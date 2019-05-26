@@ -113,6 +113,10 @@ int main(int pArgC, char *pArgV[])
     // Run the CLI version of OpenCOR, if possible/needed
 
     if (tryCliVersion) {
+        // Initialise the plugins path
+
+        OpenCOR::initPluginsPath(pArgC, pArgV);
+
         // Create and initialise the CLI version of OpenCOR
 
         auto cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
@@ -136,6 +140,10 @@ int main(int pArgC, char *pArgV[])
         //       end we need to go for its GUI version, so start over but with
         //       the GUI version of OpenCOR this time...
     }
+
+    // Initialise the plugins path
+
+    OpenCOR::initPluginsPath(pArgC, pArgV);
 
     // Create the GUI version of OpenCOR, after making sure that, on Windows,
     // OpenCOR can handle scaled HiDPI screens

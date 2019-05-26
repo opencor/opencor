@@ -162,6 +162,16 @@ private:
                                      const QString &pName,
                                      bool pMustBePresent = true) const;
 
+    bool isRelationalOperator(MathmlNode pOperandNodeType) const;
+    bool isPlusOperator(MathmlNode pOperandNodeType) const;
+    bool isMinusOperator(MathmlNode pOperandNodeType) const;
+    bool isTimesOperator(MathmlNode pOperandNodeType) const;
+    bool isDivideOperator(MathmlNode pOperandNodeType) const;
+    bool isLogicalOrBitwiseOperator(MathmlNode pOperandNodeType) const;
+    bool isAndOperator(MathmlNode pOperandNodeType) const;
+    bool isOrOperator(MathmlNode pOperandNodeType) const;
+    bool isXorOperator(MathmlNode pOperandNodeType) const;
+
     bool processModelNode(const QDomNode &pDomNode);
     QString processCommentString(const QString &pComment);
     void processCommentNode(const QDomNode &pDomNode);

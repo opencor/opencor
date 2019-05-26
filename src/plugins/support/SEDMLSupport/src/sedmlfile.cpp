@@ -154,11 +154,14 @@ bool SedmlFile::isSedmlFile() const
     // Return whether our current SED-ML document is indeed a SED-ML file
     // Note: a non-SED-ML file results in our SED-ML document having at least
     //       one error, the first of which being of id
-    //       libsedml::SedNotSchemaConformant. So, we use this fact to determine
+    //       libsedml::SedNotSchemaConformant (e.g. a CellML file, i.e. an XML
+    //       file, but not a SED-ML one) or XMLContentEmpty (e.g. a COMBINE
+    //       archive, i.e. not an XML file). So, we use this fact to determine
     //       whether our current SED-ML document is indeed a SED-ML file...
 
     return    (mSedmlDocument->getNumErrors() == 0)
-           || (mSedmlDocument->getError(0)->getErrorId() != libsedml::SedNotSchemaConformant);
+           || (   (mSedmlDocument->getError(0)->getErrorId() != libsedml::SedNotSchemaConformant)
+               && (mSedmlDocument->getError(0)->getErrorId() != XMLContentEmpty));
 }
 
 //==============================================================================
@@ -292,7 +295,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     for (uint i = 0, iMax = sedmlDocument->getNumErrors(); i < iMax; ++i) {
         const libsedml::SedError *error = sedmlDocument->getError(i);
-        SedmlFileIssue::Type issueType = SedmlFileIssue::Type::Unknown;
+        SedmlFileIssue::Type issueType = SedmlFileIssue::Type::Fatal;
 
         switch (error->getSeverity()) {
         case LIBSBML_SEV_INFO:
@@ -319,11 +322,10 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
         static const QRegularExpression TrailingEmptyLinesRegEx = QRegularExpression("[\\n]*$");
 
-        QString errorMessage = QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx);
         SedmlFileIssue issue = SedmlFileIssue(issueType,
                                               int(error->getLine()),
                                               int(error->getColumn()),
-                                              errorMessage);
+                                              QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx));
 
         if (!pIssues.contains(issue)) {
             pIssues << issue;
@@ -1326,7 +1328,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 if (!hasOwner) {
                     fileManagerInstance->setDependencies(realFileName,
                                                          QStringList() << mCellmlFile->fileName()
-                                                                       << mCellmlFile->dependencies(true));
+                                                                       << mCellmlFile->dependencies());
                 }
             } else {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
@@ -1346,7 +1348,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             QByteArray fileContents;
             QString errorMessage;
 
-            Core::centralWidget()->showBusyWidget();
+            Core::showCentralBusyWidget();
 
             if (Core::readFile(modelSource, fileContents, &errorMessage)) {
                 // Save the contents of our model source to a local file and use
@@ -1370,7 +1372,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                                                                               .arg(Core::formatMessage(errorMessage)));
             }
 
-            Core::centralWidget()->hideBusyWidget();
+            Core::hideCentralBusyWidget();
         }
     }
 

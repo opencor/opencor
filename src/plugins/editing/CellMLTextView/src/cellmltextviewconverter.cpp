@@ -460,6 +460,95 @@ CellMLTextViewConverter::MathmlNode CellMLTextViewConverter::mathmlNode(const QD
 
 //==============================================================================
 
+bool CellMLTextViewConverter::isRelationalOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a relational operator
+
+    return    (pOperandNodeType == MathmlNode::Eq)
+           || (pOperandNodeType == MathmlNode::Neq)
+           || (pOperandNodeType == MathmlNode::Gt)
+           || (pOperandNodeType == MathmlNode::Lt)
+           || (pOperandNodeType == MathmlNode::Geq)
+           || (pOperandNodeType == MathmlNode::Leq);
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isPlusOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a plus operator
+
+    return pOperandNodeType == MathmlNode::Plus;
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isMinusOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a minus operator
+
+    return pOperandNodeType == MathmlNode::Minus;
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isTimesOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a times operator
+
+    return pOperandNodeType == MathmlNode::Times;
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isDivideOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a times operator
+
+    return pOperandNodeType == MathmlNode::Divide;
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isLogicalOrBitwiseOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a logical or bitwise
+    // operator
+
+    return    (pOperandNodeType == MathmlNode::And)
+           || (pOperandNodeType == MathmlNode::Or)
+           || (pOperandNodeType == MathmlNode::Xor);
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isAndOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is an and operator
+
+    return pOperandNodeType == MathmlNode::And;
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isOrOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is an or operator
+
+    return pOperandNodeType == MathmlNode::Or;
+}
+
+//==============================================================================
+
+bool CellMLTextViewConverter::isXorOperator(MathmlNode pOperandNodeType) const
+{
+    // Return whether the given operand node type is a xor operator
+
+    return pOperandNodeType == MathmlNode::Xor;
+}
+
+//==============================================================================
+
 bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 {
     // Start processing the given model node
@@ -1059,7 +1148,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
                 }
 
-            // Arythmetic operators
+            // Arithmetic operators
 
             } else if (   mathmlNode(domNode, "plus")
                        || mathmlNode(domNode, "minus")) {
@@ -1195,6 +1284,9 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                 return {};
             }
         }
+
+    // Piecewise statement
+
     } else if (mathmlNode(domNode, "piecewise")) {
         if (mPiecewiseStatementUsed) {
             mErrorMessage = tr("A 'piecewise' element cannot be used within another 'piecewise' element.");
@@ -1483,7 +1575,6 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
     MathmlNode operatorNodeType = MathmlNode::Unknown;
 
     if (childNodesCount(pDomNode) == 2) {
-
         for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
             childNode = childNodes.item(i);
 
@@ -1499,16 +1590,17 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         return {};
                     }
 
-                    if (operatorNodeType == MathmlNode::Plus) {
+                    if (isPlusOperator(operatorNodeType)) {
                         res = pOperator+operand;
-                    } else if (operatorNodeType == MathmlNode::Minus) {
+                    } else if (isMinusOperator(operatorNodeType)) {
                         // Minus node
 
                         MathmlNode mathmlNode = CellMLTextViewConverter::mathmlNode(childNode);
 
-                        if (   (mathmlNode == MathmlNode::Eq) || (mathmlNode == MathmlNode::Neq) || (mathmlNode == MathmlNode::Gt) || (mathmlNode == MathmlNode::Lt) || (mathmlNode == MathmlNode::Geq) || (mathmlNode == MathmlNode::Leq)
-                            || (mathmlNode == MathmlNode::Plus) || (mathmlNode == MathmlNode::Minus)
-                            || (mathmlNode == MathmlNode::And) || (mathmlNode == MathmlNode::Or) || (mathmlNode == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(mathmlNode)
+                            || isPlusOperator(mathmlNode)
+                            || isMinusOperator(mathmlNode)
+                            || isLogicalOrBitwiseOperator(mathmlNode)) {
                             res = pOperator+"("+operand+")";
                         } else {
                             res = pOperator+operand;
@@ -1551,118 +1643,149 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         return {};
                     }
 
-                    if (operatorNodeType == MathmlNode::Plus) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::And) || (leftOperandNodeType == MathmlNode::Or) || (leftOperandNodeType == MathmlNode::Xor)) {
+                    // Determine whether parentheses should be added around the
+                    // left and/or right operands, and this based on the
+                    // precedence of the operators used in CellML, which are
+                    // listed below from higher to lower precedence:
+                    //  1. Parentheses                           [Left to right]
+                    //  2. Unary PLUS, Unary MINUS, NOT          [Right to left]
+                    //  3. TIMES, DIVIDE                         [Left to right]
+                    //  4. PLUS, MINUS                           [Left to right]
+                    //  5. LT, LEQ, GT, GEQ                      [Left to right]
+                    //  6. EQEQ, NEQ                             [Left to right]
+                    //  7. XOR (bitwise)                         [Left to right]
+                    //  8. AND (logical)                         [Left to right]
+                    //  9. OR (logical)                          [Left to right]
+
+                    if (isPlusOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isLogicalOrBitwiseOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::And) || (rightOperandNodeType == MathmlNode::Or) || (rightOperandNodeType == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isLogicalOrBitwiseOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
                         }
-                    } else if (operatorNodeType == MathmlNode::Minus) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::And) || (leftOperandNodeType == MathmlNode::Or) || (leftOperandNodeType == MathmlNode::Xor)) {
+                    } else if (isMinusOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isLogicalOrBitwiseOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::Minus)
-                            || (rightOperandNodeType == MathmlNode::And) || (rightOperandNodeType == MathmlNode::Or) || (rightOperandNodeType == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isMinusOperator(rightOperandNodeType)
+                            || isLogicalOrBitwiseOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if (rightOperandNodeType == MathmlNode::Plus) {
+                        } else if (isPlusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
-                    } else if (operatorNodeType == MathmlNode::Times) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::And) || (leftOperandNodeType == MathmlNode::Or) || (leftOperandNodeType == MathmlNode::Xor)) {
+                    } else if (isTimesOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isLogicalOrBitwiseOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if ((leftOperandNodeType == MathmlNode::Plus) || (leftOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::And) || (rightOperandNodeType == MathmlNode::Or) || (rightOperandNodeType == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isLogicalOrBitwiseOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if ((rightOperandNodeType == MathmlNode::Plus) || (rightOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
-                    } else if (operatorNodeType == MathmlNode::Divide) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::And) || (leftOperandNodeType == MathmlNode::Or) || (leftOperandNodeType == MathmlNode::Xor)) {
+                    } else if (isDivideOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isLogicalOrBitwiseOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if ((leftOperandNodeType == MathmlNode::Plus) || (leftOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::Times) || (rightOperandNodeType == MathmlNode::Divide)
-                            || (rightOperandNodeType == MathmlNode::And) || (rightOperandNodeType == MathmlNode::Or) || (rightOperandNodeType == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isTimesOperator(rightOperandNodeType)
+                            || isDivideOperator(rightOperandNodeType)
+                            || isLogicalOrBitwiseOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if ((rightOperandNodeType == MathmlNode::Plus) || (rightOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
-                    } else if (operatorNodeType == MathmlNode::And) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::Or) || (leftOperandNodeType == MathmlNode::Xor)) {
+                    } else if (isAndOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isOrOperator(leftOperandNodeType)
+                            || isXorOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if ((leftOperandNodeType == MathmlNode::Plus) || (leftOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::Or) || (rightOperandNodeType == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isOrOperator(rightOperandNodeType)
+                            || isXorOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if ((rightOperandNodeType == MathmlNode::Plus) || (rightOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
-                    } else if (operatorNodeType == MathmlNode::Or) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::And) || (leftOperandNodeType == MathmlNode::Xor)) {
+                    } else if (isOrOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isAndOperator(leftOperandNodeType)
+                            || isXorOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if ((leftOperandNodeType == MathmlNode::Plus) || (leftOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::And) || (rightOperandNodeType == MathmlNode::Xor)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isAndOperator(rightOperandNodeType)
+                            || isXorOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if ((rightOperandNodeType == MathmlNode::Plus) || (rightOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
-                    } else if (operatorNodeType == MathmlNode::Xor) {
-                        if (   (leftOperandNodeType == MathmlNode::Eq) || (leftOperandNodeType == MathmlNode::Neq) || (leftOperandNodeType == MathmlNode::Gt) || (leftOperandNodeType == MathmlNode::Lt) || (leftOperandNodeType == MathmlNode::Geq) || (leftOperandNodeType == MathmlNode::Leq)
-                            || (leftOperandNodeType == MathmlNode::And) || (leftOperandNodeType == MathmlNode::Or)) {
+                    } else if (isXorOperator(operatorNodeType)) {
+                        if (   isRelationalOperator(leftOperandNodeType)
+                            || isAndOperator(leftOperandNodeType)
+                            || isOrOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if ((leftOperandNodeType == MathmlNode::Plus) || (leftOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
-                        if (   (rightOperandNodeType == MathmlNode::Eq) || (rightOperandNodeType == MathmlNode::Neq) || (rightOperandNodeType == MathmlNode::Gt) || (rightOperandNodeType == MathmlNode::Lt) || (rightOperandNodeType == MathmlNode::Geq) || (rightOperandNodeType == MathmlNode::Leq)
-                            || (rightOperandNodeType == MathmlNode::And) || (rightOperandNodeType == MathmlNode::Or)) {
+                        if (   isRelationalOperator(rightOperandNodeType)
+                            || isAndOperator(rightOperandNodeType)
+                            || isOrOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if ((rightOperandNodeType == MathmlNode::Plus) || (rightOperandNodeType == MathmlNode::Minus)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
@@ -1955,9 +2078,9 @@ QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
 
                 MathmlNode mathmlNode = CellMLTextViewConverter::mathmlNode(childNode);
 
-                if (   (mathmlNode == MathmlNode::Eq) || (mathmlNode == MathmlNode::Neq) || (mathmlNode == MathmlNode::Gt) || (mathmlNode == MathmlNode::Lt) || (mathmlNode == MathmlNode::Geq) || (mathmlNode == MathmlNode::Leq)
-                    || (mathmlNode == MathmlNode::Plus) || (mathmlNode == MathmlNode::Minus) || (mathmlNode == MathmlNode::Times) || (mathmlNode == MathmlNode::Divide)
-                    || (mathmlNode == MathmlNode::And) || (mathmlNode == MathmlNode::Or) || (mathmlNode == MathmlNode::Xor)) {
+                if (   isRelationalOperator(mathmlNode)
+                    || isPlusOperator(mathmlNode) || isMinusOperator(mathmlNode) || isTimesOperator(mathmlNode) || isDivideOperator(mathmlNode)
+                    || isLogicalOrBitwiseOperator(mathmlNode)) {
                     res = "not("+operand+")";
                 } else {
                     res = "not "+operand;

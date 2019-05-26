@@ -896,7 +896,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive;
 
     if (isVisible() && (isSedmlFile || isCombineArchive)) {
-        Core::centralWidget()->showBusyWidget();
+        Core::showCentralBusyWidget();
     }
 
     processEvents();
@@ -935,106 +935,12 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                                    fileManagerInstance->url(simulationFileName):
                                    simulationFileName;
         QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
-        SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSimulation->sedmlFile() != nullptr)?
-                                                            mSimulation->sedmlFile()->issues():
-                                                            SEDMLSupport::SedmlFileIssues();
-        COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mSimulation->combineArchive() != nullptr)?
-                                                                        mSimulation->combineArchive()->issues():
-                                                                        COMBINESupport::CombineArchiveIssues();
-        bool atLeastOneBlockingSedmlIssue = false;
-        bool atLeastOneBlockingCombineIssue = false;
-
-        if (!combineArchiveIssues.isEmpty()) {
-            // There is one or several issues with our COMBINE archive, so list
-            // it/them
-
-            for (const auto &combineArchiveIssue : combineArchiveIssues) {
-                QString issueType;
-
-                switch (combineArchiveIssue.type()) {
-                case COMBINESupport::CombineArchiveIssue::Type::Information:
-                    issueType = tr("Information:");
-
-                    break;
-                case COMBINESupport::CombineArchiveIssue::Type::Error:
-                    issueType = tr("Error:");
-
-                    atLeastOneBlockingCombineIssue = true;
-
-                    break;
-                case COMBINESupport::CombineArchiveIssue::Type::Warning:
-                    issueType = tr("Warning:");
-
-                    break;
-                case COMBINESupport::CombineArchiveIssue::Type::Fatal:
-                    issueType = tr("Fatal:");
-
-                    atLeastOneBlockingCombineIssue = true;
-
-                    break;
-                }
-
-                information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
-                                                                                                                          .arg(Core::formatMessage(combineArchiveIssue.message()));
-            }
-        }
-
-        if (!sedmlFileIssues.isEmpty()) {
-            // There is one or several issues with our SED-ML file, so list
-            // it/them
-
-            for (const auto &sedmlFileIssue : sedmlFileIssues) {
-                QString issueType;
-
-                switch (sedmlFileIssue.type()) {
-                case SEDMLSupport::SedmlFileIssue::Type::Unknown:
-                    // We should never come here...
-
-#ifdef QT_DEBUG
-                    qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
-#else
-                    break;
-#endif
-                case SEDMLSupport::SedmlFileIssue::Type::Information:
-                    issueType = tr("Information:");
-
-                    break;
-                case SEDMLSupport::SedmlFileIssue::Type::Error:
-                    issueType = tr("Error:");
-
-                    atLeastOneBlockingSedmlIssue = true;
-
-                    break;
-                case SEDMLSupport::SedmlFileIssue::Type::Warning:
-                    issueType = tr("Warning:");
-
-                    break;
-                case SEDMLSupport::SedmlFileIssue::Type::Fatal:
-                    issueType = tr("Fatal:");
-
-                    atLeastOneBlockingSedmlIssue = true;
-
-                    break;
-                }
-
-                if ((sedmlFileIssue.line() != 0) && (sedmlFileIssue.column() != 0)) {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(sedmlFileIssue.line())
-                                                                                                                                      .arg(sedmlFileIssue.column())
-                                                                                                                                      .arg(issueType)
-                                                                                                                                      .arg(Core::formatMessage(sedmlFileIssue.message().toHtmlEscaped()));
-                } else {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
-                                                                                                                              .arg(Core::formatMessage(sedmlFileIssue.message().toHtmlEscaped()));
-                }
-            }
-        }
-
+        SimulationSupport::SimulationIssues simulationIssues = mSimulation->issues();
         CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
         bool validRuntime = (runtime != nullptr) && runtime->isValid();
-
         CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():nullptr;
 
-        if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
+        if (!mSimulation->hasBlockingIssues()) {
             information += QString()+OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
             if (voi != nullptr) {
@@ -1056,31 +962,43 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 updateInvalidModelMessageWidget();
 
                 information += QString()+"<span"+OutputBad+">"+((runtime != nullptr)?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+            }
+        }
 
-                if (validRuntime) {
-                    // We have a valid runtime, but no VOI, which means that the
-                    // model doesn't contain any ODE or DAE
+        if (!simulationIssues.isEmpty()) {
+            // There is one or several issues with our Simulation, so list
+            // it/them
 
-                    information += QString()+OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+            for (const auto &simulationIssue : simulationIssues) {
+                QString issueType;
+
+                switch (simulationIssue.type()) {
+                case SimulationSupport::SimulationIssue::Type::Information:
+                    issueType = tr("Information:");
+
+                    break;
+                case SimulationSupport::SimulationIssue::Type::Error:
+                    issueType = tr("Error:");
+
+                    break;
+                case SimulationSupport::SimulationIssue::Type::Warning:
+                    issueType = tr("Warning:");
+
+                    break;
+                case SimulationSupport::SimulationIssue::Type::Fatal:
+                    issueType = tr("Fatal:");
+
+                    break;
+                }
+
+                if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
+                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(simulationIssue.line())
+                                                                                                                                      .arg(simulationIssue.column())
+                                                                                                                                      .arg(issueType)
+                                                                                                                                      .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 } else {
-                    // We don't have a valid runtime, so either there are some
-                    // problems with the CellML file, its runtime, or even the
-                    // parent SED-ML file and/or COMBINE archive
-                    // Note: in the case of problems with the SED-ML file and/or
-                    //       COMBINE archive, we will already have listed the
-                    //       problems, so no need to do anything more in those
-                    //       cases...
-
-                    if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
-                        for (const auto &issue : (runtime != nullptr)?
-                                                     runtime->issues():
-                                                     (mSimulation->cellmlFile() != nullptr)?
-                                                         mSimulation->cellmlFile()->issues():
-                                                         CellMLSupport::CellmlFileIssues()) {
-                            information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?tr("Error:"):tr("Warning:"))
-                                                                                                                                      .arg(issue.message());
-                        }
-                    }
+                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
+                                                                                                                              .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 }
             }
         }
@@ -1094,7 +1012,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         mValidSimulationEnvironment = false;
 
-        if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
+        if (!mSimulation->hasBlockingIssues()) {
             // Enable/disable our run/pause action depending on whether we have
             // a VOI
 
@@ -3472,7 +3390,7 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
     if (problem == None) {
         // Everything is fine, so do the actual import
 
-        Core::centralWidget()->showProgressBusyWidget();
+        Core::showCentralProgressBusyWidget();
 
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
 
@@ -3584,7 +3502,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
     if (dataStoreExportData != nullptr) {
         // We have got the data we need, so do the actual export
 
-        Core::centralWidget()->showProgressBusyWidget();
+        Core::showCentralProgressBusyWidget();
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
@@ -4550,7 +4468,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
 
     // There has been some progress with our import, so update our busy widget
 
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+    Core::setCentralBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
@@ -4568,7 +4486,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
     // Hide our busy widget
 
-    Core::centralWidget()->hideBusyWidget();
+    Core::hideCentralBusyWidget();
 
     // Let people know about any error that we came across
 
@@ -4590,7 +4508,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore
 
     // There has been some progress with our export, so update our busy widget
 
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+    Core::setCentralBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
@@ -4602,7 +4520,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::Da
 
     // We are done with the export, so hide our busy widget
 
-    Core::centralWidget()->hideBusyWidget();
+    Core::hideCentralBusyWidget();
 
     // Display the given error message, if any
 

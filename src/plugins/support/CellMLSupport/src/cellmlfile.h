@@ -83,15 +83,14 @@ public:
 
     bool update(const QString &pFileName = QString());
 
-    bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues,
-                 bool pWithBusyWidget = false);
-    bool isValid(bool pWithBusyWidget = false);
+    bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues);
+    bool isValid();
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * runtime(bool pWithBusyWidget = false);
+    CellmlFileRuntime * runtime();
 
-    QStringList dependencies(bool pWithBusyWidget = false);
+    QStringList dependencies();
 
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
@@ -128,11 +127,9 @@ public:
     QString cmetaId();
     QString xmlBase();
 
-    bool exportTo(const QString &pFileName, Version pVersion,
-                  bool pWithBusyWidget = false);
+    bool exportTo(const QString &pFileName, Version pVersion);
     bool exportTo(const QString &pFileName,
-                  const QString &pUserDefinedFormatFileName,
-                  bool pWithBusyWidget = false);
+                  const QString &pUserDefinedFormatFileName);
 
     Version version();
 
@@ -170,8 +167,7 @@ private:
                          QStringList &pImportXmlBaseList);
 
     bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
-                                 CellmlFileIssues &pIssues,
-                                 bool pWithBusyWidget = false);
+                                 CellmlFileIssues &pIssues);
 
     bool load(const QString &pFileContents,
               ObjRef<iface::cellml_api::Model> *pModel,
@@ -179,7 +175,7 @@ private:
 
     bool isValid(const QString &pFileContents,
                  ObjRef<iface::cellml_api::Model> *pModel,
-                 CellmlFileIssues &pIssues, bool pWithBusyWidget);
+                 CellmlFileIssues &pIssues);
 
     void retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElement *pElement);
     void clearCmetaIdsFromCellmlElement(const QDomElement &pElement,

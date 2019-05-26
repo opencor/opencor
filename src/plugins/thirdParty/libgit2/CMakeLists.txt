@@ -13,11 +13,11 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
 
 # Git tag for our library
 
-set(GIT_TAG v0.28.1-opencor)
+set(GIT_TAG v0.28.1-opencor-2)
 
 # Release tag
 
-set(RELEASE_TAG v0.28.1-opencor)
+set(RELEASE_TAG v0.28.1-opencor-2)
 
 # Specify where our local package will be installed
 
@@ -67,31 +67,31 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} f2b078d21baafee084e4c19a14d937970948a989
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b901ef60993d808dd52f9c16c2fa3c9aba406eca
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES c2ff3eed82448701bae0b061d67efb4d6f4d7d27
-                                              5c943fadcbf3de2aa42a39df104f9deb72d3bd35)
+                                  SHA1_VALUES eb218ea25659af84ee3112f7a91e922b93b7a03a
+                                              4297cef930e12d8974aa10162b1346823d460393)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0f8b29ac1c39b89316aa1a0cf9c2dc14635f6973
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 79de5587bd50a84bbd32c500cfd07823c920695a
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 30ee737368de083074fc009bd55183c74f4af26b
-                                              92c804d4f007c6d268636b2d72cff50e5aeaedcb)
+                                  SHA1_VALUES 023115807ca32f0cd7161bf7d6f55e7415e4a763
+                                              6209c16ff48030646fac3a597a8e0e71214e56d0)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 86186f65c06d0c4a447e05ae3d0e979a0db3e3fa
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 62da654426c89f6367074c54a629867298040fe1
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 485faf5db46b42a373fa230167eeacf1a747a152)
+                              SHA1_VALUES 523027d121295b7c540df4052587db488ea26be4)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e14928caa0a01d4b27fe476b8770b063d0c70db0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7110a6f7437a440862634d9c7aee61c9acfc8a44
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 498dbbe4631ea9b2e6e8767e476cd7004590a2df)
+                              SHA1_VALUES e9724bac91b08eb22384843c128cbf68c95ae483)
     endif()
 else()
     # Ignore some warnings
@@ -131,13 +131,14 @@ else()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${DEFINE_STATIC_CRT_ARG}
+            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
             -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
             -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
-            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
             -DUSE_HTTPS=OpenSSL
             -DUSE_SSH=OFF
             -DWINHTTP=OFF
-            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
