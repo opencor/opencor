@@ -20,7 +20,6 @@
 
 // Qt includes
 #include <QDir>
-#include <QDebug>
 
 // Setup compiler pragmas for Python
 #include "pythonbegin.h"
