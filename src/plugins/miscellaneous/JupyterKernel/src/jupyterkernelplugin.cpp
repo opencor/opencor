@@ -60,8 +60,8 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
 // CLI interface
 //==============================================================================
 
-int JupyterKernelPlugin::executeCommand(const QString &pCommand,
-                                        const QStringList &pArguments)
+bool JupyterKernelPlugin::executeCommand(const QString &pCommand,
+                                         const QStringList &pArguments, int &pRes)
 {
     // Run the given CLI command
 
@@ -70,17 +70,17 @@ int JupyterKernelPlugin::executeCommand(const QString &pCommand,
 
         runHelpCommand();
 
-        return 0;
+        return true;
     } else if (!pCommand.compare("kernel")) {
         // Run the Jupyter kernel with the specified connection file
 
-        return runKernel(pArguments);
+        return runKernel(pArguments, pRes);
     } else {
         // Not a CLI command that we support
 
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 }
 
@@ -137,14 +137,16 @@ if __name__ == '__main__':
 
 //==============================================================================
 
-int JupyterKernelPlugin::runKernel(const QStringList &pArguments)
+bool JupyterKernelPlugin::runKernel(const QStringList &pArguments, int &pRes)
 {
+    Q_UNUSED(pRes);
+
     // Make sure that we have the correct number of arguments
 
     if (pArguments.count() != 1) {
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 
     // Run the the kernel using our connection file
@@ -154,7 +156,7 @@ int JupyterKernelPlugin::runKernel(const QStringList &pArguments)
 
     PythonQtSupport::evalScript(jupyterKernel.arg(connectionFile.replace("\\", "\\\\")));
 
-    return 0;
+    return true;
 }
 
 //==============================================================================

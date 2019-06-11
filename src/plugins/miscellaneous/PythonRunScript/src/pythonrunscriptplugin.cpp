@@ -62,7 +62,7 @@ PLUGININFO_FUNC PythonRunScriptPluginInfo()
 // CLI interface
 //==============================================================================
 
-int PythonRunScriptPlugin::executeCommand(const QString &pCommand,
+bool PythonRunScriptPlugin::executeCommand(const QString &pCommand,
                                           const QStringList &pArguments,
                                           int &pRes)
 {
@@ -73,7 +73,7 @@ int PythonRunScriptPlugin::executeCommand(const QString &pCommand,
 
         runHelpCommand();
 
-        return 0;
+        return true;
     } else if (!pCommand.compare("script")) {
         // Run the Python script in the specified file
 
@@ -83,7 +83,7 @@ int PythonRunScriptPlugin::executeCommand(const QString &pCommand,
 
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 }
 
@@ -104,7 +104,7 @@ void PythonRunScriptPlugin::runHelpCommand()
 
 //==============================================================================
 
-int PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
+bool PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
 {
     // Make sure that we have sufficient arguments
 
@@ -119,7 +119,7 @@ int PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
     if (!QFile::exists(filename)) {
         std::cerr << "File '" << filename.toStdString() << "' does not exist" << std::endl;
 
-        return -1;
+        return false;
     }
 
     // Set `sys.argv` to the list of arguments
@@ -142,7 +142,7 @@ int PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
 
     pRes = PythonQtSupport::PythonQtSupportPlugin::instance()->systemExitCode();
 
-    return 0;
+    return true;
 }
 
 //==============================================================================

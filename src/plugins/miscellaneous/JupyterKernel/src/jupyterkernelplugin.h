@@ -52,7 +52,7 @@ public:
 
 private:
     void runHelpCommand();
-    int runKernel(const QStringList &pArguments);
+    bool runKernel(const QStringList &pArguments, int &pRes);
 };
 
 //==============================================================================
