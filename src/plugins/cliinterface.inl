@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // Note: make sure to update cliInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual int executeCommand(const QString &pCommand,
-                               const QStringList &pArguments) PURE;
+    virtual bool executeCommand(const QString &pCommand,
+                                const QStringList &pArguments, int &pRes) PURE;
 
 #undef PURE
 
