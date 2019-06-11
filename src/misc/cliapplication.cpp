@@ -272,7 +272,7 @@ bool CliApplication::command(const QString &pCommand,
                 std::cout << std::endl;
             }
 
-            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments) != 0) {
+            if (!qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments, pRes)) {
                 pRes = -1;
             }
         }

@@ -77,9 +77,12 @@ bool CellMLTextViewPlugin::validCellml(const QString &pFileName,
 // CLI interface
 //==============================================================================
 
-int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
-                                         const QStringList &pArguments)
+bool CellMLTextViewPlugin::executeCommand(const QString &pCommand,
+                                          const QStringList &pArguments,
+                                          int &pRes)
 {
+    Q_UNUSED(pRes)
+
     // Run the given CLI command
 
     static const QString Help = "help";
@@ -91,7 +94,7 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 
         runHelpCommand();
 
-        return 0;
+        return true;
     }
 
     if (pCommand == Export) {
@@ -110,7 +113,7 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 
     runHelpCommand();
 
-    return -1;
+    return false;
 }
 
 //==============================================================================
@@ -448,15 +451,15 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 // Plugin specific
 //==============================================================================
 
-int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
-                                       bool pImport)
+bool CellMLTextViewPlugin::importExport(const QStringList &pArguments,
+                                        bool pImport)
 {
     // Make sure that we have the correct number of arguments
 
     if (pArguments.count() != 1) {
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 
     // Check whether we are dealing with a local or a remote file, and retrieve
@@ -525,12 +528,12 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // Let the user know if something went wrong at some point and then leave
 
     if (errorMessage.isEmpty()) {
-        return 0;
+        return true;
     }
 
     std::cout << errorMessage.toStdString() << std::endl;
 
-    return -1;
+    return false;
 }
 
 //==============================================================================
@@ -550,7 +553,7 @@ void CellMLTextViewPlugin::runHelpCommand()
 
 //==============================================================================
 
-int CellMLTextViewPlugin::runImportCommand(const QStringList &pArguments)
+bool CellMLTextViewPlugin::runImportCommand(const QStringList &pArguments)
 {
     // Export an existing CellML Text file to CellML on the console
 
@@ -559,7 +562,7 @@ int CellMLTextViewPlugin::runImportCommand(const QStringList &pArguments)
 
 //==============================================================================
 
-int CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
+bool CellMLTextViewPlugin::runExportCommand(const QStringList &pArguments)
 {
     // Export an existing CellML file to CellML Text format on the console
 

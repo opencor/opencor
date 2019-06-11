@@ -81,10 +81,10 @@ private:
     void exportTo(CellMLSupport::CellmlFile::Version pVersion);
 
     void runHelpCommand();
-    int runExportCommand(const QStringList &pArguments);
-    int runValidateCommand(const QStringList &pArguments);
+    bool runExportCommand(const QStringList &pArguments);
+    bool runValidateCommand(const QStringList &pArguments);
 
-    int runCommand(Command pCommand, const QStringList &pArguments);
+    bool runCommand(Command pCommand, const QStringList &pArguments);
 
 private slots:
     void exportToCellml10();
