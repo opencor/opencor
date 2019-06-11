@@ -111,7 +111,7 @@ bool PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
     if (pArguments.count() < 1) {
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 
     const QString filename = pArguments[0];
