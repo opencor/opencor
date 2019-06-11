@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Run Python script plugin
 //==============================================================================
 
+#include "pythonqtsupportplugin.h"
 #include "pythonrunscriptplugin.h"
 
 //==============================================================================
@@ -62,7 +63,8 @@ PLUGININFO_FUNC PythonRunScriptPluginInfo()
 //==============================================================================
 
 int PythonRunScriptPlugin::executeCommand(const QString &pCommand,
-                                          const QStringList &pArguments)
+                                          const QStringList &pArguments,
+                                          int &pRes)
 {
     // Run the given CLI command
 
@@ -75,7 +77,7 @@ int PythonRunScriptPlugin::executeCommand(const QString &pCommand,
     } else if (!pCommand.compare("script")) {
         // Run the Python script in the specified file
 
-        return runScript(pArguments);
+        return runScript(pArguments, pRes);
     } else {
         // Not a CLI command that we support
 
@@ -102,7 +104,7 @@ void PythonRunScriptPlugin::runHelpCommand()
 
 //==============================================================================
 
-int PythonRunScriptPlugin::runScript(const QStringList &pArguments)
+int PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
 {
     // Make sure that we have sufficient arguments
 
@@ -135,6 +137,10 @@ int PythonRunScriptPlugin::runScript(const QStringList &pArguments)
     // Run the file
 
     PythonQtSupport::evalFile(filename);
+
+    // Pass back Python's `sys.exit()` code
+
+    pRes = PythonQtSupport::PythonQtSupportPlugin::instance()->systemExitCode();
 
     return 0;
 }

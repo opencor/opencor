@@ -52,7 +52,7 @@ public:
 
 private:
     void runHelpCommand();
-    int runScript(const QStringList &pArguments);
+    int runScript(const QStringList &pArguments, int &pRes);
 };
 
 //==============================================================================

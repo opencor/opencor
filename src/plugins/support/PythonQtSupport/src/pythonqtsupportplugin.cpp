@@ -91,6 +91,15 @@ void PythonQtSupportPlugin::initializePlugin()
 
     mPythonManager->initialize();
 
+    // Handle sys.exit()
+
+    instance()->mSystemExitCode = 0;
+
+    mPythonManager->setSystemExitExceptionHandlerEnabled(true);
+
+    connect(mPythonManager, &ctkAbstractPythonManager::systemExitExceptionRaised,
+        this, &PythonQtSupportPlugin::systemExited);
+
     // Enable the Qt bindings for Python
 
     PythonQt_QtAll::init();
@@ -152,6 +161,37 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+int PythonQtSupportPlugin::systemExitCode() const
+{
+    // Return Python's exit code
+
+    return mSystemExitCode;
+}
+
+//==============================================================================
+
+PythonQtSupportPlugin * PythonQtSupportPlugin::instance(void)
+{
+    // Return the 'global' instance of our plugin
+
+    static PythonQtSupportPlugin pluginInstance;
+    return static_cast<PythonQtSupportPlugin *>(Core::globalInstance("OpenCOR::PythonQtSupport::PythonQtSupportPlugin",
+                                                &pluginInstance));
+}
+
+//==============================================================================
+
+void PythonQtSupportPlugin::systemExited(int pExitCode)
+{
+    // Save the code from `sys.exit()`
+
+    instance()->mSystemExitCode = pExitCode;
 }
 
 //==============================================================================
