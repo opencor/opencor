@@ -65,7 +65,7 @@ private:
     QAction *mAddTwoNumbersAction;
 
     void runHelpCommand();
-    int runAddCommand(const QStringList &pArguments);
+    bool runAddCommand(const QStringList &pArguments);
 
 private slots:
     void addTwoNumbers();

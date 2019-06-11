@@ -58,9 +58,11 @@ PLUGININFO_FUNC SampleToolsPluginInfo()
 // CLI interface
 //==============================================================================
 
-int SampleToolsPlugin::executeCommand(const QString &pCommand,
-                                      const QStringList &pArguments)
+bool SampleToolsPlugin::executeCommand(const QString &pCommand,
+                                       const QStringList &pArguments, int &pRes)
 {
+    Q_UNUSED(pRes)
+
     // Run the given CLI command
 
     static const QString Help = "help";
@@ -71,7 +73,7 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
         runHelpCommand();
 
-        return 0;
+        return true;
     }
 
     if (pCommand == Add) {
@@ -84,7 +86,7 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
     runHelpCommand();
 
-    return -1;
+    return false;
 }
 
 //==============================================================================
@@ -227,14 +229,14 @@ void SampleToolsPlugin::runHelpCommand()
 
 //==============================================================================
 
-int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
+bool SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
 {
     // Make sure that we have the correct number of arguments
 
     if (pArguments.count() != 2) {
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 
     // Make sure that the two arguments are valid numbers
@@ -246,7 +248,7 @@ int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
     if (!ok) {
         std::cout << "Sorry, but " << qPrintable(pArguments.first()) << " is not a valid number." << std::endl;
 
-        return -1;
+        return false;
     }
 
     double nb2 = pArguments.last().toDouble(&ok);
@@ -254,14 +256,14 @@ int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
     if (!ok) {
         std::cout << "Sorry, but " << qPrintable(pArguments.last()) << " is not a valid number." << std::endl;
 
-        return -1;
+        return false;
     }
 
     // Add the two numbers and output the result
 
     std::cout << qPrintable(pArguments.first()) << " + " << qPrintable(pArguments.last()) << " = " << Sample::add(nb1, nb2) << std::endl;
 
-    return 0;
+    return true;
 }
 
 //==============================================================================

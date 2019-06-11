@@ -33,7 +33,7 @@ extern "C" Q_DECL_EXPORT int cliInterfaceVersion()
 {
     // Version of the CLI interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================
