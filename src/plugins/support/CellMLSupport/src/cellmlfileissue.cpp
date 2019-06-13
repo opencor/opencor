@@ -50,6 +50,19 @@ CellmlFileIssue::CellmlFileIssue(Type pType, const QString &pMessage) :
 
 //==============================================================================
 
+bool CellmlFileIssue::operator==(const CellmlFileIssue &pIssue) const
+{
+    // Return whether we are the same as the given issue
+
+    return    (mType == pIssue.mType)
+           && (mLine == pIssue.mLine)
+           && (mColumn == pIssue.mColumn)
+           && (mMessage == pIssue.mMessage)
+           && (mImportedFile == pIssue.mImportedFile);
+}
+
+//==============================================================================
+
 bool CellmlFileIssue::compare(const CellmlFileIssue &pIssue1,
                               const CellmlFileIssue &pIssue2)
 {

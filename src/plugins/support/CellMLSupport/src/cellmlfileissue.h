@@ -52,6 +52,8 @@ public:
                              const QString &pImportedFile);
     explicit CellmlFileIssue(Type pType, const QString &pMessage);
 
+    bool operator==(const CellmlFileIssue &pIssue) const;
+
     static bool compare(const CellmlFileIssue &pIssue1,
                         const CellmlFileIssue &pIssue2);
 

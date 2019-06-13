@@ -693,11 +693,17 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
             issueType = CellmlFileIssue::Type::Error;
         }
 
-        // Append the issue to our list
+        // Append the issue to our list, but only if we don't already have it
+        // Note: we will already have it if we are importing a faulty CellML
+        //       file more than once...
 
-        pIssues << CellmlFileIssue(issueType, int(line), int(column),
-                                   QString::fromStdWString(cellmlValidityIssue->description()),
-                                   importedFile);
+        CellmlFileIssue issue = CellmlFileIssue(issueType, int(line), int(column),
+                                                QString::fromStdWString(cellmlValidityIssue->description()),
+                                                importedFile);
+
+        if (!pIssues.contains(issue)) {
+            pIssues << issue;
+        }
     }
 
     // Sort our issues (since the CellML API may generate them in a non-ordered
