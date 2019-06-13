@@ -52,18 +52,23 @@ public:
     };
 
     explicit EditorListItem(Type pType, int pLine, int pColumn,
-                            const QString &pMessage);
+                            const QString &pMessage, const QString &pFileName,
+                            const QString &pFileInfo);
 
     int type() const override;
     int line() const;
     int column() const;
     QString message() const;
+    QString fileName() const;
+    QString fileInfo() const;
 
 private:
     Type mType;
     int mLine;
     int mColumn;
     QString mMessage;
+    QString mFileName;
+    QString mFileInfo;
 };
 
 //==============================================================================
@@ -79,10 +84,14 @@ public:
     void retranslateUi() override;
 
     void addItem(EditorListItem::Type pType, int pLine, int pColumn,
-                 const QString &pMessage);
+                 const QString &pMessage, const QString &pFileName = QString(),
+                 const QString &pFileInfo = QString());
     void addItem(EditorListItem::Type pType, int pLine,
-                 const QString &pMessage);
-    void addItem(EditorListItem::Type pType, const QString &pMessage);
+                 const QString &pMessage, const QString &pFileName = QString(),
+                 const QString &pFileInfo = QString());
+    void addItem(EditorListItem::Type pType, const QString &pMessage,
+                 const QString &pFileName = QString(),
+                 const QString &pFileInfo = QString());
 
     int count() const;
 

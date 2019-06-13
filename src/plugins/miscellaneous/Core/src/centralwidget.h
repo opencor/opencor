@@ -100,6 +100,8 @@ public:
 
     void addView(Plugin *pPlugin);
 
+    Plugin * currentViewPlugin() const;
+
     TabBarWidget * newTabBarWidget(QTabBar::Shape pShape,
                                    bool pFileTabs = false);
 

@@ -145,6 +145,21 @@ void hideCentralBusyWidget()
 
 //==============================================================================
 
+Plugin * currentViewPlugin()
+{
+    // Retrieve and return our current view plugin
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        return centralWidget->currentViewPlugin();
+    }
+
+    return nullptr;
+}
+
+//==============================================================================
+
 QString allFilters(const QStringList &pFilters)
 {
     QStringList filters = pFilters;

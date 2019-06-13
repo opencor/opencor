@@ -345,7 +345,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
                 }
 
                 editorList->addItem(issueType, sedmlFileIssue.line(), sedmlFileIssue.column(),
-                                    qPrintable(sedmlFileIssue.message()));
+                                    sedmlFileIssue.message());
             }
         }
 

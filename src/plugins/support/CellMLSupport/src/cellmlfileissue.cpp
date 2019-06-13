@@ -32,20 +32,35 @@ namespace CellMLSupport {
 
 CellmlFileIssue::CellmlFileIssue(Type pType, int pLine, int pColumn,
                                  const QString &pMessage,
-                                 const QString &pImportedFile) :
+                                 const QString &pFileName,
+                                 const QString &pFileInfo) :
     mType(pType),
     mLine(pLine),
     mColumn(pColumn),
     mMessage(pMessage),
-    mImportedFile(pImportedFile)
+    mFileName(pFileName),
+    mFileInfo(pFileInfo)
 {
 }
 
 //==============================================================================
 
 CellmlFileIssue::CellmlFileIssue(Type pType, const QString &pMessage) :
-    CellmlFileIssue(pType, 0, 0, pMessage, QString())
+    CellmlFileIssue(pType, 0, 0, pMessage, QString(), QString())
 {
+}
+
+//==============================================================================
+
+bool CellmlFileIssue::operator==(const CellmlFileIssue &pIssue) const
+{
+    // Return whether we are the same as the given issue
+
+    return    (mType == pIssue.mType)
+           && (mLine == pIssue.mLine)
+           && (mColumn == pIssue.mColumn)
+           && (mMessage == pIssue.mMessage)
+           && (mFileName == pIssue.mFileName);
 }
 
 //==============================================================================
@@ -55,19 +70,23 @@ bool CellmlFileIssue::compare(const CellmlFileIssue &pIssue1,
 {
     // Determine which of the two issues should be first
 
-    if (pIssue1.line() == pIssue2.line()) {
-        if (pIssue1.column() == pIssue2.column()) {
-            if (pIssue1.type() == pIssue2.type()) {
-                return pIssue1.message().compare(pIssue2.message(), Qt::CaseInsensitive) < 0;
+    if (pIssue1.fileName() == pIssue2.fileName()) {
+        if (pIssue1.line() == pIssue2.line()) {
+            if (pIssue1.column() == pIssue2.column()) {
+                if (pIssue1.type() == pIssue2.type()) {
+                    return pIssue1.message().compare(pIssue2.message(), Qt::CaseInsensitive) < 0;
+                }
+
+                return pIssue1.type() < pIssue2.type();
             }
 
-            return pIssue1.type() < pIssue2.type();
+            return pIssue1.column() < pIssue2.column();
         }
 
-        return pIssue1.column() < pIssue2.column();
+        return pIssue1.line() < pIssue2.line();
     }
 
-    return pIssue1.line() < pIssue2.line();
+    return pIssue1.fileName().compare(pIssue2.fileName(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -118,11 +137,20 @@ QString CellmlFileIssue::formattedMessage() const
 
 //==============================================================================
 
-QString CellmlFileIssue::importedFile() const
+QString CellmlFileIssue::fileName() const
 {
-    // Return the issue's imported file
+    // Return the issue's file name
 
-    return mImportedFile;
+    return mFileName;
+}
+
+//==============================================================================
+
+QString CellmlFileIssue::fileInfo() const
+{
+    // Return the issue's file information
+
+    return mFileInfo;
 }
 
 //==============================================================================

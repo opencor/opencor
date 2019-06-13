@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 QMainWindow CORE_EXPORT * mainWindow();
 
-bool CORE_EXPORT aboutToQuit();
-
 QSize CORE_EXPORT minimumWidgetSize(QWidget *pWidget);
 void CORE_EXPORT adjustWidgetSize(QWidget *pWidget);
 
