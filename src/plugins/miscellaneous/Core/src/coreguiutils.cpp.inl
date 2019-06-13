@@ -147,15 +147,6 @@ QMainWindow * mainWindow()
 
 //==============================================================================
 
-bool aboutToQuit()
-{
-    // Return whether we are about to quit
-
-    return qApp->property("OpenCOR::aboutToQuit()").toBool();
-}
-
-//==============================================================================
-
 QSize minimumWidgetSize(QWidget *pWidget)
 {
     // Determine the minimum size of the given widget
