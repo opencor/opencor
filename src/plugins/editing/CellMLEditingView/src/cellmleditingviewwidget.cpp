@@ -266,9 +266,19 @@ void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
     } else {
         // The given item is located in a different file, so open that file, and
         // ask set our cursor position to its line/column
+        // Note: we retrieve the current view plugin's name before opening the
+        //       file to prevent any potential issue. I don't think it could
+        //       happen, but say that we need to open a CellML file. This means
+        //       that the CellML Text view will, by default, be selected, and it
+        //       might be selected before we query the current view plugin's
+        //       name, which means that the wrong view might be selected in the
+        //       end, if we were not originally using the CellML Text view (e.g.
+        //       if we were using the Raw CellML view)...
+
+        QString currentViewPluginName = Core::currentViewPlugin()->name();
 
         QDesktopServices::openUrl("opencor://openFile/"+pItem->fileName());
-        QDesktopServices::openUrl("opencor://Core.selectView/"+Core::currentViewPlugin()->name());
+        QDesktopServices::openUrl("opencor://Core.selectView/"+currentViewPluginName);
         QDesktopServices::openUrl(QString("opencor://EditingView.setCursorPosition/%1|%2").arg(pItem->line())
                                                                                           .arg(pItem->column()));
     }
