@@ -1531,6 +1531,15 @@ void CentralWidget::addView(Plugin *pPlugin)
 
 //==============================================================================
 
+Plugin * CentralWidget::currentViewPlugin() const
+{
+    // Return the current view plugin
+
+    return viewPlugin(mFileTabs->currentIndex());
+}
+
+//==============================================================================
+
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if at least one mode
