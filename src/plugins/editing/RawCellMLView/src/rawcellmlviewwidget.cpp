@@ -352,7 +352,9 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
                                         EditorWidget::EditorListItem::Type::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
-                                    cellmlFileIssue.formattedMessage());
+                                    cellmlFileIssue.formattedMessage(),
+                                    cellmlFileIssue.fileName(),
+                                    cellmlFileIssue.fileInfo());
             }
         }
 

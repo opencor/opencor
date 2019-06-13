@@ -41,11 +41,15 @@ namespace EditorWidget {
 //==============================================================================
 
 EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
-                               const QString &pMessage) :
+                               const QString &pMessage,
+                               const QString &pFileName,
+                               const QString &pFileInfo) :
     mType(pType),
     mLine(pLine),
     mColumn(pColumn),
-    mMessage(pMessage)
+    mMessage(pMessage),
+    mFileName(pFileName),
+    mFileInfo(pFileInfo)
 {
     // Customise ourselves
 
@@ -56,14 +60,32 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
     static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
 
     if ((pLine == -1) && (pColumn == -1)) {
-        setText(pMessage);
+        if (pFileInfo.isEmpty()) {
+            setText(pMessage);
+        } else {
+            setText(QString("[%1] %s").arg(pFileInfo)
+                                      .arg(pMessage));
+        }
     } else if (pColumn == -1) {
-        setText(QString("[%1] %2").arg(pLine)
-                                  .arg(pMessage));
+        if (pFileInfo.isEmpty()) {
+            setText(QString("[%1] %2").arg(pLine)
+                                      .arg(pMessage));
+        } else {
+            setText(QString("[%1:%2] %3").arg(pFileInfo)
+                                         .arg(pLine)
+                                         .arg(pMessage));
+        }
     } else {
-        setText(QString("[%1:%2] %3").arg(pLine)
-                                     .arg(pColumn)
-                                     .arg(pMessage));
+        if (pFileInfo.isEmpty()) {
+            setText(QString("[%1:%2] %3").arg(pLine)
+                                         .arg(pColumn)
+                                         .arg(pMessage));
+        } else {
+            setText(QString("[%1:%2:%3] %4").arg(pFileInfo)
+                                            .arg(pLine)
+                                            .arg(pColumn)
+                                            .arg(pMessage));
+        }
     }
 
     setToolTip(text());
@@ -126,6 +148,15 @@ QString EditorListItem::message() const
     // Return the item's message
 
     return mMessage;
+}
+
+//==============================================================================
+
+QString EditorListItem::fileName() const
+{
+    // Return the item's file name
+
+    return mFileName;
 }
 
 //==============================================================================
@@ -201,11 +232,13 @@ void EditorListWidget::clear()
 //==============================================================================
 
 void EditorListWidget::addItem(EditorListItem::Type pType,
-                               int pLine, int pColumn, const QString &pMessage)
+                               int pLine, int pColumn, const QString &pMessage,
+                               const QString &pFileName,
+                               const QString &pFileInfo)
 {
     // Add the given item to our list
 
-    mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage));
+    mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage, pFileName, pFileInfo));
 
     mClearAction->setEnabled(true);
     mCopyToClipboardAction->setEnabled(true);
@@ -214,21 +247,25 @@ void EditorListWidget::addItem(EditorListItem::Type pType,
 //==============================================================================
 
 void EditorListWidget::addItem(EditorListItem::Type pType, int pLine,
-                               const QString &pMessage)
+                               const QString &pMessage,
+                               const QString &pFileName,
+                               const QString &pFileInfo)
 {
     // Add the given item to our list
 
-    addItem(pType, pLine, -1, pMessage);
+    addItem(pType, pLine, -1, pMessage, pFileName, pFileInfo);
 }
 
 //==============================================================================
 
 void EditorListWidget::addItem(EditorListItem::Type pType,
-                               const QString &pMessage)
+                               const QString &pMessage,
+                               const QString &pFileName,
+                               const QString &pFileInfo)
 {
     // Add the given item to our list
 
-    addItem(pType, -1, -1, pMessage);
+    addItem(pType, -1, -1, pMessage, pFileName, pFileInfo);
 }
 
 //==============================================================================
