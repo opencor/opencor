@@ -459,7 +459,7 @@ void EditingViewPlugin::handleUrl(const QUrl &pUrl)
             QStringList cursorPosition = Core::urlArguments(pUrl).split("|");
 
             if (cursorPosition.count() == 2) {
-                mEditor->setCursorPosition(cursorPosition[0].toInt(), cursorPosition[1].toInt());
+                mEditor->setCursorPosition(cursorPosition[0].toInt()-1, cursorPosition[1].toInt()-1);
             }
         }
     }

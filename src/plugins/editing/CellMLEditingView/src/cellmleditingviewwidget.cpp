@@ -269,8 +269,8 @@ void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 
         QDesktopServices::openUrl("opencor://openFile/"+pItem->fileName());
         QDesktopServices::openUrl("opencor://Core.selectView/"+Core::currentViewPlugin()->name());
-        QDesktopServices::openUrl(QString("opencor://EditingView.setCursorPosition/%1|%2").arg(pItem->line()-1)
-                                                                                          .arg(pItem->column()-1));
+        QDesktopServices::openUrl(QString("opencor://EditingView.setCursorPosition/%1|%2").arg(pItem->line())
+                                                                                          .arg(pItem->column()));
     }
 }
 
