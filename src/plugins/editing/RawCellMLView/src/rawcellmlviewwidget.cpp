@@ -380,8 +380,8 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         editorList->selectFirstItem();
 
-        // Provide some extra information in case, if we are dealing with a
-        // CellML 1.0/1.1 files and are therefore using the CellML API
+        // Provide some extra information in case we are dealing with a CellML
+        // 1.0/1.1 files and are therefore using the CellML API
 
         if (   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
             || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
