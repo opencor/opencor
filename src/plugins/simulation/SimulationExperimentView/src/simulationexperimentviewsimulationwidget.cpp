@@ -2168,7 +2168,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 #endif
            ) {
             // We are dealing with a local CellML file that is on the same drive
-            // as our SED-ML file, so refer to it relatively to it
+            // as our SED-ML file, so refer to our CellML file relatively to our
+            // SED-ML file
             // Note: normally, we would use QFileInfo::canonicalPath(), but this
             //       requires an existing file, so we use QFileInfo::path()
             //       instead...
