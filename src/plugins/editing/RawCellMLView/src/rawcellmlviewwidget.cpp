@@ -374,7 +374,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
                                         EditorWidget::EditorListItem::Type::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
-                                    qPrintable(cellmlFileIssue.formattedMessage()));
+                                    cellmlFileIssue.formattedMessage());
             }
         }
 
