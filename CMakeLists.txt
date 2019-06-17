@@ -1333,6 +1333,19 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
+    # Library needed on Ubuntu 19.04 and later (while we build OpenCOR on Ubuntu
+    # 18.04 LTS)
+
+    foreach(LIBRARY tinfo.so.5)
+        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+
+        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+        install(FILES ${REAL_FULL_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_LIBRARY})
+    endforeach()
+
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
     #       all of our Qt libraries at once. Indeed, on Linux, the version of a
