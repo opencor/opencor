@@ -242,7 +242,6 @@ private:
     bool mValidSimulationEnvironment;
 
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
-    QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
     QVariantList mSimulationProperties;
     QVariantList mSolversProperties;
@@ -278,7 +277,6 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    void removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot);
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     bool pCanSetAxes, bool pForceReplot);
 
@@ -397,8 +395,6 @@ private slots:
     void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void openCellmlFile();
-
-    void plotAxesChanged();
 
     void dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
                                  double pProgress);

@@ -3758,6 +3758,15 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 
 //==============================================================================
 
+bool GraphPanelPlotWidget::hasDirtyAxes() const
+{
+    // Return whether we have dirty axes
+
+    return mDirtyAxes;
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
                                               const QwtScaleMap &pScaleMap,
                                               const QFont &pFont, int &pStart,
