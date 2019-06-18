@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Simulation Experiment view:</strong> properly disable the `Reset All Model Parameters` button (see issue <a href=\"https://github.com/opencor/opencor/issues/2116\">#2116</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> properly disable the `Reset All Model Parameters` button (see issue <a href=\"https://github.com/opencor/opencor/issues/2116\">#2116</a>). Fixed an issue with the plotting of simulation data being potentially (very) choppy (see issue <a href=\"https://github.com/opencor/opencor/issues/2118\">#2118</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
