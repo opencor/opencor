@@ -145,12 +145,16 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initPluginsPath(pArgC, pArgV);
 
-    // Create the GUI version of OpenCOR, after making sure that, on Windows,
-    // OpenCOR can handle scaled HiDPI screens
+    // Create the GUI version of OpenCOR, after making sure that OpenCOR can
+    // handle scaled HiDPI screens
 
 #ifdef Q_OS_WIN
     SetProcessDPIAware();
 #endif
+
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    // Note: the above needs to be done before QCoreApplication gets created...
 
     auto guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
 
