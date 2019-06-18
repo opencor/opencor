@@ -540,6 +540,11 @@ void SimulationData::updateInitialValues()
 
     memcpy(mInitialConstants, mConstants, size_t(mSimulation->runtime()->constantsCount())*Solver::SizeOfDouble);
     memcpy(mInitialStates, mStates, size_t(mSimulation->runtime()->statesCount())*Solver::SizeOfDouble);
+
+    // Let people know that everything has been reset by checking for
+    // modifications
+
+    checkForModifications();
 }
 
 //==============================================================================
@@ -1292,7 +1297,6 @@ void Simulation::save()
 
     if (mRuntime != nullptr) {
         mData->updateInitialValues();
-        mData->checkForModifications();
     }
 }
 
