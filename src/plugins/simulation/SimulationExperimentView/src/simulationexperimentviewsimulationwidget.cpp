@@ -113,7 +113,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mError(Error::General),
     mValidSimulationEnvironment(false),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
-    mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
     mSimulationProperties(QVariantList()),
     mSolversProperties(QVariantList()),
     mGraphPanelProperties(QMap<Core::PropertyEditorWidget *, QVariantList>()),
@@ -3748,21 +3747,10 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Prop
 
 void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    // Keep track of the fact that we want to know if a graph panel's plot's
-    // axes have been changed
-    // Note: we don't need to keep track of the graph panel's plot (in mPlots)
-    //       since we only want to do this if the plot actually has graphs
-    //       associated with it (see graphAdded())...
-
-    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
-
-    mUpdatablePlotViewports.insert(plot, true);
-
-    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::axesChanged,
-            this, &SimulationExperimentViewSimulationWidget::plotAxesChanged);
-
     // Let people know when some graph panel settings or graphs settings have
     // been requested
+
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphPanelSettingsRequested,
             this, &SimulationExperimentViewSimulationWidget::graphPanelSettingsRequested);
@@ -3801,7 +3789,7 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(GraphPanelWidge
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    removePlot(plot);
+    mPlots.removeOne(plot);
 
     // Check our graph panels and their graphs
 
@@ -3894,7 +3882,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
     // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty()) {
-        removePlot(plot);
+        mPlots.removeOne(plot);
     }
 
     // Check our graph panels and their graphs
@@ -3962,16 +3950,6 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::Gr
     // plots are up to date
 
     graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot)
-{
-    // Stop tracking the given plot
-
-    mPlots.removeOne(pPlot);
-    mUpdatablePlotViewports.remove(pPlot);
 }
 
 //==============================================================================
@@ -4245,15 +4223,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     bool needProcessingEvents = false;
 
     for (auto plot : mPlots) {
-        // If our runs are to be reset (i.e. our plot's viewport are going to be
-        // reset) or a run to be added (be it really or faked), then we want to
-        // be able to update our plot's viewport if needed (i.e. a graph segment
-        // doesn't fit within our plot's current viewport anymore)
-
-        if (pTask != Task::None) {
-            mUpdatablePlotViewports.insert(plot, true);
-        }
-
         // Now we are ready to actually update all the graphs of all our plots
 
         bool needFullUpdatePlot = !plot->isOptimizedAxes();
@@ -4310,7 +4279,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                     // plot's viewport since we last came here (e.g. by panning
                     // the plot's contents)
 
-                    if (mUpdatablePlotViewports.value(plot)) {
+                    if (!plot->hasDirtyAxes()) {
                         double minX = plotMinX;
                         double maxX = plotMaxX;
                         double minY = plotMinY;
@@ -4446,18 +4415,6 @@ void SimulationExperimentViewSimulationWidget::openCellmlFile()
     if (plugin != nullptr) {
         QDesktopServices::openUrl("opencor://Core.selectView/"+plugin->name());
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::plotAxesChanged()
-{
-    // A plot has had its axes changed (e.g. its contents was panned), which
-    // means that we don't want to allow its viewport to be updated anymore
-
-    auto plot = qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(sender());
-
-    mUpdatablePlotViewports.insert(plot, false);
 }
 
 //==============================================================================
