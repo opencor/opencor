@@ -1,5 +1,5 @@
 macro(configure_clang_and_clang_tidy TARGET_NAME)
-    # Configure Cland and Clang-Tidy for the given target
+    # Configure Clang and Clang-Tidy for the given target
 
     if(APPLE)
         # Note #1: the full list of diagnostic flags for Clang can be found at
