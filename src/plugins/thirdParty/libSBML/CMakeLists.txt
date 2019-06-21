@@ -166,6 +166,8 @@ else()
             -DWITH_ZLIB=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
+        DEPENDS
+            zlibPlugin
     )
 
     # Do some post-processing that is specific to each platform
