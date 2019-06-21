@@ -19,7 +19,8 @@ set(RELEASE_TAG OpenSSL_1_0_2s)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -65,13 +66,10 @@ endif()
 if(USE_PREBUILT_OPENSSL_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0ed38fb5e248d58858409f35544496243c61d47b
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0ed38fb5e248d58858409f35544496243c61d47b
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES db6762425527a8f21564ed7e2ab97d31976462fa
@@ -80,7 +78,7 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                                               0a59bb11f3d27eb82a9308f9c227012252e2758a)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c5be2cfa0c24abe07b6d1264e5c9a25716f3bcbb
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c5be2cfa0c24abe07b6d1264e5c9a25716f3bcbb
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 138671eeca83ca9133649d2c55b0aa4fc79c4a05
@@ -90,14 +88,14 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 8e9b36e9a654dcb2e7fb48211a41530d9b1f1173
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8e9b36e9a654dcb2e7fb48211a41530d9b1f1173
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 2debbbdd9584f650fc3320ff2cc02c72c89e934f
                                           170ccfd27fceb7778b510677aa93bcf97894c3bb)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 705666866763fd640c1da3bafeae56e9e239a44d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 705666866763fd640c1da3bafeae56e9e239a44d
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 4774a737cf361964f5931dfe34ec97d316d0e82f
@@ -210,7 +208,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
