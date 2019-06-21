@@ -139,6 +139,9 @@ else()
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
+        DEPENDS
+            OpenSSLPlugin
+            zlibPlugin
     )
 
     # Do some post-processing that is specific to each platform
@@ -186,9 +189,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libgit2plugin.cpp
-    PLUGINS
-        OpenSSL
-        zlib
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
