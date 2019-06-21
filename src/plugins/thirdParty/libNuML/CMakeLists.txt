@@ -105,16 +105,6 @@ else()
         endif()
     endif()
 
-    set(LIBSBML_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext)
-
-    if(WIN32)
-        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/${MODE}/include)
-        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    else()
-        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/include)
-        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    endif()
-
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
             ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
