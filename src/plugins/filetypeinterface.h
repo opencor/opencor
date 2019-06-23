@@ -50,7 +50,7 @@ public:
 
 //==============================================================================
 
-typedef QList<FileTypeInterface *> FileTypeInterfaces;
+using FileTypeInterfaces = QList<FileTypeInterface *>;
 
 //==============================================================================
 

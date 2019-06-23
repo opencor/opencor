@@ -30,15 +30,6 @@ namespace HeunSolver {
 
 //==============================================================================
 
-HeunSolver::HeunSolver() :
-    mStep(StepDefaultValue),
-    mK(nullptr),
-    mYk(nullptr)
-{
-}
-
-//==============================================================================
-
 HeunSolver::~HeunSolver()
 {
     // Delete some internal objects

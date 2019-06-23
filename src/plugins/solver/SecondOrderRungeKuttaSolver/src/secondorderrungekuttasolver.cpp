@@ -30,14 +30,6 @@ namespace SecondOrderRungeKuttaSolver {
 
 //==============================================================================
 
-SecondOrderRungeKuttaSolver::SecondOrderRungeKuttaSolver() :
-    mStep(StepDefaultValue),
-    mYk1(nullptr)
-{
-}
-
-//==============================================================================
-
 SecondOrderRungeKuttaSolver::~SecondOrderRungeKuttaSolver()
 {
     // Delete some internal objects
