@@ -86,7 +86,7 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
                ESCAPED_CMAKE_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
 
         set_target_properties(${TARGET_NAME} PROPERTIES
-            CXX_CLANG_TIDY "${CLANG_TIDY};-checks=${_CLANG_TIDY_CHECKS};-header-filter=${ESCAPED_CMAKE_SOURCE_DIR}\/src\/.*;-warnings-as-errors=${_CLANG_TIDY_CHECKS}"
+            CXX_CLANG_TIDY "${CLANG_TIDY};-checks=${CLANG_TIDY_CHECKS};-header-filter=${ESCAPED_CMAKE_SOURCE_DIR}\/src\/.*;-warnings-as-errors=${CLANG_TIDY_CHECKS}"
         )
     endif()
 endmacro()
