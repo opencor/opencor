@@ -41,10 +41,7 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(bool pGuiMode) :
-    mGuiMode(pGuiMode),
-    mPlugins(Plugins()),
-    mLoadedPlugins(Plugins()),
-    mCorePlugin(nullptr)
+    mGuiMode(pGuiMode)
 {
     // Retrieve OpenCOR's plugins directory
     // Note #1: the plugin's directory is retrieved in main()...
