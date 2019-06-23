@@ -22,23 +22,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update coreInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual QWidget * centralWidget() PURE;
+    VIRTUAL QWidget * centralWidget() PURE_OR_OVERRIDE;
 
-    virtual void settingsLoaded(const Plugins &pLoadedPlugins) PURE;
+    VIRTUAL void settingsLoaded(const Plugins &pLoadedPlugins) PURE_OR_OVERRIDE;
 
-    virtual void openFile(const QString &pFileNameOrUrl) PURE;
+    VIRTUAL void openFile(const QString &pFileNameOrUrl) PURE_OR_OVERRIDE;
 
-    virtual bool canClose() PURE;
+    VIRTUAL bool canClose() PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

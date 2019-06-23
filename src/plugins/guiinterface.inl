@@ -22,20 +22,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update guiInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName) PURE;
+    VIRTUAL void updateGui(Plugin *pViewPlugin, const QString &pFileName) PURE_OR_OVERRIDE;
 
-    virtual Gui::Menus guiMenus() const PURE;
-    virtual Gui::MenuActions guiMenuActions() const PURE;
+    VIRTUAL Gui::Menus guiMenus() const PURE_OR_OVERRIDE;
+    VIRTUAL Gui::MenuActions guiMenuActions() const PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

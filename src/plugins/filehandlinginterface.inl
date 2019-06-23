@@ -22,29 +22,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update fileHandlingInterfaceVersion() whenever you
     //       update this interface...
 
-    virtual bool importFile(const QString &pFileName) PURE;
-    virtual bool saveFile(const QString &pOldFileName,
+    VIRTUAL bool importFile(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL bool saveFile(const QString &pOldFileName,
                           const QString &pNewFileName,
-                          bool &pNeedFeedback) PURE;
+                          bool &pNeedFeedback) PURE_OR_OVERRIDE;
 
-    virtual void fileOpened(const QString &pFileName) PURE;
-    virtual void filePermissionsChanged(const QString &pFileName) PURE;
-    virtual void fileModified(const QString &pFileName) PURE;
-    virtual void fileSaved(const QString &pFileName) PURE;
-    virtual void fileReloaded(const QString &pFileName) PURE;
-    virtual void fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName) PURE;
-    virtual void fileClosed(const QString &pFileName) PURE;
+    VIRTUAL void fileOpened(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void filePermissionsChanged(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void fileModified(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void fileSaved(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void fileReloaded(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void fileRenamed(const QString &pOldFileName,
+                             const QString &pNewFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void fileClosed(const QString &pFileName) PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

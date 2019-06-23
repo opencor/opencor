@@ -22,29 +22,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update pluginInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual bool definesPluginInterfaces() PURE;
-    virtual bool pluginInterfacesOk(const QString &pFileName,
-                                    QObject *pInstance) PURE;
+    VIRTUAL bool definesPluginInterfaces() PURE_OR_OVERRIDE;
+    VIRTUAL bool pluginInterfacesOk(const QString &pFileName,
+                                    QObject *pInstance) PURE_OR_OVERRIDE;
 
-    virtual void initializePlugin() PURE;
-    virtual void finalizePlugin() PURE;
+    VIRTUAL void initializePlugin() PURE_OR_OVERRIDE;
+    VIRTUAL void finalizePlugin() PURE_OR_OVERRIDE;
 
-    virtual void pluginsInitialized(const Plugins &pLoadedPlugins) PURE;
+    VIRTUAL void pluginsInitialized(const Plugins &pLoadedPlugins) PURE_OR_OVERRIDE;
 
-    virtual void loadSettings(QSettings &pSettings) PURE;
-    virtual void saveSettings(QSettings &pSettings) const PURE;
+    VIRTUAL void loadSettings(QSettings &pSettings) PURE_OR_OVERRIDE;
+    VIRTUAL void saveSettings(QSettings &pSettings) const PURE_OR_OVERRIDE;
 
-    virtual void handleUrl(const QUrl &pUrl) PURE;
+    VIRTUAL void handleUrl(const QUrl &pUrl) PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file
