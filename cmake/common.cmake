@@ -32,8 +32,61 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
     endif()
 
     if(ENABLE_CLANG_TIDY)
+        # The full list of Clang-Tidy checks can be found at
+        # https://clang.llvm.org/extra/clang-tidy/checks/list.html
+
+        set(CLANG_TIDY_CHECKS
+            -*
+            bugprone-*
+            cert-*
+            -cert-err58-cpp
+            cppcoreguidelines-*
+            -cppcoreguidelines-avoid-c-arrays
+            -cppcoreguidelines-avoid-magic-numbers
+            -cppcoreguidelines-macro-usage
+            -cppcoreguidelines-non-private-member-variables-in-classes
+            -cppcoreguidelines-owning-memory
+            -cppcoreguidelines-pro-bounds-array-to-pointer-decay
+            -cppcoreguidelines-pro-bounds-constant-array-index
+            -cppcoreguidelines-pro-bounds-pointer-arithmetic
+            -cppcoreguidelines-pro-type-const-cast
+            -cppcoreguidelines-pro-type-reinterpret-cast
+            -cppcoreguidelines-pro-type-static-cast-downcast
+            -cppcoreguidelines-pro-type-vararg
+            -cppcoreguidelines-special-member-functions
+            fuchsia-*
+            -fuchsia-default-arguments
+            -fuchsia-multiple-inheritance
+            -fuchsia-overloaded-operator
+            -fuchsia-statically-constructed-objects
+            google-*
+            -google-default-arguments
+            -google-runtime-references
+            hicpp-*
+            -hicpp-no-array-decay
+            -hicpp-signed-bitwise
+            -hicpp-special-member-functions
+            -hicpp-vararg
+            llvm-*
+            -llvm-header-guard
+            -llvm-include-order
+            misc-*
+            -misc-non-private-member-variables-in-classes
+            modernize-*
+            -modernize-pass-by-value
+            performance-*
+            readability-*
+            -readability-isolate-declaration
+            -readability-magic-numbers
+        )
+
+        string(REPLACE ";" ","
+               CLANG_TIDY_CHECKS "${CLANG_TIDY_CHECKS}")
+        string(REPLACE "\/" "\\\/"
+               ESCAPED_CMAKE_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+
         set_target_properties(${TARGET_NAME} PROPERTIES
-            CXX_CLANG_TIDY "${CLANG_TIDY}"
+            CXX_CLANG_TIDY "${CLANG_TIDY};-checks=${_CLANG_TIDY_CHECKS};-header-filter=${ESCAPED_CMAKE_SOURCE_DIR}\/src\/.*;-warnings-as-errors=${_CLANG_TIDY_CHECKS}"
         )
     endif()
 endmacro()
