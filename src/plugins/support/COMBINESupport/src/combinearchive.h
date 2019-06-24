@@ -83,7 +83,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CombineArchiveFile> CombineArchiveFiles;
+using CombineArchiveFiles = QList<CombineArchiveFile>;
 
 //==============================================================================
 

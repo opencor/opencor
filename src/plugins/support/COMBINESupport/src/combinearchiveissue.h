@@ -61,7 +61,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CombineArchiveIssue> CombineArchiveIssues;
+using CombineArchiveIssues = QList<CombineArchiveIssue>;
 
 //==============================================================================
 
