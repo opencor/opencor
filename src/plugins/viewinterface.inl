@@ -22,26 +22,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update viewInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual Mode viewMode() const PURE;
-    virtual QStringList viewMimeTypes() const PURE;
-    virtual QString viewMimeType(const QString &pFileName) const PURE;
-    virtual QString viewDefaultFileExtension() const PURE;
+    VIRTUAL Mode viewMode() const PURE_OR_OVERRIDE;
+    VIRTUAL QStringList viewMimeTypes() const PURE_OR_OVERRIDE;
+    VIRTUAL QString viewMimeType(const QString &pFileName) const PURE_OR_OVERRIDE;
+    VIRTUAL QString viewDefaultFileExtension() const PURE_OR_OVERRIDE;
 
-    virtual QWidget * viewWidget(const QString &pFileName) PURE;
-    virtual void removeViewWidget(const QString &pFileName) PURE;
-    virtual QString viewName() const PURE;
+    VIRTUAL QWidget * viewWidget(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL void removeViewWidget(const QString &pFileName) PURE_OR_OVERRIDE;
+    VIRTUAL QString viewName() const PURE_OR_OVERRIDE;
 
-    virtual QIcon fileTabIcon(const QString &pFileName) const PURE;
+    VIRTUAL QIcon fileTabIcon(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

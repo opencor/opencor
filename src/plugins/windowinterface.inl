@@ -22,19 +22,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update windowInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual Qt::DockWidgetArea windowDefaultDockArea() const PURE;
-    virtual QAction * windowAction() const PURE;
-    virtual QDockWidget * windowWidget() const PURE;
+    VIRTUAL Qt::DockWidgetArea windowDefaultDockArea() const PURE_OR_OVERRIDE;
+    VIRTUAL QAction * windowAction() const PURE_OR_OVERRIDE;
+    VIRTUAL QDockWidget * windowWidget() const PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

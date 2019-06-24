@@ -162,7 +162,7 @@ private:
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotGraphRun *> GraphPanelPlotGraphRuns;
+using GraphPanelPlotGraphRuns = QList<GraphPanelPlotGraphRun *>;
 
 //==============================================================================
 
@@ -251,7 +251,7 @@ private:
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotGraph *> GraphPanelPlotGraphs;
+using GraphPanelPlotGraphs = QList<GraphPanelPlotGraph *>;
 
 //==============================================================================
 
@@ -369,7 +369,7 @@ class GraphPanelWidget;
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
+using GraphPanelPlotWidgets = QList<GraphPanelPlotWidget *>;
 
 //==============================================================================
 

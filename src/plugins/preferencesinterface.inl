@@ -22,19 +22,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update preferencesInterfaceVersion() whenever you
     //       update this interface...
 
-    virtual Preferences::PreferencesWidget * preferencesWidget() PURE;
+    VIRTUAL Preferences::PreferencesWidget * preferencesWidget() PURE_OR_OVERRIDE;
 
-    virtual void preferencesChanged(const QStringList &pPluginNames) PURE;
+    VIRTUAL void preferencesChanged(const QStringList &pPluginNames) PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

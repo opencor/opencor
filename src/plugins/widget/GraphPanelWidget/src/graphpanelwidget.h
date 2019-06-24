@@ -69,7 +69,7 @@ class GraphPanelWidget;
 
 //==============================================================================
 
-typedef QList<GraphPanelWidget *> GraphPanelWidgets;
+using GraphPanelWidgets = QList<GraphPanelWidget *>;
 
 //==============================================================================
 

@@ -22,23 +22,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update fileTypeInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual bool isFile(const QString &pFileName) const PURE;
+    VIRTUAL bool isFile(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-    virtual QString mimeType() const PURE;
-    virtual QString fileExtension() const PURE;
-    virtual QString fileTypeDescription() const PURE;
+    VIRTUAL QString mimeType() const PURE_OR_OVERRIDE;
+    VIRTUAL QString fileExtension() const PURE_OR_OVERRIDE;
+    VIRTUAL QString fileTypeDescription() const PURE_OR_OVERRIDE;
 
-    virtual QStringList fileTypeDefaultViews() const PURE;
+    VIRTUAL QStringList fileTypeDefaultViews() const PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

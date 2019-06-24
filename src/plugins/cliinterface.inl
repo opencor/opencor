@@ -22,18 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update cliInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual bool executeCommand(const QString &pCommand,
-                                const QStringList &pArguments, int &pRes) PURE;
+    VIRTUAL bool executeCommand(const QString &pCommand,
+                                const QStringList &pArguments, int &pRes) PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file
