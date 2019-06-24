@@ -114,19 +114,6 @@ Solver::OdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() cons
 
 //==============================================================================
 
-CvodeSolver::CvodeSolver() :
-    mSolver(nullptr),
-    mStatesVector(nullptr),
-    mMatrix(nullptr),
-    mLinearSolver(nullptr),
-    mNonLinearSolver(nullptr),
-    mUserData(nullptr),
-    mInterpolateSolution(InterpolateSolutionDefaultValue)
-{
-}
-
-//==============================================================================
-
 CvodeSolver::~CvodeSolver()
 {
     // Make sure that the solver has been initialised
