@@ -44,7 +44,6 @@ namespace CellMLSupport {
 class CellmlFileExporter : public QObject
 {
 public:
-    explicit CellmlFileExporter();
     ~CellmlFileExporter() override;
 
     bool result() const;
@@ -52,7 +51,7 @@ public:
     QString errorMessage() const;
 
 protected:
-    bool mResult;
+    bool mResult = false;
 
     QString mErrorMessage;
 };
