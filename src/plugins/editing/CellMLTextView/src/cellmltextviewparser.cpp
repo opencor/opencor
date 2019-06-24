@@ -84,18 +84,6 @@ QString CellmlTextViewParserMessage::message() const
 
 //==============================================================================
 
-CellmlTextViewParser::CellmlTextViewParser() :
-    mCellmlVersion(CellMLSupport::CellmlFile::Version::Cellml_1_0),
-    mDomDocument(QDomDocument()),
-    mModelElement(QDomElement()),
-    mMessages(CellmlTextViewParserMessages()),
-    mNamespaces(QMap<QString, QString>()),
-    mStatement(Statement::Unknown)
-{
-}
-
-//==============================================================================
-
 bool CellmlTextViewParser::execute(const QString &pCellmlText,
                                    CellMLSupport::CellmlFile::Version pCellmlVersion)
 {

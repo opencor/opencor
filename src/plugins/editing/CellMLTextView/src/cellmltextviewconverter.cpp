@@ -75,15 +75,7 @@ int CellMLTextViewConverterWarning::columnNumber() const
 
 //==============================================================================
 
-CellMLTextViewConverter::CellMLTextViewConverter() :
-    mLastOutput(Output::None),
-    mErrorLine(0),
-    mErrorColumn(0),
-    mAssignmentDone(false),
-    mOldPiecewiseStatementUsed(false),
-    mPiecewiseStatementUsed(false),
-    mMappings(QMap<QString, QString>()),
-    mMathmlNodes(QMap<QString, MathmlNode>())
+CellMLTextViewConverter::CellMLTextViewConverter()
 {
     // Reset our internals
 
