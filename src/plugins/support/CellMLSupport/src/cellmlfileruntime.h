@@ -121,7 +121,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
+using CellmlFileRuntimeParameters = QList<CellmlFileRuntimeParameter *>;
 
 //==============================================================================
 
@@ -130,10 +130,10 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-    typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    using InitializeConstantsFunction = void (*)(double *CONSTANTS, double *RATES, double *STATES);
+    using ComputeComputedConstantsFunction = void (*)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    using ComputeVariablesFunction = void (*)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    using ComputeRatesFunction = void (*)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime() override;
