@@ -22,20 +22,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+    #define VIRTUAL virtual
+    #define PURE_OR_OVERRIDE = 0
 #else
-    #define PURE
+    #define VIRTUAL
+    #define PURE_OR_OVERRIDE override
 #endif
 
     // Note: make sure to update editingViewInterfaceVersion() whenever you
     //       update this interface...
 
-    virtual EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const PURE;
+    VIRTUAL EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-    virtual bool isEditorWidgetUseable(const QString &pFileName) const PURE;
-    virtual bool isEditorWidgetContentsModified(const QString &pFileName) const PURE;
+    VIRTUAL bool isEditorWidgetUseable(const QString &pFileName) const PURE_OR_OVERRIDE;
+    VIRTUAL bool isEditorWidgetContentsModified(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-#undef PURE
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file
