@@ -57,8 +57,6 @@ class CellMLToolsPlugin : public QObject, public CliInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CellMLToolsPlugin();
-
 #include "cliinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
@@ -72,11 +70,11 @@ private:
 
     QString mFileName;
 
-    QMenu *mCellmlFileExportToMenu;
+    QMenu *mCellmlFileExportToMenu = nullptr;
 
-    QAction *mExportToCellml10Action;
+    QAction *mExportToCellml10Action = nullptr;
 
-    QAction *mExportToUserDefinedFormatAction;
+    QAction *mExportToUserDefinedFormatAction = nullptr;
 
     void exportTo(CellMLSupport::CellmlFile::Version pVersion);
 

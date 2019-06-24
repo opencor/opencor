@@ -60,16 +60,6 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 }
 
 //==============================================================================
-
-CellMLToolsPlugin::CellMLToolsPlugin() :
-    mFileName(QString()),
-    mCellmlFileExportToMenu(nullptr),
-    mExportToCellml10Action(nullptr),
-    mExportToUserDefinedFormatAction(nullptr)
-{
-}
-
-//==============================================================================
 // CLI interface
 //==============================================================================
 

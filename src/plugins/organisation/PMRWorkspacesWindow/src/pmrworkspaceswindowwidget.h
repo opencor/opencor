@@ -129,7 +129,7 @@ private:
 
 //==============================================================================
 
-typedef QList<PmrWorkspacesWindowItem *> PmrWorkspacesWindowItems;
+using PmrWorkspacesWindowItems = QList<PmrWorkspacesWindowItem *>;
 
 //==============================================================================
 
