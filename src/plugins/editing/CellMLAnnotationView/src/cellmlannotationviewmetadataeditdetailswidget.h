@@ -91,7 +91,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlAnnotationViewMetadataEditDetailsItem> CellmlAnnotationViewMetadataEditDetailsItems;
+using CellmlAnnotationViewMetadataEditDetailsItems = QList<CellmlAnnotationViewMetadataEditDetailsItem>;
 
 //==============================================================================
 

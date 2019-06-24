@@ -54,19 +54,6 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
 }
 
 //==============================================================================
-
-CellMLEditingViewPlugin::CellMLEditingViewPlugin() :
-    mEditReformatAction(nullptr),
-    mEditReformatSeparator(nullptr),
-    mToolsCellmlValidationAction(nullptr),
-    mToolsCellmlValidationSeparator(nullptr),
-    mFileName(QString()),
-    mEditor(nullptr),
-    mCellmlEditingViewInterface(nullptr)
-{
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 
