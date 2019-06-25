@@ -86,20 +86,7 @@ static const char *FrenchLocale  = "fr";
 
 MainWindow::MainWindow(const QString &pApplicationDate) :
     mGui(new Ui::MainWindow),
-    mApplicationDate(pApplicationDate),
-    mLoadedPluginPlugins(Plugins()),
-    mLoadedI18nPlugins(Plugins()),
-    mLoadedGuiPlugins(Plugins()),
-    mLoadedPreferencesPlugins(Plugins()),
-    mLoadedWindowPlugins(Plugins()),
-    mCoreInterface(nullptr),
-    mRawLocale(QString()),
-    mMenus(QMap<QString, QMenu *>()),
-    mFileNewMenu(nullptr),
-    mViewWindowsMenu(nullptr),
-    mViewSeparator(nullptr),
-    mDockedWindowsVisible(true),
-    mDockedWindowsState(QByteArray())
+    mApplicationDate(pApplicationDate)
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
