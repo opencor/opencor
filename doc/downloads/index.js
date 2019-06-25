@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> prebuilt third-party libraries are now installed under <a href=\"https://github.com/opencor/opencor/tree/master/ext\"><code>[OpenCOR]/ext</code></a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2126\">#2126</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> properly disable the `Reset All Model Parameters` button (see issue <a href=\"https://github.com/opencor/opencor/issues/2116\">#2116</a>). Fixed an issue with the plotting of simulation data being potentially (very) choppy (see issue <a href=\"https://github.com/opencor/opencor/issues/2118\">#2118</a>)." }
                      ]
                    },
