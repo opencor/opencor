@@ -53,7 +53,6 @@ namespace DataStore {
 
 DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     mCapacity(pCapacity),
-    mSize(0),
     mValue(pValue)
 {
     // Create our array of values

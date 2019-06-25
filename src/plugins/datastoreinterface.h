@@ -51,11 +51,11 @@ public:
     double * values() const;
 
 private:
-    quint64 mCapacity;
-    quint64 mSize;
+    quint64 mCapacity = 0;
+    quint64 mSize = 0;
 
-    double *mValue;
-    double *mValues;
+    double *mValue = nullptr;
+    double *mValues = nullptr;
 };
 
 //==============================================================================
@@ -108,7 +108,7 @@ private:
     QString mName;
     QString mUnit;
 
-    double *mValue;
+    double *mValue = nullptr;
 
     DataStoreVariableRuns mRuns;
 };
@@ -174,16 +174,16 @@ public:
 private:
     bool mValid = true;
 
-    DataStore *mImportDataStore;
-    DataStore *mResultsDataStore;
+    DataStore *mImportDataStore = nullptr;
+    DataStore *mResultsDataStore = nullptr;
 
     QStringList mHierarchy;
 
-    int mNbOfVariables;
-    quint64 mNbOfDataPoints;
+    int mNbOfVariables = 0;
+    quint64 mNbOfDataPoints = 0;
 
-    double *mImportValues;
-    double *mResultsValues;
+    double *mImportValues = nullptr;
+    double *mResultsValues = nullptr;
 
     DataStoreVariables mImportVariables;
     DataStoreVariables mResultsVariables;
@@ -191,7 +191,7 @@ private:
     QList<quint64> mRunSizes;
 
     quint64 mProgress = 0;
-    double mOneOverTotalProgress;
+    double mOneOverTotalProgress = 0.0;
 };
 
 //==============================================================================
@@ -210,7 +210,7 @@ public:
     DataStoreVariables variables() const;
 
 private:
-    DataStore *mDataStore;
+    DataStore *mDataStore = nullptr;
 
     DataStoreVariables mVariables;
 };
@@ -248,7 +248,7 @@ public:
 private:
     QString mUri;
 
-    DataStoreVariable *mVoi;
+    DataStoreVariable *mVoi = nullptr;
     DataStoreVariables mVariables;
 };
 
@@ -262,7 +262,7 @@ public:
     explicit DataStoreImporterWorker(DataStoreImportData *pImportData);
 
 protected:
-    DataStoreImportData *mImportData;
+    DataStoreImportData *mImportData = nullptr;
 
 signals:
     void progress(DataStoreImportData *pImportData, double pProgress);
@@ -299,7 +299,7 @@ public:
     explicit DataStoreExporterWorker(DataStoreExportData *pDataStoreData);
 
 protected:
-    DataStoreExportData *mDataStoreData;
+    DataStoreExportData *mDataStoreData = nullptr;
 
 signals:
     void progress(DataStoreExportData *pDataStoreData, double pProgress);
