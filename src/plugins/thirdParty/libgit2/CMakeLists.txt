@@ -189,6 +189,9 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libgit2plugin.cpp
+    PLUGINS
+        OpenSSL
+        zlib
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
