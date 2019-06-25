@@ -863,7 +863,7 @@ macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
 
     # The full path to the package's files
 
-    string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
            DIRNAME "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
     # Remove any historical package archive

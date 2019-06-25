@@ -22,7 +22,7 @@ set(WHEEL_GIT_TAG "0.31.0")
 
 # Specify where our local package will be installed
 
-string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
        FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Set the ABI flag and version identifier
@@ -363,7 +363,7 @@ else()
         # _freeze_importlib.exe, which is run as part of the Python build, needs
         # our zlib DLL
 
-        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        string(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
                ZLIB_DLL "${ZLIB_LIBRARY}")
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyZlib
@@ -375,9 +375,9 @@ else()
         # import libraries and we must use our DLLs when we run Python in
         # subsequent steps below
 
-        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        string(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
                OPENSSL_CRYPTO_DLL "${OPENSSL_CRYPTO_LIBRARY}")
-        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        string(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
                OPENSSL_SSL_DLL "${OPENSSL_SSL_LIBRARY}")
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
