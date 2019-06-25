@@ -298,7 +298,7 @@ macro(add_plugin PLUGIN_NAME)
             # Link the plugin to the external library
 
             if(WIN32)
-                string(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                string(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                        IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                 target_link_libraries(${PROJECT_NAME}
@@ -478,7 +478,7 @@ macro(add_plugin PLUGIN_NAME)
                         set(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
                         if(WIN32)
-                            string(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                            string(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                                    IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                             target_link_libraries(${TEST_NAME}
@@ -863,7 +863,7 @@ macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
 
     # The full path to the package's files
 
-    string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
            DIRNAME "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
     # Remove any historical package archive
