@@ -872,8 +872,8 @@ if(ENABLE_TEST_PLUGINS)
 endif()
 
 set(PLUGINS
-    thirdParty/zlib
     thirdParty/OpenSSL
+    thirdParty/zlib
 
     thirdParty/libSBML
     thirdParty/Python
