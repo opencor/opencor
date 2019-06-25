@@ -91,7 +91,7 @@ private:
 
 //==============================================================================
 
-typedef QList<SimulationIssue> SimulationIssues;
+using SimulationIssues = QList<SimulationIssue>;
 
 //==============================================================================
 
@@ -275,7 +275,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationImportData : public SimulationObject
 
 public:
     explicit SimulationImportData(Simulation *pSimulation);
-    ~SimulationImportData();
+    ~SimulationImportData() override;
 
     DataStore::DataStore * addDataStore();
 
