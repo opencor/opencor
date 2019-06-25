@@ -298,7 +298,7 @@ macro(add_plugin PLUGIN_NAME)
             # Link the plugin to the external library
 
             if(WIN32)
-                string(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                string(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                        IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                 target_link_libraries(${PROJECT_NAME}
@@ -478,7 +478,7 @@ macro(add_plugin PLUGIN_NAME)
                         set(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
                         if(WIN32)
-                            string(REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+                            string(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                                    IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                             target_link_libraries(${TEST_NAME}
