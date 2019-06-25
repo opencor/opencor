@@ -77,7 +77,7 @@ public:
     DataStoreVariables selectedData() const;
 
 private:
-    Ui::DataStoreDialog *mGui;
+    Ui::DataStoreDialog *mGui = nullptr;
 
     QStandardItemModel *mModel;
 

@@ -63,7 +63,7 @@ public:
     void saveSettings(QSettings &pSettings) const override;
 
 private:
-    Ui::WebBrowserWindowWindow *mGui;
+    Ui::WebBrowserWindowWindow *mGui = nullptr;
 
     WebBrowserWindowWidget *mWebBrowserWindowWidget;
 

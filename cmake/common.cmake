@@ -33,7 +33,7 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
 
     if(ENABLE_CLANG_TIDY)
         set_target_properties(${TARGET_NAME} PROPERTIES
-            CXX_CLANG_TIDY "${CLANG_TIDY};-header-filter=\\\.\\\.\\\/src\\\/.*;-line-filter=[{'name':'.h'},{'name':'diff_match_patch.h','lines':[[9999999,9999999]]},{'name':'qzipreader_p.h','lines':[[9999999,9999999]]}]"
+            CXX_CLANG_TIDY "${CLANG_TIDY};-header-filter=\\\.\\\.\\\/src\\\/.*;-line-filter=[{'name':'diff_match_patch.h','lines':[[9999999,9999999]]},{'name':'qzipreader_p.h','lines':[[9999999,9999999]]},{'name':'.h'}]"
         )
     endif()
 endmacro()

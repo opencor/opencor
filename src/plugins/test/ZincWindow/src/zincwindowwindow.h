@@ -68,7 +68,7 @@ public:
     void retranslateUi() override;
 
 private:
-    Ui::ZincWindowWindow *mGui;
+    Ui::ZincWindowWindow *mGui = nullptr;
 
     ZincWidget::ZincWidget *mZincWidget;
     OpenCMISS::Zinc::Context *mZincContext;

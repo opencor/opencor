@@ -77,7 +77,7 @@ protected:
     void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
-    Ui::PmrWindowWindow *mGui;
+    Ui::PmrWindowWindow *mGui = nullptr;
 
     QLabel *mFilterLabel;
     QLineEdit *mFilterValue;

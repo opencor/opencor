@@ -90,7 +90,7 @@ protected:
     void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
-    Ui::EditorWidgetFindReplaceWidget *mGui;
+    Ui::EditorWidgetFindReplaceWidget *mGui = nullptr;
 
     EditorWidget *mOwner;
 

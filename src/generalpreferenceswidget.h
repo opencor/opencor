@@ -67,7 +67,7 @@ public:
     void savePreferences() override;
 
 private:
-    Ui::GeneralPreferencesWidget *mGui;
+    Ui::GeneralPreferencesWidget *mGui = nullptr;
 
     QString mStyle;
 };

@@ -66,7 +66,7 @@ public:
     void saveSettings(QSettings &pSettings) const override;
 
 private:
-    Ui::FileOrganiserWindowWindow *mGui;
+    Ui::FileOrganiserWindowWindow *mGui = nullptr;
 
     FileOrganiserWindowWidget *mFileOrganiserWindowWidget;
 

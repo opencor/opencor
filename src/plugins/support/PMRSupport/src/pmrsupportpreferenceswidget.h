@@ -66,7 +66,7 @@ public:
     void savePreferences() override;
 
 private:
-    Ui::PmrSupportPreferencesWidget *mGui;
+    Ui::PmrSupportPreferencesWidget *mGui = nullptr;
 
     QString mPmrUrl;
     QString mName;

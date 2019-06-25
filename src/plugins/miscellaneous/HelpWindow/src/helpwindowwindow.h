@@ -63,7 +63,7 @@ public:
     void saveSettings(QSettings &pSettings) const override;
 
 private:
-    Ui::HelpWindowWindow *mGui;
+    Ui::HelpWindowWindow *mGui = nullptr;
 
     HelpWindowWidget *mHelpWindowWidget;
 

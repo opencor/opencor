@@ -100,7 +100,7 @@ public:
     QStringList pluginNames() const;
 
 private:
-    Ui::PreferencesDialog *mGui;
+    Ui::PreferencesDialog *mGui = nullptr;
 
     PluginManager *mPluginManager;
 

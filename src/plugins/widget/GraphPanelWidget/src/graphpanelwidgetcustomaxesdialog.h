@@ -60,7 +60,7 @@ public:
     double maxY() const;
 
 private:
-    Ui::GraphPanelWidgetCustomAxesDialog *mGui;
+    Ui::GraphPanelWidgetCustomAxesDialog *mGui = nullptr;
 
     void checkValue(QLineEdit *pValue);
 
