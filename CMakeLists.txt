@@ -274,26 +274,14 @@ set(PLATFORM_DIR ${PLATFORM})
 
 if(WIN32)
     if(RELEASE_MODE)
-        set(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
-        set(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
-
-        set(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/release)
-        set(LOCAL_EXTERNAL_PACKAGE_DIR ext/release)
+        set(EXTERNAL_PACKAGE_DIR release)
     else()
-        set(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
-        set(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
-
-        set(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/debug)
-        set(LOCAL_EXTERNAL_PACKAGE_DIR ext/debug)
+        set(EXTERNAL_PACKAGE_DIR debug)
     endif()
 
     set(DEST_EXTERNAL_BINARIES_DIR bin)
 else()
-    set(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
-    set(LOCAL_EXTERNAL_BINARIES_DIR bin)
-
-    set(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR})
-    set(LOCAL_EXTERNAL_PACKAGE_DIR ext)
+    set(EXTERNAL_PACKAGE_DIR .)
 
     if(APPLE)
         set(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
@@ -872,8 +860,8 @@ if(ENABLE_TEST_PLUGINS)
 endif()
 
 set(PLUGINS
-    thirdParty/zlib
     thirdParty/OpenSSL
+    thirdParty/zlib
 
     thirdParty/libSBML
     thirdParty/Python
@@ -962,7 +950,7 @@ foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
 
     if("${PLUGIN}" MATCHES "^thirdParty/.*$")
-        include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR}/include)
+        include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
     endif()
 
     include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
