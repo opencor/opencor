@@ -84,9 +84,9 @@ public:
     void setMenu(QMenu *pMenu);
 
 private:
-    bool mCollapsed;
+    bool mCollapsed = false;
 
-    bool mLastHeader;
+    bool mLastHeader = false;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -95,7 +95,7 @@ private:
     CollapsibleHeaderTitleWidget *mTitle;
     QToolButton *mMenu;
 
-    QMenu *mMenuMenu;
+    QMenu *mMenuMenu = nullptr;
 
     void updateBottomSeparatorVisibleStatus();
 

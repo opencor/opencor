@@ -74,7 +74,7 @@ public:
     void addViewPlugin(Plugin *pViewPlugin);
 
 private:
-    bool mEnabled;
+    bool mEnabled = false;
 
     TabBarWidget *mViewTabs;
 
@@ -132,7 +132,7 @@ private:
         Stopping
     };
 
-    State mState;
+    State mState = State::Starting;
 
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;

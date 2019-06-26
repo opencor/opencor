@@ -84,10 +84,10 @@ public:
     bool validate(const QString &pFileName, bool pOnlyErrors = false) const;
 
 private:
-    bool mNeedLoadingSettings;
+    bool mNeedLoadingSettings = true;
     QString mSettingsGroup;
 
-    SEDMLEditingView::SedmlEditingViewWidget *mEditingWidget;
+    SEDMLEditingView::SedmlEditingViewWidget *mEditingWidget = nullptr;
     QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *> mEditingWidgets;
 };
 

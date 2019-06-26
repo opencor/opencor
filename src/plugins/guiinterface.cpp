@@ -44,7 +44,6 @@ namespace Gui {
 
 Menu::Menu(Type pType, QMenu *pMenu) :
     mType(pType),
-    mAction(nullptr),
     mMenu(pMenu)
 {
 }

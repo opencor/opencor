@@ -44,9 +44,7 @@ namespace Core {
 //==============================================================================
 
 CommonWidget::CommonWidget(QWidget *pParent) :
-    mParent(pParent),
-    mBusyWidget(nullptr),
-    mCounter(0)
+    mParent(pParent)
 {
 }
 

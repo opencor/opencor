@@ -63,7 +63,7 @@ public:
 
 private:
     Type mType;
-    QAction *mAction;
+    QAction *mAction = nullptr;
     QMenu *mMenu;
 };
 

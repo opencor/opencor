@@ -53,7 +53,7 @@ protected:
     void paintEvent(QPaintEvent *pEvent) override;
 
 private:
-    double mValue;
+    double mValue = 0.0;
 };
 
 //==============================================================================

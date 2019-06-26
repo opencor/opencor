@@ -73,10 +73,10 @@ public:
     QList<QWidget *> statusBarWidgets() const override;
 
 private:
-    bool mNeedLoadingSettings;
+    bool mNeedLoadingSettings = true;
     QString mSettingsGroup;
 
-    EditorWidget::EditorWidget *mEditor;
+    EditorWidget::EditorWidget *mEditor = nullptr;
     QMap<QString, EditorWidget::EditorWidget *> mEditors;
 };
 
