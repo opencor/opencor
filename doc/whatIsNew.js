@@ -15,6 +15,15 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "fixed", "description": "Reading a <a href=\"https://www.cellml.org/\">CellML</a> file that has no <a href=\"https://www.w3.org/XML/\">XML</a> processing instruction." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Organisation",
                          "entries": [
                            { "type": "subCategory", "name": "PMR Workspaces window",
