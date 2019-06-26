@@ -156,7 +156,7 @@ protected:
 private:
     GraphPanelPlotGraph *mOwner;
 
-    int mSize;
+    int mSize = 0;
     QList<QPair<int, int>> mValidData;
 };
 
@@ -228,7 +228,7 @@ public:
     QRectF boundingLogRect();
 
 private:
-    bool mSelected;
+    bool mSelected = true;
 
     QString mFileName;
 
@@ -243,9 +243,9 @@ private:
     QRectF mBoundingLogRect;
     QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
 
-    GraphPanelPlotWidget *mPlot;
+    GraphPanelPlotWidget *mPlot = nullptr;
 
-    GraphPanelPlotGraphRun *mDummyRun;
+    GraphPanelPlotGraphRun *mDummyRun = nullptr;
     GraphPanelPlotGraphRuns mRuns;
 };
 
@@ -346,7 +346,7 @@ protected:
 private:
     GraphPanelPlotWidget *mOwner;
 
-    bool mActive;
+    bool mActive = false;
 
     int mFontSize;
     QColor mBackgroundColor;
@@ -354,7 +354,7 @@ private:
 
     QMap<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
 
-    int mSizeHintWidth;
+    int mSizeHintWidth = 0;
 
 signals:
     void graphToggled(GraphPanelPlotGraph *pGraph);

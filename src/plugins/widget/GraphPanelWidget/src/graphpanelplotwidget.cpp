@@ -185,9 +185,7 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 //==============================================================================
 
 GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
-    mOwner(pOwner),
-    mSize(0),
-    mValidData(QList<QPair<int, int>>())
+    mOwner(pOwner)
 {
     // Customise ourselves a bit
 
@@ -313,17 +311,10 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
                                          GraphPanelWidget *pOwner) :
-    mSelected(true),
-    mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY),
     mBoundingRect(InvalidRect),
-    mBoundingRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
-    mBoundingLogRect(InvalidRect),
-    mBoundingLogRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
-    mPlot(nullptr),
-    mDummyRun(nullptr),
-    mRuns(GraphPanelPlotGraphRuns())
+    mBoundingLogRect(InvalidRect)
 {
     // Determine our default colour
 
@@ -902,9 +893,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
 
 GraphPanelPlotOverlayWidget::GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *pParent) :
     QWidget(pParent),
-    mOwner(pParent),
-    mOriginPoint(QPoint()),
-    mPoint(QPoint())
+    mOwner(pParent)
 {
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -1219,12 +1208,9 @@ void GraphPanelPlotScaleWidget::updateLayout()
 GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent) :
     QwtLegend(pParent),
     mOwner(pParent),
-    mActive(false),
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
-    mForegroundColor(pParent->surroundingAreaForegroundColor()),
-    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>()),
-    mSizeHintWidth(0)
+    mForegroundColor(pParent->surroundingAreaForegroundColor())
 {
     // Have our legend items use as much horizontal space as possible
 
