@@ -363,7 +363,7 @@ else()
         # _freeze_importlib.exe, which is run as part of the Python build, needs
         # our zlib DLL
 
-        string(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
                ZLIB_DLL "${ZLIB_LIBRARY}")
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyZlib
@@ -375,9 +375,9 @@ else()
         # import libraries and we must use our DLLs when we run Python in
         # subsequent steps below
 
-        string(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
                OPENSSL_CRYPTO_DLL "${OPENSSL_CRYPTO_LIBRARY}")
-        string(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        string(REGEX REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}$" "${CMAKE_SHARED_LIBRARY_SUFFIX}"
                OPENSSL_SSL_DLL "${OPENSSL_SSL_LIBRARY}")
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
