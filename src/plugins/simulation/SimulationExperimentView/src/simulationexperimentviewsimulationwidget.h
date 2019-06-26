@@ -193,8 +193,8 @@ private:
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
-    int mProgress;
-    bool mLockedDevelopmentMode;
+    int mProgress = -1;
+    bool mLockedDevelopmentMode = false;
 
     Core::ToolBarWidget *mToolBarWidget;
 
@@ -230,16 +230,16 @@ private:
 
     SimulationExperimentViewContentsWidget *mContentsWidget;
 
-    bool mRunActionEnabled;
+    bool mRunActionEnabled = true;
 
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
     QString mOutputMessage;
 
-    Error mError;
+    Error mError = Error::General;
 
-    bool mValidSimulationEnvironment;
+    bool mValidSimulationEnvironment = false;
 
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
 
@@ -248,17 +248,17 @@ private:
     QMap<Core::PropertyEditorWidget *, QVariantList> mGraphPanelProperties;
     QMap<Core::PropertyEditorWidget *, QVariantList> mGraphsProperties;
 
-    bool mSimulationPropertiesModified;
-    bool mSolversPropertiesModified;
+    bool mSimulationPropertiesModified = false;
+    bool mSolversPropertiesModified = false;
     QMap<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
     QMap<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
 
     QIntList mGraphPanelsWidgetSizes;
-    bool mGraphPanelsWidgetSizesModified;
+    bool mGraphPanelsWidgetSizesModified = false;
 
-    bool mCanUpdatePlotsForUpdatedGraphs;
+    bool mCanUpdatePlotsForUpdatedGraphs = true;
 
-    bool mNeedUpdatePlots;
+    bool mNeedUpdatePlots = false;
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
