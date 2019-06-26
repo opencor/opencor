@@ -82,21 +82,21 @@ public:
 private:
     CellMLAnnotationViewPlugin *mPlugin;
 
-    Core::BorderedWidget *mBorderedCategoryMessage;
     Core::UserMessageWidget *mCategoryMessage;
+    Core::BorderedWidget *mBorderedCategoryMessage;
 
-    Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
     Core::UserMessageWidget *mUnsupportedMetadataMessage;
+    Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
 
     Core::SplitterWidget *mSplitter;
-
-    Core::BorderedWidget *mBorderedMetadataEditDetails;
-    Core::BorderedWidget *mBorderedMetadataViewDetails;
-    Core::BorderedWidget *mBorderedWebViewer;
 
     CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     WebViewerWidget::WebViewerWidget *mWebViewer;
+
+    Core::BorderedWidget *mBorderedMetadataEditDetails;
+    Core::BorderedWidget *mBorderedMetadataViewDetails;
+    Core::BorderedWidget *mBorderedWebViewer;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
