@@ -56,10 +56,7 @@ namespace PMRSupport {
 PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
                                            PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
-    mPmrWebService(pPmrWebService),
-    mPmrAuthentication(nullptr),
-    mWebViewerDialog(nullptr),
-    mWebViewerDialogUsed(false)
+    mPmrWebService(pPmrWebService)
 {
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)

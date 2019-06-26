@@ -47,8 +47,6 @@ class ForwardEulerSolver : public OpenCOR::Solver::OdeSolver
     Q_OBJECT
 
 public:
-    explicit ForwardEulerSolver();
-
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
                     double *pRates, double *pStates, double *pAlgebraic,
                     ComputeRatesFunction pComputeRates) override;
@@ -56,7 +54,7 @@ public:
     void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
-    double mStep;
+    double mStep = StepDefaultValue;
 };
 
 //==============================================================================

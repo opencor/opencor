@@ -44,12 +44,7 @@ EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
                                                    EditorWidget *pParent) :
     QScintillaWidget::QScintillaWidget(pLexer, pParent),
     mOwner(pParent),
-    mFindReplace(pFindReplace),
-    mReadOnlyStyles(QIntList()),
-    mHighlightedLines(QIntSet()),
-    mTexts(QStringList()),
-    mLine(0),
-    mColumn(0)
+    mFindReplace(pFindReplace)
 {
     // Use our own vertical scroll bar for our editor, so that we can show the
     // position of our highlighting

@@ -43,10 +43,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          ModelQualifier pModelQualifier,
                                          BioQualifier pBioQualifier,
                                          const QString &pResource,
-                                         const QString &pId) :
-    mSubject(nullptr),
-    mPredicate(nullptr),
-    mObject(nullptr)
+                                         const QString &pId)
 {
     mCellmlFile = pCellmlFile;
 
@@ -446,8 +443,7 @@ QString CellmlFileRdfTriple::id() const
 //==============================================================================
 
 CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
-    mCellmlFile(pCellmlFile),
-    mOriginalRdfTriples(QStringList())
+    mCellmlFile(pCellmlFile)
 {
 }
 

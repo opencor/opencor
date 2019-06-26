@@ -38,11 +38,7 @@ namespace GraphPanelWidget {
 //==============================================================================
 
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
-    Core::SplitterWidget(pParent),
-    mGraphPanels(GraphPanelWidgets()),
-    mActiveGraphPanel(nullptr),
-    mInternalSizes(QIntList()),
-    mUseInternalSizes(true)
+    Core::SplitterWidget(pParent)
 {
     // Set our orientation
 

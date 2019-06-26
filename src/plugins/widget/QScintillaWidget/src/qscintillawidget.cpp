@@ -46,10 +46,7 @@ namespace QScintillaWidget {
 //==============================================================================
 
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
-    QsciScintilla(pParent),
-    mHandleChanges(true),
-    mCanSelectAll(false),
-    mInsertMode(true)
+    QsciScintilla(pParent)
 {
     // Customise ourselves
 

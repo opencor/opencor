@@ -68,7 +68,7 @@ private:
     QString mUrl;
     QString mName;
 
-    PmrWorkspace *mWorkspace;
+    PmrWorkspace *mWorkspace = nullptr;
 
     QStringList mExposureFiles;
 };

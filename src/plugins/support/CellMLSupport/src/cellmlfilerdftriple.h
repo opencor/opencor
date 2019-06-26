@@ -138,9 +138,9 @@ private:
 
     ObjRef<iface::rdf_api::Triple> mRdfTriple;
 
-    CellmlFileRdfTripleElement *mSubject;
-    CellmlFileRdfTripleElement *mPredicate;
-    CellmlFileRdfTripleElement *mObject;
+    CellmlFileRdfTripleElement *mSubject = nullptr;
+    CellmlFileRdfTripleElement *mPredicate = nullptr;
+    CellmlFileRdfTripleElement *mObject = nullptr;
 
     Type mType;
 

@@ -88,8 +88,8 @@ private:
 
     QStringList mTexts;
 
-    int mLine;
-    int mColumn;
+    int mLine = 0;
+    int mColumn = 0;
 
     void processAll(Action pAction);
 

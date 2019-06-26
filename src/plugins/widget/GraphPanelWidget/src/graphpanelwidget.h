@@ -109,7 +109,7 @@ private:
     QFrame *mMarker;
     GraphPanelPlotWidget *mPlot;
 
-    bool mActive;
+    bool mActive = false;
 
     void updateMarkerColor();
 

@@ -57,11 +57,7 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mRdfTriples(CellmlFileRdfTriples(this)),
-    mLoadingNeeded(true),
-    mFullInstantiationNeeded(true),
-    mDependenciesNeeded(true),
-    mUpdated(false)
+    mRdfTriples(CellmlFileRdfTriples(this))
 {
     // Reset ourselves
 

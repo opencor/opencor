@@ -100,7 +100,7 @@ private:
     QAction *mWholeWordsOnlyAction;
     QAction *mRegularExpressionAction;
 
-    bool mActive;
+    bool mActive = false;
 
     void updateHeight();
     void updateStyleSheet();

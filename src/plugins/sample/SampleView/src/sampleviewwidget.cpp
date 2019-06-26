@@ -42,8 +42,7 @@ namespace SampleView {
 
 SampleViewWidget::SampleViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::SampleViewWidget),
-    mFileName(QString())
+    mGui(new Ui::SampleViewWidget)
 {
     // Delete the layout that comes with ViewWidget
 

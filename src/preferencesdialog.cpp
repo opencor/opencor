@@ -139,12 +139,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
                                      QWidget *pParent) :
     Dialog(pParent),
     mGui(new Ui::PreferencesDialog()),
-    mPluginManager(pPluginManager),
-    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
-    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
-    mItemPreferencesWidgets(QMap<QStandardItem *, Preferences::PreferencesWidget *>()),
-    mPreferencesWidgetPluginNames(QMap<Preferences::PreferencesWidget *, QString>()),
-    mPluginNames(QStringList())
+    mPluginManager(pPluginManager)
 {
     // Customise our settings
 
