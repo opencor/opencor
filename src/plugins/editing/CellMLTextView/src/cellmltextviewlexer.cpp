@@ -32,10 +32,7 @@ namespace CellMLTextView {
 //==============================================================================
 
 CellmlTextViewLexer::CellmlTextViewLexer(QObject *pParent) :
-    QsciLexerCustom(pParent),
-    mFullText(QString()),
-    mFullTextUtf8(QByteArray()),
-    mEolString(QString())
+    QsciLexerCustom(pParent)
 {
 }
 
