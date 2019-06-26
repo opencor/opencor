@@ -51,11 +51,11 @@ public:
     double * values() const;
 
 private:
-    quint64 mCapacity = 0;
+    quint64 mCapacity;
     quint64 mSize = 0;
 
-    double *mValue = nullptr;
-    double *mValues = nullptr;
+    double *mValue;
+    double *mValues;
 };
 
 //==============================================================================
@@ -108,7 +108,7 @@ private:
     QString mName;
     QString mUnit;
 
-    double *mValue = nullptr;
+    double *mValue;
 
     DataStoreVariableRuns mRuns;
 };
@@ -174,16 +174,16 @@ public:
 private:
     bool mValid = true;
 
-    DataStore *mImportDataStore = nullptr;
-    DataStore *mResultsDataStore = nullptr;
+    DataStore *mImportDataStore;
+    DataStore *mResultsDataStore;
 
     QStringList mHierarchy;
 
-    int mNbOfVariables = 0;
-    quint64 mNbOfDataPoints = 0;
+    int mNbOfVariables;
+    quint64 mNbOfDataPoints;
 
-    double *mImportValues = nullptr;
-    double *mResultsValues = nullptr;
+    double *mImportValues;
+    double *mResultsValues;
 
     DataStoreVariables mImportVariables;
     DataStoreVariables mResultsVariables;
@@ -191,7 +191,7 @@ private:
     QList<quint64> mRunSizes;
 
     quint64 mProgress = 0;
-    double mOneOverTotalProgress = 0.0;
+    double mOneOverTotalProgress;
 };
 
 //==============================================================================

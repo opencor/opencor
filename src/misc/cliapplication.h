@@ -54,7 +54,7 @@ public:
     bool run(int &pRes);
 
 private:
-    QCoreApplication *mCliApplication = nullptr;
+    QCoreApplication *mCliApplication;
 
     PluginManager *mPluginManager = nullptr;
 

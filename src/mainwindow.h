@@ -83,7 +83,7 @@ private:
 
     QString mApplicationDate;
 
-    PluginManager *mPluginManager = nullptr;
+    PluginManager *mPluginManager;
 
     Plugins mLoadedPluginPlugins;
     Plugins mLoadedI18nPlugins;
