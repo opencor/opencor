@@ -103,14 +103,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
                                                                            QTimer *pTimer,
                                                                            QWidget *pParent) :
     Core::Dialog(pParent),
-    mWorkspace(pWorkspace),
-    mSha1s(QMap<QString, QString>()),
-    mDiffHtmls(QMap<QString, QString>()),
-    mCellmlDiffHtmls(QMap<QString, QString>()),
-    mNbOfCheckableFiles(0),
-    mPreviouslySelectedIndexes(QModelIndexList()),
-    mInvalidCellmlCode(QStringList()),
-    mNeedUpdateDiffInformation(false)
+    mWorkspace(pWorkspace)
 {
     // Customise our settings
 

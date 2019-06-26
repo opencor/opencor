@@ -141,13 +141,13 @@ private:
     QMap<QString, QString> mDiffHtmls;
     QMap<QString, QString> mCellmlDiffHtmls;
 
-    int mNbOfCheckableFiles;
+    int mNbOfCheckableFiles = 0;
 
     QModelIndexList mPreviouslySelectedIndexes;
 
     QStringList mInvalidCellmlCode;
 
-    bool mNeedUpdateDiffInformation;
+    bool mNeedUpdateDiffInformation = false;
 
     PmrWorkspacesWindowSynchronizeDialogItems populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 

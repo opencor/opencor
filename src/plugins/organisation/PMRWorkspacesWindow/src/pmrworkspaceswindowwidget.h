@@ -194,11 +194,11 @@ private:
     QMap<QString, QString> mClonedWorkspaceFolderUrls;
     QMap<QString, QPair<QString, bool>> mWorkspaceUrlFoldersOwned;
 
-    bool mInitialized;
+    bool mInitialized = false;
 
-    Message mMessage;
+    Message mMessage = Message::None;
     QString mString;
-    bool mAuthenticated;
+    bool mAuthenticated = false;
 
     QTimer *mTimer;
 
