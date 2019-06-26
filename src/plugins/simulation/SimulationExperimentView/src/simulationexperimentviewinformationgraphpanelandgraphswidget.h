@@ -114,18 +114,18 @@ public:
     void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
 private:
-    Mode mMode;
+    Mode mMode = Mode::Graphs;
 
     SimulationExperimentViewWidget *mViewWidget;
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
-    SimulationSupport::Simulation *mSimulation;
+    SimulationSupport::Simulation *mSimulation = nullptr;
 
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
-    Core::PropertyEditorWidget *mGraphPanelPropertyEditor;
-    Core::PropertyEditorWidget *mGraphsPropertyEditor;
+    Core::PropertyEditorWidget *mGraphPanelPropertyEditor = nullptr;
+    Core::PropertyEditorWidget *mGraphsPropertyEditor = nullptr;
 
     QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
@@ -148,7 +148,7 @@ private:
 
     QMap<QString, QString> mRenamedModelListValues;
 
-    QMenu *mImportMenu;
+    QMenu *mImportMenu = nullptr;
 
     void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
 
