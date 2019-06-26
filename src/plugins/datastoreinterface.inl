@@ -21,14 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Data store interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define VIRTUAL virtual
-    #define PURE_OR_OVERRIDE = 0
-#else
-    #define VIRTUAL
-    #define PURE_OR_OVERRIDE override
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update dataStoreInterfaceVersion() whenever you update
     //       this interface...
 
@@ -44,9 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     VIRTUAL DataStore::DataStoreImporter * dataStoreImporterInstance() const PURE_OR_OVERRIDE;
     VIRTUAL DataStore::DataStoreExporter * dataStoreExporterInstance() const PURE_OR_OVERRIDE;
-
-#undef VIRTUAL
-#undef PURE_OR_OVERRIDE
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

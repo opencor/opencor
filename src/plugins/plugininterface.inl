@@ -21,14 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Plugin interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define VIRTUAL virtual
-    #define PURE_OR_OVERRIDE = 0
-#else
-    #define VIRTUAL
-    #define PURE_OR_OVERRIDE override
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update pluginInterfaceVersion() whenever you update
     //       this interface...
 
@@ -45,9 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     VIRTUAL void saveSettings(QSettings &pSettings) const PURE_OR_OVERRIDE;
 
     VIRTUAL void handleUrl(const QUrl &pUrl) PURE_OR_OVERRIDE;
-
-#undef VIRTUAL
-#undef PURE_OR_OVERRIDE
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

@@ -18,18 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Editing view interface
+// Interface end
 //==============================================================================
 
-#include "interfacebegin.h"
-    // Note: make sure to update cellmlEditingViewInterfaceVersion() whenever
-    //       you update this interface...
-
-    VIRTUAL void reformat(const QString &pFileName) const PURE_OR_OVERRIDE;
-
-    VIRTUAL bool validCellml(const QString &pFileName,
-                             QString &pExtra) const PURE_OR_OVERRIDE;
-#include "interfaceend.h"
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

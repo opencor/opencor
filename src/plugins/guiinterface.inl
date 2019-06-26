@@ -21,14 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // GUI interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define VIRTUAL virtual
-    #define PURE_OR_OVERRIDE = 0
-#else
-    #define VIRTUAL
-    #define PURE_OR_OVERRIDE override
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update guiInterfaceVersion() whenever you update this
     //       interface...
 
@@ -36,9 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     VIRTUAL Gui::Menus guiMenus() const PURE_OR_OVERRIDE;
     VIRTUAL Gui::MenuActions guiMenuActions() const PURE_OR_OVERRIDE;
-
-#undef VIRTUAL
-#undef PURE_OR_OVERRIDE
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

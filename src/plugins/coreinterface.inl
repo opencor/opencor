@@ -21,14 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Core interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define VIRTUAL virtual
-    #define PURE_OR_OVERRIDE = 0
-#else
-    #define VIRTUAL
-    #define PURE_OR_OVERRIDE override
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update coreInterfaceVersion() whenever you update this
     //       interface...
 
@@ -39,9 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     VIRTUAL void openFile(const QString &pFileNameOrUrl) PURE_OR_OVERRIDE;
 
     VIRTUAL bool canClose() PURE_OR_OVERRIDE;
-
-#undef VIRTUAL
-#undef PURE_OR_OVERRIDE
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file
