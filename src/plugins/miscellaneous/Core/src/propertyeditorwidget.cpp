@@ -516,15 +516,9 @@ Property * PropertyItem::owner() const
 Property::Property(Type pType, PropertyEditorWidget *pParent) :
     mOwner(pParent),
     mType(pType),
-    mId(QString()),
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
-    mUnit(pParent->showUnits()?new PropertyItem(this):nullptr),
-    mListValues(QStringList()),
-    mEmptyListValue(UnknownValue),
-    mExtraInfo(QString()),
-    mParentProperty(nullptr),
-    mProperties(Properties())
+    mUnit(pParent->showUnits()?new PropertyItem(this):nullptr)
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
@@ -1288,13 +1282,7 @@ PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
                                            QWidget *pParent) :
     TreeViewWidget(pParent),
     mShowUnits(pShowUnits),
-    mAutoUpdateHeight(pAutoUpdateHeight),
-    mProperties(Properties()),
-    mAllProperties(Properties()),
-    mProperty(nullptr),
-    mPropertyEditor(nullptr),
-    mRightClicking(false),
-    mPropertyChecked(QMap<Property *, bool>())
+    mAutoUpdateHeight(pAutoUpdateHeight)
 {
     // Customise ourselves
 
