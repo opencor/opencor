@@ -32,6 +32,31 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
     endif()
 
     if(ENABLE_CLANG_TIDY)
+        # Note: Clang-Tidy does, by default, only report issues with C++ files.
+        #       When it comes to header files, we must specify the ones for
+        #       which we want issues to be reported, this using `-header-filter`
+        #       and/or `-line-filter`. The problem is that the format of the
+        #       path reported by Clang-Tidy depends on the CMake generator that
+        #       is used. For example, with Ninja, we have a path that looks like
+        #       /a/b/build/../src while with Make it looks like /a/b/src. Also,
+        #       the regular expression needed by `-header-filter` follows the
+        #       POSIX ERE standard rather than the PCRE one, which is a big
+        #       limitation. Indeed, we are not interested in some header files
+        #       that are located in specific folders. Using a PCRE regular
+        #       expression, we could easily filter them out with something like
+        #       ^(?:(?!xxx|yyy|zzz).)*$, i.e. a regular expression with a
+        #       non-capturing group and a negative lookahead, but we can't since
+        #       we need a POSIX ERE regulard expression. So, in the end, we ask
+        #       for issues related to header files located under ../src, which
+        #       means that it only works with Ninja and from [OpenCOR]/build.
+        #       Then, there are some header files that are under [OpenCOR]/src,
+        #       but for which we don't want to see issues. So, we filter them
+        #       out using `-line-filter`, which is normally used to show issues
+        #       present between a given set of lines (!?). So, here, we ask for
+        #       issues between lines 9999999 and 9999999 (!!). We finish our
+        #       list with `.h`, so that issues with other header files can get
+        #       reported...
+
         set_target_properties(${TARGET_NAME} PROPERTIES
             CXX_CLANG_TIDY "${CLANG_TIDY};-header-filter=\\\.\\\.\\\/src\\\/.*;-line-filter=[{'name':'diff_match_patch.h','lines':[[9999999,9999999]]},{'name':'qzipreader_p.h','lines':[[9999999,9999999]]},{'name':'.h'}]"
         )
