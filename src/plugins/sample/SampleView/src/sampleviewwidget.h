@@ -55,7 +55,7 @@ public:
     void update(const QString &pFileName);
 
 private:
-    Ui::SampleViewWidget *mGui = nullptr;
+    Ui::SampleViewWidget *mGui;
 
     QString mFileName;
 };

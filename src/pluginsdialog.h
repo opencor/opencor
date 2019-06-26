@@ -74,7 +74,7 @@ public:
     ~PluginsDialog() override;
 
 private:
-    Ui::PluginsDialog *mGui = nullptr;
+    Ui::PluginsDialog *mGui;
 
     PluginManager *mPluginManager;
 

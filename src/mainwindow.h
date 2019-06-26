@@ -79,7 +79,7 @@ protected:
 #endif
 
 private:
-    Ui::MainWindow *mGui = nullptr;
+    Ui::MainWindow *mGui;
 
     QString mApplicationDate;
 

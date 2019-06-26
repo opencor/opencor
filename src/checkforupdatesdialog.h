@@ -90,7 +90,7 @@ public:
     ~CheckForUpdatesDialog() override;
 
 private:
-    Ui::CheckForUpdatesDialog *mGui = nullptr;
+    Ui::CheckForUpdatesDialog *mGui;
 
     CheckForUpdatesEngine *mEngine;
 

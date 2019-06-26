@@ -106,7 +106,7 @@ public:
     void savePreferences() override;
 
 private:
-    Ui::SimulationExperimentViewPreferencesWidget *mGui = nullptr;
+    Ui::SimulationExperimentViewPreferencesWidget *mGui;
 
     Core::TabBarWidget *mCategoryTabs;
 

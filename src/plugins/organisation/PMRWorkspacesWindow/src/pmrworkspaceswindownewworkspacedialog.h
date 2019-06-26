@@ -55,7 +55,7 @@ public:
     QString path() const;
 
 private:
-    Ui::PmrWorkspacesWindowNewWorkspaceDialog *mGui = nullptr;
+    Ui::PmrWorkspacesWindowNewWorkspaceDialog *mGui;
 
 private slots:
     void updateOkButton();

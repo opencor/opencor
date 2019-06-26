@@ -55,7 +55,7 @@ protected:
     void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
-    Ui::SplashScreenWindow *mGui = nullptr;
+    Ui::SplashScreenWindow *mGui;
 };
 
 //==============================================================================

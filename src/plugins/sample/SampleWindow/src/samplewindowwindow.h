@@ -49,7 +49,7 @@ public:
     ~SampleWindowWindow() override;
 
 private:
-    Ui::SampleWindowWindow *mGui = nullptr;
+    Ui::SampleWindowWindow *mGui;
 
 private slots:
     void updateSum();

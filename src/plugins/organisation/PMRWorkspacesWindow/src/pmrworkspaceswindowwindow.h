@@ -83,7 +83,7 @@ protected:
     void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
-    Ui::PmrWorkspacesWindowWindow *mGui = nullptr;
+    Ui::PmrWorkspacesWindowWindow *mGui;
 
     bool mInitialized;
 
