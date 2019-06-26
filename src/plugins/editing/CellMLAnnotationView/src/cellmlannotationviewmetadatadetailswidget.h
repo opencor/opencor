@@ -100,7 +100,7 @@ private:
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    ObjRef<iface::cellml_api::CellMLElement> mElement;
+    ObjRef<iface::cellml_api::CellMLElement> mElement = nullptr;
 
     void retranslateUnsupportedMetadataMessage();
 
