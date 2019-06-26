@@ -21,30 +21,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Plugin interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update pluginInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual bool definesPluginInterfaces() PURE;
-    virtual bool pluginInterfacesOk(const QString &pFileName,
-                                    QObject *pInstance) PURE;
+    VIRTUAL bool definesPluginInterfaces() PURE_OR_OVERRIDE;
+    VIRTUAL bool pluginInterfacesOk(const QString &pFileName,
+                                    QObject *pInstance) PURE_OR_OVERRIDE;
 
-    virtual void initializePlugin() PURE;
-    virtual void finalizePlugin() PURE;
+    VIRTUAL void initializePlugin() PURE_OR_OVERRIDE;
+    VIRTUAL void finalizePlugin() PURE_OR_OVERRIDE;
 
-    virtual void pluginsInitialized(const Plugins &pLoadedPlugins) PURE;
+    VIRTUAL void pluginsInitialized(const Plugins &pLoadedPlugins) PURE_OR_OVERRIDE;
 
-    virtual void loadSettings(QSettings &pSettings) PURE;
-    virtual void saveSettings(QSettings &pSettings) const PURE;
+    VIRTUAL void loadSettings(QSettings &pSettings) PURE_OR_OVERRIDE;
+    VIRTUAL void saveSettings(QSettings &pSettings) const PURE_OR_OVERRIDE;
 
-    virtual void handleUrl(const QUrl &pUrl) PURE;
-
-#undef PURE
+    VIRTUAL void handleUrl(const QUrl &pUrl) PURE_OR_OVERRIDE;
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

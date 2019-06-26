@@ -63,34 +63,6 @@ PLUGININFO_FUNC CorePluginInfo()
 }
 
 //==============================================================================
-
-CorePlugin::CorePlugin() :
-    mCentralWidget(nullptr),
-    mFileNewFileAction(nullptr),
-    mFileOpenAction(nullptr),
-    mFileOpenRemoteAction(nullptr),
-    mFileReloadAction(nullptr),
-    mFileDuplicateAction(nullptr),
-    mFileLockedAction(nullptr),
-    mFileSaveAction(nullptr),
-    mFileSaveAsAction(nullptr),
-    mFileSaveAllAction(nullptr),
-    mFilePreviousAction(nullptr),
-    mFileNextAction(nullptr),
-    mFileCloseAction(nullptr),
-    mFileCloseAllAction(nullptr),
-    mFileOpenReloadSeparator(nullptr),
-    mFileReopenSubMenu(nullptr),
-    mFileReopenMostRecentFileAction(nullptr),
-    mFileReopenSubMenuSeparator1(nullptr),
-    mFileReopenSubMenuSeparator2(nullptr),
-    mFileClearReopenSubMenuAction(nullptr),
-    mRecentFiles(QStringList()),
-    mRecentFileActions(QList<QAction *>())
-{
-}
-
-//==============================================================================
 // Core interface
 //==============================================================================
 

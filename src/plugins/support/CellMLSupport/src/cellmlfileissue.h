@@ -76,7 +76,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileIssue> CellmlFileIssues;
+using CellmlFileIssues = QList<CellmlFileIssue>;
 
 //==============================================================================
 

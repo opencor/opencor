@@ -46,7 +46,6 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      QWidget *pParent) :
     QLabel(pParent),
     CommonWidget(this),
-    mScale(0.0),
     mDefaultFontScale(1.35*font().pointSize()),
     mIcon(pIcon),
     mMessage(pMessage),

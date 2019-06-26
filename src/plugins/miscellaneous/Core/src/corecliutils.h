@@ -57,15 +57,15 @@ namespace Core {
 
 //==============================================================================
 
-typedef QList<bool> QBoolList;
-typedef QList<int> QIntList;
-typedef QList<double> QDoubleList;
+using QBoolList = QList<bool>;
+using QIntList = QList<int>;
+using QDoubleList = QList<double>;
 
 //==============================================================================
 
-typedef QSet<bool> QBoolSet;
-typedef QSet<int> QIntSet;
-typedef QSet<double> QDoubleSet;
+using QBoolSet = QSet<bool>;
+using QIntSet = QSet<int>;
+using QDoubleSet = QSet<double>;
 
 //==============================================================================
 

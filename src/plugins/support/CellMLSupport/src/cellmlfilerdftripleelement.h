@@ -70,7 +70,7 @@ public:
     QString asString() const;
 
 private:
-    Type mType;
+    Type mType = Type::UriReference;
 
     QString mId;
 

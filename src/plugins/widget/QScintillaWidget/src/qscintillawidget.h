@@ -123,15 +123,15 @@ protected:
     void setHandleChanges(bool pHandleChanges);
 
 private:
-    bool mHandleChanges;
+    bool mHandleChanges = true;
 
     QFont mFont;
 
     QMenu *mContextMenu;
 
-    bool mCanSelectAll;
+    bool mCanSelectAll = false;
 
-    bool mInsertMode;
+    bool mInsertMode = true;
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;

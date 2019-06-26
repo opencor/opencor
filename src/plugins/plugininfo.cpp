@@ -46,7 +46,6 @@ PluginInfo::PluginInfo(Category pCategory, bool pSelectable,
     mSelectable(pSelectable),
     mCliSupport(pCliSupport),
     mDependencies(pDependencies),
-    mFullDependencies(QStringList()),
     mDescriptions(pDescriptions),
     mLoadBefore(pLoadBefore)
 {

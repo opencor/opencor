@@ -42,8 +42,8 @@ class PmrWorkspaceFileNode;
 
 //==============================================================================
 
-typedef QPair<QChar, QChar> CharPair;
-typedef QList<PmrWorkspaceFileNode *> PmrWorkspaceFileNodes;
+using CharPair = QPair<QChar, QChar>;
+using PmrWorkspaceFileNodes = QList<PmrWorkspaceFileNode *>;
 
 //==============================================================================
 

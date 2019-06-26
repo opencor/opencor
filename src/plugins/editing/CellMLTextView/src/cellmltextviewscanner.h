@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <limits.h>
+#include <climits>
 
 //==============================================================================
 
@@ -125,7 +125,7 @@ public:
         Eof
     };
 
-    typedef QList<Token> Tokens;
+    using Tokens = QList<Token>;
 
     explicit CellmlTextViewScanner();
 
@@ -154,15 +154,15 @@ private:
 
     QString mText;
 
-    const QChar *mChar;
+    const QChar *mChar = nullptr;
 
-    Char mCharType;
-    int mCharLine;
-    int mCharColumn;
+    Char mCharType = Char::Eof;
+    int mCharLine = 1;
+    int mCharColumn = 0;
 
-    Token mToken;
-    int mLine;
-    int mColumn;
+    Token mToken = Token::Unknown;
+    int mLine = 0;
+    int mColumn = 0;
     QString mString;
     QString mComment;
 
@@ -170,7 +170,7 @@ private:
     QMap<QString, Token> mSiUnitKeywords;
     QMap<QString, Token> mParameterKeywords;
 
-    bool mWithinParameterBlock;
+    bool mWithinParameterBlock = false;
 
     void getNextChar();
 

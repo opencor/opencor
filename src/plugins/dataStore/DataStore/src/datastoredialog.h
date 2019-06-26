@@ -82,7 +82,7 @@ private:
     QStandardItemModel *mModel;
 
     QMap<QStandardItem *, DataStoreVariable *> mData;
-    int mNbOfData;
+    int mNbOfData = 0;
 
     DataStoreVariables selectedData(QStandardItem *pItem) const;
 

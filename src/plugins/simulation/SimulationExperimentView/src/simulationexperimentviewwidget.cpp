@@ -56,21 +56,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     ViewWidget(pParent),
     mPlugin(pPlugin),
     mCellmlEditingViewPlugins(pCellmlEditingViewPlugins),
-    mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins),
-    mSimulationWidgetSizes(QIntList()),
-    mContentsWidgetSizes(QIntList()),
-    mCollapsibleWidgetCollapsed(QBoolList()),
-    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs),
-    mSimulationColumnWidths(QIntList()),
-    mSolversColumnWidths(QIntList()),
-    mGraphPanelColumnWidths(QIntList()),
-    mGraphsColumnWidths(QIntList()),
-    mParametersColumnWidths(QIntList()),
-    mGraphPanelSectionsExpanded(QMap<int, bool>()),
-    mSimulationWidget(nullptr),
-    mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
-    mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<QString, quint64>())
+    mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins)
 {
 }
 

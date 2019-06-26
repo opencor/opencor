@@ -48,9 +48,7 @@ namespace OpenCOR {
 //==============================================================================
 
 CheckForUpdatesEngine::CheckForUpdatesEngine(const QString &pApplicationDate) :
-    mApplicationDate(pApplicationDate),
-    mStatus(QString()),
-    mNewerVersions(QStringList())
+    mApplicationDate(pApplicationDate)
 {
 }
 

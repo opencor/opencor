@@ -40,12 +40,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRdfNode) :
-    mId(QString()),
-    mUriReference(QString()),
-    mLexicalForm(QString()),
-    mLanguage(QString()),
-    mDataTypeUri(QString())
+CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRdfNode)
 {
     // Check which interface is supported by the node and initialise it in case
     // it supports the rdf_api::URIReference, rdf_api::PlainLiteral or
@@ -140,12 +135,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
 //==============================================================================
 
 CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(const QString &pUriReference) :
-    mType(Type::UriReference),
-    mId(QString()),
     mUriReference(pUriReference),
-    mLexicalForm(QString()),
-    mLanguage(QString()),
-    mDataTypeUri(QString()),
     mAsString(pUriReference)
 {
 }

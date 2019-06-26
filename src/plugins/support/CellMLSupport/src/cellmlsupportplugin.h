@@ -69,7 +69,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QAction *mFileNewCellmlFileAction;
+    QAction *mFileNewCellmlFileAction = nullptr;
 
 private slots:
     void newCellmlFile();

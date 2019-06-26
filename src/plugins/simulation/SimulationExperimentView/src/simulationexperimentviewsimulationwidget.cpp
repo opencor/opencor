@@ -103,30 +103,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                                                                    QWidget *pParent) :
     Widget(pParent),
     mPlugin(pPlugin),
-    mViewWidget(pViewWidget),
-    mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
-    mCellmlBasedViewPlugins(QMap<QAction *, Plugin *>()),
-    mProgress(-1),
-    mLockedDevelopmentMode(false),
-    mRunActionEnabled(true),
-    mOutputMessage(QString()),
-    mError(Error::General),
-    mValidSimulationEnvironment(false),
-    mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
-    mSimulationProperties(QVariantList()),
-    mSolversProperties(QVariantList()),
-    mGraphPanelProperties(QMap<Core::PropertyEditorWidget *, QVariantList>()),
-    mGraphsProperties(QMap<Core::PropertyEditorWidget *, QVariantList>()),
-    mSimulationPropertiesModified(false),
-    mSolversPropertiesModified(false),
-    mGraphPanelPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
-    mGraphsPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
-    mGraphPanelsWidgetSizes(QIntList()),
-    mGraphPanelsWidgetSizesModified(false),
-    mCanUpdatePlotsForUpdatedGraphs(true),
-    mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>()),
-    mFileTypeInterfaces(QMap<QString, FileTypeInterface *>())
+    mViewWidget(pViewWidget)
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it

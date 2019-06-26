@@ -40,11 +40,7 @@ namespace RawTextView {
 //==============================================================================
 
 RawTextViewWidget::RawTextViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mNeedLoadingSettings(true),
-    mSettingsGroup(QString()),
-    mEditor(nullptr),
-    mEditors(QMap<QString, EditorWidget::EditorWidget *>())
+    ViewWidget(pParent)
 {
 }
 

@@ -135,7 +135,6 @@ class CvodeSolver : public OpenCOR::Solver::OdeSolver
     Q_OBJECT
 
 public:
-    explicit CvodeSolver();
     ~CvodeSolver() override;
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
@@ -146,17 +145,17 @@ public:
     void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
-    void *mSolver;
+    void *mSolver = nullptr;
 
-    N_Vector mStatesVector;
+    N_Vector mStatesVector = nullptr;
 
-    SUNMatrix mMatrix;
-    SUNLinearSolver mLinearSolver;
-    SUNNonlinearSolver mNonLinearSolver;
+    SUNMatrix mMatrix = nullptr;
+    SUNLinearSolver mLinearSolver = nullptr;
+    SUNNonlinearSolver mNonLinearSolver = nullptr;
 
-    CvodeSolverUserData *mUserData;
+    CvodeSolverUserData *mUserData = nullptr;
 
-    bool mInterpolateSolution;
+    bool mInterpolateSolution = InterpolateSolutionDefaultValue;
 };
 
 //==============================================================================

@@ -33,8 +33,7 @@ namespace StandardSupport {
 
 //==============================================================================
 
-StandardFileManager::StandardFileManager() :
-    mFiles(QMap<QString, StandardFile *>())
+StandardFileManager::StandardFileManager()
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager

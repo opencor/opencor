@@ -54,8 +54,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
 
 //==============================================================================
 
-SEDMLSupportPlugin::SEDMLSupportPlugin() :
-    mFileNewSedmlFileAction(nullptr)
+SEDMLSupportPlugin::SEDMLSupportPlugin()
 {
     // Keep track of our file type interface
 

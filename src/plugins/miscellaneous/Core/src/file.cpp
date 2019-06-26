@@ -43,9 +43,7 @@ static int gNewIndex = 0;
 
 File::File(const QString &pFileName, Type pType, const QString &pUrl) :
     mFileName(canonicalFileName(pFileName)),
-    mUrl(pUrl),
-    mModified(false),
-    mDependenciesModified(false)
+    mUrl(pUrl)
 {
     // Initialise ourselves by 'resetting' ourselves
 

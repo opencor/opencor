@@ -62,7 +62,7 @@ protected:
 private:
     FileBrowserWindowModel *mModel;
 
-    bool mNeedDefColWidth;
+    bool mNeedDefColWidth = true;
 
     QStringList mInitPathDirs;
     QString mInitPathDir;

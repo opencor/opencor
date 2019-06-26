@@ -48,18 +48,6 @@ namespace Core {
 BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
     QWidget(pParent),
     mParent(pParent),
-    mFps(0),
-    mForegroundColor(Qt::white),
-    mBackgroundColor(QColor(54, 96, 146)),
-    mBackgroundRoundness(0.25),
-    mMainLine(0),
-    mCount(12),
-    mLength(5),
-    mThickness(5),
-    mRoundness(1.0),
-    mTrail(100),
-    mOpacity(0.25),
-    mRadius(15),
     mProgress(pProgress)
 {
     // Create our timer and a connection to handle its timing out

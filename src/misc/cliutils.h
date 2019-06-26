@@ -71,7 +71,7 @@ private slots:
 //==============================================================================
 
 void initQtMessagePattern();
-void initPluginsPath(int pArgC, char *pArgV[]);
+void initPluginsPath(int pArgC, char *pArgV[]); // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
 void initApplication(QString *pAppDate = nullptr);
 
 QString applicationDescription(bool pGuiMode = true);

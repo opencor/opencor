@@ -83,7 +83,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CombineArchiveFile> CombineArchiveFiles;
+using CombineArchiveFiles = QList<CombineArchiveFile>;
 
 //==============================================================================
 
@@ -119,14 +119,14 @@ public:
 private:
     QString mDirName;
 
-    bool mLoadingNeeded;
+    bool mLoadingNeeded = true;
 
-    SEDMLSupport::SedmlFile *mSedmlFile;
+    SEDMLSupport::SedmlFile *mSedmlFile = nullptr;
 
     CombineArchiveFiles mFiles;
     CombineArchiveIssues mIssues;
 
-    bool mUpdated;
+    bool mUpdated = false;
 
     void reset() override;
 };

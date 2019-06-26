@@ -54,11 +54,7 @@ namespace RawSEDMLView {
 //==============================================================================
 
 RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mNeedLoadingSettings(true),
-    mSettingsGroup(QString()),
-    mEditingWidget(nullptr),
-    mEditingWidgets(QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *>())
+    ViewWidget(pParent)
 {
 }
 

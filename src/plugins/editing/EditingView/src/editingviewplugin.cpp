@@ -54,27 +54,6 @@ PLUGININFO_FUNC EditingViewPluginInfo()
 }
 
 //==============================================================================
-
-EditingViewPlugin::EditingViewPlugin() :
-    mEditingViewInterface(nullptr),
-    mEditMenu(nullptr),
-    mEditUndoAction(nullptr),
-    mEditRedoAction(nullptr),
-    mEditCutAction(nullptr),
-    mEditCopyAction(nullptr),
-    mEditPasteAction(nullptr),
-    mEditDeleteAction(nullptr),
-    mEditFindReplaceAction(nullptr),
-    mEditFindNextAction(nullptr),
-    mEditFindPreviousAction(nullptr),
-    mEditSelectAllAction(nullptr),
-    mEditWordWrapAction(nullptr),
-    mEditor(nullptr),
-    mFileName(QString())
-{
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 

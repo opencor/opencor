@@ -42,17 +42,17 @@ class Tests : public QObject
     Q_OBJECT
 
 private:
-    OpenCOR::Compiler::CompilerEngine *mCompilerEngine;
+    OpenCOR::Compiler::CompilerEngine *mCompilerEngine = nullptr;
 
-    double mA;
-    double mB;
+    double mA = 0.0;
+    double mB = 0.0;
 
-    double mMinusA;
-    double mMinusB;
+    double mMinusA = 0.0;
+    double mMinusB = 0.0;
 
-    double mBigA;
-    double mBigB;
-    double mBigC;
+    double mBigA = 0.0;
+    double mBigB = 0.0;
+    double mBigC = 0.0;
 
 private slots:
     void initTestCase();

@@ -97,7 +97,7 @@ public:
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    int mItemsCount;
+    int mItemsCount = 0;
 
     Core::Widget *mOutput;
     Core::UserMessageWidget *mOutputMessage;
@@ -105,12 +105,12 @@ private:
     QString mOutputOntologicalTermsTemplate;
     WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
 
-    ObjRef<iface::cellml_api::CellMLElement> mElement;
+    ObjRef<iface::cellml_api::CellMLElement> mElement = nullptr;
 
     QString mRdfTripleInformation;
-    InformationType mInformationType;
+    InformationType mInformationType = InformationType::None;
 
-    Information mLookUpRdfTripleInformation;
+    Information mLookUpRdfTripleInformation = Information::First;
 
     QMap<QString, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 

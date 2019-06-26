@@ -56,13 +56,7 @@ namespace RawCellMLView {
 //==============================================================================
 
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mNeedLoadingSettings(true),
-    mSettingsGroup(QString()),
-    mEditingWidget(nullptr),
-    mEditingWidgets(QMap<QString, CellMLEditingView::CellmlEditingViewWidget *>()),
-    mPresentationMathmlEquations(QMap<QString, QString>()),
-    mContentMathmlEquation(QString())
+    ViewWidget(pParent)
 {
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions

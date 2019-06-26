@@ -116,25 +116,7 @@ Simulation * SimulationObject::simulation() const
 //==============================================================================
 
 SimulationData::SimulationData(Simulation *pSimulation) :
-    SimulationObject(pSimulation),
-    mDelay(0),
-    mStartingPoint(0.0),
-    mEndingPoint(1000.0),
-    mPointInterval(1.0),
-    mOdeSolverName(QString()),
-    mOdeSolverProperties(Solver::Solver::Properties()),
-    mDaeSolverName(QString()),
-    mDaeSolverProperties(Solver::Solver::Properties()),
-    mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties()),
-    mConstants(nullptr),
-    mRates(nullptr),
-    mStates(nullptr),
-    mDummyStates(nullptr),
-    mAlgebraic(nullptr),
-    mInitialConstants(nullptr),
-    mInitialStates(nullptr),
-    mData(QMap<DataStore::DataStore *, double *>())
+    SimulationObject(pSimulation)
 {
     // Create our various arrays
 
@@ -684,15 +666,7 @@ void SimulationData::deleteArrays()
 //==============================================================================
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
-    SimulationObject(pSimulation),
-    mDataStore(nullptr),
-    mPoints(nullptr),
-    mConstants(DataStore::DataStoreVariables()),
-    mRates(DataStore::DataStoreVariables()),
-    mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables()),
-    mData(QMap<double *, DataStore::DataStoreVariables>()),
-    mDataDataStores(QMap<double *, DataStore::DataStore *>())
+    SimulationObject(pSimulation)
 {
     // Create our data store
 
@@ -1122,8 +1096,7 @@ double * SimulationResults::data(double *pData, int pIndex, int pRun) const
 //==============================================================================
 
 SimulationImportData::SimulationImportData(Simulation *pSimulation) :
-    SimulationObject(pSimulation),
-    mDataStores(QList<DataStore::DataStore *>())
+    SimulationObject(pSimulation)
 {
 }
 
@@ -1156,16 +1129,7 @@ DataStore::DataStore * SimulationImportData::addDataStore()
 //==============================================================================
 
 Simulation::Simulation(const QString &pFileName) :
-    mFileName(pFileName),
-    mFileType(FileType::Unknown),
-    mCellmlFile(nullptr),
-    mSedmlFile(nullptr),
-    mCombineArchive(nullptr),
-    mNeedCheckIssues(true),
-    mIssues(SimulationIssues()),
-    mHasBlockingIssues(false),
-    mRuntime(nullptr),
-    mWorker(nullptr)
+    mFileName(pFileName)
 {
     // Retrieve our file details
 

@@ -43,10 +43,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication(int &pArgC, char *pArgV[]) : // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
-    mPluginManager(nullptr),
-    mLoadedPluginPlugins(Plugins()),
-    mLoadedCliPlugins(Plugins())
+CliApplication::CliApplication(int &pArgC, char *pArgV[]) // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
 {
     // Create our CLI application
 

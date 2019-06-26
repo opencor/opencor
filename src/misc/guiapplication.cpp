@@ -38,9 +38,7 @@ namespace OpenCOR {
 //==============================================================================
 
 GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
-    QtSingleApplication(QFileInfo(pArgV[0]).baseName(), pArgC, pArgV),
-    mCanEmitFileOpenRequestSignal(false),
-    mFileNamesOrOpencorUrls(QStringList())
+    QtSingleApplication(QFileInfo(pArgV[0]).baseName(), pArgC, pArgV)
 {
     // Set our style
 

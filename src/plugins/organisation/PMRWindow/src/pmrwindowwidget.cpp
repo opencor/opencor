@@ -81,12 +81,7 @@ QString PmrWindowItem::url() const
 //==============================================================================
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
-    Core::TreeViewWidget(pParent),
-    mExposureNames(QStringList()),
-    mInitialized(false),
-    mErrorMessage(QString()),
-    mNumberOfFilteredExposures(0),
-    mDontExpandExposures(QStringList())
+    Core::TreeViewWidget(pParent)
 {
     // Customise ourselves
 

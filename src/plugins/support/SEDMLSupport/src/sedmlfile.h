@@ -135,15 +135,15 @@ public:
 private:
     QString mOwnerFileName;
 
-    libsedml::SedDocument *mSedmlDocument;
+    libsedml::SedDocument *mSedmlDocument = nullptr;
 
-    bool mLoadingNeeded;
+    bool mLoadingNeeded = true;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellmlFile *mCellmlFile = nullptr;
 
     SedmlFileIssues mIssues;
 
-    bool mUpdated;
+    bool mUpdated = false;
 
     void reset() override;
 

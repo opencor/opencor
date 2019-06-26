@@ -85,23 +85,23 @@ protected:
 private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
-    bool mInitialized;
+    bool mInitialized = false;
 
     QLabel *mPmrInstanceLabel;
 
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;
 
-    bool mFirstTimeRetrievingWorkspaces;
+    bool mFirstTimeRetrievingWorkspaces = true;
 
     QString mPmrUrl;
 
-    bool mAuthenticated;
+    bool mAuthenticated = false;
 
     QIcon mLoggedOnIcon;
     QIcon mLoggedOffIcon;
 
-    bool mWaitingForPmrWebService;
+    bool mWaitingForPmrWebService = false;
 
     void retranslateActionPmr();
 
