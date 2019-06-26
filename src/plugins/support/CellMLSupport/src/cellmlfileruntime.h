@@ -168,25 +168,25 @@ public:
     CellmlFileRuntimeParameter * voi() const;
 
 private:
-    bool mAtLeastOneNlaSystem;
+    bool mAtLeastOneNlaSystem = false;
 
-    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation = nullptr;
 
-    int mConstantsCount;
-    int mStatesRatesCount;
-    int mAlgebraicCount;
+    int mConstantsCount = 0;
+    int mStatesRatesCount = 0;
+    int mAlgebraicCount = 0;
 
-    Compiler::CompilerEngine *mCompilerEngine;
+    Compiler::CompilerEngine *mCompilerEngine = nullptr;
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntimeParameter *mVoi;
+    CellmlFileRuntimeParameter *mVoi = nullptr;
     CellmlFileRuntimeParameters mParameters;
 
-    InitializeConstantsFunction mInitializeConstants;
-    ComputeComputedConstantsFunction mComputeComputedConstants;
-    ComputeVariablesFunction mComputeVariables;
-    ComputeRatesFunction mComputeRates;
+    InitializeConstantsFunction mInitializeConstants = nullptr;
+    ComputeComputedConstantsFunction mComputeComputedConstants = nullptr;
+    ComputeVariablesFunction mComputeVariables = nullptr;
+    ComputeRatesFunction mComputeRates = nullptr;
 
     void resetCodeInformation();
 

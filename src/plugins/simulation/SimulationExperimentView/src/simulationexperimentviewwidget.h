@@ -112,7 +112,7 @@ private:
 
     QBoolList mCollapsibleWidgetCollapsed;
 
-    SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mGraphPanelGraphsMode;
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs;
 
     QIntList mSimulationColumnWidths;
     QIntList mSolversColumnWidths;
@@ -122,7 +122,7 @@ private:
 
     QMap<int, bool> mGraphPanelSectionsExpanded;
 
-    SimulationExperimentViewSimulationWidget *mSimulationWidget;
+    SimulationExperimentViewSimulationWidget *mSimulationWidget = nullptr;
     QMap<QString, SimulationExperimentViewSimulationWidget *> mSimulationWidgets;
 
     QStringList mFileNames;
