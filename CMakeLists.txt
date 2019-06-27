@@ -135,17 +135,16 @@ endif()
 set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
 
 if(WIN32)
-    set(COMPILER_OPTIONS "/O2 /Fe${SILENTRUN}")
+    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 else()
     if(APPLE)
         set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
     endif()
 
-    set(COMPILER_OPTIONS "-O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN}")
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 endif()
-
-execute_process(COMMAND ${CMAKE_C_COMPILER} ${COMPILER_OPTIONS} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
-                RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
 if(NOT RESULT EQUAL 0)
     message(FATAL_ERROR "silentrun could not be built...")
