@@ -37,8 +37,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspaceManager::PmrWorkspaceManager() :
-    mUrlWorkspaces(QMap<QString, PmrWorkspace *>())
+PmrWorkspaceManager::PmrWorkspaceManager()
 {
     // Initialise libgit2
 

@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 23, "month": 5, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 27, "month": 6, "year": 2019,
                      "categories": [
                        { "name": "Editing",
                          "entries": [
@@ -11,6 +11,15 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "improved", "description": "Unicode support." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "fixed", "description": "Reading a <a href=\"https://www.cellml.org/\">CellML</a> file that has no <a href=\"https://www.w3.org/XML/\">XML</a> processing instruction." }
                              ]
                            }
                          ]

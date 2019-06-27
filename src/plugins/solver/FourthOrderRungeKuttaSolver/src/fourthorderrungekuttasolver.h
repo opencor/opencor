@@ -47,7 +47,6 @@ class FourthOrderRungeKuttaSolver : public OpenCOR::Solver::OdeSolver
     Q_OBJECT
 
 public:
-    explicit FourthOrderRungeKuttaSolver();
     ~FourthOrderRungeKuttaSolver() override;
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
@@ -57,11 +56,11 @@ public:
     void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
-    double mStep;
+    double mStep = StepDefaultValue;
 
-    double *mK1;
-    double *mK23;
-    double *mYk123;
+    double *mK1 = nullptr;
+    double *mK23 = nullptr;
+    double *mYk123 = nullptr;
 };
 
 //==============================================================================

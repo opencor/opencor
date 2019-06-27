@@ -77,9 +77,7 @@ DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
                                  const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
     Core::Dialog(pParent),
-    mGui(new Ui::DataStoreDialog),
-    mData(QMap<QStandardItem *, DataStoreVariable*>()),
-    mNbOfData(0)
+    mGui(new Ui::DataStoreDialog)
 {
     // Customise our settings
 

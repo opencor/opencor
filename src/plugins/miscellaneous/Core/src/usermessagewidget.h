@@ -66,7 +66,7 @@ public:
     void resetMessage();
 
 private:
-    double mScale;
+    double mScale = 0.0;
     double mDefaultFontScale;
 
     QString mIcon;

@@ -57,11 +57,7 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mRdfTriples(CellmlFileRdfTriples(this)),
-    mLoadingNeeded(true),
-    mFullInstantiationNeeded(true),
-    mDependenciesNeeded(true),
-    mUpdated(false)
+    mRdfTriples(CellmlFileRdfTriples(this))
 {
     // Reset ourselves
 
@@ -618,7 +614,8 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
         uint line = 0;
         uint column = 0;
-        QString importedFile = QString();
+        QString importedFileName = QString();
+        QString importedFileInfo = QString();
 
         if (cellmlRepresentationValidityError != nullptr) {
             // We are dealing with a CellML representation issue, so determine
@@ -648,29 +645,26 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
                 // Also determine its imported file, if any
 
-                ObjRef<iface::cellml_api::CellMLElement> cellmlElementParent = cellmlElement->parentElement();
+                ObjRef<iface::cellml_api::Model> importedCellmlFile = cellmlElement->modelElement();
 
-                if (cellmlElementParent != nullptr) {
-                    // Check whether the parent is an imported file
+                if (importedCellmlFile != nullptr) {
+                    // Retrieve the imported CellML element
 
-                    ObjRef<iface::cellml_api::Model> importedCellmlFile = QueryInterface(cellmlElementParent);
+                    ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
 
-                    if (importedCellmlFile != nullptr) {
-                        // Retrieve the imported CellML element
+                    if (importedCellmlElement != nullptr) {
+                        // Check whether the imported CellML element is an
+                        // import CellML element and, if so, retrieve the
+                        // relative file path of the corresponding CellML file
+                        // and keep track of its absolute path version
 
-                        ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
+                        ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
 
-                        if (importedCellmlElement != nullptr) {
-                            // Check whether the imported CellML element is an
-                            // import CellML element
+                        if (importCellmlElement != nullptr) {
+                            ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
 
-                            ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
-
-                            if (importCellmlElement != nullptr) {
-                                ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
-
-                                importedFile = QString::fromStdWString(xlinkHref->asText());
-                            }
+                            importedFileInfo = QString::fromStdWString(xlinkHref->asText());
+                            importedFileName = Core::canonicalFileName(QFileInfo(mFileName).path()+"/"+importedFileInfo);
                         }
                     }
                 }
@@ -693,11 +687,17 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
             issueType = CellmlFileIssue::Type::Error;
         }
 
-        // Append the issue to our list
+        // Append the issue to our list, but only if we don't already have it
+        // Note: we will already have it if we are importing a faulty CellML
+        //       file more than once...
 
-        pIssues << CellmlFileIssue(issueType, int(line), int(column),
-                                   QString::fromStdWString(cellmlValidityIssue->description()),
-                                   importedFile);
+        CellmlFileIssue issue = CellmlFileIssue(issueType, int(line), int(column),
+                                                QString::fromStdWString(cellmlValidityIssue->description()),
+                                                importedFileName, importedFileInfo);
+
+        if (!pIssues.contains(issue)) {
+            pIssues << issue;
+        }
     }
 
     // Sort our issues (since the CellML API may generate them in a non-ordered

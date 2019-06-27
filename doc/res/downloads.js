@@ -34,10 +34,10 @@ function versions(downloads) {
 
     var fileSizes = {};
 
-    if (location.hostname.substring(location.hostname.length-10) === "opencor.ws") {
+    if (location.hostname.indexOf("opencor") !== -1) {
         var fileSizesData;
 
-        $.ajax({ url: "http://"+location.hostname+"/res/downloads.php", async: false,
+        $.ajax({ url: location.protocol+"//"+location.hostname+"/res/downloads.php", async: false,
                  success: function(data) { fileSizesData = data; } });
 
         var retrievedFileSizes = fileSizesData.split("\n");

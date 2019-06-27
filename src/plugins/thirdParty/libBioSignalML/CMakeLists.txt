@@ -25,7 +25,8 @@ set(RELEASE_TAG v0.8.4)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -71,13 +72,10 @@ endif()
 if(USE_PREBUILT_BIOSIGNALML_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e2ca2a020750760c611b72b35edfa956bc55c593
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e2ca2a020750760c611b72b35edfa956bc55c593
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -87,7 +85,7 @@ if(USE_PREBUILT_BIOSIGNALML_PACKAGE)
                                               a10d81c681fae3efc41d7855c4250f7333821256)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} f01b5c1219ab792476ae6eaadf3be0329784c948
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f01b5c1219ab792476ae6eaadf3be0329784c948
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -98,7 +96,7 @@ if(USE_PREBUILT_BIOSIGNALML_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a9842f187002c5b9bae273bc2cd3224592f87ef2
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a9842f187002c5b9bae273bc2cd3224592f87ef2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -106,7 +104,7 @@ if(USE_PREBUILT_BIOSIGNALML_PACKAGE)
                                           8e6ca96135ae670a53422a44827579740108d559)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} b4f90f5dba99f87687b09685955e2fb4457892da
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b4f90f5dba99f87687b09685955e2fb4457892da
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -189,7 +187,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}

@@ -75,15 +75,7 @@ int CellMLTextViewConverterWarning::columnNumber() const
 
 //==============================================================================
 
-CellMLTextViewConverter::CellMLTextViewConverter() :
-    mLastOutput(Output::None),
-    mErrorLine(0),
-    mErrorColumn(0),
-    mAssignmentDone(false),
-    mOldPiecewiseStatementUsed(false),
-    mPiecewiseStatementUsed(false),
-    mMappings(QMap<QString, QString>()),
-    mMathmlNodes(QMap<QString, MathmlNode>())
+CellMLTextViewConverter::CellMLTextViewConverter()
 {
     // Reset our internals
 
@@ -154,11 +146,16 @@ bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 
     if (domDocument.setContent(pRawCellml, true,
                                &mErrorMessage, &mErrorLine, &mErrorColumn)) {
-        // Process the DOM document's children, skipping the first one since
-        // it corresponds to a CellML file's processing instruction
+        // Process the DOM document's children, skipping the first node if it is
+        // an XML processing instruction
 
-        for (QDomNode domNode = domDocument.firstChild().nextSibling();
-             !domNode.isNull(); domNode = domNode.nextSibling()) {
+        QDomNode domNode = domDocument.firstChild();
+
+        if (domNode.isProcessingInstruction() && (domNode.nodeName() == "xml")) {
+            domNode = domNode.nextSibling();
+        }
+
+        for (; !domNode.isNull(); domNode = domNode.nextSibling()) {
             if (domNode.isComment()) {
                 processCommentNode(domNode);
             } else if (rdfNode(domNode)) {

@@ -55,8 +55,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 
 //==============================================================================
 
-CellMLSupportPlugin::CellMLSupportPlugin() :
-    mFileNewCellmlFileAction(nullptr)
+CellMLSupportPlugin::CellMLSupportPlugin()
 {
     // Keep track of our file type interface
 

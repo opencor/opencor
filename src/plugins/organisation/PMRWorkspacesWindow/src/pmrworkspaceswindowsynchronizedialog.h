@@ -84,7 +84,7 @@ private:
 
 //==============================================================================
 
-typedef QList<PmrWorkspacesWindowSynchronizeDialogItem *> PmrWorkspacesWindowSynchronizeDialogItems;
+using PmrWorkspacesWindowSynchronizeDialogItems = QList<PmrWorkspacesWindowSynchronizeDialogItem *>;
 
 //==============================================================================
 
@@ -106,15 +106,15 @@ protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
-    typedef struct {
+    using DifferenceData = struct {
         QString operation;
         QString removeLineNumber;
         QString addLineNumber;
         QChar tag;
         QString difference;
-    } DifferenceData;
+    };
 
-    typedef QList<DifferenceData> DifferencesData;
+    using DifferencesData = QList<DifferenceData>;
 
     PMRSupport::PmrWorkspace *mWorkspace;
 
@@ -141,13 +141,13 @@ private:
     QMap<QString, QString> mDiffHtmls;
     QMap<QString, QString> mCellmlDiffHtmls;
 
-    int mNbOfCheckableFiles;
+    int mNbOfCheckableFiles = 0;
 
     QModelIndexList mPreviouslySelectedIndexes;
 
     QStringList mInvalidCellmlCode;
 
-    bool mNeedUpdateDiffInformation;
+    bool mNeedUpdateDiffInformation = false;
 
     PmrWorkspacesWindowSynchronizeDialogItems populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 

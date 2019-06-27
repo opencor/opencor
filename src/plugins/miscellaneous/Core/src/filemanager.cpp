@@ -39,12 +39,7 @@ namespace Core {
 
 //==============================================================================
 
-FileManager::FileManager() :
-    mFiles(QList<File *>()),
-    mFileNameFiles(QMap<QString, File *>()),
-    mFilesReadable(QMap<QString, bool>()),
-    mFilesWritable(QMap<QString, bool>()),
-    mCheckFilesEnabled(true)
+FileManager::FileManager()
 {
     // Create our timer
 

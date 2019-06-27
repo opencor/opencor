@@ -16,7 +16,8 @@ set(GIT_TAG v6.1.4)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -68,13 +69,10 @@ endif()
 if(USE_PREBUILT_QWT_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} d1d2fbec22fc34e1c0f7612676e006d9577dcad7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d1d2fbec22fc34e1c0f7612676e006d9577dcad7
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 5ef799b130da578317eaac11bcca0b6e784e856f
                                               535fe36ced19b874fb3a2955e18f161ba8d92325
@@ -82,7 +80,7 @@ if(USE_PREBUILT_QWT_PACKAGE)
                                               f86d1415aff8941bd82fc130ee0c633f3a76a853)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8eb1b10dc5cde285b12882ed7b35f2537783514e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8eb1b10dc5cde285b12882ed7b35f2537783514e
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 9474b4e7b65741b3b618e5409460db6d04789892
                                               ed05b52cb3e4a60b22544d254c92d3ea8393cb41
@@ -91,13 +89,13 @@ if(USE_PREBUILT_QWT_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 06ea2b255732bba881ef91711710f5ac1ff5aee8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 06ea2b255732bba881ef91711710f5ac1ff5aee8
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f7f1c1644ad921895a722d9f44bbda1d5da7f79e
                                           95fb741efee4869580381ba2937ecd0844dbb690)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 73e893669bb0e2cf334fcedc77dd1da70ad10f18
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 73e893669bb0e2cf334fcedc77dd1da70ad10f18
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 80ab718f8ad589a520d17c697205574cfa5c7dc1
                                           b1194973180ae987f03b3d6fc639af736f4104a4)
@@ -189,7 +187,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

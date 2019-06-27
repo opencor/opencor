@@ -109,11 +109,11 @@ private:
 
     QStringList mExposureNames;
 
-    bool mInitialized;
+    bool mInitialized = false;
 
     QString mErrorMessage;
 
-    int mNumberOfFilteredExposures;
+    int mNumberOfFilteredExposures = 0;
 
     QStringList mDontExpandExposures;
 

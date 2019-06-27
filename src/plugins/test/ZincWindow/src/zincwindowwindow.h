@@ -71,11 +71,11 @@ private:
     Ui::ZincWindowWindow *mGui;
 
     ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext;
+    OpenCMISS::Zinc::Context *mZincContext = nullptr;
 
-    char *mZincSceneViewerDescription;
+    char *mZincSceneViewerDescription = nullptr;
 
-    int mAxesFontPointSize;
+    int mAxesFontPointSize = 0;
 
 private slots:
     void createAndSetZincContext();

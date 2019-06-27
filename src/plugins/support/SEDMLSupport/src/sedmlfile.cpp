@@ -63,11 +63,7 @@ namespace SEDMLSupport {
 SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
                      bool pNew) :
     StandardSupport::StandardFile(pFileName),
-    mOwnerFileName(pOwnerFileName),
-    mSedmlDocument(nullptr),
-    mLoadingNeeded(true),
-    mCellmlFile(nullptr),
-    mUpdated(false)
+    mOwnerFileName(pOwnerFileName)
 {
     // Override our inherited value of mNew with our given one
 

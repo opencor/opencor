@@ -37,7 +37,8 @@ set(GIT_TAG v4.1.0)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -218,13 +219,10 @@ endif()
 if(USE_PREBUILT_SUNDIALS_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 32fb748c269adbd08c580580e2b7078caf88e5d5
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 32fb748c269adbd08c580580e2b7078caf88e5d5
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES d6ec8cb0c89122f976254d1dea412d7d102b8e6d
                                               53dd5f33110bcef0c47441c58374ba6d94a5d74c
@@ -262,7 +260,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
                                               154c3528340f6cccc1cef2a19dd737fd811c668a)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 49a882ac32d48186673ad93f8b7501ec4fb01f6e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 49a882ac32d48186673ad93f8b7501ec4fb01f6e
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 197163e3fb945f6aa737d064ce734215ead58b00
                                               bcfbecd63319a184fa79c8c71be7efbb509f170d
@@ -301,7 +299,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 38ad835f294bf82ff7c8a6e7241acf198c8057e6
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 38ad835f294bf82ff7c8a6e7241acf198c8057e6
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 4486898d89e85aa758193d09c37ab996f7333da2
                                           c8f77f0030c9cfb0eeb0a95ff3e804b571f726ef
@@ -322,7 +320,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
                                           047ba21ed44712eb535dae156b4afa8d074cbba9)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 3d1dcaccff7e6d97b3655abde2a1f76f4633810e
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3d1dcaccff7e6d97b3655abde2a1f76f4633810e
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES e582e17ab70bad54297d12335b49ea9758e3270b
                                           ca8d7a57f2c7e17f4b8e022b5b7b02950fb1ff43
@@ -527,7 +525,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

@@ -65,11 +65,11 @@ public:
 
 private:
     PmrWebService *mPmrWebService;
-    PmrAuthentication *mPmrAuthentication;
+    PmrAuthentication *mPmrAuthentication = nullptr;
 
-    PmrWebViewerDialog *mWebViewerDialog;
+    PmrWebViewerDialog *mWebViewerDialog = nullptr;
 
-    bool mWebViewerDialogUsed;
+    bool mWebViewerDialogUsed = false;
 
 signals:
     void busy(bool pBusy);

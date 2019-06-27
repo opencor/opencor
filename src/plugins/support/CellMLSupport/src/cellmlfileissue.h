@@ -48,9 +48,11 @@ public:
     };
 
     explicit CellmlFileIssue(Type pType, int pLine, int pColumn,
-                             const QString &pMessage,
-                             const QString &pImportedFile);
+                             const QString &pMessage, const QString &pFileName,
+                             const QString &pFileInfo);
     explicit CellmlFileIssue(Type pType, const QString &pMessage);
+
+    bool operator==(const CellmlFileIssue &pIssue) const;
 
     static bool compare(const CellmlFileIssue &pIssue1,
                         const CellmlFileIssue &pIssue2);
@@ -60,19 +62,21 @@ public:
     int column() const;
     QString message() const;
     QString formattedMessage() const;
-    QString importedFile() const;
+    QString fileName() const;
+    QString fileInfo() const;
 
 private:
     Type mType;
     int mLine;
     int mColumn;
     QString mMessage;
-    QString mImportedFile;
+    QString mFileName;
+    QString mFileInfo;
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileIssue> CellmlFileIssues;
+using CellmlFileIssues = QList<CellmlFileIssue>;
 
 //==============================================================================
 

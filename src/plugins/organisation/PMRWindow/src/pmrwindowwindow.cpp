@@ -52,9 +52,7 @@ namespace PMRWindow {
 
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWindowWindow),
-    mFirstTimeRetrievingExposures(true),
-    mItemDoubleClicked(false)
+    mGui(new Ui::PmrWindowWindow)
 {
     // Set up the GUI
 

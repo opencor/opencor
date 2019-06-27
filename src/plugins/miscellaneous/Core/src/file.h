@@ -115,12 +115,12 @@ private:
 
     int mNewIndex;
 
-    bool mModified;
+    bool mModified = false;
 
     QStringList mDependencies;
     QStringList mDependenciesSha1;
 
-    bool mDependenciesModified;
+    bool mDependenciesModified = false;
 };
 
 //==============================================================================

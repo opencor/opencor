@@ -72,7 +72,7 @@ public:
 private:
     CellMLAnnotationViewPlugin *mPlugin;
 
-    CellmlAnnotationViewEditingWidget *mEditingWidget;
+    CellmlAnnotationViewEditingWidget *mEditingWidget = nullptr;
     QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;
 
     QIntList mEditingWidgetSizes;

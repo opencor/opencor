@@ -74,9 +74,9 @@ protected:
 private:
     QWidget *mParent;
 
-    BusyWidget *mBusyWidget;
+    BusyWidget *mBusyWidget = nullptr;
 
-    int mCounter;
+    int mCounter = 0;
 
     void showBusyWidget(double pProgress);
 

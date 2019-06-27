@@ -60,14 +60,6 @@ namespace Compiler {
 
 //==============================================================================
 
-CompilerEngine::CompilerEngine() :
-    mExecutionEngine(nullptr),
-    mError(QString())
-{
-}
-
-//==============================================================================
-
 CompilerEngine::~CompilerEngine()
 {
     // Delete some internal objects

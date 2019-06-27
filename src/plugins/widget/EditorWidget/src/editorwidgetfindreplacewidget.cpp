@@ -55,8 +55,7 @@ namespace EditorWidget {
 EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pParent) :
     Core::Widget(pParent),
     mGui(new Ui::EditorWidgetFindReplaceWidget),
-    mOwner(pParent),
-    mActive(false)
+    mOwner(pParent)
 {
     // Set up the GUI
 

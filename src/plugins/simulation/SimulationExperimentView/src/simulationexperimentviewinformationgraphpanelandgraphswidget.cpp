@@ -58,20 +58,8 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
                                                                                                                            QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(this),
-    mMode(Mode::Graphs),
     mViewWidget(pViewWidget),
-    mSimulationWidget(pSimulationWidget),
-    mSimulation(nullptr),
-    mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
-    mGraphPanelPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
-    mGraphsPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
-    mGraphPanelPropertyEditor(nullptr),
-    mGraphsPropertyEditor(nullptr),
-    mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
-    mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
-    mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mRenamedModelListValues(QMap<QString, QString>()),
-    mImportMenu(nullptr)
+    mSimulationWidget(pSimulationWidget)
 {
     // Create our graph panel context menu and populate it
 

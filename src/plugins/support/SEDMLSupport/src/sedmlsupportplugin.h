@@ -69,7 +69,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QAction *mFileNewSedmlFileAction;
+    QAction *mFileNewSedmlFileAction = nullptr;
 
 private slots:
     void newSedmlFile();

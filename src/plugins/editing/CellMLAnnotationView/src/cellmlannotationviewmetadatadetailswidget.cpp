@@ -50,8 +50,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
                                                                                      CellmlAnnotationViewEditingWidget *pParent) :
     Widget(pParent),
     mPlugin(pPlugin),
-    mCellmlFile(pParent->cellmlFile()),
-    mElement(nullptr)
+    mCellmlFile(pParent->cellmlFile())
 {
     // Create and set our vertical layout
 

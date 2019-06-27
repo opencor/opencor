@@ -39,16 +39,7 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInformationParametersWidget(QWidget *pParent) :
-    PropertyEditorWidget(false, pParent),
-    mPlotAgainstVoiMenuAction(nullptr),
-    mPlotAgainstMenu(nullptr),
-    mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mSimulation(nullptr),
-    mNeedClearing(false),
-    mVoiAccessible(false),
-    mImportComponent(nullptr),
-    mImportMenu(nullptr)
+    PropertyEditorWidget(false, pParent)
 {
     // Create our context menu
 

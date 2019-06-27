@@ -114,14 +114,14 @@ private:
     QString mName;
     PluginInfo *mInfo;
     QString mErrorMessage;
-    QObject *mInstance;
+    QObject *mInstance = nullptr;
     Status mStatus;
     QString mStatusErrors;
 };
 
 //==============================================================================
 
-typedef QList<Plugin *> Plugins;
+using Plugins = QList<Plugin *>;
 
 //==============================================================================
 

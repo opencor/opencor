@@ -91,7 +91,7 @@ private:
 
 //==============================================================================
 
-typedef QList<SimulationIssue> SimulationIssues;
+using SimulationIssues = QList<SimulationIssue>;
 
 //==============================================================================
 
@@ -169,11 +169,11 @@ public:
     void updateInitialValues();
 
 private:
-    quint64 mDelay;
+    quint64 mDelay = 0;
 
-    double mStartingPoint;
-    double mEndingPoint;
-    double mPointInterval;
+    double mStartingPoint = 0.0;
+    double mEndingPoint = 1000.0;
+    double mPointInterval = 1.0;
 
     QString mOdeSolverName;
     Solver::Solver::Properties mOdeSolverProperties;
@@ -184,14 +184,14 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
-    double *mConstants;
-    double *mRates;
-    double *mStates;
-    double *mDummyStates;
-    double *mAlgebraic;
+    double *mConstants = nullptr;
+    double *mRates = nullptr;
+    double *mStates = nullptr;
+    double *mDummyStates = nullptr;
+    double *mAlgebraic = nullptr;
 
-    double *mInitialConstants;
-    double *mInitialStates;
+    double *mInitialConstants = nullptr;
+    double *mInitialStates = nullptr;
 
     QMap<DataStore::DataStore *, double *> mData;
 
@@ -244,9 +244,9 @@ public:
     double * data(double *pData, int pIndex, int pRun = -1) const;
 
 private:
-    DataStore::DataStore *mDataStore;
+    DataStore::DataStore *mDataStore = nullptr;
 
-    DataStore::DataStoreVariable *mPoints;
+    DataStore::DataStoreVariable *mPoints = nullptr;
 
     DataStore::DataStoreVariables mConstants;
     DataStore::DataStoreVariables mRates;
@@ -275,7 +275,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationImportData : public SimulationObject
 
 public:
     explicit SimulationImportData(Simulation *pSimulation);
-    ~SimulationImportData();
+    ~SimulationImportData() override;
 
     DataStore::DataStore * addDataStore();
 
@@ -350,19 +350,19 @@ public:
 private:
     QString mFileName;
 
-    FileType mFileType;
+    FileType mFileType = FileType::Unknown;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
-    SEDMLSupport::SedmlFile *mSedmlFile;
-    COMBINESupport::CombineArchive *mCombineArchive;
+    CellMLSupport::CellmlFile *mCellmlFile = nullptr;
+    SEDMLSupport::SedmlFile *mSedmlFile = nullptr;
+    COMBINESupport::CombineArchive *mCombineArchive = nullptr;
 
-    bool mNeedCheckIssues;
+    bool mNeedCheckIssues = true;
     SimulationIssues mIssues;
-    bool mHasBlockingIssues;
+    bool mHasBlockingIssues = false;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
+    CellMLSupport::CellmlFileRuntime *mRuntime = nullptr;
 
-    SimulationWorker *mWorker;
+    SimulationWorker *mWorker = nullptr;
 
     SimulationData *mData;
     SimulationResults *mResults;

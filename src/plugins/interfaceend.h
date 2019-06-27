@@ -18,55 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// COMBINE archive issue
+// Interface end
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "combinesupportglobal.h"
-
-//==============================================================================
-
-#include <QList>
-#include <QString>
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace COMBINESupport {
-
-//==============================================================================
-
-class COMBINESUPPORT_EXPORT CombineArchiveIssue
-{
-public:
-    enum class Type {
-        Information,
-        Error,
-        Warning,
-        Fatal
-    };
-
-    explicit CombineArchiveIssue(Type pType, const QString &pMessage);
-
-    Type type() const;
-    QString message() const;
-
-private:
-    Type mType;
-    QString mMessage;
-};
-
-//==============================================================================
-
-using CombineArchiveIssues = QList<CombineArchiveIssue>;
-
-//==============================================================================
-
-} // namespace COMBINESupport
-} // namespace OpenCOR
+#undef VIRTUAL
+#undef PURE_OR_OVERRIDE
 
 //==============================================================================
 // End of file

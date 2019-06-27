@@ -56,7 +56,7 @@ extern "C" Q_DECL_EXPORT int pluginInfoVersion();
 
 //==============================================================================
 
-typedef QMap<QString, QString> Descriptions;
+using Descriptions = QMap<QString, QString>;
 
 //==============================================================================
 

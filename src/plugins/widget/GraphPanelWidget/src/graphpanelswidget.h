@@ -65,13 +65,13 @@ public:
 private:
     GraphPanelWidgets mGraphPanels;
 
-    GraphPanelWidget *mActiveGraphPanel;
+    GraphPanelWidget *mActiveGraphPanel = nullptr;
 
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
 
     QIntList mInternalSizes;
-    bool mUseInternalSizes;
+    bool mUseInternalSizes = true;
 
     bool removeGraphPanel(GraphPanelWidget *pGraphPanel);
 

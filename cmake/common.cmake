@@ -1,5 +1,5 @@
 macro(configure_clang_and_clang_tidy TARGET_NAME)
-    # Configure Cland and Clang-Tidy for the given target
+    # Configure Clang and Clang-Tidy for the given target
 
     if(APPLE)
         # Note #1: the full list of diagnostic flags for Clang can be found at
@@ -32,8 +32,33 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
     endif()
 
     if(ENABLE_CLANG_TIDY)
+        # Note: Clang-Tidy does, by default, only report issues with C++ files.
+        #       When it comes to header files, we must specify the ones for
+        #       which we want issues to be reported, this using `-header-filter`
+        #       and/or `-line-filter`. The problem is that the format of the
+        #       path reported by Clang-Tidy depends on the CMake generator that
+        #       is used. For example, with Ninja, we have a path that looks like
+        #       /a/b/build/../src while with Make it looks like /a/b/src. Also,
+        #       the regular expression needed by `-header-filter` follows the
+        #       POSIX ERE standard rather than the PCRE one, which is a big
+        #       limitation. Indeed, we are not interested in some header files
+        #       that are located in specific folders. Using a PCRE regular
+        #       expression, we could easily filter them out with something like
+        #       ^(?:(?!xxx|yyy|zzz).)*$, i.e. a regular expression with a
+        #       non-capturing group and a negative lookahead, but we can't since
+        #       we need a POSIX ERE regulard expression. So, in the end, we ask
+        #       for issues related to header files located under ../src, which
+        #       means that it only works with Ninja and from [OpenCOR]/build.
+        #       Then, there are some header files that are under [OpenCOR]/src,
+        #       but for which we don't want to see issues. So, we filter them
+        #       out using `-line-filter`, which is normally used to show issues
+        #       present between a given set of lines (!?). So, here, we ask for
+        #       issues between lines 9999999 and 9999999 (!!). We finish our
+        #       list with `.h`, so that issues with other header files can get
+        #       reported...
+
         set_target_properties(${TARGET_NAME} PROPERTIES
-            CXX_CLANG_TIDY "${CLANG_TIDY}"
+            CXX_CLANG_TIDY "${CLANG_TIDY};-header-filter=\\\.\\\.\\\/src\\\/.*;-line-filter=[{'name':'diff_match_patch.h','lines':[[9999999,9999999]]},{'name':'qzipreader_p.h','lines':[[9999999,9999999]]},{'name':'.h'}]"
         )
     endif()
 endmacro()
@@ -835,7 +860,7 @@ endmacro()
 
 #===============================================================================
 
-macro(create_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME)
+macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
     # Various initialisations
 
     set(OPTIONS)
@@ -863,7 +888,8 @@ macro(create_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     # The full path to the package's files
 
-    set(REAL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+           DIRNAME "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
     # Remove any historical package archive
 
@@ -908,7 +934,7 @@ set(SHA1_FILES")
 set(SHA1_VALUES)
 
 foreach(SHA1_FILE IN LISTS SHA1_FILES)
-    set(REAL_SHA1_FILENAME \"${REAL_DIRNAME}/\$\{SHA1_FILE\}\")
+    set(REAL_SHA1_FILENAME \"${DIRNAME}/\$\{SHA1_FILE\}\")
 
     if(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
         message(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
@@ -926,7 +952,7 @@ endforeach()
 # Compress our package
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
-                WORKING_DIRECTORY ${REAL_DIRNAME}
+                WORKING_DIRECTORY ${DIRNAME}
                 OUTPUT_QUIET)
 
 # Make sure that the compressed version of our package exists
@@ -942,7 +968,7 @@ if(EXISTS ${COMPRESSED_FILENAME})
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
 retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
-                      \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}")
+                      \\$\\{FULL_LOCAL_EXTERNAL_PACKAGE_DIR\\} \$\{SHA1_VALUE\}")
 
     if(NOT "${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
         set(CMAKE_CODE "${CMAKE_CODE}\n                      PACKAGE_REPOSITORY \\$\\{PACKAGE_REPOSITORY\\}")
@@ -1074,20 +1100,13 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
     # Create our destination folder, if needed
 
-    set(REAL_DIRNAME ${CMAKE_SOURCE_DIR}/${DIRNAME}/ext)
-
-    string(REGEX REPLACE "${REMOTE_EXTERNAL_PACKAGE_DIR}/ext$" "${LOCAL_EXTERNAL_PACKAGE_DIR}"
-           REAL_DIRNAME "${REAL_DIRNAME}")
-    string(REGEX REPLACE "${PLATFORM_DIR}/ext$" "ext"
-           REAL_DIRNAME "${REAL_DIRNAME}")
-
-    if(NOT EXISTS ${REAL_DIRNAME})
-        file(MAKE_DIRECTORY ${REAL_DIRNAME})
+    if(NOT EXISTS ${DIRNAME})
+        file(MAKE_DIRECTORY ${DIRNAME})
     endif()
 
     # Make sure that we have the expected package's files
 
-    check_files(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+    check_files(${DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
     if(NOT CHECK_FILES_OK)
         # Something went wrong with the package's files, so retrieve the package
@@ -1101,7 +1120,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
         endif()
 
         set(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${REAL_TARGET_PLATFORM}.tar.gz)
-        set(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
+        set(FULL_COMPRESSED_FILENAME ${DIRNAME}/${COMPRESSED_FILENAME})
 
         if("${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
             string(TOLOWER ${PACKAGE_NAME} PACKAGE_REPOSITORY)
@@ -1126,14 +1145,14 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
         list(GET STATUS 0 STATUS_CODE)
 
         if(${STATUS_CODE} EQUAL 0)
-            check_file(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
+            check_file(${DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
 
             if(NOT CHECK_FILE_OK)
                 message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') does not have the expected SHA-1 value...")
             endif()
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
-                            WORKING_DIRECTORY ${REAL_DIRNAME}
+                            WORKING_DIRECTORY ${DIRNAME}
                             OUTPUT_QUIET)
 
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
@@ -1151,7 +1170,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
         list(GET STATUS 0 STATUS_CODE)
 
         if(${STATUS_CODE} EQUAL 0)
-            check_files(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+            check_files(${DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
             if(NOT CHECK_FILES_OK)
                 message("The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') is invalid:")

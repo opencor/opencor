@@ -3,7 +3,7 @@ project(QScintillaPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.11.1)
+set(PACKAGE_VERSION 2.11.2)
 
 # Version of our library
 
@@ -12,11 +12,12 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v2.11.1)
+set(GIT_TAG v2.11.2)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -59,33 +60,30 @@ endif()
 if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c62d064d2ae96b6707c38603642037555f02a478
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e5a68e381dc4bcc2bed758808f0ec5884109b150
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 1686ea7c964fb93f9871f7097e3467f70afa2bec
-                                              5599fb1ff906c9fd9c32c85ba22aee02014c6182)
+                                  SHA1_VALUES af78f2ab1e1b5c2bdb860e49350f1b1351aab272
+                                              0a3f89557bc51f04ffe6662420406499bf4639a9)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b5e394899c21e3d438048634b8af50fd7514e3d9
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 72e29fb95025536571d26104b77acaa5b2e00494
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b61d02815597c211c2ce0e3e26043bb736edf8aa
-                                              2dfa0d7127592a7abadfa0bb12b836b9a9465a90)
+                                  SHA1_VALUES 61dd899527192eed6b695af1669520489e8ecf31
+                                              03fe9901841c2af58d2425a15a442e88ee0749d6)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 0c714e484d1708b75ecb8fb9ff75be8211a835fc
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ee7497aebb1fb8247ed1caaf891921f8b11e214c
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 52dbf010e21045a04112d066fc2abb0ba21bc34c)
+                              SHA1_VALUES 03d3fe8585de0f7c054e2aa1216f84e5d14db3b2)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 088a41487146864415c38d5cf48558a94d4ed0af
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 10afe247899e6e23c56a4e60634c6e700578d883
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6ec3695e71aeeb26dca6f7bbd6c575fa5b84bc05)
+                              SHA1_VALUES 580b90ea5badb4bc8ea87a701819bec44f363812)
     endif()
 else()
     # Set platform specific configuration options
@@ -161,7 +159,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
