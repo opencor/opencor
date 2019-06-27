@@ -149,15 +149,15 @@ private:
 
     CellmlFileIssues mIssues;
 
-    bool mLoadingNeeded;
-    bool mFullInstantiationNeeded;
-    bool mDependenciesNeeded;
+    bool mLoadingNeeded = true;
+    bool mFullInstantiationNeeded = true;
+    bool mDependenciesNeeded = true;
 
     QMap<QString, QString> mImportContents;
 
     QStringList mUsedCmetaIds;
 
-    bool mUpdated;
+    bool mUpdated = false;
 
     void reset() override;
 

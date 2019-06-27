@@ -78,8 +78,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                                    QAction *pSynchronizeXAxisAction,
                                    QAction *pSynchronizeYAxisAction,
                                    QWidget *pParent) :
-    Widget(pParent),
-    mActive(false)
+    Widget(pParent)
 {
     // Create and set our horizontal layout
 

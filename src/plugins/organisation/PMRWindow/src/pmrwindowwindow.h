@@ -84,7 +84,7 @@ private:
 
     QLabel *mPmrInstanceLabel;
 
-    bool mFirstTimeRetrievingExposures;
+    bool mFirstTimeRetrievingExposures = true;
 
     QString mPmrUrl;
 
@@ -92,7 +92,7 @@ private:
 
     PmrWindowWidget *mPmrWindowWidget;
 
-    bool mItemDoubleClicked;
+    bool mItemDoubleClicked = false;
 
     void retrieveExposures(bool pVisible, bool pForceRetrieval);
 

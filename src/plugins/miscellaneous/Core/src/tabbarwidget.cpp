@@ -38,8 +38,7 @@ namespace Core {
 //==============================================================================
 
 TabBarWidget::TabBarWidget(QWidget *pParent) :
-    QTabBar(pParent),
-    mOldIndex(-1)
+    QTabBar(pParent)
 {
     // Customise our style, but only if we are on macOS
     // Note #1: indeed, between Qt 5.6.x LTS and Qt 5.9.x LTS, the styling of a

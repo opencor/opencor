@@ -220,7 +220,7 @@ private:
 
 //==============================================================================
 
-typedef QList<Property *> Properties;
+using Properties = QList<Property *>;
 
 //==============================================================================
 
@@ -341,11 +341,11 @@ private:
     PropertyItem *mUnit;
 
     QStringList mListValues;
-    QString mEmptyListValue;
+    QString mEmptyListValue = UnknownValue;
 
     QString mExtraInfo;
 
-    Property * mParentProperty;
+    Property * mParentProperty = nullptr;
     Properties mProperties;
 
     QList<QStandardItem *> items() const;
@@ -444,10 +444,10 @@ private:
     Properties mProperties;
     Properties mAllProperties;
 
-    Property *mProperty;
-    QWidget *mPropertyEditor;
+    Property *mProperty = nullptr;
+    QWidget *mPropertyEditor = nullptr;
 
-    bool mRightClicking;
+    bool mRightClicking = false;
 
     QMap<Property *, bool> mPropertyChecked;
 

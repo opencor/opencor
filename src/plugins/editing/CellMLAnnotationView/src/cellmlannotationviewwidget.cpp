@@ -46,11 +46,7 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                        QWidget *pParent) :
     ViewWidget(pParent),
-    mPlugin(pPlugin),
-    mEditingWidget(nullptr),
-    mEditingWidgets(QMap<QString, CellmlAnnotationViewEditingWidget *>()),
-    mEditingWidgetSizes(QIntList()),
-    mMetadataDetailsWidgetSizes(QIntList())
+    mPlugin(pPlugin)
 {
 }
 

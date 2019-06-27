@@ -69,35 +69,33 @@ class EditingViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit EditingViewPlugin();
-
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 
 private:
-    EditingViewInterface *mEditingViewInterface;
+    EditingViewInterface *mEditingViewInterface = nullptr;
 
-    QMenu *mEditMenu;
+    QMenu *mEditMenu = nullptr;
 
-    QAction *mEditUndoAction;
-    QAction *mEditRedoAction;
+    QAction *mEditUndoAction = nullptr;
+    QAction *mEditRedoAction = nullptr;
 
-    QAction *mEditCutAction;
-    QAction *mEditCopyAction;
-    QAction *mEditPasteAction;
-    QAction *mEditDeleteAction;
+    QAction *mEditCutAction = nullptr;
+    QAction *mEditCopyAction = nullptr;
+    QAction *mEditPasteAction = nullptr;
+    QAction *mEditDeleteAction = nullptr;
 
-    QAction *mEditFindReplaceAction;
-    QAction *mEditFindNextAction;
-    QAction *mEditFindPreviousAction;
+    QAction *mEditFindReplaceAction = nullptr;
+    QAction *mEditFindNextAction = nullptr;
+    QAction *mEditFindPreviousAction = nullptr;
 
-    QAction *mEditSelectAllAction;
+    QAction *mEditSelectAllAction = nullptr;
 
-    QAction *mEditWordWrapAction;
+    QAction *mEditWordWrapAction = nullptr;
 
-    EditorWidget::EditorWidget *mEditor;
+    EditorWidget::EditorWidget *mEditor = nullptr;
 
     QString mFileName;
 

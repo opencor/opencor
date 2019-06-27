@@ -58,7 +58,7 @@ public:
 
 //==============================================================================
 
-typedef QList<PluginInterface *> PluginInterfaces;
+using PluginInterfaces = QList<PluginInterface *>;
 
 //==============================================================================
 

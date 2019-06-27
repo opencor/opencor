@@ -137,21 +137,17 @@ set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
 if(WIN32)
     execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
-
-    if(NOT RESULT EQUAL 0)
-        message(FATAL_ERROR "silentrun could not be built...")
-    endif()
 else()
     if(APPLE)
-        set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
+        set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
     endif()
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+endif()
 
-    if(NOT RESULT EQUAL 0)
-        message(FATAL_ERROR "silentrun could not be built...")
-    endif()
+if(NOT RESULT EQUAL 0)
+    message(FATAL_ERROR "silentrun could not be built...")
 endif()
 
 # Try to build our runpath2rpath program, if we are on Linux
@@ -274,26 +270,14 @@ set(PLATFORM_DIR ${PLATFORM})
 
 if(WIN32)
     if(RELEASE_MODE)
-        set(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
-        set(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
-
-        set(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/release)
-        set(LOCAL_EXTERNAL_PACKAGE_DIR ext/release)
+        set(EXTERNAL_PACKAGE_DIR release)
     else()
-        set(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
-        set(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
-
-        set(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/debug)
-        set(LOCAL_EXTERNAL_PACKAGE_DIR ext/debug)
+        set(EXTERNAL_PACKAGE_DIR debug)
     endif()
 
     set(DEST_EXTERNAL_BINARIES_DIR bin)
 else()
-    set(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
-    set(LOCAL_EXTERNAL_BINARIES_DIR bin)
-
-    set(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR})
-    set(LOCAL_EXTERNAL_PACKAGE_DIR ext)
+    set(EXTERNAL_PACKAGE_DIR .)
 
     if(APPLE)
         set(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
@@ -872,8 +856,8 @@ if(ENABLE_TEST_PLUGINS)
 endif()
 
 set(PLUGINS
-    thirdParty/zlib
     thirdParty/OpenSSL
+    thirdParty/zlib
 
     thirdParty/libSBML
     thirdParty/Python
@@ -962,7 +946,7 @@ foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
 
     if("${PLUGIN}" MATCHES "^thirdParty/.*$")
-        include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR}/include)
+        include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
     endif()
 
     include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
@@ -1332,6 +1316,19 @@ else()
 
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
+
+    # Library needed on Ubuntu 19.04 and later (while we build OpenCOR on Ubuntu
+    # 18.04 LTS)
+
+    foreach(LIBRARY tinfo.so.5)
+        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+
+        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+        install(FILES ${REAL_FULL_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_LIBRARY})
+    endforeach()
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying

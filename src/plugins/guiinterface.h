@@ -63,13 +63,13 @@ public:
 
 private:
     Type mType;
-    QAction *mAction;
+    QAction *mAction = nullptr;
     QMenu *mMenu;
 };
 
 //==============================================================================
 
-typedef QList<Menu> Menus;
+using Menus = QList<Menu>;
 
 //==============================================================================
 
@@ -94,7 +94,7 @@ private:
 
 //==============================================================================
 
-typedef QList<MenuAction> MenuActions;
+using MenuActions = QList<MenuAction>;
 
 //==============================================================================
 

@@ -56,13 +56,7 @@ namespace RawCellMLView {
 //==============================================================================
 
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mNeedLoadingSettings(true),
-    mSettingsGroup(QString()),
-    mEditingWidget(nullptr),
-    mEditingWidgets(QMap<QString, CellMLEditingView::CellmlEditingViewWidget *>()),
-    mPresentationMathmlEquations(QMap<QString, QString>()),
-    mContentMathmlEquation(QString())
+    ViewWidget(pParent)
 {
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
@@ -341,28 +335,6 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
         bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues);
 
-        // Warn the user about the CellML issues being maybe for a(n)
-        // (in)direclty imported CellML file, should we be dealing with a CellML
-        // 1.1 file
-
-        int nbOfReportedIssues = 0;
-
-        for (const auto &cellmlFileIssue : cellmlFileIssues) {
-            nbOfReportedIssues += int(   !pOnlyErrors
-                                      ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error));
-        }
-
-        CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
-
-        if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
-            && (cellmlFile->model() != nullptr) && (cellmlFile->model()->imports()->length() != 0)
-            && (nbOfReportedIssues != 0)) {
-            editorList->addItem(EditorWidget::EditorListItem::Type::Information,
-                                (nbOfReportedIssues == 1)?
-                                    tr("The issue reported below may be related to this CellML file or to one of its (in)directly imported CellML files."):
-                                    tr("The issues reported below may be related to this CellML file and/or to one or several of its (in)directly imported CellML files."));
-        }
-
         // Add whatever issue there may be to our list and select the first one
         // of them
 
@@ -374,14 +346,18 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
                                         EditorWidget::EditorListItem::Type::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
-                                    qPrintable(cellmlFileIssue.formattedMessage()));
+                                    cellmlFileIssue.formattedMessage(),
+                                    cellmlFileIssue.fileName(),
+                                    cellmlFileIssue.fileInfo());
             }
         }
 
         editorList->selectFirstItem();
 
-        // Provide some extra information in case, if we are dealing with a
-        // CellML 1.0/1.1 files and are therefore using the CellML API
+        // Provide some extra information in case we are dealing with a CellML
+        // 1.0/1.1 files and are therefore using the CellML API
+
+        CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
         if (   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
             || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {

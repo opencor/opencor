@@ -49,7 +49,7 @@ protected:
     bool event(QEvent *pEvent) override;
 
 private:
-    bool mCanEmitFileOpenRequestSignal;
+    bool mCanEmitFileOpenRequestSignal = false;
 
     QStringList mFileNamesOrOpencorUrls;
 

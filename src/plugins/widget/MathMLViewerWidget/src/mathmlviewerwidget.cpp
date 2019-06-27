@@ -56,13 +56,7 @@ namespace MathMLViewerWidget {
 //==============================================================================
 
 MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
-    Widget(pParent),
-    mGreekSymbols(QMap<QString, QString>()),
-    mMathmlDocument(QwtMathMLDocument()),
-    mOneOverMathmlDocumentWidth(0),
-    mOneOverMathmlDocumentHeight(0),
-    mContents(QString()),
-    mError(false)
+    Widget(pParent)
 {
     // Populate our table of Greek symbols, if needed
 

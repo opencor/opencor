@@ -84,8 +84,7 @@ QMap<QString, Core::Properties> SimulationExperimentViewInformationSolversWidget
 //==============================================================================
 
 SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInformationSolversWidget(QWidget *pParent) :
-    PropertyEditorWidget(true, pParent),
-    mDescriptions(QMap<Core::Property *, Descriptions>())
+    PropertyEditorWidget(true, pParent)
 {
     // Remove all our properties
 

@@ -128,7 +128,6 @@ class KinsolSolver : public OpenCOR::Solver::NlaSolver
     Q_OBJECT
 
 public:
-    explicit KinsolSolver();
     ~KinsolSolver() override;
 
     void solve(ComputeSystemFunction pComputeSystem, double *pParameters,

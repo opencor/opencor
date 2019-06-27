@@ -85,10 +85,10 @@ public:
     bool validate(const QString &pFileName, QString &pExtra) const;
 
 private:
-    bool mNeedLoadingSettings;
+    bool mNeedLoadingSettings = true;
     QString mSettingsGroup;
 
-    CellMLEditingView::CellmlEditingViewWidget *mEditingWidget;
+    CellMLEditingView::CellmlEditingViewWidget *mEditingWidget = nullptr;
     QMap<QString, CellMLEditingView::CellmlEditingViewWidget *> mEditingWidgets;
 
     QMap<QString, QString> mPresentationMathmlEquations;

@@ -21,29 +21,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Data store interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update dataStoreInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual QString dataStoreName() const PURE;
+    VIRTUAL QString dataStoreName() const PURE_OR_OVERRIDE;
 
-    virtual DataStore::DataStoreImportData * getImportData(const QString &pFileName,
+    VIRTUAL DataStore::DataStoreImportData * getImportData(const QString &pFileName,
                                                            DataStore::DataStore *pImportDataStore,
                                                            DataStore::DataStore *pResultsDataStore,
-                                                           const QList<quint64> &pRunSizes) const PURE;
-    virtual DataStore::DataStoreExportData * getExportData(const QString &pFileName,
+                                                           const QList<quint64> &pRunSizes) const PURE_OR_OVERRIDE;
+    VIRTUAL DataStore::DataStoreExportData * getExportData(const QString &pFileName,
                                                            DataStore::DataStore *pDataStore,
-                                                           const QMap<int, QIcon> &pIcons) const PURE;
+                                                           const QMap<int, QIcon> &pIcons) const PURE_OR_OVERRIDE;
 
-    virtual DataStore::DataStoreImporter * dataStoreImporterInstance() const PURE;
-    virtual DataStore::DataStoreExporter * dataStoreExporterInstance() const PURE;
-
-#undef PURE
+    VIRTUAL DataStore::DataStoreImporter * dataStoreImporterInstance() const PURE_OR_OVERRIDE;
+    VIRTUAL DataStore::DataStoreExporter * dataStoreExporterInstance() const PURE_OR_OVERRIDE;
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

@@ -49,7 +49,6 @@ FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
                       pTextOrPath:
                       QFileInfo(pTextOrPath).fileName()),
     mFolder(pFolder),
-    mExpanded(false),
     mPath(pFolder?QString():pTextOrPath)
 {
     // Customise ourselves

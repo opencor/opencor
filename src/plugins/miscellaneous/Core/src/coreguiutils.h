@@ -49,6 +49,13 @@ class QWidget;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+class Plugin;
+
+//==============================================================================
+
 namespace Core {
 
 //==============================================================================
@@ -106,6 +113,8 @@ void CORE_EXPORT showCentralBusyWidget();
 void CORE_EXPORT showCentralProgressBusyWidget();
 void CORE_EXPORT setCentralBusyWidgetProgress(double pProgress);
 void CORE_EXPORT hideCentralBusyWidget();
+
+Plugin CORE_EXPORT * currentViewPlugin();
 
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),

@@ -188,13 +188,6 @@ void KinsolSolverData::setUserData(KinsolSolverUserData *pUserData)
 
 //==============================================================================
 
-KinsolSolver::KinsolSolver() :
-    mData(QMap<void *, KinsolSolverData *>())
-{
-}
-
-//==============================================================================
-
 KinsolSolver::~KinsolSolver()
 {
     // Delete some internal objects

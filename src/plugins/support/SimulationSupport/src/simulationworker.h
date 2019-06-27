@@ -74,16 +74,16 @@ private:
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
-    double mCurrentPoint;
+    double mCurrentPoint = 0.0;
 
-    bool mPaused;
-    bool mStopped;
+    bool mPaused = false;
+    bool mStopped = false;
 
-    bool mReset;
+    bool mReset = false;
 
     QWaitCondition mPausedCondition;
 
-    bool mError;
+    bool mError = false;
 
     SimulationWorker *&mSelf;
 

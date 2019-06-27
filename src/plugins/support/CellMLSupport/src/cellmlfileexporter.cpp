@@ -30,14 +30,6 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileExporter::CellmlFileExporter() :
-    mResult(false),
-    mErrorMessage(QString())
-{
-}
-
-//==============================================================================
-
 CellmlFileExporter::~CellmlFileExporter() = default;
 
 //==============================================================================

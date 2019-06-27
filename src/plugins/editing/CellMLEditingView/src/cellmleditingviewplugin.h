@@ -69,25 +69,23 @@ class CellMLEditingViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CellMLEditingViewPlugin();
-
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 
 private:
-    QAction *mEditReformatAction;
-    QAction *mEditReformatSeparator;
+    QAction *mEditReformatAction = nullptr;
+    QAction *mEditReformatSeparator = nullptr;
 
-    QAction *mToolsCellmlValidationAction;
-    QAction *mToolsCellmlValidationSeparator;
+    QAction *mToolsCellmlValidationAction = nullptr;
+    QAction *mToolsCellmlValidationSeparator = nullptr;
 
     QString mFileName;
 
-    EditorWidget::EditorWidget *mEditor;
+    EditorWidget::EditorWidget *mEditor = nullptr;
 
-    CellmlEditingViewInterface *mCellmlEditingViewInterface;
+    CellmlEditingViewInterface *mCellmlEditingViewInterface = nullptr;
 
 private slots:
     void reformat();

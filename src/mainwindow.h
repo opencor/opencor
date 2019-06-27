@@ -91,8 +91,8 @@ private:
     Plugins mLoadedPreferencesPlugins;
     Plugins mLoadedWindowPlugins;
 
-    CoreInterface *mCoreInterface;
-    FileHandlingInterface *mFileHandlingInterface;
+    CoreInterface *mCoreInterface = nullptr;
+    FileHandlingInterface *mFileHandlingInterface = nullptr;
 
     QString mRawLocale;
 
@@ -103,12 +103,12 @@ private:
 
     QMap<QString, QMenu *> mMenus;
 
-    QMenu *mFileNewMenu;
+    QMenu *mFileNewMenu = nullptr;
 
-    QMenu *mViewWindowsMenu;
-    QAction *mViewSeparator;
+    QMenu *mViewWindowsMenu = nullptr;
+    QAction *mViewSeparator = nullptr;
 
-    bool mDockedWindowsVisible;
+    bool mDockedWindowsVisible = true;
 
     QByteArray mDockedWindowsState;
 

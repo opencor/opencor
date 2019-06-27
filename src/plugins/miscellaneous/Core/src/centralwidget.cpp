@@ -67,9 +67,7 @@ namespace Core {
 
 //==============================================================================
 
-CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
-    mEnabled(false),
-    mViewPlugins(Plugins())
+CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner)
 {
     // Initialise a few internal objects
 
@@ -133,18 +131,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 //==============================================================================
 
 CentralWidget::CentralWidget(QWidget *pParent) :
-    Widget(pParent),
-    mState(State::Starting),
-    mLoadedFileHandlingPlugins(Plugins()),
-    mLoadedFileTypePlugins(Plugins()),
-    mLoadedGuiPlugins(Plugins()),
-    mLoadedViewPlugins(Plugins()),
-    mModeTabIndexModes(QMap<int, ViewInterface::Mode>()),
-    mModeModeTabIndexes(QMap<ViewInterface::Mode, int>()),
-    mFileModeTabIndexes(QMap<QString, int>()),
-    mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
-    mFileNames(QStringList()),
-    mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>())
+    Widget(pParent)
 {
     // Create and set our horizontal layout
 
@@ -1527,6 +1514,15 @@ void CentralWidget::addView(Plugin *pPlugin)
 
     mode->addViewPlugin(pPlugin);
     mode->viewTabs()->addTab(QString());
+}
+
+//==============================================================================
+
+Plugin * CentralWidget::currentViewPlugin() const
+{
+    // Return the current view plugin
+
+    return viewPlugin(mFileTabs->currentIndex());
 }
 
 //==============================================================================

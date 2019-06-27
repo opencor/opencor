@@ -42,13 +42,7 @@ namespace FileBrowserWindow {
 //==============================================================================
 
 FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
-    TreeViewWidget(pParent),
-    mNeedDefColWidth(true),
-    mInitPathDirs(QStringList()),
-    mInitPathDir(QString()),
-    mInitPath(QString()),
-    mPreviousItems(QStringList()),
-    mNextItems(QStringList())
+    TreeViewWidget(pParent)
 {
     // Customise ourselves
 

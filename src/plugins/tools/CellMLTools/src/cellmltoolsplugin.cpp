@@ -60,22 +60,14 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 }
 
 //==============================================================================
-
-CellMLToolsPlugin::CellMLToolsPlugin() :
-    mFileName(QString()),
-    mCellmlFileExportToMenu(nullptr),
-    mExportToCellml10Action(nullptr),
-    mExportToUserDefinedFormatAction(nullptr)
-{
-}
-
-//==============================================================================
 // CLI interface
 //==============================================================================
 
-int CellMLToolsPlugin::executeCommand(const QString &pCommand,
-                                      const QStringList &pArguments)
+bool CellMLToolsPlugin::executeCommand(const QString &pCommand,
+                                       const QStringList &pArguments, int &pRes)
 {
+    Q_UNUSED(pRes)
+
     // Run the given CLI command
 
     static const QString Help     = "help";
@@ -87,7 +79,7 @@ int CellMLToolsPlugin::executeCommand(const QString &pCommand,
 
         runHelpCommand();
 
-        return 0;
+        return true;
     }
 
     if (pCommand == Export) {
@@ -106,7 +98,7 @@ int CellMLToolsPlugin::executeCommand(const QString &pCommand,
 
     runHelpCommand();
 
-    return -1;
+    return false;
 }
 
 //==============================================================================
@@ -333,8 +325,8 @@ void CellMLToolsPlugin::runHelpCommand()
 
 //==============================================================================
 
-int CellMLToolsPlugin::runCommand(Command pCommand,
-                                  const QStringList &pArguments)
+bool CellMLToolsPlugin::runCommand(Command pCommand,
+                                   const QStringList &pArguments)
 {
     // Make sure that we have the correct number of arguments
 
@@ -342,7 +334,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
         || ((pCommand == Command::Validate) && (pArguments.count() != 1))) {
         runHelpCommand();
 
-        return -1;
+        return false;
     }
 
     // Check whether we are dealing with a local or a remote file
@@ -487,15 +479,13 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
         std::cout << output.toStdString() << std::endl;
     }
 
-    return (   ((pCommand == Command::Export) && output.isEmpty())
-            || ((pCommand == Command::Validate) && validFile))?
-                0:
-               -1;
+    return    ((pCommand == Command::Export) && output.isEmpty())
+           || ((pCommand == Command::Validate) && validFile);
 }
 
 //==============================================================================
 
-int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
+bool CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 {
     // Export an existing file to the console using a given format as the
     // destination format
@@ -505,7 +495,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
 //==============================================================================
 
-int CellMLToolsPlugin::runValidateCommand(const QStringList &pArguments)
+bool CellMLToolsPlugin::runValidateCommand(const QStringList &pArguments)
 {
     // Validate an existing file
 

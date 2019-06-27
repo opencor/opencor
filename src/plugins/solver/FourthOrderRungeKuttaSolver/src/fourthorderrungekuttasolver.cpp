@@ -30,16 +30,6 @@ namespace FourthOrderRungeKuttaSolver {
 
 //==============================================================================
 
-FourthOrderRungeKuttaSolver::FourthOrderRungeKuttaSolver() :
-    mStep(StepDefaultValue),
-    mK1(nullptr),
-    mK23(nullptr),
-    mYk123(nullptr)
-{
-}
-
-//==============================================================================
-
 FourthOrderRungeKuttaSolver::~FourthOrderRungeKuttaSolver()
 {
     // Delete some internal objects

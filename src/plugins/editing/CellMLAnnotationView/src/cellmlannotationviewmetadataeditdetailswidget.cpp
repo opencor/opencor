@@ -134,26 +134,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     Core::Widget(pParent),
     mAnnotationWidget(pAnnotationWidget),
     mEditingWidget(pEditingWidget),
-    mTermValue(nullptr),
-    mAddTermButton(nullptr),
-    mTerm(QString()),
-    mTerms(QStringList()),
-    mItems(CellmlAnnotationViewMetadataEditDetailsItems()),
-    mLookUpTerm(false),
-    mErrorMessage(QString()),
-    mHasInternetConnection(true),
-    mInformationType(InformationType::None),
-    mLookUpInformation(false),
-    mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
-    mEnabledItems(QMap<QString, bool>()),
-    mCellmlFile(pCellmlFile),
-    mElement(nullptr),
-    mUrls(QMap<QString, QString>()),
-    mItemInformationSha1s(QStringList()),
-    mItemInformationSha1(QString()),
-    mLink(QString()),
-    mTextContent(QString()),
-    mNetworkReply(nullptr)
+    mCellmlFile(pCellmlFile)
 {
     // Create a network access manager so that we can then retrieve a list of
     // ontological terms models from PMR

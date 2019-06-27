@@ -22,7 +22,8 @@ set(WHEEL_GIT_TAG "0.31.0")
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Set the ABI flag and version identifier
 
@@ -131,13 +132,10 @@ endif()
 if(USE_PREBUILT_PYTHON_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 201c3a0a7621901c7c5da8c121aabff69800ab93
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 201c3a0a7621901c7c5da8c121aabff69800ab93
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES b45336c90f5a8d39067c8873c46eed73e0596d82
                                               1fb636519bc0d86f181febbac697c842945f645b
@@ -146,7 +144,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                               b9d15e7df553a66f8f0a42f27016ff878051196d)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES eaec9798ba6c5a1bf4b1cc161b6c7dfc59d1ea80
                                               6e79fbfa322c9c56189932c9d6007b9e1f55d3af
@@ -156,13 +154,13 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e3452e617fa525ee46c42ba3fcbb5bff88b6ba97
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e3452e617fa525ee46c42ba3fcbb5bff88b6ba97
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES c5dbf4f4ff5355481cec920ab09bcab2257408e0
                                           c1faf41d91676096de6e3d5ac9f2f6cd0177eed0)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f6c20cf56a3adbe2cc2d4003e90ddf17f3068c83
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f6c20cf56a3adbe2cc2d4003e90ddf17f3068c83
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 15c502637e33f86db2ad9f8bc7b14b24a5c76844
                                           67b894553bdf5156219d52a9f1656bc1168d23a3
@@ -511,7 +509,6 @@ else()
     # Package Python's include files and libraries
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${CREATE_PACKAGE_TARGET})

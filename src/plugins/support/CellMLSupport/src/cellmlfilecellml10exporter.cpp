@@ -53,10 +53,7 @@ namespace CellMLSupport {
 
 CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
                                                        const QString &pFileName) :
-    mModel(pModel),
-    mCopiedUnits(QSet<QPair<QString, QString>>()),
-    mComponentNames(QSet<QString>()),
-    mRootGroup(nullptr)
+    mModel(pModel)
 {
     // Create an empty CellML 1.0 model
 

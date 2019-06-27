@@ -70,7 +70,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlTextViewParserMessage> CellmlTextViewParserMessages;
+using CellmlTextViewParserMessages = QList<CellmlTextViewParserMessage>;
 
 //==============================================================================
 
@@ -78,7 +78,7 @@ class CellmlTextViewParser;
 
 //==============================================================================
 
-typedef QDomElement (CellmlTextViewParser::*ParseNormalMathematicalExpressionFunction)(QDomNode &pDomNode);
+using ParseNormalMathematicalExpressionFunction = QDomElement (CellmlTextViewParser::*)(QDomNode &pDomNode);
 
 //==============================================================================
 
@@ -96,8 +96,6 @@ public:
         PiecewiseEndSel
     };
 
-    explicit CellmlTextViewParser();
-
     bool execute(const QString &pCellmlText,
                  CellMLSupport::CellmlFile::Version pCellmlVersion);
     bool execute(const QString &pCellmlText, bool pFullParsing = true);
@@ -114,7 +112,7 @@ public:
 private:
     CellmlTextViewScanner mScanner;
 
-    CellMLSupport::CellmlFile::Version mCellmlVersion;
+    CellMLSupport::CellmlFile::Version mCellmlVersion = CellMLSupport::CellmlFile::Version::Cellml_1_0;
 
     QDomDocument mDomDocument;
     QDomElement mModelElement;
@@ -123,7 +121,7 @@ private:
 
     QMap<QString, QString> mNamespaces;
 
-    Statement mStatement;
+    Statement mStatement = Statement::Unknown;
 
     void initialize(const QString &pCellmlText);
 

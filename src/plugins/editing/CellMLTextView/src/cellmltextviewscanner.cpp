@@ -35,18 +35,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewScanner::CellmlTextViewScanner() :
-    mText(QString()),
-    mChar(nullptr),
-    mCharType(Char::Eof),
-    mCharLine(1),
-    mCharColumn(0),
-    mToken(Token::Unknown),
-    mLine(0),
-    mColumn(0),
-    mString(QString()),
-    mComment(QString()),
-    mWithinParameterBlock(false)
+CellmlTextViewScanner::CellmlTextViewScanner()
 {
     // Our various CellML Text keywords
 

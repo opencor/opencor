@@ -47,7 +47,6 @@ class HeunSolver : public OpenCOR::Solver::OdeSolver
     Q_OBJECT
 
 public:
-    explicit HeunSolver();
     ~HeunSolver() override;
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
@@ -57,10 +56,10 @@ public:
     void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
-    double mStep;
+    double mStep = StepDefaultValue;
 
-    double *mK;
-    double *mYk;
+    double *mK = nullptr;
+    double *mYk = nullptr;
 };
 
 //==============================================================================

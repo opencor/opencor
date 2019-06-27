@@ -30,13 +30,6 @@ namespace ForwardEulerSolver {
 
 //==============================================================================
 
-ForwardEulerSolver::ForwardEulerSolver() :
-    mStep(StepDefaultValue)
-{
-}
-
-//==============================================================================
-
 void ForwardEulerSolver::initialize(double pVoi, int pRatesStatesCount,
                                     double *pConstants, double *pRates,
                                     double *pStates, double *pAlgebraic,

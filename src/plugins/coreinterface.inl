@@ -21,24 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Core interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update coreInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual QWidget * centralWidget() PURE;
+    VIRTUAL QWidget * centralWidget() PURE_OR_OVERRIDE;
 
-    virtual void settingsLoaded(const Plugins &pLoadedPlugins) PURE;
+    VIRTUAL void settingsLoaded(const Plugins &pLoadedPlugins) PURE_OR_OVERRIDE;
 
-    virtual void openFile(const QString &pFileNameOrUrl) PURE;
+    VIRTUAL void openFile(const QString &pFileNameOrUrl) PURE_OR_OVERRIDE;
 
-    virtual bool canClose() PURE;
-
-#undef PURE
+    VIRTUAL bool canClose() PURE_OR_OVERRIDE;
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

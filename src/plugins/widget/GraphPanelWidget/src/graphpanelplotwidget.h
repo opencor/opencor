@@ -156,13 +156,13 @@ protected:
 private:
     GraphPanelPlotGraph *mOwner;
 
-    int mSize;
+    int mSize = 0;
     QList<QPair<int, int>> mValidData;
 };
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotGraphRun *> GraphPanelPlotGraphRuns;
+using GraphPanelPlotGraphRuns = QList<GraphPanelPlotGraphRun *>;
 
 //==============================================================================
 
@@ -228,7 +228,7 @@ public:
     QRectF boundingLogRect();
 
 private:
-    bool mSelected;
+    bool mSelected = true;
 
     QString mFileName;
 
@@ -243,15 +243,15 @@ private:
     QRectF mBoundingLogRect;
     QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
 
-    GraphPanelPlotWidget *mPlot;
+    GraphPanelPlotWidget *mPlot = nullptr;
 
-    GraphPanelPlotGraphRun *mDummyRun;
+    GraphPanelPlotGraphRun *mDummyRun = nullptr;
     GraphPanelPlotGraphRuns mRuns;
 };
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotGraph *> GraphPanelPlotGraphs;
+using GraphPanelPlotGraphs = QList<GraphPanelPlotGraph *>;
 
 //==============================================================================
 
@@ -346,7 +346,7 @@ protected:
 private:
     GraphPanelPlotWidget *mOwner;
 
-    bool mActive;
+    bool mActive = false;
 
     int mFontSize;
     QColor mBackgroundColor;
@@ -354,7 +354,7 @@ private:
 
     QMap<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
 
-    int mSizeHintWidth;
+    int mSizeHintWidth = 0;
 
 signals:
     void graphToggled(GraphPanelPlotGraph *pGraph);
@@ -369,7 +369,7 @@ class GraphPanelWidget;
 
 //==============================================================================
 
-typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
+using GraphPanelPlotWidgets = QList<GraphPanelPlotWidget *>;
 
 //==============================================================================
 
@@ -517,6 +517,8 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
+    bool hasDirtyAxes() const;
+
     Action action() const;
 
     bool canZoomInX() const;
@@ -556,27 +558,27 @@ private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
 
-    Qt::PenStyle mPointCoordinatesStyle;
-    int mPointCoordinatesWidth;
+    Qt::PenStyle mPointCoordinatesStyle = Qt::DashLine;
+    int mPointCoordinatesWidth = 1;
     QColor mPointCoordinatesColor;
-    QColor mPointCoordinatesFontColor;
+    QColor mPointCoordinatesFontColor = Qt::white;
 
     QColor mSurroundingAreaBackgroundColor;
     QColor mSurroundingAreaForegroundColor;
 
-    Qt::PenStyle mZoomRegionStyle;
-    int mZoomRegionWidth;
+    Qt::PenStyle mZoomRegionStyle = Qt::SolidLine;
+    int mZoomRegionWidth = 1;
     QColor mZoomRegionColor;
-    QColor mZoomRegionFontColor;
-    bool mZoomRegionFilled;
+    QColor mZoomRegionFontColor = Qt::white;
+    bool mZoomRegionFilled = true;
     QColor mZoomRegionFillColor;
 
-    bool mLogAxisX;
-    bool mLogAxisY;
+    bool mLogAxisX = false;
+    bool mLogAxisY = false;
 
     GraphPanelPlotGraphs mGraphs;
 
-    bool mHasEnabledSettings;
+    bool mHasEnabledSettings = false;
 
     QColor mEnabledBackgroundColor;
     QColor mEnabledForegroundColor;
@@ -590,7 +592,7 @@ private:
     QMap<GraphPanelPlotGraph *, QBrush> mEnabledGraphSymbolBrushes;
     QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphSymbolPens;
 
-    Action mAction;
+    Action mAction = Action::None;
 
     QPoint mOriginPoint;
     QPoint mPoint;
@@ -599,18 +601,18 @@ private:
 
     GraphPanelPlotLegendWidget *mLegend;
 
-    bool mCanDirectPaint;
-    bool mCanReplot;
+    bool mCanDirectPaint = true;
+    bool mCanReplot = true;
 
-    bool mCanZoomInX;
-    bool mCanZoomOutX;
-    bool mCanZoomInY;
-    bool mCanZoomOutY;
+    bool mCanZoomInX = true;
+    bool mCanZoomOutX = true;
+    bool mCanZoomInY = true;
+    bool mCanZoomOutY = true;
 
-    bool mNeedContextMenu;
+    bool mNeedContextMenu = false;
     QMenu *mContextMenu;
 
-    bool mCanUpdateActions;
+    bool mCanUpdateActions = true;
 
     QAction *mExportToAction;
     QAction *mCopyToClipboardAction;
@@ -631,22 +633,22 @@ private:
 
     QwtPlotGrid *mGrid;
 
-    bool mOptimizedAxisX;
-    bool mOptimizedAxisY;
+    bool mOptimizedAxisX = true;
+    bool mOptimizedAxisY = true;
 
-    double mDefaultMinX;
-    double mDefaultMaxX;
-    double mDefaultMinY;
-    double mDefaultMaxY;
+    double mDefaultMinX = DefaultMinAxis;
+    double mDefaultMaxX = DefaultMaxAxis;
+    double mDefaultMinY = DefaultMinAxis;
+    double mDefaultMaxY = DefaultMaxAxis;
 
-    double mDefaultMinLogX;
-    double mDefaultMaxLogX;
-    double mDefaultMinLogY;
-    double mDefaultMaxLogY;
+    double mDefaultMinLogX = DefaultMinLogAxis;
+    double mDefaultMaxLogX = DefaultMaxAxis;
+    double mDefaultMinLogY = DefaultMinLogAxis;
+    double mDefaultMaxLogY = DefaultMaxAxis;
 
     GraphPanelPlotWidgets mNeighbors;
 
-    bool mDirtyAxes;
+    bool mDirtyAxes = false;
 
     void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 

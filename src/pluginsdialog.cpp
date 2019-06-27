@@ -89,12 +89,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                              QWidget *pParent) :
     Dialog(pParent),
     mGui(new Ui::PluginsDialog),
-    mPluginManager(pPluginManager),
-    mSelectablePluginItems(QList<QStandardItem *>()),
-    mUnselectablePluginItems(QList<QStandardItem *>()),
-    mInitialLoadingStates(QMap<QString, bool>()),
-    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
-    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>())
+    mPluginManager(pPluginManager)
 {
     // Customise our settings
 

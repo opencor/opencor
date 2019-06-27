@@ -54,27 +54,6 @@ PLUGININFO_FUNC EditingViewPluginInfo()
 }
 
 //==============================================================================
-
-EditingViewPlugin::EditingViewPlugin() :
-    mEditingViewInterface(nullptr),
-    mEditMenu(nullptr),
-    mEditUndoAction(nullptr),
-    mEditRedoAction(nullptr),
-    mEditCutAction(nullptr),
-    mEditCopyAction(nullptr),
-    mEditPasteAction(nullptr),
-    mEditDeleteAction(nullptr),
-    mEditFindReplaceAction(nullptr),
-    mEditFindNextAction(nullptr),
-    mEditFindPreviousAction(nullptr),
-    mEditSelectAllAction(nullptr),
-    mEditWordWrapAction(nullptr),
-    mEditor(nullptr),
-    mFileName(QString())
-{
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 
@@ -448,9 +427,21 @@ void EditingViewPlugin::saveSettings(QSettings &pSettings) const
 
 void EditingViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl)
+    // Handle the action that was passed to us
 
-    // We don't handle this interface...
+    QString actionName = pUrl.authority();
+
+    if (actionName.compare("EditingView.setCursorPosition", Qt::CaseInsensitive) == 0) {
+        // We want to set the cursor position of our editor, should there be one
+
+        if (mEditor != nullptr) {
+            QStringList cursorPosition = Core::urlArguments(pUrl).split("|");
+
+            if (cursorPosition.count() == 2) {
+                mEditor->setCursorPosition(cursorPosition[0].toInt()-1, cursorPosition[1].toInt()-1);
+            }
+        }
+    }
 }
 
 //==============================================================================

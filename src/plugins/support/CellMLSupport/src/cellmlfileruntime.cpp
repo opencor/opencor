@@ -250,19 +250,7 @@ QIcon CellmlFileRuntimeParameter::icon(Type pParameterType)
 
 //==============================================================================
 
-CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
-    mAtLeastOneNlaSystem(false),
-    mCodeInformation(nullptr),
-    mConstantsCount(0),
-    mStatesRatesCount(0),
-    mAlgebraicCount(0),
-    mCompilerEngine(nullptr),
-    mVoi(nullptr),
-    mParameters(CellmlFileRuntimeParameters()),
-    mInitializeConstants(nullptr),
-    mComputeComputedConstants(nullptr),
-    mComputeVariables(nullptr),
-    mComputeRates(nullptr)
+CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile)
 {
     update(pCellmlFile);
 }

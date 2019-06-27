@@ -66,8 +66,6 @@ class CorePlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit CorePlugin();
-
 #include "coreinterface.inl"
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
@@ -75,37 +73,37 @@ public:
 #include "plugininterface.inl"
 
 private:
-    CentralWidget *mCentralWidget;
+    CentralWidget *mCentralWidget = nullptr;
 
-    QAction *mFileNewFileAction;
+    QAction *mFileNewFileAction = nullptr;
 
-    QAction *mFileOpenAction;
-    QAction *mFileOpenRemoteAction;
+    QAction *mFileOpenAction = nullptr;
+    QAction *mFileOpenRemoteAction = nullptr;
 
-    QAction *mFileReloadAction;
+    QAction *mFileReloadAction = nullptr;
 
-    QAction *mFileDuplicateAction;
+    QAction *mFileDuplicateAction = nullptr;
 
-    QAction *mFileLockedAction;
+    QAction *mFileLockedAction = nullptr;
 
-    QAction *mFileSaveAction;
-    QAction *mFileSaveAsAction;
-    QAction *mFileSaveAllAction;
+    QAction *mFileSaveAction = nullptr;
+    QAction *mFileSaveAsAction = nullptr;
+    QAction *mFileSaveAllAction = nullptr;
 
-    QAction *mFilePreviousAction;
-    QAction *mFileNextAction;
+    QAction *mFilePreviousAction = nullptr;
+    QAction *mFileNextAction = nullptr;
 
-    QAction *mFileCloseAction;
-    QAction *mFileCloseAllAction;
+    QAction *mFileCloseAction = nullptr;
+    QAction *mFileCloseAllAction = nullptr;
 
-    QAction *mFileOpenReloadSeparator;
+    QAction *mFileOpenReloadSeparator = nullptr;
 
-    QMenu *mFileReopenSubMenu;
+    QMenu *mFileReopenSubMenu = nullptr;
 
-    QAction *mFileReopenMostRecentFileAction;
-    QAction *mFileReopenSubMenuSeparator1;
-    QAction *mFileReopenSubMenuSeparator2;
-    QAction *mFileClearReopenSubMenuAction;
+    QAction *mFileReopenMostRecentFileAction = nullptr;
+    QAction *mFileReopenSubMenuSeparator1 = nullptr;
+    QAction *mFileReopenSubMenuSeparator2 = nullptr;
+    QAction *mFileClearReopenSubMenuAction = nullptr;
 
     QStringList mRecentFiles;
 

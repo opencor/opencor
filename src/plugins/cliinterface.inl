@@ -21,19 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CLI interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update cliInterfaceVersion() whenever you update this
     //       interface...
 
-    virtual int executeCommand(const QString &pCommand,
-                               const QStringList &pArguments) PURE;
-
-#undef PURE
+    VIRTUAL bool executeCommand(const QString &pCommand,
+                                const QStringList &pArguments, int &pRes) PURE_OR_OVERRIDE;
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

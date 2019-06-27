@@ -121,7 +121,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
+using CellmlFileRuntimeParameters = QList<CellmlFileRuntimeParameter *>;
 
 //==============================================================================
 
@@ -130,10 +130,10 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-    typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    using InitializeConstantsFunction = void (*)(double *CONSTANTS, double *RATES, double *STATES);
+    using ComputeComputedConstantsFunction = void (*)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    using ComputeVariablesFunction = void (*)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    using ComputeRatesFunction = void (*)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime() override;
@@ -168,25 +168,25 @@ public:
     CellmlFileRuntimeParameter * voi() const;
 
 private:
-    bool mAtLeastOneNlaSystem;
+    bool mAtLeastOneNlaSystem = false;
 
-    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation = nullptr;
 
-    int mConstantsCount;
-    int mStatesRatesCount;
-    int mAlgebraicCount;
+    int mConstantsCount = 0;
+    int mStatesRatesCount = 0;
+    int mAlgebraicCount = 0;
 
-    Compiler::CompilerEngine *mCompilerEngine;
+    Compiler::CompilerEngine *mCompilerEngine = nullptr;
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntimeParameter *mVoi;
+    CellmlFileRuntimeParameter *mVoi = nullptr;
     CellmlFileRuntimeParameters mParameters;
 
-    InitializeConstantsFunction mInitializeConstants;
-    ComputeComputedConstantsFunction mComputeComputedConstants;
-    ComputeVariablesFunction mComputeVariables;
-    ComputeRatesFunction mComputeRates;
+    InitializeConstantsFunction mInitializeConstants = nullptr;
+    ComputeComputedConstantsFunction mComputeComputedConstants = nullptr;
+    ComputeVariablesFunction mComputeVariables = nullptr;
+    ComputeRatesFunction mComputeRates = nullptr;
 
     void resetCodeInformation();
 

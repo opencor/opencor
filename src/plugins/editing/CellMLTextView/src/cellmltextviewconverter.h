@@ -55,7 +55,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellMLTextViewConverterWarning> CellMLTextViewConverterWarnings;
+using CellMLTextViewConverterWarnings = QList<CellMLTextViewConverterWarning>;
 
 //==============================================================================
 
@@ -115,11 +115,11 @@ private:
     QString mPrevIndent;
     QString mIndent;
 
-    Output mLastOutput;
+    Output mLastOutput = Output::None;
 
     QString mErrorMessage;
-    int mErrorLine;
-    int mErrorColumn;
+    int mErrorLine = 0;
+    int mErrorColumn = 0;
 
     CellMLTextViewConverterWarnings mWarnings;
 
@@ -130,10 +130,10 @@ private:
     QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
 
-    bool mAssignmentDone;
+    bool mAssignmentDone = false;
 
-    bool mOldPiecewiseStatementUsed;
-    bool mPiecewiseStatementUsed;
+    bool mOldPiecewiseStatementUsed = false;
+    bool mPiecewiseStatementUsed = false;
 
     QMap<QString, QString> mMappings;
     QMap<QString, MathmlNode> mMathmlNodes;

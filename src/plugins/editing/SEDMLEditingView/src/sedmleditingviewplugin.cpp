@@ -54,19 +54,6 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
 }
 
 //==============================================================================
-
-SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
-    mEditReformatAction(nullptr),
-    mEditReformatSeparator(nullptr),
-    mToolsSedmlValidationAction(nullptr),
-    mToolsSedmlValidationSeparator(nullptr),
-    mFileName(QString()),
-    mEditor(nullptr),
-    mSedmlEditingViewInterface(nullptr)
-{
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 

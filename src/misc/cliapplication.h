@@ -48,7 +48,7 @@ class PluginManager;
 class CliApplication
 {
 public:
-    explicit CliApplication(int &pArgC, char *pArgV[]);
+    explicit CliApplication(int &pArgC, char *pArgV[]); // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
     ~CliApplication();
 
     bool run(int &pRes);
@@ -56,7 +56,7 @@ public:
 private:
     QCoreApplication *mCliApplication;
 
-    PluginManager *mPluginManager;
+    PluginManager *mPluginManager = nullptr;
 
     Plugins mLoadedPluginPlugins;
     Plugins mLoadedCliPlugins;

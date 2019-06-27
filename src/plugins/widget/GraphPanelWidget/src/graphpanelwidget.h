@@ -69,7 +69,7 @@ class GraphPanelWidget;
 
 //==============================================================================
 
-typedef QList<GraphPanelWidget *> GraphPanelWidgets;
+using GraphPanelWidgets = QList<GraphPanelWidget *>;
 
 //==============================================================================
 
@@ -109,7 +109,7 @@ private:
     QFrame *mMarker;
     GraphPanelPlotWidget *mPlot;
 
-    bool mActive;
+    bool mActive = false;
 
     void updateMarkerColor();
 

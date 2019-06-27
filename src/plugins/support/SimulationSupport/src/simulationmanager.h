@@ -48,8 +48,6 @@ class SIMULATIONSUPPORT_EXPORT SimulationManager : public QObject
     Q_OBJECT
 
 public:
-    explicit SimulationManager();
-
     static SimulationManager * instance();
 
     void manage(const QString &pFileName);

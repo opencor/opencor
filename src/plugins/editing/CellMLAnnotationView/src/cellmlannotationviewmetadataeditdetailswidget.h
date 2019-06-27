@@ -91,7 +91,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlAnnotationViewMetadataEditDetailsItem> CellmlAnnotationViewMetadataEditDetailsItems;
+using CellmlAnnotationViewMetadataEditDetailsItems = QList<CellmlAnnotationViewMetadataEditDetailsItem>;
 
 //==============================================================================
 
@@ -127,17 +127,17 @@ private:
     QPushButton *mLookUpQualifierButton;
 
     QLabel *mTermLabel;
-    QLineEdit *mTermValue;
-    QPushButton *mAddTermButton;
+    QLineEdit *mTermValue = nullptr;
+    QPushButton *mAddTermButton = nullptr;
 
     QString mTerm;
     QStringList mTerms;
 
     CellmlAnnotationViewMetadataEditDetailsItems mItems;
 
-    bool mLookUpTerm;
+    bool mLookUpTerm = false;
     QString mErrorMessage;
-    bool mHasInternetConnection;
+    bool mHasInternetConnection = true;
 
     Core::Widget *mOutput;
     Core::UserMessageWidget *mOutputMessage;
@@ -145,16 +145,16 @@ private:
     QString mOutputOntologicalTermsTemplate;
     WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
 
-    InformationType mInformationType;
+    InformationType mInformationType = InformationType::None;
 
-    bool mLookUpInformation;
+    bool mLookUpInformation = false;
 
     QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem> mItemsMapping;
     QMap<QString, bool> mEnabledItems;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    ObjRef<iface::cellml_api::CellMLElement> mElement;
+    ObjRef<iface::cellml_api::CellMLElement> mElement = nullptr;
 
     QMap<QString, QString> mUrls;
     QStringList mItemInformationSha1s;
@@ -167,7 +167,7 @@ private:
 
     QAction *mCopyAction;
 
-    QNetworkReply *mNetworkReply;
+    QNetworkReply *mNetworkReply = nullptr;
 
     void upudateOutputMessage(bool pLookUpTerm,
                               const QString &pErrorMessage,

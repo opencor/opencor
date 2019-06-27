@@ -43,10 +43,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication(int &pArgC, char *pArgV[]) : // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
-    mPluginManager(nullptr),
-    mLoadedPluginPlugins(Plugins()),
-    mLoadedCliPlugins(Plugins())
+CliApplication::CliApplication(int &pArgC, char *pArgV[]) // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
 {
     // Create our CLI application
 
@@ -272,7 +269,7 @@ bool CliApplication::command(const QString &pCommand,
                 std::cout << std::endl;
             }
 
-            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments) != 0) {
+            if (!qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments, pRes)) {
                 pRes = -1;
             }
         }
