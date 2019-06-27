@@ -545,7 +545,6 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     // Make sure that our previous run, if any, is complete, if we are coming
     // here as a result of having added a new run
 
-    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     int simulationRunsCount = simulation->runsCount();
 
     if (   (pTask == SimulationExperimentViewSimulationWidget::Task::AddRun)

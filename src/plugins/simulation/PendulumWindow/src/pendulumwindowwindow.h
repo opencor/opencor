@@ -49,7 +49,7 @@ class QSlider;
 
 namespace Ui {
     class PendulumWindowWindow;
-}
+} // namespace Ui
 
 //==============================================================================
 
@@ -81,9 +81,9 @@ class PENDULUMWINDOW_EXPORT PendulumWindowWindow : public Core::WindowWidget
 
 public:
     explicit PendulumWindowWindow(QWidget *pParent);
-    ~PendulumWindowWindow();
+    ~PendulumWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initData(const quint64 &pDataSize, const double &pMinimumTime,
                   const double &pMaximumTime, const double &pTimeInterval,
