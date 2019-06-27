@@ -139,7 +139,7 @@ if(WIN32)
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 else()
     if(APPLE)
-        set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
+        set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
     endif()
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
