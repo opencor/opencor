@@ -9,7 +9,6 @@ project(OpenCOR)
 option(ENABLE_CLANG_TIDY "Enable the use of Clang-Tidy" OFF)
 
 option(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
-option(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 option(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 if(NOT WIN32 AND NOT APPLE)
