@@ -683,21 +683,6 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 
 //==============================================================================
 
-void CentralWidget::importFile(const QString &pFileName)
-{
-    // Try to get our current view to import the given file and if it cannot
-    // then just open it as a normal file
-
-    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
-
-    if (    (fileHandlingInterface == nullptr)
-        || !fileHandlingInterface->importFile(pFileName)) {
-        openFile(pFileName);
-    }
-}
-
-//==============================================================================
-
 void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 {
     // Check whether pFileNameOrUrl refers to a remote or a local file and if it
@@ -709,7 +694,15 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
     checkFileNameOrUrl(pFileNameOrUrl, isLocalFile, fileNameOrUrl);
 
     if (isLocalFile) {
-        importFile(fileNameOrUrl);
+        // Try to get our current view to import the given file and if it cannot
+        // then just open it as a normal file
+
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+
+        if (    (fileHandlingInterface == nullptr)
+            || !fileHandlingInterface->importFile(fileNameOrUrl)) {
+           openFile(fileNameOrUrl);
+        }
 
         return;
     }
