@@ -697,7 +697,8 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
         // Try to get our current view to import the given file and if it cannot
         // then just open it as a normal file
 
-        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+        Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>((fileViewPlugin != nullptr)?fileViewPlugin->instance():nullptr);
 
         if (    (fileHandlingInterface == nullptr)
             || !fileHandlingInterface->importFile(fileNameOrUrl)) {
@@ -724,7 +725,8 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
         QString temporaryFileName = Core::temporaryFileName();
 
         if (writeFile(temporaryFileName, fileContents)) {
-            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+            Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>((fileViewPlugin != nullptr)?fileViewPlugin->instance():nullptr);
 
             if (    (fileHandlingInterface == nullptr)
                 || !fileHandlingInterface->importFile(temporaryFileName)) {
