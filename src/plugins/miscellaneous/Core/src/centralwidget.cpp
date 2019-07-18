@@ -2254,10 +2254,10 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
     // Note: we are a slot, so to be on the safe side, we need to make sure that
     //       the view plugin still exists...
 
-    Plugin *currentViewPlugin = viewPlugin(pFileName);
+    Plugin *fileViewPlugin = viewPlugin(pFileName);
 
-    if (currentViewPlugin != nullptr) {
-        if (pViewName == qobject_cast<ViewInterface *>(currentViewPlugin->instance())->viewName()) {
+    if (fileViewPlugin != nullptr) {
+        if (pViewName == qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()) {
             // The view from which the signal was emitted is the one currently
             // active, so we can try to handle its signal
 
