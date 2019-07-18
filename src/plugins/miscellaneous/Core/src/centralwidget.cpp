@@ -725,7 +725,8 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
     if (remoteFileDownloaded) {
         // We were able to retrieve the contents of our remote file, so save it
-        // to a temporary file and then import it
+        // to a temporary file and then import it or, if it cannot, then just
+        // open it as a normal remote file
 
         QString temporaryFileName = Core::temporaryFileName();
 
@@ -734,8 +735,6 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
             if (    (fileHandlingInterface == nullptr)
                 || !fileHandlingInterface->importFile(temporaryFileName)) {
-                // The remote file couldn't be imported, so just open it
-
                 openRemoteFile(fileNameOrUrl);
             }
         } else {
