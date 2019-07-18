@@ -76,22 +76,22 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d04dc6a7dde7a9121489f50e791e533201bcb8db
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c6e2a90fb76147dee33f951a783c69c60d58c0c7
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9ad71f751e0140ad1c4fa360b95b6917ae055c59
-                                              c2a6cca1e4e255d151c36ad7221832a618694ffe
-                                              546a124033336da6522a5455523dbada30b53445
-                                              cfcabbec2bea7f0824478bab058f86da7b864b6f)
+                                  SHA1_VALUES 2746890fbb098ac3dc1971c8408711310ecf0944
+                                              a602bb1a68c533174230e7aff8340a19f0d85cd0
+                                              7ba1d9c617446b2b76dff6fdd9896f6b759ceb73
+                                              1d206d3e2d2f6dbda76541242fcb5e07ae4b7b6f)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 27775ea7775f8911323c0f359d518a3079b4d110
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} df34324b69a25bbc5e81e306cf86c96210f53b21
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ea2e208190200b7ff9ad8005f652f1ed09cb4be8
-                                              bed3463792d8e3c8c85cb88b23c7fecec48da37d
-                                              2d2063487ea6d65b61eae6acbb5c1f9b83c4975e
-                                              1d12cfe99a843b5e2b24cc7ab9246dbf01ce488c)
+                                  SHA1_VALUES 3b6996f316ae333e57ee3cc67e90c38e00691843
+                                              b9023c6f74d2adfba0b34fdb75007fd614d96582
+                                              7ba1d9c617446b2b76dff6fdd9896f6b759ceb73
+                                              1d206d3e2d2f6dbda76541242fcb5e07ae4b7b6f)
         endif()
 
         # Make a copy of our import libraries
@@ -107,18 +107,18 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8dd15d814efeb0714a2e922f3efa87b277b8144d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 93b5a7a4fa0251b76293a283bbef4d24c47c7bf3
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f1f45416d042c075b6a94e8021c0763ab246515f
-                                          1e38b41042b4a4942706cbf944d802bbe4937ac7)
+                              SHA1_VALUES 7589f0346f82f5d451d03af3b96e8dc730f90fed
+                                          07d08b2584da0e1c30f5de9e84ba47e7b003afc1)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} de0f1c54189aaa94c594a221d650138a317323e4
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c0b08811b9a5292b41d4f7959632ca4142c8bc25
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f6e4da97bfd93092859f839e80850a09c30f489b
-                                          fc755c482354d0918fb33a96f87304e80cf4b980)
+                              SHA1_VALUES 6831c32f9363229a06d67f80740e59defa2f7956
+                                          019d737bb747598e0bf3bc44dcf7ef61cd93a641)
     endif()
 else()
     # We require Perl to build OpenSSL
