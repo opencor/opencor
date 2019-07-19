@@ -554,7 +554,10 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 {
     // Recompute our 'variables'
 
-    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    runtime->computeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 }
 
 //==============================================================================

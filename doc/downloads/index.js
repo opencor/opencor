@@ -38,6 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> make sure that we have a view before trying to import a file using OpenCOR's <a href=\"https://en.wikipedia.org/wiki/Uniform_Resource_Identifier\">URI scheme</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2140\">#2140</a>)." },
+                       { "change": "<strong>Simulation support:</strong> improved the accuracy of algebraic variables that depend on the value of some state variables (see issue <a href=\"https://github.com/opencor/opencor/issues/2139\">#2139</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"https://www.openssl.org/\">OpenSSL</a> library to version 1.1.1c (see issue <a href=\"https://github.com/opencor/opencor/issues/1801\">#1801</a>)." }
                      ]
                    },
