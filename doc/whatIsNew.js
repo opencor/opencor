@@ -55,6 +55,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Simulation support",
                              "entries": [
+                               { "type": "improved", "description": "Accuracy of algebraic variables that depend on the value of some state variables." },
                                { "type": "fixed", "description": "Issue with a remote SED-ML file being run headless." }
                              ]
                            }
