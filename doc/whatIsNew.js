@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 27, "month": 6, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 19, "month": 7, "year": 2019,
                      "categories": [
                        { "name": "Editing",
                          "entries": [
@@ -55,6 +55,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Simulation support",
                              "entries": [
+                               { "type": "improved", "description": "Accuracy of algebraic variables that depend on the value of some state variables." },
                                { "type": "fixed", "description": "Issue with a remote SED-ML file being run headless." }
                              ]
                            }
