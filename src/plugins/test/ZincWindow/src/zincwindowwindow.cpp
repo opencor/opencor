@@ -54,10 +54,7 @@ namespace ZincWindow {
 
 ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::ZincWindowWindow),
-    mZincContext(nullptr),
-    mZincSceneViewerDescription(nullptr),
-    mAxesFontPointSize(0)
+    mGui(new Ui::ZincWindowWindow)
 {
     // Set up the GUI
 

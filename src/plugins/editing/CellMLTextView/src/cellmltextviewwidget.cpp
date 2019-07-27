@@ -71,9 +71,7 @@ CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellmlTextViewWidgetEditingWi
     mValid(pValid),
     mCellmlVersion(pCellmlVersion),
     mDocumentationNode(pDocumentationNode),
-    mRdfNodes(pRdfNodes),
-    mFileContents(QString()),
-    mConvertedFileContents(QString())
+    mRdfNodes(pRdfNodes)
 {
 }
 
@@ -412,14 +410,7 @@ bool CellmlTextViewWidgetEditingWidget::commentOrUncommentLine(EditorWidget::Edi
 //==============================================================================
 
 CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mNeedLoadingSettings(true),
-    mSettingsGroup(QString()),
-    mEditingWidget(nullptr),
-    mData(QMap<QString, CellmlTextViewWidgetData *>()),
-    mEditorLists(QList<EditorWidget::EditorListWidget *>()),
-    mPresentationMathmlEquations(QMap<QString, QString>()),
-    mContentMathmlEquation(QString())
+    ViewWidget(pParent)
 {
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions

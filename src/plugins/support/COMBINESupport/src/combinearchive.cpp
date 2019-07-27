@@ -134,10 +134,7 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 
 CombineArchive::CombineArchive(const QString &pFileName, bool pNew) :
     StandardSupport::StandardFile(pFileName),
-    mDirName(Core::temporaryDirName()),
-    mLoadingNeeded(true),
-    mSedmlFile(nullptr),
-    mUpdated(false)
+    mDirName(Core::temporaryDirName())
 {
     // Override our inherited value of mNew with our given one
 

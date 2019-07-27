@@ -47,7 +47,6 @@ class SecondOrderRungeKuttaSolver : public OpenCOR::Solver::OdeSolver
     Q_OBJECT
 
 public:
-    explicit SecondOrderRungeKuttaSolver();
     ~SecondOrderRungeKuttaSolver() override;
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
@@ -57,9 +56,9 @@ public:
     void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
-    double mStep;
+    double mStep = StepDefaultValue;
 
-    double *mYk1;
+    double *mYk1 = nullptr;
 };
 
 //==============================================================================

@@ -35,9 +35,7 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
                          PmrWebService *pParent) :
     QObject(pParent),
     mUrl(pUrl),
-    mName(pName),
-    mWorkspace(nullptr),
-    mExposureFiles(QStringList())
+    mName(pName)
 {
 }
 

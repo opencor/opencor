@@ -36,7 +36,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
+using CellmlFiles = QMap<QString, CellmlFile *>;
 
 //==============================================================================
 

@@ -20,7 +20,8 @@ set(PACKAGE_REPOSITORY NuML)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -57,20 +58,17 @@ endif()
 if(USE_PREBUILT_LIBNUML_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} a39cae2ca11d65a3b4696ce0ba7b3f2429437b96
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a39cae2ca11d65a3b4696ce0ba7b3f2429437b96
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 9ba23228511e627e33928e3010b94fd9bc70d9f4
                                               93dd2336f2d580afe793f22dd65479cb622dbf11)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 080bfc0e7d1fbfaacccc78ca7564d4a78bbb7020
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 080bfc0e7d1fbfaacccc78ca7564d4a78bbb7020
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 36cd7e24d6b514d882d7600fc1544f5499ac7507
@@ -78,13 +76,13 @@ if(USE_PREBUILT_LIBNUML_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7c9407dc140d7eb19261182f557407124162de2d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 7c9407dc140d7eb19261182f557407124162de2d
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 3cccf0afc1826a3aef7a356a0be0ed0ea1ea2101)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 270dda02e5950e5f17673224f0f136ad693774b2
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 270dda02e5950e5f17673224f0f136ad693774b2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 6db4bb2e39c254f1740c3a80a40c61c776f3c9a9)
@@ -105,16 +103,6 @@ else()
         else()
             set(MODE debug)
         endif()
-    endif()
-
-    set(LIBSBML_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext)
-
-    if(WIN32)
-        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/${MODE}/include)
-        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    else()
-        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/include)
-        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     endif()
 
     ExternalProject_Add(${PACKAGE_BUILD}
@@ -166,7 +154,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}

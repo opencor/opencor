@@ -51,8 +51,8 @@ class PmrWebService;
 
 //==============================================================================
 
-typedef QPair<QString, git_status_t> StagedFile;
-typedef QList<StagedFile> StagedFiles;
+using StagedFile = QPair<QString, git_status_t>;
+using StagedFiles = QList<StagedFile>;
 
 //==============================================================================
 
@@ -179,7 +179,7 @@ public slots:
 
 //==============================================================================
 
-typedef QList<PmrWorkspace *> PmrWorkspaces;
+using PmrWorkspaces = QList<PmrWorkspace *>;
 
 //==============================================================================
 

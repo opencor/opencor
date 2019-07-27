@@ -90,11 +90,11 @@ private:
 
     QwtMathMLDocument mMathmlDocument;
 
-    double mOneOverMathmlDocumentWidth;
-    double mOneOverMathmlDocumentHeight;
+    double mOneOverMathmlDocumentWidth = 0.0;
+    double mOneOverMathmlDocumentHeight = 0.0;
 
     QString mContents;
-    bool mError;
+    bool mError = false;
 
     QMenu *mContextMenu;
 

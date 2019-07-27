@@ -44,11 +44,6 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation, QThread *pThread,
     mSimulation(pSimulation),
     mThread(pThread),
     mRuntime(pSimulation->runtime()),
-    mCurrentPoint(0.0),
-    mPaused(false),
-    mStopped(false),
-    mReset(false),
-    mError(false),
     mSelf(pSelf)
 {
 }

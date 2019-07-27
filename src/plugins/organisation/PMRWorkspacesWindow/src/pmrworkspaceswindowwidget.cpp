@@ -241,11 +241,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                      PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
     Core::TreeViewWidget(pParent),
-    mSettingsGroup(QString()),
-    mPmrWebService(pPmrWebService),
-    mInitialized(false),
-    mMessage(Message::None),
-    mAuthenticated(false)
+    mPmrWebService(pPmrWebService)
 {
     // Initialise our internals by 'resetting' them
 

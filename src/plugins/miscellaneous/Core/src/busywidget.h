@@ -92,23 +92,23 @@ private:
 
     QTimer *mTimer;
 
-    int mFps;
+    int mFps = 0;
 
-    QColor mForegroundColor;
-    QColor mBackgroundColor;
+    QColor mForegroundColor = Qt::white;
+    QColor mBackgroundColor = QColor(54, 96, 146);
 
-    double mBackgroundRoundness;
+    double mBackgroundRoundness = 0.25;
 
-    int mMainLine;
+    int mMainLine = 0;
 
-    int mCount;
-    int mLength;
-    int mThickness;
-    double mRoundness;
-    int mTrail;
-    double mOpacity;
+    int mCount = 12;
+    int mLength = 5;
+    int mThickness = 5;
+    double mRoundness = 1.0;
+    int mTrail = 100;
+    double mOpacity = 0.25;
 
-    int mRadius;
+    int mRadius = 15;
 
     double mProgress;
 

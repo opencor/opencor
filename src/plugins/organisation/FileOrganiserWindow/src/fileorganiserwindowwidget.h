@@ -64,7 +64,7 @@ public:
 
 private:
     bool mFolder;
-    bool mExpanded;
+    bool mExpanded = false;
 
     QString mPath;
 };

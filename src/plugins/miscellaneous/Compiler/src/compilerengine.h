@@ -50,7 +50,6 @@ class COMPILER_EXPORT CompilerEngine : public QObject
     Q_OBJECT
 
 public:
-    explicit CompilerEngine();
     ~CompilerEngine() override;
 
     bool hasError() const;
@@ -61,7 +60,7 @@ public:
     void * getFunction(const QString &pFunctionName);
 
 private:
-    llvm::ExecutionEngine *mExecutionEngine;
+    llvm::ExecutionEngine *mExecutionEngine = nullptr;
 
     QString mError;
 };

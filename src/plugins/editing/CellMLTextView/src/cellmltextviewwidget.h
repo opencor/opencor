@@ -163,10 +163,10 @@ public:
     bool validate(const QString &pFileName, QString &pExtra);
 
 private:
-    bool mNeedLoadingSettings;
+    bool mNeedLoadingSettings = true;
     QString mSettingsGroup;
 
-    CellmlTextViewWidgetEditingWidget *mEditingWidget;
+    CellmlTextViewWidgetEditingWidget *mEditingWidget = nullptr;
 
     QMap<QString, CellmlTextViewWidgetData *> mData;
 

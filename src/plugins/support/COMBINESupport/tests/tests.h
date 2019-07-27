@@ -42,7 +42,7 @@ class Tests : public QObject
     Q_OBJECT
 
 private:
-    OpenCOR::COMBINESupport::CombineArchive *mCombineArchive;
+    OpenCOR::COMBINESupport::CombineArchive *mCombineArchive = nullptr;
 
     void basicTests(const QString &pFileName);
 

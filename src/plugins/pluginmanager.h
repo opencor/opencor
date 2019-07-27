@@ -69,7 +69,7 @@ private:
     Plugins mPlugins;
     Plugins mLoadedPlugins;
 
-    Plugin *mCorePlugin;
+    Plugin *mCorePlugin = nullptr;
 };
 
 //==============================================================================

@@ -20,7 +20,8 @@ set(PACKAGE_REPOSITORY libSEDML)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -57,20 +58,17 @@ endif()
 if(USE_PREBUILT_LIBSEDML_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} aa58e6f1c4599ee30fcf77f8767082094f01aeb7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} aa58e6f1c4599ee30fcf77f8767082094f01aeb7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES f63f7f2d03ed05561b7316ce3863678f26ae9eb9
                                               fa9de78adbf4a9a74ed871d150f65477f6138ebe)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c2558bd77ed366ca6109bcddb9e22dc2af72ecf4
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c2558bd77ed366ca6109bcddb9e22dc2af72ecf4
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 72654f38292667fc2e9450fca544c02bcd666415
@@ -78,13 +76,13 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1f8e85082d57ba2820373d7652c53ac16d362e00
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1f8e85082d57ba2820373d7652c53ac16d362e00
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES cbac855943b834817a33c0f619afb9379098e777)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e7eee27dd9797404650e9fa7efd060db1ca81c0f
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e7eee27dd9797404650e9fa7efd060db1ca81c0f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 81fd13a50eab84d6acaf1562bb515aa055638a5d)
@@ -102,24 +100,6 @@ else()
         else()
             set(MODE debug)
         endif()
-    endif()
-
-    set(LIBNUML_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libNuML/ext)
-    set(LIBSBML_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext)
-
-    if(WIN32)
-        set(LIBNUML_INCLUDE_DIR ${LIBNUML_EXT_DIR}/${MODE}/include)
-        set(LIBNUML_LIBRARY ${LIBNUML_EXT_DIR}/${MODE}/lib/libnuml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/${MODE}/include)
-        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-        set(DEFINE_LIBZ_INCLUDE_DIR -DLIBZ_INCLUDE_DIR=${LIBSBML_EXT_DIR}/dependencies/${MODE}/include)
-        set(DEFINE_LIBZ_LIBRARY -DLIBZ_LIBRARY=${LIBSBML_EXT_DIR}/dependencies/${MODE}/lib/zdll${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    else()
-        set(LIBNUML_INCLUDE_DIR ${LIBNUML_EXT_DIR}/include)
-        set(LIBNUML_LIBRARY ${LIBNUML_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}numl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.1${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/include)
-        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     endif()
 
     ExternalProject_Add(${PACKAGE_BUILD}
@@ -177,7 +157,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}

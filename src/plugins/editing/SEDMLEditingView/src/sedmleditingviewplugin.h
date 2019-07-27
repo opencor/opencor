@@ -69,25 +69,23 @@ class SEDMLEditingViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit SEDMLEditingViewPlugin();
-
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 
 private:
-    QAction *mEditReformatAction;
-    QAction *mEditReformatSeparator;
+    QAction *mEditReformatAction = nullptr;
+    QAction *mEditReformatSeparator = nullptr;
 
-    QAction *mToolsSedmlValidationAction;
-    QAction *mToolsSedmlValidationSeparator;
+    QAction *mToolsSedmlValidationAction = nullptr;
+    QAction *mToolsSedmlValidationSeparator = nullptr;
 
     QString mFileName;
 
-    EditorWidget::EditorWidget *mEditor;
+    EditorWidget::EditorWidget *mEditor = nullptr;
 
-    SedmlEditingViewInterface *mSedmlEditingViewInterface;
+    SedmlEditingViewInterface *mSedmlEditingViewInterface = nullptr;
 
 private slots:
     void reformat();

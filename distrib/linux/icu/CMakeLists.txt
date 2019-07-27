@@ -16,7 +16,8 @@ set(GIT_TAG v56.1)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library
 
@@ -37,11 +38,8 @@ set(SHA1_FILES
 if(USE_PREBUILT_ICU_PACKAGE)
     # Retrieve the library's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${RELATIVE_PROJECT_SOURCE_DIR} 37cf2e70a0e2aa3f3814360e182a45269c7001f6
+                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 37cf2e70a0e2aa3f3814360e182a45269c7001f6
                           SHA1_FILES ${SHA1_FILES}
                           SHA1_VALUES 09c48c1e7ecaee2ce66d2214eb791bf14a58ed9c
                                       8ce5cb893e638bc02060271c0fc2f7cbf0156590
@@ -73,7 +71,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include lib
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

@@ -67,7 +67,7 @@ private:
 
     QSet<QString> mComponentNames;
 
-    ObjRef<iface::cellml_api::Group> mRootGroup;
+    ObjRef<iface::cellml_api::Group> mRootGroup = nullptr;
 
     void copyUnitsSet(iface::cellml_api::UnitsSet *pUnitsSet,
                       iface::cellml_api::CellMLElement *pElement);

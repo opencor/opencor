@@ -108,7 +108,7 @@ private:
 
 //==============================================================================
 
-typedef QList<SimulationIssue> SimulationIssues;
+using SimulationIssues = QList<SimulationIssue>;
 
 //==============================================================================
 
@@ -215,13 +215,13 @@ public slots:
     void updateInitialValues();
 
 private:
-    SimulationResults *mSimulationResults;
+    SimulationResults *mSimulationResults = nullptr;
 
-    quint64 mDelay;
+    quint64 mDelay = 0;
 
-    double mStartingPoint;
-    double mEndingPoint;
-    double mPointInterval;
+    double mStartingPoint = 0.0;
+    double mEndingPoint = 1000.0;
+    double mPointInterval = 1.0;
 
     QString mOdeSolverName;
     Solver::Solver::Properties mOdeSolverProperties;
@@ -232,19 +232,19 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
-    DataStore::DataStoreArray *mConstantsArray;
-    DataStore::DataStoreArray *mRatesArray;
-    DataStore::DataStoreArray *mStatesArray;
-    DataStore::DataStoreArray *mAlgebraicArray;
+    DataStore::DataStoreArray *mConstantsArray = nullptr;
+    DataStore::DataStoreArray *mRatesArray = nullptr;
+    DataStore::DataStoreArray *mStatesArray = nullptr;
+    DataStore::DataStoreArray *mAlgebraicArray = nullptr;
 
-    DataStore::DataStoreValues *mConstantsValues;
-    DataStore::DataStoreValues *mRatesValues;
-    DataStore::DataStoreValues *mStatesValues;
-    DataStore::DataStoreValues *mAlgebraicValues;
+    DataStore::DataStoreValues *mConstantsValues = nullptr;
+    DataStore::DataStoreValues *mRatesValues = nullptr;
+    DataStore::DataStoreValues *mStatesValues = nullptr;
+    DataStore::DataStoreValues *mAlgebraicValues = nullptr;
 
-    double *mDummyStates;
-    double *mInitialConstants;
-    double *mInitialStates;
+    double *mDummyStates = nullptr;
+    double *mInitialConstants = nullptr;
+    double *mInitialStates = nullptr;
 
     QVector<int> mGradientIndices;
     DataStore::DataStoreArray *mGradientsArray;
@@ -316,17 +316,17 @@ public slots:
     OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
-    DataStore::DataStore *mDataStore;
+    DataStore::DataStore *mDataStore = nullptr;
 
-    DataStore::DataStoreVariable *mPoints;
+    DataStore::DataStoreVariable *mPoints = nullptr;
 
-    DataStore::DataStoreVariables mConstants;
-    DataStore::DataStoreVariables mRates;
-    DataStore::DataStoreVariables mStates;
-    DataStore::DataStoreVariables mAlgebraic;
+    DataStore::DataStoreVariables mConstants = nullptr;
+    DataStore::DataStoreVariables mRates = nullptr;
+    DataStore::DataStoreVariables mStates = nullptr;
+    DataStore::DataStoreVariables mAlgebraic = nullptr;
 
-    DataStore::DataStore *mGradientsStore;
-    DataStore::DataStoreVariables mGradients;
+    DataStore::DataStore *mGradientsStore = nullptr;
+    DataStore::DataStoreVariables mGradients = DataStore::DataStoreVariables();
 
     QMap<double *, DataStore::DataStoreVariables> mData;
     QMap<double *, DataStore::DataStore *> mDataDataStores;
@@ -350,7 +350,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationImportData : public SimulationObject
 
 public:
     explicit SimulationImportData(Simulation *pSimulation);
-    ~SimulationImportData();
+    ~SimulationImportData() override;
 
     DataStore::DataStore * addDataStore();
 
@@ -431,23 +431,23 @@ public slots:
 private:
     QString mFileName;
 
-    FileType mFileType;
+    FileType mFileType = FileType::Unknown;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
-    SEDMLSupport::SedmlFile *mSedmlFile;
-    COMBINESupport::CombineArchive *mCombineArchive;
+    CellMLSupport::CellmlFile *mCellmlFile = nullptr;
+    SEDMLSupport::SedmlFile *mSedmlFile = nullptr;
+    COMBINESupport::CombineArchive *mCombineArchive = nullptr;
 
-    bool mNeedCheckIssues;
+    bool mNeedCheckIssues = true;
     SimulationIssues mIssues;
-    bool mHasBlockingIssues;
+    bool mHasBlockingIssues = false;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
+    CellMLSupport::CellmlFileRuntime *mRuntime = nullptr;
 
-    SimulationWorker *mWorker;
+    SimulationWorker *mWorker = nullptr;
 
-    SimulationData *mData;
-    SimulationResults *mResults;
-    SimulationImportData *mImportData;
+    SimulationData *mData = nullptr;
+    SimulationResults *mResults = nullptr;
+    SimulationImportData *mImportData = nullptr;
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 

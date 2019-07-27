@@ -158,7 +158,7 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool mCheckFilesEnabled;
+    bool mCheckFilesEnabled = true;
 
     void startStopTimer();
 

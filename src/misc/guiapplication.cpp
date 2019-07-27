@@ -38,20 +38,13 @@ namespace OpenCOR {
 //==============================================================================
 
 GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
-    QtSingleApplication(QFileInfo(pArgV[0]).baseName(), pArgC, pArgV),
-    mCanEmitFileOpenRequestSignal(false),
-    mFileNamesOrOpencorUrls(QStringList())
+    QtSingleApplication(QFileInfo(pArgV[0]).baseName(), pArgC, pArgV)
 {
     // Set our style
 
     QApplication::setStyle(PreferencesInterface::preference(Preferences::GeneralPreferences,
                                                             SettingsPreferencesStyle,
                                                             SettingsPreferencesStyleDefault).toString());
-
-    // Add support for HiDPI screens
-
-    setAttribute(Qt::AA_EnableHighDpiScaling);
-    setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     // Filter out OpenSSL warning messages
 

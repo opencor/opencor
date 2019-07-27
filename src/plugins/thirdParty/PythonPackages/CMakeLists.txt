@@ -53,7 +53,8 @@ set(GITHUB_OPENCOR https://github.com/opencor)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Where Python packages are installed
 
@@ -86,20 +87,17 @@ endif()
 if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5f1f3000a339a722de6cd9ff486ce80e727989f2
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 9f950862b63ccf386e47be21a8a2da3c68687b9f
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES cf9f9b247398d159a6658ec50787d71ea6e6ba0b)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 077f8f0f162fe54d1d4743b4ad43869d3683b8c7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 077f8f0f162fe54d1d4743b4ad43869d3683b8c7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -107,14 +105,14 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f1ca5d10b5a4f8d7ead2a151f2a64e91f5847f4a
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f1ca5d10b5a4f8d7ead2a151f2a64e91f5847f4a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES de6bb8d119560aabd31d97cd1def0545ec3d88a6)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 86529b1557f22b13bf3822d8d906b6c436be19fc
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 86529b1557f22b13bf3822d8d906b6c436be19fc
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -281,7 +279,6 @@ else()
     # Package the newly installed Python packages
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES ${PACKAGED_FILES}

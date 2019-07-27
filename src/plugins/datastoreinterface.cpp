@@ -214,7 +214,6 @@ DataStoreValues::~DataStoreValues()
 
 DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     mCapacity(pCapacity),
-    mSize(0),
     mValue(pValue)
 {
     // Create our array of values
@@ -299,12 +298,7 @@ double * DataStoreVariableRun::values() const
 //==============================================================================
 
 DataStoreVariable::DataStoreVariable(double *pValue) :
-    mType(-1),
-    mUri(QString()),
-    mName(QString()),
-    mUnit(QString()),
-    mValue(pValue),
-    mRuns(DataStoreVariableRuns())
+    mValue(pValue)
 {
 }
 
@@ -598,15 +592,11 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
                                          quint64 pNbOfDataPoints,
                                          const QList<quint64> &pRunSizes) :
     DataStoreData(pFileName),
-    mValid(true),
     mImportDataStore(pImportDataStore),
     mResultsDataStore(pResultsDataStore),
     mNbOfVariables(pNbOfVariables),
     mNbOfDataPoints(pNbOfDataPoints),
-    mImportVariables(DataStoreVariables()),
-    mResultsVariables(DataStoreVariables()),
     mRunSizes(pRunSizes),
-    mProgress(0),
     mOneOverTotalProgress(1.0/pNbOfDataPoints)
 {
     // Initialise our hierarchy
@@ -816,8 +806,7 @@ DataStoreVariables DataStoreExportData::variables() const
 
 DataStore::DataStore(const QString &pUri) :
     mUri(pUri),
-    mVoi(new DataStoreVariable()),
-    mVariables(DataStoreVariables())
+    mVoi(new DataStoreVariable())
 {
 }
 

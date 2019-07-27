@@ -32,23 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "libsedmlbegin.h"
-    #include "sedml/SedDocument.h"
-#include "libsedmlend.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace GraphPanelWidget {
 
 //==============================================================================
 
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
-    Core::SplitterWidget(pParent),
-    mGraphPanels(GraphPanelWidgets()),
-    mActiveGraphPanel(nullptr),
-    mInternalSizes(QIntList()),
-    mUseInternalSizes(true)
+    Core::SplitterWidget(pParent)
 {
     // Set our orientation
 

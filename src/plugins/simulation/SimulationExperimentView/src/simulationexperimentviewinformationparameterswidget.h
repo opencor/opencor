@@ -78,24 +78,24 @@ protected:
 
 private:
     QMenu *mContextMenu;
-    QAction *mPlotAgainstVoiMenuAction;
-    QMenu *mPlotAgainstMenu;
+    QAction *mPlotAgainstVoiMenuAction = nullptr;
+    QMenu *mPlotAgainstMenu = nullptr;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    SimulationSupport::Simulation *mSimulation;
+    SimulationSupport::Simulation *mSimulation = nullptr;
 
-    bool mNeedClearing;
-    bool mVoiAccessible;
+    bool mNeedClearing = false;
+    bool mVoiAccessible = false;
 
-    QSet<int> mGradientIndices;
+    QSet<int> mGradientIndices = QSet<int>();
 
-    QAction *mToggleGradientsMenuAction;
-    QAction *mToggleGradientsMenuSeparator;
+    QAction *mToggleGradientsMenuAction = nullptr;
+    QAction *mToggleGradientsMenuSeparator = nullptr;
 
-    Core::Property *mImportComponent;
-    QMenu *mImportMenu;
+    Core::Property *mImportComponent = nullptr;
+    QMenu *mImportMenu = nullptr;
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);

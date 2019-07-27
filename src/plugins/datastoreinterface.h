@@ -99,7 +99,7 @@ class DataStoreVariableRun : public QObject
 
 public:
     explicit DataStoreVariableRun(quint64 pCapacity, double *pValue);
-    ~DataStoreVariableRun();
+    ~DataStoreVariableRun() override;
 
     quint64 size() const;
 
@@ -113,7 +113,7 @@ public:
 
 private:
     quint64 mCapacity;
-    quint64 mSize;
+    quint64 mSize = 0;
 
     DataStoreArray *mArray;
     double *mValue;
@@ -122,7 +122,7 @@ private:
 
 //==============================================================================
 
-typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
+using DataStoreVariableRuns = QList<DataStoreVariableRun *>;
 
 //==============================================================================
 
@@ -132,7 +132,7 @@ class DataStoreVariable : public QObject
 
 public:
     explicit DataStoreVariable(double *pValue = nullptr);
-    ~DataStoreVariable();
+    ~DataStoreVariable() override;
 
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
@@ -175,7 +175,7 @@ public slots:
     double value(quint64 pPosition, int pRun = -1) const;
 
 private:
-    int mType;
+    int mType = -1;
     QString mUri;
     QString mName;
     QString mUnit;
@@ -187,13 +187,7 @@ private:
 
 //==============================================================================
 
-class DataStoreVariables : public QList<DataStoreVariable *>
-{
-};
-
-//==============================================================================
-
-class DataStore;
+using DataStoreVariables = QList<DataStoreVariable *>;
 
 //==============================================================================
 
@@ -227,7 +221,7 @@ public:
                                  int pNbOfVariables,
                                  quint64 pNbOfDataPoints,
                                  const QList<quint64> &pRunSizes);
-    ~DataStoreImportData();
+    ~DataStoreImportData() override;
 
     bool valid() const;
 
@@ -250,7 +244,7 @@ public:
     double progress();
 
 private:
-    bool mValid;
+    bool mValid = true;
 
     DataStore *mImportDataStore;
     DataStore *mResultsDataStore;
@@ -268,7 +262,7 @@ private:
 
     QList<quint64> mRunSizes;
 
-    quint64 mProgress;
+    quint64 mProgress = 0;
     double mOneOverTotalProgress;
 };
 
@@ -288,7 +282,7 @@ public:
     DataStoreVariables variables() const;
 
 private:
-    DataStore *mDataStore;
+    DataStore *mDataStore = nullptr;
 
     DataStoreVariables mVariables;
 };
@@ -301,7 +295,7 @@ class DataStore : public QObject
 
 public:
     explicit DataStore(const QString &pUri = QString());
-    ~DataStore();
+    ~DataStore() override;
 
     bool addRun(quint64 pCapacity);
 
@@ -328,7 +322,7 @@ public slots:
 private:
     QString mUri;
 
-    DataStoreVariable *mVoi;
+    DataStoreVariable *mVoi = nullptr;
     DataStoreVariables mVariables;
 };
 
@@ -342,7 +336,7 @@ public:
     explicit DataStoreImporterWorker(DataStoreImportData *pImportData);
 
 protected:
-    DataStoreImportData *mImportData;
+    DataStoreImportData *mImportData = nullptr;
 
 signals:
     void progress(DataStoreImportData *pImportData, double pProgress);
@@ -379,7 +373,7 @@ public:
     explicit DataStoreExporterWorker(DataStoreExportData *pDataStoreData);
 
 protected:
-    DataStoreExportData *mDataStoreData;
+    DataStoreExportData *mDataStoreData = nullptr;
 
 signals:
     void progress(DataStoreExportData *pDataStoreData, double pProgress);
@@ -428,7 +422,7 @@ public:
 
 //==============================================================================
 
-typedef QList<DataStoreInterface *> DataStoreInterfaces;
+using DataStoreInterfaces = QList<DataStoreInterface *>;
 
 //==============================================================================
 

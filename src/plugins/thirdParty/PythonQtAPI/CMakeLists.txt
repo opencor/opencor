@@ -61,13 +61,10 @@ endif()
 if(USE_PREBUILT_PYTHONQT_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b1598259fcd2de1901c6d840b38c36e570668bc8
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b1598259fcd2de1901c6d840b38c36e570668bc8
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES bcae917b414bbfe2ae4bfa0641e241586d87b281
@@ -75,13 +72,13 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 529f53cee8c34a408bf81dcdb5271ea181632c63
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 529f53cee8c34a408bf81dcdb5271ea181632c63
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 6ca3e2a7e30a627ae93acc3e8518a5aa783c0de5)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 67a7e1d9930f8ada3a968da87bbff3dff5f4f00c
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 67a7e1d9930f8ada3a968da87bbff3dff5f4f00c
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES a7ff6adb4eb122914bb2d265e3f96221ba6ebdaa)

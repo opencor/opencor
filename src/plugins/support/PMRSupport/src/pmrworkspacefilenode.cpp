@@ -38,8 +38,7 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
     mParent(pParent),
     mName(pName),
     mPath(pPath),
-    mStatus(pStatus),
-    mChildren(PmrWorkspaceFileNodes())
+    mStatus(pStatus)
 {
 }
 

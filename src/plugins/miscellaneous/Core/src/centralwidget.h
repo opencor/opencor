@@ -74,7 +74,7 @@ public:
     void addViewPlugin(Plugin *pViewPlugin);
 
 private:
-    bool mEnabled;
+    bool mEnabled = false;
 
     TabBarWidget *mViewTabs;
 
@@ -99,6 +99,8 @@ public:
     void retranslateUi() override;
 
     void addView(Plugin *pPlugin);
+
+    Plugin * currentViewPlugin() const;
 
     TabBarWidget * newTabBarWidget(QTabBar::Shape pShape,
                                    bool pFileTabs = false);
@@ -132,7 +134,7 @@ private:
         Stopping
     };
 
-    State mState;
+    State mState = State::Starting;
 
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;
@@ -162,8 +164,6 @@ private:
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
-
-    void importFile(const QString &pFileName);
 
     void openFiles(const QStringList &pFileNames);
 

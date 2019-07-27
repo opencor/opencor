@@ -57,9 +57,7 @@ class Solver : public QObject
     Q_OBJECT
 
 public:
-    typedef QMap<QString, QVariant> Properties;
-
-    explicit Solver();
+    using Properties = QMap<QString, QVariant>;
 
     void setProperties(const Properties &pProperties);
 
@@ -77,9 +75,7 @@ signals:
 class OdeSolver : public Solver
 {
 public:
-    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
-
-    explicit OdeSolver();
+    using ComputeRatesFunction = void (*)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
 
     virtual void initialize(double pVoi, int pRatesStatesCount,
                             double *pConstants, double *pRates, double *pStates,
@@ -99,14 +95,14 @@ public:
     virtual void solve(double &pVoi, double pVoiEnd) const = 0;
 
 protected:
-    int mRatesStatesCount;
+    int mRatesStatesCount = 0;
 
-    double *mConstants;
-    double *mStates;
-    double *mRates;
-    double *mAlgebraic;
+    double *mConstants = nullptr;
+    double *mStates = nullptr;
+    double *mRates = nullptr;
+    double *mAlgebraic = nullptr;
 
-    ComputeRatesFunction mComputeRates;
+    ComputeRatesFunction mComputeRates = nullptr;
 };
 
 //==============================================================================
@@ -116,7 +112,7 @@ class NlaSolver : public Solver
 public:
     ~NlaSolver() override;
 
-    typedef void (*ComputeSystemFunction)(double *, double *, void *);
+    using ComputeSystemFunction = void (*)(double *, double *, void *);
 
     virtual void solve(ComputeSystemFunction pComputeSystem,
                        double *pParameters, int pSize,
@@ -176,7 +172,7 @@ private:
 
 //==============================================================================
 
-typedef QList<Property> Properties;
+using Properties = QList<Property>;
 
 //==============================================================================
 
@@ -200,7 +196,7 @@ public:
 
 //==============================================================================
 
-typedef QList<SolverInterface *> SolverInterfaces;
+using SolverInterfaces = QList<SolverInterface *>;
 
 //==============================================================================
 

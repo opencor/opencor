@@ -21,21 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // SED-ML Editing view interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update sedmlEditingViewInterfaceVersion() whenever
     //       you update this interface...
 
-    virtual void reformat(const QString &pFileName) const PURE;
+    VIRTUAL void reformat(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-    virtual bool validSedml(const QString &pFileName,
-                            QString &pExtra) const PURE;
-
-#undef PURE
+    VIRTUAL bool validSedml(const QString &pFileName,
+                            QString &pExtra) const PURE_OR_OVERRIDE;
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

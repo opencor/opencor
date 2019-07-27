@@ -54,11 +54,7 @@ namespace RawSEDMLView {
 //==============================================================================
 
 RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mNeedLoadingSettings(true),
-    mSettingsGroup(QString()),
-    mEditingWidget(nullptr),
-    mEditingWidgets(QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *>())
+    ViewWidget(pParent)
 {
 }
 
@@ -345,7 +341,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
                 }
 
                 editorList->addItem(issueType, sedmlFileIssue.line(), sedmlFileIssue.column(),
-                                    qPrintable(sedmlFileIssue.message()));
+                                    sedmlFileIssue.message());
             }
         }
 

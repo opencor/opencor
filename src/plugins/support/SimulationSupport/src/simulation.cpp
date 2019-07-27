@@ -142,21 +142,7 @@ Simulation * SimulationObject::simulation() const
 //==============================================================================
 
 SimulationData::SimulationData(Simulation *pSimulation) :
-    SimulationObject(pSimulation),
-    mSimulationResults(nullptr),
-    mDelay(0),
-    mStartingPoint(0.0),
-    mEndingPoint(1000.0),
-    mPointInterval(1.0),
-    mOdeSolverName(QString()),
-    mOdeSolverProperties(Solver::Solver::Properties()),
-    mDaeSolverName(QString()),
-    mDaeSolverProperties(Solver::Solver::Properties()),
-    mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties()),
-    mGradientIndices(QVector<int>()),
-    mGradientsArray(nullptr),
-    mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
+    SimulationObject(pSimulation)
 {
     // Create our various arrays
 
@@ -606,6 +592,11 @@ void SimulationData::updateInitialValues()
 
     memcpy(mInitialConstants, mConstantsArray->data(), size_t(mSimulation->runtime()->constantsCount())*Solver::SizeOfDouble);
     memcpy(mInitialStates, mStatesArray->data(), size_t(mSimulation->runtime()->statesCount())*Solver::SizeOfDouble);
+
+    // Let people know that everything has been reset by checking for
+    // modifications
+
+    checkForModifications();
 }
 
 //==============================================================================
@@ -636,8 +627,12 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 {
     // Recompute our 'variables'
 
-    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                                               mStatesArray->data(), mAlgebraicArray->data());
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    runtime->computeRates()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
+                            mStatesArray->data(), mAlgebraicArray->data());
+    runtime->computeVariables()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
+                                mStatesArray->data(), mAlgebraicArray->data());
 }
 
 //==============================================================================
@@ -892,17 +887,7 @@ int SimulationData::gradientsCount() const
 //==============================================================================
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
-    SimulationObject(pSimulation),
-    mDataStore(nullptr),
-    mPoints(nullptr),
-    mConstants(DataStore::DataStoreVariables()),
-    mRates(DataStore::DataStoreVariables()),
-    mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables()),
-    mGradientsStore(nullptr),
-    mGradients(DataStore::DataStoreVariables()),
-    mData(QMap<double *, DataStore::DataStoreVariables>()),
-    mDataDataStores(QMap<double *, DataStore::DataStore *>())
+    SimulationObject(pSimulation)
 {
     // Create our data store
 
@@ -1448,8 +1433,7 @@ DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
 //==============================================================================
 
 SimulationImportData::SimulationImportData(Simulation *pSimulation) :
-    SimulationObject(pSimulation),
-    mDataStores(QList<DataStore::DataStore *>())
+    SimulationObject(pSimulation)
 {
 }
 
@@ -1482,16 +1466,7 @@ DataStore::DataStore * SimulationImportData::addDataStore()
 //==============================================================================
 
 Simulation::Simulation(const QString &pFileName) :
-    mFileName(pFileName),
-    mFileType(FileType::Unknown),
-    mCellmlFile(nullptr),
-    mSedmlFile(nullptr),
-    mCombineArchive(nullptr),
-    mNeedCheckIssues(true),
-    mIssues(SimulationIssues()),
-    mHasBlockingIssues(false),
-    mRuntime(nullptr),
-    mWorker(nullptr)
+    mFileName(pFileName)
 {
     // Retrieve our file details
 
@@ -1756,7 +1731,6 @@ void Simulation::save()
 
     if (mRuntime != nullptr) {
         mData->updateInitialValues();
-        mData->checkForModifications();
     }
 }
 

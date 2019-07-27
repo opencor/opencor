@@ -61,10 +61,7 @@ void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
                                                  QWidget *pParent) :
-    QWidget(pParent),
-    mCollapsed(false),
-    mLastHeader(false),
-    mMenuMenu(nullptr)
+    QWidget(pParent)
 {
     // Create and set our vertical layout
 
@@ -295,8 +292,7 @@ void CollapsibleHeaderWidget::showMenu()
 //==============================================================================
 
 CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    Widget(QSize(), pParent),
-    mHeaders(QList<CollapsibleHeaderWidget *>())
+    Widget(QSize(), pParent)
 {
     // Create a vertical layout that will contain our headers and widgets
 

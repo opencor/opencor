@@ -56,20 +56,7 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                                                          QWidget *pParent) :
     Core::Widget(pParent),
-    mCellmlFile(pCellmlFile),
-    mItemsCount(0),
-    mElement(nullptr),
-    mRdfTripleInformation(QString()),
-    mInformationType(InformationType::None),
-    mLookUpRdfTripleInformation(Information::First),
-    mRdfTriplesMapping(QMap<QString, CellMLSupport::CellmlFileRdfTriple *>()),
-    mUrls(QMap<QString, QString>()),
-    mRdfTripleInformationSha1s(QStringList()),
-    mRdfTripleInformationSha1(QString()),
-    mFirstRdfTripleInformation(QString()),
-    mLastRdfTripleInformation(QString()),
-    mLink(QString()),
-    mTextContent(QString())
+    mCellmlFile(pCellmlFile)
 {
     // Create and populate our context menu
 

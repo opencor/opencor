@@ -21,21 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Editing view interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
-
+#include "interfacebegin.h"
     // Note: make sure to update editingViewInterfaceVersion() whenever you
     //       update this interface...
 
-    virtual EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const PURE;
+    VIRTUAL EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-    virtual bool isEditorWidgetUseable(const QString &pFileName) const PURE;
-    virtual bool isEditorWidgetContentsModified(const QString &pFileName) const PURE;
-
-#undef PURE
+    VIRTUAL bool isEditorWidgetUseable(const QString &pFileName) const PURE_OR_OVERRIDE;
+    VIRTUAL bool isEditorWidgetContentsModified(const QString &pFileName) const PURE_OR_OVERRIDE;
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file

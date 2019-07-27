@@ -185,9 +185,7 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 //==============================================================================
 
 GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
-    mOwner(pOwner),
-    mSize(0),
-    mValidData(QList<QPair<int, int>>())
+    mOwner(pOwner)
 {
     // Customise ourselves a bit
 
@@ -313,17 +311,10 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
                                          GraphPanelWidget *pOwner) :
-    mSelected(true),
-    mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY),
     mBoundingRect(InvalidRect),
-    mBoundingRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
-    mBoundingLogRect(InvalidRect),
-    mBoundingLogRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
-    mPlot(nullptr),
-    mDummyRun(nullptr),
-    mRuns(GraphPanelPlotGraphRuns())
+    mBoundingLogRect(InvalidRect)
 {
     // Determine our default colour
 
@@ -902,9 +893,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
 
 GraphPanelPlotOverlayWidget::GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *pParent) :
     QWidget(pParent),
-    mOwner(pParent),
-    mOriginPoint(QPoint()),
-    mPoint(QPoint())
+    mOwner(pParent)
 {
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -1219,12 +1208,9 @@ void GraphPanelPlotScaleWidget::updateLayout()
 GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent) :
     QwtLegend(pParent),
     mOwner(pParent),
-    mActive(false),
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
-    mForegroundColor(pParent->surroundingAreaForegroundColor()),
-    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>()),
-    mSizeHintWidth(0)
+    mForegroundColor(pParent->surroundingAreaForegroundColor())
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -1539,58 +1525,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     QwtPlot(pParent),
     Core::CommonWidget(this),
     mOwner(pParent),
-    mBackgroundColor(QColor()),
-    mForegroundColor(QColor()),
-    mPointCoordinatesStyle(Qt::DashLine),
-    mPointCoordinatesWidth(1),
-    mPointCoordinatesColor(QColor()),
-    mPointCoordinatesFontColor(Qt::white),
-    mSurroundingAreaBackgroundColor(QColor()),
-    mSurroundingAreaForegroundColor(QColor()),
-    mZoomRegionStyle(Qt::SolidLine),
-    mZoomRegionWidth(1),
-    mZoomRegionColor(QColor()),
-    mZoomRegionFontColor(Qt::white),
-    mZoomRegionFilled(true),
-    mZoomRegionFillColor(QColor()),
-    mLogAxisX(false),
-    mLogAxisY(false),
-    mGraphs(GraphPanelPlotGraphs()),
-    mHasEnabledSettings(false),
-    mEnabledBackgroundColor(QColor()),
-    mEnabledForegroundColor(QColor()),
-    mEnabledSurroundingAreaBackgroundColor(QColor()),
-    mEnabledSurroundingAreaForegroundColor(QColor()),
-    mEnabledGridLinesColor(QColor()),
-    mEnabledGraphPens(QMap<GraphPanelPlotGraph *, QPen>()),
-    mEnabledGraphSymbolBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
-    mEnabledGraphSymbolPens(QMap<GraphPanelPlotGraph *, QPen>()),
-    mAction(Action::None),
-    mOriginPoint(QPoint()),
-    mPoint(QPoint()),
     mLegend(new GraphPanelPlotLegendWidget(this)),
-    mCanDirectPaint(true),
-    mCanReplot(true),
-    mCanZoomInX(true),
-    mCanZoomOutX(true),
-    mCanZoomInY(true),
-    mCanZoomOutY(true),
-    mNeedContextMenu(false),
-    mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
-    mOptimizedAxisX(true),
-    mOptimizedAxisY(true),
-    mDefaultMinX(DefaultMinAxis),
-    mDefaultMaxX(DefaultMaxAxis),
-    mDefaultMinY(DefaultMinAxis),
-    mDefaultMaxY(DefaultMaxAxis),
-    mDefaultMinLogX(DefaultMinLogAxis),
-    mDefaultMaxLogX(DefaultMaxAxis),
-    mDefaultMinLogY(DefaultMinLogAxis),
-    mDefaultMaxLogY(DefaultMaxAxis),
-    mNeighbors(pNeighbors),
-    mDirtyAxes(false)
+    mNeighbors(pNeighbors)
 {
     // Keep track of when our grand parent (i.e. a GraphPanelsWidget object)
     // gets destroyed
@@ -3754,6 +3692,15 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
     mNeighbors.removeOne(pPlot);
 
     updateActions();
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::hasDirtyAxes() const
+{
+    // Return whether we have dirty axes
+
+    return mDirtyAxes;
 }
 
 //==============================================================================

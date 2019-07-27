@@ -72,7 +72,7 @@ private:
 
 //==============================================================================
 
-typedef QList<SedmlFileIssue> SedmlFileIssues;
+using SedmlFileIssues = QList<SedmlFileIssue>;
 
 //==============================================================================
 

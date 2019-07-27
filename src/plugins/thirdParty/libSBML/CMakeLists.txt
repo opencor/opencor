@@ -20,7 +20,8 @@ set(PACKAGE_REPOSITORY libsbml)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -57,20 +58,17 @@ endif()
 if(USE_PREBUILT_LIBSBML_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 816b0d2d693561cfd1c8b8268c00665bca9cc9f7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 816b0d2d693561cfd1c8b8268c00665bca9cc9f7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 83cf96e9dda06bae8a109b850250793f6f11a5af
                                               9b0f91cf59941dca597571b87991f7790a52fddd)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} d05e5e52d33e25d25f90746c64522b774a67079d
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d05e5e52d33e25d25f90746c64522b774a67079d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 5661f67ebb6191b5856469363ae80b0405acbd4a
@@ -78,13 +76,13 @@ if(USE_PREBUILT_LIBSBML_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 44aab4d24ea8df6e318f3800492555908c35d913
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 44aab4d24ea8df6e318f3800492555908c35d913
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 62723d3554d59b04738d700cfceaa85e76110adc)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a57fe8d76f839f0aa6433dede040b78ea739dab3
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a57fe8d76f839f0aa6433dede040b78ea739dab3
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES e78b46543bc75952d14722de098bef24c25ca685)
@@ -168,6 +166,8 @@ else()
             -DWITH_ZLIB=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
+        DEPENDS
+            zlibPlugin
     )
 
     # Do some post-processing that is specific to each platform
@@ -194,7 +194,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}

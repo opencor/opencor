@@ -117,11 +117,11 @@ private:
 
     QString mHomePage;
 
-    bool mZoomingEnabled;
-    int mZoomLevel;
+    bool mZoomingEnabled = true;
+    int mZoomLevel = -1;
 
-    bool mOverrideCursor;
-    bool mOverridingCursor;
+    bool mOverrideCursor = false;
+    bool mOverridingCursor = false;
 
     QWebView *mWebView;
 

@@ -67,9 +67,7 @@ namespace Core {
 
 //==============================================================================
 
-CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
-    mEnabled(false),
-    mViewPlugins(Plugins())
+CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner)
 {
     // Initialise a few internal objects
 
@@ -133,18 +131,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 //==============================================================================
 
 CentralWidget::CentralWidget(QWidget *pParent) :
-    Widget(pParent),
-    mState(State::Starting),
-    mLoadedFileHandlingPlugins(Plugins()),
-    mLoadedFileTypePlugins(Plugins()),
-    mLoadedGuiPlugins(Plugins()),
-    mLoadedViewPlugins(Plugins()),
-    mModeTabIndexModes(QMap<int, ViewInterface::Mode>()),
-    mModeModeTabIndexes(QMap<ViewInterface::Mode, int>()),
-    mFileModeTabIndexes(QMap<QString, int>()),
-    mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
-    mFileNames(QStringList()),
-    mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>())
+    Widget(pParent)
 {
     // Create and set our horizontal layout
 
@@ -696,21 +683,6 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 
 //==============================================================================
 
-void CentralWidget::importFile(const QString &pFileName)
-{
-    // Try to get our current view to import the given file and if it cannot
-    // then just open it as a normal file
-
-    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
-
-    if (    (fileHandlingInterface == nullptr)
-        || !fileHandlingInterface->importFile(pFileName)) {
-        openFile(pFileName);
-    }
-}
-
-//==============================================================================
-
 void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 {
     // Check whether pFileNameOrUrl refers to a remote or a local file and if it
@@ -722,7 +694,16 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
     checkFileNameOrUrl(pFileNameOrUrl, isLocalFile, fileNameOrUrl);
 
     if (isLocalFile) {
-        importFile(fileNameOrUrl);
+        // Try to get our current view to import the given file and if it cannot
+        // then just open it as a normal file
+
+        Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>((fileViewPlugin != nullptr)?fileViewPlugin->instance():nullptr);
+
+        if (    (fileHandlingInterface == nullptr)
+            || !fileHandlingInterface->importFile(fileNameOrUrl)) {
+           openFile(fileNameOrUrl);
+        }
 
         return;
     }
@@ -738,17 +719,17 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
     if (remoteFileDownloaded) {
         // We were able to retrieve the contents of our remote file, so save it
-        // to a temporary file and then import it
+        // to a temporary file and then import it or, if it cannot, then just
+        // open it as a normal remote file
 
         QString temporaryFileName = Core::temporaryFileName();
 
         if (writeFile(temporaryFileName, fileContents)) {
-            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+            Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>((fileViewPlugin != nullptr)?fileViewPlugin->instance():nullptr);
 
             if (    (fileHandlingInterface == nullptr)
                 || !fileHandlingInterface->importFile(temporaryFileName)) {
-                // The remote file couldn't be imported, so just open it
-
                 openRemoteFile(fileNameOrUrl);
             }
         } else {
@@ -1554,6 +1535,15 @@ void CentralWidget::addView(Plugin *pPlugin)
 
 //==============================================================================
 
+Plugin * CentralWidget::currentViewPlugin() const
+{
+    // Return the current view plugin
+
+    return viewPlugin(mFileTabs->currentIndex());
+}
+
+//==============================================================================
+
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if at least one mode
@@ -2282,10 +2272,10 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
     // Note: we are a slot, so to be on the safe side, we need to make sure that
     //       the view plugin still exists...
 
-    Plugin *currentViewPlugin = viewPlugin(pFileName);
+    Plugin *fileViewPlugin = viewPlugin(pFileName);
 
-    if (currentViewPlugin != nullptr) {
-        if (pViewName == qobject_cast<ViewInterface *>(currentViewPlugin->instance())->viewName()) {
+    if (fileViewPlugin != nullptr) {
+        if (pViewName == qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()) {
             // The view from which the signal was emitted is the one currently
             // active, so we can try to handle its signal
 

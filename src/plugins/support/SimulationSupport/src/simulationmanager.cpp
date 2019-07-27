@@ -32,13 +32,6 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-SimulationManager::SimulationManager() :
-    mSimulations(QMap<QString, Simulation *>())
-{
-}
-
-//==============================================================================
-
 SimulationManager * SimulationManager::instance()
 {
     // Return the 'global' instance of our simulation manager class

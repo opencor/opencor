@@ -58,12 +58,7 @@ namespace PMRWorkspacesWindow {
 
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWorkspacesWindowWindow),
-    mInitialized(false),
-    mFirstTimeRetrievingWorkspaces(true),
-    mPmrUrl(QString()),
-    mAuthenticated(false),
-    mWaitingForPmrWebService(false)
+    mGui(new Ui::PmrWorkspacesWindowWindow)
 {
     // Set up the GUI
 

@@ -65,13 +65,6 @@ namespace Solver {
 
 //==============================================================================
 
-Solver::Solver() :
-    mProperties(Properties())
-{
-}
-
-//==============================================================================
-
 void Solver::setProperties(const Properties &pProperties)
 {
     // Set a property's value, but only if it is a valid property
@@ -104,19 +97,6 @@ void Solver::emitError(const QString &pErrorMessage)
     } else {
         emit error(errorMessage);
     }
-}
-
-//==============================================================================
-
-OdeSolver::OdeSolver() :
-    Solver(),
-    mRatesStatesCount(0),
-    mConstants(nullptr),
-    mStates(nullptr),
-    mRates(nullptr),
-    mAlgebraic(nullptr),
-    mComputeRates(nullptr)
-{
 }
 
 //==============================================================================

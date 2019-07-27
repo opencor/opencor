@@ -131,12 +131,7 @@ enum {
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWidget(pParent),
     Core::CommonWidget(this),
-    mToolTip(QString()),
-    mHomePage("about:blank"),
-    mZoomingEnabled(true),
-    mZoomLevel(-1),
-    mOverrideCursor(false),
-    mOverridingCursor(false)
+    mHomePage("about:blank")
 {
     // Customise ourselves
 

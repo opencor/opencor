@@ -45,7 +45,8 @@ set(RELEASE_TAG 1.12)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -154,13 +155,10 @@ endif()
 if(USE_PREBUILT_CELLMLAPI_PACKAGE)
     # Retrieve the plugin's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 036c8fa4f2e1a2c954986866879d4d79516a9068
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 036c8fa4f2e1a2c954986866879d4d79516a9068
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -184,7 +182,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                               59725a3835fa48fec41e64ba750a991abeca6f02)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} bbeab36f10ff7c95e5ddaa8239f66ba893a9798b
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bbeab36f10ff7c95e5ddaa8239f66ba893a9798b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -209,7 +207,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 21cd963f01ae3e44ce89b380afe1f55e85feb263
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 21cd963f01ae3e44ce89b380afe1f55e85feb263
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -224,7 +222,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                           d8e0879cf3d30692fc4c89059a1e4cc685097487)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} cfe1eaf66f3c22a3a095e8a90c7c8bf98db86dc1
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cfe1eaf66f3c22a3a095e8a90c7c8bf98db86dc1
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -366,7 +364,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}

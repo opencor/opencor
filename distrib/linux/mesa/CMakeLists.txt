@@ -3,15 +3,16 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 19.0.2)
+set(PACKAGE_VERSION 19.1.1)
 
 # Git tag for our library
 
-set(GIT_TAG v19.0.2)
+set(GIT_TAG v19.1.1)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library
 
@@ -28,13 +29,10 @@ set(SHA1_FILES
 if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
-    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
-
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${RELATIVE_PROJECT_SOURCE_DIR} 768e52eec779918fb01f5e05ec54417621fe9eb2
+                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 153dd68b58bcfa23c8491ff474260fb80df2b34e
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 3ae9bd87143e7c289b1523ab26d2af04ce5c47f2)
+                          SHA1_VALUES ef179cae56b75e100cff778f1020cae9d67c8bd7)
 else()
     # Build Mesa as an external project
 
@@ -67,7 +65,6 @@ else()
     # Package our external project
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
