@@ -182,9 +182,8 @@ else()
             BUILD_COMMAND
                 ${PYTHON_EXECUTABLE} setup.py build
             INSTALL_COMMAND
-                ${PYTHON_EXECUTABLE} setup.py install
-            DEPENDS
-                cleanSitePackagesDirectory
+                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
         )
 
         # Install our Python package installer
@@ -205,9 +204,11 @@ else()
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND
+                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                 ${PYTHON_EXECUTABLE} setup.py build
             INSTALL_COMMAND
-                ${PYTHON_EXECUTABLE} setup.py install
+                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
             DEPENDS
                 installSetuptools
         )
@@ -230,9 +231,10 @@ else()
             BUILD_COMMAND
                 ""
             INSTALL_COMMAND
-                ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --no-wheel
-            DEPENDS
-                cleanSitePackagesDirectory
+                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py
+                    --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                    --no-wheel
         )
 
         # Make sure pip is up to date
