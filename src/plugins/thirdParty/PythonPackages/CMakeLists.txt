@@ -136,15 +136,9 @@ else()
 
     # Clean our site packages directory before installing any packages
 
-    add_custom_target(cleanSitePackagesDirectory
-        COMMAND ${CMAKE_COMMAND} -E remove_directory ${FULL_LOCAL_SITE_PACKAGES_DIR}
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${FULL_LOCAL_SITE_PACKAGES_DIR}
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        VERBATIM
-    )
+    file(REMOVE_RECURSE ${FULL_LOCAL_SITE_PACKAGES_DIR})
 
-    add_dependencies(${PACKAGE_BUILD} cleanSitePackagesDirectory)
-    add_dependencies(cleanSitePackagesDirectory ${BUILD_DEPENDENCIES})
+    file(MAKE_DIRECTORY ${FULL_LOCAL_SITE_PACKAGES_DIR})
 
     # Use our installed pip when upgrading pip
 
