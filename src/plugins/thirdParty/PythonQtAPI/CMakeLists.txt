@@ -5,6 +5,10 @@ project(PythonQtAPIPlugin)
 set(PACKAGE_NAME PythonQt)
 set(PACKAGE_VERSION "3.2.1")
 
+# Repository in GitHub's OpenCOR organisation
+
+set(PACKAGE_REPOSITORY pythonqt-sourceforge)
+
 # Release tag of our packaged library
 
 set(RELEASE_TAG opencor-v3.2.1)
@@ -65,6 +69,7 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b1598259fcd2de1901c6d840b38c36e570668bc8
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES bcae917b414bbfe2ae4bfa0641e241586d87b281
@@ -73,12 +78,14 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 529f53cee8c34a408bf81dcdb5271ea181632c63
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 6ca3e2a7e30a627ae93acc3e8518a5aa783c0de5)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 67a7e1d9930f8ada3a968da87bbff3dff5f4f00c
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES a7ff6adb4eb122914bb2d265e3f96221ba6ebdaa)
@@ -144,7 +151,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/PythonQt
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
@@ -205,6 +212,7 @@ else()
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
