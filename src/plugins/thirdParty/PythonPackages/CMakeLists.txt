@@ -153,7 +153,7 @@ else()
 
     # Install the Python package manager and its dependencies
 
-    set(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
+    set(PIP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/pip)
 
     if(WIN32)
         # On Windows, we use our version of pip that is modified to create
@@ -162,7 +162,7 @@ else()
 
         # Install the Python setuptools package
 
-        set(SETUPTOOLS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/setuptools)
+        set(SETUPTOOLS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/setuptools)
 
         ExternalProject_Add(installSetuptools
             DOWNLOAD_DIR
