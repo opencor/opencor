@@ -10,6 +10,11 @@ set(PACKAGE_VERSION ${PYTHON_VERSION})
 set(PACKAGE_REPOSITORY python)
 set(RELEASE_TAG v${PYTHON_VERSION}_devel)
 
+# Git tags of Python package installers
+
+set(PIP_GIT_TAG "19.2.2")
+set(SETUPTOOLS_GIT_TAG "v41.2.0")
+
 # The versions of the Python packages we bundle
 
 # Science packages
@@ -129,11 +134,19 @@ else()
 
     set(BUILD_DEPENDENCIES PythonPlugin)
 
-    # Ensure local site packages directory exists
+    # Clean our site packages directory before installing any packages
 
-    file(MAKE_DIRECTORY ${FULL_LOCAL_SITE_PACKAGES_DIR})
+    add_custom_target(cleanSitePackagesDirectory
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${FULL_LOCAL_SITE_PACKAGES_DIR}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${FULL_LOCAL_SITE_PACKAGES_DIR}
+        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        VERBATIM
+    )
 
-    # Use our installed pip
+    add_dependencies(${PACKAGE_BUILD} cleanSitePackagesDirectory)
+    add_dependencies(cleanSitePackagesDirectory ${BUILD_DEPENDENCIES})
+
+    # Use our installed pip when upgrading pip
 
     file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
 
@@ -144,18 +157,100 @@ else()
                     --upgrade --upgrade-strategy only-if-needed
                     --no-warn-script-location)
 
-    # Make sure pip is up to date
+    # Install the Python package manager and its dependencies
 
-    add_custom_target(upgradePip
-        COMMAND ${PIP_INSTALL_COMMAND}
-            pip
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+    set(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
 
-    add_dependencies(${PACKAGE_BUILD} upgradePip)
-    add_dependencies(upgradePip ${BUILD_DEPENDENCIES})
+    if(WIN32)
+        # On Windows, we use our version of pip that is modified to create
+        # *-script.py files when installing packages with console scripts, so
+        # that they can then be updated to reference OpenCOR's Python executable
+
+        # Install the Python setuptools package
+
+        set(SETUPTOOLS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/setuptools)
+
+        ExternalProject_Add(installSetuptools
+            DOWNLOAD_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            SOURCE_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            BINARY_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            INSTALL_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            GIT_REPOSITORY
+                https://github.com/pypa/setuptools.git
+            GIT_TAG
+                ${SETUPTOOLS_GIT_TAG}
+            CONFIGURE_COMMAND
+                ${PYTHON_EXECUTABLE} bootstrap.py
+            BUILD_COMMAND
+                ${PYTHON_EXECUTABLE} setup.py build
+            INSTALL_COMMAND
+                ${PYTHON_EXECUTABLE} setup.py install
+            DEPENDS
+                cleanSitePackagesDirectory
+        )
+
+        # Install our Python package installer
+
+        ExternalProject_Add(installPip
+            DOWNLOAD_DIR
+                ${PIP_SOURCE_DIR}
+            SOURCE_DIR
+                ${PIP_SOURCE_DIR}
+            BINARY_DIR
+                ${PIP_SOURCE_DIR}
+            INSTALL_DIR
+                ${PIP_SOURCE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/pip.git
+            GIT_TAG
+                opencor_v${PIP_GIT_TAG}
+            CONFIGURE_COMMAND
+                ""
+            BUILD_COMMAND
+                ${PYTHON_EXECUTABLE} setup.py build
+            INSTALL_COMMAND
+                ${PYTHON_EXECUTABLE} setup.py install
+            DEPENDS
+                installSetuptools
+        )
+    else()
+        ExternalProject_Add(installPip
+            DOWNLOAD_DIR
+                ${PIP_SOURCE_DIR}
+            SOURCE_DIR
+                ${PIP_SOURCE_DIR}
+            BINARY_DIR
+                ${PIP_SOURCE_DIR}
+            INSTALL_DIR
+                ${PIP_SOURCE_DIR}
+            URL
+                https://bootstrap.pypa.io/get-pip.py
+            DOWNLOAD_NO_EXTRACT
+                TRUE
+            CONFIGURE_COMMAND
+                ""
+            BUILD_COMMAND
+                ""
+            INSTALL_COMMAND
+                ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --no-wheel
+            DEPENDS
+                cleanSitePackagesDirectory
+        )
+
+        # Make sure pip is up to date
+
+        ExternalProject_Add_Step(installPip updatePip
+                                 COMMAND ${PIP_INSTALL_COMMAND} pip
+                                 WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                                 DEPENDEES install)
+    endif()
+
+    add_dependencies(${PACKAGE_BUILD} installPip)
+    add_dependencies(installPip ${BUILD_DEPENDENCIES})
 
     # Install numpy, scipy, and matplotlib
 
@@ -170,7 +265,7 @@ else()
     )
 
     add_dependencies(${PACKAGE_BUILD} sciencePackages)
-    add_dependencies(sciencePackages upgradePip)
+    add_dependencies(sciencePackages installPip)
     add_dependencies(sciencePackages ${BUILD_DEPENDENCIES})
 
     # Copy the numpy include directory to a place that OpenCOR can use

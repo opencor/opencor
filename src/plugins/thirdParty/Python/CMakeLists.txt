@@ -19,11 +19,6 @@ set(NUMERIC_LIBRARY_VERSION 35)
 
 set(GIT_TAG "opencor")
 
-# Git tags of Python package installers
-
-set(PIP_GIT_TAG "18.1")
-set(SETUPTOOLS_GIT_TAG "v40.6.2")
-
 # Specify where our local package will be installed
 
 string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
@@ -398,8 +393,6 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-
-        set(INSTALL_STEP copyDlls)
     elseif(APPLE)
         # Fix up the newly installed Python executable and shared library:
         #  - Add RPATH to the Python executable, so that it can use the already
@@ -422,101 +415,6 @@ else()
                                  COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-
-        set(INSTALL_STEP setRpath)
-    else()
-        set(INSTALL_STEP install)
-    endif()
-
-    # Clean our site packages directory before installing any packages
-
-    ExternalProject_Add_Step(${PACKAGE_BUILD} cleanSitePackagesDirectory
-                             COMMAND ${CMAKE_COMMAND} -E remove_directory ${RUNTIME_DIR}/site-packages
-                             COMMAND ${CMAKE_COMMAND} -E make_directory ${RUNTIME_DIR}/site-packages
-                             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                             DEPENDEES ${INSTALL_STEP})
-
-    # Use our newly built Python
-
-    if(WIN32)
-        set(BUILT_PYTHON  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
-    elseif(APPLE)
-        set(BUILT_PYTHON  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
-    else()
-        set(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
-    endif()
-
-    # Install the Python package manager and its dependencies
-
-    if(WIN32)
-        # On Windows, we use our version of pip that is modified to create
-        # *-script.py files when installing packages with console scripts, so
-        # that they can then be updated to reference OpenCOR's Python executable
-
-        # Install the Python setuptools package
-
-        set(SETUPTOOLS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/setuptools)
-
-        ExternalProject_Add(installSetuptools
-            DOWNLOAD_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            SOURCE_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            BINARY_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            INSTALL_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/pypa/setuptools.git
-            GIT_TAG
-                ${SETUPTOOLS_GIT_TAG}
-            CONFIGURE_COMMAND
-                ${BUILT_PYTHON} bootstrap.py
-            BUILD_COMMAND
-                ${BUILT_PYTHON} setup.py build
-            INSTALL_COMMAND
-                ${BUILT_PYTHON} setup.py install
-            DEPENDS
-                ${PACKAGE_BUILD}
-        )
-
-        # Install our Python package installer
-
-        set(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
-
-        ExternalProject_Add(installPip
-            DOWNLOAD_DIR
-                ${PIP_SOURCE_DIR}
-            SOURCE_DIR
-                ${PIP_SOURCE_DIR}
-            BINARY_DIR
-                ${PIP_SOURCE_DIR}
-            INSTALL_DIR
-                ${PIP_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/pip.git
-            GIT_TAG
-                opencor_v${PIP_GIT_TAG}
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ${BUILT_PYTHON} setup.py build
-            INSTALL_COMMAND
-                ${BUILT_PYTHON} setup.py install
-            DEPENDS
-                installSetuptools
-        )
-
-        set(CREATE_PACKAGE_TARGET installPip)
-    else()
-        ExternalProject_Add_Step(${PACKAGE_BUILD} installPip
-                                 COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py --no-wheel
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-                                 DEPENDEES cleanSitePackagesDirectory)
-
-        ExternalProject_Add_StepTargets(${PACKAGE_BUILD} installPip)
-
-        set(CREATE_PACKAGE_TARGET ${PACKAGE_BUILD}-installPip)
     endif()
 
     # Package Python's include files and libraries
