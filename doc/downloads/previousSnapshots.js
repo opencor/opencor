@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 9, "year": 2019, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> prevent OpenCOR from crashing when on Windows, maximised and trying to open a dialog (see issue <a href=\"https://github.com/opencor/opencor/issues/2154\">#2154</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 8.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2147\">#2147</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.28.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/2148\">#2148</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 19.1.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2149\">#2149</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 7, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
