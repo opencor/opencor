@@ -21,18 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python interface
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
+#include "interfacebegin.h"
+    // Note: make sure to update solverInterfaceVersion() whenever you update
+    //       this interface...
 
-    // Note: make sure to update pythonInterfaceVersion() whenever you update this
-    //       interface...
+    VIRTUAL void registerPythonClasses(PyObject *pModule) PURE_OR_OVERRIDE;
 
-    virtual void registerPythonClasses(PyObject *pModule) PURE;
-
-#undef PURE
+#include "interfaceend.h"
 
 //==============================================================================
 // End of file
