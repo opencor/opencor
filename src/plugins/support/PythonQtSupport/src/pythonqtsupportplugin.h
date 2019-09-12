@@ -67,6 +67,7 @@ public:
     static PythonQtSupportPlugin * instance(void);
 
 private:
+    wchar_t **mArgv;
     int mSystemExitCode;
     ctkAbstractPythonManager *mPythonManager;
     PythonQtObjectPtr mOpenCORModule;

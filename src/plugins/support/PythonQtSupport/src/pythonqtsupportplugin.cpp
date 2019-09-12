@@ -91,6 +91,12 @@ void PythonQtSupportPlugin::initializePlugin()
 
     mPythonManager->initialize();
 
+    // Set `sys.argv`
+    mArgv = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(2*sizeof(wchar_t*)));
+    mArgv[0] = const_cast<wchar_t *>(L"");
+    mArgv[1] = nullptr;
+    PySys_SetArgvEx(1, mArgv, 0);
+
     // Handle sys.exit()
 
     instance()->mSystemExitCode = 0;
@@ -113,6 +119,8 @@ void PythonQtSupportPlugin::initializePlugin()
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
+    PyMem_RawFree(mArgv);
+
     delete mPythonManager;
 }
 
