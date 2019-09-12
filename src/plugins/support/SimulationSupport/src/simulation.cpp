@@ -142,7 +142,8 @@ Simulation * SimulationObject::simulation() const
 //==============================================================================
 
 SimulationData::SimulationData(Simulation *pSimulation) :
-    SimulationObject(pSimulation)
+    SimulationObject(pSimulation),
+    mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
 {
     // Create our various arrays
 

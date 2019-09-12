@@ -247,7 +247,7 @@ private:
     double *mInitialStates = nullptr;
 
     QVector<int> mGradientIndices;
-    DataStore::DataStoreArray *mGradientsArray;
+    DataStore::DataStoreArray *mGradientsArray = nullptr;
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
@@ -320,10 +320,10 @@ private:
 
     DataStore::DataStoreVariable *mPoints = nullptr;
 
-    DataStore::DataStoreVariables mConstants = nullptr;
-    DataStore::DataStoreVariables mRates = nullptr;
-    DataStore::DataStoreVariables mStates = nullptr;
-    DataStore::DataStoreVariables mAlgebraic = nullptr;
+    DataStore::DataStoreVariables mConstants;
+    DataStore::DataStoreVariables mRates;
+    DataStore::DataStoreVariables mStates;
+    DataStore::DataStoreVariables mAlgebraic;
 
     DataStore::DataStore *mGradientsStore = nullptr;
     DataStore::DataStoreVariables mGradients = DataStore::DataStoreVariables();
