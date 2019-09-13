@@ -38,6 +38,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <iostream>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PythonQtConsoleWindow {
 
@@ -126,6 +130,14 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
     // Create a Python module to setup the console
 
     PythonQtObjectPtr qtConsoleModule = pythonQtInstance->createModuleFromScript("opencor.qtconsole", PythonQtConsole);
+    if (qtConsoleModule == nullptr) {
+        if (PyErr_Occurred()) {
+            PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
+        } else {
+            std::cerr << "Cannot create QT Console module" << std::endl;
+        }
+        return;
+    }
 
     // Create and retrive an IPython widget
 
@@ -134,24 +146,30 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
     PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
 
     PythonQtInstanceWrapper *widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper*>(ipythonWidget);
+    if (widgetWrapper == nullptr) {
+        if (PyErr_Occurred()) {
+            PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
+        } else {
+            std::cerr << "Cannot create IPython widget" << std::endl;
+        }
+        return;
+    }
 
-    if (widgetWrapper) {
-        mPythonQtConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
+    mPythonQtConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
 
-        this->setFocusProxy(mPythonQtConsoleWidget);
+    this->setFocusProxy(mPythonQtConsoleWidget);
 
-        // Add the widget to our window
+    // Add the widget to our window
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-        mGui->layout->addWidget(new Core::BorderedWidget(mPythonQtConsoleWidget,
-                                                         true, true, true, true));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPythonQtConsoleWidget,
+                                                     true, true, true, true));
 #elif defined(Q_OS_MAC)
-        mGui->layout->addWidget(new Core::BorderedWidget(mPythonQtConsoleWidget,
-                                                         true, false, false, false));
+    mGui->layout->addWidget(new Core::BorderedWidget(mPythonQtConsoleWidget,
+                                                     true, false, false, false));
 #else
-        #error Unsupported platform
+    #error Unsupported platform
 #endif
-    }
 }
 
 //==============================================================================
