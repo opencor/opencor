@@ -10,10 +10,11 @@ macOS
 Ubuntu
 ------
 
+* libffi: ``sudo apt install libffi-dev``
 * SQLite: ``sudo apt install libsqlite3-dev``
 
 
 Windows
 -------
 
-We download and compile ``Sqlite`` as part of the Python build, currently version 3.29.
+We download and compile SQLite as part of the Python build, currently version 3.29.

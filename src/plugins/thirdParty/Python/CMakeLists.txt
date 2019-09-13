@@ -3,21 +3,21 @@ project(PythonPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.5.2)
+set(PACKAGE_VERSION 3.7.4)
 
 # Package release tag
 
-set(RELEASE_TAG v3.5.2_devel)
+set(RELEASE_TAG opencor_0.7)
 
 # Version of our library
 
-set(MAJOR_MINOR_LIBRARY_VERSION "3.5")
-set(LIBRARY_VERSION "${MAJOR_MINOR_LIBRARY_VERSION}.2")
-set(NUMERIC_LIBRARY_VERSION 35)
+set(MAJOR_MINOR_LIBRARY_VERSION "3.7")
+set(LIBRARY_VERSION "${MAJOR_MINOR_LIBRARY_VERSION}.4")
+set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "opencor")
+set(GIT_TAG "support-build-37-and-38-rebased")
 
 # Specify where our local package will be installed
 
@@ -166,17 +166,19 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e3452e617fa525ee46c42ba3fcbb5bff88b6ba97
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 88401973b4e0950eb178b3eadb3fca0ac5b199d4
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c5dbf4f4ff5355481cec920ab09bcab2257408e0
-                                          c1faf41d91676096de6e3d5ac9f2f6cd0177eed0)
+                              SHA1_VALUES f01b93384e9131de7861b3782e5a207794416e50
+                                          250befd28ffbb238d85c84273c12a3b5b0ca32c4)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f6c20cf56a3adbe2cc2d4003e90ddf17f3068c83
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8c998c6c384a25d2d1a6f299bef56efbf4893628
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 15c502637e33f86db2ad9f8bc7b14b24a5c76844
-                                          67b894553bdf5156219d52a9f1656bc1168d23a3
-                                          81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
+                              SHA1_VALUES 2493b3a5ece5968fcd5d3647102d8b5eec8ac907
+                                          12ad648b6162b8861436a54b26099b24acbfc98e
+                                          561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
     # Set platform-specific configuration options
@@ -352,18 +354,17 @@ else()
 
             # Use our OpenSSL
 
-            -DUSE_SYSTEM_OpenSSL=ON
-            -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
-            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
-            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
+            -DUSE_SYSTEM_OpenSSL=OFF
+            -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
+            -DOPENSSL_LIBRARIES=${OPENSSL_LIBRARIES_escaped}
 
             # Use our zlib
 
-            -DUSE_SYSTEM_ZLIB=ON
+            -DUSE_SYSTEM_ZLIB=OFF
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
 
-            # Need to install pip on macOS
+            # Needed to install pip on macOS
 
             -DENABLE_SCPROXY=ON
         BUILD_BYPRODUCTS
