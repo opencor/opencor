@@ -11,5 +11,4 @@ Matplotlib
 In our matplotlib's git controlled directory
 ::
 
-    git diff --no-prefix v3.0.2 opencor-v3.0.2.1 \
-      > ~/build/OpenCOR/src/plugins/thirdparty/PythonPackages/src/matplotlib_3.0.2.1.diff
+    git diff --no-prefix v3.1.1 PythonQt-v3.1.1 > ~/build/OpenCOR/src/plugins/thirdparty/PythonPackages/src/matplotlib_3.1.1.diff

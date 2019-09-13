@@ -8,49 +8,49 @@ set(PACKAGE_VERSION ${PYTHON_VERSION})
 # Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
-set(RELEASE_TAG v${PYTHON_VERSION}_devel)
+set(RELEASE_TAG opencor_0.7)
 
 # Git tags of Python package installers
 
-set(PIP_GIT_TAG "19.2.2")
+set(PIP_GIT_TAG "19.2.3")
 set(SETUPTOOLS_GIT_TAG "v41.2.0")
 
 # The versions of the Python packages we bundle
 
 # Science packages
 
-set(NUMPY_VERSION 1.15.4)
+set(NUMPY_VERSION 1.17.2)
+set(SCIPY_VERSION 1.3.1)
 
-set(MATPLOTLIB_VERSION 3.0.2)
-set(MATPLOTLIB_OPENCOR 3.0.2.1)
-
-set(SCIPY_VERSION 1.1.0)
+set(MATPLOTLIB_VERSION 3.1.1)
 
 # IPython, Jupyter, and friends
 
-set(IPYKERNEL_VERSION 5.1.0)
-set(IPYKERNEL_PYTHONQT 5.1.0.3)
+set(NOTEBOOK_VERSION 6.0.1)
+set(IPYWIDGETS_VERSION 7.5.1)
+set(NBCONVERT_VERSION 5.6.0)
+set(JUPYTER_CONSOLE_VERSION 6.0.0)
 
-set(IPYTHON_VERSION 7.5.0)
-set(IPYTHON_PYTHONQT 7.5.0.1)
+set(JUPYTERLAB_VERSION 1.1.3)
 
-set(QTCONSOLE_VERSION 4.4.4)
-set(QTCONSOLE_PYTHONQT 4.4.4.1)
+# We use patched versions of these packages to support PythonQt
+
+set(IPYKERNEL_VERSION 5.1.2)
+set(IPYKERNEL_PYTHONQT 5.1.2.0)
+
+set(IPYTHON_VERSION 7.8.0)
+set(IPYTHON_PYTHONQT 7.8.0.0)
+
+set(QTCONSOLE_VERSION 4.5.5)
+set(QTCONSOLE_PYTHONQT 4.5.5.0)
 
 set(TRAITLETS_VERSION 4.3.2)
 set(TRAITLETS_PYTHONQT 4.3.2.1)
 
-set(NOTEBOOK_VERSION 5.7.8)
-set(IPYWIDGETS_VERSION 7.4.2)
-set(NBCONVERT_VERSION 5.5.0)
-set(JUPYTER_CONSOLE_VERSION 6.0.0)
-
-set(JUPYTERLAB_VERSION 0.35.6)
-
 # Documentation packages
 
-set(LXML_VERSION 4.2.5)
-set(SPHINX_VERSION 1.8.2)
+set(LXML_VERSION 4.4.1)
+set(SPHINX_VERSION 2.2.0)
 
 # Our GitHub organisation
 
@@ -80,11 +80,11 @@ set(PACKAGED_FILES
 # Note: at least one file must have its SHA-1 value checked...
 
 if(WIN32)
-    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/multiarray.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
+    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
 elseif(APPLE)
-    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-darwin.so)
+    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath.cpython-${PYTHON_ABI_VERSION}-darwin.so)
 elseif(UNIX)
-    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-x86_64-linux-gnu.so)
+    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath.cpython-${PYTHON_ABI_VERSION}-x86_64-linux-gnu.so)
 endif()
 
 # Use the pre-built version of our package unless instructed otherwise
@@ -110,11 +110,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f1ca5d10b5a4f8d7ead2a151f2a64e91f5847f4a
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dd281e79f0f701f257fcb3550c19d47e943f047c
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES de6bb8d119560aabd31d97cd1def0545ec3d88a6)
+                              SHA1_VALUES 4443d8cb01dcc0edc148f9d095201b13fd09f923)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 86529b1557f22b13bf3822d8d906b6c436be19fc
@@ -357,7 +357,7 @@ else()
             --strip=2
             --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
             --verbose
-            src/matplotlib_${MATPLOTLIB_OPENCOR}.diff
+            src/matplotlib_${MATPLOTLIB_VERSION}.diff
         WORKING_DIRECTORY
             ${PROJECT_SOURCE_DIR}
         VERBATIM
