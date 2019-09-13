@@ -1120,7 +1120,7 @@ if(APPLE)
 else()
     # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
 
-    if(NOT WIN32 AND NOT APPLE)
+    if(NOT WIN32)
         runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
     endif()
 
