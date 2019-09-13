@@ -21,6 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // An dockable iPython console window for Qt
 //==============================================================================
 
+/*
+ * To debug the Python code, use `import pdb; pdb.set_trace()` to set
+ * a breakpoint and start OpenCOR from the command line
+ */
+
 #include "borderedwidget.h"
 
 //==============================================================================
@@ -52,9 +57,6 @@ namespace PythonQtConsoleWindow {
 static QString PythonQtConsole = R"PYTHON(
 import logging
 import sys
-
-## To debug this code, use `import pdb; pdb.set_trace()` to set
-## a breakpoint and start OpenCOR from the command line
 
 # Add the current working directory to IPython's search path
 
