@@ -263,6 +263,14 @@ else()
         set(BUILD_TYPE ${CMAKE_BUILD_TYPE})
     endif()
 
+    # We can't use ``;`` as a list separator with ``ExternalProject_Add`` so replace
+    # semicolons with ``|`` and use the ``LIST_SEPARATOR`` option
+
+    string(REPLACE ";" "|"
+           OPENSSL_LIBRARIES_escaped
+           "${OPENSSL_LIBRARIES}"
+           )
+
     # Build Python as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -278,6 +286,8 @@ else()
             ${GIT_TAG}
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
+        LIST_SEPARATOR
+            |
         CMAKE_ARGS
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
