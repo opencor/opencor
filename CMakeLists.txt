@@ -618,6 +618,15 @@ configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in
 configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
                ${I18N_QRC_FILENAME})
 
+# The Python interface depends on Python headers so we only include it
+# when Python is not being built
+
+if(USE_PREBUILT_PYTHON_PACKAGE)
+    set(PYTHON_INTERFACE
+        src/plugins/pythoninterface.cpp
+    )
+endif()
+
 # Files that make up the GUI version of OpenCOR
 
 set(SOURCES
@@ -646,7 +655,7 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-    src/plugins/pythoninterface.cpp
+    ${PYTHON_INTERFACE}
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -858,17 +867,15 @@ if(ENABLE_TEST_PLUGINS)
     )
 endif()
 
-set(PLUGINS
+set(THIRDPARTY_BASE_PLUGINS
     thirdParty/OpenSSL
     thirdParty/zlib
+)
 
+set(PLUGIN_PLUGINS
     thirdParty/libSBML
-    thirdParty/Python
     thirdParty/PythonPackages
     thirdParty/PythonQtAPI
-
-    ${SAMPLE_PLUGINS}
-    ${TEST_PLUGINS}
 
     dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
@@ -936,19 +943,35 @@ set(PLUGINS
     widget/WebViewerWidget
 )
 
-# Python interface depends on Python headers so we cannot include it when plugins
-# aren't being built (e.g. when building QtWebKit)
-
-set(PYTHON_INTERFACE
-    src/plugins/pythoninterface.cpp
-)
-
 if(ENABLE_TEST_PLUGINS)
-    list(APPEND PLUGINS
+    list(APPEND PLUGIN_PLUGINS
         thirdParty/Zinc
 
         widget/ZincWidget
     )
+endif()
+
+if(USE_PREBUILT_PYTHON_PACKAGE)
+    # We are not building Python, so build all our plugins
+
+    set(PLUGINS
+        ${THIRDPARTY_BASE_PLUGINS}
+
+        thirdParty/Python
+
+        ${PLUGIN_PLUGINS}
+    )
+else()
+    # We want to build our copy of the Python package, so don't build any plugins
+    # apart from third party ones that are part of Python, since others may
+    # require Python
+
+    set(PLUGINS
+        ${THIRDPARTY_BASE_PLUGINS}
+
+        thirdParty/Python
+    )
+    add_definitions(-DEXCLUDE_PYTHON)
 endif()
 
 if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
