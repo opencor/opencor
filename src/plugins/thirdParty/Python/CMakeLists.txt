@@ -39,11 +39,11 @@ endif()
 # Name of our Python executable and shared library (and import library, if any)
 
 if(WIN32)
-    set(PYTHON_EXECUTABLE bin/python.exe)
+    set(PYTHON_EXECUTABLE bin/python3.exe)
     set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
-    set(PYTHON_EXECUTABLE bin/python)
+    set(PYTHON_EXECUTABLE bin/python3)
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
@@ -422,12 +422,12 @@ else()
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
-                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} bin/python
-                                 COMMAND install_name_tool -add_rpath @executable_path/.. bin/python
-                                 COMMAND install_name_tool -add_rpath @executable_path/../.. bin/python
+                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/.. ${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/../.. ${PYTHON_EXECUTABLE}
                                  COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
                                                                    @rpath/lib/${SHARED_LIBRARY}
-                                                                   bin/python
+                                                                   ${PYTHON_EXECUTABLE}
                                  COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
