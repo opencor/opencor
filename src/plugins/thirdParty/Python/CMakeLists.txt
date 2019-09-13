@@ -66,6 +66,13 @@ else()
     set(SCRIPT_DIR bin)
 endif()
 
+# The version of SQLite3 we build for Windows
+
+if(WIN32)
+    set(SQLITE3_RELEASE_YEAR "2019")
+    set(SQLITE3_VERSION "3290000")
+endif()
+
 # Retrieve our package's binaries
 
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
@@ -187,7 +194,6 @@ else()
     # Jupyter and IPython require SQLite3
 
     if(WIN32)
-        set(SQLITE3_VERSION "3170000")
         set(SQLITE3_LIBRARY_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
         if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
@@ -195,7 +201,7 @@ else()
 
             message("Downloading ${SQLITE3_SOURCES_ZIP}...")
 
-            file(DOWNLOAD https://sqlite.org/2017/${SQLITE3_SOURCES_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
+            file(DOWNLOAD https://sqlite.org/${SQLITE3_RELEASE_YEAR}/${SQLITE3_SOURCES_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
                  SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_SOURCES_ZIP}
@@ -209,7 +215,7 @@ else()
 
             message("Downloading ${SQLITE3_DLL_ZIP}...")
 
-            file(DOWNLOAD https://sqlite.org/2017/${SQLITE3_DLL_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
+            file(DOWNLOAD https://sqlite.org/${SQLITE3_RELEASE_YEAR}/${SQLITE3_DLL_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
                  SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_DLL_ZIP} --format=zip
@@ -227,16 +233,15 @@ else()
         set(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite3/include)
         set(SQLITE3_LIBRARY_DIR /usr/local/opt/sqlite3/lib)
 
-        # Link to SQLite3's static version, so that we don't have to bundle it
+        # Link to SQLite3's static library so we don't have to bundle it
 
         set(SQLITE3_IMPORT_LIBRARY libsqlite3.a)
     else()
-        set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-
         find_package(SQLite3 REQUIRED)
 
-        get_filename_component(SQLITE3_LIBRARY_DIR ${SQLITE3_LIBRARY} DIRECTORY)
-        get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLITE3_LIBRARY} NAME)
+        set(SQLITE3_INCLUDE_DIR ${SQLite3_INCLUDE_DIRS})
+        get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
+        get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLite3_LIBRARIES} NAME)
     endif()
 
     if(NOT APPLE)
