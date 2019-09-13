@@ -279,10 +279,11 @@ else()
     # Build Python as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+            ${PACKAGE_BUILD_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -438,9 +439,9 @@ else()
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
-                        TARGET ${CREATE_PACKAGE_TARGET})
+                        TARGET ${PACKAGE_BUILD})
 
-    set(DEPENDS_ON ${CREATE_PACKAGE_TARGET})
+    set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
 
 # Allow other external projects to find our copy of Python
