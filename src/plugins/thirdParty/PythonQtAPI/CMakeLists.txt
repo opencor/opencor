@@ -7,7 +7,7 @@ set(PACKAGE_VERSION "3.2.1")
 
 # Repository in GitHub's OpenCOR organisation
 
-set(PACKAGE_REPOSITORY pythonqt-sourceforge)
+set(PACKAGE_REPOSITORY pythonqt)
 
 # Release tag of our packaged library
 
@@ -20,22 +20,27 @@ set(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.0")
 
 # Git tag for our library
 
-set(GIT_TAG opencor-v3.2.1)
+set(GIT_TAG OpenCOR-0.7)
 
 # Specify where our local package will be installed
 
-set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    set(DEBUG_POSTFIX "_d")   # PythonQt uses this for all platforms
+endif()
+
 if(WIN32)
-    set(SHARED_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(IMPORT_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(SHARED_LIBRARY PythonQt${DEBUG_POSTFIX}${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(IMPORT_LIBRARY PythonQt${DEBUG_POSTFIX}${MAJOR_LIBRARY_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
     if(APPLE)
-        set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${DEBUG_POSTFIX}${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     else()
-        set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
+        set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${DEBUG_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
     endif()
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
@@ -84,11 +89,11 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
                               SHA1_VALUES 6ca3e2a7e30a627ae93acc3e8518a5aa783c0de5)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 67a7e1d9930f8ada3a968da87bbff3dff5f4f00c
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a053f696b9eaa0d4dd1d4b62d362d638b8441fb8
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES a7ff6adb4eb122914bb2d265e3f96221ba6ebdaa)
+                              SHA1_VALUES 25f83a2e1be8ee61ccb11e0a8d08c14436245182)
     endif()
 else()
     # Set platform specific configuration options and tool names
@@ -120,34 +125,20 @@ else()
 
     set(QMAKE_INCLUDE_PATH "INCLUDEPATH+=${QTWEBKIT_INCLUDE_DIR}")
 
-    # Configure qmake project files with our settings
-
-    set(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
-    set(PYTHONQT_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
-
-    configure_file(${PROJECT_SOURCE_DIR}/qmake/PythonQtOpenCOR.pro.in
-                   ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
-                   @ONLY)
-    configure_file(${PROJECT_SOURCE_DIR}/qmake/build/common.prf.in
-                   ${PROJECT_BINARY_DIR}/build/common.prf
-                   @ONLY)
-    configure_file(${PROJECT_SOURCE_DIR}/qmake/build/python.prf.in
-                   ${PROJECT_BINARY_DIR}/build/python.prf
-                   @ONLY)
-
     # Build PythonQt as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
             ${PYTHON_DEPENDENCIES}
         DOWNLOAD_DIR
-            ${PYTHONQT_SOURCE_DIR}
+            ${PACKAGE_BUILD_DIR}
         SOURCE_DIR
-            ${PYTHONQT_SOURCE_DIR}
+            ${PACKAGE_BUILD_DIR}
         BINARY_DIR
-            ${PYTHONQT_SOURCE_DIR}
+            ${PACKAGE_BUILD_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -155,7 +146,9 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE_COMMAND} ${QMAKE_DEBUG_OPTION} ${QMAKE_INCLUDE_PATH} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
+            ${QMAKE_COMMAND}
+                ${QMAKE_DEBUG_OPTION} ${QMAKE_INCLUDE_PATH} ${QMAKE_LFLAGS_OPTION}
+                PythonQtOpenCOR.pro
         BUILD_COMMAND
             ${MAKE_COMMAND}
         INSTALL_COMMAND
@@ -166,15 +159,21 @@ else()
 
     # Copy our configured qmake project files into the build
 
+    set(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+    configure_file(${PROJECT_SOURCE_DIR}/qmake/PythonQtOpenCOR.pro.in
+                   ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
+                   @ONLY)
+    configure_file(${PROJECT_SOURCE_DIR}/qmake/build/python.prf.in
+                   ${PROJECT_BINARY_DIR}/build/python.prf
+                   @ONLY)
+
     ExternalProject_Add_Step(${PACKAGE_BUILD} update_configuration
         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
-                                         ${PYTHONQT_SOURCE_DIR}/PythonQtOpenCOR.pro
-        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/build/common.prf
-                                         ${PYTHONQT_SOURCE_DIR}/build/common.prf
+                                         ${PACKAGE_BUILD_DIR}/PythonQtOpenCOR.pro
         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/build/python.prf
-                                         ${PYTHONQT_SOURCE_DIR}/build/python.prf
+                                         ${PACKAGE_BUILD_DIR}/build/python.prf
         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/qmake/extensions/PythonQt_QtAll/PythonQt_QtAll.pri
-                                         ${PYTHONQT_SOURCE_DIR}/extensions/PythonQt_QtAll
+                                         ${PACKAGE_BUILD_DIR}/extensions/PythonQt_QtAll
         DEPENDEES update
         DEPENDERS configure
         )
@@ -188,9 +187,9 @@ else()
         set(FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY})
 
         if(APPLE)
-            set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+            set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${DEBUG_POSTFIX}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
         else()
-            set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
+            set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${DEBUG_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
         endif()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
