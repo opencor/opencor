@@ -241,6 +241,6 @@ add_plugin(PythonQtAPI
         ${DEPENDS_ON}
 )
 
-# Update our list of Python dependencies for other plugins
+# Update our list of Python specific dependencies
 
-set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)
+set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${PROJECT_NAME} PARENT_SCOPE)

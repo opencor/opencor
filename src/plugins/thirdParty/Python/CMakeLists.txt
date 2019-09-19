@@ -493,6 +493,10 @@ if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
 
+# Keep a list of Python specific dependencies
+
+set(PYTHON_DEPENDENCIES ${PROJECT_NAME} PARENT_SCOPE)
+
 # Copy a script to update the Python path in copied scripts
 
 file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py

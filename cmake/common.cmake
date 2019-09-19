@@ -279,7 +279,6 @@ macro(add_plugin PLUGIN_NAME)
         # Create a custom target for installing files
         # Note: this is to prevent Ninja from getting confused with circular
         #       references...
-        # Note: we also use this target in some Python build scripts
 
         SET(INSTALL_EXTERNAL_FILES_TARGET "${PROJECT_NAME}_INSTALL_EXTERNAL_FILES")
 
