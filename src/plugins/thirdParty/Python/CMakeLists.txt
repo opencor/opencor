@@ -39,7 +39,7 @@ endif()
 # Name of our Python executable and shared library (and import library, if any)
 
 if(WIN32)
-    set(PYTHON_EXECUTABLE bin/python3.exe)
+    set(PYTHON_EXECUTABLE bin/python.exe)
     set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
