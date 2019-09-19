@@ -44,7 +44,7 @@ class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject, public PluginIn
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtSupportPlugin" FILE "pythonqtsupportplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonSupportPlugin" FILE "pythonsupportplugin.json")
 
     Q_INTERFACES(OpenCOR::PluginInterface)
 
