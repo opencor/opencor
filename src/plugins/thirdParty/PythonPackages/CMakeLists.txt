@@ -95,11 +95,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2fcb3dc8656c736fd4a15e1ea3b1f575ffb7b7f4
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 570a80af4fc219070dbfa3f2e4cc39db57c755f4
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES cf9f9b247398d159a6658ec50787d71ea6e6ba0b)
+                                  SHA1_VALUES 360dfb74ccaca4d0152f5184c9adfeb4a65fd5d3)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 077f8f0f162fe54d1d4743b4ad43869d3683b8c7
