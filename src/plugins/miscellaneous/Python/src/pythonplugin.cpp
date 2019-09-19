@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Run Python script plugin
+// Run Python plugin
 //==============================================================================
 
 #include "pythonqtsupportplugin.h"
-#include "pythonrunscriptplugin.h"
+#include "pythonplugin.h"
 
 //==============================================================================
 
@@ -40,16 +40,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonRunScript {
+namespace Python {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonRunScriptPluginInfo()
+PLUGININFO_FUNC PythonPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the run Python script  plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the run Python script  plugin."));
+    descriptions.insert("en", QString::fromUtf8("the run Python plugin."));
+    descriptions.insert("fr", QString::fromUtf8("the run Python plugin."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
                           QStringList() << "Core" << "DataStore"
@@ -62,9 +62,9 @@ PLUGININFO_FUNC PythonRunScriptPluginInfo()
 // CLI interface
 //==============================================================================
 
-bool PythonRunScriptPlugin::executeCommand(const QString &pCommand,
-                                           const QStringList &pArguments,
-                                           int &pRes)
+bool PythonPlugin::executeCommand(const QString &pCommand,
+                                  const QStringList &pArguments,
+                                  int &pRes)
 {
     // Run the given CLI command
 
@@ -97,10 +97,7 @@ bool PythonRunScriptPlugin::executeCommand(const QString &pCommand,
 // Plugin specific
 //==============================================================================
 
-// Should we combine "script" and "shell" ??
-// And rename the plugin to say "RunPython" ??
-
-void PythonRunScriptPlugin::runHelpCommand()
+void PythonPlugin::runHelpCommand()
 {
     // Output the commands we support
 
@@ -115,7 +112,7 @@ void PythonRunScriptPlugin::runHelpCommand()
 
 //==============================================================================
 
-bool PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
+bool PythonPlugin::runScript(const QStringList &pArguments, int &pRes)
 {
     // Make sure that we have sufficient arguments
 
@@ -158,7 +155,7 @@ bool PythonRunScriptPlugin::runScript(const QStringList &pArguments, int &pRes)
 
 //==============================================================================
 
-bool PythonRunScriptPlugin::runShell(const QStringList &pArguments, int &pRes)
+bool PythonPlugin::runShell(const QStringList &pArguments, int &pRes)
 {
     // The following has been adapted from `Programs/python.c` in the Python sources.
 
@@ -224,7 +221,7 @@ bool PythonRunScriptPlugin::runShell(const QStringList &pArguments, int &pRes)
 
 //==============================================================================
 
-}   // namespace PythonRunScript
+}   // namespace Python
 }   // namespace OpenCOR
 
 //==============================================================================

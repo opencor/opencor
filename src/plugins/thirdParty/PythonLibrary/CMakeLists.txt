@@ -1,8 +1,8 @@
-project(PythonPlugin)
+project(PythonLibraryPlugin)
 
 # Name and version of our package
 
-set(PACKAGE_NAME Python)
+set(PACKAGE_NAME PythonLibrary)
 set(PACKAGE_VERSION 3.7.4)
 
 # Package release tag
@@ -140,7 +140,7 @@ endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-if(USE_PREBUILT_PYTHON_PACKAGE)
+if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
     # Retrieve the plugin's package
 
     if(WIN32)
@@ -467,11 +467,11 @@ set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_
 
 # Add the plugin
 
-add_plugin(Python
+add_plugin(PythonLibrary
     SOURCES
         ../../plugininfo.cpp
 
-        src/pythonplugin.cpp
+        src/pythonlibraryplugin.cpp
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

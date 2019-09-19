@@ -1,13 +1,13 @@
-project(PythonRunScriptPlugin)
+project(PythonPlugin)
 
 # Add the plugin
 
-add_plugin(PythonRunScript
+add_plugin(Python
     SOURCES
         ../../cliinterface.cpp
         ../../plugininfo.cpp
 
-        src/pythonrunscriptplugin.cpp
+        src/pythonplugin.cpp
     PLUGINS
         Core
         PythonQtSupport

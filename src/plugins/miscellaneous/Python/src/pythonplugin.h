@@ -18,10 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python plugin
+// Run Python plugin
 //==============================================================================
 
-#include "pythonplugin.h"
+#pragma once
+
+//==============================================================================
+
+#include "cliinterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
@@ -30,17 +35,26 @@ namespace Python {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonPluginInfo()
+PLUGININFO_FUNC PythonPluginInfo();
+
+//==============================================================================
+
+class PythonPlugin : public QObject, public CliInterface
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://www.python.org/\">Python</a> language."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au langage <a href=\"https://www.python.org/\">Python</a>."));
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonPlugin" FILE "pythonplugin.json")
 
-    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
-                          descriptions);
-}
+    Q_INTERFACES(OpenCOR::CliInterface)
+
+public:
+#include "cliinterface.inl"
+
+private:
+    void runHelpCommand();
+    bool runScript(const QStringList &pArguments, int &pRes);
+    bool runShell(const QStringList &pArguments, int &pRes);
+};
 
 //==============================================================================
 

@@ -29,7 +29,7 @@ option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff 
 option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
+option(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE "Use the pre-built version of the Python library package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
@@ -619,9 +619,9 @@ configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
                ${I18N_QRC_FILENAME})
 
 # The Python interface depends on Python headers so we only include it
-# when Python is not being built
+# when the Python library is not being built
 
-if(USE_PREBUILT_PYTHON_PACKAGE)
+if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
     set(PYTHON_INTERFACE
         src/plugins/pythoninterface.cpp
     )
@@ -830,7 +830,7 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
-# Specify a target to help us build certain plugins (e.g. our Python plugin)
+# Specify a target to help us build certain plugins (e.g. our Python library plugin)
 
 set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
 
@@ -895,7 +895,7 @@ set(PLUGIN_PLUGINS
     miscellaneous/HelpWindow
     miscellaneous/JupyterKernel
     miscellaneous/PythonQtConsoleWindow
-    miscellaneous/PythonRunScript
+    miscellaneous/Python
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -951,25 +951,25 @@ if(ENABLE_TEST_PLUGINS)
     )
 endif()
 
-if(USE_PREBUILT_PYTHON_PACKAGE)
-    # We are not building Python, so build all our plugins
+if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+    # We are not building the Python library, so build all our plugins
 
     set(PLUGINS
         ${THIRDPARTY_BASE_PLUGINS}
 
-        thirdParty/Python
+        thirdParty/PythonLibrary
 
         ${PLUGIN_PLUGINS}
     )
 else()
-    # We want to build our copy of the Python package, so don't build any plugins
-    # apart from third party ones that are part of Python, since others may
-    # require Python
+    # We want to build our copy of the Python library package, so don't build any
+    # plugins apart from third party ones that are part of Python, since others may
+    # require Python headers that don't yet exist
 
     set(PLUGINS
         ${THIRDPARTY_BASE_PLUGINS}
 
-        thirdParty/Python
+        thirdParty/PythonLibrary
     )
     add_definitions(-DEXCLUDE_PYTHON)
 endif()
@@ -1058,7 +1058,7 @@ endforeach()
 if(NOT WIN32 AND NOT APPLE)
     include_directories(${PYTHON_INCLUDE_DIR})
     target_link_libraries(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
-    add_dependencies(${CMAKE_PROJECT_NAME} PythonPlugin)
+    add_dependencies(${CMAKE_PROJECT_NAME} PythonLibraryPlugin)
 endif()
 
 # Build the CLI version of OpenCOR (Windows specific)

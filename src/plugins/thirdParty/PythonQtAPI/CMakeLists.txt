@@ -233,6 +233,7 @@ add_plugin(PythonQtAPI
         src/pythonqtapiplugin.cpp
     PLUGINS
         Core
+        PythonLibrary
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES

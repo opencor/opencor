@@ -18,47 +18,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Run Python script plugin
+// Python Library plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "cliinterface.h"
-#include "plugininfo.h"
+#include "pythonlibraryplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonRunScript {
+namespace PythonLibrary {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonRunScriptPluginInfo();
-
-//==============================================================================
-
-class PythonRunScriptPlugin : public QObject, public CliInterface
+PLUGININFO_FUNC PythonLibraryPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonRunScriptPlugin" FILE "pythonrunscriptplugin.json")
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://www.python.org/\">Python</a> language."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au langage <a href=\"https://www.python.org/\">Python</a>."));
 
-    Q_INTERFACES(OpenCOR::CliInterface)
-
-public:
-#include "cliinterface.inl"
-
-private:
-    void runHelpCommand();
-    bool runScript(const QStringList &pArguments, int &pRes);
-    bool runShell(const QStringList &pArguments, int &pRes);
-};
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace PythonRunScript
+}   // namespace PythonLibrary
 }   // namespace OpenCOR
 
 //==============================================================================

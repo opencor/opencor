@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python plugin
+// Python Library plugin
 //==============================================================================
 
 #pragma once
@@ -30,24 +30,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Python {
+namespace PythonLibrary {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonPluginInfo();
+PLUGININFO_FUNC PythonLibraryPluginInfo();
 
 //==============================================================================
 
-class PythonPlugin : public QObject
+class PythonLibraryPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonPlugin" FILE "pythonplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonLibraryPlugin" FILE "pythonlibraryplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace Python
+}   // namespace PythonLibrary
 }   // namespace OpenCOR
 
 //==============================================================================
