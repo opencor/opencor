@@ -496,7 +496,7 @@ endif()
 
 # Keep a list of Python specific dependencies
 
-set(PYTHON_DEPENDENCIES ${PROJECT_NAME} PARENT_SCOPE)
+set(PYTHON_DEPENDENCIES ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)
 
 # Copy a script to update the Python path in copied scripts
 
