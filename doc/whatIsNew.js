@@ -1,6 +1,11 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 19, "month": 7, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 9, "year": 2019,
                      "categories": [
+                       { "name": "General",
+                         "entries": [
+                           { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
+                         ]
+                       },
                        { "name": "Editing",
                          "entries": [
                            { "type": "subCategory", "name": "CellML Annotation view",
