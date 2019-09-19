@@ -361,6 +361,7 @@ else()
             # Use our zlib
 
             -DUSE_SYSTEM_ZLIB=OFF
+            -DUSE_BUILTIN_ZLIB=OFF
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
 
