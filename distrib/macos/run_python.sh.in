@@ -10,4 +10,4 @@ ${OPENCOR_DIR}/set_python_path.sh
 
 # Start the OpenCOR plugin that runs Python code
 
-${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@ -c PythonRunScript::python $*
+${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@ -c Python $*
