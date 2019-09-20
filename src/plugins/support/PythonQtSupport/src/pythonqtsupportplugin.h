@@ -31,14 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "pythonbegin.h"
-	#include "CTK/ctkAbstractPythonManager.h"
 	#include "pythonqtsupportglobal.h"
 	#include "PythonQt/PythonQt.h"
 #include "pythonend.h"
-
-//==============================================================================
-
-class ctkAbstractPythonManager;
 
 //==============================================================================
 
@@ -69,10 +64,12 @@ public:
 private:
     wchar_t **mArgv;
     int mSystemExitCode;
-    ctkAbstractPythonManager *mPythonManager;
     PythonQtObjectPtr mOpenCORModule;
 
 private slots:
+    void printStderr(const QString &pText);
+    void printStdout(const QString &pText);
+
     void systemExited(int pExitCode);
 };
 

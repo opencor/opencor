@@ -9,7 +9,6 @@ ADD_PLUGIN(PythonQtSupport
         ../../plugininfo.cpp
         ../../plugininterface.cpp
 
-        src/CTK/ctkAbstractPythonManager.cpp
         src/pythonqtsupport.cpp
         src/pythonqtsupportplugin.cpp
 

@@ -30,6 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <csignal>
+
+//==============================================================================
+
 #include "pythonbegin.h"
     #include "pythoninterface.h"
     #include "pythonqtsupportplugin.h"
@@ -83,15 +87,27 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtSupportPlugin::initializePlugin()
 {
-    // Create and initialise a new CTK Python manager
+    // Create and initialise a new Python Qt instance
 
-    mPythonManager = new ctkAbstractPythonManager(this);
+    PythonQt::init(PythonQt::RedirectStdOut);
 
-    // This also initialises Python Qt
+    // Capture and redirect output
 
-    mPythonManager->initialize();
+    connect(PythonQt::self(), &PythonQt::pythonStdOut,
+        this, &PythonQtSupportPlugin::printStdout);
+
+    connect(PythonQt::self(), &PythonQt::pythonStdErr,
+        this, &PythonQtSupportPlugin::printStderr);
+
+    // Python maps SIGINT (control-c) to its own handler.  We will remap it
+    // to the default so that control-c works.
+
+#ifdef SIGINT
+    signal(SIGINT, SIG_DFL);
+#endif
 
     // Set `sys.argv`
+
     mArgv = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(2*sizeof(wchar_t*)));
     mArgv[0] = const_cast<wchar_t *>(L"");
     mArgv[1] = nullptr;
@@ -101,9 +117,9 @@ void PythonQtSupportPlugin::initializePlugin()
 
     instance()->mSystemExitCode = 0;
 
-    mPythonManager->setSystemExitExceptionHandlerEnabled(true);
+    PythonQt::self()->setSystemExitExceptionHandlerEnabled(true);
 
-    connect(mPythonManager, &ctkAbstractPythonManager::systemExitExceptionRaised,
+    connect(PythonQt::self(), &PythonQt::systemExitExceptionRaised,
         this, &PythonQtSupportPlugin::systemExited);
 
     // Enable the Qt bindings for Python
@@ -121,7 +137,7 @@ void PythonQtSupportPlugin::finalizePlugin()
 {
     PyMem_RawFree(mArgv);
 
-    delete mPythonManager;
+    PythonQt::cleanup();
 }
 
 //==============================================================================
@@ -191,6 +207,20 @@ PythonQtSupportPlugin * PythonQtSupportPlugin::instance(void)
     static PythonQtSupportPlugin pluginInstance;
     return static_cast<PythonQtSupportPlugin *>(Core::globalInstance("OpenCOR::PythonQtSupport::PythonQtSupportPlugin",
                                                 &pluginInstance));
+}
+
+//==============================================================================
+
+void PythonQtSupportPlugin::printStdout(const QString &pText)
+{
+    std::cout << qPrintable(pText);
+}
+
+//==============================================================================
+
+void PythonQtSupportPlugin::printStderr(const QString &pText)
+{
+    std::cerr << qPrintable(pText);
 }
 
 //==============================================================================
