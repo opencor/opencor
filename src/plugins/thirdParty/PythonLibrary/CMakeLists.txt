@@ -147,14 +147,15 @@ if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fcc72268c1b82dbb96528f5752fe33d3f5d6af1a
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3010323956c36d7722c5a3a4c5ea452d7a1b11ea
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES bc7a070a65f38e27fdaaa2b7e9d9e4da1cc012c2
-                                              cbe8724f283fd4f8dc6bd1e1ed5264b582e95bdf
+                                  SHA1_VALUES 44c58a626c33290a2edf4a590bc2b7392fd6c1b9
+                                              1da1208c4beddd6190ed90acfb94f6f96f0efa1c
                                               599a6df061280855fad67d7c775c242345b0bb2d
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              abfe47025175f0f44dcddc9c87b5e2eb2703f4be)
+                                              e752cca1e5f3ff82fbc7d1f892474fc44a173213)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
