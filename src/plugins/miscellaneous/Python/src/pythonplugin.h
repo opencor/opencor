@@ -52,8 +52,7 @@ public:
 
 private:
     void runHelpCommand();
-    bool runScript(const QStringList &pArguments, int &pRes);
-    bool runShell(const QStringList &pArguments, int &pRes);
+    bool runPython(const QStringList &pArguments, int &pRes);
 };
 
 //==============================================================================

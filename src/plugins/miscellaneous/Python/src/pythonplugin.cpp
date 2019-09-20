@@ -75,15 +75,9 @@ bool PythonPlugin::executeCommand(const QString &pCommand,
 
         return true;
     } else if (pCommand.isEmpty() || !pCommand.compare("python")) {
-        if (pArguments.count() == 0) {
-            // Run an interactive Python shell
+        // Run a Python shell
 
-            return runShell(pArguments, pRes);
-        } else {
-            // Run the Python script in the specified file
-
-            return runScript(pArguments, pRes);
-        }
+        return runPython(pArguments, pRes);
     } else {
         // Not a CLI command that we support
 
@@ -105,57 +99,12 @@ void PythonPlugin::runHelpCommand()
     std::cout << " * Display the commands supported by the plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Run an interactive Python shell in OpenCOR's environment:" << std::endl;
-    std::cout << "      python" << std::endl;
-    std::cout << " * Run a Python script in OpenCOR's environment:" << std::endl;
-    std::cout << "      python <python_file> [parameters...]" << std::endl;
+    std::cout << "      python [option] ... [-c cmd | -m mod | file | -] [arg] ..." << std::endl;
 }
 
 //==============================================================================
 
-bool PythonPlugin::runScript(const QStringList &pArguments, int &pRes)
-{
-    // Make sure that we have sufficient arguments
-
-    if (pArguments.count() < 1) {
-        runHelpCommand();
-
-        return false;
-    }
-
-    const QString filename = pArguments[0];
-
-    if (!QFile::exists(filename)) {
-        std::cerr << "File '" << filename.toStdString() << "' does not exist" << std::endl;
-
-        return false;
-    }
-
-    // Set `sys.argv` to the list of arguments
-
-    PyObject *arguments = PyList_New(0);
-
-    for (const auto &argument : pArguments) {
-        PyList_Append(arguments, PyUnicode_FromString(argument.toUtf8().constData()));
-    }
-
-    auto sysModule = PythonQtSupport::importModule("sys");
-
-    PyModule_AddObject(sysModule.object(), "argv", arguments);  // Steals the reference
-
-    // Run the file
-
-    PythonQtSupport::evalFile(filename);
-
-    // Pass back Python's `sys.exit()` code
-
-    pRes = PythonQtSupport::PythonQtSupportPlugin::instance()->systemExitCode();
-
-    return true;
-}
-
-//==============================================================================
-
-bool PythonPlugin::runShell(const QStringList &pArguments, int &pRes)
+bool PythonPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
     // The following has been adapted from `Programs/python.c` in the Python sources.
 
