@@ -110,7 +110,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dd281e79f0f701f257fcb3550c19d47e943f047c
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 991ae47419a755a35be130584e4c1e3bab51f3fb
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}

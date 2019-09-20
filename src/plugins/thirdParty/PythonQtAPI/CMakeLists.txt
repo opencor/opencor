@@ -3,7 +3,7 @@ project(PythonQtAPIPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME PythonQt)
-set(PACKAGE_VERSION "3.2.1")
+set(PACKAGE_VERSION "3.2.2")
 
 # Repository in GitHub's OpenCOR organisation
 
@@ -11,7 +11,7 @@ set(PACKAGE_REPOSITORY pythonqt)
 
 # Release tag of our packaged library
 
-set(RELEASE_TAG opencor-v3.2.1)
+set(RELEASE_TAG opencor-v3.2.2)
 
 # Version of our library
 
@@ -82,11 +82,11 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 529f53cee8c34a408bf81dcdb5271ea181632c63
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6ac7f806d00d18f6051487dad4c24a77a482be9b
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6ca3e2a7e30a627ae93acc3e8518a5aa783c0de5)
+                              SHA1_VALUES 926f9f2d6d694cbdf9d3a65ef9d122b97ecc7b6d)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a053f696b9eaa0d4dd1d4b62d362d638b8441fb8

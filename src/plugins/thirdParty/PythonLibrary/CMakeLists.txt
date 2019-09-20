@@ -5,8 +5,9 @@ project(PythonLibraryPlugin)
 set(PACKAGE_NAME PythonLibrary)
 set(PACKAGE_VERSION 3.7.4)
 
-# Package release tag
+# Package repository and release tag
 
+set(PACKAGE_REPOSITORY python)
 set(RELEASE_TAG opencor_0.7)
 
 # Version of our library
@@ -166,11 +167,12 @@ if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 88401973b4e0950eb178b3eadb3fca0ac5b199d4
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3ba5d5983be8c8591c12728ade5267909934dc82
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f01b93384e9131de7861b3782e5a207794416e50
-                                          250befd28ffbb238d85c84273c12a3b5b0ca32c4)
+                              SHA1_VALUES b5b34b127e50543001f42b78ecf0f9b8b148faab
+                                          0ee577d7b1fd5c4e9b4ca89e3d2124229e63a0cc)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8c998c6c384a25d2d1a6f299bef56efbf4893628
@@ -439,6 +441,7 @@ else()
     # Package Python's include files and libraries
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
