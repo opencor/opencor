@@ -57,20 +57,13 @@ class PYTHONQTSUPPORT_EXPORT PythonQtSupportPlugin : public QObject, public Plug
 public:
 #include "plugininterface.inl"
 
-    int systemExitCode() const;
-
-    static PythonQtSupportPlugin * instance(void);
-
 private:
     wchar_t **mArgv;
-    int mSystemExitCode;
     PythonQtObjectPtr mOpenCORModule;
 
 private slots:
     void printStderr(const QString &pText);
     void printStdout(const QString &pText);
-
-    void systemExited(int pExitCode);
 };
 
 //==============================================================================

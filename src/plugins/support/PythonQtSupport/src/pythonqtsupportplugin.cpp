@@ -113,15 +113,6 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgv[1] = nullptr;
     PySys_SetArgvEx(1, mArgv, 0);
 
-    // Handle sys.exit()
-
-    instance()->mSystemExitCode = 0;
-
-    PythonQt::self()->setSystemExitExceptionHandlerEnabled(true);
-
-    connect(PythonQt::self(), &PythonQt::systemExitExceptionRaised,
-        this, &PythonQtSupportPlugin::systemExited);
-
     // Enable the Qt bindings for Python
 
     PythonQt_QtAll::init();
@@ -191,26 +182,6 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-int PythonQtSupportPlugin::systemExitCode() const
-{
-    // Return Python's exit code
-
-    return mSystemExitCode;
-}
-
-//==============================================================================
-
-PythonQtSupportPlugin * PythonQtSupportPlugin::instance(void)
-{
-    // Return the 'global' instance of our plugin
-
-    static PythonQtSupportPlugin pluginInstance;
-    return static_cast<PythonQtSupportPlugin *>(Core::globalInstance("OpenCOR::PythonQtSupport::PythonQtSupportPlugin",
-                                                &pluginInstance));
-}
-
-//==============================================================================
-
 void PythonQtSupportPlugin::printStdout(const QString &pText)
 {
     std::cout << qPrintable(pText);
@@ -221,15 +192,6 @@ void PythonQtSupportPlugin::printStdout(const QString &pText)
 void PythonQtSupportPlugin::printStderr(const QString &pText)
 {
     std::cerr << qPrintable(pText);
-}
-
-//==============================================================================
-
-void PythonQtSupportPlugin::systemExited(int pExitCode)
-{
-    // Save the code from `sys.exit()`
-
-    instance()->mSystemExitCode = pExitCode;
 }
 
 //==============================================================================
