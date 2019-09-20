@@ -89,11 +89,11 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
                               SHA1_VALUES 926f9f2d6d694cbdf9d3a65ef9d122b97ecc7b6d)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a053f696b9eaa0d4dd1d4b62d362d638b8441fb8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ad1b611aa9e439cbad9b7b29ad5fb4e5b93ea7fa
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 25f83a2e1be8ee61ccb11e0a8d08c14436245182)
+                              SHA1_VALUES 9d304e3e0637fec816c341c0cec4e76249743904)
     endif()
 else()
     # Set platform specific configuration options and tool names

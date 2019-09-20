@@ -175,11 +175,12 @@ if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
                                           0ee577d7b1fd5c4e9b4ca89e3d2124229e63a0cc)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8c998c6c384a25d2d1a6f299bef56efbf4893628
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e25cdc6257dcf62e8e15e6c99d7bcb60e74d2add
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2493b3a5ece5968fcd5d3647102d8b5eec8ac907
-                                          12ad648b6162b8861436a54b26099b24acbfc98e
+                              SHA1_VALUES 08fbaf85af97a8b2125dbff637c053986f7a2949
+                                          cda4024161a4307cc73c9667c9c6d87d8d49d0c1
                                           561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
