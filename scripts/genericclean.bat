@@ -8,17 +8,21 @@ IF "%1" == "all" (
 
 SET CurrentPath=%CD%
 
-CD %CurrentPath%\build
+IF EXIST %CurrentPath%\build (
+    CD %CurrentPath%\build
 
-FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
-FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
-FOR    %%I IN (*.*) DO DEL /Q "%%I"
-
-IF "%1" == "all" (
-    CD %CurrentPath%\ext
-
+    FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
     FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
     FOR    %%I IN (*.*) DO DEL /Q "%%I"
+)
+
+IF "%1" == "all" (
+    IF EXIST %CurrentPath%\ext (
+        CD %CurrentPath%\ext
+
+        FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
+        FOR    %%I IN (*.*) DO DEL /Q "%%I"
+    )
 )
 
 CD %CurrentPath%
