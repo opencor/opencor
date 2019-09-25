@@ -1008,7 +1008,7 @@ if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
                    ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
     build_documentation(user)
-    build_documentation(developer)
+##    build_documentation(developer)
 endif()
 
 # Build the GUI version of OpenCOR
