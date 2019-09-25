@@ -997,16 +997,19 @@ foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
 
-# Fetch parts of our documentation and build it
+if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+    # We have already built Python and hence have Sphinx available, so we can
+    # fetch parts of our documentation and build it
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
-                                                           ${PROJECT_BUILD_DIR}/doc)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+                                                               ${PROJECT_BUILD_DIR}/doc)
 
-configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+    configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+                   ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
-build_documentation(user)
-build_documentation(developer)
+    build_documentation(user)
+    build_documentation(developer)
+endif()
 
 # Build the GUI version of OpenCOR
 
