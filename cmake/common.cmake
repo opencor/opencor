@@ -131,6 +131,7 @@ macro(build_documentation DOCUMENTATION_NAME)
             CMAKE_ARGS
                 -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
                 -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
+                -DPYTHON_PACKAGES_BIN_DIR=${PYTHON_PACKAGES_BIN_DIR}
             LIST_SEPARATOR
                 |
             INSTALL_COMMAND
