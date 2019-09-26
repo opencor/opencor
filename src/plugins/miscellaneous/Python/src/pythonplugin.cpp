@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Run Python plugin
+// Python shell plugin
 //==============================================================================
 
 #include "pythonqtsupportplugin.h"
@@ -48,8 +48,8 @@ PLUGININFO_FUNC PythonPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the run Python plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the run Python plugin."));
+    descriptions.insert("en", QString::fromUtf8("the Python shell plugin."));
+    descriptions.insert("fr", QString::fromUtf8("the Python shell plugin."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
                           QStringList() << "Core" << "DataStore"
@@ -95,7 +95,7 @@ void PythonPlugin::runHelpCommand()
 {
     // Output the commands we support
 
-    std::cout << "Commands supported by the run Python script plugin:" << std::endl;
+    std::cout << "Commands supported by the Python shell plugin:" << std::endl;
     std::cout << " * Display the commands supported by the plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Run an interactive Python shell in OpenCOR's environment:" << std::endl;
