@@ -38,21 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-void DummyMessageHandler::handleMessage(QtMsgType pType,
-                                        const QString &pDescription,
-                                        const QUrl &pIdentifier,
-                                        const QSourceLocation &pSourceLocation)
-{
-    Q_UNUSED(pType)
-    Q_UNUSED(pDescription)
-    Q_UNUSED(pIdentifier)
-    Q_UNUSED(pSourceLocation)
-
-    // We ignore the message...
-}
-
-//==============================================================================
-
 static QtMessageHandler gOrigMessageHandler;
 
 //==============================================================================
@@ -88,7 +73,7 @@ void MathmlTests::tests(const QString &pCategory)
 
     QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+"/"+pCategory+"/";
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
-    DummyMessageHandler dummyMessageHandler;
+    OpenCOR::Core::DummyMessageHandler dummyMessageHandler;
     QString actualOutput;
     QString expectedOutput;
     QString failMessage = QString();

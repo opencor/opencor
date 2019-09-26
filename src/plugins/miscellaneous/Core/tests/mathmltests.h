@@ -31,18 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class DummyMessageHandler : public QAbstractMessageHandler
-{
-    Q_OBJECT
-
-protected:
-    void handleMessage(QtMsgType pType, const QString &pDescription,
-                       const QUrl &pIdentifier,
-                       const QSourceLocation &pSourceLocation) override;
-};
-
-//==============================================================================
-
 class MathmlTests : public QObject
 {
     Q_OBJECT
