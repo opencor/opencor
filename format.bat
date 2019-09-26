@@ -1,25 +1,29 @@
 @ECHO OFF
 
-TITLE Formatting OpenCOR...
+SET CurrentPath=%CD%
 
-FOR %%X IN (clang-format.exe) DO (
-    SET ClangFormatFound=%%~$PATH:X
-)
+IF EXIST %CurrentPath%\src (
+    TITLE Formatting OpenCOR...
 
-IF DEFINED ClangFormatFound (
-    SET CurrentPath=%CD%
-
-    CD %CurrentPath%\src
-
-    FOR /R %%I IN (*.cpp *.h) DO (
-        ECHO.%%I | FINDSTR /V "3rdparty \ext\ \qzip">NUL && (
-            ECHO Formatting %%I...
-
-            clang-format -i -style=file %%I
-        )
+    FOR %%X IN (clang-format.exe) DO (
+        SET ClangFormatFound=%%~$PATH:X
     )
 
-    CD %CurrentPath%
+    IF DEFINED ClangFormatFound (
+        CD %CurrentPath%\src
+
+        FOR /R %%I IN (*.cpp *.h) DO (
+            ECHO.%%I | FINDSTR /V "3rdparty \ext\ \qzip">NUL && (
+                ECHO Formatting %%I...
+
+                clang-format -i -style=file %%I
+            )
+        )
+
+        CD %CurrentPath%
+    ) ELSE (
+        ECHO Clang-Format is not installed.
+    )
 ) ELSE (
-    ECHO Clang-Format is not installed.
+    ECHO OpenCOR's source directory is missing.
 )

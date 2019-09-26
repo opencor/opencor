@@ -1,58 +1,64 @@
 #!/bin/sh
 
-cmakeBuildType=$1
+if [ -d "build" ]; then
+    cmakeBuildType=$1
 
-if [ "$cmakeBuildType" = "Release" ]; then
-    enableTests=OFF
-else
-    cmakeBuildType=Debug
-    enableTests=ON
-fi
+    if [ "$cmakeBuildType" = "Release" ]; then
+        enableTests=OFF
+    else
+        cmakeBuildType=Debug
+        enableTests=ON
+    fi
 
-if [ "`hash ninja 2>&1`" = "" ]; then
-    ninjaFound=true
-    generator="Ninja"
-    cmakeGenerator="Ninja"
-else
-    ninjaFound=false
-    generator="Make"
-    cmakeGenerator="Unix Makefiles"
-fi
+    if [ "`hash ninja 2>&1`" = "" ]; then
+        ninjaFound=true
+        generator="Ninja"
+        cmakeGenerator="Ninja"
+    else
+        ninjaFound=false
+        generator="Make"
+        cmakeGenerator="Unix Makefiles"
+    fi
 
-if [ "$cmakeBuildType" = "Release" ]; then
-    titleTests=""
-else
-    titleTests=" and its tests"
-fi
+    if [ "$cmakeBuildType" = "Release" ]; then
+        titleTests=""
+    else
+        titleTests=" and its tests"
+    fi
 
-echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
+    echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
 
-cd build
+    cd build
 
-cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
+    cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
-exitCode=$?
+    exitCode=$?
 
-if [ $exitCode -ne 0 ]; then
+    if [ $exitCode -ne 0 ]; then
+        cd ..
+
+        exit $exitCode
+    fi
+
+    shift
+
+    if [ $ninjaFound = true ]; then
+        ninja $@
+    else
+        make $@
+    fi
+
+    exitCode=$?
+
     cd ..
 
+    if [ $exitCode -eq 0 ]; then
+        echo "\033[42;37;1mAll done!\033[0m"
+    fi
+
     exit $exitCode
-fi
-
-shift
-
-if [ $ninjaFound = true ]; then
-    ninja $@
 else
-    make $@
+    echo "OpenCOR's build directory is missing."
+
+    exit 1
 fi
-
-exitCode=$?
-
-cd ..
-
-if [ $exitCode -eq 0 ]; then
-    echo "\033[42;37;1mAll done!\033[0m"
-fi
-
-exit $exitCode

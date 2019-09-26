@@ -1,15 +1,19 @@
 #!/bin/sh
 
-echo "\033[44;37;1mFormatting OpenCOR...\033[0m"
+if [ -d "src" ]; then
+    echo "\033[44;37;1mFormatting OpenCOR...\033[0m"
 
-if [ "`hash clang-format 2>&1`" = "" ]; then
-    for i in `find src -name "*.cpp" -o -name "*.h" | sort | egrep -v "(3rdparty|\/ext\/|\/qzip)"`; do
-        echo "Formatting $i..."
+    if [ "`hash clang-format 2>&1`" = "" ]; then
+        for i in `find src -name "*.cpp" -o -name "*.h" | sort | egrep -v "(3rdparty|\/ext\/|\/qzip)"`; do
+            echo "Formatting $i..."
 
-        clang-format -i -style=file $i
-    done
+            clang-format -i -style=file $i
+        done
+    else
+        echo "Clang-Format is not installed."
+    fi
+
+    echo "\033[42;37;1mAll done!\033[0m"
 else
-    echo "Clang-Format is not installed."
+    echo "OpenCOR's source directory is missing."
 fi
-
-echo "\033[42;37;1mAll done!\033[0m"
