@@ -769,29 +769,10 @@ endmacro()
 
 #===============================================================================
 
-macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
+macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
     # Strip the file of all its local symbols
 
-    set(FULL_FILENAME ${DIRNAME}/${FILENAME})
-
-    strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
-
-    # Clean up the file's id
-
-    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
-    else()
-        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
-    endif()
-endmacro()
-
-#===============================================================================
-
-macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
-    # Clean up the file
-
-    macos_clean_up_file(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
+    strip_file(${PROJECT_TARGET} ${DIRNAME}/${FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries
 
@@ -802,10 +783,10 @@ macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
         set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
 
         if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
+            execute_process(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${DIRNAME}/${FILENAME})
         else()
             add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
+                               COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${DIRNAME}/${FILENAME})
         endif()
     endforeach()
 endmacro()
