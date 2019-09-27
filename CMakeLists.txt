@@ -877,6 +877,9 @@ set(PLUGIN_PLUGINS
     thirdParty/PythonPackages
     thirdParty/PythonQtAPI
 
+    ${SAMPLE_PLUGINS}
+    ${TEST_PLUGINS}
+
     dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
     dataStore/DataStore
