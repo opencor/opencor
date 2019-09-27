@@ -29,7 +29,9 @@ string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if(NOT USE_PREBUILT_PYTHONQT_PACKAGE AND "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    # Only use the Debug library if we are building PythonQt for debugging
+
     set(DEBUG_POSTFIX "_d")   # PythonQt uses this for all platforms
 endif()
 
