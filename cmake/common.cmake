@@ -149,17 +149,19 @@ endmacro()
 #===============================================================================
 
 macro(strip_file PROJECT_TARGET FILENAME)
-    # Strip the given file of all its local symbols
+    # Strip the given file of all its local symbols, if we are in release mode
     # Note: to strip QScintilla and Qwt when building them on Linux results in
     #       an error due to patchelf having been used on them. So, we use a
     #       wrapper that ignores errors and returns 0, so that our build doesn't
     #       break...
 
-    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
-    else()
-        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+    if(RELEASE_MODE)
+        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+        else()
+            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+        endif()
     endif()
 endmacro()
 
@@ -316,7 +318,7 @@ macro(add_plugin PLUGIN_NAME)
 
             # Strip the external library of all its local symbols, if possible
 
-            if(NOT WIN32 AND RELEASE_MODE)
+            if(NOT WIN32)
                 strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
@@ -711,9 +713,7 @@ macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
 
     # Strip the Qt library of all its local symbols
 
-    if(RELEASE_MODE)
-        strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-    endif()
+    strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
 
     # Deploy the Qt library
 
@@ -739,9 +739,7 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
 
         # Strip the Qt plugin of all its local symbols
 
-        if(RELEASE_MODE)
-            strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
-        endif()
+        strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
@@ -776,9 +774,7 @@ macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
 
     set(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
-    if(RELEASE_MODE)
-        strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
-    endif()
+    strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
 
     # Clean up the file's id
 
