@@ -127,7 +127,7 @@ macro(build_documentation DOCUMENTATION_NAME)
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
             GIT_REPOSITORY
-                https://github.com/dbrnz/${DOCUMENTATION_NAME}-documentation
+                https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
             CMAKE_ARGS
                 -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
                 -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
