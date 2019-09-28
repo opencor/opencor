@@ -13,7 +13,7 @@ IF EXIST %CurrentPath%\build (
 
     FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
     FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
-    FOR    %%I IN (*.*) DO DEL /Q "%%I"
+    FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
 )
 
 IF "%1" == "all" (
@@ -21,7 +21,7 @@ IF "%1" == "all" (
         CD %CurrentPath%\ext
 
         FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
-        FOR    %%I IN (*.*) DO DEL /Q "%%I"
+        FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
     )
 )
 
