@@ -267,6 +267,10 @@ macro(add_plugin PLUGIN_NAME)
     # Qt modules
 
     foreach(ARG_QT_MODULE ${ARG_QT_MODULES})
+        if(NOT APPLE)
+            find_package(Qt5${ARG_QT_MODULE} REQUIRED)
+        endif()
+
         target_link_libraries(${PROJECT_NAME}
             Qt5::${ARG_QT_MODULE}
         )
