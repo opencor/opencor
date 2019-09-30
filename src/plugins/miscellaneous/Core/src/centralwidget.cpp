@@ -770,9 +770,9 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
                                                                                      pFileName));
         }
 
-        return tr("%1 could not be opened.").arg(pUrl.isEmpty()?
-                                                     QDir::toNativeSeparators(pFileName):
-                                                     pFileName);
+        return tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
+                                                                       QDir::toNativeSeparators(pFileName):
+                                                                       pFileName);
     }
 
     // Check whether the file is already opened and, if so, select it and leave
