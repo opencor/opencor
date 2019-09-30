@@ -398,44 +398,56 @@ endforeach()
 
 include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 
-# On macOS, keep track of the Qt libraries against which we need to link
+# On macOS, keep track of the Qt libraries against which we need to link and
+# make sure that we always use their release version
+# Note: indeed, from Qt 5.12.5, to build a debug version of a Qt-based
+#       application implies using the debug version of the Qt libraries, which
+#       we don't want to do (since it would require us to generate both a
+#       release and a debug version of our Qt-based third-party libraries)...
 
 if(APPLE)
     if(ENABLE_TESTS)
-        set(QTTEST QtTest)
+        set(TEST Test)
     endif()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        set(QTWEBKIT QtWebKit)
-        set(QTWEBKITWIDGETS QtWebKitWidgets)
+        set(WEBKIT WebKit)
+        set(WEBKITWIDGETS WebKitWidgets)
     endif()
 
     set(MACOS_QT_LIBRARIES
-        QtConcurrent
-        QtCore
-        QtDBus
-        QtGui
-        QtHelp
-        QtMacExtras
-        QtMultimedia
-        QtMultimediaWidgets
-        QtNetwork
-        QtOpenGL
-        QtPositioning
-        QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
-        QtSql
-        QtSvg
-        ${QTTEST}
-        QtWebChannel
-        ${QTWEBKIT}
-        ${QTWEBKITWIDGETS}
-        QtWidgets
-        QtXml
-        QtXmlPatterns
+        Concurrent
+        Core
+        DBus
+        Gui
+        Help
+        MacExtras
+        Multimedia
+        MultimediaWidgets
+        Network
+        OpenGL
+        Positioning
+        PrintSupport
+        Qml
+        Quick
+        Sensors
+        Sql
+        Svg
+        ${TEST}
+        WebChannel
+        ${WEBKIT}
+        ${WEBKITWIDGETS}
+        Widgets
+        Xml
+        XmlPatterns
     )
+
+    foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+        find_package(Qt5${QT_LIBRARY} REQUIRED)
+
+        get_target_property(QT_RELEASE_LIBRARY Qt5::${QT_LIBRARY} IMPORTED_LOCATION_RELEASE)
+        set_target_properties(Qt5::${QT_LIBRARY} PROPERTIES "IMPORTED_LOCATION_DEBUG" "${QT_RELEASE_LIBRARY}")
+    endforeach()
 endif()
 
 # Some general build settings
@@ -812,7 +824,7 @@ if(ENABLE_TESTS)
     # RPATH rather than RUNPATH on Linux
 
     if(APPLE)
-        macos_clean_up_file_with_qt_dependencies(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+        strip_file(${RUNTESTS_NAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
     elseif(NOT WIN32)
         runpath2rpath(${RUNTESTS_NAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
     endif()
@@ -957,8 +969,10 @@ foreach(PLUGIN ${PLUGINS})
 endforeach()
 
 # Fetch parts of our documentation and build it
+# Note: we start afresh to make sure that our CI system is always happy...
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_SOURCE_DIR}/ext/doc
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
                                                            ${PROJECT_BUILD_DIR}/doc)
 
 configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
@@ -1052,12 +1066,12 @@ if(APPLE)
 
     # Clean up the OpenCOR executable
 
-    macos_clean_up_file_with_qt_dependencies(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+    strip_file(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS/${CMAKE_PROJECT_NAME})
 
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        macos_deploy_qt_library(${QT_LIBRARY})
+        macos_deploy_qt_library(Qt${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR

@@ -267,7 +267,9 @@ macro(add_plugin PLUGIN_NAME)
     # Qt modules
 
     foreach(ARG_QT_MODULE ${ARG_QT_MODULES})
-        find_package(Qt5${ARG_QT_MODULE} REQUIRED)
+        if(NOT APPLE)
+            find_package(Qt5${ARG_QT_MODULE} REQUIRED)
+        endif()
 
         target_link_libraries(${PROJECT_NAME}
             Qt5::${ARG_QT_MODULE}
@@ -352,7 +354,7 @@ macro(add_plugin PLUGIN_NAME)
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
-                macos_clean_up_file_with_qt_dependencies(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Package the external library, if needed
@@ -427,7 +429,7 @@ macro(add_plugin PLUGIN_NAME)
     # rather than RUNPATH on Linux
 
     if(APPLE)
-        macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+        strip_file(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     elseif(NOT WIN32)
         runpath2rpath(${PROJECT_NAME} ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
     endif()
@@ -560,7 +562,7 @@ macro(add_plugin PLUGIN_NAME)
                 # that it uses RPATH rather than RUNPATH on Linux
 
                 if(APPLE)
-                    macos_clean_up_file_with_qt_dependencies(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                    strip_file(${TEST_NAME} ${DEST_TESTS_DIR}/${TEST_FILENAME})
                 elseif(NOT WIN32)
                     runpath2rpath(${TEST_NAME} ${DEST_TESTS_DIR}/${TEST_FILENAME})
                 endif()
@@ -769,30 +771,6 @@ endmacro()
 
 #===============================================================================
 
-macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
-    # Strip the file of all its local symbols
-
-    strip_file(${PROJECT_TARGET} ${DIRNAME}/${FILENAME})
-
-    # Make sure that the file refers to our embedded copy of the Qt libraries
-
-    foreach(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        set(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
-
-        set(OLD_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME}_debug)
-        set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
-
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${DIRNAME}/${FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${DIRNAME}/${FILENAME})
-        endif()
-    endforeach()
-endmacro()
-
-#===============================================================================
-
 macro(macos_deploy_qt_file ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
@@ -801,7 +779,7 @@ macro(macos_deploy_qt_file ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
     # Clean up the Qt file
 
-    macos_clean_up_file_with_qt_dependencies(DIRECT ${DEST_DIRNAME} ${FILENAME})
+    strip_file(DIRECT ${DEST_DIRNAME}/${FILENAME})
 endmacro()
 
 #===============================================================================
