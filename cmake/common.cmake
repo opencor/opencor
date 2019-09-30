@@ -789,8 +789,8 @@ macro(macos_deploy_qt_library LIBRARY_NAME)
 
     set(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    if(   "${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}"
-       OR "${LIBRARY_NAME}" STREQUAL "${QTWEBKITWIDGETS}")
+    if(   "${LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
+       OR "${LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
         set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
     else()
         set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
