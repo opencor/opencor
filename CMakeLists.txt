@@ -969,10 +969,8 @@ foreach(PLUGIN ${PLUGINS})
 endforeach()
 
 # Fetch parts of our documentation and build it
-# Note: we start afresh to make sure that our CI system is always happy...
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_SOURCE_DIR}/ext/doc
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
                                                            ${PROJECT_BUILD_DIR}/doc)
 
 configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in

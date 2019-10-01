@@ -17,12 +17,16 @@ IF EXIST %CurrentPath%\build (
 )
 
 IF "%1" == "all" (
-    IF EXIST %CurrentPath%\ext (
-        CD %CurrentPath%\ext
+    SET ExtPath=%CurrentPath%\ext
+) ELSE (
+    SET ExtPath=%CurrentPath%\ext\doc
+)
 
-        FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
-        FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
-    )
+IF EXIST %ExtPath% (
+    CD %ExtPath%
+
+    FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
+    FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
 )
 
 CD %CurrentPath%
