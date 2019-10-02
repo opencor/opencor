@@ -18,7 +18,8 @@ set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "support-build-37-and-38-rebased")
+#set(GIT_TAG "support-build-37-and-38-rebased")
+set(GIT_TAG "win-debug")
 
 # Specify where our local package will be installed
 
@@ -41,8 +42,13 @@ endif()
 
 if(WIN32)
     set(PYTHON_EXECUTABLE bin/python.exe)
-    set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    if(RELEASE_MODE)
+        set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    else()
+        set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}_d${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}_d${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    endif()
 else()
     set(PYTHON_EXECUTABLE bin/python3)
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -158,13 +164,15 @@ if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
                                               e752cca1e5f3ff82fbc7d1f892474fc44a173213)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2676be4fe72d1598043240a3c2f9d366b1e0454f
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES eaec9798ba6c5a1bf4b1cc161b6c7dfc59d1ea80
-                                              6e79fbfa322c9c56189932c9d6007b9e1f55d3af
-                                              c0d0bd4c50ad3f0760b95696d50abe9336ecfe6c
-                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              41e1905467d98d2f0ddfdb273795dfac9e3402f7)
+                                  SHA1_VALUES 4b61b48058b4d03bbff8fe543f528ce9382fa3aa
+                                              f9d1e7a381bbeb7764d99d9f8d677876b6df4e1c
+                                              7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
+                                              3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
+                                              90974260ac519f88020fe9a9cd06a1af295e5c11)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -268,10 +276,8 @@ else()
 
     if(WIN32)
         set(APPLY_PATCHES ON)
-        set(BUILD_TYPE Release)
     else()
         set(APPLY_PATCHES OFF)
-        set(BUILD_TYPE ${CMAKE_BUILD_TYPE})
     endif()
 
     # We can't use ``;`` as a list separator with ``ExternalProject_Add`` so replace
@@ -293,7 +299,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/python-cmake-buildsystem.git
+            https://github.com/dbrnz/python-cmake-buildsystem.git
         GIT_TAG
             ${GIT_TAG}
         CMAKE_GENERATOR
@@ -302,7 +308,7 @@ else()
             |
         CMAKE_ARGS
             ${CMAKE_ARGS}
-            -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}
 
