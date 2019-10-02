@@ -21,4 +21,6 @@ add_plugin(SEDMLSupport
         libSBML
         libSEDML
         Qwt
+    TESTS
+        tests
 )
