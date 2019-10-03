@@ -9,11 +9,7 @@ fi
 rm -fr build/.clang-tidy build/.ninja* build/* > /dev/null 2>&1
 
 if [ "$1" = "all" ]; then
-    extPath=ext
-else
-    extPath=ext/doc
+    rm -fr ext/* > /dev/null 2>&1
 fi
-
-rm -fr $extPath/* > /dev/null 2>&1
 
 echo "\033[42;37;1mAll done!\033[0m"
