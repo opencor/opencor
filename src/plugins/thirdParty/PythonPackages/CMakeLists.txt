@@ -69,12 +69,19 @@ set(FULL_LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LOCAL_SITE
 # Directories we package
 
 set(PACKAGED_FILES
-    etc
     include
-    share
     ${LOCAL_SITE_PACKAGES_DIR}
     ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
+
+# These directories don't exist for Windows debug mode
+
+if(RELEASE_MODE OR NOT WIN32)
+    list(APPEND PACKAGED_FILES
+        etc
+        share
+    )
+endif()
 
 # Specify the files that need to have their SHA-1 value checked
 # Note: at least one file must have its SHA-1 value checked...
