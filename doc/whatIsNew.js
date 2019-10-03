@@ -59,10 +59,15 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
                              ]
                            },
+                           { "type": "subCategory", "name": "<a href=\"https://sed-ml.github.io/\">SED-ML</a> support",
+                             "entries": [
+                               { "type": "added", "description": "Support for left and right triangle symbols." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "Simulation support",
                              "entries": [
                                { "type": "improved", "description": "Accuracy of algebraic variables that depend on the value of some state variables." },
-                               { "type": "fixed", "description": "Issue with a remote SED-ML file being run headless." }
+                               { "type": "fixed", "description": "Issue with a remote <a href=\"https://sed-ml.github.io/\">SED-ML</a> file being run headless." }
                              ]
                            }
                          ]
