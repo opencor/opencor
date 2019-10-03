@@ -84,6 +84,14 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES e677e1921fec355b4e1322c939cd36fb00b020d5
                                               8ef254df6fe1b157d3e9da7a928c16887786f602)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 887c49da95ccf7d5fc0bf171fcc14ef3b1f4f8dd
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 7c2e20566f71216be4bb2bc73a3be7eea29f1b47
+                                              1c634c8ba4685b29d3c7602f4d5f585313dc2c3c)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
