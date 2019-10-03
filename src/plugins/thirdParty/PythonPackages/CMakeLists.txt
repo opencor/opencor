@@ -80,7 +80,11 @@ set(PACKAGED_FILES
 # Note: at least one file must have its SHA-1 value checked...
 
 if(WIN32)
-    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
+    if(RELEASE_MODE)
+        set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
+    else()
+        set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath_d.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
+    endif()
 elseif(APPLE)
     set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/_multiarray_umath.cpython-${PYTHON_ABI_VERSION}-darwin.so)
 elseif(UNIX)
@@ -248,124 +252,191 @@ else()
     add_dependencies(${PACKAGE_BUILD} installPip)
     add_dependencies(installPip ${BUILD_DEPENDENCIES})
 
-    # Install numpy, scipy, and matplotlib
+    # We only install a minimal set of packages when building in Debug mode under Windows,
+    # namely a minimal version of `numpy` (used to interfacing with our DataStore arrays)
+    # and `sphinx` (used to build documentation)
 
-    add_custom_target(sciencePackages
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            numpy==${NUMPY_VERSION}
-            scipy==${SCIPY_VERSION}
-            matplotlib==${MATPLOTLIB_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+    if (NOT RELEASE_MODE AND WIN32)
+        # Download, build and install a debug version of numpy
+        #
+        # Note: This is a minimal build since we haven't provided linear algebra libraries
+        #       nor a Fortran compiler
 
-    add_dependencies(${PACKAGE_BUILD} sciencePackages)
-    add_dependencies(sciencePackages installPip)
-    add_dependencies(sciencePackages ${BUILD_DEPENDENCIES})
+        set(NUMPY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/numpy)
 
-    # Copy the numpy include directory to a place that OpenCOR can use
+        ExternalProject_Add(installNumpy
+            DOWNLOAD_DIR
+                ${NUMPY_SOURCE_DIR}
+            SOURCE_DIR
+                ${NUMPY_SOURCE_DIR}
+            BINARY_DIR
+                ${NUMPY_SOURCE_DIR}
+            INSTALL_DIR
+                ${NUMPY_SOURCE_DIR}
+            URL
+                https://github.com/numpy/numpy/releases/download/v${NUMPY_VERSION}/numpy-${NUMPY_VERSION}.zip
+            CONFIGURE_COMMAND
+                ""
+            BUILD_COMMAND
+                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                ${PYTHON_EXECUTABLE} setup.py build --debug
+            INSTALL_COMMAND
+                ${PIP_INSTALL_COMMAND}
+                    --global-option=build
+                    --global-option=--debug
+                    .
+        )
 
-    add_custom_target(copyNumpyHeaders
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    )
+        add_dependencies(${PACKAGE_BUILD} installNumpy)
+        add_dependencies(installNumpy installPip)
+        add_dependencies(installNumpy ${BUILD_DEPENDENCIES})
 
-    add_dependencies(${PACKAGE_BUILD} copyNumpyHeaders)
-    add_dependencies(copyNumpyHeaders sciencePackages)
-    add_dependencies(copyNumpyHeaders ${BUILD_DEPENDENCIES})
+        # Copy the numpy include directory to a place that OpenCOR can use
 
-    # Install Jupyter, IPython and their dependencies
-    # Note: order of installation matters as we want specific
-    #       versions of each package
+        add_custom_target(copyNumpyHeaders
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
+            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        )
 
-    add_custom_target(ipythonPackages
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            traitlets==${TRAITLETS_VERSION}
-            ipython==${IPYTHON_VERSION}
-            ipykernel==${IPYKERNEL_VERSION}
-            qtconsole==${QTCONSOLE_VERSION}
-            notebook==${NOTEBOOK_VERSION}
-            jupyter_console==${JUPYTER_CONSOLE_VERSION}
-            nbconvert==${NBCONVERT_VERSION}
-            ipywidgets==${IPYWIDGETS_VERSION}
-            jupyterlab==${JUPYTERLAB_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+        add_dependencies(${PACKAGE_BUILD} copyNumpyHeaders)
+        add_dependencies(copyNumpyHeaders installNumpy)
+        add_dependencies(copyNumpyHeaders ${BUILD_DEPENDENCIES})
 
-    add_dependencies(${PACKAGE_BUILD} ipythonPackages)
-    add_dependencies(ipythonPackages sciencePackages)
-    add_dependencies(ipythonPackages ${BUILD_DEPENDENCIES})
+        # Install Sphinx
 
-    # Install other packages we use
+        add_custom_target(installSphinx
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                sphinx==${SPHINX_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
 
-    add_custom_target(otherPackages
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            lxml==${LXML_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+        add_dependencies(${PACKAGE_BUILD} installSphinx)
+        add_dependencies(installSphinx installNumpy)
+        add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
 
-    add_dependencies(${PACKAGE_BUILD} otherPackages)
-    add_dependencies(otherPackages ipythonPackages)
-    add_dependencies(otherPackages ${BUILD_DEPENDENCIES})
+    else()
+        # Install numpy, scipy, and matplotlib
 
-    # Install Sphinx
+        add_custom_target(sciencePackages
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                numpy==${NUMPY_VERSION}
+                scipy==${SCIPY_VERSION}
+                matplotlib==${MATPLOTLIB_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
 
-    add_custom_target(installSphinx
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            sphinx==${SPHINX_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+        add_dependencies(${PACKAGE_BUILD} sciencePackages)
+        add_dependencies(sciencePackages installPip)
+        add_dependencies(sciencePackages ${BUILD_DEPENDENCIES})
 
-    add_dependencies(${PACKAGE_BUILD} installSphinx)
-    add_dependencies(installSphinx otherPackages)
-    add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
+        # Copy the numpy include directory to a place that OpenCOR can use
 
-    # We only upgrade to our versions of packages and patch matplotlib
-    # *after* all 'standard' packages have been installed
+        add_custom_target(copyNumpyHeaders
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
+            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        )
 
-    # Upgrade to our versions that have been patched to work with PythonQt
+        add_dependencies(${PACKAGE_BUILD} copyNumpyHeaders)
+        add_dependencies(copyNumpyHeaders sciencePackages)
+        add_dependencies(copyNumpyHeaders ${BUILD_DEPENDENCIES})
 
-    set(ARCHIVE_PYTHONQT archive/PythonQt-v)
+        # Install Jupyter, IPython and their dependencies
+        # Note: order of installation matters as we want specific
+        #       versions of each package
 
-    add_custom_target(pythonQtUpdate
-        COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
-            ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
-            ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
-            ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
-            ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+        add_custom_target(ipythonPackages
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                traitlets==${TRAITLETS_VERSION}
+                ipython==${IPYTHON_VERSION}
+                ipykernel==${IPYKERNEL_VERSION}
+                qtconsole==${QTCONSOLE_VERSION}
+                notebook==${NOTEBOOK_VERSION}
+                jupyter_console==${JUPYTER_CONSOLE_VERSION}
+                nbconvert==${NBCONVERT_VERSION}
+                ipywidgets==${IPYWIDGETS_VERSION}
+                jupyterlab==${JUPYTERLAB_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
 
-    add_dependencies(${PACKAGE_BUILD} pythonQtUpdate)
-    add_dependencies(pythonQtUpdate installSphinx)
-    add_dependencies(pythonQtUpdate ${BUILD_DEPENDENCIES})
+        add_dependencies(${PACKAGE_BUILD} ipythonPackages)
+        add_dependencies(ipythonPackages sciencePackages)
+        add_dependencies(ipythonPackages ${BUILD_DEPENDENCIES})
 
-    # Patch matplotlib's Qt backend so that it works with PythonQt
+        # Install other packages we use
 
-    add_custom_target(patchMatplotlib
-        COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
-            --strip=2
-            --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
-            --verbose
-            src/matplotlib_${MATPLOTLIB_VERSION}.diff
-        WORKING_DIRECTORY
-            ${PROJECT_SOURCE_DIR}
-        VERBATIM
-    )
+        add_custom_target(otherPackages
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                lxml==${LXML_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
 
-    add_dependencies(${PACKAGE_BUILD} patchMatplotlib)
-    add_dependencies(patchMatplotlib pythonQtUpdate)
-    add_dependencies(patchMatplotlib ${BUILD_DEPENDENCIES})
+        add_dependencies(${PACKAGE_BUILD} otherPackages)
+        add_dependencies(otherPackages ipythonPackages)
+        add_dependencies(otherPackages ${BUILD_DEPENDENCIES})
+
+        # Install Sphinx
+
+        add_custom_target(installSphinx
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                sphinx==${SPHINX_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+
+        add_dependencies(${PACKAGE_BUILD} installSphinx)
+        add_dependencies(installSphinx otherPackages)
+        add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
+
+        # We only upgrade to our versions of packages and patch matplotlib
+        # *after* all 'standard' packages have been installed
+
+        # Upgrade to our versions that have been patched to work with PythonQt
+
+        set(ARCHIVE_PYTHONQT archive/PythonQt-v)
+
+        add_custom_target(pythonQtUpdate
+            COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
+                ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
+                ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
+                ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
+                ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+
+        add_dependencies(${PACKAGE_BUILD} pythonQtUpdate)
+        add_dependencies(pythonQtUpdate installSphinx)
+        add_dependencies(pythonQtUpdate ${BUILD_DEPENDENCIES})
+
+        # Patch matplotlib's Qt backend so that it works with PythonQt
+
+        add_custom_target(patchMatplotlib
+            COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
+                --strip=2
+                --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
+                --verbose
+                src/matplotlib_${MATPLOTLIB_VERSION}.diff
+            WORKING_DIRECTORY
+                ${PROJECT_SOURCE_DIR}
+            VERBATIM
+        )
+
+        add_dependencies(${PACKAGE_BUILD} patchMatplotlib)
+        add_dependencies(patchMatplotlib pythonQtUpdate)
+        add_dependencies(patchMatplotlib ${BUILD_DEPENDENCIES})
+    endif()
 
     # Package the newly installed Python packages
 
