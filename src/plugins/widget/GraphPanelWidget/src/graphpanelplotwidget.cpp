@@ -1782,15 +1782,19 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                     setGridLinesColor(mEnabledGridLinesColor);
 
+                    int index = -1;
+
                     for (auto graph : mGraphs) {
                         const QwtSymbol *graphSymbol = graph->symbol();
                         QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
                         QSize graphSymbolSize = graphSymbol->size();
 
-                        graph->setPen(mEnabledGraphPens.value(graph));
+                        ++index;
+
+                        graph->setPen(mEnabledGraphPens[index]);
                         graph->setSymbol(graphSymbolStyle,
-                                         mEnabledGraphSymbolBrushes.value(graph),
-                                         mEnabledGraphSymbolPens.value(graph),
+                                         mEnabledGraphSymbolBrushes[index],
+                                         mEnabledGraphSymbolPens[index],
                                          graphSymbolSize);
                     }
 
@@ -1818,9 +1822,9 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 for (auto graph : mGraphs) {
                     const QwtSymbol *graphSymbol = graph->symbol();
 
-                    mEnabledGraphPens.insert(graph, graph->pen());
-                    mEnabledGraphSymbolBrushes.insert(graph, graphSymbol->brush());
-                    mEnabledGraphSymbolPens.insert(graph, graphSymbol->pen());
+                    mEnabledGraphPens << graph->pen();
+                    mEnabledGraphSymbolBrushes << graphSymbol->brush();
+                    mEnabledGraphSymbolPens << graphSymbol->pen();
                 }
 
                 // Use a disabled looking colour for different things
