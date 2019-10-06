@@ -1859,6 +1859,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                   int graphPlotCounter;
                                   bool logAxisX;
                                   bool logAxisY;
+                                  char padding[2];
                               };
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
@@ -1967,7 +1968,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                         +SedmlProperty.arg(SEDMLSupport::Filled)
                                                       .arg(zoomRegionProperties[4]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FillColor)
-                                                      .arg(zoomRegionProperties[5]->stringValue()));;
+                                                      .arg(zoomRegionProperties[5]->stringValue()));
 
         // Add our properties as an annotation
 

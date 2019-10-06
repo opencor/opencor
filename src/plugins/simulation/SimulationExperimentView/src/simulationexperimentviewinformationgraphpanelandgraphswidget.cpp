@@ -1463,77 +1463,88 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     Core::PropertyEditorWidget *propertyEditor = pProperty->owner();
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
     Core::Properties properties = propertyEditor->properties();
+    Core::Properties gridLinesProperties = properties[3]->properties();
+    Core::Properties pointCoordinatesProperties = properties[5]->properties();
+    Core::Properties surroundingAreaProperties = properties[6]->properties();
+    Core::Properties xAxisProperties = properties[8]->properties();
+    Core::Properties yAxisProperties = properties[9]->properties();
+    Core::Properties zoomRegionProperties = properties[10]->properties();
 
-    processEvents();
-    // Note: this ensures that our GUI is all fine before we start disabling
-    //       updates...
+    // Graph panel
 
-    graphPanelPlot->setUpdatesEnabled(false);
-        // Graph panel
+    if (pProperty == properties[0]) {
+        graphPanelPlot->setBackgroundColor(pProperty->colorValue());
+    } else if (pProperty == properties[1]) {
+        graphPanelPlot->setFontSize(pProperty->integerValue());
+    } else if (pProperty == properties[2]) {
+        graphPanelPlot->setForegroundColor(pProperty->colorValue());
 
-        graphPanelPlot->setBackgroundColor(properties[0]->colorValue());
-        graphPanelPlot->setFontSize(properties[1]->integerValue());
-        graphPanelPlot->setForegroundColor(properties[2]->colorValue());
+    // Grid lines
 
-        // Grid lines
+    } else if (pProperty == gridLinesProperties[0]) {
+        graphPanelPlot->setGridLinesStyle(SEDMLSupport::lineStyle(pProperty->listValueIndex()));
+    } else if (pProperty == gridLinesProperties[1]) {
+        graphPanelPlot->setGridLinesWidth(pProperty->integerValue());
+    } else if (pProperty == gridLinesProperties[2]) {
+        graphPanelPlot->setGridLinesColor(pProperty->colorValue());
 
-        Core::Properties gridLinesProperties = properties[3]->properties();
+    // Legend
 
-        graphPanelPlot->setGridLinesStyle(SEDMLSupport::lineStyle(gridLinesProperties[0]->listValueIndex()));
-        graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
-        graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
+    } else if (pProperty == properties[4]) {
+        graphPanelPlot->setLegendActive(pProperty->booleanValue());
 
-        // Legend
+    // Point coordinates
 
-        graphPanelPlot->setLegendActive(properties[4]->booleanValue());
+    } else if (pProperty == pointCoordinatesProperties[0]) {
+        graphPanelPlot->setPointCoordinatesStyle(SEDMLSupport::lineStyle(pProperty->listValueIndex()));
+    } else if (pProperty == pointCoordinatesProperties[1]) {
+        graphPanelPlot->setPointCoordinatesWidth(pProperty->integerValue());
+    } else if (pProperty == pointCoordinatesProperties[2]) {
+        graphPanelPlot->setPointCoordinatesColor(pProperty->colorValue());
+    } else if (pProperty == pointCoordinatesProperties[3]) {
+        graphPanelPlot->setPointCoordinatesFontColor(pProperty->colorValue());
 
-        // Point coordinates
+    // Surrounding area
 
-        Core::Properties pointCoordinatesProperties = properties[5]->properties();
+    } else if (pProperty == surroundingAreaProperties[0]) {
+        graphPanelPlot->setSurroundingAreaBackgroundColor(pProperty->colorValue());
+    } else if (pProperty == surroundingAreaProperties[1]) {
+        graphPanelPlot->setSurroundingAreaForegroundColor(pProperty->colorValue());
 
-        graphPanelPlot->setPointCoordinatesStyle(SEDMLSupport::lineStyle(pointCoordinatesProperties[0]->listValueIndex()));
-        graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
-        graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
-        graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
+    // Title
 
-        // Surrounding area
+    } else if (pProperty == properties[7]) {
+        graphPanelPlot->setTitle(pProperty->value());
 
-        Core::Properties surroundingAreaProperties = properties[6]->properties();
+    // X axis
 
-        graphPanelPlot->setSurroundingAreaBackgroundColor(surroundingAreaProperties[0]->colorValue());
-        graphPanelPlot->setSurroundingAreaForegroundColor(surroundingAreaProperties[1]->colorValue());
+    } else if (pProperty == xAxisProperties[0]) {
+        graphPanelPlot->setLogAxisX(pProperty->booleanValue());
+    } else if (pProperty == xAxisProperties[1]) {
+        graphPanelPlot->setTitleAxisX(pProperty->value());
 
-        // Title
+    // Y axis
 
-        graphPanelPlot->setTitle(properties[7]->value());
+    } else if (pProperty == yAxisProperties[0]) {
+        graphPanelPlot->setLogAxisY(pProperty->booleanValue());
+    } else if (pProperty == yAxisProperties[1]) {
+        graphPanelPlot->setTitleAxisY(pProperty->value());
 
-        // X axis
+    // Zoom region
 
-        Core::Properties xAxisProperties = properties[8]->properties();
-
-        graphPanelPlot->setLogAxisX(xAxisProperties[0]->booleanValue());
-        graphPanelPlot->setTitleAxisX(xAxisProperties[1]->value());
-
-        // Y axis
-
-        Core::Properties yAxisProperties = properties[9]->properties();
-
-        graphPanelPlot->setLogAxisY(yAxisProperties[0]->booleanValue());
-        graphPanelPlot->setTitleAxisY(yAxisProperties[1]->value());
-
-        // Zoom region
-
-        Core::Properties zoomRegionProperties = properties[10]->properties();
-
-        graphPanelPlot->setZoomRegionStyle(SEDMLSupport::lineStyle(zoomRegionProperties[0]->listValueIndex()));
-        graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
-        graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
-        graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());
-        graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
-        graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
-
-        graphPanelPlot->updateGui(false, true);
-    graphPanelPlot->setUpdatesEnabled(true);
+    } else if (pProperty == zoomRegionProperties[0]) {
+        graphPanelPlot->setZoomRegionStyle(SEDMLSupport::lineStyle(pProperty->listValueIndex()));
+    } else if (pProperty == zoomRegionProperties[1]) {
+        graphPanelPlot->setZoomRegionWidth(pProperty->integerValue());
+    } else if (pProperty == zoomRegionProperties[2]) {
+        graphPanelPlot->setZoomRegionColor(pProperty->colorValue());
+    } else if (pProperty == zoomRegionProperties[3]) {
+        graphPanelPlot->setZoomRegionFontColor(pProperty->colorValue());
+    } else if (pProperty == zoomRegionProperties[4]) {
+        graphPanelPlot->setZoomRegionFilled(pProperty->booleanValue());
+    } else if (pProperty == zoomRegionProperties[5]) {
+        graphPanelPlot->setZoomRegionFillColor(pProperty->colorValue());
+    }
 }
 
 //==============================================================================

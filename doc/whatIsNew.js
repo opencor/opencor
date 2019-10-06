@@ -45,6 +45,7 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Basic support for the import of external data." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
+                               { "type": "fixed", "description": "Issue with handling the Graph Panel properties." },
                                { "type": "fixed", "description": "Various issues with saving a file under a new name." },
                                { "type": "fixed", "description": "Issue with a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> being considered modified after changing languages." }
                              ]
@@ -58,10 +59,15 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
                              ]
                            },
+                           { "type": "subCategory", "name": "<a href=\"https://sed-ml.github.io/\">SED-ML</a> support",
+                             "entries": [
+                               { "type": "added", "description": "Support for left and right triangle symbols." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "Simulation support",
                              "entries": [
                                { "type": "improved", "description": "Accuracy of algebraic variables that depend on the value of some state variables." },
-                               { "type": "fixed", "description": "Issue with a remote SED-ML file being run headless." }
+                               { "type": "fixed", "description": "Issue with a remote <a href=\"https://sed-ml.github.io/\">SED-ML</a> file being run headless." }
                              ]
                            }
                          ]

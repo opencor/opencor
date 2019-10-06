@@ -1782,15 +1782,19 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                     setGridLinesColor(mEnabledGridLinesColor);
 
+                    int index = -1;
+
                     for (auto graph : mGraphs) {
                         const QwtSymbol *graphSymbol = graph->symbol();
                         QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
                         QSize graphSymbolSize = graphSymbol->size();
 
-                        graph->setPen(mEnabledGraphPens.value(graph));
+                        ++index;
+
+                        graph->setPen(mEnabledGraphPens[index]);
                         graph->setSymbol(graphSymbolStyle,
-                                         mEnabledGraphSymbolBrushes.value(graph),
-                                         mEnabledGraphSymbolPens.value(graph),
+                                         mEnabledGraphSymbolBrushes[index],
+                                         mEnabledGraphSymbolPens[index],
                                          graphSymbolSize);
                     }
 
@@ -1818,9 +1822,9 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 for (auto graph : mGraphs) {
                     const QwtSymbol *graphSymbol = graph->symbol();
 
-                    mEnabledGraphPens.insert(graph, graph->pen());
-                    mEnabledGraphSymbolBrushes.insert(graph, graphSymbol->brush());
-                    mEnabledGraphSymbolPens.insert(graph, graphSymbol->pen());
+                    mEnabledGraphPens << graph->pen();
+                    mEnabledGraphSymbolBrushes << graphSymbol->brush();
+                    mEnabledGraphSymbolPens << graphSymbol->pen();
                 }
 
                 // Use a disabled looking colour for different things
@@ -2114,6 +2118,11 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         setAxisFont(QwtPlot::yLeft, newFont);
         setTitleAxisY(titleAxisY());
+
+        // Our new font size may have some effects on the alignment with our
+        // neighbours, so update ourselves
+
+        updateGui(false, true);
     }
 }
 
@@ -2239,6 +2248,11 @@ void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
     if (pLegendActive != isLegendActive()) {
         mLegend->setActive(pLegendActive);
         mLegendAction->setChecked(pLegendActive);
+
+        // To show/hide our legend may have some effects on the alignment with
+        // our neighbours, so update ourselves
+
+        updateGui(false, true);
     }
 }
 
@@ -2523,7 +2537,16 @@ void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
 {
     // Set the title for our Y axis
 
+    QwtText oldAxisTitle = axisTitle(QwtPlot::yLeft);
+
     setTitleAxis(QwtPlot::yLeft, pTitleAxisY);
+
+    // To change the title of our Y axis may have some effects on the alignment
+    // with our neighbours, so update ourselves
+
+    if (axisTitle(QwtPlot::yLeft) != oldAxisTitle) {
+        updateGui(false, true);
+    }
 }
 
 //==============================================================================
@@ -3211,18 +3234,16 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 {
     // Set the title for our axis
 
-    if (pTitleAxis.isEmpty()) {
-        setAxisTitle(pAxisId, QString());
-    } else {
-        QwtText axisTitle = QwtText(pTitleAxis);
-        QFont axisTitleFont = axisTitle.font();
+    QwtText newAxisTitle = QwtText(pTitleAxis);
+    QFont newAxisTitleFont = newAxisTitle.font();
 
-        axisTitleFont.setPointSizeF(1.25*fontSize());
+    newAxisTitleFont.setPointSizeF(1.25*fontSize());
 
-        axisTitle.setColor(mSurroundingAreaForegroundColor);
-        axisTitle.setFont(axisTitleFont);
+    newAxisTitle.setColor(mSurroundingAreaForegroundColor);
+    newAxisTitle.setFont(newAxisTitleFont);
 
-        setAxisTitle(pAxisId, axisTitle);
+    if (newAxisTitle != axisTitle(pAxisId)) {
+        setAxisTitle(pAxisId, newAxisTitle);
     }
 }
 
@@ -3238,26 +3259,32 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
     for (auto plot : selfPlusNeighbors)  {
         auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
+        if (legend != nullptr) {
+            legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
 
-        if (legend->needScrollBar()) {
-            legendWidth = qMax(legendWidth,
-                               legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
+            if (legend->needScrollBar()) {
+                legendWidth = qMax(legendWidth,
+                                   legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
+            }
         }
     }
 
     for (auto plot : selfPlusNeighbors) {
         auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        legend->setSizeHintWidth(legend->needScrollBar()?
-                                     legendWidth-legend->scrollExtent(Qt::Vertical):
-                                     legendWidth);
+        if (legend != nullptr) {
+            legend->setSizeHintWidth(legend->needScrollBar()?
+                                         legendWidth-legend->scrollExtent(Qt::Vertical):
+                                         legendWidth);
+        }
     }
 
     // Reenable updates for our legend
     // Note: see addGraph() for the reasoning behind it...
 
-    legend()->setUpdatesEnabled(true);
+    if (legend() != nullptr) {
+        legend()->setUpdatesEnabled(true);
+    }
 
     // Make sure that we are still properly aligned with our neighbours
 
