@@ -287,7 +287,7 @@ macro(add_plugin PLUGIN_NAME)
         # Create a custom target for installing files
         # Note: this is to prevent Ninja from getting confused with circular
         #       references...
-        # Note: we use this target in Python build scripts when setting
+        # Note: we use this target in the PythonQtAPI build script when setting
         #       the PYTHON_DEPENDENCIES list
 
         SET(INSTALL_EXTERNAL_FILES_TARGET "${PROJECT_NAME}_INSTALL_EXTERNAL_FILES")
