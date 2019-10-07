@@ -588,9 +588,9 @@ private:
 
     QColor mEnabledGridLinesColor;
 
-    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphPens;
-    QMap<GraphPanelPlotGraph *, QBrush> mEnabledGraphSymbolBrushes;
-    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphSymbolPens;
+    QList<QPen> mEnabledGraphPens;
+    QList<QBrush> mEnabledGraphSymbolBrushes;
+    QList<QPen> mEnabledGraphSymbolPens;
 
     Action mAction = Action::None;
 
