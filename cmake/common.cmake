@@ -138,10 +138,6 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Make our local target depend on having Python fully installed
-
-        add_dependencies(${DOCUMENTATION_BUILD} ${PYTHON_DEPENDENCIES})
-
         # Make our local target depend on our project build target and make our
         # documentation build target depend on our local target
 
