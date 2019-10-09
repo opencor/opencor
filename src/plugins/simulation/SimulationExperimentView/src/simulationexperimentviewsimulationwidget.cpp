@@ -1616,14 +1616,10 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 {
     // Create, customise and add an algorithm (i.e. an ODE solver) to our given
     // SED-ML simulation
-    // Note: the algorithm parameters require the use of KiSAO ids, so if none
-    //       exists for an algorithm parameter then we set the algorithm
-    //       parameter using an annotation...
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
     SolverInterface *odeSolverInterface = mSimulation->data()->odeSolverInterface();
     Solver::Solver::Properties odeSolverProperties = mSimulation->data()->odeSolverProperties();
-    QString annotation = QString();
 
     if (odeSolverInterface != nullptr) {
         sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
@@ -1635,27 +1631,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                 QString::number(odeSolverPropertyValue.toDouble(), 'g', 15):
                                 odeSolverPropertyValue.toString();
 
-            if (kisaoId.isEmpty()) {
-                annotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty)
-                                                                 .arg(SEDMLSupport::Id)
-                                                                 .arg(odeSolverProperty)
-                                                                 .arg(SEDMLSupport::Value)
-                                                                 .arg(value);
-            } else {
-                libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
+            libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
-                sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
-                sedmlAlgorithmParameter->setValue(value.toStdString());
-            }
+            sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
+            sedmlAlgorithmParameter->setValue(value.toStdString());
         }
-    }
-
-    if (!annotation.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
-                                                  "     %3"
-                                                  " </%1>").arg(SEDMLSupport::SolverProperties)
-                                                           .arg(SEDMLSupport::OpencorNamespace)
-                                                           .arg(annotation).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1663,6 +1643,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     // have more than one SED-ML algorithm per SED-ML simulation)
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    QString annotation = QString();
 
     if ((runtime != nullptr) && runtime->needNlaSolver()) {
         QString nlaSolverAnnotation = QString();
@@ -2678,7 +2659,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     libsedml::SedDocument *sedmlDocument = mSimulation->sedmlFile()->sedmlDocument();
     auto sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
     auto sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
-
     double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
     double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
     double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
@@ -2694,8 +2674,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Customise our solvers widget by:
     //  - Specifying the ODE solver to use
     //  - Customising the solver's properties for which we have a KiSAO id
-    //  - Customising the solver's properties for which we don't have a KiSAO id
-    //    (this shouldn't happen, but better be safe than sorry)
     //  - Specifying the NLA solver, if any
 
     SimulationExperimentViewInformationSolversWidgetData *odeSolverData = solversWidget->odeSolverData();
@@ -2790,46 +2768,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
-
-    if (annotation != nullptr) {
-        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
-
-            if (   (QString::fromStdString(solverPropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                && (QString::fromStdString(solverPropertiesNode.getName()) == SEDMLSupport::SolverProperties)) {
-                for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                    const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
-
-                    if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                        && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
-                        QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
-                        QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
-                        bool propertySet = false;
-
-                        for (auto solverProperty : solverProperties) {
-                            if (solverProperty->id() == id) {
-                                solverProperty->setValue(value);
-
-                                propertySet = true;
-
-                                break;
-                            }
-                        }
-
-                        if (!propertySet) {
-                            simulationError(tr("the requested solver property (%1) could not be set").arg(id),
-                                            Error::InvalidSimulationEnvironment);
-
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    annotation = sedmlUniformTimeCourse->getAnnotation();
+    libsbml::XMLNode *annotation = sedmlUniformTimeCourse->getAnnotation();
 
     if (annotation != nullptr) {
         bool mustHaveNlaSolver = false;
@@ -3163,10 +3102,18 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
                             QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
+                            // Selected
+
                             if (curvePropertyNodeName == SEDMLSupport::Selected) {
                                 selected = curvePropertyNodeValue == TrueValue;
+
+                            // Title
+
                             } else if (curvePropertyNodeName == SEDMLSupport::Title) {
                                 title = curvePropertyNodeValue;
+
+                            // Line
+
                             } else if (curvePropertyNodeName == SEDMLSupport::Line) {
                                 for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
                                     const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
@@ -3181,6 +3128,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                         lineColor.setNamedColor(linePropertyNodeValue);
                                     }
                                 }
+
+                            // Symbol
+
                             } else if (curvePropertyNodeName == SEDMLSupport::Symbol) {
                                 for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
                                     const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
@@ -4550,7 +4500,7 @@ QVariantList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::P
     QVariantList res = QVariantList();
 
     for (auto property : pPropertyEditor->allProperties()) {
-        res << property->variantValue();
+        res << property->isChecked() << property->variantValue();
     }
 
     return res;
