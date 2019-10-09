@@ -2695,7 +2695,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     }
 
     if (odeSolverInterface == nullptr) {
-        simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
+        simulationError(tr("the requested ODE solver (%1) could not be found").arg(kisaoId),
                         Error::InvalidSimulationEnvironment);
 
         return false;
@@ -2761,7 +2761,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
 
         if (!propertySet) {
-            simulationError(tr("the requested solver property (%1) could not be set").arg(parameterKisaoId),
+            simulationError(tr("the requested ODE solver property (%1) could not be set").arg(parameterKisaoId),
                             Error::InvalidSimulationEnvironment);
 
             return false;
@@ -2819,7 +2819,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             }
 
                             if (!propertySet) {
-                                simulationError(tr("the requested solver property (%1) could not be set").arg(id),
+                                simulationError(tr("the requested NLA solver property (%1) could not be set").arg(id),
                                                 Error::InvalidSimulationEnvironment);
 
                                 return false;
