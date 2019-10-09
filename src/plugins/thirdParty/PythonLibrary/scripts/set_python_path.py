@@ -54,10 +54,9 @@ from collections import OrderedDict
 windows = (os.name == 'nt')
 
 python_exe = 'python.exe' if windows else 'python'
-path_slash = '\\' if windows else '/'
-bin_python = path_slash + 'bin' + path_slash + python_exe
-
-_pybin_match = re.compile(r'^python\d+\.\d+$')
+bin_python_re = re.compile(r'\\\\bin\\\\(python\.exe)$' if windows
+                      else r'/bin/(python((\d+\.\d+)|(\d+))?)$')
+lib_python_re = re.compile(r'^python\d+\.\d+$')
 
 def update_script(script_filename, new_path, clear_args, extra_args):
     """Updates shebang lines for actual scripts."""
@@ -87,11 +86,15 @@ def update_script(script_filename, new_path, clear_args, extra_args):
     if not args:
         return
 
-    if not (args[0].endswith(bin_python) or '/usr/bin/env python' in line):
+    bin_python = bin_python_re.search(args[0])
+    if bin_python is None and not line.startswith('/usr/bin/env python'):
         return
 
-    if '/usr/bin/env python' in line:
+    if line.startswith('/usr/bin/env python'):
         del args[0]
+        new_bin = os.path.join(new_path, 'bin', python_exe)
+    else:
+        new_bin = os.path.join(new_path, 'bin', bin_python[1])
 
     if clear_args: del args[1:]
     arg_set = OrderedDict([(a, None) for a in args[1:]])
@@ -99,7 +102,7 @@ def update_script(script_filename, new_path, clear_args, extra_args):
     new_args = list(arg_set.keys())
 
     add_quote = (' ' in new_path)
-    new_bin = os.path.join(new_path, 'bin', python_exe)
+
     if new_bin == args[0] and has_quote == add_quote and new_args == args[1:]:
         return
 
@@ -194,7 +197,7 @@ def update_paths(base, scripts_dir, clear_args, extra_args):
         base_lib_dir = os.path.join(base, 'lib')
         if os.path.isdir(base_lib_dir):
             for folder in os.listdir(base_lib_dir):
-                if _pybin_match.match(folder):
+                if lib_python_re.match(folder):
                     lib_name = folder
                     break
 
