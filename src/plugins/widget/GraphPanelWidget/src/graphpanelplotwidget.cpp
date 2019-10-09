@@ -1773,7 +1773,7 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 // Use the original colour of different things, but only if they
                 // have been set, i.e. if we were disabled and now enabled
 
-                if (mHasEnabledSettings) {
+                if (mGraphs.count() == mEnabledGraphPens.count()) {
                     setBackgroundColor(mEnabledBackgroundColor);
                     setForegroundColor(mEnabledForegroundColor);
 
@@ -1800,16 +1800,12 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                     // Reset a few things
 
-                    mHasEnabledSettings = false;
-
                     mEnabledGraphPens.clear();
                     mEnabledGraphSymbolBrushes.clear();
                     mEnabledGraphSymbolPens.clear();
                 }
             } else {
                 // Keep track of various original colours
-
-                mHasEnabledSettings = true;
 
                 mEnabledBackgroundColor = mBackgroundColor;
                 mEnabledForegroundColor = mForegroundColor;
