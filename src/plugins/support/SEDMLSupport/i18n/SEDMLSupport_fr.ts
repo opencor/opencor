@@ -79,8 +79,8 @@
         <translation>seulement les fichiers SED-ML avec une ou deux simulations avec un algorithme sont supportés</translation>
     </message>
     <message>
-        <source>only SED-ML files with a one-step as a second simulation are supported</source>
-        <translation>seulement les fichiers SED-ML avec un pas pour deuxième simulation sont supportés</translation>
+        <source>only SED-ML files with a one-step simulation as a second simulation are supported</source>
+        <translation>seulement les fichiers SED-ML avec une simulation un-pas pour deuxième simulation sont supportés</translation>
     </message>
     <message>
         <source>the value for step must be greater than zero</source>

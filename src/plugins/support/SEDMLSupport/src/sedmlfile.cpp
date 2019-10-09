@@ -492,8 +492,8 @@ bool SedmlFile::isSupported()
 
     // Make sure that we have an algorithm for the first simulation
 
-    const libsedml::SedAlgorithm *firstSimulationAlgorithm = firstSimulation->getAlgorithm();
-    const libsbml::XMLNode *annotation = nullptr;
+    libsedml::SedAlgorithm *firstSimulationAlgorithm = firstSimulation->getAlgorithm();
+    libsbml::XMLNode *annotation = nullptr;
 
     if (firstSimulationAlgorithm != nullptr) {
         // Make sure that the algorithm relies on an algorithm that we support
@@ -538,14 +538,14 @@ bool SedmlFile::isSupported()
 
         if (annotation != nullptr) {
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
+                libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
                 if (   (QString::fromStdString(solverPropertiesNode.getURI()) == OpencorNamespace)
                     && (QString::fromStdString(solverPropertiesNode.getName()) == SolverProperties)) {
                     bool validSolverProperties = true;
 
                     for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                        const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
+                        libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
                         if (   (QString::fromStdString(solverPropertyNode.getURI()) == OpencorNamespace)
                             && (QString::fromStdString(solverPropertyNode.getName()) == SolverProperty)) {
@@ -583,7 +583,7 @@ bool SedmlFile::isSupported()
             bool hasNlaSolver = false;
 
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
+                libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
                 if (   (QString::fromStdString(nlaSolverNode.getURI()) == OpencorNamespace)
                     && (QString::fromStdString(nlaSolverNode.getName()) == NlaSolver)) {
@@ -625,7 +625,7 @@ bool SedmlFile::isSupported()
 
         if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
-                                      tr("only SED-ML files with a one-step as a second simulation are supported"));
+                                      tr("only SED-ML files with a one-step simulation as a second simulation are supported"));
 
             return false;
         }
@@ -646,7 +646,7 @@ bool SedmlFile::isSupported()
         std::stringstream secondStream;
         libsbml::XMLOutputStream firstXmlStream(firstStream);
         libsbml::XMLOutputStream secondXmlStream(secondStream);
-        const libsedml::SedAlgorithm *secondSimulationAlgorithm = secondSimulation->getAlgorithm();
+        libsedml::SedAlgorithm *secondSimulationAlgorithm = secondSimulation->getAlgorithm();
 
         firstSimulationAlgorithm->write(firstXmlStream);
 
@@ -654,8 +654,8 @@ bool SedmlFile::isSupported()
             secondSimulationAlgorithm->write(secondXmlStream);
         }
 
-        const libsbml::XMLNode *firstAnnotation = firstSimulationAlgorithm->getAnnotation();
-        const libsbml::XMLNode *secondAnnotation = secondSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *firstAnnotation = firstSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *secondAnnotation = secondSimulationAlgorithm->getAnnotation();
 
         if (firstAnnotation != nullptr) {
             firstAnnotation->write(firstXmlStream);
@@ -848,7 +848,7 @@ bool SedmlFile::isSupported()
 
         if (annotation != nullptr) {
             for (uint j = 0, jMax = annotation->getNumChildren(); j < jMax; ++j) {
-                const libsbml::XMLNode &variableDegreeNode = annotation->getChild(j);
+                libsbml::XMLNode &variableDegreeNode = annotation->getChild(j);
 
                 if (   (QString::fromStdString(variableDegreeNode.getURI()) == OpencorNamespace)
                     && (QString::fromStdString(variableDegreeNode.getName()) == VariableDegree)) {
@@ -904,7 +904,7 @@ bool SedmlFile::isSupported()
 
         if (annotation != nullptr) {
             for (uint j = 0, jMax = annotation->getNumChildren(); j < jMax; ++j) {
-                const libsbml::XMLNode &plot2dPropertiesNode = annotation->getChild(j);
+                libsbml::XMLNode &plot2dPropertiesNode = annotation->getChild(j);
 
                 if (   (QString::fromStdString(plot2dPropertiesNode.getURI()) == OpencorNamespace)
                     && (QString::fromStdString(plot2dPropertiesNode.getName()) == Properties)) {
@@ -912,7 +912,7 @@ bool SedmlFile::isSupported()
                         // Note: we don't need to check for the title since it is a
                         //       string and that it can therefore have any value...
 
-                        const libsbml::XMLNode &plot2dPropertyNode = plot2dPropertiesNode.getChild(k);
+                        libsbml::XMLNode &plot2dPropertyNode = plot2dPropertiesNode.getChild(k);
                         QString plot2dPropertyNodeName = QString::fromStdString(plot2dPropertyNode.getName());
                         QString plot2dPropertyNodeValue = QString::fromStdString(plot2dPropertyNode.getChild(0).getCharacters());
 
@@ -951,7 +951,7 @@ bool SedmlFile::isSupported()
                         if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                             && (QString::fromStdString(plot2dPropertyNode.getName()) == GridLines)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &gridLinesPropertyNode = plot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &gridLinesPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
                                 QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
@@ -993,7 +993,7 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == PointCoordinates)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &pointCoordinatesPropertyNode = plot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &pointCoordinatesPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
                                 QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
 
@@ -1028,7 +1028,7 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == SurroundingArea)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &surroundingAreaPropertyNode = plot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &surroundingAreaPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
                                 QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
 
@@ -1052,7 +1052,7 @@ bool SedmlFile::isSupported()
                                 //       it is a string and that it can therefore
                                 //       have any value...
 
-                                const libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                                 QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
@@ -1077,7 +1077,7 @@ bool SedmlFile::isSupported()
                                 //       it is a string and that it can therefore
                                 //       have any value...
 
-                                const libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                                 QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
@@ -1098,7 +1098,7 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == ZoomRegion)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &zoomRegionPropertyNode = plot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &zoomRegionPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
                                 QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
 
@@ -1189,17 +1189,17 @@ bool SedmlFile::isSupported()
                     // Note: we don't need to check for the title since it is a
                     //       string and that it can therefore have any value...
 
-                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(k);
+                    libsbml::XMLNode &curvePropertiesNode = annotation->getChild(k);
 
                     if (   (QString::fromStdString(curvePropertiesNode.getURI()) == OpencorNamespace)
                         && (QString::fromStdString(curvePropertiesNode.getName()) == Properties)) {
                         for (uint l = 0, lMax = curvePropertiesNode.getNumChildren(); l < lMax; ++l) {
-                            const libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(l);
+                            libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(l);
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
 
                             if (curvePropertyNodeName == Line) {
                                 for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
-                                    const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
+                                    libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
                                     QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
@@ -1225,7 +1225,7 @@ bool SedmlFile::isSupported()
                                 }
                             } else if (curvePropertyNodeName == Symbol) {
                                 for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
-                                    const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
+                                    libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
                                     QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
