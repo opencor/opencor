@@ -625,7 +625,7 @@ bool SedmlFile::isSupported()
 
         if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
-                                      tr("only SED-ML files with a one-step as a second simulation are supported"));
+                                      tr("only SED-ML files with a one-step simulation as a second simulation are supported"));
 
             return false;
         }
