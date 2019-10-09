@@ -1786,16 +1786,14 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                     for (auto graph : mGraphs) {
                         const QwtSymbol *graphSymbol = graph->symbol();
-                        QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
-                        QSize graphSymbolSize = graphSymbol->size();
 
                         ++index;
 
                         graph->setPen(mEnabledGraphPens[index]);
-                        graph->setSymbol(graphSymbolStyle,
+                        graph->setSymbol(graphSymbol->style(),
                                          mEnabledGraphSymbolBrushes[index],
                                          mEnabledGraphSymbolPens[index],
-                                         graphSymbolSize);
+                                         graphSymbol->size());
                     }
 
                     // Reset a few things
@@ -1843,13 +1841,12 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 for (auto graph : mGraphs) {
                     QPen pen = graph->pen();
                     const QwtSymbol *graphSymbol = graph->symbol();
-                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
-                    QSize graphSymbolSize = graphSymbol->size();
 
                     pen.setColor(opaqueWindowTextColor);
 
                     graph->setPen(pen);
-                    graph->setSymbol(graphSymbolStyle, symbolBrush, symbolPen, graphSymbolSize);
+                    graph->setSymbol(graphSymbol->style(), symbolBrush,
+                                     symbolPen, graphSymbol->size());
                 }
             }
         setUpdatesEnabled(true);
