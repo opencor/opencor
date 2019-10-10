@@ -54,7 +54,7 @@ from collections import OrderedDict
 windows = (os.name == 'nt')
 
 python_exe = 'python.exe' if windows else 'python'
-bin_python_re = re.compile(r'\\\\bin\\\\(python\.exe)$' if windows
+bin_python_re = re.compile(r'\\bin\\(python\.exe)$' if windows
                       else r'/bin/(python((\d+\.\d+)|(\d+))?)$')
 lib_python_re = re.compile(r'^python\d+\.\d+$')
 
