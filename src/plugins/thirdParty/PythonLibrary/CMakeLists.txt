@@ -153,26 +153,26 @@ if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fc03ca905ec1db9372501430b6f9d99857bf0c0f
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3017b8565c4ecf0e0326b869babd0a47ec0b56b3
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a9e9b14d90c245e3ca24131f9eeb484b438f08dd
-                                              f712cbdc4fb8c9a201ec0429f709f5c9785a3903
+                                  SHA1_VALUES f8dba5f337b4d601b125b269027ad2a5423b02db
+                                              66c866543a6c4ee7653314d105517b4bf8edb535
                                               599a6df061280855fad67d7c775c242345b0bb2d
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              a25f8a0f2ceb633321cb96d17e6f4370a9700e7f)
+                                              faa88be4a49fd5b181f264a976a1acc3509e6418)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bfe7a1b2e39783305d6591841eb598bdd326bc91
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a74062ddab541f766ee2e4bfef65f5883c4c383d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 614973fcbab655e8317cb9ebe906b905cdcc5060
-                                              e15ecad155646f2669c1da13e02e5d66ee4b38ca
+                                  SHA1_VALUES 4199775133c0e5d1efd0c85a58919aa311063ded
+                                              c3743985e805d782724eae1b6d0b776e28df1d1b
                                               7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              a25f8a0f2ceb633321cb96d17e6f4370a9700e7f)
+                                              faa88be4a49fd5b181f264a976a1acc3509e6418)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
