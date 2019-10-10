@@ -2408,27 +2408,27 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
     bool needOdeSolverGuiUpdate = false;
 
     if (solversWidget->odeSolverData() != nullptr) {
-        if ((pProperty == nullptr) || (pProperty == solversWidget->odeSolverData()->solversListProperty())) {
+        bool isOdeSolversListProperty = pProperty == solversWidget->odeSolverData()->solversListProperty();
+
+        if ((pProperty == nullptr) || isOdeSolversListProperty) {
             mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
 
             needOdeSolverGuiUpdate = true;
         }
 
-        if ((pProperty == nullptr) || !needOdeSolverGuiUpdate) {
-            for (auto property : solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
-                if ((pProperty == nullptr) || (pProperty == property)) {
-                    // Note: we pass false to variantValue() because we want to
-                    //       retrieve the value of list properties as a string
-                    //       rather than an index...
+        for (auto property : solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
+            if ((pProperty == nullptr) || isOdeSolversListProperty || (pProperty == property)) {
+                // Note: we pass false to variantValue() because we want to
+                //       retrieve the value of list properties as a string
+                //       rather than an index...
 
-                    mSimulation->data()->addOdeSolverProperty(property->id(),
-                                                              property->variantValue(false));
+                mSimulation->data()->addOdeSolverProperty(property->id(),
+                                                          property->variantValue(false));
 
-                    needOdeSolverGuiUpdate = true;
+                needOdeSolverGuiUpdate = true;
 
-                    if (pProperty != nullptr) {
-                        break;
-                    }
+                if (pProperty == property) {
+                    break;
                 }
             }
         }
@@ -2447,28 +2447,28 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
     bool needNlaSolverGuiUpdate = false;
 
     if (solversWidget->nlaSolverData() != nullptr) {
-        if ((pProperty == nullptr) || (pProperty == solversWidget->nlaSolverData()->solversListProperty())) {
+        bool isNlaSolversListProperty = pProperty == solversWidget->nlaSolverData()->solversListProperty();
+
+        if ((pProperty == nullptr) || isNlaSolversListProperty) {
             mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value(), pResetNlaSolver);
 
             needNlaSolverGuiUpdate = true;
         }
 
-        if ((pProperty == nullptr) || !needNlaSolverGuiUpdate) {
-            for (auto property : solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
-                if ((pProperty == nullptr) || (pProperty == property)) {
-                    // Note: we pass false to variantValue() because we want to
-                    //       retrieve the value of list properties as a string
-                    //       rather than an index...
+        for (auto property : solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
+            if ((pProperty == nullptr) || isNlaSolversListProperty || (pProperty == property)) {
+                // Note: we pass false to variantValue() because we want to
+                //       retrieve the value of list properties as a string
+                //       rather than an index...
 
-                    mSimulation->data()->addNlaSolverProperty(property->id(),
-                                                              property->variantValue(false),
-                                                              pResetNlaSolver);
+                mSimulation->data()->addNlaSolverProperty(property->id(),
+                                                          property->variantValue(false),
+                                                          pResetNlaSolver);
 
-                    needNlaSolverGuiUpdate = true;
+                needNlaSolverGuiUpdate = true;
 
-                    if (pProperty != nullptr) {
-                        break;
-                    }
+                if (pProperty == property) {
+                    break;
                 }
             }
         }
@@ -2476,10 +2476,6 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
 
     if (needNlaSolverGuiUpdate) {
         mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->nlaSolverData());
-
-        if (pProperty != nullptr) {
-            return;
-        }
     }
 }
 
