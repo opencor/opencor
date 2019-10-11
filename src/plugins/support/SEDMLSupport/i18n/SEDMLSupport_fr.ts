@@ -55,6 +55,10 @@
         <translation>la valeur pour &apos;numberOfPoints&apos; doit être plus grande que zéro</translation>
     </message>
     <message>
+        <source>%1 (%2) is an NLA solver while an ODE solver is expected</source>
+        <translation>%1 (%2) est un solveur ANL alors qu&apos;un solveur EDO est attendu</translation>
+    </message>
+    <message>
         <source>unsupported algorithm (%1)</source>
         <translation>algorithme non supporté (%1)</translation>
     </message>
