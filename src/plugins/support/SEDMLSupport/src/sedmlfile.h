@@ -42,13 +42,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace libsedml {
-    class SedAlgorithm;
     class SedDocument;
+    class SedListOfAlgorithmParameters;
 } // namespace libsedml
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+class SolverInterface;
 
 //==============================================================================
 
@@ -150,6 +154,11 @@ private:
     bool isSedmlFile() const;
 
     bool hasErrors() const;
+
+    SolverInterface * solverInterface(const QString &pKisaoId);
+
+    bool validAlgorithmParameters(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                                  SolverInterface *pSolverInterface);
 
     bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                 const QString &pPropertyNodeValue,
