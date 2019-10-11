@@ -1623,14 +1623,10 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 {
     // Create, customise and add an algorithm (i.e. an ODE solver) to our given
     // SED-ML simulation
-    // Note: the algorithm parameters require the use of KiSAO ids, so if none
-    //       exists for an algorithm parameter then we set the algorithm
-    //       parameter using an annotation...
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
     SolverInterface *odeSolverInterface = mSimulation->data()->odeSolverInterface();
     Solver::Solver::Properties odeSolverProperties = mSimulation->data()->odeSolverProperties();
-    QString annotation = QString();
 
     if (odeSolverInterface != nullptr) {
         sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
@@ -1642,27 +1638,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                 QString::number(odeSolverPropertyValue.toDouble(), 'g', 15):
                                 odeSolverPropertyValue.toString();
 
-            if (kisaoId.isEmpty()) {
-                annotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty)
-                                                                 .arg(SEDMLSupport::Id)
-                                                                 .arg(odeSolverProperty)
-                                                                 .arg(SEDMLSupport::Value)
-                                                                 .arg(value);
-            } else {
-                libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
+            libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
-                sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
-                sedmlAlgorithmParameter->setValue(value.toStdString());
-            }
+            sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
+            sedmlAlgorithmParameter->setValue(value.toStdString());
         }
-    }
-
-    if (!annotation.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
-                                                  "     %3"
-                                                  " </%1>").arg(SEDMLSupport::SolverProperties)
-                                                           .arg(SEDMLSupport::OpencorNamespace)
-                                                           .arg(annotation).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1670,6 +1650,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     // have more than one SED-ML algorithm per SED-ML simulation)
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    QString annotation = QString();
 
     if ((runtime != nullptr) && runtime->needNlaSolver()) {
         QString nlaSolverAnnotation = QString();
@@ -2434,27 +2415,27 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
     bool needOdeSolverGuiUpdate = false;
 
     if (solversWidget->odeSolverData() != nullptr) {
-        if ((pProperty == nullptr) || (pProperty == solversWidget->odeSolverData()->solversListProperty())) {
+        bool isOdeSolversListProperty = pProperty == solversWidget->odeSolverData()->solversListProperty();
+
+        if ((pProperty == nullptr) || isOdeSolversListProperty) {
             mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
 
             needOdeSolverGuiUpdate = true;
         }
 
-        if ((pProperty == nullptr) || !needOdeSolverGuiUpdate) {
-            for (auto property : solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
-                if ((pProperty == nullptr) || (pProperty == property)) {
-                    // Note: we pass false to variantValue() because we want to
-                    //       retrieve the value of list properties as a string
-                    //       rather than an index...
+        for (auto property : solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
+            if ((pProperty == nullptr) || isOdeSolversListProperty || (pProperty == property)) {
+                // Note: we pass false to variantValue() because we want to
+                //       retrieve the value of list properties as a string
+                //       rather than an index...
 
-                    mSimulation->data()->addOdeSolverProperty(property->id(),
-                                                              property->variantValue(false));
+                mSimulation->data()->addOdeSolverProperty(property->id(),
+                                                          property->variantValue(false));
 
-                    needOdeSolverGuiUpdate = true;
+                needOdeSolverGuiUpdate = true;
 
-                    if (pProperty != nullptr) {
-                        break;
-                    }
+                if (pProperty == property) {
+                    break;
                 }
             }
         }
@@ -2473,28 +2454,28 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
     bool needNlaSolverGuiUpdate = false;
 
     if (solversWidget->nlaSolverData() != nullptr) {
-        if ((pProperty == nullptr) || (pProperty == solversWidget->nlaSolverData()->solversListProperty())) {
+        bool isNlaSolversListProperty = pProperty == solversWidget->nlaSolverData()->solversListProperty();
+
+        if ((pProperty == nullptr) || isNlaSolversListProperty) {
             mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value(), pResetNlaSolver);
 
             needNlaSolverGuiUpdate = true;
         }
 
-        if ((pProperty == nullptr) || !needNlaSolverGuiUpdate) {
-            for (auto property : solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
-                if ((pProperty == nullptr) || (pProperty == property)) {
-                    // Note: we pass false to variantValue() because we want to
-                    //       retrieve the value of list properties as a string
-                    //       rather than an index...
+        for (auto property : solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
+            if ((pProperty == nullptr) || isNlaSolversListProperty || (pProperty == property)) {
+                // Note: we pass false to variantValue() because we want to
+                //       retrieve the value of list properties as a string
+                //       rather than an index...
 
-                    mSimulation->data()->addNlaSolverProperty(property->id(),
-                                                              property->variantValue(false),
-                                                              pResetNlaSolver);
+                mSimulation->data()->addNlaSolverProperty(property->id(),
+                                                          property->variantValue(false),
+                                                          pResetNlaSolver);
 
-                    needNlaSolverGuiUpdate = true;
+                needNlaSolverGuiUpdate = true;
 
-                    if (pProperty != nullptr) {
-                        break;
-                    }
+                if (pProperty == property) {
+                    break;
                 }
             }
         }
@@ -2502,10 +2483,6 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
 
     if (needNlaSolverGuiUpdate) {
         mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->nlaSolverData());
-
-        if (pProperty != nullptr) {
-            return;
-        }
     }
 }
 
@@ -2570,7 +2547,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     if (annotation != nullptr) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
+            libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
 
             if (   (QString::fromStdString(variableDegreeNode.getURI()) == SEDMLSupport::OpencorNamespace)
                 && (QString::fromStdString(variableDegreeNode.getName()) == SEDMLSupport::VariableDegree)) {
@@ -2685,7 +2662,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     libsedml::SedDocument *sedmlDocument = mSimulation->sedmlFile()->sedmlDocument();
     auto sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
     auto sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
-
     double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
     double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
     double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
@@ -2701,12 +2677,10 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Customise our solvers widget by:
     //  - Specifying the ODE solver to use
     //  - Customising the solver's properties for which we have a KiSAO id
-    //  - Customising the solver's properties for which we don't have a KiSAO id
-    //    (this shouldn't happen, but better be safe than sorry)
     //  - Specifying the NLA solver, if any
 
     SimulationExperimentViewInformationSolversWidgetData *odeSolverData = solversWidget->odeSolverData();
-    const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
+    libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
     SolverInterface *odeSolverInterface = nullptr;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
     Core::Properties solverProperties = Core::Properties();
@@ -2724,14 +2698,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     }
 
     if (odeSolverInterface == nullptr) {
-        simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
+        simulationError(tr("the requested ODE solver (%1) could not be found").arg(kisaoId),
                         Error::InvalidSimulationEnvironment);
 
         return false;
     }
 
     for (uint i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
+        libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
         QString parameterKisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
         QString id = odeSolverInterface->id(parameterKisaoId);
         bool propertySet = false;
@@ -2790,53 +2764,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
 
         if (!propertySet) {
-            simulationError(tr("the requested solver property (%1) could not be set").arg(parameterKisaoId),
+            simulationError(tr("the requested ODE solver property (%1) could not be set").arg(parameterKisaoId),
                             Error::InvalidSimulationEnvironment);
 
             return false;
         }
     }
 
-    libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
-
-    if (annotation != nullptr) {
-        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
-
-            if (   (QString::fromStdString(solverPropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                && (QString::fromStdString(solverPropertiesNode.getName()) == SEDMLSupport::SolverProperties)) {
-                for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                    const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
-
-                    if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                        && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
-                        QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
-                        QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
-                        bool propertySet = false;
-
-                        for (auto solverProperty : solverProperties) {
-                            if (solverProperty->id() == id) {
-                                solverProperty->setValue(value);
-
-                                propertySet = true;
-
-                                break;
-                            }
-                        }
-
-                        if (!propertySet) {
-                            simulationError(tr("the requested solver property (%1) could not be set").arg(id),
-                                            Error::InvalidSimulationEnvironment);
-
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    annotation = sedmlUniformTimeCourse->getAnnotation();
+    libsbml::XMLNode *annotation = sedmlUniformTimeCourse->getAnnotation();
 
     if (annotation != nullptr) {
         bool mustHaveNlaSolver = false;
@@ -2844,7 +2779,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         QString nlaSolverName = QString();
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
+            libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
             if (   (QString::fromStdString(nlaSolverNode.getURI()) == SEDMLSupport::OpencorNamespace)
                 && (QString::fromStdString(nlaSolverNode.getName()) == SEDMLSupport::NlaSolver)) {
@@ -2868,7 +2803,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                 if (hasNlaSolver) {
                     for (uint j = 0, jMax = nlaSolverNode.getNumChildren(); j < jMax; ++j) {
-                        const libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
+                        libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
 
                         if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                             && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
@@ -2887,7 +2822,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             }
 
                             if (!propertySet) {
-                                simulationError(tr("the requested solver property (%1) could not be set").arg(id),
+                                simulationError(tr("the requested NLA solver property (%1) could not be set").arg(id),
                                                 Error::InvalidSimulationEnvironment);
 
                                 return false;
@@ -2946,12 +2881,12 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
 
             for (uint j = 0, jMax = annotation->getNumChildren(); j < jMax; ++j) {
-                const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(j);
+                libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(j);
 
                 if (   (QString::fromStdString(sedmlPlot2dPropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
                     && (QString::fromStdString(sedmlPlot2dPropertiesNode.getName()) == SEDMLSupport::Properties)) {
                     for (uint k = 0, kMax = sedmlPlot2dPropertiesNode.getNumChildren(); k < kMax; ++k) {
-                        const libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(k);
+                        libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(k);
                         QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
                         QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
 
@@ -2971,7 +2906,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
                                 QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
@@ -2996,7 +2931,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
                                 QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
 
@@ -3018,7 +2953,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
                                 QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
 
@@ -3041,7 +2976,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                                 QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
@@ -3059,7 +2994,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                                 QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
@@ -3077,7 +3012,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                const libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
                                 QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
 
@@ -3161,22 +3096,30 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
             if (annotation != nullptr) {
                 for (uint k = 0, kMax = annotation->getNumChildren(); k < kMax; ++k) {
-                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(k);
+                    libsbml::XMLNode &curvePropertiesNode = annotation->getChild(k);
 
                     if (   (QString::fromStdString(curvePropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
                         && (QString::fromStdString(curvePropertiesNode.getName()) == SEDMLSupport::Properties)) {
                         for (uint l = 0, lMax = curvePropertiesNode.getNumChildren(); l < lMax; ++l) {
-                            const libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(l);
+                            libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(l);
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
                             QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
+                            // Selected
+
                             if (curvePropertyNodeName == SEDMLSupport::Selected) {
                                 selected = curvePropertyNodeValue == TrueValue;
+
+                            // Title
+
                             } else if (curvePropertyNodeName == SEDMLSupport::Title) {
                                 title = curvePropertyNodeValue;
+
+                            // Line
+
                             } else if (curvePropertyNodeName == SEDMLSupport::Line) {
                                 for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
-                                    const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
+                                    libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
                                     QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
@@ -3188,9 +3131,12 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                         lineColor.setNamedColor(linePropertyNodeValue);
                                     }
                                 }
+
+                            // Symbol
+
                             } else if (curvePropertyNodeName == SEDMLSupport::Symbol) {
                                 for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
-                                    const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
+                                    libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
                                     QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
@@ -4557,7 +4503,7 @@ QVariantList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::P
     QVariantList res = QVariantList();
 
     for (auto property : pPropertyEditor->allProperties()) {
-        res << property->variantValue();
+        res << property->isChecked() << property->variantValue();
     }
 
     return res;

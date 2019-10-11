@@ -376,7 +376,9 @@ QString SimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
-    return (mSimulation->runtime() != nullptr)?mOdeSolverName:QString();
+    return (mSimulation->runtime() != nullptr)?
+                mOdeSolverName:
+                QString();
 }
 
 //==============================================================================
@@ -398,7 +400,9 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 {
     // Return our ODE solver's properties
 
-    return (mSimulation->runtime() != nullptr)?mOdeSolverProperties:Solver::Solver::Properties();
+    return (mSimulation->runtime() != nullptr)?
+                mOdeSolverProperties:
+                Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -429,7 +433,9 @@ QString SimulationData::nlaSolverName() const
     // Return our NLA solver name
 
     return (   (mSimulation->runtime() != nullptr)
-            && mSimulation->runtime()->needNlaSolver())?mNlaSolverName:QString();
+            && mSimulation->runtime()->needNlaSolver())?
+                mNlaSolverName:
+                QString();
 }
 
 //==============================================================================
@@ -463,7 +469,9 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
     // Return our NLA solver's properties
 
     return (   (mSimulation->runtime() != nullptr)
-            && mSimulation->runtime()->needNlaSolver())?mNlaSolverProperties:Solver::Solver::Properties();
+            && mSimulation->runtime()->needNlaSolver())?
+                mNlaSolverProperties:
+                Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -611,7 +619,8 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
     runtime->computeComputedConstants()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                                        pInitialize?mStatesArray->data():mDummyStates, mAlgebraicArray->data());
+                                        pInitialize? mStatesArray->data(): mDummyStates,
+                                        mAlgebraicArray->data());
     runtime->computeRates()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
                             mStatesArray->data(), mAlgebraicArray->data());
     runtime->computeVariables()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
@@ -1198,7 +1207,9 @@ int SimulationResults::runsCount() const
 {
     // Return the number of runs held by our data store
 
-    return (mDataStore != nullptr)?mDataStore->runsCount():0;
+    return (mDataStore != nullptr)?
+                mDataStore->runsCount():
+                0;
 }
 
 //==============================================================================
@@ -1327,7 +1338,9 @@ quint64 SimulationResults::size(int pRun) const
 {
     // Return the size of our data store for the given run
 
-    return (mDataStore != nullptr)?mDataStore->size(pRun):0;
+    return (mDataStore != nullptr)?
+                mDataStore->size(pRun):
+                0;
 }
 
 //==============================================================================
@@ -1345,7 +1358,9 @@ double * SimulationResults::points(int pRun) const
 {
     // Return our points for the given run
 
-    return (mPoints != nullptr)?mPoints->values(pRun):nullptr;
+    return (mPoints != nullptr)?
+                mPoints->values(pRun):
+                nullptr;
 }
 
 //==============================================================================
@@ -1354,7 +1369,9 @@ double * SimulationResults::constants(int pIndex, int pRun) const
 {
     // Return our constants data at the given index and for the given run
 
-    return mConstants.isEmpty()?nullptr:mConstants[pIndex]->values(pRun);
+    return mConstants.isEmpty()?
+                nullptr:
+                mConstants[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1363,7 +1380,9 @@ double * SimulationResults::rates(int pIndex, int pRun) const
 {
     // Return our rates data at the given index and for the given run
 
-    return mRates.isEmpty()?nullptr:mRates[pIndex]->values(pRun);
+    return mRates.isEmpty()?
+                nullptr:
+                mRates[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1372,7 +1391,9 @@ double * SimulationResults::states(int pIndex, int pRun) const
 {
     // Return our states data at the given index and for the given run
 
-    return mStates.isEmpty()?nullptr:mStates[pIndex]->values(pRun);
+    return mStates.isEmpty()?
+                nullptr:
+                mStates[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1381,7 +1402,9 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 {
     // Return our algebraic data at the given index and for the given run
 
-    return mAlgebraic.isEmpty()?nullptr:mAlgebraic[pIndex]->values(pRun);
+    return mAlgebraic.isEmpty()?
+                nullptr:
+                mAlgebraic[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1392,7 +1415,9 @@ double * SimulationResults::data(double *pData, int pIndex, int pRun) const
 
     DataStore::DataStoreVariables data = mData.value(pData);
 
-    return data.isEmpty()?nullptr:data[pIndex]->values(pRun);
+    return data.isEmpty()?
+                nullptr:
+                data[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1647,8 +1672,12 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     // Retrieve our CellML and SED-ML files, as well as COMBINE archive
 
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-    mSedmlFile = (mCellmlFile != nullptr)?nullptr:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
-    mCombineArchive = (mSedmlFile != nullptr)?nullptr:COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
+    mSedmlFile = (mCellmlFile != nullptr)?
+                     nullptr:
+                     SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
+    mCombineArchive = (mSedmlFile != nullptr)?
+                          nullptr:
+                          COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
 
     // Determine the type of our file
 
@@ -1679,7 +1708,9 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (pRecreateRuntime) {
         delete mRuntime;
 
-        mRuntime = (mCellmlFile != nullptr)?mCellmlFile->runtime():nullptr;
+        mRuntime = (mCellmlFile != nullptr)?
+                       mCellmlFile->runtime():
+                       nullptr;
     } else {
         if ((mCellmlFile != nullptr) && (mRuntime != nullptr)) {
             mRuntime->update(mCellmlFile, false);
@@ -1861,7 +1892,9 @@ void Simulation::checkIssues()
 
     if (!mHasBlockingIssues) {
         bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
-        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?mRuntime->voi():nullptr;
+        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?
+                                                             mRuntime->voi():
+                                                             nullptr;
 
         if (voi == nullptr) {
             // We couldn't retrieve a VOI, which means that we either don't have
@@ -1891,7 +1924,9 @@ void Simulation::checkIssues()
                                                  (mCellmlFile != nullptr)?
                                                      mCellmlFile->issues():
                                                      CellMLSupport::CellmlFileIssues()) {
-                        mIssues.append(SimulationIssue((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?SimulationIssue::Type::Error:SimulationIssue::Type::Warning,
+                        mIssues.append(SimulationIssue((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?
+                                                           SimulationIssue::Type::Error:
+                                                           SimulationIssue::Type::Warning,
                                                        issue.message()));
                     }
                 }
@@ -2034,7 +2069,9 @@ int Simulation::runsCount() const
 {
     // Return the number of runs held by our results
 
-    return (mResults != nullptr)?mResults->runsCount():0;
+    return (mResults != nullptr)?
+                mResults->runsCount():
+                0;
 }
 
 //==============================================================================
@@ -2043,7 +2080,9 @@ quint64 Simulation::runSize(int pRun) const
 {
     // Return the size of the data store for the given run
 
-    return (mResults != nullptr)?mResults->size(pRun):0;
+    return (mResults != nullptr)?
+                mResults->size(pRun):
+                0;
 }
 
 //==============================================================================
@@ -2052,7 +2091,9 @@ bool Simulation::addRun()
 {
     // Ask our results to add a run
 
-    return (mResults != nullptr)?mResults->addRun():false;
+    return (mResults != nullptr)?
+                mResults->addRun():
+                false;
 }
 
 //==============================================================================
@@ -2061,7 +2102,9 @@ bool Simulation::isRunning() const
 {
     // Return whether we are running
 
-    return (mWorker != nullptr)?mWorker->isRunning():false;
+    return (mWorker != nullptr)?
+                mWorker->isRunning():
+                false;
 }
 
 //==============================================================================
@@ -2070,7 +2113,9 @@ bool Simulation::isPaused() const
 {
     // Return whether we are paused
 
-    return (mWorker != nullptr)?mWorker->isPaused():false;
+    return (mWorker != nullptr)?
+                mWorker->isPaused():
+                false;
 }
 
 //==============================================================================
@@ -2079,7 +2124,9 @@ double Simulation::currentPoint() const
 {
     // Return our current point
 
-    return (mWorker != nullptr)?mWorker->currentPoint():data()->startingPoint();
+    return (mWorker != nullptr)?
+                mWorker->currentPoint():
+                data()->startingPoint();
 }
 
 //==============================================================================

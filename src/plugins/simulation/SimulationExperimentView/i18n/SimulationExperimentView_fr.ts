@@ -625,16 +625,20 @@
         <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
     </message>
     <message>
-        <source>the requested solver (%1) could not be found</source>
-        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
+        <source>the requested ODE solver (%1) could not be found</source>
+        <translation>le solveur EDO demandé (%1) n&apos;a pas pu être trouvé</translation>
     </message>
     <message>
-        <source>the requested solver property (%1) could not be set</source>
-        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
+        <source>the requested ODE solver property (%1) could not be set</source>
+        <translation>la propriété EDO demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
     </message>
     <message>
         <source>the requested NLA solver (%1) could not be set</source>
         <translation>le solveur ANL demandé (%1) n&apos;a pas pu être spécifié</translation>
+    </message>
+    <message>
+        <source>the requested NLA solver property (%1) could not be set</source>
+        <translation>la propriété ANL demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
     </message>
     <message>
         <source>the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)</source>

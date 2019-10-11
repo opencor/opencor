@@ -1773,7 +1773,7 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 // Use the original colour of different things, but only if they
                 // have been set, i.e. if we were disabled and now enabled
 
-                if (mHasEnabledSettings) {
+                if (mGraphs.count() == mEnabledGraphPens.count()) {
                     setBackgroundColor(mEnabledBackgroundColor);
                     setForegroundColor(mEnabledForegroundColor);
 
@@ -1786,21 +1786,17 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                     for (auto graph : mGraphs) {
                         const QwtSymbol *graphSymbol = graph->symbol();
-                        QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
-                        QSize graphSymbolSize = graphSymbol->size();
 
                         ++index;
 
                         graph->setPen(mEnabledGraphPens[index]);
-                        graph->setSymbol(graphSymbolStyle,
+                        graph->setSymbol(graphSymbol->style(),
                                          mEnabledGraphSymbolBrushes[index],
                                          mEnabledGraphSymbolPens[index],
-                                         graphSymbolSize);
+                                         graphSymbol->size());
                     }
 
                     // Reset a few things
-
-                    mHasEnabledSettings = false;
 
                     mEnabledGraphPens.clear();
                     mEnabledGraphSymbolBrushes.clear();
@@ -1808,8 +1804,6 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 }
             } else {
                 // Keep track of various original colours
-
-                mHasEnabledSettings = true;
 
                 mEnabledBackgroundColor = mBackgroundColor;
                 mEnabledForegroundColor = mForegroundColor;
@@ -1847,13 +1841,12 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 for (auto graph : mGraphs) {
                     QPen pen = graph->pen();
                     const QwtSymbol *graphSymbol = graph->symbol();
-                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
-                    QSize graphSymbolSize = graphSymbol->size();
 
                     pen.setColor(opaqueWindowTextColor);
 
                     graph->setPen(pen);
-                    graph->setSymbol(graphSymbolStyle, symbolBrush, symbolPen, graphSymbolSize);
+                    graph->setSymbol(graphSymbol->style(), symbolBrush,
+                                     symbolPen, graphSymbol->size());
                 }
             }
         setUpdatesEnabled(true);

@@ -578,8 +578,6 @@ private:
 
     GraphPanelPlotGraphs mGraphs;
 
-    bool mHasEnabledSettings = false;
-
     QColor mEnabledBackgroundColor;
     QColor mEnabledForegroundColor;
 

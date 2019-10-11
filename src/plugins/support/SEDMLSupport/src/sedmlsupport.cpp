@@ -72,7 +72,7 @@ int indexLineStyle(const QString &pStringLineStyle)
     int res = lineStyles().indexOf(pStringLineStyle);
 
     return (res != -1)?
-               res :
+               res:
                1;
 }
 
@@ -136,7 +136,7 @@ Qt::PenStyle lineStyle(const QString &pStringLineStyle)
 {
     // Return the given string line style as a line style
 
-    return Qt::PenStyle(indexLineStyle(pStringLineStyle));
+    return lineStyle(indexLineStyle(pStringLineStyle));
 }
 
 //==============================================================================
@@ -261,14 +261,8 @@ QwtSymbol::Style symbolStyle(int pIndexSymbolStyle)
 QwtSymbol::Style symbolStyle(const QString &pStringSymbolStyle)
 {
     // Return the given string symbol style as a symbol style
-    // Note: the shifting is because indices in our list of symbols don't match
-    //       those of QwtSymbol::Style...
 
-    int res = indexSymbolStyle(pStringSymbolStyle);
-
-    return QwtSymbol::Style((res <= 5)?
-                                res-1:
-                                res);
+    return symbolStyle(indexSymbolStyle(pStringSymbolStyle));
 }
 
 //==============================================================================
