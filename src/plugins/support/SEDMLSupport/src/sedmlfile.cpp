@@ -350,6 +350,61 @@ bool SedmlFile::isValid()
 
 //==============================================================================
 
+SolverInterface * SedmlFile::solverInterface(const QString &pKisaoId)
+{
+    // Retrieve and return the solver interface for the given KiSAO id and make
+    // sure that it's of the type we want
+
+    for (auto solverInterface : Core::solverInterfaces()) {
+        if (solverInterface->id(pKisaoId) == solverInterface->solverName()) {
+            if (solverInterface->solverType() != Solver::Type::Ode) {
+                mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+                                          tr("%1 (%2) is an NLA solver while an ODE solver is expected").arg(solverInterface->solverName())
+                                                                                                        .arg(pKisaoId));
+
+                return nullptr;
+            }
+
+            return solverInterface;
+        }
+    }
+
+    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+                              tr("unsupported algorithm (%1)").arg(pKisaoId));
+
+    return nullptr;
+}
+
+//==============================================================================
+
+bool SedmlFile::validAlgorithmParameters(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                                         SolverInterface *pSolverInterface)
+{
+    // Make sure that we have a solver interface
+
+    if (pSolverInterface == nullptr) {
+        return false;
+    }
+
+    // Recursively check whether the parameters of the given algorithm are valid
+
+    for (uint i = 0, iMax = pSedmlAlgorithmParameters->getNumAlgorithmParameters(); i < iMax; ++i) {
+        QString parameterKisaoId = QString::fromStdString(pSedmlAlgorithmParameters->get(i)->getKisaoID());
+        QString id = pSolverInterface->id(parameterKisaoId);
+
+        if (id.isEmpty() || (id == pSolverInterface->solverName())) {
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+                                      tr("unsupported algorithm parameter (%1)").arg(parameterKisaoId));
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
 bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                        const QString &pPropertyNodeValue,
                                        const QString &pPropertyName,
@@ -497,37 +552,11 @@ bool SedmlFile::isSupported()
 
     if (firstSimulationAlgorithm != nullptr) {
         // Make sure that the algorithm relies on an algorithm that we support
+        // and that its parameters are also supported
 
-        SolverInterface *usedSolverInterface = nullptr;
-        QString kisaoId = QString::fromStdString(firstSimulationAlgorithm->getKisaoID());
-
-        for (auto solverInterface : Core::solverInterfaces()) {
-            if (solverInterface->id(kisaoId) == solverInterface->solverName()) {
-                usedSolverInterface = solverInterface;
-
-                break;
-            }
-        }
-
-        if (usedSolverInterface == nullptr) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
-                                      tr("unsupported algorithm (%1)").arg(kisaoId));
-
+        if (!validAlgorithmParameters(firstSimulationAlgorithm->getListOfAlgorithmParameters(),
+                                      solverInterface(QString::fromStdString(firstSimulationAlgorithm->getKisaoID())))) {
             return false;
-        }
-
-        // Make sure that the algorithm parameters are also supported
-
-        for (uint i = 0, iMax = firstSimulationAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-            QString parameterKisaoId = QString::fromStdString(firstSimulationAlgorithm->getAlgorithmParameter(i)->getKisaoID());
-            QString id = usedSolverInterface->id(parameterKisaoId);
-
-            if (id.isEmpty() || (id == usedSolverInterface->solverName())) {
-                mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
-                                          tr("unsupported algorithm parameter (%1)").arg(parameterKisaoId));
-
-                return false;
-            }
         }
 
         // Make sure that the first simulation algorithm annotation, if any,
