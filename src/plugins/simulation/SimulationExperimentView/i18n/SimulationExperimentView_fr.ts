@@ -198,6 +198,10 @@
         <source>data</source>
         <translation>donnée</translation>
     </message>
+    <message>
+        <source>Toggle gradient calculation for constant</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationSimulationWidget</name>
@@ -662,6 +666,13 @@
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>unable to get simulations&apos;s runtime</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

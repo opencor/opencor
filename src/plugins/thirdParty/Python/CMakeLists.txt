@@ -1,4 +1,4 @@
-project(PythonLibraryPlugin)
+project(PythonPlugin)
 
 # Name and version of our package
 
@@ -478,11 +478,11 @@ set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_
 
 # Add the plugin
 
-add_plugin(PythonLibrary
+add_plugin(Python
     SOURCES
         ../../plugininfo.cpp
 
-        src/pythonlibraryplugin.cpp
+        src/pythonplugin.cpp
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

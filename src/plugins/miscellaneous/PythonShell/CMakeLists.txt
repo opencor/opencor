@@ -1,13 +1,13 @@
-project(PythonPlugin)
+project(PythonShellPlugin)
 
 # Add the plugin
 
-add_plugin(Python
+add_plugin(PythonShell
     SOURCES
         ../../cliinterface.cpp
         ../../plugininfo.cpp
 
-        src/pythonplugin.cpp
+        src/pythonshellplugin.cpp
     PLUGINS
         Core
         PythonQtSupport

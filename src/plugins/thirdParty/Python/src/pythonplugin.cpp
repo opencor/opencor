@@ -18,36 +18,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Library plugin
+// Python plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
+#include "pythonplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonLibrary {
+namespace Python {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonLibraryPluginInfo();
-
-//==============================================================================
-
-class PythonLibraryPlugin : public QObject
+PLUGININFO_FUNC PythonPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonLibraryPlugin" FILE "pythonlibraryplugin.json")
-};
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://www.python.org/\">Python</a> language."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au langage <a href=\"https://www.python.org/\">Python</a>."));
+
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace PythonLibrary
+}   // namespace Python
 }   // namespace OpenCOR
 
 //==============================================================================

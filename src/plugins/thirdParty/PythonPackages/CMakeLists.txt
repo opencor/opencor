@@ -143,7 +143,7 @@ else()
 
     # Python packages installation requires Python
 
-    set(BUILD_DEPENDENCIES PythonLibraryPlugin)
+    set(BUILD_DEPENDENCIES PythonPlugin)
 
     # Clean our site packages directory before installing any packages
 
@@ -479,7 +479,7 @@ add_plugin(PythonPackages
 
         src/pythonpackagesplugin.cpp
     PLUGINS
-        PythonLibrary
+        Python
     EXTERNAL_DESTINATION_DIR
         ${PYTHON_ROOT_DIR}
     EXTERNAL_SOURCE_DIR

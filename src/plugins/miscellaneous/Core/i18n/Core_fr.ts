@@ -167,6 +167,14 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
     </message>
+    <message>
+        <source>%s:%d: &apos;%s&apos; did not get created.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
@@ -513,6 +521,18 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FATAL ERROR | %s:%d: &apos;%s&apos; did not get created.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "pythonqtsupportplugin.h"
-#include "pythonplugin.h"
+#include "pythonshellplugin.h"
 
 //==============================================================================
 
@@ -40,11 +40,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Python {
+namespace PythonShell {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonPluginInfo()
+PLUGININFO_FUNC PythonShellPluginInfo()
 {
     Descriptions descriptions;
 
@@ -62,9 +62,9 @@ PLUGININFO_FUNC PythonPluginInfo()
 // CLI interface
 //==============================================================================
 
-bool PythonPlugin::executeCommand(const QString &pCommand,
-                                  const QStringList &pArguments,
-                                  int &pRes)
+bool PythonShellPlugin::executeCommand(const QString &pCommand,
+                                       const QStringList &pArguments,
+                                       int &pRes)
 {
     // Run the given CLI command
 
@@ -91,7 +91,7 @@ bool PythonPlugin::executeCommand(const QString &pCommand,
 // Plugin specific
 //==============================================================================
 
-void PythonPlugin::runHelpCommand()
+void PythonShellPlugin::runHelpCommand()
 {
     // Output the commands we support
 
@@ -104,7 +104,7 @@ void PythonPlugin::runHelpCommand()
 
 //==============================================================================
 
-bool PythonPlugin::runPython(const QStringList &pArguments, int &pRes)
+bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
     // The following has been adapted from `Programs/python.c` in the Python sources.
 
@@ -170,7 +170,7 @@ bool PythonPlugin::runPython(const QStringList &pArguments, int &pRes)
 
 //==============================================================================
 
-}   // namespace Python
+}   // namespace PythonShell
 }   // namespace OpenCOR
 
 //==============================================================================

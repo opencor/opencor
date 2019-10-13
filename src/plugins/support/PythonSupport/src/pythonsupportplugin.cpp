@@ -54,7 +54,7 @@ PLUGININFO_FUNC PythonSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("the Python support plugin."));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "PythonLibrary",
+                          QStringList() << "Python",
                           descriptions);
 }
 
@@ -87,7 +87,7 @@ bool PythonSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 void PythonSupportPlugin::initializePlugin()
 {
     // We must set the environment variable PYTHONHOME to the location of our
-    // copy of Python and this before calling any Python library code
+    // copy of Python and this before calling any Python code
     // Note: to call Py_SetPythonHome() doesn't work since Py_Initialize() first
     //       checks the environment and, if PYTHONHOME isn't set, uses the
     //       installation path compiled in at Python build time...

@@ -12,5 +12,5 @@ ADD_PLUGIN(PythonSupport
         src/pythonsupportplugin.cpp
     PLUGINS
         Core
-        PythonLibrary
+        Python
 )

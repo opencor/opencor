@@ -15,5 +15,55 @@
         <source>the starting point cannot be greater than the ending point</source>
         <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
     </message>
+    <message>
+        <source>the requested solver (%1) could not be found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the requested NLA solver (%1) could not be set</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot run because simulation has blocking issues.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot run because simulation has an invalid runtime.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>We could not allocate the memory required for the simulation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Unknown ODE solver.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown NLA solver.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
