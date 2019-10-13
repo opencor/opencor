@@ -299,7 +299,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/dbrnz/python-cmake-buildsystem.git
+            https://github.com/opencor/python-cmake-buildsystem.git
         GIT_TAG
             ${GIT_TAG}
         CMAKE_GENERATOR
