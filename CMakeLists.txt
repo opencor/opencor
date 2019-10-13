@@ -29,7 +29,7 @@ option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff 
 option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-option(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE "Use the pre-built version of the Python library package" ON)
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of the Python Qt package" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
@@ -633,7 +633,7 @@ configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
 # The Python interface depends on Python headers so we only include it
 # when the Python library is not being built
 
-if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+if(USE_PREBUILT_PYTHON_PACKAGE)
     set(PYTHON_INTERFACE
         src/plugins/pythoninterface.cpp
     )
@@ -966,7 +966,7 @@ if(ENABLE_TEST_PLUGINS)
     )
 endif()
 
-if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+if(USE_PREBUILT_PYTHON_PACKAGE)
     # We are not building the Python library, so build all our plugins
 
     set(PLUGINS
@@ -1012,7 +1012,7 @@ foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
 
-if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+if(USE_PREBUILT_PYTHON_PACKAGE)
     # We have already built Python and hence have Sphinx available, so we can
     # fetch parts of our documentation and build it
 

@@ -147,7 +147,7 @@ endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-if(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+if(USE_PREBUILT_PYTHON_PACKAGE)
     # Retrieve the plugin's package
 
     if(WIN32)
