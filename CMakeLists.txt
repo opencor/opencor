@@ -1159,12 +1159,6 @@ if(APPLE)
     macos_deploy_qt_plugin(sqldrivers qsqlite)
     macos_deploy_qt_plugin(styles qmacstyle)
 else()
-    # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
-
-    if(NOT WIN32)
-        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
-    endif()
-
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
     copy_file_to_build_dir(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
@@ -1252,6 +1246,10 @@ else()
 
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+    else()
+        # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
+
+        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
     endif()
 endif()
 
