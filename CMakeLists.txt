@@ -1036,8 +1036,9 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${RESOURCES}
 )
 
-add_definitions(-DGUI_VERSION)
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_VERSION)
 
 # We can't compile Python interface code until after the Python headers are in
 # place
