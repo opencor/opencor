@@ -18,8 +18,7 @@ set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-#set(GIT_TAG "support-build-37-and-38-rebased")
-set(GIT_TAG "win-debug")
+set(GIT_TAG "opencor")
 
 # Specify where our local package will be installed
 
