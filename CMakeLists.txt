@@ -974,6 +974,8 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
 
         ${PLUGIN_PLUGINS}
     )
+
+    add_definitions(-DPYTHON_VERSION)
 else()
     # We want to build our copy of the Python package, so don't build any
     # plugins apart from third party ones that are part of Python, since others
@@ -984,7 +986,6 @@ else()
 
         thirdParty/Python
     )
-    add_definitions(-DEXCLUDE_PYTHON)
 endif()
 
 if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
@@ -992,7 +993,6 @@ if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # of our plugins since some of them may require QtWebKit
 
     set(PLUGINS)
-    add_definitions(-DEXCLUDE_PYTHON)
 endif()
 
 foreach(PLUGIN ${PLUGINS})
@@ -1036,6 +1036,7 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${RESOURCES}
 )
 
+add_definitions(-DGUI_VERSION)
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
 
 # We can't compile Python interface code until after the Python headers are in
@@ -1098,9 +1099,6 @@ if(WIN32)
     target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
         ${PYTHON_LIBRARY}
     )
-
-    target_compile_definitions(${WINDOWS_CLI_PROJECT_NAME}
-                               PRIVATE CLI_VERSION)
 
     set_target_properties(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
