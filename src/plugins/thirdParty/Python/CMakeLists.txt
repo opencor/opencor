@@ -18,7 +18,9 @@ set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "opencor")
+set(GIT_TAG "win-debug")
+# Note: see https://github.com/opencor/opencor/pull/2160#issuecomment-541552006
+#       for the rationale behind using "win-debug" rather than "opencor"...
 
 # Specify where our local package will be installed
 
@@ -288,6 +290,10 @@ else()
            )
 
     # Build Python as an external project
+    # Note: see https://github.com/opencor/opencor/pull/2160#issuecomment-541552006
+    #       for the rationale behind using
+    #       https://github.com/dbrnz/python-cmake-buildsystem.git rather than
+    #       https://github.com/opencor/python-cmake-buildsystem.git...
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
     set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
@@ -298,7 +304,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/python-cmake-buildsystem.git
+            https://github.com/dbrnz/python-cmake-buildsystem.git
         GIT_TAG
             ${GIT_TAG}
         CMAKE_GENERATOR
