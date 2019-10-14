@@ -633,9 +633,7 @@ configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
 # Python package is not being built
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
-    set(PYTHON_INTERFACE
-        src/plugins/pythoninterface.cpp
-    )
+    set(PYTHON_INTERFACE_FILENAME src/plugins/pythoninterface.cpp)
 endif()
 
 # Files that make up the GUI version of OpenCOR
@@ -666,7 +664,7 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-    ${PYTHON_INTERFACE}
+    ${PYTHON_INTERFACE_FILENAME}
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -704,6 +702,7 @@ if(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
+        ${PYTHON_INTERFACE_FILENAME}
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -993,7 +992,6 @@ if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # of our plugins since some of them may require QtWebKit
 
     set(PLUGINS)
-    set(PYTHON_INTERFACE)
     add_definitions(-DEXCLUDE_PYTHON)
 endif()
 
@@ -1034,7 +1032,6 @@ if(APPLE)
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
-    ${PYTHON_INTERFACE}
     ${SOURCES}
     ${RESOURCES}
 )
@@ -1087,7 +1084,6 @@ if(WIN32)
     set(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
     add_executable(${WINDOWS_CLI_PROJECT_NAME}
-        ${PYTHON_INTERFACE}
         ${WINDOWS_CLI_SOURCES}
         ${WINDOWS_CLI_RESOURCES}
     )
