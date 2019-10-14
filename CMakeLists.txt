@@ -431,7 +431,6 @@ if(APPLE)
         PrintSupport
         Qml
         Quick
-        QuickWidgets
         Sensors
         Sql
         Svg
@@ -1311,7 +1310,7 @@ if(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick QuickWidgets Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
+    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
@@ -1479,7 +1478,7 @@ else()
     #       unnecessarily cumbersome to use, it's better to deploy one Qt
     #       library at a time...
 
-    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick QuickWidgets Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
+    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
         if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
            OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
             set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
