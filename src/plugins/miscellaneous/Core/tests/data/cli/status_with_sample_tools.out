@@ -24,6 +24,7 @@ The following plugins are available:
  - Python: the plugin is loaded and fully functional.
  - PythonQtAPI: the plugin is loaded and fully functional.
  - PythonQtSupport: the plugin is loaded and fully functional.
+ - PythonShell: the plugin is loaded and fully functional.
  - PythonSupport: the plugin is loaded and fully functional.
  - QScintilla: the plugin is loaded and fully functional.
  - QScintillaWidget: the plugin is loaded and fully functional.
