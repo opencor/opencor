@@ -42,8 +42,8 @@ PLUGININFO_FUNC PythonQtConsoleWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Python Qt Console window plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the Python Qt Console window plugin."));
+    descriptions.insert("en", QString::fromUtf8("the PythonQt Console window plugin."));
+    descriptions.insert("fr", QString::fromUtf8("the PythonQt Console window plugin."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           QStringList() << "Core" << "PythonQtSupport",
@@ -58,7 +58,7 @@ void PythonQtConsoleWindowPlugin::retranslateUi()
 {
   // Retranslate our window action
   retranslateAction(mPythonQtConsoleWindowAction,
-                    tr("PythonQtConsole"), tr("Show/hide the Python Qt Console window"));
+                    tr("PythonQtConsole"), tr("Show/hide the PythonQt Console window"));
   }
 
 //==============================================================================

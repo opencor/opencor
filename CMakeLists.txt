@@ -31,7 +31,7 @@ option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth packag
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
-option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of the Python Qt package" ON)
+option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of the PythonQt package" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)

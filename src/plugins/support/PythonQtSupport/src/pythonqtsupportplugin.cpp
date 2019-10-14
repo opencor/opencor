@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt Support plugin
+// PythonQt support plugin
 //==============================================================================
 
 #include "corecliutils.h"
@@ -51,8 +51,8 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Python Qt support plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the Python Qt support plugin."));
+    descriptions.insert("en", QString::fromUtf8("the PythonQt support plugin."));
+    descriptions.insert("fr", QString::fromUtf8("the PythonQt support plugin."));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "PythonQtAPI" << "PythonSupport",
@@ -87,7 +87,7 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtSupportPlugin::initializePlugin()
 {
-    // Create and initialise a new Python Qt instance
+    // Create and initialise a new PythonQt instance
 
     PythonQt::init(PythonQt::RedirectStdOut);
 
