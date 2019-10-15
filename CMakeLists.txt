@@ -17,6 +17,7 @@ if(NOT WIN32 AND NOT APPLE)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 endif()
 
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
 option(USE_PREBUILT_BIOSIGNALML_PACKAGE "Use the pre-built version of the BioSignalML package" ON)
@@ -29,8 +30,7 @@ option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff 
 option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
+option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of various Python packages" ON)
 option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of the PythonQt package" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
@@ -1026,9 +1026,7 @@ endif()
 # Build the GUI version of OpenCOR
 
 if(APPLE)
-    list(APPEND SOURCES
-        src/misc/macos.mm
-    )
+    list(APPEND SOURCES src/misc/macos.mm)
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
