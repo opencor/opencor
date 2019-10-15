@@ -480,10 +480,10 @@ add_plugin(PythonPackages
         src/pythonpackagesplugin.cpp
     PLUGINS
         Python
-    EXTERNAL_DESTINATION_DIR
-        ${PYTHON_ROOT_DIR}
     EXTERNAL_SOURCE_DIR
         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+    EXTERNAL_DESTINATION_DIR
+        ${PYTHON_ROOT_DIR}
     DEPENDS_ON
         ${DEPENDS_ON}
 )

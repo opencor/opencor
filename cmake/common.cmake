@@ -179,8 +179,8 @@ macro(add_plugin PLUGIN_NAME)
     set(OPTIONS)
     set(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
-        EXTERNAL_DESTINATION_DIR
         EXTERNAL_SOURCE_DIR
+        EXTERNAL_DESTINATION_DIR
     )
     set(MULTI_VALUE_KEYWORDS
         SOURCES
@@ -191,8 +191,8 @@ macro(add_plugin PLUGIN_NAME)
         EXTERNAL_BINARIES
         SYSTEM_BINARIES
         DEPENDS_ON
-        TESTS
         BYPRODUCTS
+        TESTS
     )
 
     cmake_parse_arguments(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
@@ -281,24 +281,24 @@ macro(add_plugin PLUGIN_NAME)
         )
     endforeach()
 
-    IF((NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
-    OR (    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
-        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""))
-        # Create a custom target for installing files
-        # Note: this is to prevent Ninja from getting confused with circular
-        #       references...
-        # Note: we use this target in the PythonQtAPI build script when setting
-        #       the PYTHON_DEPENDENCIES list
+    # Create a custom target for copying external binaries
+    # Note #1: this is to prevent Ninja from getting confused with circular
+    #          references...
+    # Note #2: we use this target in the PythonQtAPI build script when setting
+    #          the PYTHON_DEPENDENCIES list...
 
-        SET(INSTALL_EXTERNAL_FILES_TARGET "${PROJECT_NAME}_INSTALL_EXTERNAL_FILES")
+    if(   NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL ""
+       OR (    NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""
+           AND NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""))
+        set(COPY_EXTERNAL_BINARIES_TARGET "INSTALL_${PROJECT_NAME}_EXTERNAL_FILES")
 
-        ADD_CUSTOM_TARGET(${INSTALL_EXTERNAL_FILES_TARGET})
-        ADD_DEPENDENCIES(${PROJECT_NAME} ${INSTALL_EXTERNAL_FILES_TARGET})
+        add_custom_target(${COPY_EXTERNAL_BINARIES_TARGET})
+        add_dependencies(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
 
-        IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
-            ADD_DEPENDENCIES(${INSTALL_EXTERNAL_FILES_TARGET} ${ARG_DEPENDS_ON})
-        ENDIF()
-    ENDIF()
+        if(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+            add_dependencies(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
+        endif()
+    endif()
 
     # External binaries
 
@@ -315,7 +315,7 @@ macro(add_plugin PLUGIN_NAME)
                AND "${ARG_DEPENDS_ON}" STREQUAL "")
                 set(COPY_TARGET DIRECT)
             else()
-                set(COPY_TARGET ${INSTALL_EXTERNAL_FILES_TARGET})
+                set(COPY_TARGET ${COPY_EXTERNAL_BINARIES_TARGET})
             endif()
 
             # Copy the external binary to its destination directory, so we can
@@ -382,12 +382,11 @@ macro(add_plugin PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    if(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
-       AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
-
+    if(    NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""
+       AND NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL "")
         # Copy the entire source directory to the destination
 
-        add_custom_command(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
+        add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
                                                                       ${ARG_EXTERNAL_DESTINATION_DIR}
                            BYPRODUCTS ${ARG_BYPRODUCTS})
