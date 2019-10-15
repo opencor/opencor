@@ -26,18 +26,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "datastoreinterface.h"
 #include "filehandlinginterface.h"
 #include "filetypeinterface.h"
-#ifndef CLI_VERSION
+#ifdef GUI_SUPPORT
     #include "guiinterface.h"
     #include "i18ninterface.h"
 #endif
 #include "plugin.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
-#ifndef CLI_VERSION
+#ifdef GUI_SUPPORT
     #include "preferencesinterface.h"
 #endif
 #include "solverinterface.h"
-#ifndef CLI_VERSION
+#ifdef GUI_SUPPORT
     #include "viewinterface.h"
     #include "windowinterface.h"
 #endif
@@ -139,7 +139,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             && (interfaceVersion(pFileName, "fileHandlingInterfaceVersion") != fileHandlingInterfaceVersion()))
                         || (   (qobject_cast<FileTypeInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "fileTypeInterfaceVersion") != fileTypeInterfaceVersion()))
-#ifndef CLI_VERSION
+#ifdef GUI_SUPPORT
                         || (   (qobject_cast<GuiInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "guiInterfaceVersion") != guiInterfaceVersion()))
                         || (   (qobject_cast<I18nInterface *>(mInstance) != nullptr)
@@ -147,13 +147,13 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 #endif
                         || (   (pluginInterface != nullptr)
                             && (interfaceVersion(pFileName, "pluginInterfaceVersion") != pluginInterfaceVersion()))
-#ifndef CLI_VERSION
+#ifdef GUI_SUPPORT
                         || (   (qobject_cast<PreferencesInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
 #endif
                         || (   (qobject_cast<SolverInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
-#ifndef CLI_VERSION
+#ifdef GUI_SUPPORT
                         || (   (qobject_cast<ViewInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "viewInterfaceVersion") != viewInterfaceVersion()))
                         || (   (qobject_cast<WindowInterface *>(mInstance) != nullptr)
