@@ -17,6 +17,7 @@ if(NOT WIN32 AND NOT APPLE)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 endif()
 
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
 option(USE_PREBUILT_BIOSIGNALML_PACKAGE "Use the pre-built version of the BioSignalML package" ON)
@@ -29,8 +30,7 @@ option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff 
 option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
+option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of various Python packages" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
@@ -38,7 +38,13 @@ option(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package"
 
 if(ENABLE_TEST_PLUGINS)
     option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
-    #---OPENCOR--- Zinc IS CURRENTLY ONLY USED BY OUR TEST PLUGINS...
+endif()
+
+# Determine whether we are using the prebuilt version of our Python and QtWebKit
+# packages
+
+if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_QTWEBKIT_PACKAGE)
+    set(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES ON)
 endif()
 
 # Make sure that we are using the compiler we support
@@ -358,26 +364,25 @@ endif()
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
 
-if(WIN32)
-    set(ICU_VERSION 57)
-elseif(NOT APPLE)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    if(WIN32)
+        set(ICU_VERSION 57)
+    elseif(NOT APPLE)
+        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
+        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+    endif()
 endif()
 
-# Retrieve or build our copy of QtWebKit
+# Retrieve or build our copy of QtWebKit, but only if we are not building Python
 
-add_subdirectory(src/3rdparty/QtWebKit)
+if(USE_PREBUILT_PYTHON_PACKAGE)
+    add_subdirectory(src/3rdparty/QtWebKit)
+endif()
 
 # Required Qt modules
 
 if(ENABLE_TESTS)
     set(TEST Test)
-endif()
-
-if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-    set(WEBKIT WebKit)
-    set(WEBKITWIDGETS WebKitWidgets)
 endif()
 
 set(REQUIRED_QT_MODULES
@@ -386,17 +391,18 @@ set(REQUIRED_QT_MODULES
     Widgets
 )
 
-if(WIN32)
-    list(APPEND REQUIRED_QT_MODULES ${WEBKIT})
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    set(WEBKIT WebKit)
+    set(WEBKITWIDGETS WebKitWidgets)
+
+    if(WIN32)
+        list(APPEND REQUIRED_QT_MODULES ${WEBKIT})
+    endif()
 endif()
 
 foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     find_package(Qt5${REQUIRED_QT_MODULE} REQUIRED)
 endforeach()
-
-# Make sure that anyone can access diff-match-patch
-
-include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 
 # On macOS, keep track of the Qt libraries against which we need to link and
 # make sure that we always use their release version
@@ -410,7 +416,7 @@ if(APPLE)
         set(TEST Test)
     endif()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
         set(WEBKIT WebKit)
         set(WEBKITWIDGETS WebKitWidgets)
     endif()
@@ -533,20 +539,6 @@ add_definitions(-DQT_DEPRECATED_WARNINGS)
 # Note: at least needed for QtSingleApplication on Windows...
 
 add_definitions(-DUNICODE)
-
-# Let OpenCOR know about some of the options with which it was built
-
-if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-    add_definitions(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
-endif()
-
-if(ENABLE_SAMPLE_PLUGINS)
-    add_definitions(-DENABLE_SAMPLE_PLUGINS)
-endif()
-
-if(ENABLE_TEST_PLUGINS)
-    add_definitions(-DENABLE_TEST_PLUGINS)
-endif()
 
 # On macOS, make sure that we support version 10.12 and later, unless a specific
 # deployment target has been specified
@@ -704,13 +696,15 @@ if(WIN32)
 endif()
 
 # Various include directories
-# Note: access to the Core plugin's source folder is needed so that we can build
-#       OpenCOR on its own, i.e. without any plugins (due to the global CLI/GUI
-#       utilities needing access to some features that are in common with the
-#       Core CLI/GUI utilities)...
+# Note #1: access to the Core plugin's source folder is needed so that we can
+#          build OpenCOR on its own, i.e. without any plugins (due to the global
+#          CLI/GUI utilities needing access to some features that are in common
+#          with the Core CLI/GUI utilities)...
+# Note #2: we want everybody to be able to access diff-match-patch...
 
 include_directories(
     src
+    src/3rdparty/diff_match_patch/src
     src/misc
     src/plugins
     src/plugins/miscellaneous/Core/src
@@ -852,132 +846,157 @@ add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
 # Note #3: soft dependencies are determined automatically, so other plugins can
 #          be listed in any order...
 
-if(ENABLE_SAMPLE_PLUGINS)
-    set(SAMPLE_PLUGINS
-        sample/Sample
-        sample/SampleTools
-        sample/SampleView
-        sample/SampleWindow
+if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # We are using the prebuilt version of our QtWebKit package, so build
+    # whatever we can depending on whether we are using the prebuilt version of
+    # our Python package
+
+    set(PLUGINS
+        thirdParty/OpenSSL
+        thirdParty/zlib
+
+        thirdParty/Python
     )
-endif()
 
-if(ENABLE_TEST_PLUGINS)
-    set(TEST_PLUGINS
-        test/ZincWindow
-    )
-endif()
+    if(USE_PREBUILT_PYTHON_PACKAGE)
+        # We are using the prebuilt version of our Python package, so build all
+        # our plugins
 
-set(PLUGINS
-    thirdParty/OpenSSL
-    thirdParty/zlib
+        list(APPEND PLUGINS
+            thirdParty/libSBML
+            thirdParty/PythonPackages
 
-    thirdParty/libSBML
-    thirdParty/Python
-    thirdParty/PythonPackages
+            dataStore/BioSignalMLDataStore
+            dataStore/CSVDataStore
+            dataStore/DataStore
 
-    ${SAMPLE_PLUGINS}
-    ${TEST_PLUGINS}
+            editing/CellMLAnnotationView
+            editing/CellMLEditingView
+            editing/CellMLTextView
+            editing/EditingView
+            editing/RawCellMLView
+            editing/RawSEDMLView
+            editing/RawTextView
+            editing/SEDMLEditingView
 
-    dataStore/BioSignalMLDataStore
-    dataStore/CSVDataStore
-    dataStore/DataStore
+            miscellaneous/Compiler
+            miscellaneous/Core
+            miscellaneous/HelpWindow
+            miscellaneous/WebBrowserWindow
 
-    editing/CellMLAnnotationView
-    editing/CellMLEditingView
-    editing/CellMLTextView
-    editing/EditingView
-    editing/RawCellMLView
-    editing/RawSEDMLView
-    editing/RawTextView
-    editing/SEDMLEditingView
+            organisation/FileBrowserWindow
+            organisation/FileOrganiserWindow
+            organisation/PMRWindow
+            organisation/PMRWorkspacesWindow
 
-    miscellaneous/Compiler
-    miscellaneous/Core
-    miscellaneous/HelpWindow
-    miscellaneous/WebBrowserWindow
+            simulation/SimulationExperimentView
 
-    organisation/FileBrowserWindow
-    organisation/FileOrganiserWindow
-    organisation/PMRWindow
-    organisation/PMRWorkspacesWindow
+            solver/CVODESolver
+            solver/ForwardEulerSolver
+            solver/FourthOrderRungeKuttaSolver
+            solver/HeunSolver
+            solver/KINSOLSolver
+            solver/SecondOrderRungeKuttaSolver
 
-    simulation/SimulationExperimentView
+            support/CellMLSupport
+            support/COMBINESupport
+            support/PMRSupport
+            support/SEDMLSupport
+            support/SimulationSupport
+            support/StandardSupport
+            support/ZIPSupport
 
-    solver/CVODESolver
-    solver/ForwardEulerSolver
-    solver/FourthOrderRungeKuttaSolver
-    solver/HeunSolver
-    solver/KINSOLSolver
-    solver/SecondOrderRungeKuttaSolver
+            thirdParty/CellMLAPI
+            thirdParty/libBioSignalML
+            thirdParty/libgit2
+            thirdParty/libNuML
+            thirdParty/libSEDML
+            thirdParty/LibXDiff
+            thirdParty/LLVMClang
+            thirdParty/OAuth
+            thirdParty/QScintilla
+            thirdParty/Qwt
+            thirdParty/SUNDIALS
 
-    support/CellMLSupport
-    support/COMBINESupport
-    support/PMRSupport
-    support/SEDMLSupport
-    support/SimulationSupport
-    support/StandardSupport
-    support/ZIPSupport
+            tools/CellMLTools
 
-    thirdParty/CellMLAPI
-    thirdParty/libBioSignalML
-    thirdParty/libgit2
-    thirdParty/libNuML
-    thirdParty/libSEDML
-    thirdParty/LibXDiff
-    thirdParty/LLVMClang
-    thirdParty/OAuth
-    thirdParty/QScintilla
-    thirdParty/Qwt
-    thirdParty/SUNDIALS
+            widget/EditorWidget
+            widget/GraphPanelWidget
+            widget/MathMLViewerWidget
+            widget/QScintillaWidget
+            widget/WebViewerWidget
+        )
 
-    tools/CellMLTools
+        # Build our sample plugins, if required
 
-    widget/EditorWidget
-    widget/GraphPanelWidget
-    widget/MathMLViewerWidget
-    widget/QScintillaWidget
-    widget/WebViewerWidget
-)
+        if(ENABLE_SAMPLE_PLUGINS)
+            list(APPEND PLUGINS
+                sample/Sample
+                sample/SampleTools
+                sample/SampleView
+                sample/SampleWindow
+            )
 
-if(ENABLE_TEST_PLUGINS)
-    list(APPEND PLUGINS
-        thirdParty/Zinc
+            # Let OpenCOR know about the sample plugins being enabled
 
-        widget/ZincWidget
-    )
-endif()
+            add_definitions(-DENABLE_SAMPLE_PLUGINS)
+        endif()
 
-if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
-    # We want to build our copy of the QtWebKit package, so don't build any
-    # of our plugins since some of them may require QtWebKit
+        # Build our test plugins, if required
 
-    set(PLUGINS)
-endif()
+        if(ENABLE_TEST_PLUGINS)
+            list(APPEND PLUGINS
+                test/ZincWindow
 
-foreach(PLUGIN ${PLUGINS})
-    set(PLUGIN_DIR src/plugins/${PLUGIN})
+                thirdParty/Zinc
 
-    if("${PLUGIN}" MATCHES "^thirdParty/.*$")
-        include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
+                widget/ZincWidget
+            )
+
+            # Let OpenCOR know about the test plugins being enabled
+
+            add_definitions(-DENABLE_TEST_PLUGINS)
+        endif()
+
+        # Let OpenCOR know about the prebuilt version of our QtWebKit package
+        # being used
+
+        add_definitions(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
     endif()
 
-    include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
-endforeach()
+    # Include different directories needed by our various plugins
 
-foreach(PLUGIN ${PLUGINS})
-    add_subdirectory(src/plugins/${PLUGIN})
-endforeach()
+    foreach(PLUGIN ${PLUGINS})
+        set(PLUGIN_DIR src/plugins/${PLUGIN})
 
-# Fetch parts of our documentation and build it
+        if("${PLUGIN}" MATCHES "^thirdParty/.*$")
+            include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
+        endif()
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
-                                                           ${PROJECT_BUILD_DIR}/doc)
+        include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
+    endforeach()
 
-configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+    # Build our various plugins
 
-build_documentation(user)
-build_documentation(developer)
+    foreach(PLUGIN ${PLUGINS})
+        add_subdirectory(src/plugins/${PLUGIN})
+    endforeach()
+endif()
+
+# Fetch parts of our documentation and build it, if we are neither building
+# Python nor QtWebKit
+# Note: we need Python because we rely on Sphinx to build our documentation...
+
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+                                                               ${PROJECT_BUILD_DIR}/doc)
+
+    configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+                   ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+    build_documentation(user)
+    build_documentation(developer)
+endif()
 
 # Build the GUI version of OpenCOR
 
@@ -991,6 +1010,8 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
 )
 
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_SUPPORT)
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
@@ -1023,9 +1044,6 @@ if(WIN32)
         ${WINDOWS_CLI_SOURCES}
         ${WINDOWS_CLI_RESOURCES}
     )
-
-    target_compile_definitions(${WINDOWS_CLI_PROJECT_NAME}
-                               PRIVATE CLI_VERSION)
 
     set_target_properties(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -1235,7 +1253,7 @@ if(WIN32)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
         foreach(QT_LIBRARY icudt icuin icuuc)
             windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
         endforeach()
