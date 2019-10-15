@@ -210,6 +210,7 @@ WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance(void)
     // Return the 'global' instance of our plugin
 
     static WebBrowserWindowPlugin pluginInstance;
+
     return static_cast<WebBrowserWindowPlugin *>(Core::globalInstance("OpenCOR::WebBrowserWindow::WebBrowserWindowPlugin",
                                                  &pluginInstance));
 }
