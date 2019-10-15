@@ -26,21 +26,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "datastoreinterface.h"
 #include "filehandlinginterface.h"
 #include "filetypeinterface.h"
-#ifdef GUI_VERSION
+#ifdef GUI_SUPPORT
     #include "guiinterface.h"
     #include "i18ninterface.h"
 #endif
 #include "plugin.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
-#ifdef GUI_VERSION
+#ifdef GUI_SUPPORT
     #include "preferencesinterface.h"
 #endif
-#ifdef PYTHON_VERSION
+#ifdef PYTHON_SUPPORT
     #include "pythoninterface.h"
 #endif
 #include "solverinterface.h"
-#ifdef GUI_VERSION
+#ifdef GUI_SUPPORT
     #include "viewinterface.h"
     #include "windowinterface.h"
 #endif
@@ -142,7 +142,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             && (interfaceVersion(pFileName, "fileHandlingInterfaceVersion") != fileHandlingInterfaceVersion()))
                         || (   (qobject_cast<FileTypeInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "fileTypeInterfaceVersion") != fileTypeInterfaceVersion()))
-#ifdef GUI_VERSION
+#ifdef GUI_SUPPORT
                         || (   (qobject_cast<GuiInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "guiInterfaceVersion") != guiInterfaceVersion()))
                         || (   (qobject_cast<I18nInterface *>(mInstance) != nullptr)
@@ -150,17 +150,17 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 #endif
                         || (   (pluginInterface != nullptr)
                             && (interfaceVersion(pFileName, "pluginInterfaceVersion") != pluginInterfaceVersion()))
-#ifdef GUI_VERSION
+#ifdef GUI_SUPPORT
                         || (   (qobject_cast<PreferencesInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
 #endif
-#ifdef PYTHON_VERSION
+#ifdef PYTHON_SUPPORT
                         || (   (qobject_cast<PythonInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "pythonInterfaceVersion") != pythonInterfaceVersion()))
                         || (   (qobject_cast<SolverInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
 #endif
-#ifdef GUI_VERSION
+#ifdef GUI_SUPPORT
                         || (   (qobject_cast<ViewInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "viewInterfaceVersion") != viewInterfaceVersion()))
                         || (   (qobject_cast<WindowInterface *>(mInstance) != nullptr)

@@ -976,7 +976,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
         # Let OpenCOR know that we want Python support
 
-        add_definitions(-DPYTHON_VERSION)
+        add_definitions(-DPYTHON_SUPPORT)
 
         # Let OpenCOR know about the prebuilt version of our QtWebKit package
         # being used
@@ -1031,7 +1031,7 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
 
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
 
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_VERSION)
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_SUPPORT)
 
 # We can't compile Python interface code until after the Python headers are in
 # place
