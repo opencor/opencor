@@ -1323,7 +1323,7 @@ elseif(APPLE)
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME})
+                   ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .
@@ -1389,7 +1389,7 @@ else()
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
     configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
-                   ${SH_FILENAME})
+                   ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .
