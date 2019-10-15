@@ -257,6 +257,6 @@ add_plugin(PythonQtAPI
 
 # Update our list of Python specific dependencies
 # Note: We use INSTALL_EXTERNAL_FILES_TARGET instead of PROJECT_NAME to
-#       prevent a cyclic dependency
+#       prevent a cyclic dependency...
 
 set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)

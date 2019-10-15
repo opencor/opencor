@@ -1033,13 +1033,6 @@ add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_SUPPORT)
 
-# We can't compile Python interface code until after the Python headers are in
-# place
-
-if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
-    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
-endif()
-
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -1060,13 +1053,24 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     )
 endforeach()
 
-# Under Linux, the Python package needs linking directly to the executable as
+# We can't compile Python interface code until after the Python headers are in
+# place
+
+if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+endif()
+
+# On Linux, the Python package needs to be directly linked to the executable
 # otherwise extension DSOs (which are loaded using dlopen()) can't find symbols
 # (see https://www.akkadia.org/drepper/dsohowto.pdf for details)
 
 if(NOT WIN32 AND NOT APPLE)
     include_directories(${PYTHON_INCLUDE_DIR})
-    target_link_libraries(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
+
+    target_link_libraries(${CMAKE_PROJECT_NAME}
+        ${PYTHON_LIBRARY}
+    )
+
     add_dependencies(${CMAKE_PROJECT_NAME} PythonPlugin)
 endif()
 
@@ -1083,17 +1087,6 @@ if(WIN32)
         ${WINDOWS_CLI_RESOURCES}
     )
 
-    # We can't compile Python interface code until after the Python headers are
-    # in place
-
-    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
-        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
-    endif()
-
-    target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
-        ${PYTHON_LIBRARY}
-    )
-
     set_target_properties(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
@@ -1103,7 +1096,12 @@ if(WIN32)
     target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
         Qt5::Core
         Qt5::Network
+        ${PYTHON_LIBRARY}
     )
+
+    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+    endif()
 endif()
 
 # Some post-processing specific stuff
@@ -1318,12 +1316,13 @@ if(WIN32)
 
     # Python runtime libraries and utilities
 
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    # Scripts to setup and run Python and Jupyter
+    # Batch files to setup and run Python and Jupyter
 
     set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/run_python.bat")
+
     configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/run_python.bat.in
                    ${RUN_PYTHON_FILENAME})
 
@@ -1397,14 +1396,13 @@ elseif(APPLE)
     # Shell scripts to setup and run Python and Jupyter
 
     set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/run_jupyter.sh)
+    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/run_python.sh)
+    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/set_python_path.sh)
+
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/run_jupyter.sh.in
                    ${RUN_JUPYTER_FILENAME} @ONLY)
-
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/run_python.sh)
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/run_python.sh.in
                    ${RUN_PYTHON_FILENAME} @ONLY)
-
-    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/set_python_path.sh)
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/set_python_path.sh.in
                    ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
@@ -1484,16 +1482,16 @@ else()
     linux_deploy_qt_plugin(sqldrivers qsqlite)
     linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
-
     # Python runtime libraries and utilities
 
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/python
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/python
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
 
     # Shell scripts to setup and run Python and Jupyter
 
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/run_python.sh)
+
     configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/run_python.sh.in
                    ${RUN_PYTHON_FILENAME} @ONLY)
 
