@@ -394,10 +394,6 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     find_package(Qt5${REQUIRED_QT_MODULE} REQUIRED)
 endforeach()
 
-# Make sure that anyone can access diff-match-patch
-
-include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
-
 # On macOS, keep track of the Qt libraries against which we need to link and
 # make sure that we always use their release version
 # Note: indeed, from Qt 5.12.5, to build a debug version of a Qt-based
@@ -713,13 +709,15 @@ if(WIN32)
 endif()
 
 # Various include directories
-# Note: access to the Core plugin's source folder is needed so that we can build
-#       OpenCOR on its own, i.e. without any plugins (due to the global CLI/GUI
-#       utilities needing access to some features that are in common with the
-#       Core CLI/GUI utilities)...
+# Note #1: access to the Core plugin's source folder is needed so that we can
+#          build OpenCOR on its own, i.e. without any plugins (due to the global
+#          CLI/GUI utilities needing access to some features that are in common
+#          with the Core CLI/GUI utilities)...
+# Note #2: we want everybody to be able to access diff-match-patch...
 
 include_directories(
     src
+    src/3rdparty/diff_match_patch/src
     src/misc
     src/plugins
     src/plugins/miscellaneous/Core/src
