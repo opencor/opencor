@@ -1,18 +1,18 @@
-PROJECT(PythonQtConsoleWindowPlugin)
+PROJECT(PythonConsoleWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PythonQtConsoleWindow
+ADD_PLUGIN(PythonConsoleWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
         ../../windowinterface.cpp
 
-        src/pythonqtconsolewindowplugin.cpp
-        src/pythonqtconsolewindow.cpp
+        src/pythonconsolewindowplugin.cpp
+        src/pythonconsolewindow.cpp
     UIS
-        src/pythonqtconsolewindow.ui
+        src/pythonconsolewindow.ui
     PLUGINS
         Core
         PythonQtSupport

@@ -25,43 +25,53 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "windowwidget.h"
-
-//==============================================================================
-
-#include <QtGlobal>
-#include <QWidget>
-
-//==============================================================================
-
-namespace Ui {
-    class PythonQtConsoleWindow;
-}
+#include "plugininfo.h"
+#include "i18ninterface.h"
+#include "plugininterface.h"
+#include "windowinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtConsoleWindow {
+namespace PythonConsoleWindow {
 
 //==============================================================================
 
-class PythonQtConsoleWindow : public Core::WindowWidget
+PLUGININFO_FUNC PythonConsoleWindowPluginInfo();
+
+//==============================================================================
+
+class PythonConsoleWindow;
+
+//==============================================================================
+
+class PythonConsoleWindowPlugin : public QObject, public I18nInterface,
+                                  public PluginInterface, public WindowInterface
 {
-Q_OBJECT
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonConsoleWindowPlugin" FILE "pythonconsolewindowplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
-    explicit PythonQtConsoleWindow(QWidget *pParent);
-    ~PythonQtConsoleWindow();
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "windowinterface.inl"
 
 private:
-    Ui::PythonQtConsoleWindow *mGui;
+    void startConsole();
 
-    QWidget *mPythonQtConsoleWidget;
+    QAction *mPythonConsoleWindowAction;
+
+    PythonConsoleWindow *mPythonConsoleWindowWindow;
 };
 
 //==============================================================================
 
-}   // namespace PythonQtConsoleWindow
+}   // namespace PythonConsoleWindow
 }   // namespace OpenCOR
 
 //==============================================================================

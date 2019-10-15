@@ -18,13 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// An dockable iPython console window for Qt
+// Python Console window
 //==============================================================================
-
-/*
- * To debug the Python code, use `import pdb; pdb.set_trace()` to set
- * a breakpoint and start OpenCOR from the command line
- */
+// Note: to debug the Python code, use `import pdb; pdb.set_trace()` to set a
+//       breakpoint and start OpenCOR from the command line...
+//==============================================================================
 
 #include "borderedwidget.h"
 
@@ -32,14 +30,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "pythonbegin.h"
 
-#include "pythonqtconsolewindow.h"
+#include "pythonconsolewindow.h"
 #include "pythonqtsupport.h"
 
 #include "PythonQt/PythonQt.h"
 
 //==============================================================================
 
-#include "ui_pythonqtconsolewindow.h"
+#include "ui_pythonconsolewindow.h"
 
 //==============================================================================
 
@@ -48,13 +46,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtConsoleWindow {
+namespace PythonConsoleWindow {
 
 //==============================================================================
 
 // An IPython console
 
-static QString PythonQtConsole = R"PYTHON(
+static QString PythonConsole = R"PYTHON(
 import logging
 import sys
 
@@ -117,9 +115,9 @@ def create_ipython_widget():
 
 //==============================================================================
 
-PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
+PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::PythonQtConsoleWindow)
+    mGui(new Ui::PythonConsoleWindow)
 {
     // Set up the GUI
 
@@ -131,7 +129,7 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
     // Create a Python module to setup the console
 
-    PythonQtObjectPtr qtConsoleModule = pythonQtInstance->createModuleFromScript("opencor.qtconsole", PythonQtConsole);
+    PythonQtObjectPtr qtConsoleModule = pythonQtInstance->createModuleFromScript("opencor.qtconsole", PythonConsole);
     if (qtConsoleModule == nullptr) {
         if (PyErr_Occurred()) {
             PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
@@ -157,17 +155,17 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
         return;
     }
 
-    mPythonQtConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
+    mPythonConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
 
-    this->setFocusProxy(mPythonQtConsoleWidget);
+    this->setFocusProxy(mPythonConsoleWidget);
 
     // Add the widget to our window
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->layout->addWidget(new Core::BorderedWidget(mPythonQtConsoleWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mPythonConsoleWidget,
                                                      true, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(new Core::BorderedWidget(mPythonQtConsoleWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mPythonConsoleWidget,
                                                      true, false, false, false));
 #else
     #error Unsupported platform
@@ -176,7 +174,7 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
 //==============================================================================
 
-PythonQtConsoleWindow::~PythonQtConsoleWindow()
+PythonConsoleWindow::~PythonConsoleWindow()
 {
     // Delete the GUI
 
@@ -185,7 +183,7 @@ PythonQtConsoleWindow::~PythonQtConsoleWindow()
 
 //==============================================================================
 
-}   // namespace PythonQtConsoleWindow
+}   // namespace PythonConsoleWindow
 }   // namespace OpenCOR
 
 //==============================================================================

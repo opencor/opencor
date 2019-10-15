@@ -894,7 +894,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             miscellaneous/Core
             miscellaneous/HelpWindow
             miscellaneous/JupyterKernel
-            miscellaneous/PythonQtConsoleWindow
+            miscellaneous/PythonConsoleWindow
             miscellaneous/PythonShell
             miscellaneous/WebBrowserWindow
 
