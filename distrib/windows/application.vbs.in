@@ -6,6 +6,6 @@ Next
 
 Set shell = CreateObject("WScript.Shell")
 
-cmd = "bin\${CMAKE_PROJECT_NAME}.exe"&args
+cmd = Left(Wscript.ScriptFullName, Len(Wscript.ScriptFullName)-Len(Wscript.ScriptName))&"bin\${CMAKE_PROJECT_NAME}.exe"&args
 
 shell.Run cmd, 1, False
