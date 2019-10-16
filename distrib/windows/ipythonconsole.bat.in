@@ -4,4 +4,4 @@ TITLE Running the Jupyter Lab environment...
 
 SET appDir=%~dp0
 
-CALL "%appDir%runjupyter.bat" console --kernel OpenCOR %*
+CALL "%appDir%runjupyter.bat" console --kernel ${CMAKE_PROJECT_NAME} %*

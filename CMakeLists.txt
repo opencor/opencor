@@ -1337,12 +1337,15 @@ if(WIN32)
 
     # Batch files to setup and run Python and Jupyter
 
+    set(IPYTHON_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/ipythonconsole.bat")
     set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/runpython.bat")
 
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/ipythonconsole.bat.in
+                   ${IPYTHON_CONSOLE_FILENAME})
     configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/runpython.bat.in
                    ${RUN_PYTHON_FILENAME})
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/ipythonconsole.bat
+    install(FILES ${IPYTHON_CONSOLE_FILENAME}
                   ${CMAKE_SOURCE_DIR}/distrib/windows/jupyterlab.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/jupyterlab.vbs
                   ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.bat
