@@ -4,4 +4,4 @@ TITLE Running the ${CMAKE_PROJECT_NAME} environment...
 
 SET AppBase=%~dp0bin\${CMAKE_PROJECT_NAME}
 
-%AppBase% %*
+"%AppBase%" %*

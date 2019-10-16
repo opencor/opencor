@@ -2,4 +2,4 @@
 
 SET AppDir=%~dp0
 
-CALL %AppDir%scripts\genericclean all
+CALL "%AppDir%scripts\genericclean" all
