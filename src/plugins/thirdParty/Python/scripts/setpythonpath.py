@@ -47,7 +47,6 @@ import sys
 import logging
 import marshal
 import argparse
-import subprocess
 from types import CodeType
 from collections import OrderedDict
 
@@ -55,8 +54,9 @@ windows = (os.name == 'nt')
 
 python_exe = 'python.exe' if windows else 'python'
 bin_python_re = re.compile(r'\\bin\\(python\.exe)$' if windows
-                      else r'/bin/(python((\d+\.\d+)|(\d+))?)$')
+                           else r'/bin/(python((\d+\.\d+)|(\d+))?)$')
 lib_python_re = re.compile(r'^python\d+\.\d+$')
+
 
 def update_script(script_filename, new_path, clear_args, extra_args):
     """Updates shebang lines for actual scripts."""
@@ -77,7 +77,7 @@ def update_script(script_filename, new_path, clear_args, extra_args):
         has_quote = True
         quote = line[0]
         end = line[1:].index(quote) + 1
-        args = [line[1:end]] + line[end+1:].split()
+        args = [line[1:end]] + line[end + 1:].split()
     else:
         has_quote = False
         quote = '"'
@@ -96,7 +96,9 @@ def update_script(script_filename, new_path, clear_args, extra_args):
     else:
         new_bin = os.path.join(new_path, 'bin', bin_python[1])
 
-    if clear_args: del args[1:]
+    if clear_args:
+        del args[1:]
+
     arg_set = OrderedDict([(a, None) for a in args[1:]])
     arg_set.update(OrderedDict([(a, None) for a in extra_args]))
     new_args = list(arg_set.keys())
@@ -127,27 +129,28 @@ def update_scripts(bin_dir, new_path, clear_args, extra_args):
 def update_pyc(filename, new_path):
     """Updates the filenames stored in pyc files."""
     with open(filename, 'rb') as f:
-        if sys.version_info < (3, 3): magic = f.read(8)
-        else:                         magic = f.read(12)
+        if sys.version_info < (3, 3):
+            magic = f.read(8)
+        else:
+            magic = f.read(12)
         code = marshal.loads(f.read())
 
-    def _make_code(code, filename, consts):
-        return CodeType(code.co_argcount, code.co_kwonlyargcount, code.co_nlocals,
-                        code.co_stacksize, code.co_flags, code.co_code,
-                        tuple(consts), code.co_names, code.co_varnames, filename,
-                        code.co_name, code.co_firstlineno, code.co_lnotab,
-                        code.co_freevars, code.co_cellvars)
+    def _make_code(_code, _filename, consts):
+        return CodeType(_code.co_argcount, _code.co_kwonlyargcount, _code.co_nlocals,
+                        _code.co_stacksize, _code.co_flags, _code.co_code,
+                        tuple(consts), _code.co_names, _code.co_varnames, _filename,
+                        _code.co_name, _code.co_firstlineno, _code.co_lnotab,
+                        _code.co_freevars, _code.co_cellvars)
 
-    def _process(code):
-        new_filename = new_path
+    def _process(_code):
         consts = []
-        for const in code.co_consts:
+        for const in _code.co_consts:
             if type(const) is CodeType:
                 const = _process(const)
             consts.append(const)
-        if new_path != code.co_filename or consts != list(code.co_consts):
-            code = _make_code(code, new_path, consts)
-        return code
+        if new_path != _code.co_filename or consts != list(_code.co_consts):
+            _code = _make_code(_code, new_path, consts)
+        return _code
 
     new_code = _process(code)
 
@@ -158,20 +161,19 @@ def update_pyc(filename, new_path):
             marshal.dump(new_code, f)
 
 
-def update_pycs(lib_dir, new_path, lib_name):
+def update_pycs(lib_dir, new_path):
     """Walks over all pyc files and updates their paths."""
-    files = []
 
-    def get_new_path(filename):
-        filename = os.path.normpath(filename)
-        if filename.startswith(lib_dir.rstrip('/') + '/'):
-            return os.path.join(new_path, filename[len(lib_dir) + 1:])
+    def get_new_path(_filename):
+        _filename = os.path.normpath(_filename)
+        if _filename.startswith(lib_dir.rstrip('/') + '/'):
+            return os.path.join(new_path, _filename[len(lib_dir) + 1:])
 
     for dirname, dirnames, filenames in os.walk(lib_dir):
         for filename in filenames:
             filename = os.path.join(dirname, filename)
             if (filename.endswith(('.pyc', '.pyo'))
-            and not os.path.dirname(filename).endswith('__pycache__')):
+                    and not os.path.dirname(filename).endswith('__pycache__')):
                 local_path = get_new_path(filename)
                 if local_path is not None:
                     update_pyc(filename, local_path)
@@ -181,7 +183,6 @@ def update_paths(base, scripts_dir, clear_args, extra_args):
     """Updates all paths in a virtualenv to a new one."""
     new_path = os.path.abspath(base)
     bin_dir = os.path.join(base, 'bin')
-    lib_dir = None
     lib_name = None
 
     if scripts_dir == 'auto':
@@ -202,16 +203,16 @@ def update_paths(base, scripts_dir, clear_args, extra_args):
                     break
 
     if (lib_name is None
-     or not os.path.isdir(scripts_dir)
-     or not os.path.isdir(bin_dir)
-     or not os.path.isfile(os.path.join(bin_dir, python_exe))):
+            or not os.path.isdir(scripts_dir)
+            or not os.path.isdir(bin_dir)
+            or not os.path.isfile(os.path.join(bin_dir, python_exe))):
         print('error: %s does not refer to a Python installation' % base)
         return False
 
     lib_dir = os.path.join(base_lib_dir, lib_name)
 
     update_scripts(scripts_dir, new_path, clear_args, extra_args)
-    update_pycs(lib_dir, new_path, lib_name)
+    update_pycs(lib_dir, new_path)
 
     return True
 
