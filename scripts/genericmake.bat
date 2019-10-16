@@ -1,8 +1,8 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-SET CurrentPath=%CD%
+SET AppDir=%~dp0..\
 
-IF EXIST %CurrentPath%\build (
+IF EXIST "%AppDir%build" (
     SET CMakeBuildType=%1
 
     IF "!CMakeBuildType!" == "Release" (
@@ -32,7 +32,9 @@ IF EXIST %CurrentPath%\build (
 
     CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
-    CD %CurrentPath%\build
+    SET OrigDir=%CD%
+
+    CD "%AppDir%build"
 
     IF DEFINED NinjaFound (
         SET CMakeGenerator=Ninja
@@ -60,7 +62,7 @@ IF EXIST %CurrentPath%\build (
         )
     )
 
-    CD %CurrentPath%
+    CD "%OrigDir%"
 
     EXIT /B !ExitCode!
 ) ELSE (

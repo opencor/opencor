@@ -1,3 +1,5 @@
 @ECHO OFF
 
-CALL scripts\genericmake Release %*
+SET AppDir=%~dp0
+
+CALL "%AppDir%scripts\genericmake" Release %*
