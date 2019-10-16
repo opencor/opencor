@@ -2,11 +2,11 @@
 
 # Get the script's directory, which should be OpenCOR's base directory
 
-OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
 # Make sure the path to Python is correct
 
-${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python                \
-  ${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/setpythonpath.py  \
-  ${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python                         \
+${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python                \
+  ${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/setpythonpath.py  \
+  ${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python                         \
   -s

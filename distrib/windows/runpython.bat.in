@@ -1,10 +1,10 @@
 @ECHO OFF
 
 REM Get the directory containing this batch file
-SET OPENCOR_DIR=%~dp0
+SET appDir=%~dp0
 
 REM Make sure the path to Python is correct before starting Jupyter
-CALL "%OPENCOR_DIR%setpythonpath.bat"
+CALL "%appDir%setpythonpath.bat"
 
 REM Start the OpenCOR plugin that runs Python code
-"%OPENCOR_DIR%bin\${CMAKE_PROJECT_NAME}" -c Python %*
+"%appDir%bin\${CMAKE_PROJECT_NAME}" -c Python %*

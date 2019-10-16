@@ -1,5 +1,5 @@
 #!/bin/sh
 
-OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${OPENCOR_DIR}/bin/@CMAKE_PROJECT_NAME@ $*
+${appDir}/bin/@CMAKE_PROJECT_NAME@ $*

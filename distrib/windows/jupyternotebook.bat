@@ -3,7 +3,7 @@
 TITLE Running the Jupyter notebook environment...
 
 REM Get the directory containing this batch file
-SET OPENCOR_DIR=%~dp0
+SET appDir=%~dp0
 
 REM Start a Jupyter notebook server
-CALL "%OPENCOR_DIR%runjupyter.bat" notebook --ip 127.0.0.1 %*
+CALL "%appDir%runjupyter.bat" notebook --ip 127.0.0.1 %*

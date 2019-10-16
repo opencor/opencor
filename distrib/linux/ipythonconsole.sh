@@ -2,8 +2,8 @@
 
 # Get the script's directory, which should be OpenCOR's base directory
 
-OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
 # Start an IPython console attached to an OpenCOR kernel
 
-${OPENCOR_DIR}/runjupyter.sh console --kernel OpenCOR $*
+${appDir}/runjupyter.sh console --kernel OpenCOR $*

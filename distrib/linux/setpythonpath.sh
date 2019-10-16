@@ -2,8 +2,8 @@
 
 # Get the script's directory, which should be OpenCOR's base directory
 
-OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
 # Make sure the path to Python is correct
 
-${OPENCOR_DIR}/python/bin/python ${OPENCOR_DIR}/python/bin/setpythonpath.py ${OPENCOR_DIR}/python -s
+${appDir}/python/bin/python ${appDir}/python/bin/setpythonpath.py ${appDir}/python -s

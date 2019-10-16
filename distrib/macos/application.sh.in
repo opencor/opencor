@@ -1,5 +1,5 @@
 #!/bin/sh
 
-OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@ $*
+${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@ $*

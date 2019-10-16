@@ -3,7 +3,7 @@
 TITLE Running the Jupyter Lab environment...
 
 REM Get the directory containing this batch file
-SET OPENCOR_DIR=%~dp0
+SET appDir=%~dp0
 
 REM Start a Jupyter Lab server
-CALL "%OPENCOR_DIR%runjupyter.bat" lab --ip 127.0.0.1 %*
+CALL "%appDir%runjupyter.bat" lab --ip 127.0.0.1 %*
