@@ -1339,10 +1339,10 @@ if(WIN32)
 
     # Batch files to setup and run Python and Jupyter
 
-    set(IPYTHON_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/ipythonconsole.bat")
+    set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
     set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/runpython.bat")
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/ipythonconsole.bat.in ${IPYTHON_CONSOLE_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
@@ -1351,7 +1351,7 @@ if(WIN32)
     configure_file(${PLATFORM_DISTRIB_DIR}/runpython.bat.in ${RUN_PYTHON_FILENAME})
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . setpythonpath.bat)
 
-    install(FILES ${IPYTHON_CONSOLE_FILENAME}
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
@@ -1420,19 +1420,19 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(IPYTHON_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/ipythonconsole.sh)
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole.sh)
     set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter.sh)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
     set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath.sh)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/ipythonconsole.sh.in ${IPYTHON_CONSOLE_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.sh.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.sh)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.sh)
     configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.sh.in ${RUN_JUPYTER_FILENAME} @ONLY)
     configure_file(${PLATFORM_DISTRIB_DIR}/runpython.sh.in ${RUN_PYTHON_FILENAME} @ONLY)
     configure_file(${PLATFORM_DISTRIB_DIR}/setpythonpath.sh.in ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
-    install(FILES ${IPYTHON_CONSOLE_FILENAME}
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.sh
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.sh
                   ${RUN_JUPYTER_FILENAME}
@@ -1515,17 +1515,17 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(IPYTHON_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/ipythonconsole.sh)
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole.sh)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/ipythonconsole.sh.in ${IPYTHON_CONSOLE_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.sh.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.sh)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.sh)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter.sh)
     configure_file(${PLATFORM_DISTRIB_DIR}/runpython.sh.in ${RUN_PYTHON_FILENAME} @ONLY)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . setpythonpath.sh)
 
-    install(FILES ${IPYTHON_CONSOLE_FILENAME}
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.sh
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.sh
                   ${PLATFORM_DISTRIB_DIR}/runjupyter.sh
