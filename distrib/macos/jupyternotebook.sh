@@ -4,6 +4,6 @@
 
 OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
-# Start an IPython console attached to an OpenCOR kernel
+# Start Jupyter notebook
 
-${OPENCOR_DIR}/run_jupyter.sh console --kernel OpenCOR $*
+${OPENCOR_DIR}/runjupyter.sh notebook --ip 127.0.0.1 $*

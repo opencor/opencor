@@ -1337,16 +1337,18 @@ if(WIN32)
 
     # Batch files to setup and run Python and Jupyter
 
-    set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/run_python.bat")
+    set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/runpython.bat")
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/run_python.bat.in
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/runpython.bat.in
                    ${RUN_PYTHON_FILENAME})
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/IPython.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/JupyterLab.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/Notebook.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/run_jupyter.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/set_python_path.bat
+    install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/ipythonconsole.bat
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyterlab.bat
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyterlab.vbs
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.bat
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.vbs
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/runjupyter.bat
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/setpythonpath.bat
                   ${RUN_PYTHON_FILENAME}
             DESTINATION .)
 
@@ -1373,7 +1375,7 @@ if(WIN32)
         # Update Python scripts to refer to our installed Python
 
         set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
-           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
+           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\setpythonpath.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
         ")
     endif()
 elseif(APPLE)
@@ -1408,20 +1410,20 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/run_jupyter.sh)
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/run_python.sh)
-    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/set_python_path.sh)
+    set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter.sh)
+    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
+    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath.sh)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/run_jupyter.sh.in
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/runjupyter.sh.in
                    ${RUN_JUPYTER_FILENAME} @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/run_python.sh.in
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/runpython.sh.in
                    ${RUN_PYTHON_FILENAME} @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/set_python_path.sh.in
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/setpythonpath.sh.in
                    ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/macos/ipython.sh
+    install(FILES ${CMAKE_SOURCE_DIR}/distrib/macos/ipythonconsole.sh
                   ${CMAKE_SOURCE_DIR}/distrib/macos/jupyterlab.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/notebook.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/macos/jupyternotebook.sh
                   ${RUN_JUPYTER_FILENAME}
                   ${RUN_PYTHON_FILENAME}
                   ${SET_PYTHON_PATH_FILENAME}
@@ -1502,16 +1504,16 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/run_python.sh)
+    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/run_python.sh.in
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/runpython.sh.in
                    ${RUN_PYTHON_FILENAME} @ONLY)
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/ipython.sh
+    install(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/ipythonconsole.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/jupyterlab.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/notebook.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/run_jupyter.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/set_python_path.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/jupyternotebook.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/runjupyter.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/setpythonpath.sh
                   ${RUN_PYTHON_FILENAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

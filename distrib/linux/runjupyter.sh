@@ -6,7 +6,7 @@ OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
 # Make sure the path to Python is correct before starting Jupyter
 
-${OPENCOR_DIR}/set_python_path.sh
+${OPENCOR_DIR}/setpythonpath.sh
 
 # Make sure we can find the OpenCOR application to run as a Jupyter kernel
 
@@ -14,4 +14,4 @@ export PATH=${OPENCOR_DIR}:$PATH
 
 # Start Jupyter
 
-${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter $*
+${OPENCOR_DIR}/python/bin/jupyter $*
