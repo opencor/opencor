@@ -1348,8 +1348,8 @@ if(WIN32)
                   ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.vbs
                   ${CMAKE_SOURCE_DIR}/distrib/windows/runjupyter.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/setpythonpath.bat
                   ${RUN_PYTHON_FILENAME}
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/setpythonpath.bat
             DESTINATION .)
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
@@ -1513,8 +1513,8 @@ else()
                   ${CMAKE_SOURCE_DIR}/distrib/linux/jupyterlab.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/jupyternotebook.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/runjupyter.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/setpythonpath.sh
                   ${RUN_PYTHON_FILENAME}
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/setpythonpath.sh
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
