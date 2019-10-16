@@ -1413,10 +1413,13 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
+    set(IPYTHON_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/ipythonconsole.sh)
     set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter.sh)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
     set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath.sh)
 
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/ipythonconsole.sh.in
+                   ${IPYTHON_CONSOLE_FILENAME} @ONLY)
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/runjupyter.sh.in
                    ${RUN_JUPYTER_FILENAME} @ONLY)
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/runpython.sh.in
@@ -1424,7 +1427,7 @@ elseif(APPLE)
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/setpythonpath.sh.in
                    ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/macos/ipythonconsole.sh
+    install(FILES ${IPYTHON_CONSOLE_FILENAME}
                   ${CMAKE_SOURCE_DIR}/distrib/macos/jupyterlab.sh
                   ${CMAKE_SOURCE_DIR}/distrib/macos/jupyternotebook.sh
                   ${RUN_JUPYTER_FILENAME}
@@ -1507,12 +1510,15 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
+    set(IPYTHON_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/ipythonconsole.sh)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
 
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/ipythonconsole.sh.in
+                   ${IPYTHON_CONSOLE_FILENAME} @ONLY)
     configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/runpython.sh.in
                    ${RUN_PYTHON_FILENAME} @ONLY)
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/ipythonconsole.sh
+    install(FILES ${IPYTHON_CONSOLE_FILENAME}
                   ${CMAKE_SOURCE_DIR}/distrib/linux/jupyterlab.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/jupyternotebook.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/runjupyter.sh
