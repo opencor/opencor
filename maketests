@@ -1,3 +1,5 @@
 #!/bin/sh
 
-scripts/genericmake Tests $*
+appDir="$(cd "$(dirname "$0")"; pwd)"
+
+${appDir}/scripts/genericmake Tests $*

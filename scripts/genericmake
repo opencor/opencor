@@ -1,6 +1,8 @@
 #!/bin/sh
 
-if [ -d "build" ]; then
+appDir="$(cd "$(dirname "$0")"; pwd)"/..
+
+if [ -d "${appDir}/build" ]; then
     cmakeBuildType=$1
 
     if [ "$cmakeBuildType" = "Release" ]; then
@@ -20,22 +22,22 @@ if [ -d "build" ]; then
         cmakeGenerator="Unix Makefiles"
     fi
 
-    if [ "$cmakeBuildType" = "Release" ]; then
-        titleTests=""
-    else
+    if [ "$cmakeBuildType" = "Debug" ]; then
         titleTests=" and its tests"
     fi
 
     echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
 
-    cd build
+    origDir=`pwd`
+
+    cd ${appDir}/build
 
     cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
     exitCode=$?
 
     if [ $exitCode -ne 0 ]; then
-        cd ..
+        cd $origDir
 
         exit $exitCode
     fi
@@ -50,7 +52,7 @@ if [ -d "build" ]; then
 
     exitCode=$?
 
-    cd ..
+    cd $origDir
 
     if [ $exitCode -eq 0 ]; then
         echo "\033[42;37;1mAll done!\033[0m"

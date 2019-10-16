@@ -1,3 +1,5 @@
 #!/bin/sh
 
-scripts/genericmake Release $*
+appDir="$(cd "$(dirname "$0")"; pwd)"
+
+${appDir}/scripts/genericmake Release $*
