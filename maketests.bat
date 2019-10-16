@@ -2,4 +2,4 @@
 
 SET AppDir=%~dp0
 
-CALL %AppDir%scripts\genericmake Tests %*
+CALL "%AppDir%scripts\genericmake" Tests %*
