@@ -1,7 +1,9 @@
 #!/bin/sh
 
-./clean
-./make $*
+appDir="$(cd "$(dirname "$0")"; pwd)"
+
+${appDir}/clean
+${appDir}/make $*
 
 exitCode=$?
 
@@ -11,7 +13,9 @@ fi
 
 echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
-cd build
+origDir=`pwd`
+
+cd ${appDir}/build
 
 if [ "`uname -s`" = "Linux" ]; then
     cpack
@@ -25,7 +29,7 @@ fi
 
 exitCode=$?
 
-cd ..
+cd $origDir
 
 if [ $exitCode -eq 0 ]; then
     echo "\033[42;37;1mAll done!\033[0m"

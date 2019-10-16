@@ -2,20 +2,18 @@
 
 echo "\033[44;37;1mRunning OpenCOR's tests...\033[0m"
 
-WMsg="OpenCOR's tests must first be built before being run."
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
 if [ "`uname -s`" = "Linux" ]; then
-    if [ -f build/bin/runtests ]; then
-        build/bin/runtests
-    else
-        echo $WMsg
-    fi
+    OPENCOR_TESTS_EXE=${appDir}/build/bin/runtests
 else
-    if [ -f build/OpenCOR.app/Contents/MacOS/runtests ]; then
-        build/OpenCOR.app/Contents/MacOS/runtests
-    else
-        echo $WMsg
-    fi
+    OPENCOR_TESTS_EXE=${appDir}/build/OpenCOR.app/Contents/MacOS/runtests
+fi
+
+if [ -f ${OPENCOR_TESTS_EXE} ]; then
+    ${OPENCOR_TESTS_EXE} "$@"
+else
+    echo "OpenCOR's tests must first be built before being run."
 fi
 
 echo "\033[42;37;1mAll done!\033[0m"
