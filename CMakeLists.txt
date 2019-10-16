@@ -273,6 +273,11 @@ endif()
 
 set(PLATFORM_DIR ${PLATFORM})
 
+# Location of our distribution files
+
+set(DISTRIB_DIR ${CMAKE_SOURCE_DIR}/distrib)
+set(PLATFORM_DISTRIB_DIR ${DISTRIB_DIR}/${PLATFORM})
+
 # Default location of external binaries and packages
 
 if(WIN32)
@@ -369,8 +374,8 @@ if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
     if(WIN32)
         set(ICU_VERSION 57)
     elseif(NOT APPLE)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+        add_subdirectory(${PLATFORM_DISTRIB_DIR}/icu)
+        add_subdirectory(${PLATFORM_DISTRIB_DIR}/mesa)
     endif()
 endif()
 
@@ -1114,8 +1119,7 @@ if(APPLE)
 
     set(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/Info.plist.in
-                   ${INFO_PLIST_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/Info.plist.in ${INFO_PLIST_FILENAME})
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${INFO_PLIST_FILENAME}
@@ -1245,7 +1249,7 @@ endif()
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${DISTRIB_DIR}/readMe.txt")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_PROJECT_NAME}" "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "Physiome Project")
@@ -1320,10 +1324,8 @@ if(WIN32)
     set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
     set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
-                   ${BAT_FILENAME})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
-                   ${VBS_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.bat.in ${BAT_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.vbs.in ${VBS_FILENAME})
 
     install(FILES ${BAT_FILENAME}
             DESTINATION .)
@@ -1340,22 +1342,20 @@ if(WIN32)
     set(IPYTHON_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/ipythonconsole.bat")
     set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/runpython.bat")
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/ipythonconsole.bat.in
-                   ${IPYTHON_CONSOLE_FILENAME})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/runpython.bat.in
-                   ${RUN_PYTHON_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/ipythonconsole.bat.in ${IPYTHON_CONSOLE_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.bat.in ${RUN_PYTHON_FILENAME})
 
     install(FILES ${IPYTHON_CONSOLE_FILENAME}
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyterlab.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyterlab.vbs
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/jupyternotebook.vbs
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/runjupyter.bat
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
+                  ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
                   ${RUN_PYTHON_FILENAME}
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/setpythonpath.bat
+                  ${PLATFORM_DISTRIB_DIR}/setpythonpath.bat
             DESTINATION .)
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
+    install(FILES ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
             DESTINATION ./Python/Scripts)
 
     # File type association
@@ -1389,8 +1389,8 @@ elseif(APPLE)
 
     set(CPACK_SYSTEM_NAME "macOS")
 
-    set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+    set(CPACK_RESOURCE_FILE_WELCOME "${PLATFORM_DISTRIB_DIR}/welcome.txt")
+    set(CPACK_RESOURCE_FILE_README "${DISTRIB_DIR}/readMe.txt")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
     set(CPACK_SET_DESTDIR TRUE)
@@ -1403,8 +1403,7 @@ elseif(APPLE)
 
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.sh.in ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .
@@ -1418,18 +1417,14 @@ elseif(APPLE)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
     set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath.sh)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/ipythonconsole.sh.in
-                   ${IPYTHON_CONSOLE_FILENAME} @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/runjupyter.sh.in
-                   ${RUN_JUPYTER_FILENAME} @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/runpython.sh.in
-                   ${RUN_PYTHON_FILENAME} @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/setpythonpath.sh.in
-                   ${SET_PYTHON_PATH_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/ipythonconsole.sh.in ${IPYTHON_CONSOLE_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.sh.in ${RUN_JUPYTER_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.sh.in ${RUN_PYTHON_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/setpythonpath.sh.in ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
     install(FILES ${IPYTHON_CONSOLE_FILENAME}
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/jupyterlab.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/jupyternotebook.sh
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab.sh
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook.sh
                   ${RUN_JUPYTER_FILENAME}
                   ${RUN_PYTHON_FILENAME}
                   ${SET_PYTHON_PATH_FILENAME}
@@ -1494,7 +1489,7 @@ else()
 
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.sh.in
                    ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
@@ -1513,17 +1508,15 @@ else()
     set(IPYTHON_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/ipythonconsole.sh)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/ipythonconsole.sh.in
-                   ${IPYTHON_CONSOLE_FILENAME} @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/runpython.sh.in
-                   ${RUN_PYTHON_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/ipythonconsole.sh.in ${IPYTHON_CONSOLE_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.sh.in ${RUN_PYTHON_FILENAME} @ONLY)
 
     install(FILES ${IPYTHON_CONSOLE_FILENAME}
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/jupyterlab.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/jupyternotebook.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/runjupyter.sh
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab.sh
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook.sh
+                  ${PLATFORM_DISTRIB_DIR}/runjupyter.sh
                   ${RUN_PYTHON_FILENAME}
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/setpythonpath.sh
+                  ${PLATFORM_DISTRIB_DIR}/setpythonpath.sh
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
