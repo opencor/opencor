@@ -1314,6 +1314,22 @@ if(WIN32)
     windows_deploy_qt_plugin(sqldrivers qsqlite)
     windows_deploy_qt_plugin(styles qwindowsvistastyle)
 
+    # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
+    # version of OpenCOR)
+
+    set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
+    set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
+
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
+                   ${BAT_FILENAME})
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
+                   ${VBS_FILENAME})
+
+    install(FILES ${BAT_FILENAME}
+            DESTINATION .)
+    install(FILES ${VBS_FILENAME}
+            DESTINATION .)
+
     # Python runtime libraries and utilities
 
     install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
@@ -1336,22 +1352,6 @@ if(WIN32)
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
             DESTINATION ./Python/Scripts)
-
-    # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
-    # version of OpenCOR)
-
-    set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
-    set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
-
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
-                   ${BAT_FILENAME})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
-                   ${VBS_FILENAME})
-
-    install(FILES ${BAT_FILENAME}
-            DESTINATION .)
-    install(FILES ${VBS_FILENAME}
-            DESTINATION .)
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
@@ -1393,6 +1393,19 @@ elseif(APPLE)
     install(TARGETS ${CMAKE_PROJECT_NAME} BUNDLE
             DESTINATION .)
 
+    # Shell script to run OpenCOR (useful when downloading a ZIPped version of
+    # OpenCOR)
+
+    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
+                   ${SH_FILENAME} @ONLY)
+
+    install(FILES ${SH_FILENAME}
+            DESTINATION .
+            RENAME ${CMAKE_PROJECT_NAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
     # Shell scripts to setup and run Python and Jupyter
 
     set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/run_jupyter.sh)
@@ -1413,19 +1426,6 @@ elseif(APPLE)
                   ${RUN_PYTHON_FILENAME}
                   ${SET_PYTHON_PATH_FILENAME}
             DESTINATION .
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-    # Shell script to run OpenCOR (useful when downloading a ZIPped version of
-    # OpenCOR)
-
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
-
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME} @ONLY)
-
-    install(FILES ${SH_FILENAME}
-            DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()
     # Select TGZ as the packager on Linux
@@ -1482,6 +1482,18 @@ else()
     linux_deploy_qt_plugin(sqldrivers qsqlite)
     linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
+    # Shell script to run OpenCOR
+
+    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
+                   ${SH_FILENAME} @ONLY)
+
+    install(FILES ${SH_FILENAME}
+            DESTINATION .
+            RENAME ${CMAKE_PROJECT_NAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
     # Python runtime libraries and utilities
 
     install(DIRECTORY ${PROJECT_BUILD_DIR}/python
@@ -1502,18 +1514,6 @@ else()
                   ${CMAKE_SOURCE_DIR}/distrib/linux/set_python_path.sh
                   ${RUN_PYTHON_FILENAME}
             DESTINATION .
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-    # Shell script to run OpenCOR
-
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
-
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
-                   ${SH_FILENAME} @ONLY)
-
-    install(FILES ${SH_FILENAME}
-            DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
 
