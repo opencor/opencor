@@ -42,6 +42,7 @@ endif()
 
 if(WIN32)
     set(PYTHON_EXECUTABLE bin/python.exe)
+
     if(RELEASE_MODE)
         set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
         set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
@@ -51,14 +52,16 @@ if(WIN32)
     endif()
 else()
     set(PYTHON_EXECUTABLE bin/python3)
+
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
 
-# The base Python directory and library and script directories
+# The base Python directory, library and script directories
 
 if(WIN32)
     set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../Python)
+
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
     set(SCRIPT_DIR Scripts)
@@ -68,16 +71,10 @@ else()
     else()
         set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../python)
     endif()
+
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
     set(SCRIPT_DIR bin)
-endif()
-
-# The version of SQLite3 we build for Windows
-
-if(WIN32)
-    set(SQLITE3_RELEASE_YEAR "2019")
-    set(SQLITE3_VERSION "3290000")
 endif()
 
 # Retrieve our package's binaries
@@ -204,6 +201,8 @@ else()
     # Jupyter and IPython require SQLite3
 
     if(WIN32)
+        set(SQLITE3_RELEASE_YEAR "2019")
+        set(SQLITE3_VERSION "3290000")
         set(SQLITE3_LIBRARY_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
         if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
@@ -250,6 +249,7 @@ else()
         find_package(SQLite3 REQUIRED)
 
         set(SQLITE3_INCLUDE_DIR ${SQLite3_INCLUDE_DIRS})
+
         get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
         get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLite3_LIBRARIES} NAME)
     endif()
@@ -276,14 +276,6 @@ else()
         set(APPLY_PATCHES OFF)
     endif()
 
-    # We can't use ``;`` as a list separator with ``ExternalProject_Add`` so replace
-    # semicolons with ``|`` and use the ``LIST_SEPARATOR`` option
-
-    string(REPLACE ";" "|"
-           OPENSSL_LIBRARIES_escaped
-           "${OPENSSL_LIBRARIES}"
-           )
-
     # Build Python as an external project
     # Note: see https://github.com/opencor/opencor/pull/2160#issuecomment-541552006
     #       for the rationale behind using
@@ -292,6 +284,9 @@ else()
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
     set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
+
+    string(REPLACE ";" "|"
+           PYTHON_OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES}")
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -366,7 +361,7 @@ else()
 
             -DUSE_SYSTEM_OpenSSL=OFF
             -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
-            -DOPENSSL_LIBRARIES=${OPENSSL_LIBRARIES_escaped}
+            -DOPENSSL_LIBRARIES=${PYTHON_OPENSSL_LIBRARIES}
 
             # Use our zlib
 
@@ -450,7 +445,6 @@ else()
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
