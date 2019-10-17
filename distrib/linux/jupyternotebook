@@ -2,4 +2,4 @@
 
 appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/runjupyter.sh lab --ip 127.0.0.1 $*
+${appDir}/runjupyter notebook --ip 127.0.0.1 $*

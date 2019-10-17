@@ -2,7 +2,7 @@
 
 appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/setpythonpath.sh
+${appDir}/setpythonpath
 
 export PATH=${appDir}:$PATH
 

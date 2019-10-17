@@ -2,6 +2,6 @@
 
 appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/setpythonpath.sh
+${appDir}/setpythonpath
 
 ${appDir}/bin/@CMAKE_PROJECT_NAME@ -c Python $*

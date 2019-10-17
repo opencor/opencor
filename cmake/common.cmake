@@ -826,21 +826,6 @@ endmacro()
 
 #===============================================================================
 
-macro(deploy_shell_scripts)
-    foreach(SHELL_SCRIPT_FILENAME ${ARGN})
-        # Deploy the Shell script
-
-        get_filename_component(NEW_SHELL_SCRIPT_FILENAME ${SHELL_SCRIPT_FILENAME} NAME_WE)
-
-        install(FILES ${SHELL_SCRIPT_FILENAME}
-                DESTINATION .
-                RENAME ${NEW_SHELL_SCRIPT_FILENAME}
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-    endforeach()
-endmacro()
-
-#===============================================================================
-
 macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
     # Various initialisations
 
