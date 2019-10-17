@@ -23,10 +23,8 @@ endif()
 
 set(OPENCOR_KERNEL "${PROJECT_BUILD_DIR}/kernel.json")
 
-configure_file(${PROJECT_SOURCE_DIR}/kernels/OpenCOR/kernel.json.in
-               ${OPENCOR_KERNEL})
+configure_file(${PROJECT_SOURCE_DIR}/kernels/OpenCOR/kernel.json.in ${OPENCOR_KERNEL})
 
-add_custom_command(TARGET JupyterKernelPlugin POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${OPENCOR_KERNEL}
-                                     ${PYTHON_ROOT_DIR}/share/jupyter/kernels/OpenCOR/kernel.json
-    )
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy ${OPENCOR_KERNEL}
+                                                    ${PYTHON_ROOT_DIR}/share/jupyter/kernels/OpenCOR/kernel.json)
