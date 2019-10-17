@@ -110,12 +110,13 @@ public:
     void importRemoteFile(const QString &pFileNameOrUrl);
 
     QString openFile(const QString &pFileName,
-                     const File::Type &pType = File::Type::Local,
+                     File::Type pType = File::Type::Local,
                      const QString &pUrl = QString(),
                      bool pShowWarning = true);
     QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
+
     bool closeFile(const QString &pFileName);
 
     bool selectMode(const QString &pModeName);

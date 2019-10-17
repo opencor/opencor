@@ -175,6 +175,10 @@
         <source>&apos;%1&apos; could not be opened (%2).</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

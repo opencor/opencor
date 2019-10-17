@@ -65,7 +65,7 @@ static PyObject *getSimulation(const QString &pFileName,
         if (!simulation->runtime()) {
             // The simulation is missing a runtime so raise a Python exception
 
-            PyErr_SetString(PyExc_ValueError, QObject::tr("unable to get simulations's runtime").toStdString().c_str());
+            PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("unable to get simulations's runtime")));
 
             return nullptr;
         }
@@ -105,7 +105,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
 static PyObject *openSimulation(PyObject *self, PyObject *args)
 {
-    Q_UNUSED(self);
+    Q_UNUSED(self)
 
     PyObject *bytes;
     char *name;
@@ -117,11 +117,12 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     QString fileName = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Type::Local,
+    QString ioError = Core::centralWidget()->openFile(fileName,
+                                                      Core::File::Type::Local,
                                                       QString(), false);
 
     if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
 
         return nullptr;
     }
@@ -133,7 +134,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
 
 static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 {
-    Q_UNUSED(self);
+    Q_UNUSED(self)
 
     PyObject *bytes;
     char *name;
@@ -148,7 +149,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     QString ioError = Core::centralWidget()->openRemoteFile(url, false);
 
     if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
 
         return nullptr;
     }
@@ -160,7 +161,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 
 static PyObject *closeSimulation(PyObject *self, PyObject *args)
 {
-    Q_UNUSED(self);
+    Q_UNUSED(self)
 
     if (PyTuple_Size(args) > 0) {
         PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0));
@@ -186,8 +187,8 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
 
 static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 {
-    Q_UNUSED(self);
-    Q_UNUSED(args);
+    Q_UNUSED(self)
+    Q_UNUSED(args)
 
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     if (simulationExperimentViewWidget) {

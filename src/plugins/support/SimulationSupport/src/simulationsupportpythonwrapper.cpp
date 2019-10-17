@@ -176,7 +176,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
                 // And raise a Python exception
 
-                PyErr_SetString(PyExc_ValueError, initialisationError.toStdString().c_str());
+                PyErr_SetString(PyExc_ValueError, qPrintable(initialisationError));
 
                 return nullptr;
             }
@@ -219,7 +219,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     QString ioError = Core::openFile(fileName);
 
     if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
 
         return nullptr;
     }
@@ -246,7 +246,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     QString ioError = Core::openRemoteFile(url);
 
     if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
 
         return nullptr;
     }

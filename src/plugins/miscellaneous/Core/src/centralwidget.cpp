@@ -751,7 +751,7 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
 //==============================================================================
 
-QString CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
+QString CentralWidget::openFile(const QString &pFileName, File::Type pType,
                                 const QString &pUrl, bool pShowWarning)
 {
     // Make sure that modes are available and that the file exists
@@ -770,9 +770,9 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
                                                                                      pFileName));
         }
 
-        return tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
-                                                                       QDir::toNativeSeparators(pFileName):
-                                                                       pFileName);
+        return tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
+                                                       QDir::toNativeSeparators(pFileName):
+                                                       pFileName);
     }
 
     // Check whether the file is already opened and, if so, select it and leave
@@ -869,7 +869,8 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        return openFile(fileNameOrUrl, File::Type::Local, QString(), pShowWarning);
+        return openFile(fileNameOrUrl, File::Type::Local, QString(),
+                        pShowWarning);
     }
 
     // Check whether the remote file is already opened and if so select it,
@@ -906,6 +907,7 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
                 return tr("%s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
 #endif
             }
+
             return QString("");
         } else {
             // We were not able to retrieve the contents of the remote file, so
@@ -919,11 +921,12 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
                                                                                      .arg(formatMessage(errorMessage)));
             }
 
-            return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
+            return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl)
+                                                       .arg(formatMessage(errorMessage));
         }
     }
 
-    return openFile(fileName, File::Type::Remote, fileNameOrUrl);
+    return openFile(fileName, File::Type::Remote, fileNameOrUrl, pShowWarning);
 }
 
 //==============================================================================
@@ -1389,14 +1392,12 @@ bool CentralWidget::closeFile(int pIndex)
 
 bool CentralWidget::closeFile(const QString &pFileName)
 {
-    // Close the file whose filename is given
+    // Close the given file
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
-        if (!mFileNames[i].compare(pFileName)) {
-            // We have found the file to close
+    int index = mFileNames.indexOf(pFileName);
 
-            return closeFile(i, true);
-        }
+    if (index != -1) {
+        return closeFile(index, true);
     }
 
     return false;
