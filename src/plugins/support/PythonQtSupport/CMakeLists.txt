@@ -5,13 +5,12 @@ PROJECT(PythonQtSupportPlugin)
 ADD_PLUGIN(PythonQtSupport
     SOURCES
         ../../plugin.cpp
-        ../../pluginmanager.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
+        ../../pluginmanager.cpp
 
         src/pythonqtsupport.cpp
         src/pythonqtsupportplugin.cpp
-
     PLUGINS
         PythonSupport
         PythonQtAPI
