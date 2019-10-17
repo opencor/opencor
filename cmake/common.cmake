@@ -208,8 +208,7 @@ macro(add_plugin PLUGIN_NAME)
         string(REPLACE "${CMAKE_SOURCE_DIR}" "${PROJECT_BUILD_DIR}"
                I18N_QRC_FILENAME "${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}_i18n.qrc")
 
-        configure_file(${I18N_QRC_IN_FILENAME}
-                       ${I18N_QRC_FILENAME})
+        configure_file(${I18N_QRC_IN_FILENAME} ${I18N_QRC_FILENAME})
 
         list(APPEND RESOURCES ${I18N_QRC_FILENAME})
 
