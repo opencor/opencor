@@ -1,4 +1,4 @@
-/*******************************************************************************
+mLoadedSolverPlugins << plugin/*******************************************************************************
 
 Copyright (C) The University of Auckland
 
@@ -100,6 +100,7 @@ void CliApplication::loadPlugins()
 
         if (qobject_cast<SolverInterface *>(plugin->instance()) != nullptr) {
             mLoadedSolverPlugins << plugin;
+        }
     }
 
     // Initialise the plugins themselves
