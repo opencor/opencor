@@ -105,31 +105,27 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 85ec07562073aab48c368de525dbf4399225c932
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dbb160a97ca7900ec1e0b37f60f1db47b8dcaacf
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 360dfb74ccaca4d0152f5184c9adfeb4a65fd5d3)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 149161cc53c98474be62be7a3e29c53dbfd8e136
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 932be97b10b2c24b3fa5e25014a54c4c5061a791
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 8d9b1cc01f26d7b6d64a549ab0c05c1cefd48aef)
+                                  SHA1_VALUES cf9b5ece9556f91577396cc959ed9a2feecb4bed)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 991ae47419a755a35be130584e4c1e3bab51f3fb
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2dd18b923489fe3aef2a216234247403b72429b5
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 4443d8cb01dcc0edc148f9d095201b13fd09f923)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 23c1abf6b8b92b1e78c41b8d66bdcffd160af746
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cdb41b65012c628f1cd4381b8d79d1332a074604
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 80632ca1842b5a8668616766ef3bb2d01ed84e63)
     endif()
