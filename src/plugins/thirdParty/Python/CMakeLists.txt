@@ -2,13 +2,12 @@ project(PythonPlugin)
 
 # Name and version of our package
 
-set(PACKAGE_NAME PythonLibrary)
+set(PACKAGE_NAME Python)
 set(PACKAGE_VERSION 3.7.4)
 
 # Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
-set(RELEASE_TAG opencor_0.7)
 
 # Version of our library
 
