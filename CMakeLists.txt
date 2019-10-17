@@ -19,6 +19,7 @@ endif()
 
 option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
+set(USE_PREBUILT_PYTHON_PACKAGE OFF)
 
 option(USE_PREBUILT_BIOSIGNALML_PACKAGE "Use the pre-built version of the BioSignalML package" ON)
 option(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
