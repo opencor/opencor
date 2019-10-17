@@ -831,7 +831,6 @@ macro(deploy_shell_scripts)
         # Deploy the Shell script
 
         get_filename_component(NEW_SHELL_SCRIPT_FILENAME ${SHELL_SCRIPT_FILENAME} NAME_WE)
-message("${SHELL_SCRIPT_FILENAME} ---> ${NEW_SHELL_SCRIPT_FILENAME}")
 
         install(FILES ${SHELL_SCRIPT_FILENAME}
                 DESTINATION .
