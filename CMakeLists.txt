@@ -621,10 +621,8 @@ track_files(${VERSION_DATE_FILENAME})
 set(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
 set(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
 
-configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in
-               ${COMMON_QRC_FILENAME})
-configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
-               ${I18N_QRC_FILENAME})
+configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
+configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in ${I18N_QRC_FILENAME})
 
 # The Python interface depends on Python headers, so we only include it if we
 # are using the prebuilt version of our Python and QtWebKit packages
@@ -758,8 +756,7 @@ string(TIMESTAMP YEAR "%Y")
 if(WIN32)
     set(RC_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.rc)
 
-    configure_file(${CMAKE_SOURCE_DIR}/res/${CMAKE_PROJECT_NAME}.rc.in
-                   ${RC_FILENAME})
+    configure_file(${CMAKE_SOURCE_DIR}/res/${CMAKE_PROJECT_NAME}.rc.in ${RC_FILENAME})
 
     list(APPEND SOURCES ${RC_FILENAME})
 elseif(APPLE)
@@ -799,8 +796,7 @@ if(ENABLE_TESTS)
 
     set(TESTS_QRC_FILENAME ${PROJECT_BUILD_DIR}/src/tests/res/tests.qrc)
 
-    configure_file(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in
-                   ${TESTS_QRC_FILENAME})
+    configure_file(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in ${TESTS_QRC_FILENAME})
 
     add_executable(${RUNTESTS_NAME}
         src/tests/src/main.cpp
@@ -1555,8 +1551,7 @@ endif()
 
 set(NOTICE_FILENAME ${PROJECT_BUILD_DIR}/NOTICE.txt)
 
-configure_file(${CMAKE_SOURCE_DIR}/NOTICE.txt.in
-               ${NOTICE_FILENAME})
+configure_file(${CMAKE_SOURCE_DIR}/NOTICE.txt.in ${NOTICE_FILENAME})
 
 set(FILES
     ${CMAKE_SOURCE_DIR}/LICENSE.txt
