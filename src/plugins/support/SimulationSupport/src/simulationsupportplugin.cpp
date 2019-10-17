@@ -162,6 +162,8 @@ void SimulationSupportPlugin::retranslateUi()
 
 void SimulationSupportPlugin::registerPythonClasses(PyObject *pModule)
 {
+    // Register our Python classes
+
     mSimulationSupportPythonWrapper = new SimulationSupportPythonWrapper(pModule, this);
 }
 

@@ -21,10 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python wrapper for DataStore classes
 //==============================================================================
 
-#include "datastoreinterface.h"
-
-//==============================================================================
-
 #include <Qt>
 
 //==============================================================================
@@ -49,11 +45,10 @@ namespace DataStore {
 
 //==============================================================================
 
-// We need to wrap import_array() as it is a define that includes a return statement
-
 static bool init_numpy()
 {
-    import_array1(false);  //  Will return false upon failure
+    import_array1(false)
+
     return true;
 }
 
@@ -131,9 +126,9 @@ static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key
 //==============================================================================
 
 static PyMappingMethods DataStoreValuesDict_as_mapping = {
-    0,                                                 /*mp_length*/
-    (binaryfunc)DataStoreValuesDict_subscript,         /*mp_subscript*/
-    (objobjargproc)DataStoreValuesDict_ass_subscript,  /*mp_ass_subscript*/
+    nullptr,                                            // mp_length
+    (binaryfunc) DataStoreValuesDict_subscript,         // mp_subscript
+    (objobjargproc) DataStoreValuesDict_ass_subscript   // mp_ass_subscript
 };
 
 //==============================================================================
@@ -163,21 +158,23 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
 
     _PyUnicodeWriter_Init(&writer);
     writer.overallocate = 1;
-    /* "{" + "1: 2" + ", 3: 4" * (len - 1) + "}" */
+    // "{" + "1: 2" + ", 3: 4" * (len - 1) + "}"
     writer.min_length = 1 + 4 + (2 + 4) * (mp->ma_used - 1) + 1;
 
     if (_PyUnicodeWriter_WriteChar(&writer, '{') < 0)
         goto error;
 
-    /* Do repr() on each key+value pair, and insert ": " between them.
-       Note that repr may mutate the dict. */
+    // Do repr() on each key+value pair, and insert ": " between them.
+    // Note: repr() may mutate the dictionary...
+
     i = 0;
     first = 1;
     while (PyDict_Next((PyObject *)mp, &i, &key, &value)) {
         PyObject *s;
         int res;
 
-        /* Prevent repr from deleting key or value during key format. */
+        // Prevent repr() from deleting key or value during key format
+
         Py_INCREF(key);
         Py_INCREF(value);
 
@@ -241,43 +238,43 @@ error:
 
 PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "OpenCOR.DataStoreValuesDict",
-    sizeof(DataStoreValuesDictObject),
-    0,
-    0,                                          /* tp_dealloc */
-    0,                                          /* tp_print */
-    0,                                          /* tp_getattr */
-    0,                                          /* tp_setattr */
-    0,                                          /* tp_compare */
-    (reprfunc)DataStoreValuesDict_repr,         /* tp_repr */
-    0,                                          /* tp_as_number */
-    0,                                          /* tp_as_sequence */
-    &DataStoreValuesDict_as_mapping,            /* tp_as_mapping */
-    0,                                          /* tp_hash */
-    0,                                          /* tp_call */
-    0,                                          /* tp_str */
-    0,                                          /* tp_getattro */
-    0,                                          /* tp_setattro */
-    0,                                          /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,   /* tp_flags */
-    0,                                          /* tp_doc */
-    0,                                          /* tp_traverse */
-    0,                                          /* tp_clear */
-    0,                                          /* tp_richcompare */
-    0,                                          /* tp_weaklistoffset */
-    0,                                          /* tp_iter */
-    0,                                          /* tp_iternext */
-    0,                                          /* tp_methods */
-    0,                                          /* tp_members */
-    0,                                          /* tp_getset */
-    &PyDict_Type,                               /* tp_base */
+    "OpenCOR.DataStoreValuesDict",            // tp_name
+    sizeof(DataStoreValuesDictObject),        // tp_basicsize
+    0,                                        // tp_itemsize
+    nullptr,                                  // tp_dealloc
+    nullptr,                                  // tp_print
+    nullptr,                                  // tp_getattr
+    nullptr,                                  // tp_setattr
+    nullptr,                                  // tp_compare
+    (reprfunc) DataStoreValuesDict_repr,      // tp_repr
+    nullptr,                                  // tp_as_number
+    nullptr,                                  // tp_as_sequence
+    &DataStoreValuesDict_as_mapping,          // tp_as_mapping
+    nullptr,                                  // tp_hash
+    nullptr,                                  // tp_call
+    nullptr,                                  // tp_str
+    nullptr,                                  // tp_getattro
+    nullptr,                                  // tp_setattro
+    nullptr,                                  // tp_as_buffer
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   // tp_flags
+    nullptr,                                  // tp_doc
+    nullptr,                                  // tp_traverse
+    nullptr,                                  // tp_clear
+    nullptr,                                  // tp_richcompare
+    0,                                        // tp_weaklistoffset
+    nullptr,                                  // tp_iter
+    nullptr,                                  // tp_iternext
+    nullptr,                                  // tp_methods
+    nullptr,                                  // tp_members
+    nullptr,                                  // tp_getset
+    &PyDict_Type                              // tp_base
 };
 
 //==============================================================================
 
 DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
-    Q_UNUSED(pModule);
+    Q_UNUSED(pModule)
 
     // Initialise NumPy
 
@@ -391,8 +388,7 @@ PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
 NumpyPythonWrapper::NumpyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize) :
     mArray(pDataStoreArray)
 {
-    npy_intp dims[1];
-    dims[0] = (pSize > 0) ? pSize : pDataStoreArray->size();
+    npy_intp dims[1] = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
 
     mArray->incRef();
     mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->data());

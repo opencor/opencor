@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     //       this interface...
 
     VIRTUAL void registerPythonClasses(PyObject *pModule) PURE_OR_OVERRIDE;
-
 #include "interfaceend.h"
 
 //==============================================================================

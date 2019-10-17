@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 // Import the NumPy API
-// See https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
+// Note: see https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api...
 
 #define NPY_NO_DEPRECATED_API NPY_1_8_API_VERSION
 #define PY_ARRAY_UNIQUE_SYMBOL OpenCOR_Python_Wrapper_PyArray_API

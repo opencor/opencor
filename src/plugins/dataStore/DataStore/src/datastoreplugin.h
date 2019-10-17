@@ -44,7 +44,8 @@ class DataStorePythonWrapper;
 
 //==============================================================================
 
-class DataStorePlugin : public QObject, public I18nInterface, public PythonInterface
+class DataStorePlugin : public QObject, public I18nInterface,
+                        public PythonInterface
 {
     Q_OBJECT
 

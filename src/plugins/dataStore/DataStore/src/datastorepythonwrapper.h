@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreglobal.h"
+#include "datastoreinterface.h"
 #include "simulationsupportpythonwrapper.h"
 
 //==============================================================================
@@ -52,34 +53,29 @@ typedef struct {
 
 //==============================================================================
 
-class DataStore;
-class DataStoreArray;
-class DataStoreValues;
-class DataStoreVariable;
-class DataStoreVariables;
-
-//==============================================================================
-
 class DataStorePythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent=0);
+    explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent);
 
     static PyTypeObject DataStoreValuesDict_Type;
 
     static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
-    static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable, const int &pRun);
+    static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable,
+                                                     const int &pRun);
 
     static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                           SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction=NULL);
     static DATASTORE_EXPORT PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
-    double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const quint64 &pPosition, const int &pRun = -1) const;
+    double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
+                 const quint64 &pPosition, const int &pRun = -1) const;
 
-    PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const int &pRun = -1) const;
+    PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
+                      const int &pRun = -1) const;
 
     PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
     PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);

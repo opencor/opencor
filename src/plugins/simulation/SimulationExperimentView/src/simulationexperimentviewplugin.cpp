@@ -408,6 +408,8 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 
 void SimulationExperimentViewPlugin::registerPythonClasses(PyObject *pModule)
 {
+    // Register our Python classes
+
     mSimulationExperimentViewPythonWrapper = new SimulationExperimentViewPythonWrapper(pModule, this);
 }
 

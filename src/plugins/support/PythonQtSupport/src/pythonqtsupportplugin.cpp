@@ -75,8 +75,8 @@ bool PythonQtSupportPlugin::definesPluginInterfaces()
 bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                                QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -155,7 +155,7 @@ void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void PythonQtSupportPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -164,7 +164,7 @@ void PythonQtSupportPlugin::loadSettings(QSettings &pSettings)
 
 void PythonQtSupportPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -173,7 +173,7 @@ void PythonQtSupportPlugin::saveSettings(QSettings &pSettings) const
 
 void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

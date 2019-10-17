@@ -187,7 +187,7 @@ private:
 
 //==============================================================================
 
-class DataStoreVariables : public QList<DataStoreVariable *> {};
+using DataStoreVariables = QList<DataStoreVariable *>;
 
 //==============================================================================
 

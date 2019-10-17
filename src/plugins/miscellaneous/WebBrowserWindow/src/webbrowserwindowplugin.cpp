@@ -198,6 +198,8 @@ QDockWidget * WebBrowserWindowPlugin::windowWidget() const
 
 void WebBrowserWindowPlugin::registerPythonClasses(PyObject *pModule)
 {
+    // Register our Python classes
+
     mWebBrowserWindowPythonWrapper = new WebBrowserWindowPythonWrapper(pModule, this);
 }
 

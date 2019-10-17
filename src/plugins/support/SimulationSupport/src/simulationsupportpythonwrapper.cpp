@@ -204,7 +204,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
 static PyObject *openSimulation(PyObject *self, PyObject *args)
 {
-    Q_UNUSED(self);
+    Q_UNUSED(self)
 
     PyObject *bytes;
     char *name;
@@ -231,7 +231,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
 
 static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 {
-    Q_UNUSED(self);
+    Q_UNUSED(self)
 
     PyObject *bytes;
     char *name;
@@ -258,7 +258,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 
 static PyObject *closeSimulation(PyObject *self, PyObject *args)
 {
-    Q_UNUSED(self);
+    Q_UNUSED(self)
 
     if (PyTuple_Size(args) > 0) {
         PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0));
@@ -297,7 +297,7 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
     mElapsedTime(-1),
     mErrorMessage(QString())
 {
-    Q_UNUSED(pModule);
+    Q_UNUSED(pModule)
 
     PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::Simulation::staticMetaObject);
     PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
@@ -421,7 +421,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
             tr("Cannot run because simulation has an invalid runtime.").toStdString());
     }
 
-    QWidget *focusWidget = 0;
+    QWidget *focusWidget = nullptr;
 
     // A successful run will set elapsed time
 
@@ -475,7 +475,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         // Disconnect our signal handlers now that the simulation has finished
 
-        disconnect(pSimulation, 0, this, 0);
+        disconnect(pSimulation, nullptr, this, nullptr);
 
         if (!mErrorMessage.isEmpty())
             throw std::runtime_error(mErrorMessage.toStdString());
@@ -642,7 +642,7 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
             // Each state variable has a dictionary containing gradients wrt each constant
 
             PyObject *stateGradientsDict = stateGradientsDictionaries[state->uri()];
-            if (stateGradientsDict == 0) {
+            if (stateGradientsDict == nullptr) {
                 stateGradientsDict = PyDict_New();
                 PyDict_SetItemString(gradientsDict, state->uri().toLatin1().data(), stateGradientsDict);
                 stateGradientsDictionaries[state->uri()] = stateGradientsDict;

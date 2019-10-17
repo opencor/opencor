@@ -61,6 +61,8 @@ void DataStorePlugin::retranslateUi()
 
 void DataStorePlugin::registerPythonClasses(PyObject *pModule)
 {
+    // Register our Python classes
+
     mDataStorePythonWrapper = new DataStorePythonWrapper(pModule, this);
 }
 
