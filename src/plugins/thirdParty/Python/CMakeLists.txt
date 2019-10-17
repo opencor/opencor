@@ -153,43 +153,39 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3017b8565c4ecf0e0326b869babd0a47ec0b56b3
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d1161453399b7c02c26061d218a88864f2c97c51
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f8dba5f337b4d601b125b269027ad2a5423b02db
-                                              66c866543a6c4ee7653314d105517b4bf8edb535
+                                  SHA1_VALUES 924b7e4d1f6aafca919a2367540574ea672c8ddf
+                                              017253858331c5918d1a1dc61a691e75872b4857
                                               599a6df061280855fad67d7c775c242345b0bb2d
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              faa88be4a49fd5b181f264a976a1acc3509e6418)
+                                              2a0b3c26a83e072da5bedbb6aed7daa6f5d21d05)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a74062ddab541f766ee2e4bfef65f5883c4c383d
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b2c76e8c0ff5d92d90ad81c12c6d79145163dc9a
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 4199775133c0e5d1efd0c85a58919aa311063ded
-                                              c3743985e805d782724eae1b6d0b776e28df1d1b
+                                  SHA1_VALUES accec3a63c125f7e81074cad1e19123deca9b6a3
+                                              16bb9cfaa8f24cda03b4e756e6a78b52c5d5ef3f
                                               7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              faa88be4a49fd5b181f264a976a1acc3509e6418)
+                                              6009f6ef04a19abef0517669a71306e6e6916fff)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2146547f4f4fc55fa471dce5f0de802b6aca11e8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d1f5b61e822535a282931f1edbd1525b2a654250
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 86f9b749f8decdf3455975e38d7d48323ab97631
-                                          e3a6ab735fdeee11988bebbe4d174614a43a16f3)
+                              SHA1_VALUES 9df0883f363d9236d0e448022992c7af43259a8d
+                                          be9c40887c02022b18c5102f60ce0b2d5211a610)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 9eb2e273dd9b58e4ea07f00ba8ef83c9dd5e31b6
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dda21bf0fc999544f4cdd6e4474aac4249877a5e
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES a370f9f49b7d0cbd6627afc4aed2720add98bd9f
-                                          b4afcc6927ea7d477937027b8a897a59361974bd
+                              SHA1_VALUES ecc5e3a1015fdb780bbd43cef33f4d3d34326f21
+                                          ac1fd749c1ecc76d656b8ab9dae1439271f4b069
                                           561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
