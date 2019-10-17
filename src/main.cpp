@@ -21,14 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Main
 //==============================================================================
 
-// We need to know the state of Q_OS_LINUX
-
 #include <Qt>
-
-// The Python header must be included before <QObject> because of name clashes
 
 #ifdef Q_OS_LINUX
     #include "Python.h"
+    // Note: this needs to be included before <QObject> to prevent name clashes...
 #endif
 
 //==============================================================================
@@ -66,14 +63,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int pArgC, char *pArgV[])
 {
+    // On Linux, our Python package needs to be directly linked to OpenCOR
+    // (otherwise Python extension DSOs can't find symbols), which can be done
+    // by setting Py_NoUserSiteDirectory to 1
+    // Note: this is because the lookup scope changes for DSOs that are loaded
+    //       using dlopen()...
+    //       (See https://www.akkadia.org/drepper/dsohowto.pdf)
+
 #ifdef Q_OS_LINUX
-    // The Python library needs linking directly to the executable as otherwise
-    // Python extension shared objects can't find symbols in the library. This is
-    // because the lookup scope changes for DSOs that are are loaded using dlopen()
-    // (see https://www.akkadia.org/drepper/dsohowto.pdf for details)
-
-    // This is sufficient to ensure the library is linked to the executable
-
     Py_NoUserSiteDirectory = 1;
 #endif
 

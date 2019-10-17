@@ -90,16 +90,16 @@ void CliApplication::loadPlugins()
     // Retrieve some categories of plugins
 
     for (auto plugin : mPluginManager->loadedPlugins()) {
+        if (qobject_cast<CliInterface *>(plugin->instance()) != nullptr) {
+            mLoadedCliPlugins << plugin;
+        }
+
         if (qobject_cast<PluginInterface *>(plugin->instance()) != nullptr) {
             mLoadedPluginPlugins << plugin;
         }
 
         if (qobject_cast<SolverInterface *>(plugin->instance()) != nullptr) {
             mLoadedSolverPlugins << plugin;
-        }
-
-        if (qobject_cast<CliInterface *>(plugin->instance()) != nullptr) {
-            mLoadedCliPlugins << plugin;
         }
     }
 
