@@ -272,6 +272,11 @@ endif()
 
 set(PLATFORM_DIR ${PLATFORM})
 
+# Location of our distribution files
+
+set(DISTRIB_DIR ${CMAKE_SOURCE_DIR}/distrib)
+set(PLATFORM_DISTRIB_DIR ${DISTRIB_DIR}/${PLATFORM})
+
 # Default location of external binaries and packages
 
 if(WIN32)
@@ -368,8 +373,8 @@ if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
     if(WIN32)
         set(ICU_VERSION 57)
     elseif(NOT APPLE)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+        add_subdirectory(${PLATFORM_DISTRIB_DIR}/icu)
+        add_subdirectory(${PLATFORM_DISTRIB_DIR}/mesa)
     endif()
 endif()
 
@@ -1067,8 +1072,7 @@ if(APPLE)
 
     set(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/Info.plist.in
-                   ${INFO_PLIST_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/Info.plist.in ${INFO_PLIST_FILENAME})
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${INFO_PLIST_FILENAME}
@@ -1090,12 +1094,12 @@ if(APPLE)
 
     # Qt plugins required by OpenCOR
 
-    macos_deploy_qt_plugin(imageformats qjpeg)
-    macos_deploy_qt_plugin(mediaservice qavfmediaplayer)
-    macos_deploy_qt_plugin(platforms qcocoa)
-    macos_deploy_qt_plugin(printsupport cocoaprintersupport)
-    macos_deploy_qt_plugin(sqldrivers qsqlite)
-    macos_deploy_qt_plugin(styles qmacstyle)
+    macos_deploy_qt_plugins(imageformats qjpeg)
+    macos_deploy_qt_plugins(mediaservice qavfmediaplayer)
+    macos_deploy_qt_plugins(platforms qcocoa)
+    macos_deploy_qt_plugins(printsupport cocoaprintersupport)
+    macos_deploy_qt_plugins(sqldrivers qsqlite)
+    macos_deploy_qt_plugins(styles qmacstyle)
 else()
     # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
 
@@ -1198,7 +1202,7 @@ endif()
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${DISTRIB_DIR}/readMe.txt")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_PROJECT_NAME}" "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "Physiome Project")
@@ -1261,11 +1265,11 @@ if(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    windows_deploy_qt_plugin(imageformats qjpeg)
-    windows_deploy_qt_plugin(platforms qwindows)
-    windows_deploy_qt_plugin(printsupport windowsprintersupport)
-    windows_deploy_qt_plugin(sqldrivers qsqlite)
-    windows_deploy_qt_plugin(styles qwindowsvistastyle)
+    windows_deploy_qt_plugins(imageformats qjpeg)
+    windows_deploy_qt_plugins(platforms qwindows)
+    windows_deploy_qt_plugins(printsupport windowsprintersupport)
+    windows_deploy_qt_plugins(sqldrivers qsqlite)
+    windows_deploy_qt_plugins(styles qwindowsvistastyle)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -1273,10 +1277,8 @@ if(WIN32)
     set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
     set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
-                   ${BAT_FILENAME})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
-                   ${VBS_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.bat.in ${BAT_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.vbs.in ${VBS_FILENAME})
 
     install(FILES ${BAT_FILENAME}
             DESTINATION .)
@@ -1308,8 +1310,8 @@ elseif(APPLE)
 
     set(CPACK_SYSTEM_NAME "macOS")
 
-    set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+    set(CPACK_RESOURCE_FILE_WELCOME "${PLATFORM_DISTRIB_DIR}/welcome.txt")
+    set(CPACK_RESOURCE_FILE_README "${DISTRIB_DIR}/readMe.txt")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
     set(CPACK_SET_DESTDIR TRUE)
@@ -1320,12 +1322,11 @@ elseif(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    set(SHELL_SCRIPT_FILENAME ${PROJECT_BUILD_DIR}/application)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.in ${SHELL_SCRIPT_FILENAME} @ONLY)
 
-    install(FILES ${SH_FILENAME}
+    install(FILES ${SHELL_SCRIPT_FILENAME}
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -1378,20 +1379,19 @@ else()
 
     # Qt plugins required by OpenCOR
 
-    linux_deploy_qt_plugin(imageformats qjpeg)
-    linux_deploy_qt_plugin(platforms qxcb)
-    linux_deploy_qt_plugin(printsupport cupsprintersupport)
-    linux_deploy_qt_plugin(sqldrivers qsqlite)
-    linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+    linux_deploy_qt_plugins(imageformats qjpeg)
+    linux_deploy_qt_plugins(platforms qxcb)
+    linux_deploy_qt_plugins(printsupport cupsprintersupport)
+    linux_deploy_qt_plugins(sqldrivers qsqlite)
+    linux_deploy_qt_plugins(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
     # Shell script to run OpenCOR
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    set(SHELL_SCRIPT_FILENAME ${PROJECT_BUILD_DIR}/application)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
-                   ${SH_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.in ${SHELL_SCRIPT_FILENAME} @ONLY)
 
-    install(FILES ${SH_FILENAME}
+    install(FILES ${SHELL_SCRIPT_FILENAME}
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

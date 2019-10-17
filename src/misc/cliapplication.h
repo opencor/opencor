@@ -58,8 +58,8 @@ private:
 
     PluginManager *mPluginManager = nullptr;
 
-    Plugins mLoadedPluginPlugins;
     Plugins mLoadedCliPlugins;
+    Plugins mLoadedPluginPlugins;
 
     void loadPlugins();
     void includePlugins(const QStringList &pPluginNames,
