@@ -668,7 +668,7 @@ endmacro()
 
 #===============================================================================
 
-macro(windows_deploy_qt_plugin PLUGIN_CATEGORY)
+macro(windows_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
@@ -736,7 +736,7 @@ endmacro()
 
 #===============================================================================
 
-macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
+macro(linux_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
@@ -814,7 +814,7 @@ endmacro()
 
 #===============================================================================
 
-macro(macos_deploy_qt_plugin PLUGIN_CATEGORY)
+macro(macos_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin
 

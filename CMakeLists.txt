@@ -1141,12 +1141,12 @@ if(APPLE)
 
     # Qt plugins required by OpenCOR
 
-    macos_deploy_qt_plugin(imageformats qjpeg)
-    macos_deploy_qt_plugin(mediaservice qavfmediaplayer)
-    macos_deploy_qt_plugin(platforms qcocoa)
-    macos_deploy_qt_plugin(printsupport cocoaprintersupport)
-    macos_deploy_qt_plugin(sqldrivers qsqlite)
-    macos_deploy_qt_plugin(styles qmacstyle)
+    macos_deploy_qt_plugins(imageformats qjpeg)
+    macos_deploy_qt_plugins(mediaservice qavfmediaplayer)
+    macos_deploy_qt_plugins(platforms qcocoa)
+    macos_deploy_qt_plugins(printsupport cocoaprintersupport)
+    macos_deploy_qt_plugins(sqldrivers qsqlite)
+    macos_deploy_qt_plugins(styles qmacstyle)
 else()
     # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
 
@@ -1312,11 +1312,11 @@ if(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    windows_deploy_qt_plugin(imageformats qjpeg)
-    windows_deploy_qt_plugin(platforms qwindows)
-    windows_deploy_qt_plugin(printsupport windowsprintersupport)
-    windows_deploy_qt_plugin(sqldrivers qsqlite)
-    windows_deploy_qt_plugin(styles qwindowsvistastyle)
+    windows_deploy_qt_plugins(imageformats qjpeg)
+    windows_deploy_qt_plugins(platforms qwindows)
+    windows_deploy_qt_plugins(printsupport windowsprintersupport)
+    windows_deploy_qt_plugins(sqldrivers qsqlite)
+    windows_deploy_qt_plugins(styles qwindowsvistastyle)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -1489,11 +1489,11 @@ else()
 
     # Qt plugins required by OpenCOR
 
-    linux_deploy_qt_plugin(imageformats qjpeg)
-    linux_deploy_qt_plugin(platforms qxcb)
-    linux_deploy_qt_plugin(printsupport cupsprintersupport)
-    linux_deploy_qt_plugin(sqldrivers qsqlite)
-    linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+    linux_deploy_qt_plugins(imageformats qjpeg)
+    linux_deploy_qt_plugins(platforms qxcb)
+    linux_deploy_qt_plugins(printsupport cupsprintersupport)
+    linux_deploy_qt_plugins(sqldrivers qsqlite)
+    linux_deploy_qt_plugins(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
     # Shell script to run OpenCOR
 
