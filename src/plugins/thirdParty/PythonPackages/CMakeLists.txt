@@ -8,7 +8,6 @@ set(PACKAGE_VERSION ${PYTHON_VERSION})
 # Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
-set(RELEASE_TAG opencor_0.7)
 
 # Git tags of Python package installers
 
