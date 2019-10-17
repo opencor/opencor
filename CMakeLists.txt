@@ -1409,32 +1409,31 @@ elseif(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/application.sh.in ${SH_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.in ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole.sh)
-    set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter.sh)
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
-    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath.sh)
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter)
+    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython)
+    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.sh.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.sh)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.sh)
-    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.sh.in ${RUN_JUPYTER_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.sh.in ${RUN_PYTHON_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/setpythonpath.sh.in ${SET_PYTHON_PATH_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.in ${RUN_PYTHON_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/setpythonpath.in ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/jupyterlab.sh
-                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook.sh
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                   ${RUN_JUPYTER_FILENAME}
                   ${RUN_PYTHON_FILENAME}
                   ${SET_PYTHON_PATH_FILENAME}
@@ -1497,14 +1496,13 @@ else()
 
     # Shell script to run OpenCOR
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/application.sh.in
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.in
                    ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Python runtime libraries and utilities
@@ -1515,22 +1513,22 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole.sh)
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython.sh)
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.sh.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.sh)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.sh)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter.sh)
-    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.sh.in ${RUN_PYTHON_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . setpythonpath.sh)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runpython.in ${RUN_PYTHON_FILENAME} @ONLY)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . setpythonpath)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/jupyterlab.sh
-                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook.sh
-                  ${PLATFORM_DISTRIB_DIR}/runjupyter.sh
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                  ${PLATFORM_DISTRIB_DIR}/runjupyter
                   ${RUN_PYTHON_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/setpythonpath.sh
+                  ${PLATFORM_DISTRIB_DIR}/setpythonpath
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
