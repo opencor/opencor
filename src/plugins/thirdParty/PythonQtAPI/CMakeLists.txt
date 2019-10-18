@@ -159,9 +159,7 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE_COMMAND}
-                ${QMAKE_DEBUG_OPTION} ${QMAKE_INCLUDE_PATH} ${QMAKE_LFLAGS_OPTION}
-                PythonQtOpenCOR.pro
+            ${QMAKE_COMMAND} ${QMAKE_DEBUG_OPTION} ${QMAKE_INCLUDE_PATH} ${QMAKE_LFLAGS_OPTION} PythonQtOpenCOR.pro
         BUILD_COMMAND
             ${MAKE_COMMAND}
         INSTALL_COMMAND
@@ -173,6 +171,7 @@ else()
     # Copy our configured qmake project files into the build
 
     set(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+
     configure_file(${PROJECT_SOURCE_DIR}/qmake/PythonQtOpenCOR.pro.in
                    ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
                    @ONLY)
