@@ -3,7 +3,7 @@ project(PythonQtPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME PythonQt)
-set(PACKAGE_VERSION "3.2.2")
+set(PACKAGE_VERSION 3.2.2)
 
 # Repository in GitHub's OpenCOR organisation
 
