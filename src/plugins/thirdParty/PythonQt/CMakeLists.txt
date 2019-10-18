@@ -9,10 +9,6 @@ set(PACKAGE_VERSION 3.2.2)
 
 set(PACKAGE_REPOSITORY pythonqt)
 
-# Release tag of our packaged library
-
-set(RELEASE_TAG opencor-v3.2.2)
-
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 3)
@@ -20,7 +16,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.0)
 
 # Git tag for our library
 
-set(GIT_TAG OpenCOR-0.7)
+set(GIT_TAG v3.2.2)
 
 # Specify where our local package will be installed
 
