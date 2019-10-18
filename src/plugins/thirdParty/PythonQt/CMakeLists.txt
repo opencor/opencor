@@ -15,8 +15,8 @@ set(RELEASE_TAG opencor-v3.2.2)
 
 # Version of our library
 
-set(MAJOR_LIBRARY_VERSION "3")
-set(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.0")
+set(MAJOR_LIBRARY_VERSION 3)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.0)
 
 # Git tag for our library
 
