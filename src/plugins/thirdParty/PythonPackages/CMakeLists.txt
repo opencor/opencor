@@ -14,42 +14,29 @@ set(PACKAGE_REPOSITORY python)
 set(PIP_GIT_TAG "19.2.3")
 set(SETUPTOOLS_GIT_TAG "v41.2.0")
 
-# The versions of the Python packages we bundle
-
-# Science packages
-
-set(NUMPY_VERSION 1.17.2)
-set(SCIPY_VERSION 1.3.1)
-
-set(MATPLOTLIB_VERSION 3.1.1)
-
-# IPython, Jupyter, and friends
-
-set(NOTEBOOK_VERSION 6.0.1)
-set(IPYWIDGETS_VERSION 7.5.1)
-set(NBCONVERT_VERSION 5.6.0)
-set(JUPYTER_CONSOLE_VERSION 6.0.0)
-
-set(JUPYTERLAB_VERSION 1.1.3)
-
-# We use patched versions of these packages to support PythonQt
+# Version of our different Python packages
 
 set(IPYKERNEL_VERSION 5.1.2)
-set(IPYKERNEL_PYTHONQT 5.1.2.0)
-
 set(IPYTHON_VERSION 7.8.0)
-set(IPYTHON_PYTHONQT 7.8.0.0)
-
-set(QTCONSOLE_VERSION 4.5.5)
-set(QTCONSOLE_PYTHONQT 4.5.5.0)
-
-set(TRAITLETS_VERSION 4.3.2)
-set(TRAITLETS_PYTHONQT 4.3.2.1)
-
-# Documentation packages
-
+set(IPYWIDGETS_VERSION 7.5.1)
+set(JUPYTER_CONSOLE_VERSION 6.0.0)
+set(JUPYTERLAB_VERSION 1.1.3)
 set(LXML_VERSION 4.4.1)
+set(MATPLOTLIB_VERSION 3.1.1)
+set(NBCONVERT_VERSION 5.6.0)
+set(NOTEBOOK_VERSION 6.0.1)
+set(NUMPY_VERSION 1.17.2)
+set(QTCONSOLE_VERSION 4.5.5)
+set(SCIPY_VERSION 1.3.1)
 set(SPHINX_VERSION 2.2.0)
+set(TRAITLETS_VERSION 4.3.2)
+
+# Patched version of some packages to support PythonQt
+
+set(IPYKERNEL_PYTHONQT ${IPYKERNEL_VERSION}.0)
+set(IPYTHON_PYTHONQT ${IPYTHON_VERSION}.0)
+set(QTCONSOLE_PYTHONQT ${QTCONSOLE_VERSION}.0)
+set(TRAITLETS_PYTHONQT ${TRAITLETS_VERSION}.1)
 
 # Our GitHub organisation
 
@@ -73,7 +60,9 @@ set(PACKAGED_FILES
     ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
 
-# These directories don't exist for Windows debug mode
+# These directories only exist in release mode
+# Note: indeed, in debug mode (on Windows), we only have what is needed to run
+#       our tests and to do some basic debugging...
 
 if(RELEASE_MODE OR NOT WIN32)
     list(APPEND PACKAGED_FILES
@@ -143,29 +132,27 @@ else()
     # Clean our site packages directory before installing any packages
 
     file(REMOVE_RECURSE ${FULL_LOCAL_SITE_PACKAGES_DIR})
-
     file(MAKE_DIRECTORY ${FULL_LOCAL_SITE_PACKAGES_DIR})
 
     # Use our installed pip when upgrading pip
 
     file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
 
-    set(PIP_INSTALL_COMMAND
-        ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-        ${PYTHON_EXECUTABLE} -s -m
-        pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                    --upgrade --upgrade-strategy only-if-needed
-                    --no-warn-script-location)
+    set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                                                                                       --upgrade
+                                                                                       --upgrade-strategy only-if-needed
+                                                                                       --no-warn-script-location)
 
     # Install the Python package manager and its dependencies
+    # Note: on Windows, we use our version of pip that is modified to create
+    #       *-script.py files when installing packages with console scripts, so
+    #       that they can then be updated to reference OpenCOR's Python
+    #       executable...
 
     set(PIP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/pip)
 
     if(WIN32)
-        # On Windows, we use our version of pip that is modified to create
-        # *-script.py files when installing packages with console scripts, so
-        # that they can then be updated to reference OpenCOR's Python executable
-
         # Install the Python setuptools package
 
         set(SETUPTOOLS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/setuptools)
@@ -189,7 +176,7 @@ else()
                 ${PYTHON_EXECUTABLE} setup.py build
             INSTALL_COMMAND
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                                    ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
         )
 
         # Install our Python package installer
@@ -211,14 +198,16 @@ else()
                 ""
             BUILD_COMMAND
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                ${PYTHON_EXECUTABLE} setup.py build
+                                    ${PYTHON_EXECUTABLE} setup.py build
             INSTALL_COMMAND
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                                    ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
             DEPENDS
                 installSetuptools
         )
     else()
+        # Install the Python package installer
+
         ExternalProject_Add(installPip
             DOWNLOAD_DIR
                 ${PIP_SOURCE_DIR}
@@ -238,12 +227,11 @@ else()
                 ""
             INSTALL_COMMAND
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py
-                    --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                    --no-wheel
+                                    ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                                                                                         --no-wheel
         )
 
-        # Make sure pip is up to date
+        # Make sure that pip is up to date
 
         ExternalProject_Add_Step(installPip updatePip
                                  COMMAND ${PIP_INSTALL_COMMAND} pip
@@ -254,15 +242,14 @@ else()
     add_dependencies(${PACKAGE_BUILD} installPip)
     add_dependencies(installPip ${BUILD_DEPENDENCIES})
 
-    # We only install a minimal set of packages when building in Debug mode under Windows,
-    # namely a minimal version of `numpy` (used to interfacing with our DataStore arrays)
-    # and `sphinx` (used to build documentation)
+    # On Windows, we only install a minimal set of packages when building in
+    # debug mode, namely a minimal version of NumPy (used to interface with our
+    # DataStore arrays) and Sphinx (used to build our documentation)
 
-    if (NOT RELEASE_MODE AND WIN32)
-        # Download, build and install a debug version of numpy
-        #
-        # Note: This is a minimal build since we haven't provided linear algebra libraries
-        #       nor a Fortran compiler
+    if (WIN32 AND NOT RELEASE_MODE)
+        # Download, build and install a debug version of NumPy
+        # Note: this is a minimal build since we don't provide linear algebra
+        #       libraries nor a Fortran compiler...
 
         set(NUMPY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/numpy)
 
@@ -281,23 +268,22 @@ else()
                 ""
             BUILD_COMMAND
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                ${PYTHON_EXECUTABLE} setup.py build --debug
+                                    ${PYTHON_EXECUTABLE} setup.py build --debug
             INSTALL_COMMAND
-                ${PIP_INSTALL_COMMAND}
-                    --global-option=build
-                    --global-option=--debug
-                    .
+                ${PIP_INSTALL_COMMAND} --global-option=build
+                                       --global-option=--debug
+                                       .
         )
 
         add_dependencies(${PACKAGE_BUILD} installNumpy)
         add_dependencies(installNumpy installPip)
         add_dependencies(installNumpy ${BUILD_DEPENDENCIES})
 
-        # Copy the numpy include directory to a place that OpenCOR can use
+        # Copy the NumPy include directory to a place that OpenCOR can use
 
         add_custom_target(copyNumpyHeaders
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include
+                                                       include
             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         )
 
@@ -309,7 +295,7 @@ else()
 
         add_custom_target(installSphinx
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                sphinx==${SPHINX_VERSION}
+                                           sphinx==${SPHINX_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
@@ -320,13 +306,13 @@ else()
         add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
 
     else()
-        # Install numpy, scipy, and matplotlib
+        # Install NumPy, SciPy and Matplotlib
 
         add_custom_target(sciencePackages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                numpy==${NUMPY_VERSION}
-                scipy==${SCIPY_VERSION}
-                matplotlib==${MATPLOTLIB_VERSION}
+                                           matplotlib==${MATPLOTLIB_VERSION}
+                                           numpy==${NUMPY_VERSION}
+                                           scipy==${SCIPY_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
@@ -336,11 +322,11 @@ else()
         add_dependencies(sciencePackages installPip)
         add_dependencies(sciencePackages ${BUILD_DEPENDENCIES})
 
-        # Copy the numpy include directory to a place that OpenCOR can use
+        # Copy the NumPy include directory to a place that OpenCOR can use
 
         add_custom_target(copyNumpyHeaders
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include
+                                                       include
             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         )
 
@@ -349,20 +335,18 @@ else()
         add_dependencies(copyNumpyHeaders ${BUILD_DEPENDENCIES})
 
         # Install Jupyter, IPython and their dependencies
-        # Note: order of installation matters as we want specific
-        #       versions of each package
 
         add_custom_target(ipythonPackages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                traitlets==${TRAITLETS_VERSION}
-                ipython==${IPYTHON_VERSION}
-                ipykernel==${IPYKERNEL_VERSION}
-                qtconsole==${QTCONSOLE_VERSION}
-                notebook==${NOTEBOOK_VERSION}
-                jupyter_console==${JUPYTER_CONSOLE_VERSION}
-                nbconvert==${NBCONVERT_VERSION}
-                ipywidgets==${IPYWIDGETS_VERSION}
-                jupyterlab==${JUPYTERLAB_VERSION}
+                                           ipykernel==${IPYKERNEL_VERSION}
+                                           ipython==${IPYTHON_VERSION}
+                                           ipywidgets==${IPYWIDGETS_VERSION}
+                                           jupyter_console==${JUPYTER_CONSOLE_VERSION}
+                                           jupyterlab==${JUPYTERLAB_VERSION}
+                                           nbconvert==${NBCONVERT_VERSION}
+                                           notebook==${NOTEBOOK_VERSION}
+                                           qtconsole==${QTCONSOLE_VERSION}
+                                           traitlets==${TRAITLETS_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
@@ -372,11 +356,11 @@ else()
         add_dependencies(ipythonPackages sciencePackages)
         add_dependencies(ipythonPackages ${BUILD_DEPENDENCIES})
 
-        # Install other packages we use
+        # Install other packages that we use
 
         add_custom_target(otherPackages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                lxml==${LXML_VERSION}
+                                           lxml==${LXML_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
@@ -390,7 +374,7 @@ else()
 
         add_custom_target(installSphinx
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                sphinx==${SPHINX_VERSION}
+                                           sphinx==${SPHINX_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
@@ -400,19 +384,19 @@ else()
         add_dependencies(installSphinx otherPackages)
         add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
 
-        # We only upgrade to our versions of packages and patch matplotlib
-        # *after* all 'standard' packages have been installed
-
         # Upgrade to our versions that have been patched to work with PythonQt
+        # Note: we only upgrade to our version of packages and patch Matplotlib
+        #       *after* all standard packages have been installed...
 
         set(ARCHIVE_PYTHONQT archive/PythonQt-v)
 
         add_custom_target(pythonQtUpdate
-            COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
-                ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
-                ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
-                ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
-                ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
+            COMMAND ${PIP_INSTALL_COMMAND} --no-deps
+                                           --force-reinstall
+                                           ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
@@ -422,14 +406,13 @@ else()
         add_dependencies(pythonQtUpdate installSphinx)
         add_dependencies(pythonQtUpdate ${BUILD_DEPENDENCIES})
 
-        # Patch matplotlib's Qt backend so that it works with PythonQt
+        # Patch Matplotlib's Qt backend so that it works with PythonQt
 
         add_custom_target(patchMatplotlib
-            COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
-                --strip=2
-                --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
-                --verbose
-                src/matplotlib_${MATPLOTLIB_VERSION}.diff
+            COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py --strip=2
+                                                             --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
+                                                             --verbose
+                                                             src/matplotlib_${MATPLOTLIB_VERSION}.diff
             WORKING_DIRECTORY
                 ${PROJECT_SOURCE_DIR}
             VERBATIM
@@ -462,7 +445,7 @@ endif()
 
 set(SPHINX_EXECUTABLE
     ${CMAKE_COMMAND} -E env PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}
-    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_EXECUTABLE}
+                        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_EXECUTABLE}
     PARENT_SCOPE
 )
 
@@ -489,13 +472,13 @@ if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
 
-# Update the Python path in newly copied scripts
+# Update the Python path in our newly copied scripts
 
 add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
-                   COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/setpythonpath.py
-                                                --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
-                                                ${PYTHON_ROOT_DIR} -s)
+                   COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/setpythonpath.py --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
+                                                                                                    ${PYTHON_ROOT_DIR}
+                                                -s)
 
 # Update our list of Python specific dependencies
 
