@@ -283,8 +283,8 @@ macro(add_plugin PLUGIN_NAME)
     # Create a custom target for copying external binaries
     # Note #1: this is to prevent Ninja from getting confused with circular
     #          references...
-    # Note #2: we use this target in the PythonQtAPI build script when setting
-    #          the PYTHON_DEPENDENCIES list...
+    # Note #2: we use this target in the PythonQt build script when setting the
+    #          PYTHON_DEPENDENCIES list...
 
     if(   NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL ""
        OR (    NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""

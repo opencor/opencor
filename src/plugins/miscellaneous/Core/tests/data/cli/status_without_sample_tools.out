@@ -22,7 +22,7 @@ The following plugins are available:
  - LLVMClang: the plugin is loaded and fully functional.
  - MathMLViewerWidget: the plugin is loaded and fully functional.
  - Python: the plugin is loaded and fully functional.
- - PythonQtAPI: the plugin is loaded and fully functional.
+ - PythonQt: the plugin is loaded and fully functional.
  - PythonQtSupport: the plugin is loaded and fully functional.
  - PythonShell: the plugin is loaded and fully functional.
  - PythonSupport: the plugin is loaded and fully functional.

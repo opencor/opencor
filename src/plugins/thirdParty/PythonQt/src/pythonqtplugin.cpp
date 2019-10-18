@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PythonQt API plugin
+// PythonQt plugin
 //==============================================================================
 
-#include "pythonqtapiplugin.h"
+#include "pythonqtplugin.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtAPI {
+namespace PythonQt {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtAPIPluginInfo()
+PLUGININFO_FUNC PythonQtPluginInfo()
 {
     Descriptions descriptions;
 
@@ -48,7 +48,7 @@ PLUGININFO_FUNC PythonQtAPIPluginInfo()
 
 //==============================================================================
 
-}   // namespace PythonQtAPI
+}   // namespace PythonQt
 }   // namespace OpenCOR
 
 //==============================================================================

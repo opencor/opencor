@@ -876,7 +876,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         list(APPEND PLUGINS
             thirdParty/libSBML
             thirdParty/PythonPackages
-            thirdParty/PythonQtAPI
+            thirdParty/PythonQt
 
             dataStore/BioSignalMLDataStore
             dataStore/CSVDataStore

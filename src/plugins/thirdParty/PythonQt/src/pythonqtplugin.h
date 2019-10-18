@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PythonQt API plugin
+// PythonQt plugin
 //==============================================================================
 
 #pragma once
@@ -30,24 +30,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtAPI {
+namespace PythonQt {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtAPIPluginInfo();
+PLUGININFO_FUNC PythonQtPluginInfo();
 
 //==============================================================================
 
-class PythonQtAPIPlugin : public QObject
+class PythonQtPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtAPIPlugin" FILE "pythonqtapiplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtPlugin" FILE "pythonqtplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace PythonQtAPI
+}   // namespace PythonQt
 }   // namespace OpenCOR
 
 //==============================================================================

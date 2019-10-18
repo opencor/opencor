@@ -1,4 +1,4 @@
-project(PythonQtAPIPlugin)
+project(PythonQtPlugin)
 
 # Name and version of our package
 
@@ -238,11 +238,11 @@ set(PYTHONQT_ROOT_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 
 # Add the plugin
 
-add_plugin(PythonQtAPI
+add_plugin(PythonQt
     SOURCES
         ../../plugininfo.cpp
 
-        src/pythonqtapiplugin.cpp
+        src/pythonqtplugin.cpp
     PLUGINS
         Core
         Python

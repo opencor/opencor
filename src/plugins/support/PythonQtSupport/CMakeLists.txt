@@ -13,5 +13,5 @@ ADD_PLUGIN(PythonQtSupport
         src/pythonqtsupportplugin.cpp
     PLUGINS
         PythonSupport
-        PythonQtAPI
+        PythonQt
 )
