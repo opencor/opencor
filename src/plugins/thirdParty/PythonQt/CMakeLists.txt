@@ -74,35 +74,31 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 59ece483ba1517e547a18cc808e0098532383881
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6b77a00beb999a37e705d7bcd2843e71f18ef3fa
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES e677e1921fec355b4e1322c939cd36fb00b020d5
+                                  SHA1_VALUES 1fd50ce4736dd3dc52228150fc7ce1ae0f02d0dc
                                               8ef254df6fe1b157d3e9da7a928c16887786f602)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 887c49da95ccf7d5fc0bf171fcc14ef3b1f4f8dd
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3367e1ffa29a65f9430891d05c24685a3639ecc7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7c2e20566f71216be4bb2bc73a3be7eea29f1b47
+                                  SHA1_VALUES 929c111ca9ecdb425726dcca676111f5d0f1df4f
                                               1c634c8ba4685b29d3c7602f4d5f585313dc2c3c)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6ac7f806d00d18f6051487dad4c24a77a482be9b
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 10d6869c90298fe29f49ac3e6b5a35ac21faef9d
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 926f9f2d6d694cbdf9d3a65ef9d122b97ecc7b6d)
+                              SHA1_VALUES 111b3c3df66274ff6dd5c0355480c2f3910fe956)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ad1b611aa9e439cbad9b7b29ad5fb4e5b93ea7fa
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} edadfe667c87893a5b64af1d148a32d603cd96e8
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9d304e3e0637fec816c341c0cec4e76249743904)
+                              SHA1_VALUES 7bd353b23b270f2a62be49ea7fc9174e5e2235c2)
     endif()
 else()
     # Set platform specific configuration options and tool names
