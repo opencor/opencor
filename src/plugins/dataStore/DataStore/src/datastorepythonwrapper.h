@@ -67,7 +67,7 @@ public:
                                                      const int &pRun);
 
     static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
-                                                          SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction=NULL);
+                                                          SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction = nullptr);
     static DATASTORE_EXPORT PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:

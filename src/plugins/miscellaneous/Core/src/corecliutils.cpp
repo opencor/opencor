@@ -576,10 +576,11 @@ QString openFile(const QString &pFileName, const File::Type &pType,
 
     FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
 
-    if (fileStatus == FileManager::Status::DoesNotExist)
+    if (fileStatus == FileManager::Status::DoesNotExist) {
         return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
                                                                 QDir::toNativeSeparators(pFileName):
                                                                 pFileName);
+    }
 
     return QString();
 }
@@ -651,7 +652,9 @@ QString localFileName(const QString &pUrl)
 
     checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
 
-    return isLocalFile ? pUrl : FileManager::instance()->fileName(fileNameOrUrl);
+    return isLocalFile?
+                pUrl:
+                FileManager::instance()->fileName(fileNameOrUrl);
 }
 
 //==============================================================================

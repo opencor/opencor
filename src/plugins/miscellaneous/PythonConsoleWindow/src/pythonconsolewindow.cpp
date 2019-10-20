@@ -130,34 +130,36 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
     // Create a Python module to setup the console
 
     PythonQtObjectPtr qtConsoleModule = pythonQtInstance->createModuleFromScript("opencor.qtconsole", PythonConsole);
+
     if (qtConsoleModule == nullptr) {
         if (PyErr_Occurred()) {
             PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
         } else {
             std::cerr << "Cannot create QT Console module" << std::endl;
         }
+
         return;
     }
 
     // Create and retrive an IPython widget
 
     PyObject *createWidget = pythonQtInstance->lookupObject(qtConsoleModule, "create_ipython_widget");
-
     PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
-
     PythonQtInstanceWrapper *widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper*>(ipythonWidget);
+
     if (widgetWrapper == nullptr) {
         if (PyErr_Occurred()) {
             PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
         } else {
             std::cerr << "Cannot create IPython widget" << std::endl;
         }
+
         return;
     }
 
     mPythonConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
 
-    this->setFocusProxy(mPythonConsoleWidget);
+    setFocusProxy(mPythonConsoleWidget);
 
     // Add the widget to our window
 
