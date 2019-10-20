@@ -1427,7 +1427,7 @@ void CentralWidget::moveFile(int pFromIndex, int pToIndex)
 
 bool CentralWidget::canClose()
 {
-    // We can close only if none of the opened files is modified
+    // We can close only if none of the opened files are modified
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         if (!canCloseFile(i)) {
