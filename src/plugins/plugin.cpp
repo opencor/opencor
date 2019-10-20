@@ -157,9 +157,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 #ifdef PYTHON_SUPPORT
                         || (   (qobject_cast<PythonInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "pythonInterfaceVersion") != pythonInterfaceVersion()))
+#endif
                         || (   (qobject_cast<SolverInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
-#endif
 #ifdef GUI_SUPPORT
                         || (   (qobject_cast<ViewInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "viewInterfaceVersion") != viewInterfaceVersion()))
