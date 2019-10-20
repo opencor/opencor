@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pythonbegin.h"
 
 #include "datastorepythonwrapper.h"  // Needs to come before numpy includes
-#include "datastorenumpy.h"
+#include "datastorepythonnumpy.h"
 
 #include "pythonqtsupport.h"
 

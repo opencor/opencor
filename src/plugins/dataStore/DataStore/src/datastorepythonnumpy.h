@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NPY_NO_DEPRECATED_API NPY_1_8_API_VERSION
 #define PY_ARRAY_UNIQUE_SYMBOL OpenCOR_Python_Wrapper_PyArray_API
 
+//==============================================================================
+
 #include <numpy/arrayobject.h>
 
 //==============================================================================
