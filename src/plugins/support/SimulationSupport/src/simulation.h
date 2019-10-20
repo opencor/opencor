@@ -155,9 +155,7 @@ public:
     DataStore::DataStoreValues * algebraicValues() const;
 
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
-
     void setEndingPoint(double pEndingPoint);
-
     void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
@@ -185,9 +183,7 @@ public slots:
     void setDelay(quint64 pDelay);
 
     double startingPoint() const;
-
     double endingPoint() const;
-
     double pointInterval() const;
 
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
