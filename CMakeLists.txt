@@ -916,8 +916,8 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             support/CellMLSupport
             support/COMBINESupport
             support/PMRSupport
-            support/PythonSupport
             support/PythonQtSupport
+            support/PythonSupport
             support/SEDMLSupport
             support/SimulationSupport
             support/StandardSupport
@@ -1383,8 +1383,8 @@ if(WIN32)
 
         # Update Python scripts to refer to our installed Python
 
-        set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
-           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\setpythonpath.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
+        set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
+            Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\setpythonpath.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
         ")
     endif()
 elseif(APPLE)
