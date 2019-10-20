@@ -159,6 +159,10 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
 
     mPythonConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
 
+    mPythonConsoleWidget->setStyleSheet("QWidget {"
+                                        "    border: none;"
+                                        "}");
+
     setFocusProxy(mPythonConsoleWidget);
 
     // Add the widget to our window
@@ -168,7 +172,7 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
                                                      true, true, true, true));
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mPythonConsoleWidget,
-                                                     true, false, false, false));
+                                                     false, false, false, false));
 #else
     #error Unsupported platform
 #endif
