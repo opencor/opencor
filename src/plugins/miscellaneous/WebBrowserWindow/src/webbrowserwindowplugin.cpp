@@ -53,7 +53,8 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo()
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           QStringList() << "Core" << "PythonQtSupport" << "WebViewerWidget",
-                          descriptions);
+                          descriptions,
+                          QStringList() << "PythonConsoleWindow");
 }
 
 //==============================================================================
