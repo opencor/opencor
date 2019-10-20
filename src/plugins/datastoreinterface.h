@@ -46,8 +46,8 @@ public:
 
     void clear();
 
-    void decRef();
     void incRef();
+    void decRef();
 
 private:
     const quint64 mSize;
@@ -64,7 +64,7 @@ class DataStoreValue : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreValue(double *pValue = 0);
+    explicit DataStoreValue(double *pValue = nullptr);
     ~DataStoreValue();
 
     void setUri(const QString &pUri);

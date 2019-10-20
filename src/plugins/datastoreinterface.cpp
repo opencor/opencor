@@ -56,6 +56,7 @@ DataStoreArray::DataStoreArray(quint64 pSize) :
     mSize(pSize)
 {
     mData = new double[pSize]{};
+
     mRefCount = 1;
 }
 
@@ -105,20 +106,25 @@ void DataStoreArray::clear()
 
 //==============================================================================
 
-void DataStoreArray::decRef()
+void DataStoreArray::incRef()
 {
-    --mRefCount;
-    if (mRefCount == 0) {
-        delete[] mData;
-        delete this;
-    }
+    // Increment our reference counter
+
+    ++mRefCount;
 }
 
 //==============================================================================
 
-void DataStoreArray::incRef()
+void DataStoreArray::decRef()
 {
-    ++mRefCount;
+    // Decrement our reference counter, and delete our data and ourselves, if
+    // needed
+
+    if (--mRefCount == 0) {
+        delete[] mData;
+
+        delete this;
+    }
 }
 
 //==============================================================================
