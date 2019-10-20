@@ -37,10 +37,6 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-class SimulationSupportPythonWrapper;
-
-//==============================================================================
-
 PLUGININFO_FUNC SimulationSupportPluginInfo();
 
 //==============================================================================
@@ -60,9 +56,6 @@ public:
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "pythoninterface.inl"
-
-private:
-    SimulationSupportPythonWrapper *mSimulationSupportPythonWrapper;
 };
 
 //==============================================================================

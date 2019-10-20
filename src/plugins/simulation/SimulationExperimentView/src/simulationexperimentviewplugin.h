@@ -44,7 +44,6 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo();
 
 //==============================================================================
 
-class SimulationExperimentViewPythonWrapper;
 class SimulationExperimentViewWidget;
 
 //==============================================================================
@@ -82,8 +81,6 @@ public:
 
 private:
     SimulationExperimentViewWidget *mViewWidget;
-
-    SimulationExperimentViewPythonWrapper *mSimulationExperimentViewPythonWrapper;
 };
 
 //==============================================================================

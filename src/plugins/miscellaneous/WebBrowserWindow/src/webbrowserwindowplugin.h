@@ -42,7 +42,6 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo();
 
 //==============================================================================
 
-class WebBrowserWindowPythonWrapper;
 class WebBrowserWindowWidget;
 class WebBrowserWindowWindow;
 
@@ -76,8 +75,6 @@ private:
 
     WebBrowserWindowWidget *mWebBrowserWindowWidget;
     WebBrowserWindowWindow *mWebBrowserWindowWindow;
-
-    WebBrowserWindowPythonWrapper *mWebBrowserWindowPythonWrapper;
 };
 
 //==============================================================================

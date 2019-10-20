@@ -40,10 +40,6 @@ PLUGININFO_FUNC DataStorePluginInfo();
 
 //==============================================================================
 
-class DataStorePythonWrapper;
-
-//==============================================================================
-
 class DataStorePlugin : public QObject, public I18nInterface,
                         public PythonInterface
 {
@@ -57,9 +53,6 @@ class DataStorePlugin : public QObject, public I18nInterface,
 public:
 #include "i18ninterface.inl"
 #include "pythoninterface.inl"
-
-private:
-    DataStorePythonWrapper *mDataStorePythonWrapper;
 };
 
 //==============================================================================

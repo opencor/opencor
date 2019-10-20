@@ -410,7 +410,7 @@ void SimulationExperimentViewPlugin::registerPythonClasses(PyObject *pModule)
 {
     // Register our Python classes
 
-    mSimulationExperimentViewPythonWrapper = new SimulationExperimentViewPythonWrapper(pModule, this);
+    new SimulationExperimentViewPythonWrapper(pModule, this);
 }
 
 //==============================================================================
