@@ -60,7 +60,6 @@ public:
 public slots:
     double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                  const quint64 &pPosition, int pRun = -1) const;
-
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                       int pRun = -1) const;
 
