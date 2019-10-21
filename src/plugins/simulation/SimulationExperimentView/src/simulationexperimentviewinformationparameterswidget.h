@@ -108,7 +108,7 @@ signals:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void calculateGradients(const int &pIndex, const bool &pCalculate);
+    void calculateGradients(int pIndex, bool pCalculate);
 
 public slots:
     void updateParameters(double pCurrentPoint);

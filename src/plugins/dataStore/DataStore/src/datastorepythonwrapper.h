@@ -51,7 +51,7 @@ public:
 
     static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
     static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable,
-                                                     const int &pRun);
+                                                     int pRun = -1);
 
     static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                           SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction = nullptr);
@@ -59,10 +59,10 @@ public:
 
 public slots:
     double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
-                 const quint64 &pPosition, const int &pRun = -1) const;
+                 const quint64 &pPosition, int pRun = -1) const;
 
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
-                      const int &pRun = -1) const;
+                      int pRun = -1) const;
 
     PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
     PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
@@ -75,7 +75,8 @@ class NumpyPythonWrapper : public QObject
     Q_OBJECT
 
 public:
-    explicit NumpyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize=0);
+    explicit NumpyPythonWrapper(DataStoreArray *pDataStoreArray,
+                                quint64 pSize = 0);
     ~NumpyPythonWrapper();
 
     PyObject * numpyArray() const;

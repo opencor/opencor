@@ -789,7 +789,7 @@ void SimulationData::deleteArrays()
 
 //==============================================================================
 
-void SimulationData::setGradientCalculationByIndex(const int &pIndex, bool pCalculate)
+void SimulationData::setGradientCalculationByIndex(int pIndex, bool pCalculate)
 {
     // Keep track of the indices of constant parameters that will
     // have gradients calculated

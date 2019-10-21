@@ -153,8 +153,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                              double *pConstants, double *pRates,
                              double *pStates, double *pAlgebraic,
                              ComputeRatesFunction pComputeRates,
-                             const int &pGradientsCount,
-                             int *pGradientsIndices,
+                             int pGradientsCount, int *pGradientsIndices,
                              double *pGradients)
 {
     // Retrieve our properties

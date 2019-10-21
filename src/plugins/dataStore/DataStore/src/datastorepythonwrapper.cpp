@@ -313,7 +313,8 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable, const int &pRun)
+PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable,
+                                                 int pRun)
 {
     if (pDataStoreVariable && pDataStoreVariable->array(pRun)) {
         auto numpyArray = new NumpyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
@@ -328,7 +329,7 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
 //==============================================================================
 
 double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
-                                     const quint64 &pPosition, const int &pRun) const
+                                     const quint64 &pPosition, int pRun) const
 {
     if (pDataStoreVariable && pDataStoreVariable->array()) {
         return pDataStoreVariable->value(pPosition, pRun);
@@ -339,7 +340,8 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable, const int &pRun) const
+PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
+                                          int pRun) const
 {
     return DataStorePythonWrapper::newNumPyArray(pDataStoreVariable, pRun);
 }
