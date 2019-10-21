@@ -454,9 +454,9 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
                                        quint64 pSize) :
     mArray(pDataStoreArray)
 {
-    // Increment our array's reference counter
+    // Tell our array that we are holding it
 
-    mArray->incRef();
+    mArray->hold();
 
     // Initialise ourselves
 
@@ -472,9 +472,9 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
 
 NumPyPythonWrapper::~NumPyPythonWrapper()
 {
-    // Decrement our array's reference counter
+    // Tell our array that we are releasing it
 
-    mArray->decRef();
+    mArray->release();
 }
 
 //==============================================================================

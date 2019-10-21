@@ -539,90 +539,81 @@ void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationDat
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->algebraicValues(),
-        &(pSimulationData->mSimulationDataUpdatedFunction));
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicValues(),
+                                                                  &(pSimulationData->simulationDataUpdatedFunction()));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->constantsValues(),
-        &(pSimulationData->mSimulationDataUpdatedFunction));
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantsValues(),
+                                                                  &(pSimulationData->simulationDataUpdatedFunction()));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->ratesValues(),
-        &(pSimulationData->mSimulationDataUpdatedFunction));
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->ratesValues(),
+                                                                  &(pSimulationData->simulationDataUpdatedFunction()));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->statesValues(),
-        &(pSimulationData->mSimulationDataUpdatedFunction));
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->statesValues(),
+                                                                  &(pSimulationData->simulationDataUpdatedFunction()));
 }
 
 //==============================================================================
 
-const OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(
-    SimulationResults *pSimulationResults) const
+const OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
 {
-    return pSimulationResults->mPoints;
+    return pSimulationResults->pointsVariable();
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::algebraic(
-    SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mAlgebraic);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->algebraicVariables());
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::constants(
-    SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mConstants);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->constantsVariables());
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::rates(
-    SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mRates);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->ratesVariables());
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::states(
-    SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mStates);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->statesVariables());
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulationResults) const
 {
-    SimulationData *simulationData = pSimulationResults->mSimulation->data();
+    SimulationData *simulationData = pSimulationResults->simulation()->data();
 
-    const DataStore::DataStoreVariables constantVariables = pSimulationResults->mConstants;
+    const DataStore::DataStoreVariables constantVariables = pSimulationResults->constantsVariables();
 
-    const DataStore::DataStoreVariables stateVariables = pSimulationResults->mStates;
+    const DataStore::DataStoreVariables stateVariables = pSimulationResults->statesVariables();
     int statesCount = stateVariables.size();
 
-    const DataStore::DataStoreVariables gradientVariables = pSimulationResults->mGradients;
+    const DataStore::DataStoreVariables gradientVariables = pSimulationResults->gradientsVariables();
     int gradientsCount = gradientVariables.size()/statesCount;
 
     int *indices = simulationData->gradientIndices();

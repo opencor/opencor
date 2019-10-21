@@ -133,8 +133,6 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public SimulationObject
 {
     Q_OBJECT
 
-    friend class SimulationSupportPythonWrapper;
-
 public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData() override;
@@ -164,52 +162,18 @@ public:
     SolverInterface * nlaSolverInterface() const;
     void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
-    int * gradientIndices();
-
     bool createGradientsArray();
     void deleteGradientsArray();
 
     double * gradients() const;
-
-    int gradientsCount() const;
     int gradientsSize() const;
 
+    int * gradientIndices();
+    int gradientIndicesCount() const;
+
+    SimulationDataUpdatedFunction & simulationDataUpdatedFunction();
+
     static void updateParameters(SimulationData *pSimulationData);
-
-public slots:
-    void reload();
-
-    const quint64 * delay() const;
-    void setDelay(quint64 pDelay);
-
-    double startingPoint() const;
-    double endingPoint() const;
-    double pointInterval() const;
-
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
-    QString odeSolverName() const;
-    Solver::Solver::Properties odeSolverProperties() const;
-
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              bool pReset = true);
-    QString nlaSolverName() const;
-    Solver::Solver::Properties nlaSolverProperties() const;
-
-    void reset(bool pInitialize = true, bool pAll = true);
-
-    void recomputeComputedConstantsAndVariables(double pCurrentPoint,
-                                                bool pInitialize);
-    void recomputeVariables(double pCurrentPoint);
-
-    bool isStatesModified() const;
-    bool isModified() const;
-    void checkForModifications();
-
-    void setGradientCalculation(const QString &pConstantUri,
-                                bool pCalculate = true);
-    void setGradientCalculationByIndex(int pIndex, bool pCalculate);
-
-    void updateInitialValues();
 
 private:
     SimulationResults *mSimulationResults = nullptr;
@@ -266,6 +230,41 @@ signals:
     void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
 
     void error(const QString &pMessage);
+
+public slots:
+    void reload();
+
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
+
+    double startingPoint() const;
+    double endingPoint() const;
+    double pointInterval() const;
+
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+    QString odeSolverName() const;
+    Solver::Solver::Properties odeSolverProperties() const;
+
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
+                              bool pReset = true);
+    QString nlaSolverName() const;
+    Solver::Solver::Properties nlaSolverProperties() const;
+
+    void reset(bool pInitialize = true, bool pAll = true);
+
+    void recomputeComputedConstantsAndVariables(double pCurrentPoint,
+                                                bool pInitialize);
+    void recomputeVariables(double pCurrentPoint);
+
+    bool isStatesModified() const;
+    bool isModified() const;
+    void checkForModifications();
+
+    void setGradientCalculationByIndex(int pIndex, bool pCalculate);
+    void setGradientCalculation(const QString &pConstantUri,
+                                bool pCalculate = true);
+
+    void updateInitialValues();
 };
 
 //==============================================================================
@@ -273,8 +272,6 @@ signals:
 class SIMULATIONSUPPORT_EXPORT SimulationResults : public SimulationObject
 {
     Q_OBJECT
-
-    friend class SimulationSupportPythonWrapper;
 
 public:
     explicit SimulationResults(Simulation *pSimulation);
@@ -294,36 +291,29 @@ public:
     double * algebraic(int pIndex, int pRun = -1) const;
     double * data(double *pData, int pIndex, int pRun = -1) const;
 
-    DataStore::DataStoreVariables constantVariables() const;
-    DataStore::DataStoreVariables rateVariables() const;
-    DataStore::DataStoreVariables stateVariables() const;
+    DataStore::DataStoreVariable * pointsVariable() const;
+
+    DataStore::DataStoreVariables constantsVariables() const;
+    DataStore::DataStoreVariables ratesVariables() const;
+    DataStore::DataStoreVariables statesVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
+    DataStore::DataStoreVariables gradientsVariables() const;
+
     bool initialiseGradientsStore();
-
-public slots:
-    void reload();
-
-    void reset();
-
-    int runsCount() const;
-
-    quint64 size(int pRun = -1) const;
-
-    OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
     DataStore::DataStore *mDataStore = nullptr;
 
-    DataStore::DataStoreVariable *mPoints = nullptr;
+    DataStore::DataStoreVariable *mPointsVariables = nullptr;
 
-    DataStore::DataStoreVariables mConstants;
-    DataStore::DataStoreVariables mRates;
-    DataStore::DataStoreVariables mStates;
-    DataStore::DataStoreVariables mAlgebraic;
+    DataStore::DataStoreVariables mConstantsVariables;
+    DataStore::DataStoreVariables mRatesVariables;
+    DataStore::DataStoreVariables mStatesVariables;
+    DataStore::DataStoreVariables mAlgebraicVariables;
 
-    DataStore::DataStore *mGradientsStore = nullptr;
-    DataStore::DataStoreVariables mGradients = DataStore::DataStoreVariables();
+    DataStore::DataStore *mGradientsDataStore = nullptr;
+    DataStore::DataStoreVariables mGradientsVariables;
 
     QMap<double *, DataStore::DataStoreVariables> mData;
     QMap<double *, DataStore::DataStore *> mDataDataStores;
@@ -337,6 +327,17 @@ private:
 
     double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
                      DataStore::DataStoreVariable *pVariable) const;
+
+public slots:
+    void reload();
+
+    void reset();
+
+    int runsCount() const;
+
+    quint64 size(int pRun = -1) const;
+
+    OpenCOR::DataStore::DataStore * dataStore() const;
 };
 
 //==============================================================================
@@ -400,31 +401,6 @@ public:
 
     void reset(bool pAll = true);
 
-public slots:
-    QString fileName() const;
-
-    bool hasBlockingIssues();
-
-    void save();
-    void reload();
-    void rename(const QString &pFileName);
-
-    OpenCOR::SimulationSupport::SimulationData * data() const;
-    OpenCOR::SimulationSupport::SimulationResults * results() const;
-
-    int runsCount() const;
-    quint64 runSize(int pRun = -1) const;
-
-    bool isRunning() const;
-    bool isPaused() const;
-
-    double currentPoint() const;
-
-    const quint64 * delay() const;
-    void setDelay(quint64 pDelay);
-
-    quint64 size();
-
 private:
     QString mFileName;
 
@@ -460,6 +436,31 @@ signals:
     void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
+
+public slots:
+    QString fileName() const;
+
+    bool hasBlockingIssues();
+
+    void save();
+    void reload();
+    void rename(const QString &pFileName);
+
+    OpenCOR::SimulationSupport::SimulationData * data() const;
+    OpenCOR::SimulationSupport::SimulationResults * results() const;
+
+    int runsCount() const;
+    quint64 runSize(int pRun = -1) const;
+
+    bool isRunning() const;
+    bool isPaused() const;
+
+    double currentPoint() const;
+
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
+
+    quint64 size();
 
 private slots:
     void fileManaged(const QString &pFileName);

@@ -132,7 +132,7 @@ void SimulationWorker::run()
                           mSimulation->data()->states(),
                           mSimulation->data()->algebraic(),
                           mRuntime->computeRates(),
-                          mSimulation->data()->gradientsCount(),
+                          mSimulation->data()->gradientIndicesCount(),
                           mSimulation->data()->gradientIndices(),
                           mSimulation->data()->gradients());
 

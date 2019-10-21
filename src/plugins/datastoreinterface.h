@@ -44,15 +44,16 @@ public:
     double * data() const;
     double data(quint64 pPosition) const;
 
-    void clear();
+    void reset();
 
-    void incRef();
-    void decRef();
+    void hold();
+    void release();
 
 private:
+    int mReferenceCounter = 1;
+
     const quint64 mSize;
-    int mRefCount = 1;
-    double *mData;
+    double *mData = nullptr;
 };
 
 //==============================================================================
@@ -111,7 +112,7 @@ private:
     quint64 mCapacity;
     quint64 mSize = 0;
 
-    DataStoreArray *mArray;
+    DataStoreArray *mArray = nullptr;
     double *mValue;
 };
 
@@ -139,9 +140,7 @@ public:
     void setType(int pType);
 
     void setUri(const QString &pUri);
-
     void setLabel(const QString &pLabel);
-
     void setUnit(const QString &pUnit);
 
     DataStoreArray * array(int pRun = -1) const;
@@ -157,9 +156,7 @@ public slots:
     int runsCount() const;
 
     QString uri() const;
-
     QString label() const;
-
     QString unit() const;
 
     quint64 size(int pRun = -1) const;

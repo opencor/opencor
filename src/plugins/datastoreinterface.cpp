@@ -89,7 +89,7 @@ double DataStoreArray::data(quint64 pPosition) const
 
 //==============================================================================
 
-void DataStoreArray::clear()
+void DataStoreArray::reset()
 {
     // Clear our data
 
@@ -98,21 +98,21 @@ void DataStoreArray::clear()
 
 //==============================================================================
 
-void DataStoreArray::incRef()
+void DataStoreArray::hold()
 {
     // Increment our reference counter
 
-    ++mRefCount;
+    ++mReferenceCounter;
 }
 
 //==============================================================================
 
-void DataStoreArray::decRef()
+void DataStoreArray::release()
 {
     // Decrement our reference counter, and delete our data and ourselves, if
     // needed
 
-    if (--mRefCount == 0) {
+    if (--mReferenceCounter == 0) {
         delete[] mData;
 
         delete this;
@@ -211,7 +211,7 @@ DataStoreVariableRun::~DataStoreVariableRun()
 {
     // Delete some internal objects
 
-    mArray->decRef();
+    mArray->release();
 }
 
 //==============================================================================
