@@ -82,7 +82,7 @@ double DataStoreArray::data(quint64 pPosition) const
 {
     // Return the value at the given position
 
-    Q_ASSERT((pPosition < mSize) && mData);
+    Q_ASSERT((pPosition < mSize) && (mData != nullptr));
 
     return mData[pPosition];
 }
@@ -122,24 +122,8 @@ void DataStoreArray::decRef()
 //==============================================================================
 
 DataStoreValue::DataStoreValue(double *pValue) :
-    mUri(QString()),
     mValue(pValue)
 {
-}
-
-//==============================================================================
-
-DataStoreValue::~DataStoreValue()
-{
-}
-
-//==============================================================================
-
-void DataStoreValue::setUri(const QString &pUri)
-{
-    // Set our URI
-
-    mUri = pUri;
 }
 
 //==============================================================================
@@ -153,11 +137,20 @@ QString DataStoreValue::uri() const
 
 //==============================================================================
 
+void DataStoreValue::setUri(const QString &pUri)
+{
+    // Set our URI
+
+    mUri = pUri;
+}
+
+//==============================================================================
+
 double DataStoreValue::value() const
 {
     // Return our value
 
-    Q_ASSERT(mValue);
+    Q_ASSERT(mValue != nullptr);
 
     return *mValue;
 }
@@ -168,30 +161,23 @@ void DataStoreValue::setValue(double pValue)
 {
     // Set our value
 
-    Q_ASSERT(mValue);
+    Q_ASSERT(mValue != nullptr);
 
     *mValue = pValue;
 }
 
 //==============================================================================
 
-DataStoreValues::DataStoreValues()
-{
-}
-
-//==============================================================================
-
 DataStoreValues::DataStoreValues(DataStoreArray *pDataStoreArray)
 {
-    // Create a list of DataStoreValues
+    // Create a list of DataStoreValue objects
 
-    double *d = pDataStoreArray->data();
-    quint64 i = pDataStoreArray->size();
+    double *data = pDataStoreArray->data();
 
-    while (i-- > 0) {
-        auto v = new DataStoreValue(d);
-        *this << v;
-        ++d;
+    for (quint64 i = 0, iMax = pDataStoreArray->size(); i < iMax; ++i) {
+        *this << new DataStoreValue(data);
+
+        ++data;
     }
 }
 
@@ -199,13 +185,13 @@ DataStoreValues::DataStoreValues(DataStoreArray *pDataStoreArray)
 
 DataStoreValues::~DataStoreValues()
 {
-    // Delete our DataStoreValues
+    // Delete our DataStoreValue objects
 
-    while (count() > 0) {
-        delete last();
-
-        removeLast();
+    for (DataStoreValue *dataStoreValue : *this) {
+        delete dataStoreValue;
     }
+
+    clear();
 }
 
 //==============================================================================
@@ -217,7 +203,6 @@ DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     // Create our array of values
 
     mArray = new DataStoreArray(mCapacity);
-    mValues = mArray->data();
 }
 
 //==============================================================================
@@ -244,9 +229,9 @@ void DataStoreVariableRun::addValue()
 {
     // Set the value of the variable at the given position
 
-    Q_ASSERT((mSize < mCapacity) && mValue);
+    Q_ASSERT((mSize < mCapacity) && (mValue != nullptr));
 
-    mValues[mSize] = *mValue;
+    mArray->data()[mSize] = *mValue;
 
     ++mSize;
 }
@@ -259,7 +244,7 @@ void DataStoreVariableRun::addValue(double pValue)
 
     Q_ASSERT(mSize < mCapacity);
 
-    mValues[mSize] = pValue;
+    mArray->data()[mSize] = pValue;
 
     ++mSize;
 }
@@ -281,7 +266,7 @@ double DataStoreVariableRun::value(quint64 pPosition) const
 
     Q_ASSERT(pPosition < mSize);
 
-    return mValues[pPosition];
+    return mArray->data()[pPosition];
 }
 
 //==============================================================================
@@ -290,7 +275,7 @@ double * DataStoreVariableRun::values() const
 {
     // Return our values
 
-    return mValues;
+    return mArray->data();
 }
 
 //==============================================================================
@@ -465,6 +450,25 @@ quint64 DataStoreVariable::size(int pRun) const
 
 //==============================================================================
 
+DataStoreArray * DataStoreVariable::array(int pRun) const
+{
+    // Return the data array for the given run, if any
+
+    if (mRuns.isEmpty()) {
+        return nullptr;
+    }
+
+    if (pRun == -1) {
+        return mRuns.last()->array();
+    }
+
+    return ((pRun >= 0) && (pRun < mRuns.count()))?
+                mRuns[pRun]->array():
+                nullptr;
+}
+
+//==============================================================================
+
 void DataStoreVariable::addValue()
 {
     // Add a value to our current (i.e. last) run
@@ -529,11 +533,11 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-double DataStoreVariable::getValue() const
+double DataStoreVariable::value() const
 {
     // Return the value to be added next
 
-    Q_ASSERT(mValue);
+    Q_ASSERT(mValue != nullptr);
 
     return *mValue;
 }
@@ -544,28 +548,9 @@ void DataStoreVariable::setValue(double pValue)
 {
     // Set the value to be added next
 
-    Q_ASSERT(mValue);
+    Q_ASSERT(mValue != nullptr);
 
     *mValue = pValue;
-}
-
-//==============================================================================
-
-DataStoreArray * DataStoreVariable::array(int pRun) const
-{
-    // Return the data array for the given run, if any
-
-    if (mRuns.isEmpty()) {
-        return nullptr;
-    } else {
-        if (pRun == -1) {
-            return mRuns.last()->array();
-        } else {
-            return ((pRun >= 0) && (pRun < mRuns.count()))?
-                        mRuns[pRun]->array():
-                        nullptr;
-        }
-    }
 }
 
 //==============================================================================

@@ -63,7 +63,6 @@ class DataStoreValue : public QObject
 
 public:
     explicit DataStoreValue(double *pValue = nullptr);
-    ~DataStoreValue();
 
     void setUri(const QString &pUri);
 
@@ -84,7 +83,6 @@ private:
 class DataStoreValues : public QList<DataStoreValue *>
 {
 public:
-    explicit DataStoreValues();
     explicit DataStoreValues(DataStoreArray *pDataStoreArray);
     ~DataStoreValues();
 };
@@ -115,7 +113,6 @@ private:
 
     DataStoreArray *mArray;
     double *mValue;
-    double *mValues;
 };
 
 //==============================================================================
@@ -167,10 +164,10 @@ public slots:
 
     quint64 size(int pRun = -1) const;
 
-    double getValue() const;
-    void setValue(double pValue);
-
     double value(quint64 pPosition, int pRun = -1) const;
+
+    double value() const;
+    void setValue(double pValue);
 
 private:
     int mType = -1;
