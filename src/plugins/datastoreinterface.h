@@ -51,10 +51,8 @@ public:
 
 private:
     const quint64 mSize;
-    int mRefCount;
+    int mRefCount = 1;
     double *mData;
-
-    ~DataStoreArray();
 };
 
 //==============================================================================

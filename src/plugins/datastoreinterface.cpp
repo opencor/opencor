@@ -55,15 +55,7 @@ namespace DataStore {
 DataStoreArray::DataStoreArray(quint64 pSize) :
     mSize(pSize)
 {
-    mData = new double[pSize]{};
-
-    mRefCount = 1;
-}
-
-//==============================================================================
-
-DataStoreArray::~DataStoreArray()
-{
+    mData = new double[pSize] {};
 }
 
 //==============================================================================
