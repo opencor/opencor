@@ -45,29 +45,20 @@ namespace PythonQtSupport {
 
 //==============================================================================
 
-PYTHONQTSUPPORT_EXPORT
-void addInstanceDecorators(QObject *pQObject);
+void PYTHONQTSUPPORT_EXPORT addInstanceDecorators(QObject *pQObject);
+void PYTHONQTSUPPORT_EXPORT addObject(PyObject *pObject, const QString &pName,
+                                      QObject *pQObject);
 
-PYTHONQTSUPPORT_EXPORT
-void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
+void PYTHONQTSUPPORT_EXPORT evalFile(const QString &pFileName);
+QVariant PYTHONQTSUPPORT_EXPORT evalScript(const QString &pScript);
 
-PYTHONQTSUPPORT_EXPORT
-void evalFile(const QString &pFileName);
+PythonQtObjectPtr PYTHONQTSUPPORT_EXPORT importModule(const QString &pModule);
 
-PYTHONQTSUPPORT_EXPORT
-QVariant evalScript(const QString &pScript);
+void PYTHONQTSUPPORT_EXPORT registerClass(const QMetaObject *pMetaObject);
 
-PYTHONQTSUPPORT_EXPORT
-PythonQtObjectPtr importModule(const QString &pModule);
+PyObject PYTHONQTSUPPORT_EXPORT * wrapQObject(QObject *pQObject);
 
-PYTHONQTSUPPORT_EXPORT
-void registerClass(const QMetaObject *pMetaObject);
-
-PYTHONQTSUPPORT_EXPORT
-PyObject *wrapQObject(QObject *pQObject);
-
-PYTHONQTSUPPORT_EXPORT
-PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self);
+PythonQtInstanceWrapper PYTHONQTSUPPORT_EXPORT * getInstanceWrapper(PyObject *pSelf);
 
 //==============================================================================
 

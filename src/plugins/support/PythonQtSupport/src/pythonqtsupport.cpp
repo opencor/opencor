@@ -87,10 +87,11 @@ PyObject *wrapQObject(QObject *pQObject)
 
 //==============================================================================
 
-PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self)
+PythonQtInstanceWrapper *getInstanceWrapper(PyObject *pSelf)
 {
-    if (self && PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
-        return reinterpret_cast<PythonQtInstanceWrapper*>(self);
+    if (   (pSelf != nullptr)
+        && PyObject_TypeCheck(pSelf, &PythonQtInstanceWrapper_Type)) {
+        return reinterpret_cast<PythonQtInstanceWrapper*>(pSelf);
     }
 
     return nullptr;
