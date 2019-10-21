@@ -334,9 +334,9 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
     // Create and return a NumPy array for the given data store array
 
     if (pDataStoreArray != nullptr) {
-        auto numpyArray = new NumPyPythonWrapper(pDataStoreArray);
+        auto numPyArray = new NumPyPythonWrapper(pDataStoreArray);
 
-        return numpyArray->numpyArray();
+        return numPyArray->numPyArray();
     }
 
     Py_RETURN_NONE;
@@ -352,9 +352,9 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
     DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
 
     if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
-        auto numpyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
+        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
 
-        return numpyArray->numpyArray();
+        return numPyArray->numPyArray();
     }
 
     Py_RETURN_NONE;
@@ -465,7 +465,7 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
     mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, static_cast<void *>(mArray->data()));
     mPythonObject = PythonQtSupport::wrapQObject(this);
 
-    PyArray_SetBaseObject(static_cast<PyArrayObject *>(mNumPyArray), mPythonObject);
+    PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(mNumPyArray), mPythonObject);
 }
 
 //==============================================================================
