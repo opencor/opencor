@@ -40,14 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "PythonQt/PythonQtConversion.h"
-
-//==============================================================================
-
-#include <stdexcept>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace DataStore {
 
