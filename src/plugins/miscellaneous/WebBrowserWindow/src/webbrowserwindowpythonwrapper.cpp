@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "pythonbegin.h"
 
+//==============================================================================
+
 #include "pythonqtsupport.h"
 #include "webbrowserwindowpythonwrapper.h"
 
@@ -42,10 +44,10 @@ namespace WebBrowserWindow {
 
 //==============================================================================
 
-static PyObject *browserWebView(PyObject *self, PyObject *args)
+static PyObject *browserWebView(PyObject *pSelf, PyObject *pArgs)
 {
-    Q_UNUSED(self);
-    Q_UNUSED(args);
+    Q_UNUSED(pSelf)
+    Q_UNUSED(pArgs)
 
     return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->browserWidget()->webView());
 }
@@ -53,13 +55,15 @@ static PyObject *browserWebView(PyObject *self, PyObject *args)
 //==============================================================================
 
 static PyMethodDef pythonWebBrowserWindowMethods[] = {
-    {"browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser."},
-    {NULL, NULL, 0, NULL}
+    { "browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser." },
+    { nullptr, nullptr, 0, nullptr }
 };
 
 //==============================================================================
 
-WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
+WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule,
+                                                             QObject *pParent) :
+    QObject(pParent)
 {
     PyModule_AddFunctions(pModule, pythonWebBrowserWindowMethods);
 }

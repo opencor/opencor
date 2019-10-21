@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "pythonbegin.h"
-	#include "PythonQt/PythonQtPythonInclude.h"
+    #include "PythonQt/PythonQtPythonInclude.h"
 #include "pythonend.h"
 
 //==============================================================================
@@ -48,7 +48,7 @@ class WebBrowserWindowPythonWrapper : public QObject
     Q_OBJECT
 
 public:
-    explicit WebBrowserWindowPythonWrapper(PyObject *pModule, QObject *pParent=0);
+    explicit WebBrowserWindowPythonWrapper(PyObject *pModule, QObject *pParent);
 };
 
 //==============================================================================

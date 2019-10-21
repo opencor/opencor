@@ -13,4 +13,5 @@ ADD_PLUGIN(PythonSupport
     PLUGINS
         Core
         Python
+        PythonPackages
 )

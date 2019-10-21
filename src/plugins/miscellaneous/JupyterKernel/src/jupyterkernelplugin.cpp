@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
 bool JupyterKernelPlugin::runKernel(const QStringList &pArguments, int &pRes)
 {
-    Q_UNUSED(pRes);
+    Q_UNUSED(pRes)
 
     // Make sure that we have the correct number of arguments
 

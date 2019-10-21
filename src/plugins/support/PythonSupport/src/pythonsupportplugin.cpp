@@ -54,7 +54,7 @@ PLUGININFO_FUNC PythonSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("the Python support plugin."));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "Python",
+                          QStringList() << "Python" << "PythonPackages",
                           descriptions);
 }
 
@@ -74,8 +74,8 @@ bool PythonSupportPlugin::definesPluginInterfaces()
 bool PythonSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                                QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -152,7 +152,7 @@ void PythonSupportPlugin::finalizePlugin()
 
 void PythonSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -161,7 +161,7 @@ void PythonSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void PythonSupportPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -170,7 +170,7 @@ void PythonSupportPlugin::loadSettings(QSettings &pSettings)
 
 void PythonSupportPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -179,7 +179,7 @@ void PythonSupportPlugin::saveSettings(QSettings &pSettings) const
 
 void PythonSupportPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

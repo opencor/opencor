@@ -49,10 +49,6 @@ public:
 
     static PyTypeObject DataStoreValuesDict_Type;
 
-    static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
-    static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable,
-                                                     int pRun = -1);
-
     static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                           SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction = nullptr);
     static DATASTORE_EXPORT PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
@@ -79,12 +75,10 @@ public:
     ~NumPyPythonWrapper();
 
     PyObject * numPyArray() const;
-    PyObject * pythonObject() const;
 
 private:
     DataStoreArray *mArray;
     PyObject *mNumPyArray;
-    PyObject *mPythonObject;
 };
 
 //==============================================================================

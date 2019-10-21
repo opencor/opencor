@@ -30,8 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "pythonbegin.h"
 
+//==============================================================================
+
 #include "pythonconsolewindow.h"
 #include "pythonqtsupport.h"
+
+//==============================================================================
 
 #include "PythonQt/PythonQt.h"
 

@@ -329,40 +329,6 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule,
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray)
-{
-    // Create and return a NumPy array for the given data store array
-
-    if (pDataStoreArray != nullptr) {
-        auto numPyArray = new NumPyPythonWrapper(pDataStoreArray);
-
-        return numPyArray->numPyArray();
-    }
-
-    Py_RETURN_NONE;
-}
-
-//==============================================================================
-
-PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable,
-                                                 int pRun)
-{
-    // Create and return a NumPy array for the given data store variable and run
-
-    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
-
-    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
-        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
-
-        return numPyArray->numPyArray();
-    }
-
-    Py_RETURN_NONE;
-}
-
-
-//==============================================================================
-
 double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
                                      quint64 pPosition, int pRun) const
 {
@@ -382,10 +348,17 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
 PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
                                           int pRun) const
 {
-    // Return the values of the given data store viarable for the given run as a
-    // NumPy array
+    // Create and return a NumPy array for the given data store variable and run
 
-    return DataStorePythonWrapper::newNumPyArray(pDataStoreVariable, pRun);
+    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
+
+    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
+        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
+
+        return numPyArray->numPyArray();
+    }
+
+    Py_RETURN_NONE;
 }
 
 //==============================================================================
@@ -463,9 +436,9 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
     npy_intp dims[1] = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
 
     mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, static_cast<void *>(mArray->data()));
-    mPythonObject = PythonQtSupport::wrapQObject(this);
 
-    PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(mNumPyArray), mPythonObject);
+    PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(mNumPyArray),
+                          PythonQtSupport::wrapQObject(this));
 }
 
 //==============================================================================
@@ -484,15 +457,6 @@ PyObject * NumPyPythonWrapper::numPyArray() const
     // Return our NumPy array
 
     return mNumPyArray;
-}
-
-//==============================================================================
-
-PyObject * NumPyPythonWrapper::pythonObject() const
-{
-    // Return our Python object
-
-    return mPythonObject;
 }
 
 //==============================================================================
