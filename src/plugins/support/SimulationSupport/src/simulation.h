@@ -97,10 +97,13 @@ using SimulationIssues = QList<SimulationIssue>;
 
 class SimulationObject : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit SimulationObject(Simulation *pSimulation);
     ~SimulationObject() override;
 
+public slots:
     Simulation * simulation() const;
 
 protected:
@@ -117,8 +120,6 @@ public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData() override;
 
-    void reload();
-
     double * constants() const;
     double * rates() const;
     double * states() const;
@@ -127,46 +128,15 @@ public:
 
     void importData(DataStore::DataStoreImportData *pImportData);
 
-    const quint64 * delay() const;
-    void setDelay(quint64 pDelay);
-
-    double startingPoint() const;
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
-
-    double endingPoint() const;
     void setEndingPoint(double pEndingPoint);
-
-    double pointInterval() const;
     void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
-
-    QString odeSolverName() const;
-    void setOdeSolverName(const QString &pOdeSolverName);
-
-    Solver::Solver::Properties odeSolverProperties() const;
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
-
     SolverInterface * nlaSolverInterface() const;
 
-    QString nlaSolverName() const;
+    void setOdeSolverName(const QString &pOdeSolverName);
     void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
-
-    Solver::Solver::Properties nlaSolverProperties() const;
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              bool pReset = true);
-
-    void reset(bool pInitialize = true, bool pAll = true);
-
-    void recomputeComputedConstantsAndVariables(double pCurrentPoint,
-                                                bool pInitialize);
-    void recomputeVariables(double pCurrentPoint);
-
-    bool isStatesModified() const;
-    bool isModified() const;
-    void checkForModifications();
-
-    void updateInitialValues();
 
 private:
     quint64 mDelay = 0;
@@ -207,6 +177,39 @@ signals:
     void modified(bool pIsModified);
 
     void error(const QString &pMessage);
+
+public slots:
+    void reload();
+
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
+
+    double startingPoint() const;
+    double endingPoint() const;
+    double pointInterval() const;
+
+    QString odeSolverName() const;
+    QString nlaSolverName() const;
+
+    Solver::Solver::Properties odeSolverProperties() const;
+    Solver::Solver::Properties nlaSolverProperties() const;
+
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
+                              bool pReset = true);
+
+    void reset(bool pInitialize = true, bool pAll = true);
+
+    void recomputeComputedConstantsAndVariables(double pCurrentPoint,
+                                                bool pInitialize);
+    void recomputeVariables(double pCurrentPoint);
+
+    bool isStatesModified() const;
+    bool isModified() const;
+
+    void checkForModifications();
+
+    void updateInitialValues();
 };
 
 //==============================================================================
@@ -219,21 +222,11 @@ public:
     explicit SimulationResults(Simulation *pSimulation);
     ~SimulationResults() override;
 
-    void reload();
-
-    void reset();
-
     void importData(DataStore::DataStoreImportData *pImportData);
-
-    int runsCount() const;
 
     bool addRun();
 
     void addPoint(double pPoint);
-
-    quint64 size(int pRun = -1) const;
-
-    DataStore::DataStore * dataStore() const;
 
     double * points(int pRun = -1) const;
 
@@ -265,6 +258,17 @@ private:
 
     double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
                      DataStore::DataStoreVariable *pVariable) const;
+
+public slots:
+    void reload();
+
+    void reset();
+
+    int runsCount() const;
+
+    quint64 size(int pRun = -1) const;
+
+    OpenCOR::DataStore::DataStore * dataStore() const;
 };
 
 //==============================================================================
@@ -300,14 +304,7 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
-    QString fileName() const;
-
-    void save();
-    void reload();
-    void rename(const QString &pFileName);
-
     SimulationIssues issues();
-    bool hasBlockingIssues();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
@@ -319,26 +316,11 @@ public:
     SEDMLSupport::SedmlFile * sedmlFile() const;
     COMBINESupport::CombineArchive * combineArchive() const;
 
-    SimulationData * data() const;
-    SimulationResults * results() const;
     SimulationImportData * importData() const;
 
     void importData(DataStore::DataStoreImportData *pImportData);
 
-    int runsCount() const;
-    quint64 runSize(int pRun = -1) const;
-
     bool addRun();
-
-    bool isRunning() const;
-    bool isPaused() const;
-
-    double currentPoint() const;
-
-    const quint64 * delay() const;
-    void setDelay(quint64 pDelay);
-
-    quint64 size();
 
     void run();
     void pause();
@@ -364,9 +346,9 @@ private:
 
     SimulationWorker *mWorker = nullptr;
 
-    SimulationData *mData;
-    SimulationResults *mResults;
-    SimulationImportData *mImportData;
+    SimulationData *mData = nullptr;
+    SimulationResults *mResults = nullptr;
+    SimulationImportData *mImportData = nullptr;
 
     void checkIssues();
 
@@ -381,6 +363,31 @@ signals:
     void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
+
+public slots:
+    QString fileName() const;
+
+    bool hasBlockingIssues();
+
+    void save();
+    void reload();
+    void rename(const QString &pFileName);
+
+    OpenCOR::SimulationSupport::SimulationData * data() const;
+    OpenCOR::SimulationSupport::SimulationResults * results() const;
+
+    int runsCount() const;
+    quint64 runSize(int pRun = -1) const;
+
+    bool isRunning() const;
+    bool isPaused() const;
+
+    double currentPoint() const;
+
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
+
+    quint64 size();
 
 private slots:
     void fileManaged(const QString &pFileName);

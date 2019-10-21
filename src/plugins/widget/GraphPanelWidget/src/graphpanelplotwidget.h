@@ -656,7 +656,7 @@ private:
 
     QRectF realDataRect();
 
-    void optimizeAxis(const int &pAxisId, double &pMin, double &pMax,
+    void optimizeAxis(int pAxisId, double &pMin, double &pMax,
                       Optimization pOptimization);
 
     void setAxis(int pAxisId, double pMin, double pMax);
