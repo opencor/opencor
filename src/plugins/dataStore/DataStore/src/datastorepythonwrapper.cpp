@@ -45,42 +45,13 @@ namespace DataStore {
 
 //==============================================================================
 
-static bool init_numpy()
+static bool initNumPy()
 {
+    // Initialise NumPy
+
     import_array1(false)
 
     return true;
-}
-
-//==============================================================================
-
-static DataStoreValue *getDataStoreValue(PyObject *valuesDict, PyObject *key)
-{
-    DataStoreValue *dataStoreValue = nullptr;
-
-    PyObject *object = PyDict_GetItem(valuesDict, key);
-    PythonQtInstanceWrapper *wrappedObject = PythonQtSupport::getInstanceWrapper(object);
-
-    if (wrappedObject) {
-        dataStoreValue = (DataStoreValue *)wrappedObject->_objPointerCopy;
-    }
-
-    return dataStoreValue;
-}
-
-//==============================================================================
-
-// Get a subscripted item from a values dictionary
-
-static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *key)
-{
-    auto *dataStoreValue = getDataStoreValue(valuesDict, key);
-
-    if (dataStoreValue) {
-        return PyFloat_FromDouble(dataStoreValue->value());
-    } else {
-        Py_RETURN_NONE;
-    }
 }
 
 //==============================================================================
@@ -92,41 +63,71 @@ typedef struct {
 
 //==============================================================================
 
-// Assign to a subscripted item in a values dictionary
-
-static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObject *value)
+static DataStoreValue * getDataStoreValue(PyObject *pValuesDict, PyObject *pKey)
 {
-    if (value == nullptr) {
-        return PyDict_DelItem(valuesDict, key);
+    // Get and return a DataStoreValue item from a values dictionary
+
+    PythonQtInstanceWrapper *wrappedObject = PythonQtSupport::getInstanceWrapper(PyDict_GetItem(pValuesDict, pKey));
+
+    if (wrappedObject != nullptr) {
+        return static_cast<DataStoreValue *>(wrappedObject->_objPointerCopy);
     }
 
-    else if (PyNumber_Check(value)) {
-        auto *dataStoreValue = getDataStoreValue(valuesDict, key);
+    return nullptr;
+}
 
-        if (dataStoreValue) {
-            auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(value));
-#if defined(__GNUC__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wfloat-equal"
-#endif
-            if (dataStoreValue->value() != newValue) {
-                dataStoreValue->setValue(newValue);
-#if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-#endif
-                // Let our SimulationData object know that data values have changed
+//==============================================================================
 
-                SimulationSupport::SimulationDataUpdatedFunction *simulationDataUpdatedFunction =
-                    ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction;
-                if (simulationDataUpdatedFunction)
-                    (*simulationDataUpdatedFunction)();
+static PyObject * DataStoreValuesDict_subscript(PyObject *pValuesDict,
+                                                PyObject *pKey)
+{
+    // Get and return a subscripted item from a values dictionary
+
+    auto *dataStoreValue = getDataStoreValue(pValuesDict, pKey);
+
+    if (dataStoreValue != nullptr) {
+        return PyFloat_FromDouble(dataStoreValue->value());
+    }
+
+    Py_RETURN_NONE;
+}
+
+//==============================================================================
+
+static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
+                                             PyObject *pKey, PyObject *pValue)
+{
+    // Assign to a subscripted item in a values dictionary
+
+    if (pValue == nullptr) {
+        return PyDict_DelItem(pValuesDict, pKey);
+    }
+
+    PyNumber_Check(pValue);
+
+    auto dataStoreValue = getDataStoreValue(pValuesDict, pKey);
+
+    if (dataStoreValue != nullptr) {
+        auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(pValue));
+
+        if (!qFuzzyCompare(dataStoreValue->value(), newValue)) {
+            dataStoreValue->setValue(newValue);
+
+            // Let our SimulationData object know that simulation data values
+            // have been updated
+
+            auto simulationDataUpdatedFunction = reinterpret_cast<DataStoreValuesDictObject *>(pValuesDict)->mSimulationDataUpdatedFunction;
+
+            if (simulationDataUpdatedFunction != nullptr) {
+                (*simulationDataUpdatedFunction)();
             }
-
-            return 0;
         }
+
+        return 0;
     }
 
     PyErr_SetString(PyExc_TypeError, "Invalid value");
+
     return -1;
 }
 
@@ -140,91 +141,107 @@ static PyMappingMethods DataStoreValuesDict_as_mapping = {
 
 //==============================================================================
 
-// A string representation of a values dictionary
-
-static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
+static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDict)
 {
-    // A modified version of `dict_repr()` from `dictobject.c` in Python's C source
+    // A string representation of a values dictionary
+    // Note: this is a modified version of dict_repr() from dictobject.c in
+    //       Python's C source code...
 
-    PyDictObject *mp = (PyDictObject *)valuesDict;
+    PyDictObject *mp = reinterpret_cast<PyDictObject *>(pValuesDict);
+    Py_ssize_t i = Py_ReprEnter(reinterpret_cast<PyObject *>(mp));
+    PyObject *key = nullptr;
+    PyObject *value = nullptr;
+    bool first = true;
 
-    Py_ssize_t i;
-    PyObject *key = nullptr, *value = nullptr;
-    _PyUnicodeWriter writer;
-    int first;
-
-    i = Py_ReprEnter((PyObject *)mp);
     if (i != 0) {
-        return i > 0 ? PyUnicode_FromString("{...}") : nullptr;
+        return (i > 0)?
+                    PyUnicode_FromString("{...}"):
+                    nullptr;
     }
 
     if (mp->ma_used == 0) {
-        Py_ReprLeave((PyObject *)mp);
+        Py_ReprLeave(reinterpret_cast<PyObject *>(mp));
+
         return PyUnicode_FromString("{}");
     }
 
+    _PyUnicodeWriter writer;
+
     _PyUnicodeWriter_Init(&writer);
+
     writer.overallocate = 1;
-    // "{" + "1: 2" + ", 3: 4" * (len - 1) + "}"
-    writer.min_length = 1 + 4 + (2 + 4) * (mp->ma_used - 1) + 1;
+    writer.min_length = 1+4+(2+4)*(mp->ma_used-1)+1;
 
-    if (_PyUnicodeWriter_WriteChar(&writer, '{') < 0)
+    if (_PyUnicodeWriter_WriteChar(&writer, '{') < 0) {
         goto error;
+    }
 
-    // Do repr() on each key+value pair, and insert ": " between them.
-    // Note: repr() may mutate the dictionary...
-
-    i = 0;
-    first = 1;
-    while (PyDict_Next((PyObject *)mp, &i, &key, &value)) {
+    while (PyDict_Next(reinterpret_cast<PyObject *>(mp), &i, &key, &value)) {
         PyObject *s;
         int res;
-
-        // Prevent repr() from deleting key or value during key format
 
         Py_INCREF(key);
         Py_INCREF(value);
 
         if (!first) {
-            if (_PyUnicodeWriter_WriteASCIIString(&writer, ", ", 2) < 0)
+            if (_PyUnicodeWriter_WriteASCIIString(&writer, ", ", 2) < 0) {
                 goto error;
+            }
         }
-        first = 0;
+
+        first = false;
 
         s = PyObject_Repr(key);
-        if (s == nullptr)
+
+        if (s == nullptr) {
             goto error;
+        }
+
         res = _PyUnicodeWriter_WriteStr(&writer, s);
+
         Py_DECREF(s);
-        if (res < 0)
+
+        if (res < 0) {
             goto error;
+        }
 
-        if (_PyUnicodeWriter_WriteASCIIString(&writer, ": ", 2) < 0)
+        if (_PyUnicodeWriter_WriteASCIIString(&writer, ": ", 2) < 0) {
             goto error;
+        }
 
-        PythonQtInstanceWrapper *wrappedValue = PythonQtSupport::getInstanceWrapper(value);
+        auto wrappedValue = PythonQtSupport::getInstanceWrapper(value);
 
-        if (wrappedValue) {
-            DataStoreValue *dataStoreValue = (DataStoreValue *)wrappedValue->_objPointerCopy;
+        if (wrappedValue != nullptr) {
+            auto dataStoreValue = static_cast<DataStoreValue *>(wrappedValue->_objPointerCopy);
+
             Py_CLEAR(value);
+
             value = PyFloat_FromDouble(dataStoreValue->value());
         }
 
         s = PyObject_Repr(value);
-        if (s == nullptr)
+
+        if (s == nullptr) {
             goto error;
+        }
+
         res = _PyUnicodeWriter_WriteStr(&writer, s);
+
         Py_DECREF(s);
-        if (res < 0)
+
+        if (res < 0) {
             goto error;
+        }
 
         Py_CLEAR(key);
         Py_CLEAR(value);
     }
 
     writer.overallocate = 0;
-    if (_PyUnicodeWriter_WriteChar(&writer, '}') < 0)
+
+    if (_PyUnicodeWriter_WriteChar(&writer, '}') < 0) {
         goto error;
+    }
 
     Py_ReprLeave((PyObject *)mp);
 
@@ -233,60 +250,72 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
 error:
     Py_ReprLeave((PyObject *)mp);
     _PyUnicodeWriter_Dealloc(&writer);
+
     Py_XDECREF(key);
     Py_XDECREF(value);
+
     return nullptr;
 }
 
 //==============================================================================
-
-// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the
-// values of a DataStoreValues list and Python
+// Note: a DataStoreValuesDict is a dictionary sub-class for mapping between the
+//       values of a DataStoreValues list and Python...
 
 PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "OpenCOR.DataStoreValuesDict",            // tp_name
-    sizeof(DataStoreValuesDictObject),        // tp_basicsize
-    0,                                        // tp_itemsize
-    nullptr,                                  // tp_dealloc
-    nullptr,                                  // tp_print
-    nullptr,                                  // tp_getattr
-    nullptr,                                  // tp_setattr
-    nullptr,                                  // tp_compare
-    (reprfunc) DataStoreValuesDict_repr,      // tp_repr
-    nullptr,                                  // tp_as_number
-    nullptr,                                  // tp_as_sequence
-    &DataStoreValuesDict_as_mapping,          // tp_as_mapping
-    nullptr,                                  // tp_hash
-    nullptr,                                  // tp_call
-    nullptr,                                  // tp_str
-    nullptr,                                  // tp_getattro
-    nullptr,                                  // tp_setattro
-    nullptr,                                  // tp_as_buffer
-    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   // tp_flags
-    nullptr,                                  // tp_doc
-    nullptr,                                  // tp_traverse
-    nullptr,                                  // tp_clear
-    nullptr,                                  // tp_richcompare
-    0,                                        // tp_weaklistoffset
-    nullptr,                                  // tp_iter
-    nullptr,                                  // tp_iternext
-    nullptr,                                  // tp_methods
-    nullptr,                                  // tp_members
-    nullptr,                                  // tp_getset
-    &PyDict_Type                              // tp_base
+    "OpenCOR.DataStoreValuesDict",                          // tp_name
+    sizeof(DataStoreValuesDictObject),                      // tp_basicsize
+    0,                                                      // tp_itemsize
+    nullptr,                                                // tp_dealloc
+    nullptr,                                                // tp_print
+    nullptr,                                                // tp_getattr
+    nullptr,                                                // tp_setattr
+    nullptr,                                                // tp_compare
+    reinterpret_cast<reprfunc>(DataStoreValuesDict_repr),   // tp_repr
+    nullptr,                                                // tp_as_number
+    nullptr,                                                // tp_as_sequence
+    &DataStoreValuesDict_as_mapping,                        // tp_as_mapping
+    nullptr,                                                // tp_hash
+    nullptr,                                                // tp_call
+    nullptr,                                                // tp_str
+    nullptr,                                                // tp_getattro
+    nullptr,                                                // tp_setattro
+    nullptr,                                                // tp_as_buffer
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,                 // tp_flags
+    nullptr,                                                // tp_doc
+    nullptr,                                                // tp_traverse
+    nullptr,                                                // tp_clear
+    nullptr,                                                // tp_richcompare
+    0,                                                      // tp_weaklistoffset
+    nullptr,                                                // tp_iter
+    nullptr,                                                // tp_iternext
+    nullptr,                                                // tp_methods
+    nullptr,                                                // tp_members
+    nullptr,                                                // tp_getset
+    &PyDict_Type                                            // tp_base
 };
 
 //==============================================================================
 
-DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
+DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule,
+                                               QObject *pParent) :
+    QObject(pParent)
 {
     Q_UNUSED(pModule)
 
     // Initialise NumPy
 
     if (OpenCOR_Python_Wrapper_PyArray_API == nullptr) {
-        if (!init_numpy()) qFatal("Unable to initialise NumPy API...");
+#ifdef QT_DEBUG
+        bool res =
+#endif
+        initNumPy();
+
+#ifdef QT_DEBUG
+        if (!res) {
+            qFatal("FATAL ERROR | %s:%d: unable to initialise NumPy.", __FILE__, __LINE__);
+        }
+#endif
     }
 
     PyType_Ready(&DataStoreValuesDict_Type);
@@ -302,8 +331,10 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pPare
 
 PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray)
 {
-    if (pDataStoreArray) {
-        auto numpyArray = new NumpyPythonWrapper(pDataStoreArray);
+    // Create and return a NumPy array for the given data store array
+
+    if (pDataStoreArray != nullptr) {
+        auto numpyArray = new NumPyPythonWrapper(pDataStoreArray);
 
         return numpyArray->numpyArray();
     }
@@ -316,8 +347,12 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable,
                                                  int pRun)
 {
-    if (pDataStoreVariable && pDataStoreVariable->array(pRun)) {
-        auto numpyArray = new NumpyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
+    // Create and return a NumPy array for the given data store variable and run
+
+    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
+
+    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
+        auto numpyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
 
         return numpyArray->numpyArray();
     }
@@ -329,13 +364,17 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
 //==============================================================================
 
 double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
-                                     const quint64 &pPosition, int pRun) const
+                                     quint64 pPosition, int pRun) const
 {
-    if (pDataStoreVariable && pDataStoreVariable->array()) {
+    // Return the value of the given data store variable at the given position
+    // and for the given run
+
+    if (   (pDataStoreVariable != nullptr)
+        && (pDataStoreVariable->array() != nullptr)) {
         return pDataStoreVariable->value(pPosition, pRun);
     }
 
-    throw std::runtime_error("'NoneType' object is not subscriptable");
+    throw std::runtime_error("'NoneType' object is not subscriptable.");
 }
 
 //==============================================================================
@@ -343,47 +382,59 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
 PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
                                           int pRun) const
 {
+    // Return the values of the given data store viarable for the given run as a
+    // NumPy array
+
     return DataStorePythonWrapper::newNumPyArray(pDataStoreVariable, pRun);
 }
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::dataStoreValuesDict(
-    const DataStoreValues *pDataStoreValues,
-    SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
+PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
+                                                       SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
-    PyObject *valuesDict = PyDict_Type.tp_new(&DataStoreValuesDict_Type, nullptr, nullptr);
-    valuesDict->ob_type = &DataStoreValuesDict_Type;
+    // Create and return a Python dictionary for the given data store values and
+    // keep track of the given simulation data updated function so that we can
+    // let OpenCOR know when simulation data have been updated
 
-    ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
+    PyObject *res = PyDict_Type.tp_new(&DataStoreValuesDict_Type, nullptr, nullptr);
+
+    res->ob_type = &DataStoreValuesDict_Type;
+
+    reinterpret_cast<DataStoreValuesDictObject *>(res)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
     if (pDataStoreValues != nullptr) {
-        for (int i = 0; i < pDataStoreValues->size(); ++i) {
-            DataStoreValue *value = pDataStoreValues->at(i);
+        for (int i = 0, iMax = pDataStoreValues->size(); i < iMax; ++i) {
+            auto value = pDataStoreValues->at(i);
 
-            PythonQtSupport::addObject(valuesDict, value->uri(), value);
+            PythonQtSupport::addObject(res, value->uri(), value);
         }
     }
 
-    return valuesDict;
+    return res;
 }
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::dataStoreVariablesDict(
-    const DataStoreVariables &pDataStoreVariables)
+PyObject * DataStorePythonWrapper::dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables)
 {
-    PyObject *variablesDict = PyDict_New();
-    foreach (DataStoreVariable *variable, pDataStoreVariables)
-        PythonQtSupport::addObject(variablesDict, variable->uri(), variable);
+    // Create and return a Python dictionary for the given data store variables
 
-    return variablesDict;
+    PyObject *res = PyDict_New();
+
+    foreach (DataStoreVariable *dataStoreVariable, pDataStoreVariables) {
+        PythonQtSupport::addObject(res, dataStoreVariable->uri(), dataStoreVariable);
+    }
+
+    return res;
 }
 
 //==============================================================================
 
 PyObject * DataStorePythonWrapper::variables(DataStore *pDataStore)
 {
+    // Return the variables in the given data store as a Python dictionary
+
     return dataStoreVariablesDict(pDataStore->variables());
 }
 
@@ -391,41 +442,56 @@ PyObject * DataStorePythonWrapper::variables(DataStore *pDataStore)
 
 PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
 {
+    // Return the VOI and variables in the given data store as a Python
+    // dictionary
+
     return dataStoreVariablesDict(pDataStore->voiAndVariables());
 }
 
 //==============================================================================
 
-NumpyPythonWrapper::NumpyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize) :
+NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
+                                       quint64 pSize) :
     mArray(pDataStoreArray)
 {
-    npy_intp dims[1] = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
+    // Increment our array's reference counter
 
     mArray->incRef();
-    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->data());
 
+    // Initialise ourselves
+
+    npy_intp dims[1] = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
+
+    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, static_cast<void *>(mArray->data()));
     mPythonObject = PythonQtSupport::wrapQObject(this);
-    PyArray_SetBaseObject((PyArrayObject *)mNumPyArray, mPythonObject);
+
+    PyArray_SetBaseObject(static_cast<PyArrayObject *>(mNumPyArray), mPythonObject);
 }
 
 //==============================================================================
 
-NumpyPythonWrapper::~NumpyPythonWrapper()
+NumPyPythonWrapper::~NumPyPythonWrapper()
 {
+    // Decrement our array's reference counter
+
     mArray->decRef();
 }
 
 //==============================================================================
 
-PyObject * NumpyPythonWrapper::numpyArray() const
+PyObject * NumPyPythonWrapper::numPyArray() const
 {
+    // Return our NumPy array
+
     return mNumPyArray;
 }
 
 //==============================================================================
 
-PyObject * NumpyPythonWrapper::pythonObject() const
+PyObject * NumPyPythonWrapper::pythonObject() const
 {
+    // Return our Python object
+
     return mPythonObject;
 }
 
