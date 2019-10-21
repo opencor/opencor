@@ -85,6 +85,13 @@ static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *k
 
 //==============================================================================
 
+typedef struct {
+    PyDictObject mDict;
+    SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
+} DataStoreValuesDictObject;
+
+//==============================================================================
+
 // Assign to a subscripted item in a values dictionary
 
 static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObject *value)
