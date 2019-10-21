@@ -81,7 +81,6 @@ public:
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,
                             ComputeRatesFunction pComputeRates);
-
     virtual void initialize(double pVoi, int pRatesStatesCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,

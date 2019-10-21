@@ -133,9 +133,9 @@ static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key
 //==============================================================================
 
 static PyMappingMethods DataStoreValuesDict_as_mapping = {
-    nullptr,                                            // mp_length
-    (binaryfunc) DataStoreValuesDict_subscript,         // mp_subscript
-    (objobjargproc) DataStoreValuesDict_ass_subscript   // mp_ass_subscript
+    nullptr,                                                        // mp_length
+    static_cast<binaryfunc>(DataStoreValuesDict_subscript),         // mp_subscript
+    static_cast<objobjargproc>(DataStoreValuesDict_ass_subscript)   // mp_ass_subscript
 };
 
 //==============================================================================
@@ -240,8 +240,8 @@ error:
 
 //==============================================================================
 
-// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the values
-// of a DataStoreValues list and Python.
+// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the
+// values of a DataStoreValues list and Python
 
 PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
@@ -304,6 +304,7 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 {
     if (pDataStoreArray) {
         auto numpyArray = new NumpyPythonWrapper(pDataStoreArray);
+
         return numpyArray->numpyArray();
     }
 
@@ -316,6 +317,7 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
 {
     if (pDataStoreVariable && pDataStoreVariable->array(pRun)) {
         auto numpyArray = new NumpyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
+
         return numpyArray->numpyArray();
     }
 
