@@ -366,7 +366,7 @@ int main(int pArgC, char *pArgV[])
         }
 
         // Restart OpenCOR, but without providing any of the arguments that were
-        // originally passed to us since we want to reset everything
+        // originally passed to us since we just want to restart
 
         QProcess::startDetached(appFilePath, QStringList(), appDirPath);
     }
