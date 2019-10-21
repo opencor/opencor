@@ -556,12 +556,15 @@ DataStoreArray * DataStoreVariable::array(int pRun) const
     // Return the data array for the given run, if any
 
     if (mRuns.isEmpty()) {
-        return 0;
+        return nullptr;
     } else {
-        if (pRun == -1)
+        if (pRun == -1) {
             return mRuns.last()->array();
-        else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->array():0;
+        } else {
+            return ((pRun >= 0) && (pRun < mRuns.count()))?
+                        mRuns[pRun]->array():
+                        nullptr;
+        }
     }
 }
 
