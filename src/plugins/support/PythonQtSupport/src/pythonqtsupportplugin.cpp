@@ -142,7 +142,7 @@ void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
     // Register wrappers for every plugin that has a Python interface
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
+    for (auto plugin : pLoadedPlugins) {
         PythonInterface *pythonInterface = qobject_cast<PythonInterface *>(plugin->instance());
 
         if (pythonInterface) {

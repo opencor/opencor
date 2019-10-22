@@ -1606,7 +1606,7 @@ QString Simulation::furtherInitialize() const
 
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, solverInterfaces) {
+    for (auto solverInterface : solverInterfaces) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             odeSolverInterface = solverInterface;
 
@@ -1669,7 +1669,7 @@ QString Simulation::furtherInitialize() const
                 mustHaveNlaSolver = true;
                 nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
-                foreach (SolverInterface *solverInterface, solverInterfaces) {
+                for (auto solverInterface : solverInterfaces) {
                     if (!nlaSolverName.compare(solverInterface->solverName())) {
 
                         mData->setNlaSolverName(nlaSolverName);
