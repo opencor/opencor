@@ -56,6 +56,10 @@
         <translation>Ouvrir</translation>
     </message>
     <message>
+        <source>&apos;%1&apos; could not be created.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
+    </message>
+    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
@@ -174,10 +178,6 @@
     <message>
         <source>The file is being edited, so switching views is not possible for now</source>
         <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be created.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
     </message>
 </context>
 <context>
@@ -511,6 +511,10 @@
         <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
     </message>
     <message>
+        <source>&apos;%1&apos; could not be created.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
+    </message>
+    <message>
         <source>&apos;%1&apos; could not be opened (%2).</source>
         <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
@@ -533,10 +537,6 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be created.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
     </message>
 </context>
 </TS>
