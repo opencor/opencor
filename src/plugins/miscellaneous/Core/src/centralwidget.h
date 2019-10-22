@@ -111,13 +111,12 @@ public:
 
     QString openFile(const QString &pFileName,
                      File::Type pType = File::Type::Local,
-                     const QString &pUrl = QString(),
-                     bool pShowWarning = true);
+                     const QString &pUrl = QString(), bool pShowWarning = true);
     QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
-    bool canClose();
-
     bool closeFile(const QString &pFileName);
+
+    bool canClose();
 
     bool selectMode(const QString &pModeName);
     bool selectView(const QString &pViewName);
