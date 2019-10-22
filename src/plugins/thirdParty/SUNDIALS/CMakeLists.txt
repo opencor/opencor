@@ -3,37 +3,37 @@ project(SUNDIALSPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME SUNDIALS)
-set(PACKAGE_VERSION 4.1.0)
+set(PACKAGE_VERSION 5.0.0)
 
 # Version of our package's libraries
 
-set(MAJOR_ARKODE_LIBRARY_VERSION 3)
-set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.1.0)
+set(MAJOR_ARKODE_LIBRARY_VERSION 4)
+set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_CVODES_LIBRARY_VERSION 4)
-set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.1.0)
+set(MAJOR_CVODES_LIBRARY_VERSION 5)
+set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_IDAS_LIBRARY_VERSION 3)
-set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.1.0)
+set(MAJOR_IDAS_LIBRARY_VERSION 4)
+set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_KINSOL_LIBRARY_VERSION 4)
-set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.1.0)
+set(MAJOR_KINSOL_LIBRARY_VERSION 5)
+set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_NVEC_LIBRARY_VERSION 4)
-set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.1.0)
+set(MAJOR_NVEC_LIBRARY_VERSION 5)
+set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_SUNLINSOL_LIBRARY_VERSION 2)
-set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.1.0)
+set(MAJOR_SUNLINSOL_LIBRARY_VERSION 3)
+set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_SUNNONLINSOL_LIBRARY_VERSION 1)
-set(SUNNONLINSOL_LIBRARY_VERSION ${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}.1.0)
+set(MAJOR_SUNNONLINSOL_LIBRARY_VERSION 2)
+set(SUNNONLINSOL_LIBRARY_VERSION ${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_SUNMATRIX_LIBRARY_VERSION 2)
-set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.1.0)
+set(MAJOR_SUNMATRIX_LIBRARY_VERSION 3)
+set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v4.1.0)
+set(GIT_TAG v5.0.0)
 
 # Specify where our local package will be installed
 
@@ -222,123 +222,123 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 32fb748c269adbd08c580580e2b7078caf88e5d5
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d3364953ab3e961057a292d058123c4038f58247
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES d6ec8cb0c89122f976254d1dea412d7d102b8e6d
-                                              53dd5f33110bcef0c47441c58374ba6d94a5d74c
-                                              18492b2145ec01e9b6d8e7bab6262a7af6e1cb72
-                                              a39fb607e81a3fd92028b197cce7e8045d1e8c43
-                                              02c3ef3ac3c088c2608f22679df8b15466a4dc57
-                                              472c2fd55f6a9e51c80f5f254d854eec972fbf8f
-                                              4595512d73d1f24bba0217e3d945412d606ffd5d
-                                              f3d4234f91dc61280c28d76f5fb1bf0e694a2e2e
-                                              9281538a2a40d36f88fc63421f21d10f3a4d81dc
-                                              7631e362dcd95e1490c42d430390acefb649e3a4
-                                              1d82951f4d2c31bc7bdcfd6876784d61c4c1b200
-                                              4bb7f3766d442e51f2ea3ba745a80a2a76528bdb
-                                              c5e513a5f2e99bc24d90a67a956d4f9d0e32826f
-                                              05fad934b1716128c7996ebef63c66491ea61a14
-                                              b444b940b6d071208504793d5a544984ce8255e8
-                                              897061c2b0ce25e651bad5895897a373732e50ab
-                                              a33dbc41c51dc2d885b3b338dc552e1907e4bf77
-                                              0a276f3e8191f92f7c5891d4a8f5a3ac5d96a49a
-                                              97f00a6fb6057373217f50c29d22b520f1951064
-                                              a2850820263b05cc78c71c6c2901b6d8d2b1cba1
-                                              22fe7bc63c0a8e6beb5f13d0ff8d1114f11e3eb4
-                                              ee0c7c0885240edbd1a1bddd9a24ac75a387dee2
-                                              2c6965488e803320ccb220413e0d00e8efd0deb0
-                                              00aa5979ea0e09d202dda6825a73414e01f370dd
-                                              665acc4548f869c2e41170021729f9528707f758
-                                              41babc05ccffda1d6e3f1b9ab79513ac5e43f7b0
-                                              c24bd32bb0fd8e4dc6e1f893b7e77994870540e5
-                                              c0c791974cac1c568f7e3728e95fbe88393be007
-                                              5da154edd86ddbbd51430b35438db6ece4f59b85
-                                              2a89c4d9d00855b4dfa83745e20c8f4bfedc29bf
-                                              1da70bacec01254041391d1b456f07766667cc0a
-                                              707feb630c72bf47bddfafbc3fe754e07bfb0f6e
-                                              f56130124ad8db4771727ba4853e9d4442f636c6
-                                              154c3528340f6cccc1cef2a19dd737fd811c668a)
+                                  SHA1_VALUES e134a4720b566cb7a34840674364c0accb225b93
+                                              cead49234464e6c2bc64405c1681ad472649d110
+                                              1fb7e2f26d75d7e9735866b5fb53d9a8885f96f8
+                                              7c792be9128218af5a001e3aeb8b25d1ab3ba5ef
+                                              7a0318592ead717cb8ee49e90203b31d005dc1b9
+                                              8c8eddad28f5515b8548feedce4e8af8befb09f2
+                                              ea98516d2db412ab1ffba09fc8740aa904a28773
+                                              f4dcda216936743afe2af9a79a260b299530da72
+                                              12cd8879e86bdbc187848d076329ca2338184ce1
+                                              9d6895ae73aefa910eb4786c6f36504fff98f7dc
+                                              40cdb0e66db2e56bf60eea698bd7512d8bcf24d0
+                                              b317df5450fabf52560075f6a9100f4b377fa0a6
+                                              093b2ee8b01dad96160e26611893e7c53294a0c3
+                                              107326b34f7a54c598e5c44b58d6f67b57441813
+                                              45661075fb27dfdd5795b96941f5c1d558e64487
+                                              59e15f44916a86aecce55c5ea0e1b894c1954a4b
+                                              0343a4e459c5ec52d628fed0cbc71d72c2bf9090
+                                              2c0d7058289b461f7d38bfaafe9b27cdb4ca34f1
+                                              7bb62bfb500be03921764b6c6971460d4b9eb316
+                                              79ceadac5abafc897cad81456870bf5c7c981d56
+                                              7c2321bee43113ea985079212a8eac27f4739508
+                                              16ee06430ef022f9da30f88207043d84a7f38a58
+                                              9db3d61a5799e38ad98919cafe1d9b69d9fc6077
+                                              09083a8b9ee6c8629163c9ec6a96dbd445db921a
+                                              d3d568a6919ae26c020b43553b7d9889c194b3c0
+                                              928fccf69c90330708bc71e8ca6adcb26333c424
+                                              e98ab5950e6680308782fcd6b155a4f84843269d
+                                              4cc8a1b25f6afc81282cc0f1e2e82fbb45ad1214
+                                              f785b6c42703e5bcb8a2f4bd4d7066a3c8614d74
+                                              687585beb5d8ee312c4cfe3146529e2548a5aab1
+                                              8b68560d350851786efcfb12a876ef7a221f087c
+                                              0ac8f8cf9814265e0037c6f6ccfe8d207de35e45
+                                              bdc57e6dc65474b80d220bc5923d03c192d70c89
+                                              5cf3b10006579ef89678cf56c67dcc0cbaf251a7)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 49a882ac32d48186673ad93f8b7501ec4fb01f6e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bda5f85f86938a22137e76cc26d20ff9318bdad0
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 197163e3fb945f6aa737d064ce734215ead58b00
-                                              bcfbecd63319a184fa79c8c71be7efbb509f170d
-                                              831d791159375c2befe44d739aac5b31074e5c54
-                                              0d346120d4bce53ee47c7a3af90db81c1767cdaa
-                                              8b0eb5419dbde4ee8cb9c46fbca40ad072dedd5e
-                                              e54e92f9d7951d0544972bc570c1669cdd23b5d3
-                                              dc9712d2ded02643c62e3cfc6275bf91267f0636
-                                              5501e1f4e9fe29fea9fbfd878b904f65261f298b
-                                              e4ac0653f804a64a4d4810978f5584fffa57d128
-                                              65955c5840cde9edeab3b0bf5d7b009147a96f11
-                                              792d0b4e6da0ab8fdce9dd3b6455eed547304b3a
-                                              5b8d6c9eba4a6c961dba0de9d6291944ce55f973
-                                              ec7d8ac5fb4c6e9cdddeccb91b4ceba28c4c3bc3
-                                              bdc1ecc206c20ec66da719a8274c63b1703628f6
-                                              01100f041f1c8c76e2435199a41ac4c38f34c141
-                                              2076d8ab6b0872e2bb1585f3e584d3da7bf1ac7e
-                                              01ba44b2022f2cda84a83663a3f39dc2f7f6f769
-                                              70d2a22dea54764e3fcc8d15c53e664dd793f644
-                                              28058576bb4bea054b890af7f01bcf0238c462bc
-                                              ab7e63e5a461e4f22fd8431720f7fe0b8866664a
-                                              c616c5cf5ef7ab1b594c7c60c78b2320ca09801e
-                                              d23fe7d4487965faca9883ae4efecfa134c28714
-                                              0b74468103c04b2bee2bd3b2ebb922ca555d1e0e
-                                              711a663780c060dddf0406b72bbe29c84b3e378d
-                                              b64dda230beaa861cd4fe8f9c6709f10a31a6686
-                                              e8824017eac002d5b511bbfd8848bd720a0a5dab
-                                              65562976122725ae92f1d2921415be063109ecce
-                                              f853761335bcdaa62717111459f4355da9437eda
-                                              2ecdb07008b87960f86fef282c8a4cf72fcf8afd
-                                              b5225889924d1e21da5e645451df8f2f49c56488
-                                              097c93fb3089362e10e375794c5bd6ff82e3932b
-                                              894de0e50e00d59863557b8e268dba1dabf14708
-                                              9c95abcb9253403a0b353bcf0bf833266ff4ef19
-                                              07404bfd03309ea8786e620d3089ea081eb2c930)
+                                  SHA1_VALUES 828fc37023cdbc6dde9b0a43db25615a0cfc5038
+                                              a7dccd96e7f62f08d717be1a16370d65f9151891
+                                              2831a5ff6a702a82047a3966267343fa6fe5c0fa
+                                              ec9ada18762e189141b3992e2592f1e0ff6a941b
+                                              c4d2740aa43f62957e424192ace663e5c56aa272
+                                              4c9dad88a233f16a358c6e06309a277bc5b5e537
+                                              7d67165f26e3011f438a3a2793a319ef6cf81675
+                                              12292188fdd2eb512a25ef4c7dc46ff7d929f4aa
+                                              033fdaf239547f18ce3eb58d6626cc4e460f53de
+                                              a5c648abcd5d2d114fa798b4d2413408bf0917e8
+                                              c6da027b49c03bba47bb205c7b53f864174e6318
+                                              b549cdff4cb3dc6b61b2a9ffad2855335a16a7c6
+                                              7a8f520c50500a1f77fe9836ddee788e5803d633
+                                              6931bf6946e83c358fed241c4428d9e4515e90ff
+                                              3f3c5ca945ce3b95f74f8cad82e1d255af79b630
+                                              a87c25a6bb3109c8552a2fbe3ffa5fde42d67391
+                                              ddc035d735efb63e89d9146e240a54d7253e98cd
+                                              2c0d7058289b461f7d38bfaafe9b27cdb4ca34f1
+                                              7bb62bfb500be03921764b6c6971460d4b9eb316
+                                              79ceadac5abafc897cad81456870bf5c7c981d56
+                                              7c2321bee43113ea985079212a8eac27f4739508
+                                              16ee06430ef022f9da30f88207043d84a7f38a58
+                                              9db3d61a5799e38ad98919cafe1d9b69d9fc6077
+                                              09083a8b9ee6c8629163c9ec6a96dbd445db921a
+                                              d3d568a6919ae26c020b43553b7d9889c194b3c0
+                                              928fccf69c90330708bc71e8ca6adcb26333c424
+                                              e98ab5950e6680308782fcd6b155a4f84843269d
+                                              4cc8a1b25f6afc81282cc0f1e2e82fbb45ad1214
+                                              f785b6c42703e5bcb8a2f4bd4d7066a3c8614d74
+                                              687585beb5d8ee312c4cfe3146529e2548a5aab1
+                                              8b68560d350851786efcfb12a876ef7a221f087c
+                                              0ac8f8cf9814265e0037c6f6ccfe8d207de35e45
+                                              bdc57e6dc65474b80d220bc5923d03c192d70c89
+                                              5cf3b10006579ef89678cf56c67dcc0cbaf251a7)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 38ad835f294bf82ff7c8a6e7241acf198c8057e6
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} eee3adeb77d9511feb31e13cb226a073a396e108
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 4486898d89e85aa758193d09c37ab996f7333da2
-                                          c8f77f0030c9cfb0eeb0a95ff3e804b571f726ef
-                                          f58043ede883815ab43214f879460b6545e6ca87
-                                          4cec2cdeb5ed7f81778d535d1fc53194a18b749c
-                                          e453232f2fef61ecafb5b39e361c2c8d847077bd
-                                          102040d7943b3640b7a096378fc1559d7e95d00c
-                                          d09a189c2200ff813601ecae1f0353f76f908d24
-                                          9585060f27f0bf6664782d5290d316fc4375f6dd
-                                          363271347c89bfefb5b640d160946934c018be42
-                                          7de96939f98006ae4c04c013c8b73779dd2ac993
-                                          ba99726bf9aee9fbbc7526645f63ac80d75a93bb
-                                          16789da67eebf7422aa723266cb202a0bfc1a985
-                                          7a00a81dd6d266c74aeae61a67d485b946dac9a2
-                                          69a670e05bc9718c54bd2d841e0f9db590ffcd9c
-                                          2b6c3d8dd7529743d6fb1cdadd3cfae27eda33f8
-                                          7df762a35b908472108d1519df78533b4e5ef59f
-                                          047ba21ed44712eb535dae156b4afa8d074cbba9)
+                              SHA1_VALUES 971d21dac86c2ab9778156daa34c198b0ea1d14f
+                                          fc7033cd140faa747af39bf4a4520665fd75f1b2
+                                          ed25cdda89be613d89adb9c3daf1505613732475
+                                          cf34b474318d48b832ea741e6902cadf91559527
+                                          6fd533213ce2efdeb9069cd9b90090173cd4d758
+                                          3c1568a7780eb4262de240ee88b03127056907a0
+                                          f8565cc16132f68f03e3e9991e41d16d4b76e9ff
+                                          b774559134d89863f4c4c077886946e0e0aec2ff
+                                          52c05ae4c8622008cc38430d2d3591ea5ff5129a
+                                          c7cb9fa304532793537a414e2117bcb9836218e2
+                                          779d498c3ef189544b0bf0ee93005a8eb797ea0b
+                                          a85220d36ab73f308856d1cf55c5938750838152
+                                          7a6ae3452fda90437a22b18469fb7df822bb305c
+                                          f8ca7df8006612ff9fbab832aab97dde04a96a3d
+                                          ca3de2d24e66165351436f8ed841a3c0ec978573
+                                          41c87a55e9db850fc5dd45570f7efecbe0784544
+                                          a82f46f6c7fb8d22b56a4caa4203cc9efa375353)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3d1dcaccff7e6d97b3655abde2a1f76f4633810e
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f6adada52dc5524888a2f4f119b474a9bc121ef6
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e582e17ab70bad54297d12335b49ea9758e3270b
-                                          ca8d7a57f2c7e17f4b8e022b5b7b02950fb1ff43
-                                          398ae260acb42acbe437d7b33855175be52f3e8f
-                                          270980a3b7b14aa5d6340c29b9086a7766a1f33c
-                                          fc29f0aa96e562779fef2d9c6c1b149c1e0999da
-                                          71831bd1eecf45c8e35424bf28457527a43d1e5d
-                                          43109914af6ab7de66fcb2a1c62272f0acb473c4
-                                          d39f632c89c2499d98d906ba1e6f6303b242749a
-                                          ae4c0b3ed64dac0724a79459dcf31cc68e128585
-                                          b0e34412031594bb9263eeaf199e5d8ab8bab41f
-                                          7a26b9e433472a8dfebc54a56392a992ded2f98d
-                                          ec4e780cae75382707d1ae959d6a9299012800ee
-                                          aa1651ed9ca3031896434446d13228feee88aaa1
-                                          d4ee2b9a884c5f763a1505e057a77a9e508b1c4c
-                                          7f1dccf31d7bc0d9b0f9b76377e06db79f8aa5fb
-                                          dcf4879289e3611797fbc47692369c8c867627fc
-                                          dac6e6607d7d28796c8b420ca514b3dea98b9a0c)
+                              SHA1_VALUES 1df2e445230a37c7fd66d718a3ee44bb9e4f3bb1
+                                          5ea71f5990bdf3eaf7284bec8906beeb2f83b9c7
+                                          f11403670a73b114e8bce23f528d3b9646f86271
+                                          adea8a6e4c7471ff214f003b0c071597b50171d6
+                                          fd859bca3cecafeca52e882c5804d96e9fe47e80
+                                          417c81ac4b93fe01e95f6865c2db83e6a0b6494d
+                                          0aba846c3ec2524c400634b6930d9fd57a7f635a
+                                          703b2ceb95e8d57d1207a6c067cdddf8e777f9c4
+                                          b61d945d5524dcdc762908b45c8dc055ce7a61f9
+                                          366550166697aaeace76b991af283cfaaf66be52
+                                          bc8221cff89b934cc9819438dfe45d87dc98e7ed
+                                          1186bba6042bc451b531b40109bcf985571e252e
+                                          d5029573d63bc20dde520f4242b8513fc0f9e21d
+                                          f988358c02d4dda835c64507f067c3ea5ca829db
+                                          e34015490994e3566a772969bcf07913c0d09dae
+                                          cfe2adbb5f41205bf3d33d8e7f4e84e8b8e8a2e7
+                                          2ba94a9f4f12731cc17ec07bd346ffe174fc9144)
     endif()
 else()
     # Ignore some warnings
