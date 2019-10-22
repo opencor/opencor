@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // libSBML end
 //==============================================================================
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     #pragma warning(pop)
 #elif defined(Q_OS_MAC)
     #pragma clang diagnostic pop
