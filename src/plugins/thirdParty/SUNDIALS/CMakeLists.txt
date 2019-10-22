@@ -3,7 +3,7 @@ project(SUNDIALSPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME SUNDIALS)
-set(PACKAGE_VERSION 4.1.0)
+set(PACKAGE_VERSION 5.0.0)
 
 # Version of our package's libraries
 
@@ -33,7 +33,7 @@ set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.1.0)
 
 # Git tag for our library
 
-set(GIT_TAG v4.1.0)
+set(GIT_TAG v5.0.0)
 
 # Specify where our local package will be installed
 
