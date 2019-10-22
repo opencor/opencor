@@ -1037,7 +1037,7 @@ void CentralWidget::duplicateFile()
 
 #ifdef QT_DEBUG
     if (status != FileManager::Status::Duplicated) {
-        qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated.", __FILE__, __LINE__, qPrintable(fileName));
+        qFatal("FATAL ERROR | %s:%d: '%s' could not be duplicated.", __FILE__, __LINE__, qPrintable(fileName));
     }
 #endif
 }
@@ -1177,7 +1177,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 
 #ifdef QT_DEBUG
         if (status != FileManager::Status::Renamed) {
-            qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
+            qFatal("FATAL ERROR | %s:%d: '%s' could not be renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
         }
 #endif
     }
@@ -1204,7 +1204,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 
 #ifdef QT_DEBUG
         if (status != FileManager::Status::Removed) {
-            qFatal("FATAL ERROR | %s:%d: '%s' did not get unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
+            qFatal("FATAL ERROR | %s:%d: '%s' could not be unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
         }
 
         status =
@@ -1213,7 +1213,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 
 #ifdef QT_DEBUG
         if (status != FileManager::Status::Added) {
-            qFatal("FATAL ERROR | %s:%d: '%s' did not get managed.", __FILE__, __LINE__, qPrintable(newFileName));
+            qFatal("FATAL ERROR | %s:%d: '%s' could not be managed.", __FILE__, __LINE__, qPrintable(newFileName));
         }
 #endif
     }
