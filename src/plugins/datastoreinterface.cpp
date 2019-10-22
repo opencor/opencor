@@ -283,10 +283,12 @@ quint64 DataStoreVariable::size(int pRun) const
 {
     // Return our size for the given run
 
+    if (mRuns.isEmpty()) {
+        return 0;
+    }
+
     if (pRun == -1) {
-        return (!mRuns.isEmpty())?
-                   mRuns.last()->size():
-                   0;
+        return mRuns.last()->size();
     }
 
     return ((pRun >= 0) && (pRun < mRuns.count()))?
