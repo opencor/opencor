@@ -1130,7 +1130,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // provided
 
         if (pFileName.isEmpty()) {
-            std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
+            std::cout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdString() << std::endl;
         } else if (!Core::writeFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the output file could not be saved"));

@@ -415,7 +415,7 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
         mNlaSolverProperties.insert(pName, pValue);
 
         // Reset our parameter values, if required
-        // Note: to only recompute our 'computed constants' and 'variables' is
+        // Note: to recompute only our 'computed constants' and 'variables' is
         //       not sufficient since some constants may also need to be
         //       reinitialised...
 

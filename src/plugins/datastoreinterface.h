@@ -75,32 +75,33 @@ public:
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
 
-    bool isVisible() const;
-
-    int runsCount() const;
-
     bool addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 
     int type() const;
     void setType(int pType);
 
-    QString uri() const;
     void setUri(const QString &pUri);
-
-    QString label() const;
     void setLabel(const QString &pLabel);
-
-    QString unit() const;
     void setUnit(const QString &pUnit);
-
-    quint64 size(int pRun = -1) const;
 
     void addValue();
     void addValue(double pValue, int pRun = -1);
 
-    double value(quint64 pPosition, int pRun = -1) const;
     double * values(int pRun = -1) const;
+
+public slots:
+    bool isVisible() const;
+
+    int runsCount() const;
+
+    QString uri() const;
+    QString label() const;
+    QString unit() const;
+
+    quint64 size(int pRun = -1) const;
+
+    double value(quint64 pPosition, int pRun = -1) const;
 
 private:
     int mType = -1;
@@ -225,15 +226,8 @@ public:
     explicit DataStore(const QString &pUri = QString());
     ~DataStore() override;
 
-    QString uri() const;
-
-    int runsCount() const;
-
     bool addRun(quint64 pCapacity);
 
-    quint64 size(int pRun = -1) const;
-
-    DataStoreVariable * voi() const;
     DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
@@ -244,6 +238,15 @@ public:
     void removeVariable(DataStoreVariable *pVariable);
 
     void addValues(double pVoiValue);
+
+public slots:
+    QString uri() const;
+
+    int runsCount() const;
+
+    quint64 size(int pRun = -1) const;
+
+    OpenCOR::DataStore::DataStoreVariable * voi() const;
 
 private:
     QString mUri;

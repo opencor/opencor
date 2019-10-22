@@ -2764,8 +2764,7 @@ bool GraphPanelPlotWidget::isOptimizedAxes() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
-                                        double &pMax,
+void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
                                         Optimization pOptimization)
 {
     // Make sure that the given values are different (and therefore optimisable

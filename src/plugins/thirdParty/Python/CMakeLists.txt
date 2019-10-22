@@ -226,12 +226,10 @@ else()
 
         set(SQLITE3_IMPORT_LIBRARY libsqlite3.a)
     else()
-        set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-
         find_package(SQLite3 REQUIRED)
 
-        get_filename_component(SQLITE3_LIBRARY_DIR ${SQLITE3_LIBRARY} DIRECTORY)
-        get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLITE3_LIBRARY} NAME)
+        get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
+        get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLite3_LIBRARIES} NAME)
     endif()
 
     if(NOT APPLE)
@@ -342,7 +340,7 @@ else()
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
 
-            # Need to install pip on macOS
+            # Needed to install pip on macOS
 
             -DENABLE_SCPROXY=ON
         BUILD_BYPRODUCTS

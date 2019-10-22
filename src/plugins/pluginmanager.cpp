@@ -137,7 +137,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     }
 
     // We now have all our needed and wanted plugins with our needed plugins
-    // nicely sorted based on their dependencies with one another. So, retrieve
+    // nicely sorted based on their dependencies with one another, so retrieve
     // their file name
 
     QStringList plugins = neededPlugins+wantedPlugins;
