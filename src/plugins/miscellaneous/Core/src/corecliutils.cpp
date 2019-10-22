@@ -637,6 +637,7 @@ QString openRemoteFile(const QString &pUrl)
                                                                 .arg(formatMessage(errorMessage));
         }
     }
+
     // We now have the file so open it, which will add it to the file manager
 
     return openFile(fileName, File::Type::Remote, fileNameOrUrl);
