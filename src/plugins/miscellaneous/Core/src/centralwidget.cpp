@@ -912,9 +912,9 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             // We were not able to retrieve the contents of the remote file, so
             // let the user know about it, after having hidden our busy widget
 
-            if (pShowWarning) {
-                hideBusyWidget();
+            hideBusyWidget();
 
+            if (pShowWarning) {
                 warningMessageBox(tr("Open Remote File"),
                                   tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl)
                                                                                      .arg(formatMessage(errorMessage)));
