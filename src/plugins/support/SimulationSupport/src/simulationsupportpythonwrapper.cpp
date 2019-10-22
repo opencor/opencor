@@ -60,16 +60,15 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-static void setOdeSolver_(SimulationData *pSimulationData, const QString &pOdeSolverName)
+static void doSetOdeSolver(SimulationData *pSimulationData, const QString &pOdeSolverName)
 {
-    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+    for (auto solverInterface : Core::solverInterfaces()) {
         if (!pOdeSolverName.compare(solverInterface->solverName())) {
             // Set the ODE solver's name
 
             pSimulationData->setOdeSolverName(pOdeSolverName);
 
-            foreach (const Solver::Property &solverInterfaceProperty,
-                     solverInterface->solverProperties()) {
+            for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Set each ODE solver property's default value
 
                 pSimulationData->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
@@ -78,21 +77,21 @@ static void setOdeSolver_(SimulationData *pSimulationData, const QString &pOdeSo
             return;
         }
     }
+
     throw std::runtime_error(QObject::tr("Unknown ODE solver.").toStdString());
 }
 
 //==============================================================================
 
-static void setNlaSolver_(SimulationData *pSimulationData, const QString &pNlaSolverName)
+static void doSetNlaSolver(SimulationData *pSimulationData, const QString &pNlaSolverName)
 {
-    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+    for (auto solverInterface : Core::solverInterfaces()) {
         if (!pNlaSolverName.compare(solverInterface->solverName())) {
             // Set the NLA solver's name
 
             pSimulationData->setNlaSolverName(pNlaSolverName);
 
-            foreach (const Solver::Property &solverInterfaceProperty,
-                     solverInterface->solverProperties()) {
+            for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Set each NLA solver property's default value
 
                 pSimulationData->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
@@ -101,6 +100,7 @@ static void setNlaSolver_(SimulationData *pSimulationData, const QString &pNlaSo
             return;
         }
     }
+
     throw std::runtime_error(QObject::tr("Unknown NLA solver.").toStdString());
 }
 
@@ -136,7 +136,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
         QString odeSolverName = QString();
         QString nlaSolverName = QString();
 
-        foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+        for (auto solverInterface : Core::solverInterfaces()) {
             QString solverName = solverInterface->solverName();
 
             if (solverInterface->solverType() == Solver::Type::Ode) {
@@ -154,12 +154,12 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
         // Set our solver and its default properties
 
-        setOdeSolver_(simulation->data(), odeSolverName);
+        doSetOdeSolver(simulation->data(), odeSolverName);
 
         // Set our NLA solver if we need one
 
         if ((runtime != nullptr) && runtime->needNlaSolver()) {
-            setNlaSolver_(simulation->data(), nlaSolverName);
+            doSetNlaSolver(simulation->data(), nlaSolverName);
         }
 
         // Complete initialisation by loading any SED-ML properties
@@ -299,9 +299,9 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 {
     Q_UNUSED(pModule)
 
-    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::Simulation::staticMetaObject);
-    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
-    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
+    PythonQtSupport::registerClass(&Simulation::staticMetaObject);
+    PythonQtSupport::registerClass(&SimulationData::staticMetaObject);
+    PythonQtSupport::registerClass(&SimulationResults::staticMetaObject);
     PythonQtSupport::addInstanceDecorators(this);
 
     PyModule_AddFunctions(pModule, pythonSimulationSupportMethods);
@@ -414,11 +414,11 @@ PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
     if (pSimulation->hasBlockingIssues()) {
-        throw std::runtime_error(
-            tr("Cannot run because simulation has blocking issues.").toStdString());
-    } else if (!valid(pSimulation)) {
-        throw std::runtime_error(
-            tr("Cannot run because simulation has an invalid runtime.").toStdString());
+        throw std::runtime_error(tr("Cannot run because simulation has blocking issues.").toStdString());
+    }
+
+    if (!valid(pSimulation)) {
+        throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
     }
 
     QWidget *focusWidget = nullptr;
@@ -477,17 +477,18 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         disconnect(pSimulation, nullptr, this, nullptr);
 
-        if (!mErrorMessage.isEmpty())
+        if (!mErrorMessage.isEmpty()) {
             throw std::runtime_error(mErrorMessage.toStdString());
+        }
     } else {
-        throw std::runtime_error(
-            tr("We could not allocate the memory required for the simulation.").toStdString());
+        throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
     }
 
     // Restore the keyboard focus back to IPython
 
-    if (focusWidget)
+    if (focusWidget) {
         focusWidget->setFocus();
+    }
 
     return mElapsedTime >= 0;
 }
@@ -525,14 +526,14 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 
 void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData, const QString &pOdeSolverName)
 {
-    setOdeSolver_(pSimulationData, pOdeSolverName);
+    doSetOdeSolver(pSimulationData, pOdeSolverName);
 }
 
 //==============================================================================
 
 void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData, const QString &pNlaSolverName)
 {
-    setNlaSolver_(pSimulationData, pNlaSolverName);
+    doSetNlaSolver(pSimulationData, pNlaSolverName);
 }
 
 //==============================================================================

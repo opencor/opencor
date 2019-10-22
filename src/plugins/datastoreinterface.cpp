@@ -55,6 +55,8 @@ namespace DataStore {
 DataStoreArray::DataStoreArray(quint64 pSize) :
     mSize(pSize)
 {
+    // Allocate our data
+
     mData = new double[pSize] {};
 }
 
@@ -71,7 +73,7 @@ quint64 DataStoreArray::size() const
 
 double * DataStoreArray::data() const
 {
-    // Return a pointer to our data
+    // Return our data
 
     return mData;
 }
@@ -80,7 +82,7 @@ double * DataStoreArray::data() const
 
 double DataStoreArray::data(quint64 pPosition) const
 {
-    // Return the value at the given position
+    // Return the data value at the given position
 
     Q_ASSERT((pPosition < mSize) && (mData != nullptr));
 
@@ -91,7 +93,7 @@ double DataStoreArray::data(quint64 pPosition) const
 
 void DataStoreArray::reset()
 {
-    // Clear our data
+    // Reset our data
 
     memset(mData, 0, mSize*Solver::SizeOfDouble);
 }
@@ -253,7 +255,7 @@ void DataStoreVariableRun::addValue(double pValue)
 
 DataStoreArray * DataStoreVariableRun::array() const
 {
-    // Return our data array
+    // Return our array
 
     return mArray;
 }
@@ -437,10 +439,12 @@ quint64 DataStoreVariable::size(int pRun) const
 {
     // Return our size for the given run
 
+    if (mRuns.isEmpty()) {
+        return 0;
+    }
+
     if (pRun == -1) {
-        return (!mRuns.isEmpty())?
-                   mRuns.last()->size():
-                   0;
+        return mRuns.last()->size();
     }
 
     return ((pRun >= 0) && (pRun < mRuns.count()))?
@@ -452,7 +456,7 @@ quint64 DataStoreVariable::size(int pRun) const
 
 DataStoreArray * DataStoreVariable::array(int pRun) const
 {
-    // Return the data array for the given run, if any
+    // Return the array for the given run, if any
 
     if (mRuns.isEmpty()) {
         return nullptr;

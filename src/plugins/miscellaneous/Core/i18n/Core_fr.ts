@@ -20,20 +20,36 @@
         <translation></translation>
     </message>
     <message>
-        <source>Open Remote File</source>
-        <translation>Ouvrir Fichier À Distance</translation>
-    </message>
-    <message>
         <source>File</source>
         <translation>Fichier</translation>
+    </message>
+    <message>
+        <source>Import Remote File</source>
+        <translation>Importer Fichier À Distance</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved locally (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé localement (%2).</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
     </message>
     <message>
         <source>Open File</source>
         <translation>Ouvrir Fichier</translation>
     </message>
     <message>
+        <source>Open Remote File</source>
+        <translation>Ouvrir Fichier À Distance</translation>
+    </message>
+    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
     </message>
     <message>
         <source>Open</source>
@@ -42,6 +58,10 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
     <message>
         <source>File Modified</source>
@@ -156,28 +176,8 @@
         <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
     <message>
-        <source>Import Remote File</source>
-        <translation>Importer Fichier À Distance</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved locally (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé localement (%2).</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
-    </message>
-    <message>
-        <source>%s:%d: &apos;%s&apos; did not get created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened.</source>
-        <translation type="unfinished"></translation>
+        <source>&apos;%1&apos; could not be created.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
     </message>
 </context>
 <context>
@@ -507,6 +507,14 @@
         <translation></translation>
     </message>
     <message>
+        <source>&apos;%1&apos; could not be opened.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
+    </message>
+    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
@@ -527,16 +535,8 @@
         <translation>Veuillez choisir un répertoire vide.</translation>
     </message>
     <message>
-        <source>&apos;%1&apos; could not be opened.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>FATAL ERROR | %s:%d: &apos;%s&apos; did not get created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
-        <translation type="unfinished"></translation>
+        <source>&apos;%1&apos; could not be created.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
     </message>
 </context>
 </TS>

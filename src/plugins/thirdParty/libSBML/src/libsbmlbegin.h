@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // libSBML begin
 //==============================================================================
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     #pragma warning(push)
     #pragma warning(disable: 4005)
 #elif defined(Q_OS_MAC)

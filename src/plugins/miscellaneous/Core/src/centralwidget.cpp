@@ -901,9 +901,9 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
             if (status != FileManager::Status::Created) {
 #ifdef QT_DEBUG
-                qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
+                qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #else
-                return tr("%s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
+                return tr("'%1' could not be created.").arg(fileNameOrUrl);
 #endif
             }
 

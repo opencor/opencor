@@ -55,13 +55,6 @@ static bool initNumPy()
 
 //==============================================================================
 
-typedef struct {
-    PyDictObject mDict;
-    SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
-} DataStoreValuesDictObject;
-
-//==============================================================================
-
 static DataStoreValue * getDataStoreValue(PyObject *pValuesDict, PyObject *pKey)
 {
     // Get and return a DataStoreValue item from a values dictionary
@@ -90,6 +83,13 @@ static PyObject * DataStoreValuesDict_subscript(PyObject *pValuesDict,
 
     Py_RETURN_NONE;
 }
+
+//==============================================================================
+
+typedef struct {
+    PyDictObject mDict;
+    SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
+} DataStoreValuesDictObject;
 
 //==============================================================================
 
@@ -143,8 +143,8 @@ static PyMappingMethods DataStoreValuesDict_as_mapping = {
 static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDict)
 {
     // A string representation of a values dictionary
-    // Note: this is a modified version of dict_repr() from dictobject.c in
-    //       Python's C source code...
+    // Note: this is a modified version of dict_repr() from dictobject.c in the
+    //       Python source code...
 
     PyDictObject *mp = reinterpret_cast<PyDictObject *>(pValuesDict);
     Py_ssize_t i = Py_ReprEnter(reinterpret_cast<PyObject *>(mp));
@@ -319,9 +319,9 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule,
 
     PyType_Ready(&DataStoreValuesDict_Type);
 
-    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
-    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStoreValue::staticMetaObject);
-    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
+    PythonQtSupport::registerClass(&DataStore::staticMetaObject);
+    PythonQtSupport::registerClass(&DataStoreValue::staticMetaObject);
+    PythonQtSupport::registerClass(&DataStoreVariable::staticMetaObject);
 
     PythonQtSupport::addInstanceDecorators(this);
 }
@@ -394,7 +394,7 @@ PyObject * DataStorePythonWrapper::dataStoreVariablesDict(const DataStoreVariabl
 
     PyObject *res = PyDict_New();
 
-    foreach (DataStoreVariable *dataStoreVariable, pDataStoreVariables) {
+    for (auto dataStoreVariable : pDataStoreVariables) {
         PythonQtSupport::addObject(res, dataStoreVariable->uri(), dataStoreVariable);
     }
 

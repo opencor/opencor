@@ -139,12 +139,12 @@ public:
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
                     double *pRates, double *pStates, double *pAlgebraic,
-                    ComputeRatesFunction pComputeRates) override;
-    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
-                    double *pRates, double *pStates, double *pAlgebraic,
                     ComputeRatesFunction pComputeRates,
                     int pGradientsCount, int *pGradientsIndices,
                     double *pGradients) override;
+    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
+                    double *pRates, double *pStates, double *pAlgebraic,
+                    ComputeRatesFunction pComputeRates) override;
     void reinitialize(double pVoi) override;
 
     void solve(double &pVoi, double pVoiEnd) const override;

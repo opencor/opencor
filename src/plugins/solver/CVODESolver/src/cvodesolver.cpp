@@ -142,16 +142,6 @@ CvodeSolver::~CvodeSolver()
 void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                              double *pConstants, double *pRates,
                              double *pStates, double *pAlgebraic,
-                             ComputeRatesFunction pComputeRates)
-{
-    initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, 0, 0);
-}
-
-//==============================================================================
-
-void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
-                             double *pConstants, double *pRates,
-                             double *pStates, double *pAlgebraic,
                              ComputeRatesFunction pComputeRates,
                              int pGradientsCount, int *pGradientsIndices,
                              double *pGradients)
@@ -402,32 +392,34 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
         mSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
 
         for (int i = 0, iMax = mSensitivityVectorsSize; i < iMax; ++i) {
-#ifdef Q_OS_MAC
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wold-style-cast"
-#endif
-            NV_DATA_S(mSensitivityVectors[i]) = pGradients;
-#ifdef Q_OS_MAC
-    #pragma clang diagnostic pop
-#endif
+            N_VectorContent_Serial(mSensitivityVectors[i]->content)->data = pGradients;
 
             pGradients += pRatesStatesCount;
         }
 
         // Initialise sensitivity code
 
-        CVodeSensInit1(mSolver, mSensitivityVectorsSize, CV_SIMULTANEOUS, NULL, mSensitivityVectors);
+        CVodeSensInit1(mSolver, mSensitivityVectorsSize, CV_SIMULTANEOUS, nullptr, mSensitivityVectors);
 
         CVodeSensEEtolerances(mSolver);
 
         CVodeSetSensErrCon(mSolver, SUNTRUE);
-
         CVodeSetSensDQMethod(mSolver, CV_CENTERED, 0.0);
 
         // Specify which constants will have gradients calculated
 
-        CVodeSetSensParams(mSolver, mUserData->constants(), NULL, pGradientsIndices);
+        CVodeSetSensParams(mSolver, mUserData->constants(), nullptr, pGradientsIndices);
     }
+}
+
+//==============================================================================
+
+void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
+                             double *pConstants, double *pRates,
+                             double *pStates, double *pAlgebraic,
+                             ComputeRatesFunction pComputeRates)
+{
+    initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, nullptr, nullptr);
 }
 
 //==============================================================================
