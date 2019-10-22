@@ -21,9 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
-    #pragma warning(push)
-#elif defined(Q_OS_LINUX)
+#if defined(Q_OS_LINUX)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #elif defined(Q_OS_MAC)
