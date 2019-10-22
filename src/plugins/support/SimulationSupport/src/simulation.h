@@ -157,9 +157,9 @@ public:
     void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
-    void setOdeSolverName(const QString &pOdeSolverName);
-
     SolverInterface * nlaSolverInterface() const;
+
+    void setOdeSolverName(const QString &pOdeSolverName);
     void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
     bool createGradientsArray();
@@ -227,7 +227,8 @@ signals:
 
     void modified(bool pIsModified);
 
-    void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
+    void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                             bool pCalculate = true);
 
     void error(const QString &pMessage);
 
@@ -241,14 +242,15 @@ public slots:
     double endingPoint() const;
     double pointInterval() const;
 
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
     QString odeSolverName() const;
-    Solver::Solver::Properties odeSolverProperties() const;
+    QString nlaSolverName() const;
 
+    Solver::Solver::Properties odeSolverProperties() const;
+    Solver::Solver::Properties nlaSolverProperties() const;
+
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               bool pReset = true);
-    QString nlaSolverName() const;
-    Solver::Solver::Properties nlaSolverProperties() const;
 
     void reset(bool pInitialize = true, bool pAll = true);
 
@@ -258,6 +260,7 @@ public slots:
 
     bool isStatesModified() const;
     bool isModified() const;
+
     void checkForModifications();
 
     void setGradientCalculationByIndex(int pIndex, bool pCalculate);
@@ -373,7 +376,6 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
-    void checkIssues();
     SimulationIssues issues();
 
     QString furtherInitialize() const;
@@ -421,6 +423,8 @@ private:
     SimulationData *mData = nullptr;
     SimulationResults *mResults = nullptr;
     SimulationImportData *mImportData = nullptr;
+
+    void checkIssues();
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 

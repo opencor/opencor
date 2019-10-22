@@ -101,10 +101,6 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::Task::None);
 
-public slots:
-    void clearResults(const QString &pFileName);
-    void startingRun(const QString &pFileName);
-
 private:
     SimulationExperimentViewPlugin *mPlugin;
 
@@ -134,6 +130,10 @@ private:
     QMap<QString, quint64> mSimulationResultsSizes;
 
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
+
+public slots:
+    void clearResults(const QString &pFileName);
+    void startingRun(const QString &pFileName);
 
 private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);

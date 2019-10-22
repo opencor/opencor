@@ -118,10 +118,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
     Simulation *simulation = simulationManager->simulation(pFileName);
 
     if (simulation) {
-
         // Check for issues with the simulation
-
-        simulation->checkIssues();
 
         if (simulation->hasBlockingIssues()) {
             // We return the simulation to allow the user to view its issues
@@ -141,6 +138,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
         foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
             QString solverName = solverInterface->solverName();
+
             if (solverInterface->solverType() == Solver::Type::Ode) {
                 if (odeSolverName.isEmpty()
                  || odeSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {

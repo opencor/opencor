@@ -400,10 +400,17 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
         // Allocate senstivity vectors
 
         mSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
-        for (int i = 0; i < mSensitivityVectorsSize; i++) {
-#include "sundialsbegin.h"
+
+        for (int i = 0, iMax = mSensitivityVectorsSize; i < iMax; ++i) {
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif
             NV_DATA_S(mSensitivityVectors[i]) = pGradients;
-#include "sundialsend.h"
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic pop
+#endif
+
             pGradients += pRatesStatesCount;
         }
 

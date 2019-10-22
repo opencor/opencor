@@ -486,7 +486,7 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
         mNlaSolverProperties.insert(pName, pValue);
 
         // Reset our parameter values, if required
-        // Note: to only recompute our 'computed constants' and 'variables' is
+        // Note: to recompute only our 'computed constants' and 'variables' is
         //       not sufficient since some constants may also need to be
         //       reinitialised...
 
@@ -1546,7 +1546,7 @@ Simulation::Simulation(const QString &pFileName) :
     mResults = new SimulationResults(this);
     mImportData = new SimulationImportData(this);
 
-    // Make sure we can access metadata about result variables
+    // Make sure that we can access metadata about result variables
 
     mData->setSimulationResults(mResults);
 
@@ -1582,7 +1582,7 @@ Simulation::~Simulation()
 
 QString Simulation::furtherInitialize() const
 {
-    // Initialize ourself from a SED-ML document
+    // Initialise ourself from a SED-ML document
 
     libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
