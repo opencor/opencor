@@ -159,10 +159,10 @@ private:
 
     void startStopTimer();
 
-    void emitFilePermissionsChanged(const QString &pFileName);
-
     bool newFile(QString &pFileName,
                  const QByteArray &pContents = QByteArray());
+
+    void emitFilePermissionsChanged(const QString &pFileName);
 
 signals:
     void fileManaged(const QString &pFileName);
