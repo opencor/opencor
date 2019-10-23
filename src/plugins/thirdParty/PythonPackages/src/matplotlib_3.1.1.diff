@@ -1,5 +1,5 @@
 diff --git lib/matplotlib/backends/backend_qt5.py lib/matplotlib/backends/backend_qt5.py
-index b4562db7f..74f48b0d7 100644
+index b4562db7f..77caced86 100644
 --- lib/matplotlib/backends/backend_qt5.py
 +++ lib/matplotlib/backends/backend_qt5.py
 @@ -17,7 +17,7 @@ from matplotlib.backends.qt_editor.formsubplottool import UiSubplotTool
@@ -16,7 +16,7 @@ index b4562db7f..74f48b0d7 100644
      if qApp is None:
          app = QtWidgets.QApplication.instance()
 -        if app is None:
-+        if is_pyqt5 and app is None:
++        if is_pyqt5() and app is None:
              # check for DISPLAY env variable on X11 build of Qt
 -            if is_pyqt5():
 +            if is_qt5():
