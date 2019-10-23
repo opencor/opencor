@@ -855,6 +855,10 @@ void CentralWidget::openFile()
 
 QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 {
+    // Note: this method is used by the GUI and should be kept in sync with that
+    //       of openRemoteFile() in
+    //       src/plugins/miscellaneous/Core/src/corecliutils.cpp...
+
     // Make sure that pUrl really refers to a remote file
 
     bool isLocalFile;

@@ -589,6 +589,10 @@ QString openFile(const QString &pFileName, const File::Type &pType,
 
 QString openRemoteFile(const QString &pUrl)
 {
+    // Note: this method is used by our Python wrapper and should be kept in
+    //       sync with that of CentralWidget::openRemoteFile() in
+    //       src/plugins/miscellaneous/Core/src/centralwidget.cpp...
+
     // Make sure that pUrl really refers to a remote file
 
     bool isLocalFile;

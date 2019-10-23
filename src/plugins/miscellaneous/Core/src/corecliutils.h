@@ -150,10 +150,6 @@ bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 void CORE_EXPORT doNothing(quint64 pMax);
 void CORE_EXPORT doNothing(const quint64 *pMax, const bool *pStopped = nullptr);
 
-void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
-                                    bool &pOutIsLocalFile,
-                                    QString &pOutFileNameOrUrl);
-
 QString CORE_EXPORT openFile(const QString &pFileName,
                              const File::Type &pType = File::Type::Local,
                              const QString &pUrl = QString());
