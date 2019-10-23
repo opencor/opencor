@@ -1,4 +1,5 @@
-{"argv":["@OPENCOR_COMMAND@", "-c", "JupyterKernel::kernel", "{connection_file}"],
- "display_name":"OpenCOR",
- "language":"python"
+{
+    "argv": [ "@OPENCOR_COMMAND@", "-c", "JupyterKernel::kernel", "{connection_file}" ],
+    "display_name": "OpenCOR",
+    "language": "python"
 }
