@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "graphpanelwidget.h"
+#include "solverinterface.h"
 #include "widget.h"
 
 //==============================================================================
@@ -44,7 +45,10 @@ class QwtWheel;
 //==============================================================================
 
 namespace libsedml {
+    class SedAlgorithm;
+    class SedAlgorithmParameter;
     class SedDocument;
+    class SedListOfAlgorithmParameters;
     class SedModel;
     class SedRepeatedTask;
     class SedSimulation;
@@ -110,6 +114,7 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 class SimulationExperimentViewContentsWidget;
+class SimulationExperimentViewInformationSolversWidgetData;
 class SimulationExperimentViewPlugin;
 class SimulationExperimentViewWidget;
 
@@ -300,6 +305,10 @@ private:
     bool isRuntimeDataParameter(const QString &pComponent,
                                 const QString &pVariable);
 
+    bool initializeSolver(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                          const QString &pKisaoId,
+                          SimulationExperimentViewInformationSolversWidgetData *pSolverData);
+
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);
     void initializeSimulation();
@@ -310,6 +319,9 @@ private:
                      const QString &pFileExtension, const QString &pCaption,
                      const QStringList &pFileFilters);
 
+    void addSedmlSimulationAlgorithm(libsedml::SedAlgorithm *pAlgorithm,
+                                     SolverInterface *pSolverInterface,
+                                     const Solver::Solver::Properties &pSolverProperties);
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -341,6 +353,9 @@ signals:
     void importDone(DataStore::DataStoreImporter *pDataStoreImporter);
     void exportDone(DataStore::DataStoreExporter *pDataStoreExporter);
 
+public slots:
+    void clearSimulationResults();
+
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();
@@ -351,7 +366,6 @@ private slots:
     void removeAllGraphPanels();
     void resetStateModelParameters();
     void resetAllModelParameters();
-    void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
     void preferences();

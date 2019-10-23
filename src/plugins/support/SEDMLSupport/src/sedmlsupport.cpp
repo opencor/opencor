@@ -72,7 +72,7 @@ int indexLineStyle(const QString &pStringLineStyle)
     int res = lineStyles().indexOf(pStringLineStyle);
 
     return (res != -1)?
-               res :
+               res:
                1;
 }
 
@@ -136,7 +136,7 @@ Qt::PenStyle lineStyle(const QString &pStringLineStyle)
 {
     // Return the given string line style as a line style
 
-    return Qt::PenStyle(indexLineStyle(pStringLineStyle));
+    return lineStyle(indexLineStyle(pStringLineStyle));
 }
 
 //==============================================================================
@@ -150,6 +150,8 @@ QStringList symbolStyles()
                                                           << "diamond"
                                                           << "triangle"
                                                           << "downTriangle"
+                                                          << "leftTriangle"
+                                                          << "rightTriangle"
                                                           << "cross" << "xCross"
                                                           << "horizontalLine"
                                                           << "verticalLine"
@@ -170,6 +172,8 @@ QStringList formattedSymbolStyles()
                          << QObject::tr("Diamond")
                          << QObject::tr("Triangle")
                          << QObject::tr("Down Triangle")
+                         << QObject::tr("Left Triangle")
+                         << QObject::tr("Right Triangle")
                          << QObject::tr("Cross")
                          << QObject::tr("X Cross")
                          << QObject::tr("Horizontal Line")
@@ -229,8 +233,8 @@ QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle, bool pFormatted)
 
     return res[int((pSymbolStyle <= QwtSymbol::DTriangle)?
                    pSymbolStyle+1:
-                   ((pSymbolStyle >= QwtSymbol::Cross) && (pSymbolStyle <= QwtSymbol::Star1))?
-                       pSymbolStyle-2:
+                   ((pSymbolStyle >= QwtSymbol::LTriangle) && (pSymbolStyle <= QwtSymbol::Star1))?
+                       pSymbolStyle:
                        QwtSymbol::NoSymbol)];
 }
 
@@ -248,7 +252,7 @@ QwtSymbol::Style symbolStyle(int pIndexSymbolStyle)
                             && (pIndexSymbolStyle < symbolStyles().count()))?
                                 (pIndexSymbolStyle <= 5)?
                                     pIndexSymbolStyle-1:
-                                    pIndexSymbolStyle+2:
+                                    pIndexSymbolStyle:
                                 -1);
 }
 
@@ -257,14 +261,8 @@ QwtSymbol::Style symbolStyle(int pIndexSymbolStyle)
 QwtSymbol::Style symbolStyle(const QString &pStringSymbolStyle)
 {
     // Return the given string symbol style as a symbol style
-    // Note: the shifting is because indices in our list of symbols don't match
-    //       those of QwtSymbol::Style...
 
-    int res = indexSymbolStyle(pStringSymbolStyle);
-
-    return QwtSymbol::Style((res <= 5)?
-                                res-1:
-                                res+2);
+    return symbolStyle(indexSymbolStyle(pStringSymbolStyle));
 }
 
 //==============================================================================

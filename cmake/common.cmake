@@ -149,17 +149,19 @@ endmacro()
 #===============================================================================
 
 macro(strip_file PROJECT_TARGET FILENAME)
-    # Strip the given file of all its local symbols
+    # Strip the given file of all its local symbols, if we are in release mode
     # Note: to strip QScintilla and Qwt when building them on Linux results in
     #       an error due to patchelf having been used on them. So, we use a
     #       wrapper that ignores errors and returns 0, so that our build doesn't
     #       break...
 
-    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
-    else()
-        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+    if(RELEASE_MODE)
+        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+        else()
+            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+        endif()
     endif()
 endmacro()
 
@@ -173,8 +175,8 @@ macro(add_plugin PLUGIN_NAME)
     set(OPTIONS)
     set(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
-        EXTERNAL_DESTINATION_DIR
         EXTERNAL_SOURCE_DIR
+        EXTERNAL_DESTINATION_DIR
     )
     set(MULTI_VALUE_KEYWORDS
         SOURCES
@@ -206,8 +208,7 @@ macro(add_plugin PLUGIN_NAME)
         string(REPLACE "${CMAKE_SOURCE_DIR}" "${PROJECT_BUILD_DIR}"
                I18N_QRC_FILENAME "${PROJECT_SOURCE_DIR}/res/${PLUGIN_NAME}_i18n.qrc")
 
-        configure_file(${I18N_QRC_IN_FILENAME}
-                       ${I18N_QRC_FILENAME})
+        configure_file(${I18N_QRC_IN_FILENAME} ${I18N_QRC_FILENAME})
 
         list(APPEND RESOURCES ${I18N_QRC_FILENAME})
 
@@ -265,20 +266,22 @@ macro(add_plugin PLUGIN_NAME)
     # Qt modules
 
     foreach(ARG_QT_MODULE ${ARG_QT_MODULES})
-        find_package(Qt5${ARG_QT_MODULE} REQUIRED)
+        if(NOT APPLE)
+            find_package(Qt5${ARG_QT_MODULE} REQUIRED)
+        endif()
 
         target_link_libraries(${PROJECT_NAME}
             Qt5::${ARG_QT_MODULE}
         )
     endforeach()
 
-    # External binaries
+    # Create a custom target for copying external binaries
+    # Note: this is to prevent Ninja from getting confused with circular
+    #       references...
 
-    if(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
-        # Create a custom target for copying binaries
-        # Note: this is to prevent Ninja from getting confused with circular
-        #       references...
-
+    if(   NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL ""
+       OR (    NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""
+           AND NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""))
         set(COPY_EXTERNAL_BINARIES_TARGET "COPY_${PROJECT_NAME}_EXTERNAL_BINARIES")
 
         add_custom_target(${COPY_EXTERNAL_BINARIES_TARGET})
@@ -287,7 +290,11 @@ macro(add_plugin PLUGIN_NAME)
         if(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
             add_dependencies(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
         endif()
+    endif()
 
+    # External binaries
+
+    if(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
         foreach(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
             # Make sure that the external binary exists
 
@@ -316,7 +323,7 @@ macro(add_plugin PLUGIN_NAME)
 
             # Strip the external library of all its local symbols, if possible
 
-            if(NOT WIN32 AND RELEASE_MODE)
+            if(NOT WIN32)
                 strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
@@ -350,7 +357,7 @@ macro(add_plugin PLUGIN_NAME)
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
-                macos_clean_up_file_with_qt_dependencies(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Package the external library, if needed
@@ -367,12 +374,11 @@ macro(add_plugin PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    if(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
-       AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
-
+    if(    NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""
+       AND NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL "")
         # Copy the entire source directory to the destination
 
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
                                                                       ${ARG_EXTERNAL_DESTINATION_DIR})
     endif()
@@ -425,7 +431,7 @@ macro(add_plugin PLUGIN_NAME)
     # rather than RUNPATH on Linux
 
     if(APPLE)
-        macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+        strip_file(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     elseif(NOT WIN32)
         runpath2rpath(${PROJECT_NAME} ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
     endif()
@@ -554,11 +560,11 @@ macro(add_plugin PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # Clean up our plugin's tests, if we are on macOS, our make sure
+                # Clean up our plugin's tests, if we are on macOS, or make sure
                 # that it uses RPATH rather than RUNPATH on Linux
 
                 if(APPLE)
-                    macos_clean_up_file_with_qt_dependencies(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                    strip_file(${TEST_NAME} ${DEST_TESTS_DIR}/${TEST_FILENAME})
                 elseif(NOT WIN32)
                     runpath2rpath(${TEST_NAME} ${DEST_TESTS_DIR}/${TEST_FILENAME})
                 endif()
@@ -653,7 +659,7 @@ endmacro()
 
 #===============================================================================
 
-macro(windows_deploy_qt_plugin PLUGIN_CATEGORY)
+macro(windows_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
@@ -711,9 +717,7 @@ macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
 
     # Strip the Qt library of all its local symbols
 
-    if(RELEASE_MODE)
-        strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-    endif()
+    strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
 
     # Deploy the Qt library
 
@@ -723,7 +727,7 @@ endmacro()
 
 #===============================================================================
 
-macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
+macro(linux_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
@@ -739,9 +743,7 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
 
         # Strip the Qt plugin of all its local symbols
 
-        if(RELEASE_MODE)
-            strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
-        endif()
+        strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
@@ -771,51 +773,6 @@ endmacro()
 
 #===============================================================================
 
-macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
-    # Strip the file of all its local symbols
-
-    set(FULL_FILENAME ${DIRNAME}/${FILENAME})
-
-    if(RELEASE_MODE)
-        strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
-    endif()
-
-    # Clean up the file's id
-
-    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
-    else()
-        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
-    endif()
-endmacro()
-
-#===============================================================================
-
-macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
-    # Clean up the file
-
-    macos_clean_up_file(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
-
-    # Make sure that the file refers to our embedded copy of the Qt libraries
-
-    foreach(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        set(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
-
-        set(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
-        set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
-
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
-        endif()
-    endforeach()
-endmacro()
-
-#===============================================================================
-
 macro(macos_deploy_qt_file ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
@@ -824,7 +781,7 @@ macro(macos_deploy_qt_file ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
     # Clean up the Qt file
 
-    macos_clean_up_file_with_qt_dependencies(DIRECT ${DEST_DIRNAME} ${FILENAME})
+    strip_file(DIRECT ${DEST_DIRNAME}/${FILENAME})
 endmacro()
 
 #===============================================================================
@@ -834,8 +791,8 @@ macro(macos_deploy_qt_library LIBRARY_NAME)
 
     set(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    if(   "${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}"
-       OR "${LIBRARY_NAME}" STREQUAL "${QTWEBKITWIDGETS}")
+    if(   "${LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
+       OR "${LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
         set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
     else()
         set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
@@ -848,7 +805,7 @@ endmacro()
 
 #===============================================================================
 
-macro(macos_deploy_qt_plugin PLUGIN_CATEGORY)
+macro(macos_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin
 
@@ -953,11 +910,12 @@ endforeach()
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
                 WORKING_DIRECTORY ${DIRNAME}
+                RESULT_VARIABLE RESULT
                 OUTPUT_QUIET)
 
 # Make sure that the compressed version of our package exists
 
-if(EXISTS ${COMPRESSED_FILENAME})
+if(RESULT EQUAL 0 AND EXISTS ${COMPRESSED_FILENAME})
     # The compressed version of our package exists, so calculate its SHA-1 value
     # and let people know how we should call the retrieve_package_file() macro
 
@@ -985,6 +943,10 @@ retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
     set(CMAKE_CODE "${CMAKE_CODE}\n                      SHA1_FILES \\$\\{SHA1_FILES\\}
                       SHA1_VALUES \$\{SHA1_VALUES\})\")
 else()
+    if(EXISTS ${COMPRESSED_FILENAME})
+        file(REMOVE ${COMPRESSED_FILENAME})
+    endif()
+
     message(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
 endif()
 ")

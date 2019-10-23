@@ -1,3 +1,5 @@
 @ECHO OFF
 
-CALL scripts\genericclean all
+SET AppDir=%~dp0
+
+CALL "%AppDir%scripts\genericclean" all

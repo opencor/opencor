@@ -29,12 +29,22 @@ option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClan
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
+option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of various Python packages" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
-option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 option(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+
+if(ENABLE_TEST_PLUGINS)
+    option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
+endif()
+
+# Determine whether we are using the prebuilt version of our Python and QtWebKit
+# packages
+
+if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_QTWEBKIT_PACKAGE)
+    set(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES ON)
+endif()
 
 # Make sure that we are using the compiler we support
 
@@ -261,6 +271,11 @@ endif()
 
 set(PLATFORM_DIR ${PLATFORM})
 
+# Location of our distribution files
+
+set(DISTRIB_DIR ${CMAKE_SOURCE_DIR}/distrib)
+set(PLATFORM_DISTRIB_DIR ${DISTRIB_DIR}/${PLATFORM})
+
 # Default location of external binaries and packages
 
 if(WIN32)
@@ -353,26 +368,25 @@ endif()
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
 
-if(WIN32)
-    set(ICU_VERSION 57)
-elseif(NOT APPLE)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    if(WIN32)
+        set(ICU_VERSION 57)
+    elseif(NOT APPLE)
+        add_subdirectory(${PLATFORM_DISTRIB_DIR}/icu)
+        add_subdirectory(${PLATFORM_DISTRIB_DIR}/mesa)
+    endif()
 endif()
 
-# Retrieve or build our copy of QtWebKit
+# Retrieve or build our copy of QtWebKit, but only if we are not building Python
 
-add_subdirectory(src/3rdparty/QtWebKit)
+if(USE_PREBUILT_PYTHON_PACKAGE)
+    add_subdirectory(src/3rdparty/QtWebKit)
+endif()
 
 # Required Qt modules
 
 if(ENABLE_TESTS)
     set(TEST Test)
-endif()
-
-if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-    set(WEBKIT WebKit)
-    set(WEBKITWIDGETS WebKitWidgets)
 endif()
 
 set(REQUIRED_QT_MODULES
@@ -381,56 +395,69 @@ set(REQUIRED_QT_MODULES
     Widgets
 )
 
-if(WIN32)
-    list(APPEND REQUIRED_QT_MODULES ${WEBKIT})
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    set(WEBKIT WebKit)
+    set(WEBKITWIDGETS WebKitWidgets)
+
+    if(WIN32)
+        list(APPEND REQUIRED_QT_MODULES ${WEBKIT})
+    endif()
 endif()
 
 foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     find_package(Qt5${REQUIRED_QT_MODULE} REQUIRED)
 endforeach()
 
-# Make sure that anyone can access diff-match-patch
-
-include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
-
-# On macOS, keep track of the Qt libraries against which we need to link
+# On macOS, keep track of the Qt libraries against which we need to link and
+# make sure that we always use their release version
+# Note: indeed, from Qt 5.12.5, to build a debug version of a Qt-based
+#       application implies using the debug version of the Qt libraries, which
+#       we don't want to do (since it would require us to generate both a
+#       release and a debug version of our Qt-based third-party libraries)...
 
 if(APPLE)
     if(ENABLE_TESTS)
-        set(QTTEST QtTest)
+        set(TEST Test)
     endif()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        set(QTWEBKIT QtWebKit)
-        set(QTWEBKITWIDGETS QtWebKitWidgets)
+    if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+        set(WEBKIT WebKit)
+        set(WEBKITWIDGETS WebKitWidgets)
     endif()
 
     set(MACOS_QT_LIBRARIES
-        QtConcurrent
-        QtCore
-        QtDBus
-        QtGui
-        QtHelp
-        QtMacExtras
-        QtMultimedia
-        QtMultimediaWidgets
-        QtNetwork
-        QtOpenGL
-        QtPositioning
-        QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
-        QtSql
-        QtSvg
-        ${QTTEST}
-        QtWebChannel
-        ${QTWEBKIT}
-        ${QTWEBKITWIDGETS}
-        QtWidgets
-        QtXml
-        QtXmlPatterns
+        Concurrent
+        Core
+        DBus
+        Gui
+        Help
+        MacExtras
+        Multimedia
+        MultimediaWidgets
+        Network
+        OpenGL
+        Positioning
+        PrintSupport
+        Qml
+        Quick
+        Sensors
+        Sql
+        Svg
+        ${TEST}
+        WebChannel
+        ${WEBKIT}
+        ${WEBKITWIDGETS}
+        Widgets
+        Xml
+        XmlPatterns
     )
+
+    foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+        find_package(Qt5${QT_LIBRARY} REQUIRED)
+
+        get_target_property(QT_RELEASE_LIBRARY Qt5::${QT_LIBRARY} IMPORTED_LOCATION_RELEASE)
+        set_target_properties(Qt5::${QT_LIBRARY} PROPERTIES "IMPORTED_LOCATION_DEBUG" "${QT_RELEASE_LIBRARY}")
+    endforeach()
 endif()
 
 # Some general build settings
@@ -517,20 +544,6 @@ add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 add_definitions(-DUNICODE)
 
-# Let OpenCOR know about some of the options with which it was built
-
-if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-    add_definitions(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
-endif()
-
-if(ENABLE_SAMPLE_PLUGINS)
-    add_definitions(-DENABLE_SAMPLE_PLUGINS)
-endif()
-
-if(ENABLE_TEST_PLUGINS)
-    add_definitions(-DENABLE_TEST_PLUGINS)
-endif()
-
 # On macOS, make sure that we support version 10.12 and later, unless a specific
 # deployment target has been specified
 
@@ -606,10 +619,8 @@ track_files(${VERSION_DATE_FILENAME})
 set(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
 set(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
 
-configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in
-               ${COMMON_QRC_FILENAME})
-configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
-               ${I18N_QRC_FILENAME})
+configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
+configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in ${I18N_QRC_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -687,13 +698,15 @@ if(WIN32)
 endif()
 
 # Various include directories
-# Note: access to the Core plugin's source folder is needed so that we can build
-#       OpenCOR on its own, i.e. without any plugins (due to the global CLI/GUI
-#       utilities needing access to some features that are in common with the
-#       Core CLI/GUI utilities)...
+# Note #1: access to the Core plugin's source folder is needed so that we can
+#          build OpenCOR on its own, i.e. without any plugins (due to the global
+#          CLI/GUI utilities needing access to some features that are in common
+#          with the Core CLI/GUI utilities)...
+# Note #2: we want everybody to be able to access diff-match-patch...
 
 include_directories(
     src
+    src/3rdparty/diff_match_patch/src
     src/misc
     src/plugins
     src/plugins/miscellaneous/Core/src
@@ -732,8 +745,7 @@ string(TIMESTAMP YEAR "%Y")
 if(WIN32)
     set(RC_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.rc)
 
-    configure_file(${CMAKE_SOURCE_DIR}/res/${CMAKE_PROJECT_NAME}.rc.in
-                   ${RC_FILENAME})
+    configure_file(${CMAKE_SOURCE_DIR}/res/${CMAKE_PROJECT_NAME}.rc.in ${RC_FILENAME})
 
     list(APPEND SOURCES ${RC_FILENAME})
 elseif(APPLE)
@@ -773,8 +785,7 @@ if(ENABLE_TESTS)
 
     set(TESTS_QRC_FILENAME ${PROJECT_BUILD_DIR}/src/tests/res/tests.qrc)
 
-    configure_file(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in
-                   ${TESTS_QRC_FILENAME})
+    configure_file(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in ${TESTS_QRC_FILENAME})
 
     add_executable(${RUNTESTS_NAME}
         src/tests/src/main.cpp
@@ -807,7 +818,7 @@ if(ENABLE_TESTS)
     # RPATH rather than RUNPATH on Linux
 
     if(APPLE)
-        macos_clean_up_file_with_qt_dependencies(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+        strip_file(${RUNTESTS_NAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
     elseif(NOT WIN32)
         runpath2rpath(${RUNTESTS_NAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
     endif()
@@ -835,134 +846,165 @@ add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
 # Note #3: soft dependencies are determined automatically, so other plugins can
 #          be listed in any order...
 
-if(ENABLE_SAMPLE_PLUGINS)
-    set(SAMPLE_PLUGINS
-        sample/Sample
-        sample/SampleTools
-        sample/SampleView
-        sample/SampleWindow
+if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # We are using the prebuilt version of our QtWebKit package, so build
+    # whatever we can depending on whether we are using the prebuilt version of
+    # our Python package
+
+    set(PLUGINS
+        thirdParty/OpenSSL
+        thirdParty/zlib
+
+        thirdParty/Python
     )
-endif()
 
-if(ENABLE_TEST_PLUGINS)
-    set(TEST_PLUGINS
-        test/ZincWindow
-    )
-endif()
+    if(USE_PREBUILT_PYTHON_PACKAGE)
+        # We are using the prebuilt version of our Python package, so build all
+        # our plugins
 
-set(PLUGINS
-    thirdParty/OpenSSL
-    thirdParty/zlib
+        list(APPEND PLUGINS
+            thirdParty/libSBML
+            thirdParty/PythonPackages
 
-    thirdParty/libSBML
-    thirdParty/Python
-    thirdParty/PythonPackages
+            dataStore/BioSignalMLDataStore
+            dataStore/CSVDataStore
+            dataStore/DataStore
 
-    ${SAMPLE_PLUGINS}
-    ${TEST_PLUGINS}
+            editing/CellMLAnnotationView
+            editing/CellMLEditingView
+            editing/CellMLTextView
+            editing/EditingView
+            editing/RawCellMLView
+            editing/RawSEDMLView
+            editing/RawTextView
+            editing/SEDMLEditingView
 
-    dataStore/BioSignalMLDataStore
-    dataStore/CSVDataStore
-    dataStore/DataStore
+            miscellaneous/Compiler
+            miscellaneous/Core
+            miscellaneous/HelpWindow
+            miscellaneous/WebBrowserWindow
 
-    editing/CellMLAnnotationView
-    editing/CellMLEditingView
-    editing/CellMLTextView
-    editing/EditingView
-    editing/RawCellMLView
-    editing/RawSEDMLView
-    editing/RawTextView
-    editing/SEDMLEditingView
+            organisation/FileBrowserWindow
+            organisation/FileOrganiserWindow
+            organisation/PMRWindow
+            organisation/PMRWorkspacesWindow
 
-    miscellaneous/Compiler
-    miscellaneous/Core
-    miscellaneous/HelpWindow
-    miscellaneous/WebBrowserWindow
+            simulation/PendulumWindow
+            simulation/SimulationExperimentView
 
-    organisation/FileBrowserWindow
-    organisation/FileOrganiserWindow
-    organisation/PMRWindow
-    organisation/PMRWorkspacesWindow
+            solver/CVODESolver
+            solver/ForwardEulerSolver
+            solver/FourthOrderRungeKuttaSolver
+            solver/HeunSolver
+            solver/KINSOLSolver
+            solver/SecondOrderRungeKuttaSolver
 
-    simulation/PendulumWindow
-    simulation/SimulationExperimentView
+            support/CellMLSupport
+            support/COMBINESupport
+            support/PMRSupport
+            support/SEDMLSupport
+            support/SimulationSupport
+            support/StandardSupport
+            support/ZIPSupport
 
-    solver/CVODESolver
-    solver/ForwardEulerSolver
-    solver/FourthOrderRungeKuttaSolver
-    solver/HeunSolver
-    solver/KINSOLSolver
-    solver/SecondOrderRungeKuttaSolver
+            thirdParty/CellMLAPI
+            thirdParty/libBioSignalML
+            thirdParty/libgit2
+            thirdParty/libNuML
+            thirdParty/libSEDML
+            thirdParty/LibXDiff
+            thirdParty/LLVMClang
+            thirdParty/OAuth
+            thirdParty/QScintilla
+            thirdParty/Qwt
+            thirdParty/SUNDIALS
+            thirdParty/Zinc
 
-    support/CellMLSupport
-    support/COMBINESupport
-    support/PMRSupport
-    support/SEDMLSupport
-    support/SimulationSupport
-    support/StandardSupport
-    support/ZIPSupport
+            tools/CellMLTools
 
-    thirdParty/CellMLAPI
-    thirdParty/libBioSignalML
-    thirdParty/libgit2
-    thirdParty/libNuML
-    thirdParty/libSEDML
-    thirdParty/LibXDiff
-    thirdParty/LLVMClang
-    thirdParty/OAuth
-    thirdParty/QScintilla
-    thirdParty/Qwt
-    thirdParty/SUNDIALS
-    thirdParty/Zinc
+            widget/EditorWidget
+            widget/GraphPanelWidget
+            widget/MathMLViewerWidget
+            widget/QScintillaWidget
+            widget/WebViewerWidget
+            widget/ZincWidget
+        )
 
-    tools/CellMLTools
+        # Build our sample plugins, if required
 
-    widget/EditorWidget
-    widget/GraphPanelWidget
-    widget/MathMLViewerWidget
-    widget/QScintillaWidget
-    widget/WebViewerWidget
-    widget/ZincWidget
-)
+        if(ENABLE_SAMPLE_PLUGINS)
+            list(APPEND PLUGINS
+                sample/Sample
+                sample/SampleTools
+                sample/SampleView
+                sample/SampleWindow
+            )
 
-if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
-    # We want to build our copy of the QtWebKit package, so don't build any
-    # of our plugins since some of them may require QtWebKit
+            # Let OpenCOR know about the sample plugins being enabled
 
-    set(PLUGINS)
-endif()
+            add_definitions(-DENABLE_SAMPLE_PLUGINS)
+        endif()
 
-foreach(PLUGIN ${PLUGINS})
-    set(PLUGIN_DIR src/plugins/${PLUGIN})
+        # Build our test plugins, if required
 
-    if("${PLUGIN}" MATCHES "^thirdParty/.*$")
-        include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
+        if(ENABLE_TEST_PLUGINS)
+            list(APPEND PLUGINS
+                test/ZincWindow
+
+                thirdParty/Zinc
+
+                widget/ZincWidget
+            )
+
+            # Let OpenCOR know about the test plugins being enabled
+
+            add_definitions(-DENABLE_TEST_PLUGINS)
+        endif()
+
+        # Let OpenCOR know about the prebuilt version of our QtWebKit package
+        # being used
+
+        add_definitions(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
     endif()
 
-    include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
-endforeach()
+    # Include different directories needed by our various plugins
 
-foreach(PLUGIN ${PLUGINS})
-    add_subdirectory(src/plugins/${PLUGIN})
-endforeach()
+    foreach(PLUGIN ${PLUGINS})
+        set(PLUGIN_DIR src/plugins/${PLUGIN})
 
-# Fetch parts of our documentation and build it
+        if("${PLUGIN}" MATCHES "^thirdParty/.*$")
+            include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
+        endif()
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
-                                                           ${PROJECT_BUILD_DIR}/doc)
+        include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
+    endforeach()
 
-configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+    # Build our various plugins
 
-build_documentation(user)
-build_documentation(developer)
+    foreach(PLUGIN ${PLUGINS})
+        add_subdirectory(src/plugins/${PLUGIN})
+    endforeach()
+endif()
+
+# Fetch parts of our documentation and build it, if we are neither building
+# Python nor QtWebKit
+# Note: we need Python because we rely on Sphinx to build our documentation...
+
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+                                                               ${PROJECT_BUILD_DIR}/doc)
+
+    configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+                   ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+    build_documentation(user)
+    build_documentation(developer)
+endif()
 
 # Build the GUI version of OpenCOR
 
 if(APPLE)
-    list(APPEND SOURCES
-        src/misc/macos.mm
-    )
+    list(APPEND SOURCES src/misc/macos.mm)
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
@@ -971,6 +1013,8 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
 )
 
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_SUPPORT)
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
@@ -1004,9 +1048,6 @@ if(WIN32)
         ${WINDOWS_CLI_RESOURCES}
     )
 
-    target_compile_definitions(${WINDOWS_CLI_PROJECT_NAME}
-                               PRIVATE CLI_VERSION)
-
     set_target_properties(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
@@ -1029,8 +1070,7 @@ if(APPLE)
 
     set(INFO_PLIST_FILENAME ${PROJECT_BUILD_DIR}/Info.plist)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/Info.plist.in
-                   ${INFO_PLIST_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/Info.plist.in ${INFO_PLIST_FILENAME})
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${INFO_PLIST_FILENAME}
@@ -1042,26 +1082,26 @@ if(APPLE)
 
     # Clean up the OpenCOR executable
 
-    macos_clean_up_file_with_qt_dependencies(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+    strip_file(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS/${CMAKE_PROJECT_NAME})
 
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        macos_deploy_qt_library(${QT_LIBRARY})
+        macos_deploy_qt_library(Qt${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR
 
-    macos_deploy_qt_plugin(imageformats qjpeg)
-    macos_deploy_qt_plugin(mediaservice qavfmediaplayer)
-    macos_deploy_qt_plugin(platforms qcocoa)
-    macos_deploy_qt_plugin(printsupport cocoaprintersupport)
-    macos_deploy_qt_plugin(sqldrivers qsqlite)
-    macos_deploy_qt_plugin(styles qmacstyle)
+    macos_deploy_qt_plugins(imageformats qjpeg)
+    macos_deploy_qt_plugins(mediaservice qavfmediaplayer)
+    macos_deploy_qt_plugins(platforms qcocoa)
+    macos_deploy_qt_plugins(printsupport cocoaprintersupport)
+    macos_deploy_qt_plugins(sqldrivers qsqlite)
+    macos_deploy_qt_plugins(styles qmacstyle)
 else()
     # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
 
-    if(NOT WIN32 AND NOT APPLE)
+    if(NOT WIN32)
         runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
     endif()
 
@@ -1160,7 +1200,7 @@ endif()
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${DISTRIB_DIR}/readMe.txt")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_PROJECT_NAME}" "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "Physiome Project")
@@ -1215,7 +1255,7 @@ if(WIN32)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
         foreach(QT_LIBRARY icudt icuin icuuc)
             windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
         endforeach()
@@ -1223,11 +1263,11 @@ if(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    windows_deploy_qt_plugin(imageformats qjpeg)
-    windows_deploy_qt_plugin(platforms qwindows)
-    windows_deploy_qt_plugin(printsupport windowsprintersupport)
-    windows_deploy_qt_plugin(sqldrivers qsqlite)
-    windows_deploy_qt_plugin(styles qwindowsvistastyle)
+    windows_deploy_qt_plugins(imageformats qjpeg)
+    windows_deploy_qt_plugins(platforms qwindows)
+    windows_deploy_qt_plugins(printsupport windowsprintersupport)
+    windows_deploy_qt_plugins(sqldrivers qsqlite)
+    windows_deploy_qt_plugins(styles qwindowsvistastyle)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -1235,10 +1275,8 @@ if(WIN32)
     set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
     set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
-                   ${BAT_FILENAME})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
-                   ${VBS_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.bat.in ${BAT_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.vbs.in ${VBS_FILENAME})
 
     install(FILES ${BAT_FILENAME}
             DESTINATION .)
@@ -1270,8 +1308,8 @@ elseif(APPLE)
 
     set(CPACK_SYSTEM_NAME "macOS")
 
-    set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+    set(CPACK_RESOURCE_FILE_WELCOME "${PLATFORM_DISTRIB_DIR}/welcome.txt")
+    set(CPACK_RESOURCE_FILE_README "${DISTRIB_DIR}/readMe.txt")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
     set(CPACK_SET_DESTDIR TRUE)
@@ -1282,12 +1320,11 @@ elseif(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    set(SHELL_SCRIPT_FILENAME ${PROJECT_BUILD_DIR}/application)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.in ${SHELL_SCRIPT_FILENAME} @ONLY)
 
-    install(FILES ${SH_FILENAME}
+    install(FILES ${SHELL_SCRIPT_FILENAME}
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -1340,20 +1377,19 @@ else()
 
     # Qt plugins required by OpenCOR
 
-    linux_deploy_qt_plugin(imageformats qjpeg)
-    linux_deploy_qt_plugin(platforms qxcb)
-    linux_deploy_qt_plugin(printsupport cupsprintersupport)
-    linux_deploy_qt_plugin(sqldrivers qsqlite)
-    linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+    linux_deploy_qt_plugins(imageformats qjpeg)
+    linux_deploy_qt_plugins(platforms qxcb)
+    linux_deploy_qt_plugins(printsupport cupsprintersupport)
+    linux_deploy_qt_plugins(sqldrivers qsqlite)
+    linux_deploy_qt_plugins(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
     # Shell script to run OpenCOR
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    set(SHELL_SCRIPT_FILENAME ${PROJECT_BUILD_DIR}/application)
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
-                   ${SH_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/application.in ${SHELL_SCRIPT_FILENAME} @ONLY)
 
-    install(FILES ${SH_FILENAME}
+    install(FILES ${SHELL_SCRIPT_FILENAME}
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -1378,8 +1414,7 @@ endif()
 
 set(NOTICE_FILENAME ${PROJECT_BUILD_DIR}/NOTICE.txt)
 
-configure_file(${CMAKE_SOURCE_DIR}/NOTICE.txt.in
-               ${NOTICE_FILENAME})
+configure_file(${CMAKE_SOURCE_DIR}/NOTICE.txt.in ${NOTICE_FILENAME})
 
 set(FILES
     ${CMAKE_SOURCE_DIR}/LICENSE.txt

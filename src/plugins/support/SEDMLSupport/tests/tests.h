@@ -18,59 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Core MathML tests
+// SED-ML support tests
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QAbstractMessageHandler>
 #include <QObject>
-#include <QStringList>
 
 //==============================================================================
 
-class MathmlTests : public QObject
+class Tests : public QObject
 {
     Q_OBJECT
 
-private:
-    QString mQuery;
-
-    void tests(const QString &pCategory);
-
 private slots:
-    void initTestCase();
-
-    void plusTests();
-    void minusTests();
-    void timesTests();
-    void divideTests();
-
-    void powerTests();
-    void rootTests();
-
-    void absTests();
-
-    void expTests();
-    void lnTests();
-    void logTests();
-
-    void floorTests();
-    void ceilTests();
-
-    void factTests();
-
-    void remTests();
-
-    void minTests();
-    void maxTests();
-
-    void gcdTests();
-    void lcmTests();
-
-    void trigonometricTests();
+    void lineStyleTests();
+    void symbolStyleTests();
 };
 
 //==============================================================================

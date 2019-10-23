@@ -707,7 +707,7 @@ void CorePlugin::newFile()
     // Make sure that the file has indeed been created
 
     if (createStatus != FileManager::Status::Created) {
-        qFatal("FATAL ERROR | %s:%d: the new file did not get created.", __FILE__, __LINE__);
+        qFatal("FATAL ERROR | %s:%d: the new file could not be created.", __FILE__, __LINE__);
     }
 #endif
 }

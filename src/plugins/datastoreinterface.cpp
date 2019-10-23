@@ -84,7 +84,7 @@ void DataStoreVariableRun::addValue()
 {
     // Set the value of the variable at the given position
 
-    Q_ASSERT((mSize < mCapacity) && mValue);
+    Q_ASSERT((mSize < mCapacity) && (mValue != nullptr));
 
     mValues[mSize] = *mValue;
 
@@ -283,10 +283,12 @@ quint64 DataStoreVariable::size(int pRun) const
 {
     // Return our size for the given run
 
+    if (mRuns.isEmpty()) {
+        return 0;
+    }
+
     if (pRun == -1) {
-        return (!mRuns.isEmpty())?
-                   mRuns.last()->size():
-                   0;
+        return mRuns.last()->size();
     }
 
     return ((pRun >= 0) && (pRun < mRuns.count()))?

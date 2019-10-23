@@ -773,7 +773,7 @@ bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
     domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
 
     if (pFileName.isEmpty()) {
-        std::wcout << QString(Core::serialiseDomDocument(domDocument)).toStdWString() << std::endl;
+        std::cout << QString(Core::serialiseDomDocument(domDocument)).toStdString() << std::endl;
 
         return true;
     }

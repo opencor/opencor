@@ -1,36 +1,29 @@
 @ECHO OFF
 
-IF "%1" == "all" GOTO ALL1
+IF "%1" == "all" (
+    TITLE Cleaning all of OpenCOR...
+) ELSE (
+    TITLE Cleaning OpenCOR...
+)
 
-TITLE Cleaning OpenCOR...
+SET AppDir=%~dp0..\
+SET OrigDir=%CD%
 
-GOTO NEXT
+IF EXIST "%AppDir%build" (
+    CD "%AppDir%build"
 
-:ALL1
+    FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
+    FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
+    FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
+)
 
-TITLE Cleaning all of OpenCOR...
+IF "%1" == "all" (
+    IF EXIST "%AppDir%ext" (
+        CD "%AppDir%ext"
 
-:NEXT
+        FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
+        FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
+    )
+)
 
-SET CurrentPath=%CD%
-
-CD %CurrentPath%\build
-
-FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
-FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
-FOR    %%I IN (*.*) DO DEL /Q "%%I"
-
-IF "%1" == "all" GOTO ALL2
-
-GOTO END
-
-:ALL2
-
-CD %CurrentPath%\ext
-
-FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
-FOR    %%I IN (*.*) DO DEL /Q "%%I"
-
-:END
-
-CD %CurrentPath%
+CD "%OrigDir%"

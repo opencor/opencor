@@ -2,4 +2,4 @@
 
 appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/scripts/genericmake Release $*
+${appDir}/bin/@CMAKE_PROJECT_NAME@ $*

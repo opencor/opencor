@@ -3,16 +3,16 @@ project(LLVMClangPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME LLVMClang)
-set(PACKAGE_VERSION 8.0.0)
+set(PACKAGE_VERSION 9.0.0)
 
 # Version of our library
 
-set(MAJOR_LIBRARY_VERSION 8)
+set(MAJOR_LIBRARY_VERSION 9)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v8.0.0)
+set(GIT_TAG v9.0.0)
 
 # Specify where our local package will be installed
 
@@ -57,33 +57,33 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 051ba18ff21a7cb9de0f5b6d1a3bb5b74546b669
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 62a2e14a56a312ffde072237edc227f6ee5435d6
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9712bfe792d407ada0f24f28742c8511a2bb8015
-                                              c3e8323dacc6ba400524da57ab4ac9352f081168)
+                                  SHA1_VALUES 33b1bc033e0944ec5fa32fb03955f4dd60468890
+                                              19f6852616b7225465a9fce7aa4876020db037cc)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 111fe52d1c7daa53ce98bce7d9f72ab882d57c7b
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 7b856b4631ab16a182b0c326782d7fd04b7f02a7
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 8ba8a24f8f74dc3eae88da27953f6f094efd2736
-                                              c7ae90a9be859db514fd7b275e058876edf021fc)
+                                  SHA1_VALUES faefba96a620532b3270d7b84e4489e5019a34fc
+                                              81cd29270a71aa56b4178b89a63133170a13197f)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2176e081262efdde11a9471ee39dc469e9e07888
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8e1798d9fafcf419c63edf9e4a882307a61ab955
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 86132b222789842bd5321cd73367cfe6fe21277a)
+                              SHA1_VALUES 9dbcad3d57e436b35208cd06bf7149fd963fcd8a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0e4d3b3b9535e03a24cd8b7adf3a5f269c1065c3
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bbbbac602c0b3cadca80a4232712a1c05b510981
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c5918bf9995969c35b11a4d3d7a7ea3984d3cc2d)
+                              SHA1_VALUES e45f4f4eae310fff10c6664dd0454770ba6e7696)
     endif()
 else()
     # Allow for big objects and ignore some warnings
 
     if(WIN32)
-        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4251 /wd4275 /wd4530")
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4251 /wd4275 /wd4530 /wd4996")
     endif()
 
     # Build LLVM+Clang as an external project
@@ -113,6 +113,7 @@ else()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLLVMCLANG_BUILD_SHARED_LIB=ON
+            -DLLVM_BUILD_LLVM_C_DYLIB=OFF
             -DLLVM_BUILD_RUNTIME=OFF
             -DLLVM_BUILD_RUNTIMES=OFF
             -DLLVM_BUILD_UTILS=OFF
@@ -124,8 +125,10 @@ else()
             -DLLVM_ENABLE_LIBEDIT=OFF
             -DLLVM_ENABLE_LIBPFM=OFF
             -DLLVM_ENABLE_LIBXML2=OFF
+            -DLLVM_ENABLE_MODULE_DEBUGGING=OFF
             -DLLVM_ENABLE_OCAMLDOC=OFF
             -DLLVM_ENABLE_PEDANTIC=OFF
+            -DLLVM_ENABLE_PLUGINS=OFF
             -DLLVM_ENABLE_TERMINFO=OFF
             -DLLVM_ENABLE_WARNINGS=OFF
             -DLLVM_INCLUDE_BENCHMARKS=OFF

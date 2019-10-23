@@ -295,11 +295,9 @@ int main(int pArgC, char *pArgV[])
         res = 0;
     }
 
-    // Keep track of our application file and directory paths (in case we need
-    // to restart OpenCOR)
+    // Keep track of our application file (in case we need to restart OpenCOR)
 
     QString appFilePath = OpenCOR::GuiApplication::applicationFilePath();
-    QString appDirPath = OpenCOR::GuiApplication::applicationDirPath();
 
     // Delete our main window
 
@@ -345,10 +343,9 @@ int main(int pArgC, char *pArgV[])
             QSettings().clear();
         }
 
-        // Restart OpenCOR, but without providing any of the arguments that were
-        // originally passed to us since we want to reset everything
+        // Restart OpenCOR
 
-        QProcess::startDetached(appFilePath, QStringList(), appDirPath);
+        QProcess::startDetached(appFilePath);
     }
 
     // We are done running the GUI version of OpenCOR, so leave

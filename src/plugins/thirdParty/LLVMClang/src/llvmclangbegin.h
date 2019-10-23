@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma warning(disable: 4146)
     #pragma warning(disable: 4267)
     #pragma warning(disable: 4291)
+    #pragma warning(disable: 4624)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic push
     #if defined(__GNUC__) && (__GNUC__ >= 8)

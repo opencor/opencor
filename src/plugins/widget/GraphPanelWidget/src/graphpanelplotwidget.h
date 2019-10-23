@@ -578,8 +578,6 @@ private:
 
     GraphPanelPlotGraphs mGraphs;
 
-    bool mHasEnabledSettings = false;
-
     QColor mEnabledBackgroundColor;
     QColor mEnabledForegroundColor;
 
@@ -588,9 +586,9 @@ private:
 
     QColor mEnabledGridLinesColor;
 
-    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphPens;
-    QMap<GraphPanelPlotGraph *, QBrush> mEnabledGraphSymbolBrushes;
-    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphSymbolPens;
+    QList<QPen> mEnabledGraphPens;
+    QList<QBrush> mEnabledGraphSymbolBrushes;
+    QList<QPen> mEnabledGraphSymbolPens;
 
     Action mAction = Action::None;
 
@@ -658,7 +656,7 @@ private:
 
     QRectF realDataRect();
 
-    void optimizeAxis(const int &pAxisId, double &pMin, double &pMax,
+    void optimizeAxis(int pAxisId, double &pMin, double &pMax,
                       Optimization pOptimization);
 
     void setAxis(int pAxisId, double pMin, double pMax);

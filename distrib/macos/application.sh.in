@@ -1,3 +1,0 @@
-#!/bin/sh
-
-${CMAKE_PROJECT_NAME}.app/Contents/MacOS/${CMAKE_PROJECT_NAME} $*

@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 7, "year": 2019, "type": 2, "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 9, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,9 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> make sure that we have a view before trying to import a file using OpenCOR's <a href=\"https://en.wikipedia.org/wiki/Uniform_Resource_Identifier\">URI scheme</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2140\">#2140</a>)." },
-                       { "change": "<strong>Simulation support:</strong> improved the accuracy of algebraic variables that depend on the value of some state variables (see issue <a href=\"https://github.com/opencor/opencor/issues/2139\">#2139</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"https://www.openssl.org/\">OpenSSL</a> library to version 1.1.1c (see issue <a href=\"https://github.com/opencor/opencor/issues/1801\">#1801</a>)." }
+                       { "change": "<strong>SED-ML support:</strong> added support left and right triangle symbols (see issue <a href=\"https://github.com/opencor/opencor/issues/2173\">#2173</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> properly handle the Graph Panel properties (see issue <a href=\"https://github.com/opencor/opencor/issues/2171\">#2171</a>). Make sure that curves are plotted with all of their original settings when reloading a SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2176\">#2176</a>). Make sure that all of a solver's properties get saved to a SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2185\">#2185</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"https://www.openssl.org/\">OpenSSL</a> library to version 1.1.1d (see issue <a href=\"https://github.com/opencor/opencor/issues/2157\">#2157</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 9.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2161\">#2161</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 19.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2197\">#2197</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 5.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2198\">#2198</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

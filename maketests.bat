@@ -1,3 +1,5 @@
 @ECHO OFF
 
-CALL scripts\genericmake Tests %*
+SET AppDir=%~dp0
+
+CALL "%AppDir%scripts\genericmake" Tests %*
