@@ -9,6 +9,7 @@ project(OpenCOR)
 option(ENABLE_CLANG_TIDY "Enable the use of Clang-Tidy" OFF)
 
 option(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
+option(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 option(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 if(NOT WIN32 AND NOT APPLE)
@@ -33,11 +34,8 @@ option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of variou
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
+option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 option(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-
-if(ENABLE_TEST_PLUGINS)
-    option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
-endif()
 
 # Determine whether we are using the prebuilt version of our Python and QtWebKit
 # packages
@@ -950,10 +948,6 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         if(ENABLE_TEST_PLUGINS)
             list(APPEND PLUGINS
                 test/ZincWindow
-
-                thirdParty/Zinc
-
-                widget/ZincWidget
             )
 
             # Let OpenCOR know about the test plugins being enabled
