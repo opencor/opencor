@@ -1,4 +1,4 @@
-    /*******************************************************************************
+/*******************************************************************************
 
 Copyright (C) The University of Auckland
 
@@ -25,12 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QCoreApplication>
-#include <QSettings>
-#include <QTimer>
-
-//==============================================================================
-
 #include "pythonbegin.h"
     #include "pythonqtsupport.h"
 #include "pythonend.h"
@@ -47,12 +41,10 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", QString::fromUtf8("the Jupyter kernel plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the Jupyter kernel plugin."));
+    descriptions.insert("fr", QString::fromUtf8("le plugin du noyau Jupyter."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
-                          QStringList() << "Core" << "DataStore"
-                                        << "SimulationSupport"
-                                        << "PythonQtSupport",
+                          QStringList() << "Core" << "SimulationSupport",
                           descriptions);
 }
 
@@ -61,27 +53,33 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
 //==============================================================================
 
 bool JupyterKernelPlugin::executeCommand(const QString &pCommand,
-                                         const QStringList &pArguments, int &pRes)
+                                         const QStringList &pArguments,
+                                         int &pRes)
 {
     // Run the given CLI command
 
-    if (!pCommand.compare("help")) {
+    static const QString Help = "help";
+    static const QString Kernel = "kernel";
+
+    if (pCommand == Help) {
         // Display the commands that we support
 
         runHelpCommand();
 
         return true;
-    } else if (!pCommand.compare("kernel")) {
+    }
+
+    if (pCommand == Kernel) {
         // Run the Jupyter kernel with the specified connection file
 
         return runKernel(pArguments, pRes);
-    } else {
-        // Not a CLI command that we support
-
-        runHelpCommand();
-
-        return false;
     }
+
+    // Not a CLI command that we support
+
+    runHelpCommand();
+
+    return false;
 }
 
 //==============================================================================
@@ -92,48 +90,12 @@ void JupyterKernelPlugin::runHelpCommand()
 {
     // Output the commands we support
 
-    std::cout << "Commands supported by the Jupyter kernel plugin:" << std::endl;
-    std::cout << " * Display the commands supported by the Jupyter kernel plugin:" << std::endl;
+    std::cout << "Commands supported by the JupyterKernel plugin:" << std::endl;
+    std::cout << " * Display the commands supported by the JupyterKernel plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Start the OpenCOR Jupyter kernel:" << std::endl;
     std::cout << "      kernel <connection_file>" << std::endl;
 }
-
-//==============================================================================
-
-// The OpenCOR Jupyter kernel
-
-static QString jupyterKernel = R"PYTHON(
-import matplotlib
-from IPython.core.pylabtools import activate_matplotlib
-from ipykernel.ipkernel import IPythonKernel
-
-# Use the Jupyter notebook for matplotlib plots
-
-MATPLOTLIB_BACKEND = 'nbAgg'
-matplotlib.use(MATPLOTLIB_BACKEND)
-
-# Enable interactive plots
-
-activate_matplotlib(MATPLOTLIB_BACKEND)
-
-# Make sure Jupyter %matplotlib magic won't try to use OS-specific backend
-
-matplotlib.rcParamsOrig['backend'] = matplotlib.rcParams['backend']
-
-# Minimal customisation of the standard IPython kernel
-
-class OpenCORKernel(IPythonKernel):
-    implementation = 'OpenCOR'
-    implementation_version = '0.6'
-    banner = "Jupyter kernel for OpenCOR"
-
-if __name__ == '__main__':
-    from ipykernel.kernelapp import IPKernelApp
-
-    IPKernelApp.connection_file = '%1'
-    IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
-)PYTHON";
 
 //==============================================================================
 
@@ -152,9 +114,42 @@ bool JupyterKernelPlugin::runKernel(const QStringList &pArguments, int &pRes)
     // Run the the kernel using our connection file
     // Note: any backslashes in the filename need to be escaped for Python
 
-    QString connectionFile = pArguments[0];
+    static const QString JupyterKernel = R"PYTHON(
+import matplotlib
 
-    PythonQtSupport::evalScript(jupyterKernel.arg(connectionFile.replace("\\", "\\\\")));
+from IPython.core.pylabtools import activate_matplotlib
+from ipykernel.ipkernel import IPythonKernel
+
+# Use the Jupyter notebook for Matplotlib plots
+
+MATPLOTLIB_BACKEND = 'nbAgg'
+
+matplotlib.use(MATPLOTLIB_BACKEND)
+
+# Enable interactive plots
+
+activate_matplotlib(MATPLOTLIB_BACKEND)
+
+# Make sure that Jupyter %matplotlib magic doesn't try to use OS-specific
+# backend
+
+matplotlib.rcParamsOrig['backend'] = matplotlib.rcParams['backend']
+
+# Minimal customisation of the standard IPython kernel
+
+class OpenCORKernel(IPythonKernel):
+    implementation = 'OpenCOR'
+    implementation_version = '0.6'
+    banner = "Jupyter kernel for OpenCOR"
+
+if __name__ == '__main__':
+    from ipykernel.kernelapp import IPKernelApp
+
+    IPKernelApp.connection_file = '%1'
+    IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
+)PYTHON";
+
+    PythonQtSupport::evalScript(JupyterKernel.arg(QString(pArguments[0]).replace("\\", "\\\\")));
 
     return true;
 }
