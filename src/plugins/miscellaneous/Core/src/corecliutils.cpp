@@ -643,7 +643,6 @@ QString openRemoteFile(const QString &pUrl)
 #endif
             }
 
-            return QString("");
             return {};
         }
 
