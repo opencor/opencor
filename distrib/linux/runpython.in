@@ -4,4 +4,4 @@ appDir="$(cd "$(dirname "$0")"; pwd)"
 
 ${appDir}/setpythonpath
 
-${appDir}/bin/@CMAKE_PROJECT_NAME@ -c Python $*
+${appDir}/bin/@CMAKE_PROJECT_NAME@ -c PythonShell $*

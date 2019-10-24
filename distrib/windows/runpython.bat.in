@@ -4,4 +4,4 @@ SET appDir=%~dp0
 
 CALL "%appDir%setpythonpath.bat"
 
-"%appDir%bin\${CMAKE_PROJECT_NAME}" -c Python %*
+"%appDir%bin\${CMAKE_PROJECT_NAME}" -c PythonShell %*
