@@ -21,17 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python begin
 //==============================================================================
 
-#if defined(Q_OS_LINUX)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#elif defined(Q_OS_MAC)
+#ifdef Q_OS_MAC
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wcast-qual"
     #pragma GCC diagnostic ignored "-Wcovered-switch-default"
     #pragma GCC diagnostic ignored "-Wduplicate-enum"
     #pragma GCC diagnostic ignored "-Wextra-semi"
     #pragma GCC diagnostic ignored "-Wold-style-cast"
-    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
     #pragma GCC diagnostic ignored "-Wold-style-cast"
     #pragma GCC diagnostic ignored "-Wreserved-id-macro"
