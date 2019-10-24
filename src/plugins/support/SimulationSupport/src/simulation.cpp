@@ -655,8 +655,9 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
     //       than our constants...
 
     for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
-        if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i]))
+        if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i])) {
             return true;
+        }
     }
 
     if (pCheckConstants) {
@@ -751,23 +752,23 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    if (mConstantsArray) {
+    if (mConstantsArray != nullptr) {
         mConstantsArray->release();
     }
 
-    if (mRatesArray) {
+    if (mRatesArray != nullptr) {
         mRatesArray->release();
     }
 
-    if (mStatesArray) {
+    if (mStatesArray != nullptr) {
         mStatesArray->release();
     }
 
-    if (mAlgebraicArray) {
+    if (mAlgebraicArray != nullptr) {
         mAlgebraicArray->release();
     }
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         delete[] data;
     }
 
@@ -932,9 +933,7 @@ SimulationResults::~SimulationResults()
 
     deleteDataStore();
 
-    if (mGradientsDataStore) {
-        delete mGradientsDataStore;
-    }
+    delete mGradientsDataStore;
 }
 
 //==============================================================================
@@ -1291,7 +1290,7 @@ void SimulationResults::addPoint(double pPoint)
 
     // Add data to gradients store
 
-    if (mGradientsDataStore) {
+    if (mGradientsDataStore != nullptr) {
        mGradientsDataStore->addValues(pPoint);
     }
 }
@@ -1448,11 +1447,9 @@ bool SimulationResults::initialiseGradientsStore()
     // This can only be done when starting a simulation as only then do we
     // know what constant parameters are having their gradients calculated
 
-    // Delete the previous run's gradient store if it exists
+    // Delete the previous run's gradients data store
 
-    if (mGradientsDataStore) {
-        delete mGradientsDataStore;
-    }
+    delete mGradientsDataStore;
 
     SimulationData *data = mSimulation->data();
 
@@ -1488,8 +1485,9 @@ bool SimulationResults::initialiseGradientsStore()
 
         quint64 simulationSize = mSimulation->size();
 
-        if (simulationSize)
+        if (simulationSize != 0) {
             return mGradientsDataStore->addRun(simulationSize);
+        }
     } else {
         mGradientsDataStore = nullptr;
         mGradientsVariables = DataStore::DataStoreVariables();
@@ -1585,15 +1583,16 @@ QString Simulation::furtherInitialize() const
     // Initialise ourself from a SED-ML document
 
     libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
-    libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
-    libsedml::SedOneStep *sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+    auto sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    auto sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
 
     double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
     double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
     double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
 
-    if (sedmlOneStep)
+    if (sedmlOneStep != nullptr) {
         endingPoint += sedmlOneStep->getStep();
+    }
 
     mData->setStartingPoint(startingPoint);
     mData->setEndingPoint(endingPoint);
@@ -1607,7 +1606,7 @@ QString Simulation::furtherInitialize() const
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
 
     for (auto solverInterface : solverInterfaces) {
-        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+        if (solverInterface->id(kisaoId) == solverInterface->solverName()) {
             odeSolverInterface = solverInterface;
 
             mData->setOdeSolverName(solverInterface->solverName());
@@ -1616,7 +1615,7 @@ QString Simulation::furtherInitialize() const
         }
     }
 
-    if (!odeSolverInterface) {
+    if (odeSolverInterface == nullptr) {
         return tr("the requested solver (%1) could not be found").arg(kisaoId);
     }
 
@@ -1632,17 +1631,17 @@ QString Simulation::furtherInitialize() const
 
     libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
 
-    if (annotation) {
+    if (annotation != nullptr) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-            if (   !QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                && !QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
+            if (   (QString::fromStdString(solverPropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                && (QString::fromStdString(solverPropertiesNode.getName()) == SEDMLSupport::SolverProperties)) {
                 for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
                     const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
-                    if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                        && !QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                    if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                        && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
                         QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
                         QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
 
@@ -1655,7 +1654,7 @@ QString Simulation::furtherInitialize() const
 
     annotation = sedmlUniformTimeCourse->getAnnotation();
 
-    if (annotation) {
+    if (annotation != nullptr) {
         bool mustHaveNlaSolver = false;
         bool hasNlaSolver = false;
         QString nlaSolverName = QString();
@@ -1663,14 +1662,14 @@ QString Simulation::furtherInitialize() const
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
-            if (   !QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                && !QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
+            if (   (QString::fromStdString(nlaSolverNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                && (QString::fromStdString(nlaSolverNode.getName()) == SEDMLSupport::NlaSolver)) {
 
                 mustHaveNlaSolver = true;
                 nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
                 for (auto solverInterface : solverInterfaces) {
-                    if (!nlaSolverName.compare(solverInterface->solverName())) {
+                    if (nlaSolverName == solverInterface->solverName()) {
 
                         mData->setNlaSolverName(nlaSolverName);
 
@@ -1684,8 +1683,8 @@ QString Simulation::furtherInitialize() const
                     for (uint j = 0, jMax = nlaSolverNode.getNumChildren(); j < jMax; ++j) {
                         const libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
 
-                        if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                            && !QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                        if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                            && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
                             QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
                             QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
 
@@ -2239,8 +2238,9 @@ void Simulation::run()
 
     // Initialise sensitivity gradients data store
 
-    if (!mResults->initialiseGradientsStore())
+    if (!mResults->initialiseGradientsStore()) {
         return;
+    }
 
     // Initialise our worker, if we don't already have one and if the
     // simulation settings we were given are sound

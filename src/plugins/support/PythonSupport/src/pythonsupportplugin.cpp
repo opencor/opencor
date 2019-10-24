@@ -21,6 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python Support plugin
 //==============================================================================
 
+#include "pythonsupportplugin.h"
+
+//==============================================================================
+
 #include <QCoreApplication>
 #ifdef Q_OS_WIN
     #include <QDir>
@@ -35,8 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "pythonbegin.h"
-    #include "pythoninclude.h"
-    #include "pythonsupportplugin.h"
+    #include "PythonQt/PythonQtPythonInclude.h"
 #include "pythonend.h"
 
 //==============================================================================

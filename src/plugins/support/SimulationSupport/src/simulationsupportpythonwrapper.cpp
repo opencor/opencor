@@ -24,11 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "cellmlfileruntime.h"
 #include "datastoreinterface.h"
+#include "datastorepythonwrapper.h"
 #include "filemanager.h"
 #include "interfaces.h"
+#include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationmanager.h"
 #include "simulationsupportplugin.h"
+#include "simulationsupportpythonwrapper.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -41,17 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "pythonbegin.h"
-
-//==============================================================================
-
-#include "datastorepythonwrapper.h"
-#include "pythonqtsupport.h"
-#include "simulationsupportpythonwrapper.h"
-
-//==============================================================================
-
-#include <stdexcept>
+#include <array>
 
 //==============================================================================
 
@@ -63,7 +56,7 @@ namespace SimulationSupport {
 static void doSetOdeSolver(SimulationData *pSimulationData, const QString &pOdeSolverName)
 {
     for (auto solverInterface : Core::solverInterfaces()) {
-        if (!pOdeSolverName.compare(solverInterface->solverName())) {
+        if (pOdeSolverName == solverInterface->solverName()) {
             // Set the ODE solver's name
 
             pSimulationData->setOdeSolverName(pOdeSolverName);
@@ -86,7 +79,7 @@ static void doSetOdeSolver(SimulationData *pSimulationData, const QString &pOdeS
 static void doSetNlaSolver(SimulationData *pSimulationData, const QString &pNlaSolverName)
 {
     for (auto solverInterface : Core::solverInterfaces()) {
-        if (!pNlaSolverName.compare(solverInterface->solverName())) {
+        if (pNlaSolverName == solverInterface->solverName()) {
             // Set the NLA solver's name
 
             pSimulationData->setNlaSolverName(pNlaSolverName);
@@ -117,7 +110,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
     Simulation *simulation = simulationManager->simulation(pFileName);
 
-    if (simulation) {
+    if (simulation != nullptr) {
         // Check for issues with the simulation
 
         if (simulation->hasBlockingIssues()) {
@@ -197,7 +190,9 @@ static PyObject *initializeSimulation(const QString &pFileName)
         return PythonQt::priv()->wrapQObject(simulation);
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -209,12 +204,16 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     PyObject *bytes;
     char *name;
     Py_ssize_t len;
-    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+    if (PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
+#include "pythonbegin.h"
         Py_RETURN_NONE;
+#include "pythonend.h"
     }
     PyBytes_AsStringAndSize(bytes, &name, &len);
-    QString fileName = QString::fromUtf8(name, len);
+    QString fileName = QString::fromUtf8(name, int(len));
+#include "pythonbegin.h"
     Py_DECREF(bytes);
+#include "pythonend.h"
 
     QString ioError = Core::openFile(fileName);
 
@@ -236,12 +235,16 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     PyObject *bytes;
     char *name;
     Py_ssize_t len;
-    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+    if (PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
+#include "pythonbegin.h"
         Py_RETURN_NONE;
+#include "pythonend.h"
     }
     PyBytes_AsStringAndSize(bytes, &name, &len);
-    QString url = QString::fromUtf8(name, len);
+    QString url = QString::fromUtf8(name, int(len));
+#include "pythonbegin.h"
     Py_DECREF(bytes);
+#include "pythonend.h"
 
     QString ioError = Core::openRemoteFile(url);
 
@@ -261,10 +264,12 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
     Q_UNUSED(self)
 
     if (PyTuple_Size(args) > 0) {
-        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0));
+#include "pythonbegin.h"
+        auto wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+#include "pythonend.h"
 
-        if (wrappedSimulation) {
-            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrappedSimulation->_objPointerCopy;
+        if (wrappedSimulation != nullptr) {
+            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
 
             QString fileName = simulation->fileName();
 
@@ -278,17 +283,10 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
         }
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
-
-//==============================================================================
-
-static PyMethodDef pythonSimulationSupportMethods[] = {
-    {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
-    {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
-    {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
-    {nullptr, nullptr, 0, nullptr}
-};
 
 //==============================================================================
 
@@ -304,7 +302,14 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
     PythonQtSupport::registerClass(&SimulationResults::staticMetaObject);
     PythonQtSupport::addInstanceDecorators(this);
 
-    PyModule_AddFunctions(pModule, pythonSimulationSupportMethods);
+    static std::array<PyMethodDef, 4> PythonSimulationSupportMethods = {{
+                                                                           { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
+                                                                           { "openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation." },
+                                                                           { "closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation." },
+                                                                           { nullptr, nullptr, 0, nullptr }
+                                                                       }};
+
+    PyModule_AddFunctions(pModule, PythonSimulationSupportMethods.data());
 }
 
 //==============================================================================
@@ -396,11 +401,11 @@ PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
         if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
             information = QString("[%1:%2] %3: %4.").arg(simulationIssue.line())
                                                      .arg(simulationIssue.column())
-                                                     .arg(issueType)
-                                                     .arg(Core::formatMessage(simulationIssue.message()));
+                                                     .arg(issueType,
+                                                          Core::formatMessage(simulationIssue.message()));
         } else {
-            information = QString("%1: %2.").arg(issueType)
-                                             .arg(Core::formatMessage(simulationIssue.message()));
+            information = QString("%1: %2.").arg(issueType,
+                                                 Core::formatMessage(simulationIssue.message()));
         }
 
         PyList_Append(issuesList, PyUnicode_FromString(information.toUtf8().constData()));
@@ -486,7 +491,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
     // Restore the keyboard focus back to IPython
 
-    if (focusWidget) {
+    if (focusWidget != nullptr) {
         focusWidget->setFocus();
     }
 
@@ -608,17 +613,12 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulationResults) const
 {
     SimulationData *simulationData = pSimulationResults->simulation()->data();
-
-    const DataStore::DataStoreVariables constantVariables = pSimulationResults->constantsVariables();
-
-    const DataStore::DataStoreVariables stateVariables = pSimulationResults->statesVariables();
+    DataStore::DataStoreVariables constantVariables = pSimulationResults->constantsVariables();
+    DataStore::DataStoreVariables stateVariables = pSimulationResults->statesVariables();
+    DataStore::DataStoreVariables gradientVariables = pSimulationResults->gradientsVariables();
     int statesCount = stateVariables.size();
-
-    const DataStore::DataStoreVariables gradientVariables = pSimulationResults->gradientsVariables();
     int gradientsCount = gradientVariables.size()/statesCount;
-
     int *indices = simulationData->gradientIndices();
-
     PyObject *gradientsDict = PyDict_New();
     QMap<QString, PyObject *> stateGradientsDictionaries;
 
@@ -650,10 +650,6 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
 
 }   // namespace SimulationSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#include "pythonend.h"
 
 //==============================================================================
 // End of file

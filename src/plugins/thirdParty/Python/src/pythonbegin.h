@@ -24,18 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef Q_OS_MAC
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wcast-qual"
-    #pragma GCC diagnostic ignored "-Wcovered-switch-default"
     #pragma GCC diagnostic ignored "-Wduplicate-enum"
-    #pragma GCC diagnostic ignored "-Wextra-semi"
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
     #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
     #pragma GCC diagnostic ignored "-Wold-style-cast"
     #pragma GCC diagnostic ignored "-Wreserved-id-macro"
-    #pragma GCC diagnostic ignored "-Wshadow"
-    #pragma GCC diagnostic ignored "-Wshadow-field"
     #pragma GCC diagnostic ignored "-Wshift-sign-overflow"
-    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-    #pragma GCC diagnostic ignored "-Wundef"
 #endif
 
 //==============================================================================

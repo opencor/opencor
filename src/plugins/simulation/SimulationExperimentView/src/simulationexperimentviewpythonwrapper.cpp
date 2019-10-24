@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "coreguiutils.h"
 #include "file.h"
+#include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
@@ -32,15 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "pythonbegin.h"
-
-//==============================================================================
-
-#include "pythonqtsupport.h"
-
-//==============================================================================
-
-#include <stdexcept>
+#include <array>
 
 //==============================================================================
 
@@ -50,7 +43,7 @@ namespace OpenCOR {
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace Simulationsupport
+}   // namespace SimulationSupport
 
 //==============================================================================
 
@@ -63,8 +56,8 @@ static PyObject *getSimulation(const QString &pFileName,
 {
     SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);
 
-    if (simulation) {
-        if (!simulation->runtime()) {
+    if (simulation != nullptr) {
+        if (simulation->runtime() != nullptr) {
             // The simulation is missing a runtime so raise a Python exception
 
             PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("unable to get simulations's runtime")));
@@ -85,7 +78,9 @@ static PyObject *getSimulation(const QString &pFileName,
         return PythonQt::priv()->wrapQObject(simulation);
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -94,13 +89,15 @@ static PyObject *initializeSimulation(const QString &pFileName)
 {
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
 
-    if (simulationExperimentViewWidget) {
+    if (simulationExperimentViewWidget != nullptr) {
         simulationExperimentViewWidget->initialize(pFileName);
 
         return getSimulation(pFileName, simulationExperimentViewWidget);
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -112,12 +109,16 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     PyObject *bytes;
     char *name;
     Py_ssize_t len;
-    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+    if (PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
+#include "pythonbegin.h"
         Py_RETURN_NONE;
+#include "pythonend.h"
     }
     PyBytes_AsStringAndSize(bytes, &name, &len);
-    QString fileName = QString::fromUtf8(name, len);
+    QString fileName = QString::fromUtf8(name, int(len));
+#include "pythonbegin.h"
     Py_DECREF(bytes);
+#include "pythonend.h"
 
     QString ioError = Core::centralWidget()->openFile(fileName,
                                                       Core::File::Type::Local,
@@ -141,12 +142,16 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     PyObject *bytes;
     char *name;
     Py_ssize_t len;
-    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+    if (PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
+#include "pythonbegin.h"
         Py_RETURN_NONE;
+#include "pythonend.h"
     }
     PyBytes_AsStringAndSize(bytes, &name, &len);
-    QString url = QString::fromUtf8(name, len);
+    QString url = QString::fromUtf8(name, int(len));
+#include "pythonbegin.h"
     Py_DECREF(bytes);
+#include "pythonend.h"
 
     QString ioError = Core::centralWidget()->openRemoteFile(url, false);
 
@@ -166,10 +171,12 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
     Q_UNUSED(self)
 
     if (PyTuple_Size(args) > 0) {
-        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0));
+#include "pythonbegin.h"
+        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+#include "pythonend.h"
 
-        if (wrappedSimulation) {
-            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrappedSimulation->_objPointerCopy;
+        if (wrappedSimulation != nullptr) {
+            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
 
             // Close the simulation by closing its file, raising an exception if we
             // are unable to do so
@@ -182,7 +189,9 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
         }
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -193,39 +202,35 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
     Q_UNUSED(args)
 
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
-    if (simulationExperimentViewWidget) {
 
+    if (simulationExperimentViewWidget != nullptr) {
         return getSimulation(Core::centralWidget()->currentFileName(), simulationExperimentViewWidget);
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
-
-//==============================================================================
-
-static PyMethodDef pythonSimulationExperimentViewMethods[] = {
-    {"simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation."},
-    {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
-    {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
-    {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
-    {nullptr, nullptr, 0, nullptr}
-};
 
 //==============================================================================
 
 SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
-    PyModule_AddFunctions(pModule, pythonSimulationExperimentViewMethods);
+    static std::array<PyMethodDef, 5> PythonSimulationExperimentViewMethods = {{
+                                                                                  { "simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation." },
+                                                                                  { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
+                                                                                  { "openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation." },
+                                                                                  { "closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation." },
+                                                                                  { nullptr, nullptr, 0, nullptr }
+                                                                              }};
+
+    PyModule_AddFunctions(pModule, PythonSimulationExperimentViewMethods.data());
 }
 
 //==============================================================================
 
 }   // namespace SimulationExperimentView
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#include "pythonend.h"
 
 //==============================================================================
 // End of file

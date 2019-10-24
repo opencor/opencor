@@ -24,10 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Qt>
 
 //==============================================================================
-
-#include "pythonbegin.h"
-
-//==============================================================================
 // Note: yes, these two header files must be included in this order...
 
 #include "datastorepythonwrapper.h"
@@ -81,15 +77,17 @@ static PyObject * DataStoreValuesDict_subscript(PyObject *pValuesDict,
         return PyFloat_FromDouble(dataStoreValue->value());
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================
 
-typedef struct {
-    PyDictObject mDict;
-    SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
-} DataStoreValuesDictObject;
+using DataStoreValuesDictObject = struct {
+                                             PyDictObject mDict;
+                                             SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
+                                         };
 
 //==============================================================================
 
@@ -107,7 +105,9 @@ static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
     auto dataStoreValue = getDataStoreValue(pValuesDict, pKey);
 
     if (dataStoreValue != nullptr) {
-        auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(pValue));
+#include "pythonbegin.h"
+        auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(pValue)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+#include "pythonend.h"
 
         if (!qFuzzyCompare(dataStoreValue->value(), newValue)) {
             dataStoreValue->setValue(newValue);
@@ -140,13 +140,14 @@ static PyMappingMethods DataStoreValuesDict_as_mapping = {
 
 //==============================================================================
 
+#include "pythonbegin.h"
 static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDict)
 {
     // A string representation of a values dictionary
     // Note: this is a modified version of dict_repr() from dictobject.c in the
     //       Python source code...
 
-    PyDictObject *mp = reinterpret_cast<PyDictObject *>(pValuesDict);
+    auto mp = reinterpret_cast<PyDictObject *>(pValuesDict);
     Py_ssize_t i = Py_ReprEnter(reinterpret_cast<PyObject *>(mp));
     PyObject *key = nullptr;
     PyObject *value = nullptr;
@@ -172,7 +173,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
     writer.min_length = 1+4+(2+4)*(mp->ma_used-1)+1;
 
     if (_PyUnicodeWriter_WriteChar(&writer, '{') < 0) {
-        goto error;
+        goto error; // NOLINT(cppcoreguidelines-avoid-goto)
     }
 
     while (PyDict_Next(reinterpret_cast<PyObject *>(mp), &i, &key, &value)) {
@@ -184,7 +185,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
 
         if (!first) {
             if (_PyUnicodeWriter_WriteASCIIString(&writer, ", ", 2) < 0) {
-                goto error;
+                goto error; // NOLINT(cppcoreguidelines-avoid-goto)
             }
         }
 
@@ -193,7 +194,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         s = PyObject_Repr(key);
 
         if (s == nullptr) {
-            goto error;
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
         }
 
         res = _PyUnicodeWriter_WriteStr(&writer, s);
@@ -201,11 +202,11 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         Py_DECREF(s);
 
         if (res < 0) {
-            goto error;
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
         }
 
         if (_PyUnicodeWriter_WriteASCIIString(&writer, ": ", 2) < 0) {
-            goto error;
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
         }
 
         auto wrappedValue = PythonQtSupport::getInstanceWrapper(value);
@@ -221,7 +222,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         s = PyObject_Repr(value);
 
         if (s == nullptr) {
-            goto error;
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
         }
 
         res = _PyUnicodeWriter_WriteStr(&writer, s);
@@ -229,7 +230,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         Py_DECREF(s);
 
         if (res < 0) {
-            goto error;
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
         }
 
         Py_CLEAR(key);
@@ -239,15 +240,15 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
     writer.overallocate = 0;
 
     if (_PyUnicodeWriter_WriteChar(&writer, '}') < 0) {
-        goto error;
+        goto error; // NOLINT(cppcoreguidelines-avoid-goto)
     }
 
-    Py_ReprLeave((PyObject *)mp);
+    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 
     return _PyUnicodeWriter_Finish(&writer);
 
 error:
-    Py_ReprLeave((PyObject *)mp);
+    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
     _PyUnicodeWriter_Dealloc(&writer);
 
     Py_XDECREF(key);
@@ -255,6 +256,7 @@ error:
 
     return nullptr;
 }
+#include "pythonend.h"
 
 //==============================================================================
 // Note: a DataStoreValuesDict is a dictionary sub-class for mapping between the
@@ -374,7 +376,9 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
         return numPyArray->numPyArray();
     }
 
+#include "pythonbegin.h"
     Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -451,10 +455,12 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
 
     npy_intp dims[1] = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
 
-    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, static_cast<void *>(mArray->data()));
+#include "pythonbegin.h"
+    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, static_cast<void *>(mArray->data())); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 
-    PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(mNumPyArray),
+    PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(mNumPyArray), // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
                           PythonQtSupport::wrapQObject(this));
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -479,10 +485,6 @@ PyObject * NumPyPythonWrapper::numPyArray() const
 
 }   // namespace DataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#include "pythonend.h"
 
 //==============================================================================
 // End of file
