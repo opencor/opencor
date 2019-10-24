@@ -26,6 +26,7 @@ set(MATPLOTLIB_VERSION 3.1.1)
 set(NBCONVERT_VERSION 5.6.0)
 set(NOTEBOOK_VERSION 6.0.1)
 set(NUMPY_VERSION 1.17.2)
+set(QIMAGE2NDARRAY_VERSION 1.8)
 set(QTCONSOLE_VERSION 4.5.5)
 set(SCIPY_VERSION 1.3.1)
 set(SPHINX_VERSION 2.2.0)
@@ -35,6 +36,7 @@ set(TRAITLETS_VERSION 4.3.2)
 
 set(IPYKERNEL_PYTHONQT ${IPYKERNEL_VERSION}.0)
 set(IPYTHON_PYTHONQT ${IPYTHON_VERSION}.0)
+set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.1)
 set(QTCONSOLE_PYTHONQT ${QTCONSOLE_VERSION}.0)
 set(TRAITLETS_PYTHONQT ${TRAITLETS_VERSION}.1)
 
@@ -312,6 +314,7 @@ else()
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                                            matplotlib==${MATPLOTLIB_VERSION}
                                            numpy==${NUMPY_VERSION}
+                                           qimage2ndarray==${QIMAGE2NDARRAY_VERSION}
                                            scipy==${SCIPY_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
@@ -412,7 +415,7 @@ else()
             COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py --strip=2
                                                              --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
                                                              --verbose
-                                                             src/matplotlib_${MATPLOTLIB_VERSION}.diff
+                                                             src/matplotlib_${MATPLOTLIB_PYTHONQT}.diff
             WORKING_DIRECTORY
                 ${PROJECT_SOURCE_DIR}
             VERBATIM

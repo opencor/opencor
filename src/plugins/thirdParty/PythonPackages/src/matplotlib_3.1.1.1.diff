@@ -173,6 +173,40 @@ index b4562db7f..77caced86 100644
 +            finally:
 +                # reset the SIGINT exception handler
 +                signal.signal(signal.SIGINT, old_signal)
+diff --git lib/matplotlib/backends/backend_qt5agg.py lib/matplotlib/backends/backend_qt5agg.py
+index 4dec3b9cb..d0b11d5c9 100644
+--- lib/matplotlib/backends/backend_qt5agg.py
++++ lib/matplotlib/backends/backend_qt5agg.py
+@@ -4,6 +4,8 @@ Render to qt from agg.
+ 
+ import ctypes
+ 
++from qimage2ndarray import array2qimage
++
+ from matplotlib.transforms import Bbox
+ 
+ from .. import cbook
+@@ -52,14 +54,15 @@ class FigureCanvasQTAgg(FigureCanvasAgg, FigureCanvasQT):
+         buf = cbook._unmultiplied_rgba8888_to_premultiplied_argb32(
+             memoryview(reg))
+ 
+-        # clear the widget canvas
+-        painter.eraseRect(rect)
+-
+-        qimage = QtGui.QImage(buf, buf.shape[1], buf.shape[0],
+-                              QtGui.QImage.Format_ARGB32_Premultiplied)
++        # create a QImage from the array buffer
++        qimage = array2qimage(buf)
+         if hasattr(qimage, 'setDevicePixelRatio'):
+             # Not available on Qt4 or some older Qt5.
+             qimage.setDevicePixelRatio(self._dpi_ratio)
++
++        # clear the widget canvas
++        painter.eraseRect(rect)
++
+         origin = QtCore.QPoint(left, top)
+         painter.drawImage(origin / self._dpi_ratio, qimage)
+         # Adjust the buf reference count to work around a memory
 diff --git lib/matplotlib/backends/qt_compat.py lib/matplotlib/backends/qt_compat.py
 index 6b52284fe..7d52ac114 100644
 --- lib/matplotlib/backends/qt_compat.py
