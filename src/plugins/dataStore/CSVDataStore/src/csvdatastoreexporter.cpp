@@ -125,9 +125,9 @@ void CsvDataStoreExporterWorker::run()
         QString header = QString();
 
         if (voi != nullptr) {
-            header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "))
-                            .arg(voi->unit())
-                            .arg(QString());
+            header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
+                                 voi->unit(),
+                                 QString());
         }
 
         for (auto variable : variables) {
@@ -136,9 +136,9 @@ void CsvDataStoreExporterWorker::run()
                     header += ',';
                 }
 
-                header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "))
-                                .arg(variable->unit())
-                                .arg((nbOfRuns == 1)?
+                header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "),
+                                     variable->unit(),
+                                     (nbOfRuns == 1)?
                                          QString():
                                          RunNb.arg(i+1));
             }

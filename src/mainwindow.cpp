@@ -852,8 +852,8 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
         //       plugin to work properly...
 
         for (auto plugin : mLoadedI18nPlugins) {
-            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name())
-                                                                                                  .arg(newLocale));
+            qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name(),
+                                                                                                       newLocale));
         }
 
         // Retranslate our various plugins

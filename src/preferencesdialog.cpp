@@ -368,7 +368,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     // Check whether we are dealing with a plugin category
 
     QStandardItem *item = mModel->itemFromIndex(pNewIndex);
-    bool isPluginCategory = mCategoryItems.values().contains(item);
+    bool isPluginCategory = std::find(mCategoryItems.begin(), mCategoryItems.end(), item) != mCategoryItems.end();
 
     mResetButton->setEnabled(!isPluginCategory);
 

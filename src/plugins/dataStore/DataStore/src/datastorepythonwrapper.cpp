@@ -35,6 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <array>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace DataStore {
 
@@ -173,10 +177,10 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
     writer.min_length = 1+4+(2+4)*(mp->ma_used-1)+1;
 
     if (_PyUnicodeWriter_WriteChar(&writer, '{') < 0) {
-        goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+        goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
     }
 
-    while (PyDict_Next(reinterpret_cast<PyObject *>(mp), &i, &key, &value)) {
+    while (PyDict_Next(reinterpret_cast<PyObject *>(mp), &i, &key, &value) != 0) {
         PyObject *s;
         int res;
 
@@ -185,7 +189,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
 
         if (!first) {
             if (_PyUnicodeWriter_WriteASCIIString(&writer, ", ", 2) < 0) {
-                goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+                goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
             }
         }
 
@@ -194,7 +198,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         s = PyObject_Repr(key);
 
         if (s == nullptr) {
-            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
         res = _PyUnicodeWriter_WriteStr(&writer, s);
@@ -202,11 +206,11 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         Py_DECREF(s);
 
         if (res < 0) {
-            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
         if (_PyUnicodeWriter_WriteASCIIString(&writer, ": ", 2) < 0) {
-            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
         auto wrappedValue = PythonQtSupport::getInstanceWrapper(value);
@@ -222,7 +226,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         s = PyObject_Repr(value);
 
         if (s == nullptr) {
-            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
         res = _PyUnicodeWriter_WriteStr(&writer, s);
@@ -230,7 +234,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         Py_DECREF(s);
 
         if (res < 0) {
-            goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+            goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
         Py_CLEAR(key);
@@ -240,15 +244,15 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
     writer.overallocate = 0;
 
     if (_PyUnicodeWriter_WriteChar(&writer, '}') < 0) {
-        goto error; // NOLINT(cppcoreguidelines-avoid-goto)
+        goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
     }
 
-    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting)
 
     return _PyUnicodeWriter_Finish(&writer);
 
 error:
-    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting)
     _PyUnicodeWriter_Dealloc(&writer);
 
     Py_XDECREF(key);
@@ -453,10 +457,10 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
 
     // Initialise ourselves
 
-    npy_intp dims[1] = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
+    std::array<npy_intp, 1> dims = { npy_intp((pSize > 0)?pSize:pDataStoreArray->size()) };
 
 #include "pythonbegin.h"
-    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, static_cast<void *>(mArray->data())); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+    mNumPyArray = PyArray_SimpleNewFromData(1, dims.data(), NPY_DOUBLE, static_cast<void *>(mArray->data())); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 
     PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(mNumPyArray), // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
                           PythonQtSupport::wrapQObject(this));

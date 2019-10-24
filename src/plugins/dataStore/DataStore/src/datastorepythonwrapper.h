@@ -72,7 +72,7 @@ class NumPyPythonWrapper : public QObject
 public:
     explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
                                 quint64 pSize = 0);
-    ~NumPyPythonWrapper();
+    ~NumPyPythonWrapper() override;
 
     PyObject * numPyArray() const;
 
