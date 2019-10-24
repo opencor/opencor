@@ -911,7 +911,7 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 #endif
             }
 
-            return QString("");
+            return {};
         }
 
         // We were not able to retrieve the contents of the remote file, so let

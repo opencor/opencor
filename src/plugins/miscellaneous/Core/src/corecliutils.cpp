@@ -644,6 +644,7 @@ QString openRemoteFile(const QString &pUrl)
             }
 
             return QString("");
+            return {};
         }
 
         // We were not able to retrieve the contents of the remote file, so let
