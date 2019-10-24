@@ -1,4 +1,4 @@
-    /*******************************************************************************
+/*******************************************************************************
 
 Copyright (C) The University of Auckland
 
@@ -63,23 +63,28 @@ bool PythonShellPlugin::executeCommand(const QString &pCommand,
 {
     // Run the given CLI command
 
-    if (!pCommand.compare("help")) {
+    static const QString Help = "help";
+    static const QString Python = "python";
+
+    if (pCommand == Help) {
         // Display the commands that we support
 
         runHelpCommand();
 
         return true;
-    } else if (pCommand.isEmpty() || !pCommand.compare("python")) {
+    }
+
+    if (pCommand.isEmpty() || (pCommand == Python)) {
         // Run a Python shell
 
         return runPython(pArguments, pRes);
-    } else {
-        // Not a CLI command that we support
-
-        runHelpCommand();
-
-        return false;
     }
+
+    // Not a CLI command that we support
+
+    runHelpCommand();
+
+    return false;
 }
 
 //==============================================================================
@@ -101,64 +106,70 @@ void PythonShellPlugin::runHelpCommand()
 
 bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
-    // The following has been adapted from `Programs/python.c` in the Python sources.
+    // The following has been adapted from `Programs/python.c` in the Python
+    // source code
 
-    const int argc = pArguments.size() + 1;
-    wchar_t **argv = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1)));
+    const int argC = pArguments.size() + 1;
+    auto argV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc((argC+1)*sizeof(wchar_t*)));
 
-    /* We need a second copy, as Python might modify the first one. */
-    wchar_t **argv_copy = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1)));
+    auto argVCopy = reinterpret_cast<wchar_t **>(PyMem_RawMalloc((argC+1)*sizeof(wchar_t*)));
 
-    if (!argv || !argv_copy) {
+    if ((argV == nullptr) || (argVCopy == nullptr)) {
         fprintf(stderr, "out of memory\n");
+
         pRes = 1;
+
         return false;
     }
 
-    /* PEP 754 requires that FP exceptions run in "no stop" mode by default,
-     * and until C vendors implement C99's ways to control FP exceptions,
-     * Python requires non-stop mode.  Alas, some platforms enable FP
-     * exceptions by default.  Here we disable them.
-     */
 #ifdef __FreeBSD__
     fedisableexcept(FE_OVERFLOW);
 #endif
 
     char *oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
-    if (!oldloc) {
+
+    if (oldloc == nullptr) {
         fprintf(stderr, "out of memory\n");
+
         pRes = 1;
+
         return false;
     }
 
     setlocale(LC_ALL, "");
-    argv_copy[0] = argv[0] = Py_DecodeLocale("python", nullptr);
-    for (int i = 1; i < argc; i++) {
-        argv[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), nullptr);
-        if (!argv[i]) {
+
+    argVCopy[0] = argV[0] = Py_DecodeLocale("python", nullptr);
+
+    for (int i = 1; i < argC; ++i) {
+        argV[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), nullptr);
+
+        if (argV[i] == nullptr) {
             PyMem_RawFree(oldloc);
-            fprintf(stderr, "Fatal Python error: "
-                            "unable to decode the command line argument #%i\n",
-                            i + 1);
+
+            fprintf(stderr, "Fatal Python error: unable to decode the command line argument #%i\n", i+1);
+
             pRes = 1;
+
             return false;
         }
-        argv_copy[i] = argv[i];
+
+        argVCopy[i] = argV[i];
     }
-    argv_copy[argc] = argv[argc] = nullptr;
+
+    argVCopy[argC] = argV[argC] = nullptr;
 
     setlocale(LC_ALL, oldloc);
+
     PyMem_RawFree(oldloc);
 
-    // N.B. PyMain() calls Py_Initialize() and Py_Finalize()
+    pRes = Py_Main(argC, argV);
 
-    pRes = Py_Main(argc, argv);
-
-    for (int i = 0; i < argc; i++) {
-        PyMem_RawFree(argv_copy[i]);
+    for (int i = 0; i < argC; ++i) {
+        PyMem_RawFree(argVCopy[i]);
     }
-    PyMem_RawFree(argv);
-    PyMem_RawFree(argv_copy);
+
+    PyMem_RawFree(argV);
+    PyMem_RawFree(argVCopy);
 
     return true;
 }

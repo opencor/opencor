@@ -417,11 +417,12 @@ void SimulationExperimentViewPlugin::registerPythonClasses(PyObject *pModule)
 // Plugin specific
 //==============================================================================
 
-SimulationExperimentViewPlugin * SimulationExperimentViewPlugin::instance(void)
+SimulationExperimentViewPlugin * SimulationExperimentViewPlugin::instance()
 {
     // Return the 'global' instance of our plugin
 
     static SimulationExperimentViewPlugin pluginInstance;
+
     return static_cast<SimulationExperimentViewPlugin *>(Core::globalInstance("OpenCOR::SimulationExperimentView::SimulationExperimentViewPlugin",
                                                          &pluginInstance));
 }

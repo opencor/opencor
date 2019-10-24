@@ -137,7 +137,7 @@ void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     for (auto plugin : pLoadedPlugins) {
         PythonInterface *pythonInterface = qobject_cast<PythonInterface *>(plugin->instance());
 
-        if (pythonInterface) {
+        if (pythonInterface != nullptr) {
             pythonInterface->registerPythonClasses(mOpenCORModule);
         }
     }

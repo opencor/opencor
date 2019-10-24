@@ -779,11 +779,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::fileRenamed(c
 
     QString oldModelListValue = modelListValue(pOldFileName);
 
-    if (mRenamedModelListValues.values().contains(oldModelListValue)) {
+    if (std::find(mRenamedModelListValues.begin(), mRenamedModelListValues.end(), oldModelListValue) != mRenamedModelListValues.end()) {
         // A previous model list value has been renamed again, so find its
         // original value and update its new renamed version, if needed
 
-        for (const auto &origModelListValue : mRenamedModelListValues.keys()) {
+        QStringList origModelListValueKeys = mRenamedModelListValues.keys();
+
+        for (const auto &origModelListValue : origModelListValueKeys) {
             QString renamedOrigModelListValue = mRenamedModelListValues.value(origModelListValue);
 
             if (renamedOrigModelListValue == oldModelListValue) {

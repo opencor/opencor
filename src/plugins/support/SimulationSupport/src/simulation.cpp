@@ -1022,7 +1022,9 @@ void SimulationResults::createDataStore()
     // Reimport our data, if any, and update their array so that it contains the
     // computed values for our start point
 
-    for (auto data : mDataDataStores.keys()) {
+    QList<double *> dataKeys = mDataDataStores.keys();
+
+    for (auto data : dataKeys) {
         DataStore::DataStore *importDataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
 
@@ -1272,9 +1274,10 @@ void SimulationResults::addPoint(double pPoint)
     // Make sure that we have the correct imported data values for the given
     // point, keeping in mind that we may have several runs
 
+    QList<double *> dataKeys = mDataDataStores.keys();
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto data : mDataDataStores.keys()) {
+    for (auto data : dataKeys) {
         DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();

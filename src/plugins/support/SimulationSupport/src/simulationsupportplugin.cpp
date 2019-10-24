@@ -40,11 +40,9 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support simulations."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter des simulations."));
 
-// TODO: we need a better way to include all the solver plugins...
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "COMBINESupport" << "DataStore" << "PythonQtSupport"
-                                        << "CVODESolver" << "ForwardEulerSolver"
-                                        << "FourthOrderRungeKuttaSolver" << "HeunSolver"
+                          QStringList() << "COMBINESupport" << "CVODESolver" << "DataStore"
+                                        << "ForwardEulerSolver" << "FourthOrderRungeKuttaSolver" << "HeunSolver"
                                         << "KINSOLSolver" << "SecondOrderRungeKuttaSolver",
                           descriptions);
 }

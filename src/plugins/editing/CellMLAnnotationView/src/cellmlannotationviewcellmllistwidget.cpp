@@ -166,15 +166,15 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Typ
     } else if (pType == Type::ComponentMapping) {
         ObjRef<iface::cellml_api::MapComponents> mapComponents = dynamic_cast<iface::cellml_api::MapComponents *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()))
-                                   .arg(QChar(RightArrow))
-                                   .arg(QString::fromStdWString(mapComponents->secondComponentName())));
+        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()),
+                                        QChar(RightArrow),
+                                        QString::fromStdWString(mapComponents->secondComponentName())));
     } else if (pType == Type::VariableMapping) {
         ObjRef<iface::cellml_api::MapVariables> mapVariables = dynamic_cast<iface::cellml_api::MapVariables *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()))
-                                   .arg(QChar(RightArrow))
-                                   .arg(QString::fromStdWString(mapVariables->secondVariableName())));
+        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()),
+                                        QChar(RightArrow),
+                                        QString::fromStdWString(mapVariables->secondVariableName())));
     } else {
         // Another type of element that has a name
 

@@ -63,8 +63,9 @@ void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu
 
     if (mPlotAgainstMenu != nullptr) {
         mPlotAgainstMenu->menuAction()->setText(tr("Plot Against"));
+    }
 
-    if (mToggleGradientsMenuAction)
+    if (mToggleGradientsMenuAction != nullptr) {
         mToggleGradientsMenuAction->setText(tr("Toggle gradient calculation for constant"));
     }
 }
@@ -107,8 +108,8 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
     // Show separator and item to toggle constants having gradients calculated
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
-
-    bool gradientActionVisible = (parameter && parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant);
+    bool gradientActionVisible =    (parameter != nullptr)
+                                 && (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant);
 
     mToggleGradientsMenuSeparator->setVisible(gradientActionVisible);
 
@@ -618,7 +619,7 @@ void SimulationExperimentViewInformationParametersWidget::gradientToggled(
 
     Core::Property *property = mParameters.key(pParameter);
 
-    if (property) {
+    if (property != nullptr) {
         int index = pParameter->index();
         if (mGradientIndices.contains(index)) {
             if (!pCalculate) {
@@ -640,13 +641,15 @@ void SimulationExperimentViewInformationParametersWidget::toggleGradientFlag()
 
     Core::Property *crtProperty = currentProperty();
 
-    if (!crtProperty)
+    if (crtProperty == nullptr) {
         return;
+    }
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
 
-    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
+    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant) {
         gradientToggled(parameter, !mGradientIndices.contains(parameter->index()));
+    }
 
     emit calculateGradients(parameter->index(), mGradientIndices.contains(parameter->index()));
 }

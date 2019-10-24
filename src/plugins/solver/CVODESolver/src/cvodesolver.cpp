@@ -129,8 +129,9 @@ CvodeSolver::~CvodeSolver()
     SUNNonlinSolFree(mNonLinearSolver);
     SUNMatDestroy(mMatrix);
 
-    if (mSensitivityVectors)
+    if (mSensitivityVectors != nullptr) {
         N_VDestroyVectorArray_Serial(mSensitivityVectors, mSensitivityVectorsSize);
+    }
 
     CVodeFree(&mSolver);
 
@@ -381,7 +382,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
 
     // See if we are performing a sensitivity analysis
 
-    if (pGradientsCount && pGradients) {
+    if ((pGradientsCount != 0) && (pGradients != nullptr)) {
 
         // The number of constants that state variables have gradients computed
 
@@ -432,8 +433,9 @@ void CvodeSolver::reinitialize(double pVoi)
 
     // Reinitialise sensitivity analysis
 
-    if (mSensitivityVectors)
+    if (mSensitivityVectors != nullptr) {
         CVodeSensReInit(mSolver, CV_SIMULTANEOUS, mSensitivityVectors);
+    }
 }
 
 //==============================================================================
@@ -450,8 +452,9 @@ void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
 
     // Get the sensitivity solution vectors if we are doing sensitivity analysis
 
-    if (mSensitivityVectors)
+    if (mSensitivityVectors != nullptr) {
         CVodeGetSens(mSolver, &pVoi, mSensitivityVectors);
+    }
 
     // Compute the rates one more time to get up to date values for the rates
     // Note: another way of doing this would be to copy the contents of the

@@ -501,8 +501,9 @@ void SimulationExperimentViewWidget::clearResults(const QString &pFileName)
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (!simulationWidget)
+    if (simulationWidget != nullptr) {
         return;
+    }
 
     simulationWidget->clearSimulationResults();
 }

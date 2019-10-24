@@ -67,7 +67,7 @@ private:
     Core::Property *mEndingPointProperty;
     Core::Property *mPointIntervalProperty;
 
-    SimulationSupport::Simulation *mSimulation;
+    SimulationSupport::Simulation *mSimulation = nullptr;
 
     void updateToolTips();
 

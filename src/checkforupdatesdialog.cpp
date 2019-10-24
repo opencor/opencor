@@ -70,8 +70,12 @@ void CheckForUpdatesEngine::check()
 
         if (jsonParseError.error == QJsonParseError::NoError) {
             QVariantMap versionMap;
-            int versionMajor, versionMinor, versionPatch;
-            int versionDay, versionMonth, versionYear;
+            int versionMajor;
+            int versionMinor;
+            int versionPatch;
+            int versionDay;
+            int versionMonth;
+            int versionYear;
             QString versionVersion;
             QString versionDate;
 

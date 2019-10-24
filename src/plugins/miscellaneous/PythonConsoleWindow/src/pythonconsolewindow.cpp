@@ -101,7 +101,6 @@ def create_ipython_widget():
     return qt_console.widget()
 )PYTHON";
 
-
 //==============================================================================
 
 PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
@@ -121,7 +120,7 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
     PythonQtObjectPtr qtConsoleModule = pythonQtInstance->createModuleFromScript("opencor.qtconsole", PythonConsole);
 
     if (qtConsoleModule == nullptr) {
-        if (PyErr_Occurred()) {
+        if (PyErr_Occurred() != nullptr) {
             PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
         } else {
             std::cerr << "Cannot create QT Console module" << std::endl;
@@ -137,7 +136,7 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
     auto widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper *>(ipythonWidget);
 
     if (widgetWrapper == nullptr) {
-        if (PyErr_Occurred()) {
+        if (PyErr_Occurred() != nullptr) {
             PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
         } else {
             std::cerr << "Cannot create IPython widget" << std::endl;

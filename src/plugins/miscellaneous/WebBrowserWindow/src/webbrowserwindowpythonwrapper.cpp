@@ -35,6 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <array>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace WebBrowserWindow {
 
@@ -47,21 +51,18 @@ static PyObject *browserWebView(PyObject *pSelf, PyObject *pArgs)
 
     return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->browserWidget()->webView());
 }
-
-//==============================================================================
-
-static PyMethodDef pythonWebBrowserWindowMethods[] = {
-    { "browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser." },
-    { nullptr, nullptr, 0, nullptr }
-};
-
 //==============================================================================
 
 WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule,
                                                              QObject *pParent) :
     QObject(pParent)
 {
-    PyModule_AddFunctions(pModule, pythonWebBrowserWindowMethods);
+    static std::array<PyMethodDef, 2> PythonWebBrowserWindowMethods = {{
+                                                                          { "browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser." },
+                                                                          { nullptr, nullptr, 0, nullptr }
+                                                                      }};
+
+    PyModule_AddFunctions(pModule, PythonWebBrowserWindowMethods.data());
 }
 
 //==============================================================================

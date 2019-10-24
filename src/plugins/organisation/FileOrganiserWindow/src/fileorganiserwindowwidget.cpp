@@ -397,7 +397,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings &pSettings,
             } else {
                 // We are dealing with a file item
 
-                if (QFileInfo(textOrPath).exists()) {
+                if (QFileInfo::exists(textOrPath)) {
                     pParentItem->appendRow(new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::File),
                                                                        textOrPath));
 
