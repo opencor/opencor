@@ -1094,7 +1094,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     // Manually serialise the elements' attributes
 
-    for (const auto &elementAttribute : elementsAttributes) {
+    for (const auto &elementAttribute : elementsAttributes.keys()) {
         res.replace(elementAttribute+R"(="")", elementsAttributes.value(elementAttribute));
     }
 
