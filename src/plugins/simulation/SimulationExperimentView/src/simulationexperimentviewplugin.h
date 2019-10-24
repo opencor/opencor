@@ -80,7 +80,7 @@ public:
     SimulationExperimentViewWidget * viewWidget() const;
 
 private:
-    SimulationExperimentViewWidget *mViewWidget;
+    SimulationExperimentViewWidget *mViewWidget = nullptr;
 };
 
 //==============================================================================

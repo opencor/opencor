@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PythonConsoleWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -51,7 +51,7 @@ Q_OBJECT
 
 public:
     explicit PythonConsoleWindow(QWidget *pParent);
-    ~PythonConsoleWindow();
+    ~PythonConsoleWindow() override;
 
 private:
     Ui::PythonConsoleWindow *mGui;

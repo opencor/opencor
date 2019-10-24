@@ -203,7 +203,7 @@ void WebBrowserWindowPlugin::registerPythonClasses(PyObject *pModule)
 // Plugin specific
 //==============================================================================
 
-WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance(void)
+WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance()
 {
     // Return the 'global' instance of our plugin
 
@@ -216,7 +216,7 @@ WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance(void)
 
 //==============================================================================
 
-WebBrowserWindowWidget * WebBrowserWindowPlugin::browserWidget(void) const
+WebBrowserWindowWidget * WebBrowserWindowPlugin::browserWidget() const
 {
     // Return our Web Browser widget
 

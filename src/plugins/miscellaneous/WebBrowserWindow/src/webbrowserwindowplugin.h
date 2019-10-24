@@ -71,10 +71,10 @@ public:
     WebBrowserWindowWidget * browserWidget() const;
 
 private:
-    QAction *mWebBrowserWindowAction;
+    QAction *mWebBrowserWindowAction = nullptr;
 
-    WebBrowserWindowWidget *mWebBrowserWindowWidget;
-    WebBrowserWindowWindow *mWebBrowserWindowWindow;
+    WebBrowserWindowWidget *mWebBrowserWindowWidget = nullptr;
+    WebBrowserWindowWindow *mWebBrowserWindowWindow = nullptr;
 };
 
 //==============================================================================

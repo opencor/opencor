@@ -42,7 +42,7 @@ namespace OpenCOR {
 
 namespace DataStore {
     class DataStoreVariable;
-}
+}   // namespace DataStore
 
 //==============================================================================
 
@@ -60,17 +60,11 @@ class SimulationResults;
 // to create a function object to be called when simulation parameters are updated
 
 #if defined(_MSC_VER)
-    #if _MSC_VER > 1900
-        // Visual Studio 2017
-        typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
-    #else
-        // Visual Studio 2015
-        typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData * const> SimulationDataUpdatedFunction;
-    #endif
+    using SimulationDataUpdatedFunction = std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *>;
 #elif defined(__APPLE__)
-    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+    using SimulationDataUpdatedFunction = std::__bind<void (*)(SimulationData *), SimulationData *>;
 #else
-    typedef std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type SimulationDataUpdatedFunction;
+    using SimulationDataUpdatedFunction = std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type;
 #endif
 
 //==============================================================================
@@ -131,7 +125,7 @@ public slots:
 
     // Access a simulation's sensitivity gradients
 
-    PyObject * gradients(OpenCOR::SimulationSupport::SimulationResults *pSimulationData) const;
+    PyObject * gradients(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
 private slots:
     void error(const QString &pErrorMessage);
