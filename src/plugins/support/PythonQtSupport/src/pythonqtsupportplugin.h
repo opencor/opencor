@@ -27,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "pythonqtsupportglobal.h"
 
 //==============================================================================
 
 #include "pythonbegin.h"
-	#include "pythonqtsupportglobal.h"
-	#include "PythonQt/PythonQt.h"
+    #include "PythonQt/PythonQt.h"
 #include "pythonend.h"
 
 //==============================================================================

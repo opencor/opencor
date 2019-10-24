@@ -26,12 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "plugin.h"
-
-//==============================================================================
-
-#include "pythonbegin.h"
-    #include "pythoninclude.h"
-#include "pythonend.h"
+#include "pythoninclude.h"
 
 //==============================================================================
 

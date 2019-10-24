@@ -30,10 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "pythonbegin.h"
-
-//==============================================================================
-
 #include "pythonqtsupport.h"
 #include "webbrowserwindowpythonwrapper.h"
 
@@ -71,10 +67,6 @@ WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule,
 //==============================================================================
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#include "pythonend.h"
 
 //==============================================================================
 // End of file

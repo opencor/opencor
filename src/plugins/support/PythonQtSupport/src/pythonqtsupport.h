@@ -29,14 +29,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "PythonQt/PythonQt.h"
-
-//==============================================================================
-
 #include <QObject>
 #include <QMetaObject>
 #include <QString>
 #include <QVariant>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "PythonQt/PythonQt.h"
+#include "pythonend.h"
 
 //==============================================================================
 

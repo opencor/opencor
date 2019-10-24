@@ -28,7 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma push_macro("slots")
 #undef slots
 
-#include "Python.h"
+#include "pythonbegin.h"
+    #include "Python.h"
+#include "pythonend.h"
 
 #pragma pop_macro("slots")
 

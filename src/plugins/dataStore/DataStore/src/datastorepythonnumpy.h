@@ -31,7 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <numpy/arrayobject.h>
+#include "pythonbegin.h"
+    #include <numpy/arrayobject.h>
+#include "pythonend.h"
 
 //==============================================================================
 // End of file

@@ -25,27 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "borderedwidget.h"
-
-//==============================================================================
-
-#include "pythonbegin.h"
-
-//==============================================================================
-
 #include "pythonconsolewindow.h"
 #include "pythonqtsupport.h"
 
 //==============================================================================
 
-#include "PythonQt/PythonQt.h"
-
-//==============================================================================
-
 #include "ui_pythonconsolewindow.h"
-
-//==============================================================================
-
-#include <iostream>
 
 //==============================================================================
 
@@ -149,7 +134,7 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
 
     PyObject *createWidget = pythonQtInstance->lookupObject(qtConsoleModule, "create_ipython_widget");
     PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
-    PythonQtInstanceWrapper *widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper*>(ipythonWidget);
+    auto widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper *>(ipythonWidget);
 
     if (widgetWrapper == nullptr) {
         if (PyErr_Occurred()) {
@@ -195,10 +180,6 @@ PythonConsoleWindow::~PythonConsoleWindow()
 
 }   // namespace PythonConsoleWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#include "pythonend.h"
 
 //==============================================================================
 // End of file

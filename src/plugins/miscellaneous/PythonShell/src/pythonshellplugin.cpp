@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python shell plugin
 //==============================================================================
 
+#include "pythonqtsupport.h"
 #include "pythonqtsupportplugin.h"
 #include "pythonshellplugin.h"
 
@@ -30,12 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QSettings>
 #include <QTimer>
-
-//==============================================================================
-
-#include "pythonbegin.h"
-    #include "pythonqtsupport.h"
-#include "pythonend.h"
 
 //==============================================================================
 

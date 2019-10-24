@@ -256,9 +256,14 @@ QString digitGroupNumber(const QString &pNumber)
 
 QString sizeAsString(quint64 pSize, int pPrecision)
 {
-    std::array<QString, 9> units = { QObject::tr("B"), QObject::tr("KB"),
-                                     QObject::tr("MB"), QObject::tr("GB"),
-                                     QObject::tr("TB"), QObject::tr("PB") };
+    static const std::array<QString, 9> Units = {
+                                                    QObject::tr("B"),
+                                                    QObject::tr("KB"),
+                                                    QObject::tr("MB"),
+                                                    QObject::tr("GB"),
+                                                    QObject::tr("TB"),
+                                                    QObject::tr("PB")
+                                                };
 
     auto i = ulong(qFloor(log(pSize)/log(1024.0)));
     double size = pSize/qPow(1024.0, i);
@@ -266,7 +271,7 @@ QString sizeAsString(quint64 pSize, int pPrecision)
 
     size = qRound(scaling*size)/scaling;
 
-    return QLocale().toString(size)+" "+units[i];
+    return QLocale().toString(size)+" "+Units.at(i);
 }
 
 //==============================================================================
@@ -639,13 +644,13 @@ QString openRemoteFile(const QString &pUrl)
             }
 
             return QString("");
-        } else {
-            // We were not able to retrieve the contents of the remote file, so
-            // let the user know about it
-
-            return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl)
-                                                                .arg(formatMessage(errorMessage));
         }
+
+        // We were not able to retrieve the contents of the remote file, so let
+        // the user know about it
+
+        return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl,
+                                                                 formatMessage(errorMessage));
     }
 
     return openFile(fileName, File::Type::Remote, fileNameOrUrl);
@@ -1089,7 +1094,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     // Manually serialise the elements' attributes
 
-    for (const auto &elementAttribute : elementsAttributes.keys()) {
+    for (const auto &elementAttribute : elementsAttributes) {
         res.replace(elementAttribute+R"(="")", elementsAttributes.value(elementAttribute));
     }
 

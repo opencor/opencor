@@ -9,8 +9,8 @@ ADD_PLUGIN(PythonConsoleWindow
         ../../plugininterface.cpp
         ../../windowinterface.cpp
 
-        src/pythonconsolewindowplugin.cpp
         src/pythonconsolewindow.cpp
+        src/pythonconsolewindowplugin.cpp
     UIS
         src/pythonconsolewindow.ui
     PLUGINS

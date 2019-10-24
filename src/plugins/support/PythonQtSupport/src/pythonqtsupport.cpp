@@ -25,10 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "pythonbegin.h"
-
-//==============================================================================
-
 #include "pythonqtsupport.h"
 
 //==============================================================================
@@ -90,7 +86,9 @@ PyObject *wrapQObject(QObject *pQObject)
 PythonQtInstanceWrapper *getInstanceWrapper(PyObject *pSelf)
 {
     if (   (pSelf != nullptr)
+#include "pythonbegin.h"
         && PyObject_TypeCheck(pSelf, &PythonQtInstanceWrapper_Type)) {
+#include "pythonend.h"
         return reinterpret_cast<PythonQtInstanceWrapper*>(pSelf);
     }
 
@@ -101,10 +99,6 @@ PythonQtInstanceWrapper *getInstanceWrapper(PyObject *pSelf)
 
 }   // namespace PythonQtSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#include "pythonend.h"
 
 //==============================================================================
 // End of file

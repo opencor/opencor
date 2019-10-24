@@ -22,23 +22,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "pythoninterface.h"
+#include "pythonqtsupportplugin.h"
 #include "solverinterface.h"
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
-#include <csignal>
+//#include <Qt>
 
 //==============================================================================
 
 #include "pythonbegin.h"
-    #include "pythoninterface.h"
-    #include "pythonqtsupportplugin.h"
     #include "PythonQt/PythonQt_QtAll.h"
 #include "pythonend.h"
+
+//==============================================================================
+
+//#include <csignal>
 
 //==============================================================================
 
