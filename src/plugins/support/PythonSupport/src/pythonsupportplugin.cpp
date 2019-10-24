@@ -133,13 +133,6 @@ void PythonSupportPlugin::initializePlugin()
     // Ensure the user's Python site directory (in ~/.local, etc.) isn't used
 
     Py_NoUserSiteDirectory = 1;
-
-#ifdef Q_OS_WIN
-    // On Windows, we need to specify the location of the DLLs we have bundled
-    // with OpenCOR
-
-    SetDllDirectoryW((LPCWSTR) QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).utf16());
-#endif
 }
 
 //==============================================================================

@@ -140,9 +140,6 @@ public:
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
-    bool newFile(QString &pFileName,
-                 const QByteArray &pContents = QByteArray());
-
     void save(const QString &pFileName);
 
     int count() const;
@@ -161,6 +158,9 @@ private:
     bool mCheckFilesEnabled = true;
 
     void startStopTimer();
+
+    bool newFile(QString &pFileName,
+                 const QByteArray &pContents = QByteArray());
 
     void emitFilePermissionsChanged(const QString &pFileName);
 
