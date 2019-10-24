@@ -372,7 +372,7 @@ void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
         pLine = -1;
         pColumn = -1;
     } else {
-        pLine = pString.left(pPosition).count(pEol)+1;
+        pLine = pString.leftRef(pPosition).count(pEol)+1;
         pColumn = pPosition-((pPosition >= pEol.length())?pString.lastIndexOf(pEol, pPosition-pEol.length()):-1);
     }
 }
@@ -637,7 +637,7 @@ QString openRemoteFile(const QString &pUrl)
 
             if (status != FileManager::Status::Created) {
 #ifdef QT_DEBUG
-                qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
+                qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay, cppcoreguidelines-pro-type-vararg)
 #else
                 return QObject::tr("'%1' could not be created.").arg(fileNameOrUrl);
 #endif
@@ -966,7 +966,7 @@ bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
     // Determine which of the two serialised attributes should be first based on
     // the attribute name, i.e. ignoring the "=<AttributeValue>" bit
 
-    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf('=')).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf('=')), Qt::CaseInsensitive) < 0;
+    return pSerialisedAttribute1.leftRef(pSerialisedAttribute1.indexOf('=')).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf('=')), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
