@@ -343,7 +343,7 @@ void PreferencesDialog::buttonBoxAccepted()
 
     mPluginNames = QStringList();
 
-    for (auto preferencesWidget : mItemPreferencesWidgets.values()) {
+    for (auto preferencesWidget : mItemPreferencesWidgets) {
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
@@ -368,7 +368,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     // Check whether we are dealing with a plugin category
 
     QStandardItem *item = mModel->itemFromIndex(pNewIndex);
-    bool isPluginCategory = mCategoryItems.values().contains(item);
+    bool isPluginCategory = std::find(mCategoryItems.begin(), mCategoryItems.end(), item) != mCategoryItems.end();
 
     mResetButton->setEnabled(!isPluginCategory);
 
@@ -417,7 +417,7 @@ void PreferencesDialog::resetAll()
 {
     // Reset all of our general and plugins' preferences
 
-    for (auto preferencesWidget : mItemPreferencesWidgets.values()) {
+    for (auto preferencesWidget : mItemPreferencesWidgets) {
         preferencesWidget->resetPreferences();
     }
 }
