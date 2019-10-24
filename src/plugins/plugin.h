@@ -115,7 +115,7 @@ private:
     PluginInfo *mInfo = nullptr;
     QString mErrorMessage;
     QObject *mInstance = nullptr;
-    Status mStatus = NotPlugin;
+    Status mStatus = Status::NotPlugin;
     QString mStatusErrors;
 };
 
