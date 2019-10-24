@@ -2341,7 +2341,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         // Remove the local copy of our remote imported CellML files, if any
 
-        for (const auto &localImportedFileName : remoteImportedFileNames.values()) {
+        for (const auto &localImportedFileName : remoteImportedFileNames) {
             QFile::remove(localImportedFileName);
         }
 
@@ -4551,13 +4551,13 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
     bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
 
     if (!graphPanelPropertiesModified) {
-        for (auto someGraphPanelPropertiesModified : mGraphPanelPropertiesModified.values()) {
+        for (auto someGraphPanelPropertiesModified : mGraphPanelPropertiesModified) {
             graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
         }
     }
 
     if (!graphsPropertiesModified) {
-        for (auto someGraphsPropertiesModified : mGraphsPropertiesModified.values()) {
+        for (auto someGraphsPropertiesModified : mGraphsPropertiesModified) {
             graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
         }
     }

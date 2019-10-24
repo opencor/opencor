@@ -82,7 +82,7 @@ PmrWorkspaces PmrWorkspaceManager::workspaces() const
 
     PmrWorkspaces res = PmrWorkspaces();
 
-    for (auto workspace : mUrlWorkspaces.values()) {
+    for (auto workspace : mUrlWorkspaces) {
         res << workspace;
     }
 
@@ -146,7 +146,7 @@ void PmrWorkspaceManager::clearWorkspaces()
 {
     // Stop tracking all of our workspaces
 
-    for (auto workspace : mUrlWorkspaces.values()) {
+    for (auto workspace : mUrlWorkspaces) {
         workspace->close();
     }
 

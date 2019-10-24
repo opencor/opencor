@@ -446,7 +446,7 @@ void CellmlTextViewWidget::retranslateUi()
 {
     // Retranslate all of our data
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         data->retranslateUi();
     }
 }
@@ -1271,7 +1271,7 @@ void CellmlTextViewWidget::selectFirstItemInEditorList()
 
     mEditorLists.removeFirst();
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         if (data->editingWidget()->editorListWidget() == editorList) {
             editorList->selectFirstItem();
 

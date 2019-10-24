@@ -192,7 +192,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     // Make a category checkable if it contains selectable plugins
 
-    for (auto categoryItem : mCategoryItems.values()) {
+    for (auto categoryItem : mCategoryItems) {
         for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
                 categoryItem->setCheckable(true);
@@ -474,7 +474,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // Update the selected state of all our categories which have at least one
     // selectable plugin
 
-    for (auto categoryItem : mCategoryItems.values()) {
+    for (auto categoryItem : mCategoryItems) {
         int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins != 0) {
@@ -661,7 +661,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
 
     // Show/hide our categories, based on whether they contain visible plugins
 
-    for (auto categoryItem : mCategoryItems.values()) {
+    for (auto categoryItem : mCategoryItems) {
         if (categoryItem->hasChildren()) {
             // The category contains plugins, but the question is whether they
             // are visible
