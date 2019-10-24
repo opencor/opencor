@@ -628,29 +628,25 @@ QString openRemoteFile(const QString &pUrl)
         QString errorMessage;
 
         if (readFile(fileNameOrUrl, fileContents, &errorMessage)) {
-            // We were able to retrieve the contents of the remote file, so ask
-            // our file manager to create a new remote file
+            // We were able to retrieve the contents of the remote file, so save
+            // it locally
 
-            FileManager::Status status = fileManagerInstance->create(fileNameOrUrl, fileContents);
+            fileName = Core::temporaryFileName();
 
-            // Make sure that the file has indeed been created
-
-            if (status != FileManager::Status::Created) {
+            if (!writeFile(fileName, fileContents)) {
 #ifdef QT_DEBUG
                 qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay, cppcoreguidelines-pro-type-vararg)
 #else
                 return QObject::tr("'%1' could not be created.").arg(fileNameOrUrl);
 #endif
             }
+        } else {
+            // We were not able to retrieve the contents of the remote file, so let
+            // the user know about it
 
-            return {};
+            return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl,
+                                                                     formatMessage(errorMessage));
         }
-
-        // We were not able to retrieve the contents of the remote file, so let
-        // the user know about it
-
-        return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl,
-                                                                 formatMessage(errorMessage));
     }
 
     return openFile(fileName, File::Type::Remote, fileNameOrUrl);
