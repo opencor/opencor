@@ -77,7 +77,7 @@ public:
 #include "viewinterface.inl"
 
 private:
-    CellmlTextViewWidget *mViewWidget;
+    CellmlTextViewWidget *mViewWidget = nullptr;
 
     bool importExport(const QStringList &pArguments, bool pImport);
 

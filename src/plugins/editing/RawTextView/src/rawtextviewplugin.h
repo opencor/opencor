@@ -69,7 +69,7 @@ public:
 #include "viewinterface.inl"
 
 private:
-    RawTextViewWidget *mViewWidget;
+    RawTextViewWidget *mViewWidget = nullptr;
 };
 
 //==============================================================================

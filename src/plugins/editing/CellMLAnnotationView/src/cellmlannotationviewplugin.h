@@ -67,7 +67,7 @@ public:
 #include "viewinterface.inl"
 
 private:
-    CellmlAnnotationViewWidget *mViewWidget;
+    CellmlAnnotationViewWidget *mViewWidget = nullptr;
 };
 
 //==============================================================================

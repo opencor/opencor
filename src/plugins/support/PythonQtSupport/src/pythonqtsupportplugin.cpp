@@ -86,10 +86,10 @@ void PythonQtSupportPlugin::initializePlugin()
     // Capture and redirect output
 
     connect(PythonQt::self(), &PythonQt::pythonStdOut,
-        this, &PythonQtSupportPlugin::printStdout);
+        this, &PythonQtSupportPlugin::printStdOut);
 
     connect(PythonQt::self(), &PythonQt::pythonStdErr,
-        this, &PythonQtSupportPlugin::printStderr);
+        this, &PythonQtSupportPlugin::printStdErr);
 
     // Python maps SIGINT (control-c) to its own handler.  We will remap it
     // to the default so that control-c works.
@@ -174,14 +174,14 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void PythonQtSupportPlugin::printStdout(const QString &pText)
+void PythonQtSupportPlugin::printStdOut(const QString &pText)
 {
     std::cout << qPrintable(pText);
 }
 
 //==============================================================================
 
-void PythonQtSupportPlugin::printStderr(const QString &pText)
+void PythonQtSupportPlugin::printStdErr(const QString &pText)
 {
     std::cerr << qPrintable(pText);
 }

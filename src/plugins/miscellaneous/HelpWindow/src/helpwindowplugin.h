@@ -62,9 +62,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mHelpAction;
+    QAction *mHelpAction = nullptr;
 
-    HelpWindowWindow *mHelpWindow;
+    HelpWindowWindow *mHelpWindow = nullptr;
 };
 
 //==============================================================================

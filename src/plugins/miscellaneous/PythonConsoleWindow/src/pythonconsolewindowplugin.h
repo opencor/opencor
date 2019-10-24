@@ -62,11 +62,11 @@ public:
 #include "windowinterface.inl"
 
 private:
+    QAction *mPythonConsoleWindowAction = nullptr;
+
+    PythonConsoleWindow *mPythonConsoleWindowWindow = nullptr;
+
     void startConsole();
-
-    QAction *mPythonConsoleWindowAction;
-
-    PythonConsoleWindow *mPythonConsoleWindowWindow;
 };
 
 //==============================================================================
