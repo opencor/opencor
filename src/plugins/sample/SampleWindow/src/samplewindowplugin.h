@@ -62,9 +62,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mSampleWindowAction;
+    QAction *mSampleWindowAction = nullptr;
 
-    SampleWindowWindow *mSampleWindowWindow;
+    SampleWindowWindow *mSampleWindowWindow = nullptr;
 };
 
 //==============================================================================
