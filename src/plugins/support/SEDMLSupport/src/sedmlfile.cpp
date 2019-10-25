@@ -359,8 +359,8 @@ SolverInterface * SedmlFile::solverInterface(const QString &pKisaoId)
         if (solverInterface->id(pKisaoId) == solverInterface->solverName()) {
             if (solverInterface->solverType() != Solver::Type::Ode) {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
-                                          tr("%1 (%2) is an NLA solver while an ODE solver is expected").arg(solverInterface->solverName())
-                                                                                                        .arg(pKisaoId));
+                                          tr("%1 (%2) is an NLA solver while an ODE solver is expected").arg(solverInterface->solverName(),
+                                                                                                             pKisaoId));
 
                 return nullptr;
             }
@@ -428,8 +428,8 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                   int(pPropertyNode.getLine()),
                                   int(pPropertyNode.getColumn()),
-                                  tr("the '%1' property must have a value of %2").arg(pPropertyName)
-                                                                                 .arg(values));
+                                  tr("the '%1' property must have a value of %2").arg(pPropertyName,
+                                                                                      values));
 
         return false;
     }
@@ -1393,8 +1393,8 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 }
             } else {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                          tr("%1 could not be retrieved (%2)").arg(modelSource)
-                                                                              .arg(Core::formatMessage(errorMessage)));
+                                          tr("%1 could not be retrieved (%2)").arg(modelSource,
+                                                                                   Core::formatMessage(errorMessage)));
             }
 
             Core::hideCentralBusyWidget();
