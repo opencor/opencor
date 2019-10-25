@@ -74,7 +74,7 @@ public:
 #include "viewinterface.inl"
 
 private:
-    RawSedmlViewWidget *mViewWidget;
+    RawSedmlViewWidget *mViewWidget = nullptr;
 };
 
 //==============================================================================

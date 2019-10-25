@@ -73,7 +73,7 @@ public:
 #include "viewinterface.inl"
 
 private:
-    RawCellmlViewWidget *mViewWidget;
+    RawCellmlViewWidget *mViewWidget = nullptr;
 };
 
 //==============================================================================

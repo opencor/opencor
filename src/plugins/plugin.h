@@ -112,10 +112,10 @@ public:
 
 private:
     QString mName;
-    PluginInfo *mInfo;
+    PluginInfo *mInfo = nullptr;
     QString mErrorMessage;
     QObject *mInstance = nullptr;
-    Status mStatus;
+    Status mStatus = Status::NotPlugin;
     QString mStatusErrors;
 };
 
