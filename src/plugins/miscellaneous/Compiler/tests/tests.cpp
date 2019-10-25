@@ -971,9 +971,9 @@ void Tests::minFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
-                          compiler_multi_min(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0)));
+                          compiler_multi_min(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
-                          compiler_multi_min(2, mBigA, mBigB)));
+                          compiler_multi_min(2, mBigA, mBigB))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
@@ -981,9 +981,9 @@ void Tests::minFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
-                          compiler_multi_min(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0)));
+                          compiler_multi_min(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
-                          compiler_multi_min(3, mBigA, mBigB, mBigC)));
+                          compiler_multi_min(3, mBigA, mBigB, mBigC))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 }
 
 //==============================================================================
@@ -996,9 +996,9 @@ void Tests::maxFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
-                          compiler_multi_max(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0)));
+                          compiler_multi_max(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
-                          compiler_multi_max(2, mBigA, mBigB)));
+                          compiler_multi_max(2, mBigA, mBigB))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
@@ -1006,9 +1006,9 @@ void Tests::maxFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
-                          compiler_multi_max(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0)));
+                          compiler_multi_max(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
-                          compiler_multi_max(3, mBigA, mBigB, mBigC)));
+                          compiler_multi_max(3, mBigA, mBigB, mBigC))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 }
 
 //==============================================================================
@@ -1021,9 +1021,9 @@ void Tests::gcdFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
-                          compiler_gcd_multi(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0)));
+                          compiler_gcd_multi(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
-                          compiler_gcd_multi(2, mBigA, mBigB)));
+                          compiler_gcd_multi(2, mBigA, mBigB))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
@@ -1031,9 +1031,9 @@ void Tests::gcdFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
-                          compiler_gcd_multi(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0)));
+                          compiler_gcd_multi(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
-                          compiler_gcd_multi(3, mBigA, mBigB, mBigC)));
+                          compiler_gcd_multi(3, mBigA, mBigB, mBigC))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 }
 
 //==============================================================================
@@ -1046,9 +1046,9 @@ void Tests::lcmFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
-                          compiler_lcm_multi(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0)));
+                          compiler_lcm_multi(2, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
-                          compiler_lcm_multi(2, mBigA, mBigB)));
+                          compiler_lcm_multi(2, mBigA, mBigB))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
                                          "{\n"
@@ -1056,9 +1056,9 @@ void Tests::lcmFunctionTests()
                                          "}"));
 
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
-                          compiler_lcm_multi(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0)));
+                          compiler_lcm_multi(3, 3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0))); // NOLINT(cppcoreguidelines-pro-type-vararg)
     QVERIFY(qFuzzyCompare(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
-                          compiler_lcm_multi(3, mBigA, mBigB, mBigC)));
+                          compiler_lcm_multi(3, mBigA, mBigB, mBigC))); // NOLINT(cppcoreguidelines-pro-type-vararg)
 }
 
 //==============================================================================
