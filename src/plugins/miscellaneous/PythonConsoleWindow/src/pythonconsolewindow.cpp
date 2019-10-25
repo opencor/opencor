@@ -129,6 +129,10 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
         return;
     }
 
+    // IPython tracebacks are noisy if modules have an empty filename, so set one
+
+    qtConsoleModule.addVariable("__file__", "QtConsole");
+
     // Create and retrive an IPython widget
 
     PyObject *createWidget = pythonQtInstance->lookupObject(qtConsoleModule, "create_ipython_widget");

@@ -112,6 +112,10 @@ void PythonQtSupportPlugin::initializePlugin()
     // Create a Python module to access OpenCOR's objects
 
     mOpenCORModule = PythonQt::self()->createModuleFromScript("OpenCOR");
+
+    // IPython tracebacks are noisy if modules have an empty filename, so set one
+
+    mOpenCORModule.addVariable("__file__", "OpenCOR");
 }
 
 //==============================================================================
