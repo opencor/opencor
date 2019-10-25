@@ -783,7 +783,7 @@ QString CentralWidget::openFile(const QString &pFileName, File::Type pType,
         if (mFileNames[i] == fileName) {
             setTabBarCurrentIndex(mFileTabs, i);
 
-            return QString();
+            return {};
         }
     }
 
@@ -823,7 +823,7 @@ QString CentralWidget::openFile(const QString &pFileName, File::Type pType,
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================

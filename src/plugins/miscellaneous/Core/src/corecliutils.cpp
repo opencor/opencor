@@ -587,7 +587,7 @@ QString openFile(const QString &pFileName, const File::Type &pType,
                                                                 pFileName);
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================

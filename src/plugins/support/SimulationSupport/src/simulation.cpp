@@ -1705,7 +1705,7 @@ QString Simulation::furtherInitialize() const
         }
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
