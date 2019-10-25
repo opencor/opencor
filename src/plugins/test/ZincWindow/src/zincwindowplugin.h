@@ -62,9 +62,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mZincWindowAction;
+    QAction *mZincWindowAction = nullptr;
 
-    ZincWindowWindow *mZincWindowWindow;
+    ZincWindowWindow *mZincWindowWindow = nullptr;
 };
 
 //==============================================================================

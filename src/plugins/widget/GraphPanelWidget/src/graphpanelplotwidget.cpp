@@ -1095,8 +1095,8 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QPointF point = mOwner->canvasPoint(pPoint);
-    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15))
-                                                 .arg(QLocale().toString(point.y(), 'g', 15));
+    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
+                                                      QLocale().toString(point.y(), 'g', 15));
     QPen pen = pPainter->pen();
 
     pen.setStyle(Qt::SolidLine);
@@ -1399,7 +1399,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
     // Check whether we are dealing with one of our main legend labels
 
     auto legendLabel = static_cast<QwtLegendLabel *>(pWidget);
-    bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
+    bool mainLegendLabel = std::find(mLegendLabels.begin(), mLegendLabels.end(), legendLabel) != mLegendLabels.end();
 
     if (mainLegendLabel) {
         // We are dealing with a main legend label, i.e. a legend label
@@ -1474,7 +1474,7 @@ bool GraphPanelPlotLegendWidget::needScrollBar() const
 
     int legendLabelsHeight = 0;
 
-    for (auto legendLabel : mLegendLabels.values()) {
+    for (auto legendLabel : mLegendLabels) {
         legendLabelsHeight += legendLabel->height();
     }
 
