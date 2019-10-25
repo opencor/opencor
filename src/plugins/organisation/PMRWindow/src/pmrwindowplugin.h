@@ -66,9 +66,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mPmrWindowAction;
+    QAction *mPmrWindowAction = nullptr;
 
-    PmrWindowWindow *mPmrWindowWindow;
+    PmrWindowWindow *mPmrWindowWindow = nullptr;
 };
 
 //==============================================================================

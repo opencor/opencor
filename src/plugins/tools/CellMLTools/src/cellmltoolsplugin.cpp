@@ -300,9 +300,9 @@ void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
         }
 
         Core::warningMessageBox(tr("Export CellML File To %1").arg(format),
-                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName))
-                                                                                                         .arg(format)
-                                                                                                         .arg(errorMessage));
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
+                                                                                                              format,
+                                                                                                              errorMessage));
     }
 }
 
@@ -445,8 +445,8 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
                     CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
 
                     for (const auto &cellmlFileIssue : cellmlFileIssues) {
-                        output += QString("%1[%2] [%3:%4] %5").arg(output.isEmpty()?QString():"\n")
-                                                              .arg((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?"Error":"Warning")
+                        output += QString("%1[%2] [%3:%4] %5").arg(output.isEmpty()?QString():"\n",
+                                                                   (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?"Error":"Warning")
                                                               .arg(cellmlFileIssue.line())
                                                               .arg(cellmlFileIssue.column())
                                                               .arg(Core::plainString(cellmlFileIssue.formattedMessage()));
@@ -550,9 +550,9 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
         }
 
         Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),
-                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName))
-                                                                                                                                              .arg(QDir::toNativeSeparators(userDefinedFormatFileName))
-                                                                                                                                              .arg(errorMessage));
+                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
+                                                                                                                                                   QDir::toNativeSeparators(userDefinedFormatFileName),
+                                                                                                                                                   errorMessage));
     }
 }
 

@@ -62,7 +62,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    QAction *mAddTwoNumbersAction;
+    QAction *mAddTwoNumbersAction = nullptr;
 
     void runHelpCommand();
     bool runAddCommand(const QStringList &pArguments);

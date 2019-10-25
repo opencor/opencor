@@ -614,7 +614,9 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
     // Retranslate our CellML editing view actions
 
-    for (auto cellmlEditingViewAction : mCellmlBasedViewPlugins.keys()) {
+    QList<QAction *> cellmlEditingViewActionKeys = mCellmlBasedViewPlugins.keys();
+
+    for (auto cellmlEditingViewAction : cellmlEditingViewActionKeys) {
         Plugin *plugin = mCellmlBasedViewPlugins.value(cellmlEditingViewAction);
         QString viewName = qobject_cast<ViewInterface *>(plugin->instance())->viewName();
 
@@ -717,7 +719,9 @@ void SimulationExperimentViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions
 
-    for (auto action : mDataStoreInterfaces.keys()) {
+    QList<QAction *> actionKeys = mDataStoreInterfaces.keys();
+
+    for (auto action : actionKeys) {
         I18nInterface::retranslateAction(action,
                                          action->text(),
                                          tr("Export the simulation results to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
@@ -970,11 +974,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
                     information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(simulationIssue.line())
                                                                                                                                       .arg(simulationIssue.column())
-                                                                                                                                      .arg(issueType)
-                                                                                                                                      .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
+                                                                                                                                      .arg(issueType,
+                                                                                                                                           Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 } else {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
-                                                                                                                              .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
+                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType,
+                                                                                                                                   Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 }
             }
         }
@@ -1237,8 +1241,9 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         QString importedParameters = QString();
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mSimulation->cellmlFile()->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
+        Core::Properties propertyKeys = parameters.keys();
 
-        for (auto property : parameters.keys()) {
+        for (auto property : propertyKeys) {
             CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
 
             if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
@@ -1616,7 +1621,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulationAlgorithm(libse
     // properties
 
     if (pSolverInterface != nullptr) {
-        for (const auto &solverProperty : pSolverProperties.keys()) {
+        QStringList solverPropertyKeys = pSolverProperties.keys();
+
+        for (const auto &solverProperty : solverPropertyKeys) {
             QString kisaoId = pSolverInterface->kisaoId(solverProperty);
             QVariant solverPropertyValue = pSolverProperties.value(solverProperty);
             QString value = (solverPropertyValue.type() == QVariant::Double)?
@@ -1655,27 +1662,27 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     // have more than one SED-ML algorithm per SED-ML simulation)
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    QString annotation = QString();
 
     if ((runtime != nullptr) && runtime->needNlaSolver()) {
-        QString nlaSolverAnnotation = QString();
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
+        QStringList nlaSolverPropertyKeys = nlaSolverProperties.keys();
+        QString nlaSolverAnnotation = QString();
 
-        for (const auto &nlaSolverProperty : nlaSolverProperties.keys()) {
-            nlaSolverAnnotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty)
-                                                                      .arg(SEDMLSupport::Id)
-                                                                      .arg(nlaSolverProperty)
-                                                                      .arg(SEDMLSupport::Value)
-                                                                      .arg(nlaSolverProperties.value(nlaSolverProperty).toString());
+        for (const auto &nlaSolverProperty : nlaSolverPropertyKeys) {
+            nlaSolverAnnotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty,
+                                                                           SEDMLSupport::Id,
+                                                                           nlaSolverProperty,
+                                                                           SEDMLSupport::Value,
+                                                                           nlaSolverProperties.value(nlaSolverProperty).toString());
         }
 
         pSedmlSimulation->appendAnnotation(QString(R"(<%1 xmlns="%2" %3="%4">)"
                                                     "     %5"
-                                                    " </%1>").arg(SEDMLSupport::NlaSolver)
-                                                             .arg(SEDMLSupport::OpencorNamespace)
-                                                             .arg(SEDMLSupport::Name)
-                                                             .arg(mSimulation->data()->nlaSolverName())
-                                                             .arg(nlaSolverAnnotation).toStdString());
+                                                    " </%1>").arg(SEDMLSupport::NlaSolver,
+                                                                  SEDMLSupport::OpencorNamespace,
+                                                                  SEDMLSupport::Name,
+                                                                  mSimulation->data()->nlaSolverName(),
+                                                                  nlaSolverAnnotation).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1716,14 +1723,14 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 
     // Set the target itself, as well as its degree, if any
 
-    pSedmlVariable->setTarget(Target.arg(pComponent)
-                                    .arg(variable).toStdString());
+    pSedmlVariable->setTarget(Target.arg(pComponent,
+                                         variable).toStdString());
 
     if (variableDegree != 0) {
         pSedmlVariable->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
                                                   "    %3"
-                                                  "</%1>").arg(SEDMLSupport::VariableDegree)
-                                                          .arg(SEDMLSupport::OpencorNamespace)
+                                                  "</%1>").arg(SEDMLSupport::VariableDegree,
+                                                               SEDMLSupport::OpencorNamespace)
                                                           .arg(variableDegree).toStdString());
     }
 }
@@ -1845,7 +1852,6 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                   int graphPlotCounter;
                                   bool logAxisX;
                                   bool logAxisY;
-                                  char padding[2];
                               };
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
@@ -1863,12 +1869,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
-        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor)
-                                           .arg(graphPanelProperties[0]->stringValue())
-                             +SedmlProperty.arg(SEDMLSupport::FontSize)
-                                           .arg(graphPanelProperties[1]->stringValue())
-                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
-                                           .arg(graphPanelProperties[2]->stringValue())
+        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+                                                graphPanelProperties[0]->stringValue())
+                             +SedmlProperty.arg(SEDMLSupport::FontSize,
+                                                graphPanelProperties[1]->stringValue())
+                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
+                                                graphPanelProperties[2]->stringValue())
                              +SedmlProperty.arg(SEDMLSupport::Height)
                                            .arg(graphPanelsWidgetSizes[graphPlotCounter-1]);
 
@@ -1876,93 +1882,93 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
-        annotation += SedmlProperty.arg(SEDMLSupport::GridLines)
-                                   .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::stringLineStyle(gridLinesProperties[0]->listValueIndex()))
-                                        +SedmlProperty.arg(SEDMLSupport::Width)
-                                                      .arg(gridLinesProperties[1]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Color)
-                                                      .arg(gridLinesProperties[2]->stringValue()));
+        annotation += SedmlProperty.arg(SEDMLSupport::GridLines,
+                                         SedmlProperty.arg(SEDMLSupport::Style,
+                                                           SEDMLSupport::stringLineStyle(gridLinesProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           gridLinesProperties[1]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           gridLinesProperties[2]->stringValue()));
 
         // Legend
 
-        annotation += SedmlProperty.arg(SEDMLSupport::Legend)
-                                   .arg(graphPanelProperties[4]->stringValue());
+        annotation += SedmlProperty.arg(SEDMLSupport::Legend,
+                                        graphPanelProperties[4]->stringValue());
 
         // Point coordinates
 
         Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
-        annotation += SedmlProperty.arg(SEDMLSupport::PointCoordinates)
-                                   .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::stringLineStyle(pointCoordinatesProperties[0]->listValueIndex()))
-                                        +SedmlProperty.arg(SEDMLSupport::Width)
-                                                      .arg(pointCoordinatesProperties[1]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Color)
-                                                      .arg(pointCoordinatesProperties[2]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::FontColor)
-                                                      .arg(pointCoordinatesProperties[3]->stringValue()));
+        annotation += SedmlProperty.arg(SEDMLSupport::PointCoordinates,
+                                         SedmlProperty.arg(SEDMLSupport::Style,
+                                                           SEDMLSupport::stringLineStyle(pointCoordinatesProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           pointCoordinatesProperties[1]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           pointCoordinatesProperties[2]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::FontColor,
+                                                           pointCoordinatesProperties[3]->stringValue()));
 
         // Surrounding area
 
         Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
-        annotation += SedmlProperty.arg(SEDMLSupport::SurroundingArea)
-                                   .arg( SedmlProperty.arg(SEDMLSupport::BackgroundColor)
-                                                      .arg(surroundingAreaProperties[0]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
-                                                      .arg(surroundingAreaProperties[1]->stringValue()));
+        annotation += SedmlProperty.arg(SEDMLSupport::SurroundingArea,
+                                         SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+                                                           surroundingAreaProperties[0]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
+                                                           surroundingAreaProperties[1]->stringValue()));
 
         // Title
 
-        annotation += SedmlProperty.arg(SEDMLSupport::Title)
-                                   .arg(graphPanelProperties[7]->stringValue());
+        annotation += SedmlProperty.arg(SEDMLSupport::Title,
+                                        graphPanelProperties[7]->stringValue());
 
         // X axis
 
         Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
-        annotation += SedmlProperty.arg(SEDMLSupport::XAxis)
-                                   .arg( SedmlProperty.arg(SEDMLSupport::LogarithmicScale)
-                                                      .arg(xAxisProperties[0]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Title)
-                                                      .arg(xAxisProperties[1]->stringValue()));
+        annotation += SedmlProperty.arg(SEDMLSupport::XAxis,
+                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                           xAxisProperties[0]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Title,
+                                                           xAxisProperties[1]->stringValue()));
 
         // Y axis
 
         Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
-        annotation += SedmlProperty.arg(SEDMLSupport::YAxis)
-                                   .arg( SedmlProperty.arg(SEDMLSupport::LogarithmicScale)
-                                                      .arg(yAxisProperties[0]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Title)
-                                                      .arg(yAxisProperties[1]->stringValue()));
+        annotation += SedmlProperty.arg(SEDMLSupport::YAxis,
+                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                           yAxisProperties[0]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Title,
+                                                           yAxisProperties[1]->stringValue()));
 
         // Zoom region
 
         Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
-        annotation += SedmlProperty.arg(SEDMLSupport::ZoomRegion)
-                                   .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::stringLineStyle(zoomRegionProperties[0]->listValueIndex()))
-                                        +SedmlProperty.arg(SEDMLSupport::Width)
-                                                      .arg(zoomRegionProperties[1]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Color)
-                                                      .arg(zoomRegionProperties[2]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::FontColor)
-                                                      .arg(zoomRegionProperties[3]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Filled)
-                                                      .arg(zoomRegionProperties[4]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::FillColor)
-                                                      .arg(zoomRegionProperties[5]->stringValue()));
+        annotation += SedmlProperty.arg(SEDMLSupport::ZoomRegion,
+                                         SedmlProperty.arg(SEDMLSupport::Style,
+                                                           SEDMLSupport::stringLineStyle(zoomRegionProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           zoomRegionProperties[1]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           zoomRegionProperties[2]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::FontColor,
+                                                           zoomRegionProperties[3]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Filled,
+                                                           zoomRegionProperties[4]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::FillColor,
+                                                           zoomRegionProperties[5]->stringValue()));
 
         // Add our properties as an annotation
 
         sedmlPlot2d->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
                                                "    %3"
-                                               "</%1>").arg(SEDMLSupport::Properties)
-                                                       .arg(SEDMLSupport::OpencorNamespace)
-                                                       .arg(annotation).toStdString());
+                                               "</%1>").arg(SEDMLSupport::Properties,
+                                                            SEDMLSupport::OpencorNamespace,
+                                                            annotation).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2059,32 +2065,32 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             sedmlCurve->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
                                                   "    %3"
-                                                  "</%1>").arg(SEDMLSupport::Properties)
-                                                          .arg(SEDMLSupport::OpencorNamespace)
-                                                          .arg( SedmlProperty.arg(SEDMLSupport::Selected)
-                                                                             .arg(property->isChecked()?
+                                                  "</%1>").arg(SEDMLSupport::Properties,
+                                                               SEDMLSupport::OpencorNamespace,
+                                                                SedmlProperty.arg(SEDMLSupport::Selected,
+                                                                                  property->isChecked()?
                                                                                       TrueValue:
                                                                                       FalseValue)
-                                                               +SedmlProperty.arg(SEDMLSupport::Title)
-                                                                             .arg(properties[1]->stringValue())
-                                                               +SedmlProperty.arg(SEDMLSupport::Line)
-                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                                                                .arg(SEDMLSupport::stringLineStyle(lineProperties[0]->listValueIndex()))
-                                                                                  +SedmlProperty.arg(SEDMLSupport::Width)
-                                                                                                .arg(lineProperties[1]->stringValue())
-                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
-                                                                                                .arg(lineProperties[2]->stringValue()))
-                                                               +SedmlProperty.arg(SEDMLSupport::Symbol)
-                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                                                                .arg(SEDMLSupport::stringSymbolStyle(symbolProperties[0]->listValueIndex()))
-                                                                                  +SedmlProperty.arg(SEDMLSupport::Size)
-                                                                                                .arg(symbolProperties[1]->stringValue())
-                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
-                                                                                                .arg(symbolProperties[2]->stringValue())
-                                                                                  +SedmlProperty.arg(SEDMLSupport::Filled)
-                                                                                                .arg(symbolProperties[3]->stringValue())
-                                                                                  +SedmlProperty.arg(SEDMLSupport::FillColor)
-                                                                                                .arg(symbolProperties[4]->stringValue()))).toStdString());
+                                                               +SedmlProperty.arg(SEDMLSupport::Title,
+                                                                                  properties[1]->stringValue())
+                                                               +SedmlProperty.arg(SEDMLSupport::Line,
+                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                     SEDMLSupport::stringLineStyle(lineProperties[0]->listValueIndex()))
+                                                                                  +SedmlProperty.arg(SEDMLSupport::Width,
+                                                                                                     lineProperties[1]->stringValue())
+                                                                                  +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                     lineProperties[2]->stringValue()))
+                                                               +SedmlProperty.arg(SEDMLSupport::Symbol,
+                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                     SEDMLSupport::stringSymbolStyle(symbolProperties[0]->listValueIndex()))
+                                                                                  +SedmlProperty.arg(SEDMLSupport::Size,
+                                                                                                     symbolProperties[1]->stringValue())
+                                                                                  +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                     symbolProperties[2]->stringValue())
+                                                                                  +SedmlProperty.arg(SEDMLSupport::Filled,
+                                                                                                     symbolProperties[3]->stringValue())
+                                                                                  +SedmlProperty.arg(SEDMLSupport::FillColor,
+                                                                                                     symbolProperties[4]->stringValue()))).toStdString());
         }
     }
 
@@ -2305,8 +2311,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     if (!combineArchive->addFile(realImportedFileName,
                                                  relativeImportedFileName,
                                                  COMBINESupport::CombineArchiveFile::Format::Cellml)) {
-                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
-                                                                                                           .arg(" ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
+                                                                                                                " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
 
                         break;
                     }
@@ -2320,12 +2326,12 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
-                                                                                                   .arg(" ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
+                                                                                                        " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
             }
         } else {
-            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
-                                                                                               .arg(" ("+tr("the master SED-ML file could not be added")+").");
+            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
+                                                                                                    " ("+tr("the master SED-ML file could not be added")+").");
         }
 
         if (isCellmlOrSedmlFile) {
@@ -2334,7 +2340,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         // Remove the local copy of our remote imported CellML files, if any
 
-        for (const auto &localImportedFileName : remoteImportedFileNames.values()) {
+        for (const auto &localImportedFileName : remoteImportedFileNames) {
             QFile::remove(localImportedFileName);
         }
 
@@ -2748,12 +2754,12 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                     }
 
                     break;
-                } else {
-                    simulationError(tr("the requested solver (%1) could not be found").arg(nlaSolverName),
-                                    Error::InvalidSimulationEnvironment);
-
-                    return false;
                 }
+
+                simulationError(tr("the requested solver (%1) could not be found").arg(nlaSolverName),
+                                Error::InvalidSimulationEnvironment);
+
+                return false;
             }
         }
     }
@@ -2969,28 +2975,28 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
             if (xParameter == nullptr) {
                 if (yParameter == nullptr) {
-                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
-                                                                                                                                                                            .arg(xCellmlVariable)
-                                                                                                                                                                            .arg(xCellmlComponent)
-                                                                                                                                                                            .arg(yCellmlVariable)
-                                                                                                                                                                            .arg(yCellmlComponent),
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()),
+                                                                                                                                                                                 xCellmlVariable,
+                                                                                                                                                                                 xCellmlComponent,
+                                                                                                                                                                                 yCellmlVariable,
+                                                                                                                                                                                 yCellmlComponent),
                                     Error::InvalidSimulationEnvironment);
 
                     return false;
                 }
 
-                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
-                                                                                                                                    .arg(xCellmlVariable)
-                                                                                                                                    .arg(xCellmlComponent),
+                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()),
+                                                                                                                                         xCellmlVariable,
+                                                                                                                                         xCellmlComponent),
                                 Error::InvalidSimulationEnvironment);
 
                 return false;
             }
 
             if (yParameter == nullptr) {
-                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
-                                                                                                                                    .arg(yCellmlVariable)
-                                                                                                                                    .arg(yCellmlComponent),
+                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()),
+                                                                                                                                         yCellmlVariable,
+                                                                                                                                         yCellmlComponent),
                                 Error::InvalidSimulationEnvironment);
 
                 return false;
@@ -3369,8 +3375,8 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
     }
 
     Core::warningMessageBox(tr("Data Import"),
-                            tr("<strong>%1</strong> could not be imported (%2).").arg(pFileName)
-                                                                                 .arg((problem == FileAccess)?
+                            tr("<strong>%1</strong> could not be imported (%2).").arg(pFileName,
+                                                                                      (problem == FileAccess)?
                                                                                           tr("the file could not be accessed"):
                                                                                           tr("the memory needed to store the data could not be allocated")));
 
@@ -3552,8 +3558,8 @@ void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTim
             solversInformation += "+"+mSimulation->data()->nlaSolverName();
         }
 
-        output(QString(QString()+OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 using %2").arg(Core::formatTime(pElapsedTime))
-                                                                                                                               .arg(solversInformation)+"</span>."+OutputBrLn));
+        output(QString(QString()+OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 using %2").arg(Core::formatTime(pElapsedTime),
+                                                                                                                                    solversInformation)+"</span>."+OutputBrLn));
     }
 
     // Update our parameters and simulation mode
@@ -4396,8 +4402,8 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
     if (!pErrorMessage.isEmpty()) {
         Core::warningMessageBox(tr("Data Import"),
-                                tr("<strong>%1</strong> could not be imported (%2).").arg(pImportData->fileName())
-                                                                                     .arg(Core::formatMessage(pErrorMessage, true)));
+                                tr("<strong>%1</strong> could not be imported (%2).").arg(pImportData->fileName(),
+                                                                                          Core::formatMessage(pErrorMessage, true)));
     }
 
     emit importDone(static_cast<DataStore::DataStoreImporter *>(sender()));
@@ -4544,13 +4550,13 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
     bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
 
     if (!graphPanelPropertiesModified) {
-        for (auto someGraphPanelPropertiesModified : mGraphPanelPropertiesModified.values()) {
+        for (auto someGraphPanelPropertiesModified : mGraphPanelPropertiesModified) {
             graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
         }
     }
 
     if (!graphsPropertiesModified) {
-        for (auto someGraphsPropertiesModified : mGraphsPropertiesModified.values()) {
+        for (auto someGraphsPropertiesModified : mGraphsPropertiesModified) {
             graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
         }
     }

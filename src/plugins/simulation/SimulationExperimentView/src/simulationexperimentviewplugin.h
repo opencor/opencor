@@ -72,7 +72,7 @@ public:
 #include "viewinterface.inl"
 
 private:
-    SimulationExperimentViewWidget *mViewWidget;
+    SimulationExperimentViewWidget *mViewWidget = nullptr;
 };
 
 //==============================================================================

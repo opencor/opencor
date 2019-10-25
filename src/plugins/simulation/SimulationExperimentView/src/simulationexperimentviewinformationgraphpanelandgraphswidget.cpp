@@ -219,17 +219,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
 
     // Retranslate all our property editors
 
-    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors.values()) {
+    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors) {
         graphPanelPropertyEditor->retranslateUi();
     }
 
-    for (auto graphsPropertyEditor : mGraphsPropertyEditors.values()) {
+    for (auto graphsPropertyEditor : mGraphsPropertyEditors) {
         graphsPropertyEditor->retranslateUi();
     }
 
     // Retranslate the contents of our graph panel property editors
 
-    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors.values()) {
+    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors) {
         retranslateGraphPanelPropertyEditor(graphPanelPropertyEditor);
     }
 
@@ -272,7 +272,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
     // Remove all our graphs' runs
 
-    for (auto graph : mGraphs.values()) {
+    for (auto graph : mGraphs) {
         graph->removeRuns();
     }
 }
@@ -779,11 +779,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::fileRenamed(c
 
     QString oldModelListValue = modelListValue(pOldFileName);
 
-    if (mRenamedModelListValues.values().contains(oldModelListValue)) {
+    if (std::find(mRenamedModelListValues.begin(), mRenamedModelListValues.end(), oldModelListValue) != mRenamedModelListValues.end()) {
         // A previous model list value has been renamed again, so find its
         // original value and update its new renamed version, if needed
 
-        for (const auto &origModelListValue : mRenamedModelListValues.keys()) {
+        QStringList origModelListValueKeys = mRenamedModelListValues.keys();
+
+        for (const auto &origModelListValue : origModelListValueKeys) {
             QString renamedOrigModelListValue = mRenamedModelListValues.value(origModelListValue);
 
             if (renamedOrigModelListValue == oldModelListValue) {
@@ -1724,7 +1726,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateAllGrap
     // Go through our graphs property editors and update the information about
     // the graph properties they hold
 
-    for (auto graphsPropertyEditor : mGraphsPropertyEditors.values()) {
+    for (auto graphsPropertyEditor : mGraphsPropertyEditors) {
         mGraphsPropertyEditor = graphsPropertyEditor;
 
         updateGraphsInfo();

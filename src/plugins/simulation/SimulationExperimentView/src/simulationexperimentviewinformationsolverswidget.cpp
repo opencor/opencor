@@ -477,8 +477,10 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationE
     // Go through the different properties for the given type of solver and
     // show/hide whatever needs showing/hiding
 
-    for (auto solverProperties = pSolverData->solversProperties().constBegin(),
-              solverPropertiesEnd = pSolverData->solversProperties().constEnd();
+    QMap<QString, Core::Properties> solversProperties = pSolverData->solversProperties();
+
+    for (auto solverProperties = solversProperties.constBegin(),
+              solverPropertiesEnd = solversProperties.constEnd();
          solverProperties != solverPropertiesEnd; ++solverProperties) {
         bool solverPropertiesVisible = solverProperties.key() == pSolverName;
 

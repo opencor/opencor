@@ -555,8 +555,8 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::DefModel,
-                 QString("def model%1 %2 as").arg(cmetaId(pDomNode))
-                                             .arg(cellmlAttributeNodeValue(pDomNode, "name")));
+                 QString("def model%1 %2 as").arg(cmetaId(pDomNode),
+                                                  cellmlAttributeNodeValue(pDomNode, "name")));
 
     indent();
 
@@ -690,8 +690,8 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::DefImport,
-                 QString(R"(def import%1 using "%2" for)").arg(cmetaId(pDomNode))
-                                                          .arg(attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
+                 QString(R"(def import%1 using "%2" for)").arg(cmetaId(pDomNode),
+                                                               attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
 
     indent();
 
@@ -755,8 +755,8 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
         }
 
         outputString(Output::DefUnit,
-                     QString("def unit%1 %2 as").arg(cmetaId(pDomNode))
-                                                .arg(cellmlAttributeNodeValue(pDomNode, "name")));
+                     QString("def unit%1 %2 as").arg(cmetaId(pDomNode),
+                                                     cellmlAttributeNodeValue(pDomNode, "name")));
 
         indent();
     }
@@ -787,9 +787,9 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
         }
 
         outputString(Output::ImportUnit,
-                     QString("unit%1 %2 using unit %3;").arg(cmetaId(pDomNode))
-                                                        .arg(cellmlAttributeNodeValue(pDomNode, "name"))
-                                                        .arg(cellmlAttributeNodeValue(pDomNode, "units_ref")));
+                     QString("unit%1 %2 using unit %3;").arg(cmetaId(pDomNode),
+                                                             cellmlAttributeNodeValue(pDomNode, "name"),
+                                                             cellmlAttributeNodeValue(pDomNode, "units_ref")));
     } else if (isBaseUnits) {
         if (   (mLastOutput == Output::Comment)
             || (mLastOutput == Output::EndDef)
@@ -799,8 +799,8 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
         }
 
         outputString(Output::DefBaseUnit,
-                     QString("def unit%1 %2 as base unit;").arg(cmetaId(pDomNode))
-                                                           .arg(cellmlAttributeNodeValue(pDomNode, "name")));
+                     QString("def unit%1 %2 as base unit;").arg(cmetaId(pDomNode),
+                                                                cellmlAttributeNodeValue(pDomNode, "name")));
     } else {
         unindent();
 
@@ -862,9 +862,9 @@ bool CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::Unit,
-                 QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
-                                        .arg(cellmlAttributeNodeValue(pDomNode, "units"))
-                                        .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
+                 QString("unit%1 %2%3;").arg(cmetaId(pDomNode),
+                                             cellmlAttributeNodeValue(pDomNode, "units"),
+                                             parameters.isEmpty()?QString():" {"+parameters+"}"));
 
     return true;
 }
@@ -883,8 +883,8 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
         }
 
         outputString(Output::DefComp,
-                     QString("def comp%1 %2 as").arg(cmetaId(pDomNode))
-                                                .arg(cellmlAttributeNodeValue(pDomNode, "name")));
+                     QString("def comp%1 %2 as").arg(cmetaId(pDomNode),
+                                                     cellmlAttributeNodeValue(pDomNode, "name")));
 
         indent();
     }
@@ -927,9 +927,9 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
         }
 
         outputString(Output::ImportComp,
-                     QString("comp%1 %2 using comp %3;").arg(cmetaId(pDomNode))
-                                                        .arg(cellmlAttributeNodeValue(pDomNode, "name"))
-                                                        .arg(cellmlAttributeNodeValue(pDomNode, "component_ref")));
+                     QString("comp%1 %2 using comp %3;").arg(cmetaId(pDomNode),
+                                                             cellmlAttributeNodeValue(pDomNode, "name"),
+                                                             cellmlAttributeNodeValue(pDomNode, "component_ref")));
     } else {
         unindent();
 
@@ -989,10 +989,10 @@ bool CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::Var,
-                 QString("var%1 %2: %3%4;").arg(cmetaId(pDomNode))
-                                           .arg(cellmlAttributeNodeValue(pDomNode, "name"))
-                                           .arg(cellmlAttributeNodeValue(pDomNode, "units"))
-                                           .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
+                 QString("var%1 %2: %3%4;").arg(cmetaId(pDomNode),
+                                                cellmlAttributeNodeValue(pDomNode, "name"),
+                                                cellmlAttributeNodeValue(pDomNode, "units"),
+                                                parameters.isEmpty()?QString():" {"+parameters+"}"));
 
     return true;
 }
@@ -1947,8 +1947,8 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
                     static const QString Degree = "degree";
 
                     if (childNode.localName() != Degree) {
-                        mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
-                                                                                                                           .arg("degree");
+                        mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root",
+                                                                                                                                "degree");
                         mErrorLine = childNode.lineNumber();
                         mErrorColumn = childNode.columnNumber();
 
@@ -2118,8 +2118,8 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
                 static const QString Bvar = "bvar";
 
                 if (childNode.localName() != Bvar) {
-                    mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
-                                                                                                                       .arg("bvar");
+                    mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff",
+                                                                                                                            "bvar");
                     mErrorLine = childNode.lineNumber();
                     mErrorColumn = childNode.columnNumber();
 
@@ -2212,8 +2212,8 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
                 static const QString Degree = "degree";
 
                 if (childNode.localName() != Degree) {
-                    mErrorMessage = tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
-                                                                                                                                    .arg("degree");
+                    mErrorMessage = tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar",
+                                                                                                                                         "degree");
                     mErrorLine = childNode.lineNumber();
                     mErrorColumn = childNode.columnNumber();
 
@@ -2263,8 +2263,8 @@ bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::DefGroup,
-                 QString("def group%1 as %2 for").arg(cmetaId(pDomNode))
-                                                 .arg(RelationshipRef));
+                 QString("def group%1 as %2 for").arg(cmetaId(pDomNode),
+                                                      RelationshipRef));
 
     indent();
 
@@ -2356,10 +2356,10 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
         return false;
     }
 
-    pRelationshipRef += QString("%1%2%3%4").arg(pRelationshipRef.isEmpty()?QString():" and ")
-                                           .arg(relationship)
-                                           .arg(cmetaId(pDomNode))
-                                           .arg(name.isEmpty()?QString():" "+name);
+    pRelationshipRef += QString("%1%2%3%4").arg(pRelationshipRef.isEmpty()?QString():" and ",
+                                                relationship,
+                                                cmetaId(pDomNode),
+                                                name.isEmpty()?QString():" "+name);
 
     return true;
 }
@@ -2393,8 +2393,8 @@ bool CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
         }
 
         outputString(Output::CompIncl,
-                     QString("comp%1 %2 incl").arg(cmetaId(pDomNode))
-                                              .arg(cellmlAttributeNodeValue(pDomNode, "component")));
+                     QString("comp%1 %2 incl").arg(cmetaId(pDomNode),
+                                                   cellmlAttributeNodeValue(pDomNode, "component")));
 
         indent();
     }
@@ -2429,8 +2429,8 @@ bool CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
         }
 
         outputString(Output::Comp,
-                     QString("comp%1 %2;").arg(cmetaId(pDomNode))
-                                          .arg(cellmlAttributeNodeValue(pDomNode, "component")));
+                     QString("comp%1 %2;").arg(cmetaId(pDomNode),
+                                               cellmlAttributeNodeValue(pDomNode, "component")));
     }
 
     return true;
@@ -2450,8 +2450,8 @@ bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::DefMap,
-                 QString("def map%1 %2 for").arg(cmetaId(pDomNode))
-                                            .arg(MapComponents));
+                 QString("def map%1 %2 for").arg(cmetaId(pDomNode),
+                                                 MapComponents));
 
     indent();
 
@@ -2525,9 +2525,9 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
 
     // Process the given map components node
 
-    pMapComponents = QString("between%1 %2 and %3").arg(cmetaId(pDomNode))
-                                                   .arg(cellmlAttributeNodeValue(pDomNode, "component_1"))
-                                                   .arg(cellmlAttributeNodeValue(pDomNode, "component_2"));
+    pMapComponents = QString("between%1 %2 and %3").arg(cmetaId(pDomNode),
+                                                        cellmlAttributeNodeValue(pDomNode, "component_1"),
+                                                        cellmlAttributeNodeValue(pDomNode, "component_2"));
 
     return true;
 }
@@ -2562,9 +2562,9 @@ bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::Vars,
-                 QString("vars%1 %2 and %3;").arg(cmetaId(pDomNode))
-                                             .arg(cellmlAttributeNodeValue(pDomNode, "variable_1"))
-                                             .arg(cellmlAttributeNodeValue(pDomNode, "variable_2")));
+                 QString("vars%1 %2 and %3;").arg(cmetaId(pDomNode),
+                                                  cellmlAttributeNodeValue(pDomNode, "variable_1"),
+                                                  cellmlAttributeNodeValue(pDomNode, "variable_2")));
 
     return true;
 }
@@ -2677,8 +2677,8 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
     // The given node is known, but we don't support it, so consider it as an
     // error or a warning, depending on the case
 
-    QString message = tr("A%1 '%2' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pExtra)
-                                                                                                                                              .arg(pDomNode.prefix().isEmpty()?
+    QString message = tr("A%1 '%2' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pExtra,
+                                                                                                                                                   pDomNode.prefix().isEmpty()?
                                                                                                                                                        pDomNode.localName():
                                                                                                                                                        pDomNode.prefix()+":"+pDomNode.localName());
     int lineNumber = pDomNode.lineNumber();
