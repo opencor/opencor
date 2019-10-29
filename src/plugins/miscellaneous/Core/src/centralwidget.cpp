@@ -911,8 +911,8 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
                 hideBusyWidget();
 
                 warningMessageBox(tr("Open Remote File"),
-                                  tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl)
-                                                                                     .arg(formatMessage(errorMessage)));
+                                  tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl,
+                                                                                          formatMessage(errorMessage)));
             }
         }
     } else {
