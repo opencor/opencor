@@ -80,13 +80,13 @@ public:
     virtual void initialize(double pVoi, int pRatesStatesCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates);
-    virtual void initialize(double pVoi, int pRatesStatesCount,
-                            double *pConstants, double *pRates, double *pStates,
-                            double *pAlgebraic,
                             ComputeRatesFunction pComputeRates,
                             int pGradientsCount, int *pGradientsIndices,
                             double *pGradients);
+    virtual void initialize(double pVoi, int pRatesStatesCount,
+                            double *pConstants, double *pRates, double *pStates,
+                            double *pAlgebraic,
+                            ComputeRatesFunction pComputeRates);
 
     virtual void reinitialize(double pVoi);
 
