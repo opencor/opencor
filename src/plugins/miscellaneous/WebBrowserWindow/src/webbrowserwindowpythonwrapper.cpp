@@ -59,6 +59,8 @@ WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule,
                                                              QObject *pParent) :
     QObject(pParent)
 {
+    // Add some Python wrappers
+
     static std::array<PyMethodDef, 2> PythonWebBrowserWindowMethods = {{
                                                                           { "browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser." },
                                                                           { nullptr, nullptr, 0, nullptr }

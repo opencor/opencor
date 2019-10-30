@@ -216,6 +216,8 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
 SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
+    // Add some Python wrappers
+
     static std::array<PyMethodDef, 5> PythonSimulationExperimentViewMethods = {{
                                                                                   { "simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation." },
                                                                                   { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },

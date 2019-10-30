@@ -297,10 +297,15 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 {
     Q_UNUSED(pModule)
 
+    // Register some OpenCOR classes with Python and decorators to our ourselves
+
     PythonQtSupport::registerClass(&Simulation::staticMetaObject);
     PythonQtSupport::registerClass(&SimulationData::staticMetaObject);
     PythonQtSupport::registerClass(&SimulationResults::staticMetaObject);
+
     PythonQtSupport::addInstanceDecorators(this);
+
+    // Add some Python wrappers
 
     static std::array<PyMethodDef, 4> PythonSimulationSupportMethods = {{
                                                                            { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
