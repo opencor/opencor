@@ -332,8 +332,8 @@ enum HostOS {
 Q_DECLARE_TYPEINFO(HostOS, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::HostOS, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -353,8 +353,8 @@ enum GeneralPurposeFlag {
 Q_DECLARE_TYPEINFO(GeneralPurposeFlag, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::GeneralPurposeFlag, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -389,8 +389,8 @@ enum CompressionMethod {
 Q_DECLARE_TYPEINFO(CompressionMethod, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::CompressionMethod, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -413,8 +413,8 @@ struct LocalFileHeader
 Q_DECLARE_TYPEINFO(LocalFileHeader, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::LocalFileHeader, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -430,8 +430,8 @@ struct DataDescriptor
 Q_DECLARE_TYPEINFO(DataDescriptor, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::DataDescriptor, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -461,8 +461,8 @@ struct CentralFileHeader
 Q_DECLARE_TYPEINFO(CentralFileHeader, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::CentralFileHeader, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -483,8 +483,8 @@ struct EndOfDirectory
 Q_DECLARE_TYPEINFO(EndOfDirectory, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::EndOfDirectory, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -501,8 +501,8 @@ struct FileHeader
 Q_DECLARE_TYPEINFO(FileHeader, Q_MOVABLE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::FileHeader, Q_MOVABLE_TYPE);
 namespace OpenCOR {
 namespace ZIPSupport {
@@ -1532,8 +1532,8 @@ QT_END_NAMESPACE
     #pragma clang diagnostic pop
 #endif
 
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 //---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER

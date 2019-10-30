@@ -126,8 +126,8 @@ private:
 
 QT_END_NAMESPACE
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 //---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER
