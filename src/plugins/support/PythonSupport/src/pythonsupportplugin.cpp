@@ -98,9 +98,9 @@ void PythonSupportPlugin::initializePlugin()
     QString pythonHome = QCoreApplication::applicationDirPath()+"/../";
 
 #if defined(Q_OS_WIN)
-    pythonDir += "Python";
+    pythonHome += "Python";
 #elif defined(Q_OS_LINUX)
-    pythonDir += "python";
+    pythonHome += "python";
 #elif defined(Q_OS_MAC)
     pythonHome += "Frameworks/Python";
 #endif
