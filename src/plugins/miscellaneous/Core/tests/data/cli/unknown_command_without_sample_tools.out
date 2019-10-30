@@ -16,11 +16,11 @@ Commands supported by the CellMLTools plugin:
  * Validate <file>:
       validate <file>
 
-Commands supported by the Jupyter kernel plugin:
- * Display the commands supported by the Jupyter kernel plugin:
+Commands supported by the JupyterKernel plugin:
+ * Display the commands supported by the JupyterKernel plugin:
       help
  * Start the OpenCOR Jupyter kernel:
-      kernel <connection_file>
+      kernel <connectionFile>
 
 Commands supported by the Python shell plugin:
  * Display the commands supported by the plugin:

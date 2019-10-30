@@ -89,7 +89,7 @@ void JupyterKernelPlugin::runHelpCommand()
     std::cout << " * Display the commands supported by the JupyterKernel plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Start the OpenCOR Jupyter kernel:" << std::endl;
-    std::cout << "      kernel <connection_file>" << std::endl;
+    std::cout << "      kernel <connectionFile>" << std::endl;
 }
 
 //==============================================================================
