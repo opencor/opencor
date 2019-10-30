@@ -536,12 +536,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     mOutputOntologicalTerms->webView()->setHtml(QString());
 
-    // Populate our web view, but only if there is at least one item
+    // Populate our Web view, but only if there is at least one item
 
     bool showBusyWidget = false;
 
     if (!pItems.isEmpty()) {
-        // Initialise our web view
+        // Initialise our Web view
 
         int iconSize = int(16/qApp->devicePixelRatio());
 
