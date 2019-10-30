@@ -216,7 +216,7 @@ WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance()
 
 //==============================================================================
 
-WebBrowserWindowWidget * WebBrowserWindowPlugin::browserWidget() const
+WebBrowserWindowWidget * WebBrowserWindowPlugin::webBrowserWidget() const
 {
     // Return our Web Browser widget
 

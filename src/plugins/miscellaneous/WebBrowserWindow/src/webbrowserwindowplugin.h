@@ -68,7 +68,7 @@ public:
 
     static WebBrowserWindowPlugin * instance();
 
-    WebBrowserWindowWidget * browserWidget() const;
+    WebBrowserWindowWidget * webBrowserWidget() const;
 
 private:
     QAction *mWebBrowserWindowAction = nullptr;

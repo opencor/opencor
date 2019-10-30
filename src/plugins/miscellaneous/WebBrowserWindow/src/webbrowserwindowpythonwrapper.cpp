@@ -44,12 +44,14 @@ namespace WebBrowserWindow {
 
 //==============================================================================
 
-static PyObject *browserWebView(PyObject *pSelf, PyObject *pArgs)
+static PyObject * browserWebView(PyObject *pSelf, PyObject *pArgs)
 {
     Q_UNUSED(pSelf)
     Q_UNUSED(pArgs)
 
-    return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->browserWidget()->webView());
+    // Return a Python object to our Web browser's Web view
+
+    return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->webBrowserWidget()->webView());
 }
 //==============================================================================
 
