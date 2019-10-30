@@ -107,8 +107,6 @@ void PythonSupportPlugin::initializePlugin()
     pythonHome = (applicationDirectories << "python").join("/");
 #elif defined(Q_OS_MAC)
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
-#else
-    #error Unsupported platform
 #endif
 
     qputenv("PYTHONHOME", pythonHome.toUtf8());

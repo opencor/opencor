@@ -165,8 +165,6 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mPythonConsoleWidget,
                                                      false, false, false, false));
-#else
-    #error Unsupported platform
 #endif
 }
 
