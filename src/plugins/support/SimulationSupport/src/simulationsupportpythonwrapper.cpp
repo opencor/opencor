@@ -642,7 +642,7 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
             if (stateGradientsDict == nullptr) {
                 stateGradientsDict = PyDict_New();
                 PyDict_SetItemString(gradientsDict, state->uri().toLatin1().data(), stateGradientsDict);
-                stateGradientsDictionaries[state->uri()] = stateGradientsDict;
+                stateGradientsDictionaries.insert(state->uri(), stateGradientsDict);
             }
 
             PythonQtSupport::addObject(stateGradientsDict, constant->uri(), gradient);
