@@ -18,20 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for web browser window
+// Web Browser window Python wrapper
 //==============================================================================
 
+#include "pythonqtsupport.h"
 #include "webbrowserwindowplugin.h"
+#include "webbrowserwindowpythonwrapper.h"
 #include "webbrowserwindowwidget.h"
 
 //==============================================================================
 
 #include <QWebView>
-
-//==============================================================================
-
-#include "pythonqtsupport.h"
-#include "webbrowserwindowpythonwrapper.h"
 
 //==============================================================================
 
@@ -44,14 +41,14 @@ namespace WebBrowserWindow {
 
 //==============================================================================
 
-static PyObject * browserWebView(PyObject *pSelf, PyObject *pArgs)
+static PyObject * webBrowserWindowWebView(PyObject *pSelf, PyObject *pArgs)
 {
     Q_UNUSED(pSelf)
     Q_UNUSED(pArgs)
 
-    // Return a Python object to our Web browser's Web view
+    // Return a Python object to our Web browser window's Web view
 
-    return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->webBrowserWidget()->webView());
+    return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->webBrowserWindowWidget()->webView());
 }
 //==============================================================================
 
@@ -62,7 +59,7 @@ WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule,
     // Add some Python wrappers
 
     static std::array<PyMethodDef, 2> PythonWebBrowserWindowMethods = {{
-                                                                          { "browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser." },
+                                                                          { "webBrowserWindowWebView",  webBrowserWindowWebView, METH_VARARGS, "Return OpenCOR's Web Browser window's QWebView object." },
                                                                           { nullptr, nullptr, 0, nullptr }
                                                                       }};
 

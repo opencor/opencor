@@ -160,6 +160,17 @@ void WebBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 }
 
 //==============================================================================
+// Python interface
+//==============================================================================
+
+void WebBrowserWindowPlugin::registerPythonClasses(PyObject *pModule)
+{
+    // Register our Python classes
+
+    new WebBrowserWindowPythonWrapper(pModule, this);
+}
+
+//==============================================================================
 // Window interface
 //==============================================================================
 
@@ -189,17 +200,6 @@ QDockWidget * WebBrowserWindowPlugin::windowWidget() const
 }
 
 //==============================================================================
-// Python interface
-//==============================================================================
-
-void WebBrowserWindowPlugin::registerPythonClasses(PyObject *pModule)
-{
-    // Register our Python classes
-
-    new WebBrowserWindowPythonWrapper(pModule, this);
-}
-
-//==============================================================================
 // Plugin specific
 //==============================================================================
 
@@ -207,18 +207,18 @@ WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance()
 {
     // Return the 'global' instance of our plugin
 
-    static WebBrowserWindowPlugin pluginInstance;
+    static WebBrowserWindowPlugin instance;
 
-    return static_cast<WebBrowserWindowPlugin *>(Core::globalInstance("OpenCOR::WebBrowserWindow::WebBrowserWindowPlugin",
-                                                 &pluginInstance));
+    return static_cast<WebBrowserWindowPlugin *>(Core::globalInstance("OpenCOR::WebBrowserWindow::WebBrowserWindowPlugin::instance()",
+                                                 &instance));
 }
 
 
 //==============================================================================
 
-WebBrowserWindowWidget * WebBrowserWindowPlugin::webBrowserWidget() const
+WebBrowserWindowWidget * WebBrowserWindowPlugin::webBrowserWindowWidget() const
 {
-    // Return our Web Browser widget
+    // Return our Web Browser window widget
 
     return mWebBrowserWindowWidget;
 }

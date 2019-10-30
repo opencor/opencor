@@ -261,7 +261,7 @@ void WebBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 
 //==============================================================================
 
-WebBrowserWindowWidget *WebBrowserWindowWindow::widget() const
+WebBrowserWindowWidget * WebBrowserWindowWindow::widget() const
 {
     return mWebBrowserWindowWidget;
 }
