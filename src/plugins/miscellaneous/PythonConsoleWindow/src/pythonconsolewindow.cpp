@@ -185,8 +185,8 @@ void PythonConsoleWindow::retranslateUi()
 
 //==============================================================================
 
-}   // namespace PythonConsoleWindow
-}   // namespace OpenCOR
+} // namespace PythonConsoleWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

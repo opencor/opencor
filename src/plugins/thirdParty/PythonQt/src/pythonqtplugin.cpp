@@ -48,8 +48,8 @@ PLUGININFO_FUNC PythonQtPluginInfo()
 
 //==============================================================================
 
-}   // namespace PythonQt
-}   // namespace OpenCOR
+} // namespace PythonQt
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

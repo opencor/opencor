@@ -47,8 +47,8 @@ class PythonPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace Python
-}   // namespace OpenCOR
+} // namespace Python
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

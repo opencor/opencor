@@ -178,8 +178,8 @@ QDockWidget * PythonConsoleWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace PythonConsoleWindow
-}   // namespace OpenCOR
+} // namespace PythonConsoleWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

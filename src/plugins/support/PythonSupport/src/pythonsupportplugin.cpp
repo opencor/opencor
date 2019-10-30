@@ -180,8 +180,8 @@ void PythonSupportPlugin::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace PythonSupport
-}   // namespace OpenCOR
+} // namespace PythonSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

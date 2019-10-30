@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PythonConsoleWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -66,8 +66,8 @@ private:
 
 //==============================================================================
 
-}   // namespace PythonConsoleWindow
-}   // namespace OpenCOR
+} // namespace PythonConsoleWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

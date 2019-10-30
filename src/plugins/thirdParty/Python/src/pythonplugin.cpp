@@ -44,8 +44,8 @@ PLUGININFO_FUNC PythonPluginInfo()
 
 //==============================================================================
 
-}   // namespace Python
-}   // namespace OpenCOR
+} // namespace Python
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

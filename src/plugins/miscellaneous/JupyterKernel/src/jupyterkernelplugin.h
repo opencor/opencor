@@ -57,8 +57,8 @@ private:
 
 //==============================================================================
 
-}   // namespace JupyterKernel
-}   // namespace OpenCOR
+} // namespace JupyterKernel
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

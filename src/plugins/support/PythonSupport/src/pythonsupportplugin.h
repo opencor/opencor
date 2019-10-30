@@ -54,8 +54,8 @@ public:
 
 //==============================================================================
 
-}   // namespace PythonSupport
-}   // namespace OpenCOR
+} // namespace PythonSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

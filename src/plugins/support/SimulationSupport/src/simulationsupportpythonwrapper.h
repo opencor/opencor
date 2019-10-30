@@ -42,7 +42,7 @@ namespace OpenCOR {
 
 namespace DataStore {
     class DataStoreVariable;
-}   // namespace DataStore
+} // namespace DataStore
 
 //==============================================================================
 
@@ -137,8 +137,8 @@ signals:
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

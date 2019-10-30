@@ -57,8 +57,8 @@ private:
 
 //==============================================================================
 
-}   // namespace PythonShell
-}   // namespace OpenCOR
+} // namespace PythonShell
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

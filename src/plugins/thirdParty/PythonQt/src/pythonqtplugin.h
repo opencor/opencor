@@ -47,8 +47,8 @@ class PythonQtPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace PythonQt
-}   // namespace OpenCOR
+} // namespace PythonQt
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

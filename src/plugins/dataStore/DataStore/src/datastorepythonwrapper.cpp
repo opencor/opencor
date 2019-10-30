@@ -487,8 +487,8 @@ PyObject * NumPyPythonWrapper::numPyArray() const
 
 //==============================================================================
 
-}   // namespace DataStore
-}   // namespace OpenCOR
+} // namespace DataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

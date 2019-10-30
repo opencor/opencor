@@ -192,8 +192,8 @@ void PythonQtSupportPlugin::printStdErr(const QString &pText)
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
-}   // namespace OpenCOR
+} // namespace PythonQtSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

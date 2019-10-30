@@ -97,8 +97,8 @@ PythonQtInstanceWrapper *getInstanceWrapper(PyObject *pSelf)
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
-}   // namespace OpenCOR
+} // namespace PythonQtSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

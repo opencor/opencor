@@ -64,8 +64,8 @@ PythonQtInstanceWrapper PYTHONQTSUPPORT_EXPORT * getInstanceWrapper(PyObject *pS
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
-}   // namespace OpenCOR
+} // namespace PythonQtSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

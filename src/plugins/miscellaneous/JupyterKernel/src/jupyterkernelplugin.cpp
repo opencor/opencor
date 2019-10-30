@@ -151,8 +151,8 @@ if __name__ == '__main__':
 
 //==============================================================================
 
-}   // namespace JupyterKernel
-}   // namespace OpenCOR
+} // namespace JupyterKernel
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
