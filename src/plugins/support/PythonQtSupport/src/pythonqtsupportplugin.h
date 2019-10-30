@@ -58,12 +58,12 @@ public:
 #include "plugininterface.inl"
 
 private:
-    wchar_t **mArgv = nullptr;
-    PythonQtObjectPtr mOpenCORModule = nullptr;
+    wchar_t **mArgV = nullptr;
+    PythonQtObjectPtr mModule = nullptr;
 
 private slots:
-    void printStdErr(const QString &pText);
-    void printStdOut(const QString &pText);
+    void printStdOut(const QString &pString);
+    void printStdErr(const QString &pString);
 };
 
 //==============================================================================

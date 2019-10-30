@@ -144,7 +144,7 @@ if __name__ == '__main__':
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
 )PYTHON";
 
-    PythonQtSupport::evalScript(JupyterKernel.arg(QString(pArguments[0]).replace("\\", "\\\\")));
+    PythonQtSupport::evaluateScript(JupyterKernel.arg(QString(pArguments[0]).replace("\\", "\\\\")));
 
     return true;
 }

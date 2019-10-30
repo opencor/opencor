@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // PythonQt support plugin
 //==============================================================================
 
-#include "corecliutils.h"
 #include "pythoninterface.h"
 #include "pythonqtsupportplugin.h"
 #include "solverinterface.h"
@@ -43,8 +42,8 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the PythonQt support plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the PythonQt support plugin."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://mevislab.github.io/pythonqt/">PythonQt</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://mevislab.github.io/pythonqt/">PythonQt</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "PythonQt" << "PythonSupport",
@@ -83,46 +82,56 @@ void PythonQtSupportPlugin::initializePlugin()
 
     PythonQt::init(PythonQt::RedirectStdOut);
 
-    // Capture and redirect output
+    // Capture and redirect PythonQt's standard output and error
 
     connect(PythonQt::self(), &PythonQt::pythonStdOut,
-        this, &PythonQtSupportPlugin::printStdOut);
+            this, &PythonQtSupportPlugin::printStdOut);
 
     connect(PythonQt::self(), &PythonQt::pythonStdErr,
-        this, &PythonQtSupportPlugin::printStdErr);
+            this, &PythonQtSupportPlugin::printStdErr);
 
-    // Python maps SIGINT (control-c) to its own handler.  We will remap it
-    // to the default so that control-c works.
+    // Remap SIGINT
+    // Note: indeed, Python maps SIGINT (Ctrl+C) to its own handler, so we need
+    //       to remap it to the default handler so that Ctrl+C can work...
 
 #ifdef SIGINT
     signal(SIGINT, SIG_DFL);
 #endif
 
-    // Set `sys.argv`
+    // Set sys.argv
+//---ISSUE1255--- DO WE REALLY NEED THIS?...
 
-    mArgv = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(2*sizeof(wchar_t*)));
-    mArgv[0] = const_cast<wchar_t *>(L"");
-    mArgv[1] = nullptr;
-    PySys_SetArgvEx(1, mArgv, 0);
+    mArgV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(2*sizeof(wchar_t*)));
 
-    // Enable the Qt bindings for Python
+    mArgV[0] = const_cast<wchar_t *>(L"");
+    mArgV[1] = nullptr;
+
+    PySys_SetArgvEx(1, mArgV, 0);
+
+    // Initialise Qt binding for Python
 
     PythonQt_QtAll::init();
 
     // Create a Python module to access OpenCOR's objects
 
-    mOpenCORModule = PythonQt::self()->createModuleFromScript("OpenCOR");
+    mModule = PythonQt::self()->createModuleFromScript("OpenCOR");
 
-    // IPython tracebacks are noisy if modules have an empty filename, so set one
+    // Give a file name to our Python module
+    // Note: indeed, IPython tracebacks are noisy if modules don't have have a
+    //       file name...
 
-    mOpenCORModule.addVariable("__file__", "OpenCOR");
+    mModule.addVariable("__file__", "OpenCOR");
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
-    PyMem_RawFree(mArgv);
+    // Delete some internal objects
+
+    PyMem_RawFree(mArgV);
+
+    // Clean up PythonQt
 
     PythonQt::cleanup();
 }
@@ -131,8 +140,8 @@ void PythonQtSupportPlugin::finalizePlugin()
 
 void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // We need to register the Solver::Properties class with Qt so it gets automatically
-    // wrapped to Python
+    // Register the Solver::Properties class with Qt
+    // Note: indeed, so that it gets automatically wrapped to Python...
 
     qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
 
@@ -142,7 +151,7 @@ void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         PythonInterface *pythonInterface = qobject_cast<PythonInterface *>(plugin->instance());
 
         if (pythonInterface != nullptr) {
-            pythonInterface->registerPythonClasses(mOpenCORModule);
+            pythonInterface->registerPythonClasses(mModule);
         }
     }
 }
@@ -178,16 +187,20 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void PythonQtSupportPlugin::printStdOut(const QString &pText)
+void PythonQtSupportPlugin::printStdOut(const QString &pString)
 {
-    std::cout << qPrintable(pText);
+    // Print the given text to the standard output
+
+    std::cout << qPrintable(pString);
 }
 
 //==============================================================================
 
-void PythonQtSupportPlugin::printStdErr(const QString &pText)
+void PythonQtSupportPlugin::printStdErr(const QString &pString)
 {
-    std::cerr << qPrintable(pText);
+    // Print the given text to the standard error
+
+    std::cerr << qPrintable(pString);
 }
 
 //==============================================================================

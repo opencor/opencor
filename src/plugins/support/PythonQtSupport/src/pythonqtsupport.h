@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PythonQt support functions
+// PythonQt support
 //==============================================================================
 
 #pragma once
@@ -47,18 +47,18 @@ namespace PythonQtSupport {
 
 //==============================================================================
 
-void PYTHONQTSUPPORT_EXPORT addInstanceDecorators(QObject *pQObject);
-void PYTHONQTSUPPORT_EXPORT addObject(PyObject *pObject, const QString &pName,
-                                      QObject *pQObject);
+void PYTHONQTSUPPORT_EXPORT addInstanceDecorators(QObject *pObject);
+void PYTHONQTSUPPORT_EXPORT addObject(PyObject *pPyObject, const QString &pName,
+                                      QObject *pObject);
 
-void PYTHONQTSUPPORT_EXPORT evalFile(const QString &pFileName);
-QVariant PYTHONQTSUPPORT_EXPORT evalScript(const QString &pScript);
+void PYTHONQTSUPPORT_EXPORT evaluateFile(const QString &pFileName);
+QVariant PYTHONQTSUPPORT_EXPORT evaluateScript(const QString &pScript);
 
 PythonQtObjectPtr PYTHONQTSUPPORT_EXPORT importModule(const QString &pModule);
 
 void PYTHONQTSUPPORT_EXPORT registerClass(const QMetaObject *pMetaObject);
 
-PyObject PYTHONQTSUPPORT_EXPORT * wrapQObject(QObject *pQObject);
+PyObject PYTHONQTSUPPORT_EXPORT * wrapQObject(QObject *pObject);
 
 PythonQtInstanceWrapper PYTHONQTSUPPORT_EXPORT * getInstanceWrapper(PyObject *pSelf);
 

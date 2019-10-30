@@ -18,11 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PythonQt support functions
-//==============================================================================
-
-#include <Qt>
-
+// PythonQt support
 //==============================================================================
 
 #include "pythonqtsupport.h"
@@ -34,29 +30,37 @@ namespace PythonQtSupport {
 
 //==============================================================================
 
-void addInstanceDecorators(QObject *pQObject)
+void addInstanceDecorators(QObject *pObject)
 {
-    PythonQt::self()->addInstanceDecorators(pQObject);
+    // Add instance decorators for the given object
+
+    PythonQt::self()->addInstanceDecorators(pObject);
 }
 
 //==============================================================================
 
-void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
+void addObject(PyObject *pPyObject, const QString &pName, QObject *pObject)
 {
-    PythonQt::self()->addObject(pObject, pName, pQObject);
+    // Add the given Qt object, using the given name, to the given Python object
+
+    PythonQt::self()->addObject(pPyObject, pName, pObject);
 }
 
 //==============================================================================
 
-void evalFile(const QString &pFilename)
+void evaluateFile(const QString &pFilename)
 {
+    // Evaluate the script which file name is given
+
     PythonQt::self()->evalFile(PythonQt::self()->getMainModule(), pFilename);
 }
 
 //==============================================================================
 
-QVariant evalScript(const QString &pScript)
+QVariant evaluateScript(const QString &pScript)
 {
+    // Evaluate the given script
+
     return PythonQt::self()->evalScript(PythonQt::self()->getMainModule(), pScript);
 }
 
@@ -64,6 +68,8 @@ QVariant evalScript(const QString &pScript)
 
 PythonQtObjectPtr importModule(const QString &pModule)
 {
+    // Import the given module
+
     return PythonQt::self()->importModule(pModule);
 }
 
@@ -71,25 +77,31 @@ PythonQtObjectPtr importModule(const QString &pModule)
 
 void registerClass(const QMetaObject *pMetaObject)
 {
+    // Register the class which meta object is given
+
     PythonQt::self()->registerClass(pMetaObject);
 }
 
 //==============================================================================
 
-PyObject *wrapQObject(QObject *pQObject)
+PyObject * wrapQObject(QObject *pObject)
 {
-    return PythonQt::priv()->wrapQObject(pQObject);
+    // Wrap the given Qt object into a Python object
+
+    return PythonQt::priv()->wrapQObject(pObject);
 }
 
 //==============================================================================
 
-PythonQtInstanceWrapper *getInstanceWrapper(PyObject *pSelf)
+PythonQtInstanceWrapper * getInstanceWrapper(PyObject *pSelf)
 {
+    // Retrieve and return a Python wrapper object for the given Python object
+
     if (   (pSelf != nullptr)
 #include "pythonbegin.h"
         && PyObject_TypeCheck(pSelf, &PythonQtInstanceWrapper_Type)) {
 #include "pythonend.h"
-        return reinterpret_cast<PythonQtInstanceWrapper*>(pSelf);
+        return reinterpret_cast<PythonQtInstanceWrapper *>(pSelf);
     }
 
     return nullptr;
