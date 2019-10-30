@@ -35,8 +35,8 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Jupyter kernel plugin."));
-    descriptions.insert("fr", QString::fromUtf8("le plugin du noyau Jupyter."));
+    descriptions.insert("en", QString::fromUtf8(R"(the <a href="https://jupyter.org/">Jupyter</a> kernel plugin.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(le plugin du noyau <a href="https://jupyter.org/">Jupyter</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
                           QStringList() << "Core" << "SimulationSupport",
