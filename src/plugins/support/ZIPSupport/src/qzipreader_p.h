@@ -136,8 +136,8 @@ Q_DECLARE_TYPEINFO(QZipReader::FileInfo, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(QZipReader::Status, Q_PRIMITIVE_TYPE);
 */
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::QZipReader::FileInfo, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(OpenCOR::ZIPSupport::QZipReader::Status, Q_PRIMITIVE_TYPE);
 namespace OpenCOR {
@@ -146,8 +146,8 @@ namespace ZIPSupport {
 
 QT_END_NAMESPACE
 //---OPENCOR--- BEGIN
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 //---OPENCOR--- END
 
 #endif // QT_NO_TEXTODFWRITER
