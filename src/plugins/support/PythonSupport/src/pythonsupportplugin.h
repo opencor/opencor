@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Support plugin
+// Python support plugin
 //==============================================================================
 
 #pragma once
@@ -40,7 +40,8 @@ PLUGININFO_FUNC PythonSupportPluginInfo();
 
 //==============================================================================
 
-class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject, public PluginInterface
+class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject,
+                                                 public PluginInterface
 {
     Q_OBJECT
 

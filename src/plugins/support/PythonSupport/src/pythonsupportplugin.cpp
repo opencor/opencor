@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Support plugin
+// Python support plugin
 //==============================================================================
 
 #include "pythonsupportplugin.h"
@@ -53,8 +53,8 @@ PLUGININFO_FUNC PythonSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Python support plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the Python support plugin."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://www.python.org/">Python</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://www.python.org/">Python</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "Python" << "PythonPackages",
@@ -89,49 +89,42 @@ bool PythonSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonSupportPlugin::initializePlugin()
 {
-    // We must set the environment variable PYTHONHOME to the location of our
-    // copy of Python and this before calling any Python code
+    // Set the environment variable PYTHONHOME to the location of our copy of
+    // Python
     // Note: to call Py_SetPythonHome() doesn't work since Py_Initialize() first
     //       checks the environment and, if PYTHONHOME isn't set, uses the
     //       installation path compiled in at Python build time...
 
-    QStringList applicationDirectories = QCoreApplication::applicationDirPath().split("/");
-
-    applicationDirectories.removeLast();
-
-    QString pythonHome = QString();
+    QString pythonHome = QCoreApplication::applicationDirPath()+"/../";
 
 #if defined(Q_OS_WIN)
-    pythonHome = (applicationDirectories << "Python").join("/");
+    pythonDir += "Python";
 #elif defined(Q_OS_LINUX)
-    pythonHome = (applicationDirectories << "python").join("/");
+    pythonDir += "python";
 #elif defined(Q_OS_MAC)
-    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+    pythonHome += "Frameworks/Python";
 #endif
 
     qputenv("PYTHONHOME", pythonHome.toUtf8());
 
-    // Get our current system PATH
+    // Update our system PATH by prepending our Python script directories to it
 
 #ifdef Q_OS_WIN
     static const char PathSeparator = ';';
 #else
     static const char PathSeparator = ':';
 #endif
-    QByteArrayList systemPath = qgetenv("PATH").split(PathSeparator);
 
-    // Put our Python script directories at the head of the system PATH
+    QByteArray path = (pythonHome+"/bin").toUtf8()+PathSeparator+qgetenv("PATH");
 
-    systemPath.prepend((pythonHome+"/bin").toUtf8());
 #ifdef Q_OS_WIN
-    systemPath.prepend((pythonHome+"/Scripts").toUtf8());
+    path = (pythonHome+"/Scripts").toUtf8()+PathSeparator+path;
 #endif
 
-    // Update the system PATH
+    qputenv("PATH", path);
 
-    qputenv("PATH", systemPath.join(PathSeparator));
-
-    // Ensure the user's Python site directory (in ~/.local, etc.) isn't used
+    // Ensure that the user's Python site directory (in ~/.local, etc.) isn't
+    // used
 
     Py_NoUserSiteDirectory = 1;
 }
@@ -140,6 +133,7 @@ void PythonSupportPlugin::initializePlugin()
 
 void PythonSupportPlugin::finalizePlugin()
 {
+    // We don't handle this interface...
 }
 
 //==============================================================================
