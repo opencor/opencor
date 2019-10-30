@@ -39,9 +39,17 @@ namespace PythonConsoleWindow {
 
 //==============================================================================
 
-// An IPython console
+PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
+    Core::WindowWidget(pParent),
+    mGui(new Ui::PythonConsoleWindow)
+{
+    // Set up the GUI
 
-static QString PythonConsole = R"PYTHON(
+    mGui->setupUi(this);
+
+    // Create a Python module to setup the console
+
+    static const QString PythonConsole = R"PYTHON(
 import logging
 import sys
 
@@ -59,30 +67,32 @@ class QtConsole(object):
         # Create and start an in-process kernel manager
 
         self._kernel_manager = QtInProcessKernelManager()
+
         self._kernel_manager.start_kernel(show_banner=False)
 
         # Set the kernel's GUI to PythonQt
 
         self._kernel = self._kernel_manager.kernel
         self._kernel.gui = 'pythonqt'
+
         self._kernel.shell.enable_gui()
         self._kernel.shell.enable_matplotlib()
 
         # Start the kernel's client
 
         self._kernel_client = self._kernel_manager.client()
+
         self._kernel_client.start_channels()
 
-        # Create a Jupyter widget and connect it with our kernel and
-        # its client
+        # Create a Jupyter widget and connect it with our kernel and its client
 
         self._widget = QtInProcessRichJupyterWidget(font_size=10, enable_calltips=False)
-        self._widget.kernel_manager = self._kernel_manager
         self._widget.kernel_client = self._kernel_client
+        self._widget.kernel_manager = self._kernel_manager
 
-        # `sys.stderr` will now be redirected to the console, however
-        # logging is still going to PythonQt (and the terminal shell)
-        # so we redirect logging output to the console.
+        # sys.stderr will now be redirected to the console, however logging is
+        # still going to PythonQt (and the terminal shell), so we redirect
+        # logging output to the console
 
         logging.getLogger().handlers[0].stream = sys.stderr
 
@@ -90,50 +100,37 @@ class QtConsole(object):
         return self._widget
 
 # The console we are creating
-
-# Note: we make it a global so it doesn't get garbage collected
+# Note: we make it a global so it doesn't get garbage collected...
 
 qt_console = None
 
 def create_ipython_widget():
     global qt_console
+
     qt_console = QtConsole()
+
     return qt_console.widget()
 )PYTHON";
 
-//==============================================================================
-
-PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
-    Core::WindowWidget(pParent),
-    mGui(new Ui::PythonConsoleWindow)
-{
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
-    // Get the PythonQt Qt manager
-
     PythonQt *pythonQtInstance = PythonQt::self();
-
-    // Create a Python module to setup the console
-
     PythonQtObjectPtr qtConsoleModule = pythonQtInstance->createModuleFromScript("opencor.qtconsole", PythonConsole);
 
     if (qtConsoleModule == nullptr) {
         if (PyErr_Occurred() != nullptr) {
-            PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
+            PyErr_Print();
         } else {
-            std::cerr << "Cannot create QT Console module" << std::endl;
+            std::cerr << "The Qt Console module could not be created." << std::endl;
         }
 
         return;
     }
 
-    // IPython tracebacks are noisy if modules have an empty filename, so set one
+    // IPython tracebacks are noisy if modules have an empty filename, so set
+    // one
 
     qtConsoleModule.addVariable("__file__", "QtConsole");
 
-    // Create and retrive an IPython widget
+    // Create and retrieve an IPython widget
 
     PyObject *createWidget = pythonQtInstance->lookupObject(qtConsoleModule, "create_ipython_widget");
     PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
@@ -141,9 +138,9 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
 
     if (widgetWrapper == nullptr) {
         if (PyErr_Occurred() != nullptr) {
-            PyErr_Print();   // This goes to stderr; should error be reported as a plugin load error??
+            PyErr_Print();
         } else {
-            std::cerr << "Cannot create IPython widget" << std::endl;
+            std::cerr << "An IPython widget could not be created." << std::endl;
         }
 
         return;
@@ -157,7 +154,7 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
 
     setFocusProxy(mPythonConsoleWidget);
 
-    // Add the widget to our window
+    // Add the IPython widget to our layout
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mPythonConsoleWidget,
@@ -175,6 +172,15 @@ PythonConsoleWindow::~PythonConsoleWindow()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void PythonConsoleWindow::retranslateUi()
+{
+    // Retranslate our whole window
+
+    mGui->retranslateUi(this);
 }
 
 //==============================================================================

@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QtGlobal>
+
+//==============================================================================
+
 #include <QWidget>
 
 //==============================================================================
@@ -52,6 +55,8 @@ Q_OBJECT
 public:
     explicit PythonConsoleWindow(QWidget *pParent);
     ~PythonConsoleWindow() override;
+
+    void retranslateUi() override;
 
 private:
     Ui::PythonConsoleWindow *mGui;

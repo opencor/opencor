@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "plugininfo.h"
 #include "i18ninterface.h"
+#include "plugininfo.h"
 #include "plugininterface.h"
 #include "windowinterface.h"
 
