@@ -265,7 +265,7 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
 
     if (PyTuple_Size(args) > 0) {
 #include "pythonbegin.h"
-        auto wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 #include "pythonend.h"
 
         if (wrappedSimulation != nullptr) {

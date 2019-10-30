@@ -213,7 +213,7 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
             goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
-        auto wrappedValue = PythonQtSupport::getInstanceWrapper(value);
+        PythonQtInstanceWrapper *wrappedValue = PythonQtSupport::getInstanceWrapper(value);
 
         if (wrappedValue != nullptr) {
             auto dataStoreValue = static_cast<DataStoreValue *>(wrappedValue->_objPointerCopy);
