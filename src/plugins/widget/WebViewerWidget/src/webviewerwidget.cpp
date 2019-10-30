@@ -137,7 +137,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    // Create our web view object and customise it
+    // Create our Web view object and customise it
 
     mWebView = new QWebView(this);
 
@@ -317,7 +317,7 @@ bool WebViewerWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 
 QWebView * WebViewerWidget::webView() const
 {
-    // Return our web view
+    // Return our Web view
 
     return mWebView;
 }

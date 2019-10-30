@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PMR web service
+// PMR Web service
 //==============================================================================
 
 #include "corecliutils.h"
@@ -43,12 +43,12 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
     QObject(pParent),
     mPmrUrl(pPmrUrl)
 {
-    // Create a PMR web service manager so that we can retrieve various things
+    // Create a PMR Web service manager so that we can retrieve various things
     // from PMR
 
     mPmrWebServiceManager = new PmrWebServiceManager(pPmrUrl, this);
 
-    // Forward any signal we receive from our PMR web service manager
+    // Forward any signal we receive from our PMR Web service manager
 
     connect(mPmrWebServiceManager, &PmrWebServiceManager::busy,
             this, &PmrWebService::busy);
@@ -515,7 +515,7 @@ void PmrWebService::workspaceSynchronizeFinished(PmrWorkspace *pWorkspace)
 
 void PmrWebService::update(const QString &pPmrUrl)
 {
-    // Keep track of the new PMR URL and then update our PMR web service manager
+    // Keep track of the new PMR URL and then update our PMR Web service manager
 
     mPmrUrl = pPmrUrl;
 

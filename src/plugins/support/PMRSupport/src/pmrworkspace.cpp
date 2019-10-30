@@ -104,7 +104,7 @@ PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
     connect(this, &PmrWorkspace::workspaceSynchronized,
             workspaceManager, &PmrWorkspaceManager::workspaceSynchronized);
 
-    // Forward our signals to our parent PMR web service
+    // Forward our signals to our parent PMR Web service
 
     connect(this, &PmrWorkspace::information,
             pParent, &PmrWebService::information);

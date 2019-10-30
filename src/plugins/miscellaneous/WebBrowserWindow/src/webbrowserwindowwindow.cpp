@@ -131,7 +131,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(bottomToolBarWidget);
 
-    // Create and add a web browser window widget
+    // Create and add a Web browser window widget
 
     mWebBrowserWindowWidget = new WebBrowserWindowWidget(this);
 
@@ -147,7 +147,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
                                                      true, false, false, false));
 #endif
 
-    // Various connections to handle our web browser window widget
+    // Various connections to handle our Web browser window widget
 
     connect(mWebBrowserWindowWidget->webView(), &QWebView::urlChanged,
             this, &WebBrowserWindowWindow::urlChanged);

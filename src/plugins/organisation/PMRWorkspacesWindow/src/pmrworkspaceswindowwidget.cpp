@@ -1559,7 +1559,7 @@ void PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy()
             workspaceFolder.mkpath(".");
         }
 
-        // Ask our PMR web service to effectively clone our owned workspace
+        // Ask our PMR Web service to effectively clone our owned workspace
 
         mPmrWebService->requestWorkspaceClone(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->workspace()->url()),
                                               dirName);
