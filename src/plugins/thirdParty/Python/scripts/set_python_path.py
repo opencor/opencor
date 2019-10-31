@@ -46,7 +46,6 @@ import re
 import sys
 import logging
 import marshal
-import argparse
 from types import CodeType
 from collections import OrderedDict
 
@@ -217,15 +216,16 @@ def update_paths(base, scripts_dir, clear_args, extra_args):
     return True
 
 
-def main():
+if __name__ == '__main__':
+    import argparse
+
     parser = argparse.ArgumentParser(description='Update the path of scripts '
                                                  'to a new Python prefix')
-
     parser.add_argument('-c', '--clear-args', dest='clear_args',
                         default=False, action='store_true',
                         help='Clear all existing arguments to Python')
 
-    parser.add_argument('-u', '--update-path', dest='update_path',
+    parser.add_argument('-u', '--scripts-dir', dest='scripts_dir',
                         help='Path to scripts. Set to "auto" for autodetection')
 
     parser.add_argument('-v', '--verbose', dest='verbose',
@@ -238,14 +238,11 @@ def main():
                         help='Additional arguments to append to Python')
 
     args = parser.parse_args()
-    if not args.update_path:
-        args.update_path = 'auto'
+    if not args.scripts_dir:
+        args.scripts_dir = 'auto'
 
     if not args.verbose:
         logging.disable(logging.INFO)
 
-    sys.exit(0 if update_paths(args.path, args.update_path, args.clear_args, args.extra_args) else 1)
-
-
-if __name__ == '__main__':
-    main()
+    if not update_paths(args.path, args.scripts_dir, args.clear_args, args.extra_args):
+        sys.exit(1)
