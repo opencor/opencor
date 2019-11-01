@@ -2,4 +2,4 @@
 
 crtDir="$(cd "$(dirname "$0")"; pwd)"
 
-"${crtDir}/runjupyter" notebook --ip 127.0.0.1 $*
+"${crtDir}/python/bin/runjupyter" notebook --ip 127.0.0.1 $*
