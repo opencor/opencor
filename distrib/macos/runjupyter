@@ -1,0 +1,9 @@
+#!/bin/sh
+
+pythonBinDir="$(cd "$(dirname "$0")"; pwd)"
+
+export PATH=${pythonBinDir}/../../../MacOS:$PATH
+
+"${pythonBinDir}/python" "${pythonBinDir}/set_python_path.py" "${pythonBinDir}/.." -s
+
+"${pythonBinDir}/jupyter" $*

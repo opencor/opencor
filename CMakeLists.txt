@@ -287,21 +287,21 @@ if(WIN32)
         set(EXTERNAL_PACKAGE_DIR debug)
     endif()
 
-    set(DEST_EXTERNAL_BINARIES_DIR bin)
+    set(DEST_EXTERNAL_LIBRARIES_DIR bin)
 else()
     set(EXTERNAL_PACKAGE_DIR .)
 
     if(APPLE)
-        set(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
+        set(DEST_EXTERNAL_LIBRARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
     else()
-        set(DEST_EXTERNAL_BINARIES_DIR lib)
+        set(DEST_EXTERNAL_LIBRARIES_DIR lib)
     endif()
 endif()
 
-set(FULL_DEST_EXTERNAL_BINARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
+set(FULL_DEST_EXTERNAL_LIBRARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_LIBRARIES_DIR})
 
-if(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
-    file(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+if(NOT EXISTS ${FULL_DEST_EXTERNAL_LIBRARIES_DIR})
+    file(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_LIBRARIES_DIR})
 endif()
 
 # Some in-house CMake macros
@@ -1404,21 +1404,22 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${DEST_EXTERNAL_LIBRARIES_DIR}/Python/bin runjupyter)
+
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
+    set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
     set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
-    set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter)
 
     configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
     configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/jupyterlab
-                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                  ${JUPYTER_LAB_FILENAME}
+                  ${JUPYTER_NOTEBOOK_FILENAME}
                   ${PYTHON_SHELL_FILENAME}
-                  ${RUN_JUPYTER_FILENAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()

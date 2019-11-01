@@ -60,16 +60,16 @@ endif()
 # The base Python directory, library and script directories
 
 if(WIN32)
-    set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../Python)
+    set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
 
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
     set(SCRIPT_DIR Scripts)
 else()
     if (APPLE)
-        set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/Python)
     else()
-        set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../python)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../python)
     endif()
 
     set(LIBRARY_DIR lib)
@@ -429,7 +429,7 @@ else()
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
-                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_LIBRARIES_DIR} ${PYTHON_EXECUTABLE}
                                  COMMAND install_name_tool -add_rpath @executable_path/.. ${PYTHON_EXECUTABLE}
                                  COMMAND install_name_tool -add_rpath @executable_path/../.. ${PYTHON_EXECUTABLE}
                                  COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}

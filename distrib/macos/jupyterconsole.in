@@ -2,4 +2,4 @@
 
 appDir="$(cd "$(dirname "$0")"; pwd)"
 
-"${appDir}/runjupyter" console --kernel @CMAKE_PROJECT_NAME@ $*
+"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/runjupyter" console --kernel @CMAKE_PROJECT_NAME@ $*

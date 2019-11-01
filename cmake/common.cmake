@@ -326,12 +326,12 @@ macro(add_plugin PLUGIN_NAME)
                 copy_file_to_build_dir(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
             endif()
 
-            copy_file_to_build_dir(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+            copy_file_to_build_dir(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_LIBRARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
             # Strip the external library of all its local symbols, if possible
 
             if(NOT WIN32)
-                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Link the plugin to the external library
@@ -345,7 +345,7 @@ macro(add_plugin PLUGIN_NAME)
                 )
             elseif(APPLE)
                 target_link_libraries(${PROJECT_NAME}
-                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                    ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
             else()
                 target_link_libraries(${PROJECT_NAME}
@@ -358,13 +358,13 @@ macro(add_plugin PLUGIN_NAME)
 
             if(APPLE)
                 if("${COPY_TARGET}" STREQUAL "DIRECT")
-                    execute_process(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    execute_process(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 else()
                     add_custom_command(TARGET ${COPY_TARGET} POST_BUILD
-                                       COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                                       COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
-                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Package the external library, if needed
@@ -525,7 +525,7 @@ macro(add_plugin PLUGIN_NAME)
                             )
                         elseif(APPLE)
                             target_link_libraries(${TEST_NAME}
-                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY}
                             )
                         else()
                             target_link_libraries(${TEST_NAME}

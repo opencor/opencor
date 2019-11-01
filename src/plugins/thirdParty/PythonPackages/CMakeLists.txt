@@ -237,7 +237,7 @@ else()
 
         ExternalProject_Add_Step(installPip updatePip
                                  COMMAND ${PIP_INSTALL_COMMAND} pip
-                                 WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                                 WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
                                  DEPENDEES install)
     endif()
 
@@ -299,7 +299,7 @@ else()
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                                            sphinx==${SPHINX_VERSION}
             WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
         )
 
@@ -317,7 +317,7 @@ else()
                                            qimage2ndarray==${QIMAGE2NDARRAY_VERSION}
                                            scipy==${SCIPY_VERSION}
             WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
         )
 
@@ -351,7 +351,7 @@ else()
                                            qtconsole==${QTCONSOLE_VERSION}
                                            traitlets==${TRAITLETS_VERSION}
             WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
         )
 
@@ -365,7 +365,7 @@ else()
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                                            lxml==${LXML_VERSION}
             WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
         )
 
@@ -379,7 +379,7 @@ else()
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                                            sphinx==${SPHINX_VERSION}
             WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
         )
 
@@ -401,7 +401,7 @@ else()
                                            ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
                                            ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
             WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
         )
 

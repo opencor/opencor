@@ -1,0 +1,5 @@
+#!/bin/sh
+
+appDir="$(cd "$(dirname "$0")"; pwd)"
+
+"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/runjupyter" lab --ip 127.0.0.1 $*
