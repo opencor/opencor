@@ -2,4 +2,4 @@
 
 appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/bin/@CMAKE_PROJECT_NAME@ -c PythonShell $*
+"${appDir}/bin/@CMAKE_PROJECT_NAME@" -c PythonShell $*
