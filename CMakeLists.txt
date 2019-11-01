@@ -1357,7 +1357,7 @@ if(WIN32)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ./Python/Scripts start_jupyter.py)
 
     install(FILES ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
-            DESTINATION ./Python/Scripts)
+            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
