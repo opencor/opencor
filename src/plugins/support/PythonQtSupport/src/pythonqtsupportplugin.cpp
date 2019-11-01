@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "pythoninterface.h"
+#include "pythonqtsupport.h"
 #include "pythonqtsupportplugin.h"
 #include "solverinterface.h"
 
@@ -98,16 +99,6 @@ void PythonQtSupportPlugin::initializePlugin()
     signal(SIGINT, SIG_DFL);
 #endif
 
-    // Set sys.argv
-//---ISSUE1255--- DO WE REALLY NEED THIS?...
-
-    mArgV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(2*sizeof(wchar_t*)));
-
-    mArgV[0] = const_cast<wchar_t *>(L"");
-    mArgV[1] = nullptr;
-
-    PySys_SetArgvEx(1, mArgV, 0);
-
     // Initialise Qt binding for Python
 
     PythonQt_QtAll::init();
@@ -121,6 +112,49 @@ void PythonQtSupportPlugin::initializePlugin()
     //       file name...
 
     mModule.addVariable("__file__", "OpenCOR");
+
+    // We already have set PYTHONHOME, so get it
+
+    QString pythonHome = qEnvironmentVariable("PYTHONHOME");
+
+    // The script to update Python scripts
+
+    QString setPythonPathScript = pythonHome
+#if defined(Q_OS_WIN)
+        + "/Scripts"
+#else
+        + "/bin"
+#endif
+        + "/set_python_path.py";
+
+    // Create a buffer in which to pass arguments to Python
+
+    mArgV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(4*sizeof(wchar_t*)));
+
+    // Set arguments for `set_python_path`
+    // Note: we need to use an intermediate variable as otherwise the cast
+    //       results in an empty string
+
+    auto wSetPythonPathScript = setPythonPathScript.toStdWString();
+    mArgV[0] = const_cast<wchar_t *>(wSetPythonPathScript.c_str());
+
+    auto wPythonHome = pythonHome.toStdWString();
+    mArgV[1] = const_cast<wchar_t *>(wPythonHome.c_str());
+
+    mArgV[2] = const_cast<wchar_t *>(L"-s");
+    mArgV[3] = nullptr;
+
+    PySys_SetArgvEx(3, mArgV, 0);
+
+    // Actually update the path to Python in scripts
+
+    PythonQtSupport::evaluateFile(setPythonPathScript);
+
+    // Clear the argument buffer so that `sys.argv` is empty in the GUI console
+
+    mArgV[0] = const_cast<wchar_t *>(L"");
+    mArgV[1] = nullptr;
+    PySys_SetArgvEx(1, mArgV, 0);
 }
 
 //==============================================================================
