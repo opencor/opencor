@@ -1253,6 +1253,9 @@ else()
     set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 endif()
 
+string(REPLACE "${PROJECT_BUILD_DIR}/" ""
+       RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
+
 if(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
@@ -1404,7 +1407,7 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${DEST_EXTERNAL_LIBRARIES_DIR}/Python/bin runjupyter)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
 
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
     set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
