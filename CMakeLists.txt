@@ -1347,7 +1347,6 @@ if(WIN32)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter.bat)
     configure_file(${PLATFORM_DISTRIB_DIR}/runpython.bat.in ${RUN_PYTHON_FILENAME})
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . setpythonpath.bat)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
@@ -1356,7 +1355,6 @@ if(WIN32)
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
                   ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
                   ${RUN_PYTHON_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/setpythonpath.bat
             DESTINATION .)
 
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ./Python/Scripts start_jupyter.py)
@@ -1415,21 +1413,18 @@ elseif(APPLE)
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
     set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter)
     set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/runpython)
-    set(SET_PYTHON_PATH_FILENAME ${PROJECT_BUILD_DIR}/setpythonpath)
 
     configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
     configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
     configure_file(${PLATFORM_DISTRIB_DIR}/runpython.in ${RUN_PYTHON_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/setpythonpath.in ${SET_PYTHON_PATH_FILENAME} @ONLY)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                   ${RUN_JUPYTER_FILENAME}
                   ${RUN_PYTHON_FILENAME}
-                  ${SET_PYTHON_PATH_FILENAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()
@@ -1514,14 +1509,12 @@ else()
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter)
     configure_file(${PLATFORM_DISTRIB_DIR}/runpython.in ${RUN_PYTHON_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . setpythonpath)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                   ${PLATFORM_DISTRIB_DIR}/runjupyter
                   ${RUN_PYTHON_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/setpythonpath
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()

@@ -1,8 +1,0 @@
-#!/bin/sh
-
-appDir="$(cd "$(dirname "$0")"; pwd)"
-
-${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python             \
-${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/set_python_path.py \
-${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python                        \
--s
