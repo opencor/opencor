@@ -1380,12 +1380,6 @@ if(WIN32)
             \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
             System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
         ")
-
-        # Update Python scripts to refer to our installed Python
-
-        set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
-            Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
-        ")
     endif()
 elseif(APPLE)
     # Select PackageMaker and ZIP as the packagers on macOS
