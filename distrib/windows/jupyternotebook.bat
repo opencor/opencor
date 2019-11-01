@@ -2,6 +2,6 @@
 
 TITLE Running the Jupyter Notebook environment...
 
-SET appDir=%~dp0
+SET CrtDir=%~dp0
 
-CALL "%appDir%runjupyter.bat" notebook --ip 127.0.0.1 %*
+CALL "%CrtDir%runjupyter.bat" notebook --ip 127.0.0.1 %*

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+crtDir="$(cd "$(dirname "$0")"; pwd)"
 
-export PATH="${appDir}/bin":$PATH
+export PATH="${crtDir}/bin":$PATH
 
-"${appDir}/python/bin/python" "${appDir}/python/bin/set_python_path.py" "${appDir}/python" -s
+"${crtDir}/python/bin/python" "${crtDir}/python/bin/set_python_path.py" "${crtDir}/python" -s
 
-"${appDir}/python/bin/jupyter" $*
+"${crtDir}/python/bin/jupyter" $*

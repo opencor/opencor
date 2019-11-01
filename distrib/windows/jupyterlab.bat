@@ -2,6 +2,6 @@
 
 TITLE Running the Jupyter Lab environment...
 
-SET appDir=%~dp0
+SET CrtDir=%~dp0
 
-CALL "%appDir%runjupyter.bat" lab --ip 127.0.0.1 %*
+CALL "%CrtDir%runjupyter.bat" lab --ip 127.0.0.1 %*

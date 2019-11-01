@@ -1,5 +1,5 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+crtDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/scripts/genericmake Release $*
+${crtDir}/scripts/genericmake Release $*

@@ -2,8 +2,8 @@
 
 TITLE Running the Jupyter environment...
 
-SET appDir=%~dp0
+SET CrtDir=%~dp0
 
-"%appDir%Python\bin\Python.exe" "%appDir%Python\Scripts\set_python_path.py" "%appDir%Python" -s
+"%CrtDir%Python\bin\Python.exe" "%CrtDir%Python\Scripts\set_python_path.py" "%CrtDir%Python" -s
 
-"%appDir%Python\bin\Python.exe" "%appDir%Python\Scripts\start_jupyter.py" %*
+"%CrtDir%Python\bin\Python.exe" "%CrtDir%Python\Scripts\start_jupyter.py" %*

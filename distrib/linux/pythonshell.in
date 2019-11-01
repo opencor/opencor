@@ -1,5 +1,5 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+crtDir="$(cd "$(dirname "$0")"; pwd)"
 
-"${appDir}/bin/@CMAKE_PROJECT_NAME@" -c PythonShell $*
+"${crtDir}/bin/@CMAKE_PROJECT_NAME@" -c PythonShell $*

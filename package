@@ -1,9 +1,9 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+crtDir="$(cd "$(dirname "$0")"; pwd)"
 
-${appDir}/clean
-${appDir}/make $*
+${crtDir}/clean
+${crtDir}/make $*
 
 exitCode=$?
 
@@ -15,7 +15,7 @@ echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 origDir=`pwd`
 
-cd ${appDir}/build
+cd ${crtDir}/build
 
 if [ "`uname -s`" = "Linux" ]; then
     cpack

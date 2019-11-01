@@ -1,5 +1,5 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+crtDir="$(cd "$(dirname "$0")"; pwd)"
 
-"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@" $*
+"${crtDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@" $*

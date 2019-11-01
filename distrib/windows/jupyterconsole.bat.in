@@ -2,6 +2,6 @@
 
 TITLE Running the Jupyter Lab environment...
 
-SET appDir=%~dp0
+SET CrtDir=%~dp0
 
-CALL "%appDir%runjupyter.bat" console --kernel ${CMAKE_PROJECT_NAME} %*
+CALL "%CrtDir%runjupyter.bat" console --kernel ${CMAKE_PROJECT_NAME} %*

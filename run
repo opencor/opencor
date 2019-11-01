@@ -2,12 +2,12 @@
 
 echo "\033[44;37;1mRunning OpenCOR...\033[0m"
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+crtDir="$(cd "$(dirname "$0")"; pwd)"
 
 if [ "`uname -s`" = "Linux" ]; then
-    appExe=${appDir}/build/bin/OpenCOR
+    appExe=${crtDir}/build/bin/OpenCOR
 else
-    appExe=${appDir}/build/OpenCOR.app/Contents/MacOS/OpenCOR
+    appExe=${crtDir}/build/OpenCOR.app/Contents/MacOS/OpenCOR
 fi
 
 if [ -f ${appExe} ]; then
