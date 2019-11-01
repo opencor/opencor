@@ -123,10 +123,6 @@ public slots:
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
-    // Access a simulation's sensitivity gradients
-
-    PyObject * gradients(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
-
 private slots:
     void error(const QString &pErrorMessage);
     void simulationFinished(const qint64 &pElapsedTime);

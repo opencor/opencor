@@ -157,7 +157,6 @@ SimulationData::~SimulationData()
     // Delete some internal objects
 
     deleteArrays();
-    deleteGradientsArray();
 }
 
 //==============================================================================
@@ -793,79 +792,6 @@ void SimulationData::deleteArrays()
 
 //==============================================================================
 
-bool SimulationData::createGradientsArray()
-{
-    // Create our gradients array. We can only do so when
-    // starting a simulation as we need to know what constant
-    // parameters are having their gradients calculated
-
-    if (!mGradientIndices.isEmpty()) {
-        // Allocate the array to hold sensitivity gradients at a single point
-
-        mGradientsArray = new DataStore::DataStoreArray(quint64(mGradientIndices.size())*mStatesArray->size());
-
-        return true;
-    }
-
-    mGradientsArray = nullptr;
-
-    return false;
-}
-
-//==============================================================================
-
-void SimulationData::deleteGradientsArray()
-{
-    // Remove reference to gradients array
-    // Note: this will delete the array if it now has no references
-
-    if (mGradientsArray != nullptr) {
-        mGradientsArray->release();
-    }
-}
-
-//==============================================================================
-
-double * SimulationData::gradients() const
-{
-    // Return our gradients array, if it has been allocated
-
-    return (mGradientsArray != nullptr)?
-               mGradientsArray->data():
-               nullptr;
-}
-
-//==============================================================================
-
-int SimulationData::gradientsSize() const
-{
-    // Return the size of the gradients array
-
-    return (mGradientsArray != nullptr)?
-               int(mGradientsArray->size()):
-               0;
-}
-
-//==============================================================================
-
-int * SimulationData::gradientIndices()
-{
-    // Return an integer array of our gradient indices
-
-    return mGradientIndices.data();
-}
-
-//==============================================================================
-
-int SimulationData::gradientIndicesCount() const
-{
-    // Return the number of constant parameters having their gradient calculated
-
-    return mGradientIndices.count();
-}
-
-//==============================================================================
-
 SimulationDataUpdatedFunction & SimulationData::simulationDataUpdatedFunction()
 {
     // Return our simulation data updated function
@@ -890,8 +816,6 @@ SimulationResults::~SimulationResults()
     // Delete some internal objects
 
     deleteDataStore();
-
-    delete mGradientsDataStore;
 }
 
 //==============================================================================
@@ -1248,12 +1172,6 @@ void SimulationResults::addPoint(double pPoint)
     // Now that we are all set, we can add the data to our data store
 
     mDataStore->addValues(pPoint);
-
-    // Add data to gradients store
-
-    if (mGradientsDataStore != nullptr) {
-       mGradientsDataStore->addValues(pPoint);
-    }
 }
 
 //==============================================================================
@@ -1388,73 +1306,6 @@ DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
     // Return our algebraic variables
 
     return mAlgebraicVariables;
-}
-
-//==============================================================================
-
-DataStore::DataStoreVariables SimulationResults::gradientsVariables() const
-{
-    // Return our gradients variables
-
-    return mGradientsVariables;
-}
-
-//==============================================================================
-
-bool SimulationResults::initialiseGradientsStore()
-{
-    // Allocate additional memory for sensitivity analysis
-
-    // This can only be done when starting a simulation as only then do we
-    // know what constant parameters are having their gradients calculated
-
-    // Delete the previous run's gradients data store
-
-    delete mGradientsDataStore;
-
-    SimulationData *data = mSimulation->data();
-
-    // Delete any gradients array
-
-    data->deleteGradientsArray();
-
-    // Create a new gradients array and data store
-
-    if (data->createGradientsArray()) {
-        mGradientsDataStore = new DataStore::DataStore(mDataStore->uri() + "/gradients");
-        mGradientsVariables = mGradientsDataStore->addVariables(data->gradients(), data->gradientsSize());
-
-        // Customise our gradient variables
-
-        int *gradientIndices = data->gradientIndices();
-        int statesCount = mStatesVariables.size();
-        for (int i = 0; i < data->gradientIndicesCount(); ++i) {
-            DataStore::DataStoreVariable *constant = mConstantsVariables[gradientIndices[i]];
-
-            for (int j = 0; j < statesCount; ++j) {
-                DataStore::DataStoreVariable *state = mStatesVariables[j];
-                DataStore::DataStoreVariable *gradient = mGradientsVariables[i*statesCount + j];
-
-                // Gradient is of state variable wrt each constant
-
-                gradient->setUri(state->uri() + "/gradient_with/" + constant->uri());
-                gradient->setLabel("d(" + state->label() + ")/d(" + constant->label() + ")");
-            }
-        }
-
-        // Allocate data for gradients
-
-        quint64 simulationSize = mSimulation->size();
-
-        if (simulationSize != 0) {
-            return mGradientsDataStore->addRun(simulationSize);
-        }
-    } else {
-        mGradientsDataStore = nullptr;
-        mGradientsVariables = DataStore::DataStoreVariables();
-        return true;
-    }
-    return false;
 }
 
 //==============================================================================
@@ -2197,14 +2048,8 @@ void Simulation::run()
         return;
     }
 
-    // Initialise sensitivity gradients data store
-
-    if (!mResults->initialiseGradientsStore()) {
-        return;
-    }
-
-    // Initialise our worker, if we don't already have one and if the
-    // simulation settings we were given are sound
+    // Initialise our worker, if we don't already have one and if the simulation
+    // settings we were given are sound
 
     if ((mWorker == nullptr) && simulationSettingsOk()) {
         // Create and move our worker to a thread

@@ -615,44 +615,6 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulationResults) const
-{
-    SimulationData *simulationData = pSimulationResults->simulation()->data();
-    DataStore::DataStoreVariables constantVariables = pSimulationResults->constantsVariables();
-    DataStore::DataStoreVariables stateVariables = pSimulationResults->statesVariables();
-    DataStore::DataStoreVariables gradientVariables = pSimulationResults->gradientsVariables();
-    int statesCount = stateVariables.size();
-    int gradientsCount = gradientVariables.size()/statesCount;
-    int *indices = simulationData->gradientIndices();
-    PyObject *gradientsDict = PyDict_New();
-    QMap<QString, PyObject *> stateGradientsDictionaries;
-
-    // We need to transpose gradients when building dictionary
-
-    for (int i = 0; i < gradientsCount; ++i) {
-        DataStore::DataStoreVariable *constant = constantVariables[indices[i]];
-
-        for (int j = 0; j < statesCount; ++j) {
-            DataStore::DataStoreVariable *state = stateVariables[j];
-            DataStore::DataStoreVariable *gradient = gradientVariables[i*statesCount + j];
-
-            // Each state variable has a dictionary containing gradients wrt each constant
-
-            PyObject *stateGradientsDict = stateGradientsDictionaries[state->uri()];
-            if (stateGradientsDict == nullptr) {
-                stateGradientsDict = PyDict_New();
-                PyDict_SetItemString(gradientsDict, state->uri().toLatin1().data(), stateGradientsDict);
-                stateGradientsDictionaries.insert(state->uri(), stateGradientsDict);
-            }
-
-            PythonQtSupport::addObject(stateGradientsDict, constant->uri(), gradient);
-        }
-    }
-    return gradientsDict;
-}
-
-//==============================================================================
-
 } // namespace SimulationSupport
 } // namespace OpenCOR
 

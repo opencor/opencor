@@ -162,15 +162,6 @@ public:
     void setOdeSolverName(const QString &pOdeSolverName);
     void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
-    bool createGradientsArray();
-    void deleteGradientsArray();
-
-    double * gradients() const;
-    int gradientsSize() const;
-
-    int * gradientIndices();
-    int gradientIndicesCount() const;
-
     SimulationDataUpdatedFunction & simulationDataUpdatedFunction();
 
     static void updateParameters(SimulationData *pSimulationData);
@@ -206,9 +197,6 @@ private:
     double *mDummyStates = nullptr;
     double *mInitialConstants = nullptr;
     double *mInitialStates = nullptr;
-
-    QVector<int> mGradientIndices;
-    DataStore::DataStoreArray *mGradientsArray = nullptr;
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
@@ -297,10 +285,6 @@ public:
     DataStore::DataStoreVariables statesVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
-    DataStore::DataStoreVariables gradientsVariables() const;
-
-    bool initialiseGradientsStore();
-
 private:
     DataStore::DataStore *mDataStore = nullptr;
 
@@ -310,9 +294,6 @@ private:
     DataStore::DataStoreVariables mRatesVariables;
     DataStore::DataStoreVariables mStatesVariables;
     DataStore::DataStoreVariables mAlgebraicVariables;
-
-    DataStore::DataStore *mGradientsDataStore = nullptr;
-    DataStore::DataStoreVariables mGradientsVariables;
 
     QMap<double *, DataStore::DataStoreVariables> mData;
     QMap<double *, DataStore::DataStore *> mDataDataStores;

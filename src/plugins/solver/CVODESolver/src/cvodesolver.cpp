@@ -129,10 +129,6 @@ CvodeSolver::~CvodeSolver()
     SUNNonlinSolFree(mNonLinearSolver);
     SUNMatDestroy(mMatrix);
 
-    if (mSensitivityVectors != nullptr) {
-        N_VDestroyVectorArray_Serial(mSensitivityVectors, mSensitivityVectorsSize);
-    }
-
     CVodeFree(&mSolver);
 
     delete mUserData;
@@ -143,9 +139,7 @@ CvodeSolver::~CvodeSolver()
 void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                              double *pConstants, double *pRates,
                              double *pStates, double *pAlgebraic,
-                             ComputeRatesFunction pComputeRates,
-                             int pGradientsCount, int *pGradientsIndices,
-                             double *pGradients)
+                             ComputeRatesFunction pComputeRates)
 {
     // Retrieve our properties
 
@@ -379,48 +373,6 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     // Set our relative and absolute tolerances
 
     CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
-
-    // See if we are performing a sensitivity analysis
-
-    if ((pGradientsCount != 0) && (pGradients != nullptr)) {
-
-        // The number of constants that state variables have gradients computed
-
-        mSensitivityVectorsSize = pGradientsCount;
-
-        // Allocate senstivity vectors
-
-        mSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
-
-        for (int i = 0, iMax = mSensitivityVectorsSize; i < iMax; ++i) {
-            N_VectorContent_Serial(mSensitivityVectors[i]->content)->data = pGradients;
-
-            pGradients += pRatesStatesCount;
-        }
-
-        // Initialise sensitivity code
-
-        CVodeSensInit1(mSolver, mSensitivityVectorsSize, CV_SIMULTANEOUS, nullptr, mSensitivityVectors);
-
-        CVodeSensEEtolerances(mSolver);
-
-        CVodeSetSensErrCon(mSolver, SUNTRUE);
-        CVodeSetSensDQMethod(mSolver, CV_CENTERED, 0.0);
-
-        // Specify which constants will have gradients calculated
-
-        CVodeSetSensParams(mSolver, mUserData->constants(), nullptr, pGradientsIndices);
-    }
-}
-
-//==============================================================================
-
-void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
-                             double *pConstants, double *pRates,
-                             double *pStates, double *pAlgebraic,
-                             ComputeRatesFunction pComputeRates)
-{
-    initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, nullptr, nullptr);
 }
 
 //==============================================================================
@@ -430,12 +382,6 @@ void CvodeSolver::reinitialize(double pVoi)
     // Reinitialise our CVODES object
 
     CVodeReInit(mSolver, pVoi, mStatesVector);
-
-    // Reinitialise sensitivity analysis
-
-    if (mSensitivityVectors != nullptr) {
-        CVodeSensReInit(mSolver, CV_SIMULTANEOUS, mSensitivityVectors);
-    }
 }
 
 //==============================================================================
@@ -449,12 +395,6 @@ void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
     }
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
-
-    // Get the sensitivity solution vectors if we are doing sensitivity analysis
-
-    if (mSensitivityVectors != nullptr) {
-        CVodeGetSens(mSolver, &pVoi, mSensitivityVectors);
-    }
 
     // Compute the rates one more time to get up to date values for the rates
     // Note: another way of doing this would be to copy the contents of the

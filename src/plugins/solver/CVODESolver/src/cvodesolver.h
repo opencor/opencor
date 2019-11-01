@@ -139,10 +139,6 @@ public:
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
                     double *pRates, double *pStates, double *pAlgebraic,
-                    ComputeRatesFunction pComputeRates, int pGradientsCount,
-                    int *pGradientsIndices, double *pGradients) override;
-    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
-                    double *pRates, double *pStates, double *pAlgebraic,
                     ComputeRatesFunction pComputeRates) override;
     void reinitialize(double pVoi) override;
 
@@ -158,9 +154,6 @@ private:
     SUNNonlinearSolver mNonLinearSolver = nullptr;
 
     CvodeSolverUserData *mUserData = nullptr;
-
-    N_Vector *mSensitivityVectors = nullptr;
-    int mSensitivityVectorsSize = 0;
 
     bool mInterpolateSolution = InterpolateSolutionDefaultValue;
 };
