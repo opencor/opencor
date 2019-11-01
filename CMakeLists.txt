@@ -1334,6 +1334,13 @@ if(WIN32)
 
     # Batch files to setup and run Python and Jupyter
 
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter.bat)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ./Python/Scripts start_jupyter.py)
+
+    install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
+                  ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
+            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
+
     set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
     set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
 
@@ -1343,7 +1350,6 @@ if(WIN32)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
     configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter.bat)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
@@ -1353,11 +1359,6 @@ if(WIN32)
                   ${PYTHON_SHELL_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
             DESTINATION .)
-
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ./Python/Scripts start_jupyter.py)
-
-    install(FILES ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
-            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
