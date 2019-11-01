@@ -215,9 +215,6 @@ signals:
 
     void modified(bool pIsModified);
 
-    void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                             bool pCalculate = true);
-
     void error(const QString &pMessage);
 
 public slots:
