@@ -1499,6 +1499,12 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+
+    install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
+            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
     set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
@@ -1506,13 +1512,11 @@ else()
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
     configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                   ${PYTHON_SHELL_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/runjupyter
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
