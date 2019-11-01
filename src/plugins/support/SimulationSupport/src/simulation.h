@@ -222,7 +222,7 @@ private:
     bool doIsModified(bool pCheckConstants) const;
 
 signals:
-    void updatedParameters(double pCurrentPoint);
+    void updated(double pCurrentPoint);
     void updatedPointData();
 
     void modified(bool pIsModified);
@@ -262,10 +262,6 @@ public slots:
     bool isModified() const;
 
     void checkForModifications();
-
-    void setGradientCalculationByIndex(int pIndex, bool pCalculate);
-    void setGradientCalculation(const QString &pConstantUri,
-                                bool pCalculate = true);
 
     void updateInitialValues();
 };

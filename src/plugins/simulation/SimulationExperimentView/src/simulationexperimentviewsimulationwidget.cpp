@@ -478,13 +478,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsUpdated,
             this, &SimulationExperimentViewSimulationWidget::graphsUpdated);
 
-    // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
-
-    connect(mSimulation->data(), &SimulationSupport::SimulationData::gradientCalculation,
-            informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::gradientToggled);
-    connect(informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::calculateGradients,
-            mSimulation->data(), &SimulationSupport::SimulationData::setGradientCalculationByIndex);
-
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
     // Note: the separating line is because we remove, for aesthetical reasons,

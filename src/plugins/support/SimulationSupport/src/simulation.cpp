@@ -628,7 +628,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
 
     // Let people know that our data has been updated
 
-    emit updatedParameters(pCurrentPoint);
+    emit updated(pCurrentPoint);
 }
 
 //==============================================================================
@@ -708,7 +708,7 @@ void SimulationData::updateParameters(SimulationData *pSimulationData)
 
     // Let the simulation view know parameters have changed
 
-    emit pSimulationData->updatedParameters(pSimulationData->mStartingPoint);
+    emit pSimulationData->updated(pSimulationData->mStartingPoint);
 }
 
 //==============================================================================
@@ -875,48 +875,6 @@ SimulationDataUpdatedFunction & SimulationData::simulationDataUpdatedFunction()
 
 //==============================================================================
 
-void SimulationData::setGradientCalculationByIndex(int pIndex, bool pCalculate)
-{
-    // Keep track of the indices of constant parameters that will have their
-    // gradient calculated
-
-    int pos = mGradientIndices.indexOf(pIndex);
-
-    if (pCalculate) {
-        if (pos == -1) {
-            mGradientIndices << pIndex;
-        }
-    } else if (pos > -1) {
-        mGradientIndices.remove(pos);
-    }
-}
-
-//==============================================================================
-
-void SimulationData::setGradientCalculation(const QString &pConstantUri,
-                                            bool pCalculate)
-{
-    // Keep track of the indices of constant parameters that will
-    // have gradients calculated
-
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-    for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
-
-        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant
-              && pConstantUri == mSimulationResults->constantsVariables()[parameter->index()]->uri()) {
-            setGradientCalculationByIndex(parameter->index(), pCalculate);
-
-            // Update icon in parameter information widget
-
-            emit gradientCalculation(parameter, pCalculate);
-        }
-    }
-}
-
-//==============================================================================
-
 SimulationResults::SimulationResults(Simulation *pSimulation) :
     SimulationObject(pSimulation)
 {
@@ -1041,7 +999,7 @@ void SimulationResults::createDataStore()
     // Let people know that our (imported) data, if any, has been updated
 
     if (!mDataDataStores.isEmpty()) {
-        emit simulationData->updatedParameters(mSimulation->currentPoint());
+        emit simulationData->updated(mSimulation->currentPoint());
     }
 }
 

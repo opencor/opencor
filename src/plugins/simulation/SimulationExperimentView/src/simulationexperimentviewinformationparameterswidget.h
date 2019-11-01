@@ -89,11 +89,6 @@ private:
     bool mNeedClearing = false;
     bool mVoiAccessible = false;
 
-    QSet<int> mGradientIndices = QSet<int>();
-
-    QAction *mToggleGradientsMenuAction = nullptr;
-    QAction *mToggleGradientsMenuSeparator = nullptr;
-
     Core::Property *mImportComponent = nullptr;
     QMenu *mImportMenu = nullptr;
 
@@ -108,19 +103,13 @@ signals:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void calculateGradients(int pIndex, bool pCalculate);
-
 public slots:
     void updateParameters(double pCurrentPoint);
-
-    void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate);
 
 private slots:
     void propertyChanged(Core::Property *pProperty);
 
     void emitGraphRequired();
-
-    void toggleGradientFlag();
 };
 
 //==============================================================================
