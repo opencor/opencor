@@ -1338,7 +1338,7 @@ if(WIN32)
     # Batch files to setup and run Python and Jupyter
 
     set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
-    set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
+    set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
 
     configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
@@ -1346,7 +1346,7 @@ if(WIN32)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter.bat)
-    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${RUN_PYTHON_FILENAME})
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
@@ -1354,7 +1354,7 @@ if(WIN32)
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
                   ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
-                  ${RUN_PYTHON_FILENAME}
+                  ${PYTHON_SHELL_FILENAME}
             DESTINATION .)
 
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ./Python/Scripts start_jupyter.py)
@@ -1412,19 +1412,19 @@ elseif(APPLE)
 
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
     set(RUN_JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/runjupyter)
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
     configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
     configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${RUN_PYTHON_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                   ${RUN_JUPYTER_FILENAME}
-                  ${RUN_PYTHON_FILENAME}
+                  ${PYTHON_SHELL_FILENAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()
@@ -1502,19 +1502,19 @@ else()
     # Shell scripts to setup and run Python and Jupyter
 
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
-    set(RUN_PYTHON_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
     configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
     copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . runjupyter)
-    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${RUN_PYTHON_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
     install(FILES ${JUPYTER_CONSOLE_FILENAME}
                   ${PLATFORM_DISTRIB_DIR}/jupyterlab
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                   ${PLATFORM_DISTRIB_DIR}/runjupyter
-                  ${RUN_PYTHON_FILENAME}
+                  ${PYTHON_SHELL_FILENAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
