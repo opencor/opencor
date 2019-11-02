@@ -1,5 +1,3 @@
 #!/bin/sh
 
-crtDir="$(cd "$(dirname "$0")"; pwd)"
-
-"${crtDir}/bin/@CMAKE_PROJECT_NAME@" $*
+"$(cd "$(dirname "$0")"; pwd)/bin/@CMAKE_PROJECT_NAME@" $*

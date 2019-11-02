@@ -1,9 +1,9 @@
 @ECHO OFF
 
-SET CrtDir=%~dp0
+SET HomeDir=%~dp0
 SET OrigDir=%CD%
 
-IF EXIST "%CrtDir%src" (
+IF EXIST "%HomeDir%src" (
     TITLE Formatting OpenCOR...
 
     FOR %%X IN (clang-format.exe) DO (
@@ -11,7 +11,7 @@ IF EXIST "%CrtDir%src" (
     )
 
     IF DEFINED ClangFormatFound (
-        CD "%CrtDir%src"
+        CD "%HomeDir%src"
 
         FOR /R %%I IN (*.cpp *.h) DO (
             ECHO.%%I | FINDSTR /V "3rdparty \ext\ \qzip">NUL && (

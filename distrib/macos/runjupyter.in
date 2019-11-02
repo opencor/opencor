@@ -1,0 +1,12 @@
+#!/bin/sh
+
+homeDir="$(cd "$(dirname "$0")"; pwd)/../../../../.."
+
+export PATH="${homeDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS":$PATH
+
+"${homeDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python"             \
+"${homeDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/set_python_path.py" \
+"${homeDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python"                        \
+-s
+
+"${homeDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter" $*

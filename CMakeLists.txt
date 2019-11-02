@@ -1408,7 +1408,9 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+    set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
+
+    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
     set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
     set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)

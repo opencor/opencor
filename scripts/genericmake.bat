@@ -1,8 +1,8 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-SET CrtDir=%~dp0
+SET HomeDir=%~dp0..\
 
-IF EXIST "%CrtDir%..\build" (
+IF EXIST "%HomeDir%build" (
     SET CMakeBuildType=%1
 
     IF "!CMakeBuildType!" == "Release" (
@@ -34,7 +34,7 @@ IF EXIST "%CrtDir%..\build" (
 
     SET OrigDir=%CD%
 
-    CD "%CrtDir%..\build"
+    CD "%HomeDir%build"
 
     IF DEFINED NinjaFound (
         SET CMakeGenerator=Ninja

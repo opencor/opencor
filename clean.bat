@@ -1,5 +1,5 @@
 @ECHO OFF
 
-SET CrtDir=%~dp0
+SET HomeDir=%~dp0
 
-CALL "%CrtDir%scripts\genericclean"
+CALL "%HomeDir%scripts\genericclean"

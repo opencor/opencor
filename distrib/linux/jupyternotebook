@@ -1,5 +1,3 @@
 #!/bin/sh
 
-crtDir="$(cd "$(dirname "$0")"; pwd)"
-
-"${crtDir}/python/bin/runjupyter" notebook --ip 127.0.0.1 $*
+"$(cd "$(dirname "$0")"; pwd)/python/bin/runjupyter" notebook --ip 127.0.0.1 $*

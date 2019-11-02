@@ -1,5 +1,3 @@
 @ECHO OFF
 
-SET CrtDir=%~dp0
-
-"%CrtDir%bin\${CMAKE_PROJECT_NAME}" -c PythonShell %*
+"%~dp0bin\${CMAKE_PROJECT_NAME}" -c PythonShell %*

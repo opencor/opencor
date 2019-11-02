@@ -2,17 +2,17 @@ import os
 import subprocess
 import sys
 
-# Get OpenCOR's root directory
+# Get OpenCOR's home directory
 
-root = '\\'.join(sys.executable.split('\\')[:-3])
+home_dir = '\\'.join(sys.executable.split('\\')[:-3])
 
 # Add the location of our binaries to the beginning of the system PATH
 
 path = os.environ['PATH'].split(';')
 
-path.insert(0, '%s\\bin' % root)
-path.insert(0, '%s\\Python\\Scripts' % root)
-path.insert(0, '%s\\Python\\bin' % root)
+path.insert(0, '%s\\bin' % home_dir)
+path.insert(0, '%s\\Python\\bin' % home_dir)
+path.insert(0, '%s\\Python\\Scripts' % home_dir)
 
 os.environ['PATH'] = ';'.join(path)
 

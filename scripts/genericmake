@@ -1,8 +1,8 @@
 #!/bin/sh
 
-crtDir="$(cd "$(dirname "$0")"; pwd)"
+homeDir="$(cd "$(dirname "$0")"; pwd)"/..
 
-if [ -d "${crtDir}/../build" ]; then
+if [ -d "${homeDir}/build" ]; then
     cmakeBuildType=$1
 
     if [ "$cmakeBuildType" = "Release" ]; then
@@ -30,7 +30,7 @@ if [ -d "${crtDir}/../build" ]; then
 
     origDir=`pwd`
 
-    cd ${crtDir}/../build
+    cd ${homeDir}/build
 
     cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
