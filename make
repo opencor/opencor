@@ -1,5 +1,3 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
-
-${appDir}/scripts/genericmake Release $*
+"$(cd "$(dirname "$0")"; pwd)/scripts/genericmake" Release $*
