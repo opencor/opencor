@@ -1,10 +1,10 @@
 shell = CreateObject("WScript.Shell")
-crtDir = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
+homeDir = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
 
-updatePythonPath = """"&crtDir&"\Python\bin\Python.exe"" """&crtDir&"\Python\Scripts\set_python_path.py"" """&crtDir&"\Python"" -s"
+updatePythonPath = """"&homeDir&"\Python\bin\Python.exe"" """&homeDir&"\Python\Scripts\set_python_path.py"" """&homeDir&"\Python"" -s"
 
 shell.Run updatePythonPath, 0, True
 
-cmd = """"&crtDir&"\Python\bin\Python.exe"" """&crtDir&"\Python\Scripts\start_jupyter.py"" lab --ip 127.0.0.1"
+cmd = """"&homeDir&"\Python\bin\Python.exe"" """&homeDir&"\Python\Scripts\start_jupyter.py"" lab --ip 127.0.0.1"
 
 shell.Run cmd, 1, False
