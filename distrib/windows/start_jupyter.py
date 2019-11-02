@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-# Get OpenCOR's home directory
+# Retrieve OpenCOR's home directory
 
 home_dir = '\\'.join(sys.executable.split('\\')[:-3])
 
