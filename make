@@ -1,5 +1,5 @@
 #!/bin/sh
 
-homeDir="$(cd "$(dirname "$0")"; pwd)"
+appDir="$(cd "$(dirname "$0")"; pwd)"
 
-${homeDir}/scripts/genericmake Release $*
+${appDir}/scripts/genericmake Release $*

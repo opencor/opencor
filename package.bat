@@ -2,10 +2,10 @@
 
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-SET HomeDir=%~dp0
+SET AppDir=%~dp0
 
-CALL "%HomeDir%clean"
-CALL "%HomeDir%make" %*
+CALL "%AppDir%clean"
+CALL "%AppDir%make" %*
 
 SET ExitCode=!ERRORLEVEL!
 
@@ -14,7 +14,7 @@ IF !ExitCode! EQU 0 (
 
     SET OrigDir=%CD%
 
-    CD "%HomeDir%build"
+    CD "%AppDir%build"
 
     cpack
 

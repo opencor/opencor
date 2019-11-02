@@ -1,5 +1,5 @@
 @ECHO OFF
 
-SET HomeDir=%~dp0
+SET AppDir=%~dp0
 
-CALL "%HomeDir%scripts\genericmake" Tests %*
+CALL "%AppDir%scripts\genericmake" Tests %*

@@ -6,11 +6,11 @@ IF "%1" == "all" (
     TITLE Cleaning OpenCOR...
 )
 
-SET HomeDir=%~dp0..\
+SET AppDir=%~dp0..\
 SET OrigDir=%CD%
 
-IF EXIST "%HomeDir%build" (
-    CD "%HomeDir%build"
+IF EXIST "%AppDir%build" (
+    CD "%AppDir%build"
 
     FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
     FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
@@ -18,8 +18,8 @@ IF EXIST "%HomeDir%build" (
 )
 
 IF "%1" == "all" (
-    IF EXIST "%HomeDir%ext" (
-        CD "%HomeDir%ext"
+    IF EXIST "%AppDir%ext" (
+        CD "%AppDir%ext"
 
         FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
         FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
