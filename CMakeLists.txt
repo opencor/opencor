@@ -1357,7 +1357,6 @@ if(WIN32)
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
                   ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
                   ${PYTHON_SHELL_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
             DESTINATION .)
 
     # File type association
