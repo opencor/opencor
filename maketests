@@ -1,5 +1,3 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
-
-${appDir}/scripts/genericmake Tests $*
+"$(cd "$(dirname "$0")"; pwd)/scripts/genericmake" Tests $*

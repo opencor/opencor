@@ -1,5 +1,3 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
-
-${appDir}/scripts/genericclean
+"$(cd "$(dirname "$0")"; pwd)/scripts/genericclean"

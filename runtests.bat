@@ -2,10 +2,10 @@
 
 TITLE Running OpenCOR's tests...
 
-SET appTestsExe=%~dp0build\bin\runtests.exe
+SET AppTestsExe=%~dp0build\bin\runtests.exe
 
-IF NOT EXIST %appTestsExe% (
+IF NOT EXIST %AppTestsExe% (
     ECHO OpenCOR's tests must first be built before being run.
 ) ELSE (
-    "%appTestsExe%"
+    "%AppTestsExe%"
 )

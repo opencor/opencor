@@ -1732,8 +1732,8 @@ void Simulation::run()
         return;
     }
 
-    // Initialise our worker, if we don't already have one and if the
-    // simulation settings we were given are sound
+    // Initialise our worker, if we don't already have one and if the simulation
+    // settings we were given are sound
 
     if ((mWorker == nullptr) && simulationSettingsOk()) {
         // Create and move our worker to a thread
