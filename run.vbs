@@ -1,13 +1,13 @@
-AppExe = Left(Wscript.ScriptFullName, Len(Wscript.ScriptFullName)-Len(Wscript.ScriptName))&"build\bin\OpenCOR.exe"
+Set AppExe = Left(Wscript.ScriptFullName, Len(Wscript.ScriptFullName)-Len(Wscript.ScriptName))&"build\bin\OpenCOR.exe"
 
 If CreateObject("Scripting.FileSystemObject").FileExists(AppExe) Then
-    args = ""
+    Set args = ""
 
     For Each arg in WScript.Arguments
         args = args&" "&arg
     Next
 
-    cmd = """"&AppExe&args&""""
+    Set cmd = """"&AppExe&args&""""
 
     CreateObject("WScript.Shell").Run cmd, 1, False
 Else
