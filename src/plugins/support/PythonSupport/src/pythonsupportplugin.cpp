@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QCoreApplication>
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     #include <QDir>
 #endif
 
@@ -91,9 +91,11 @@ void PythonSupportPlugin::initializePlugin()
 {
     // Set the environment variable PYTHONHOME to the location of our copy of
     // Python
-    // Note: to call Py_SetPythonHome() doesn't work since Py_Initialize() first
-    //       checks the environment and, if PYTHONHOME isn't set, uses the
-    //       installation path compiled in at Python build time...
+    // Note #1: we are doing something similar to what initPluginsPath() does
+    //          when it comes to the "../" bit...
+    // Note #2: to call Py_SetPythonHome() doesn't work since Py_Initialize()
+    //          first checks the environment and, if PYTHONHOME isn't set, uses
+    //          the installation path compiled in at Python build time...
 
     QString pythonHome = QCoreApplication::applicationDirPath()+"/../";
 
@@ -101,8 +103,20 @@ void PythonSupportPlugin::initializePlugin()
     pythonHome += "Python";
 #elif defined(Q_OS_LINUX)
     pythonHome += "python";
-#elif defined(Q_OS_MAC)
-    pythonHome += "Frameworks/Python";
+#else
+    pythonHome = appDir+"/../Frameworks/Python";
+#endif
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    if (!QDir(pythonHome).exists()) {
+        pythonHome = QCoreApplication::applicationDirPath();
+
+#ifdef Q_OS_WIN
+        pythonHome += "Python";
+#else
+        pythonHome += "python";
+#endif
+    }
 #endif
 
     qputenv("PYTHONHOME", pythonHome.toUtf8());
