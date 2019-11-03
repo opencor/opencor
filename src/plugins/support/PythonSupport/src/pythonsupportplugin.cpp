@@ -104,7 +104,7 @@ void PythonSupportPlugin::initializePlugin()
 #elif defined(Q_OS_LINUX)
     pythonHome += "python";
 #else
-    pythonHome = appDir+"/../Frameworks/Python";
+    pythonHome = pythonHome+"/../Frameworks/Python";
 #endif
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
