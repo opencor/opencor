@@ -139,7 +139,7 @@ void initPluginsPath(int pArgC, char *pArgV[]) // NOLINT(hicpp-avoid-c-arrays, m
 
         pluginsDir = appDir+"/plugins";
     }
-#elif defined(Q_OS_MAC)
+#else
     pluginsDir = appDir+"/../PlugIns";
 #endif
 
