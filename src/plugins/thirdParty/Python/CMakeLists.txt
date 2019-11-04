@@ -3,7 +3,7 @@ project(PythonPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.7.4)
+set(PACKAGE_VERSION 3.7.5)
 
 # Package repository and release tag
 
@@ -17,7 +17,7 @@ set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "win-debug")
+set(GIT_TAG "opencor")
 # Note: see https://github.com/opencor/opencor/pull/2160#issuecomment-541552006
 #       for the rationale behind using "win-debug" rather than "opencor"...
 
@@ -277,10 +277,6 @@ else()
     endif()
 
     # Build Python as an external project
-    # Note: see https://github.com/opencor/opencor/pull/2160#issuecomment-541552006
-    #       for the rationale behind using
-    #       https://github.com/dbrnz/python-cmake-buildsystem.git rather than
-    #       https://github.com/opencor/python-cmake-buildsystem.git...
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
     set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
@@ -294,7 +290,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/dbrnz/python-cmake-buildsystem.git
+            https://github.com/opencor/python-cmake-buildsystem.git
         GIT_TAG
             ${GIT_TAG}
         CMAKE_GENERATOR
