@@ -194,7 +194,9 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     //       being referenced all over the place, which is really not what we
     //       want since that unnecessarily pollutes things...
 
-    for (const auto &key : mNamespaces.keys()) {
+    QStringList keys = mNamespaces.keys();
+
+    for (const auto &key : keys) {
         mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
     }
 
@@ -242,10 +244,10 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
                                                                                         << CellmlTextViewScanner::Token::Otherwise
                                                                                         << CellmlTextViewScanner::Token::EndSel;
 
-    if (tokenType(mDomDocument, tr("An identifier, '%1', '%2', '%3' or '%4'").arg("ode")
-                                                                             .arg("case")
-                                                                             .arg("otherwise")
-                                                                             .arg("endsel"),
+    if (tokenType(mDomDocument, tr("An identifier, '%1', '%2', '%3' or '%4'").arg("ode",
+                                                                                  "case",
+                                                                                  "otherwise",
+                                                                                  "endsel"),
                   Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Case) {
             mStatement = Statement::PiecewiseCase;
@@ -345,8 +347,8 @@ void CellmlTextViewParser::addUnexpectedTokenErrorMessage(const QString &pExpect
     mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Error,
                                              mScanner.line(),
                                              mScanner.column(),
-                                             tr("%1 is expected, but %2 was found instead.").arg(pExpectedString)
-                                                                                            .arg(pFoundString));
+                                             tr("%1 is expected, but %2 was found instead.").arg(pExpectedString,
+                                                                                                 pFoundString));
 }
 
 //==============================================================================
@@ -1096,8 +1098,8 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
     static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Def
                                                                                         << CellmlTextViewScanner::Token::EndDef;
 
-    while (tokenType(pDomNode, tr("'%1' or '%2'").arg("def")
-                                                 .arg("enddef"),
+    while (tokenType(pDomNode, tr("'%1' or '%2'").arg("def",
+                                                      "enddef"),
                      Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Def) {
             // Expect a model definition
@@ -1110,11 +1112,11 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 
             mScanner.getNextToken();
 
-            if (tokenType(pDomNode, tr("'%1', '%2', '%3', '%4' or '%5'").arg("import")
-                                                                        .arg("unit")
-                                                                        .arg("comp")
-                                                                        .arg("group")
-                                                                        .arg("map"),
+            if (tokenType(pDomNode, tr("'%1', '%2', '%3', '%4' or '%5'").arg("import",
+                                                                             "unit",
+                                                                             "comp",
+                                                                             "group",
+                                                                             "map"),
                           Tokens)) {
                 if (mScanner.token() == CellmlTextViewScanner::Token::Import) {
                     if (!parseImportDefinition(pDomNode)) {
@@ -1209,9 +1211,9 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    while (tokenType(importElement, tr("'%1', '%2' or '%3'").arg("unit")
-                                                            .arg("comp")
-                                                            .arg("enddef"),
+    while (tokenType(importElement, tr("'%1', '%2' or '%3'").arg("unit",
+                                                                 "comp",
+                                                                 "enddef"),
                      Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Unit) {
             // We are dealing with a unit import, so create our unit import
@@ -1393,9 +1395,9 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    if (!tokenType(unitsElement, tr("'%1', '%2' or '%3'").arg("base")
-                                                         .arg("unit")
-                                                         .arg("enddef"),
+    if (!tokenType(unitsElement, tr("'%1', '%2' or '%3'").arg("base",
+                                                              "unit",
+                                                              "enddef"),
                    Tokens)) {
         return false;
     }
@@ -1430,8 +1432,8 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
         static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Unit
                                                                                             << CellmlTextViewScanner::Token::EndDef;
 
-        while (tokenType(unitsElement, tr("'%1' or '%2'").arg("unit")
-                                                         .arg("enddef"),
+        while (tokenType(unitsElement, tr("'%1' or '%2'").arg("unit",
+                                                              "enddef"),
                          Tokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::Unit) {
                 if (!parseUnitDefinition(unitsElement)) {
@@ -1489,8 +1491,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    if (!tokenType(unitElement, tr("'%1' or '%2'").arg("{")
-                                                  .arg(";"),
+    if (!tokenType(unitElement, tr("'%1' or '%2'").arg("{",
+                                                       ";"),
                    Tokens)) {
         return false;
     }
@@ -1510,10 +1512,10 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
             mScanner.getNextToken();
 
-            if (!tokenType(unitElement, tr("'%1', '%2', '%3' or '%4'").arg("pref")
-                                                                      .arg("expo")
-                                                                      .arg("mult")
-                                                                      .arg("off"),
+            if (!tokenType(unitElement, tr("'%1', '%2', '%3' or '%4'").arg("pref",
+                                                                           "expo",
+                                                                           "mult",
+                                                                           "off"),
                            Tokens)) {
                 return false;
             }
@@ -1618,8 +1620,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
             mScanner.getNextToken();
 
-            if (!tokenType(unitElement, tr("'%1' or '%2'").arg(",")
-                                                          .arg("}"),
+            if (!tokenType(unitElement, tr("'%1' or '%2'").arg(",",
+                                                               "}"),
                            NextTokens)) {
                 return false;
             }
@@ -1696,10 +1698,10 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
     mScanner.getNextToken();
 
     while (tokenType(hasMathElement?mathElement:componentElement,
-                     tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def")
-                                                                  .arg("var")
-                                                                  .arg("ode")
-                                                                  .arg("enddef"),
+                     tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def",
+                                                                       "var",
+                                                                       "ode",
+                                                                       "enddef"),
                      Tokens)) {
         // Move trailing comment(s), if any, from mathElement to
         // componentElement, if needed
@@ -1812,8 +1814,8 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    if (!tokenType(variableElement, tr("'%1' or '%2'").arg("{")
-                                                      .arg(";"),
+    if (!tokenType(variableElement, tr("'%1' or '%2'").arg("{",
+                                                           ";"),
                    Tokens)) {
         return false;
     }
@@ -1832,9 +1834,9 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
             mScanner.getNextToken();
 
-            if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("init")
-                                                                    .arg("pub")
-                                                                    .arg("priv"),
+            if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("init",
+                                                                         "pub",
+                                                                         "priv"),
                            Tokens)) {
                 return false;
             }
@@ -1911,9 +1913,9 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                                                                                                     << CellmlTextViewScanner::Token::Out
                                                                                                     << CellmlTextViewScanner::Token::None;
 
-                if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("in")
-                                                                        .arg("out")
-                                                                        .arg("none"),
+                if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("in",
+                                                                             "out",
+                                                                             "none"),
                                Tokens)) {
                     return false;
                 }
@@ -1944,8 +1946,8 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
             mScanner.getNextToken();
 
-            if (!tokenType(variableElement, tr("'%1' or '%2'").arg(",")
-                                                              .arg("}"),
+            if (!tokenType(variableElement, tr("'%1' or '%2'").arg(",",
+                                                                   "}"),
                            NextTokens)) {
                 return false;
             }
@@ -2072,8 +2074,8 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    while (tokenType(groupElement, tr("'%1' or '%2'").arg("containment")
-                                                     .arg("encapsulation"),
+    while (tokenType(groupElement, tr("'%1' or '%2'").arg("containment",
+                                                          "encapsulation"),
                      Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Containment) {
             // Create our relationship reference and make it a containment
@@ -2096,8 +2098,8 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
                                                                                                 << CellmlTextViewScanner::Token::And
                                                                                                 << CellmlTextViewScanner::Token::For;
 
-            if (!tokenType(groupElement, tr("An identifier, '%1' or '%2'").arg("and")
-                                                                          .arg("for"),
+            if (!tokenType(groupElement, tr("An identifier, '%1' or '%2'").arg("and",
+                                                                               "for"),
                            Tokens)) {
                 return false;
             }
@@ -2136,8 +2138,8 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
         static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::And
                                                                                             << CellmlTextViewScanner::Token::For;
 
-        if (tokenType(groupElement, tr("'%1' or '%2'").arg("and")
-                                                      .arg("for"),
+        if (tokenType(groupElement, tr("'%1' or '%2'").arg("and",
+                                                           "for"),
                       Tokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::For) {
                 break;
@@ -2156,8 +2158,8 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    while (tokenType(groupElement, tr("'%1' or '%2'").arg("comp")
-                                                     .arg("enddef"),
+    while (tokenType(groupElement, tr("'%1' or '%2'").arg("comp",
+                                                          "enddef"),
                      NextTokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Comp) {
             // Recursively parse our component reference
@@ -2210,8 +2212,8 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    if (!tokenType(componentRefElement, tr("'%1' or '%2'").arg("incl")
-                                                          .arg(";"),
+    if (!tokenType(componentRefElement, tr("'%1' or '%2'").arg("incl",
+                                                               ";"),
                    Tokens)) {
         return false;
     }
@@ -2247,8 +2249,8 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
             } else {
                 break;
             }
-        } while (tokenType(componentRefElement, tr("'%1' or '%2'").arg("comp")
-                                                                  .arg("endcomp"),
+        } while (tokenType(componentRefElement, tr("'%1' or '%2'").arg("comp",
+                                                                       "endcomp"),
                            Tokens));
 
         // Expect ";"
@@ -2347,8 +2349,8 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    while (tokenType(connectionElement, tr("'%1' or '%2'").arg("vars")
-                                                          .arg("enddef"),
+    while (tokenType(connectionElement, tr("'%1' or '%2'").arg("vars",
+                                                               "enddef"),
                      Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Vars) {
             // Create our map variables element
@@ -2724,8 +2726,8 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 
     mScanner.getNextToken();
 
-    if (!tokenType(pDomNode, tr("'%1' or '%2'").arg(",")
-                                               .arg(")"),
+    if (!tokenType(pDomNode, tr("'%1' or '%2'").arg(",",
+                                                    ")"),
                    Tokens)) {
         return {};
     }
@@ -3256,9 +3258,9 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
     mScanner.getNextToken();
 
-    while (tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("case")
-                                                               .arg("otherwise")
-                                                               .arg("endsel"),
+    while (tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("case",
+                                                                    "otherwise",
+                                                                    "endsel"),
                      Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::EndSel) {
             break;

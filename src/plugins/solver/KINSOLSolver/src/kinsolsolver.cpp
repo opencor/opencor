@@ -192,7 +192,7 @@ KinsolSolver::~KinsolSolver()
 {
     // Delete some internal objects
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         delete data;
     }
 }

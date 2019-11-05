@@ -133,7 +133,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(mPmrInstanceLabel);
 
-    // Create an instance of our PMR web service
+    // Create an instance of our PMR Web service
 
     mPmrWebService = new PMRSupport::PmrWebService(this);
 
@@ -163,7 +163,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(this, &PmrWorkspacesWindowWindow::visibilityChanged,
             this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
-    // Some connections to process responses from our PMR web service
+    // Some connections to process responses from our PMR Web service
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
             this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
@@ -278,7 +278,7 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
 
 void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 {
-    // Update both our PMR web service and workspaces widget, and then update
+    // Update both our PMR Web service and workspaces widget, and then update
     // our GUI (which will, as a result, also update our workspaces widget), if
     // needed
     // Note: we make sure that no busy widget is visible. Indeed, this is in
@@ -473,7 +473,7 @@ void PmrWorkspacesWindowWindow::actionNewTriggered()
     PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
     if (newWorkspaceDialog.exec() == QDialog::Accepted) {
-        // Ask the PMR web service to create a new workspace, resulting in the
+        // Ask the PMR Web service to create a new workspace, resulting in the
         // (empty) workspace being cloned into its folder
 
         mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
@@ -486,7 +486,7 @@ void PmrWorkspacesWindowWindow::actionNewTriggered()
 
 void PmrWorkspacesWindowWindow::actionReloadTriggered()
 {
-    // Get the list of workspaces from our PMR web service, after making sure
+    // Get the list of workspaces from our PMR Web service, after making sure
     // that we have cleared existing workspaces from our workspace manager
 
     PMRSupport::PmrWorkspaceManager::instance()->clearWorkspaces();

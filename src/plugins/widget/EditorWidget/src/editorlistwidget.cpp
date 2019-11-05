@@ -63,8 +63,8 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
         if (pFileInfo.isEmpty()) {
             setText(pMessage);
         } else {
-            setText(QString("[%1] %s").arg(pFileInfo)
-                                      .arg(pMessage));
+            setText(QString("[%1] %s").arg(pFileInfo,
+                                           pMessage));
         }
     } else if (pColumn == -1) {
         if (pFileInfo.isEmpty()) {

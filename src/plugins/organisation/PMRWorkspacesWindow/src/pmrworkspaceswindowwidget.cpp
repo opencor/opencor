@@ -1407,9 +1407,9 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
     //       (since the message box would show up from nowhere)...
 
     if (mInitialized) {
-        emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl)
-                                                                                .arg(pPath1)
-                                                                                .arg(pPath2));
+        emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl,
+                                                                                     pPath1,
+                                                                                     pPath2));
     }
 }
 
@@ -1559,7 +1559,7 @@ void PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy()
             workspaceFolder.mkpath(".");
         }
 
-        // Ask our PMR web service to effectively clone our owned workspace
+        // Ask our PMR Web service to effectively clone our owned workspace
 
         mPmrWebService->requestWorkspaceClone(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->workspace()->url()),
                                               dirName);
@@ -1662,17 +1662,17 @@ void PmrWorkspacesWindowWidget::aboutWorkspace()
                "<table>\n";
 
     if (!workspace->owner().isEmpty()) {
-        message += Entry.arg(tr("Owner:"))
-                        .arg(workspace->owner());
+        message += Entry.arg(tr("Owner:"),
+                             workspace->owner());
     }
 
-    message += Entry.arg(tr("PMR:"))
-                    .arg(QString(R"(<a href="%1">%1</a>)").arg(workspace->url()));
+    message += Entry.arg(tr("PMR:"),
+                         QString(R"(<a href="%1">%1</a>)").arg(workspace->url()));
 
     if (workspace->isLocal()) {
-        message += Entry.arg(tr("Path:"))
-                        .arg(QString(R"(<a href="%1">%2</a>)").arg(QUrl::fromLocalFile(workspace->path()).url())
-                                                              .arg(workspace->path()));
+        message += Entry.arg(tr("Path:"),
+                             QString(R"(<a href="%1">%2</a>)").arg(QUrl::fromLocalFile(workspace->path()).url(),
+                                                                   workspace->path()));
     }
 
     message += "</table>\n";

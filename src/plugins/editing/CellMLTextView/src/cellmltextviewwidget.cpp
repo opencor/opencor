@@ -446,7 +446,7 @@ void CellmlTextViewWidget::retranslateUi()
 {
     // Retranslate all of our data
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         data->retranslateUi();
     }
 }
@@ -805,9 +805,9 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Version::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (Core::questionMessageBox(tr("Save File"),
-                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName))
-                                                                                                                                                                                       .arg(CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()))
-                                                                                                                                                                                       .arg(CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
+                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName),
+                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
+                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
                 pNeedFeedback = false;
 
                 return false;
@@ -1271,7 +1271,7 @@ void CellmlTextViewWidget::selectFirstItemInEditorList()
 
     mEditorLists.removeFirst();
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         if (data->editingWidget()->editorListWidget() == editorList) {
             editorList->selectFirstItem();
 

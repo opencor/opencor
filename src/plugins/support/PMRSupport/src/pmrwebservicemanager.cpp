@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PMR web service manager
+// PMR Web service manager
 //==============================================================================
 
 #include "corecliutils.h"
@@ -124,7 +124,7 @@ void PmrWebServiceManager::authenticationFailed()
 
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
-    // Open the given URL in our web browser
+    // Open the given URL in our Web browser
 
     mWebViewerDialogUsed = true;
 
@@ -135,7 +135,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
                 this, &PmrWebServiceManager::authenticationCancelled);
     } else {
         mWebViewerDialog->load(QString());
-        // Note: this is in case we used our web brower before, in which case it
+        // Note: this is in case we used our Web brower before, in which case it
         //       will contain something, which we don't want to see when
         //       reopening it...
 
@@ -151,14 +151,14 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
 void PmrWebServiceManager::startCloseBrowser()
 {
-    // Close our temporary web browser after a slight delay
+    // Close our temporary Web browser after a slight delay
     // Note: the whole idea is that granting/denying access resuts in a new
     //       (empty) page being loaded, so we want to wait until that page is
-    //       loaded before actually closing our temporary web browser. So, here,
-    //       we have a short delay to give time to our temporary web browser to
+    //       loaded before actually closing our temporary Web browser. So, here,
+    //       we have a short delay to give time to our temporary Web browser to
     //       start loading that new (empty) page. Then, in closeBrowser(), we
     //       checking whether the loading is finished and, if so, close our
-    //       temporary web browser otherwise check again in a bit...
+    //       temporary Web browser otherwise check again in a bit...
 
     QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
 }
@@ -167,7 +167,7 @@ void PmrWebServiceManager::startCloseBrowser()
 
 void PmrWebServiceManager::closeBrowser()
 {
-    // Close our temporary web browser, but only if the current page has
+    // Close our temporary Web browser, but only if the current page has
     // finished loading otherwise try again in a bit
 
     if (mWebViewerDialog->isLoadFinished()) {

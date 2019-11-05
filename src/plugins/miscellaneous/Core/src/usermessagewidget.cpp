@@ -145,9 +145,9 @@ void UserMessageWidget::updateGui()
 
         setText(Message.arg(mIcon.isEmpty()?
                                 QString():
-                                Icon.arg(iconDataUri(mIcon, iconSize, iconSize)))
-                       .arg(mMessage)
-                       .arg(mExtraMessage.isEmpty()?
+                                Icon.arg(iconDataUri(mIcon, iconSize, iconSize)),
+                            mMessage,
+                            mExtraMessage.isEmpty()?
                                 QString():
                                 ExtraMessage.arg(mIcon.isEmpty()?
                                                      QString():

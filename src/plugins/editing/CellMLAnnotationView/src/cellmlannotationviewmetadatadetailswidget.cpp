@@ -237,7 +237,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
     mBorderedUnsupportedMetadataMessage->setVisible((pElement != nullptr) && isUnknownMetadata);
 
-    // Show/hide our metadata edit details and web viewer, depending on whether
+    // Show/hide our metadata edit details and Web viewer, depending on whether
     // the type of the metadata is known
 
     mBorderedMetadataEditDetails->setVisible((pElement != nullptr) && !isUnknownMetadata);
@@ -297,7 +297,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDeta
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &pQualifier)
 {
-    // Let people know that we want our web viewer to be updated with some
+    // Let people know that we want our Web viewer to be updated with some
     // details about the given qualifier
 
     mWebViewer->progressBarWidget()->setEnabled(true);
@@ -309,7 +309,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &p
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pResource)
 {
-    // Let people know that we want our web viewer to be updated with some
+    // Let people know that we want our Web viewer to be updated with some
     // details about the given resource
 
     mWebViewer->progressBarWidget()->setEnabled(true);
@@ -322,7 +322,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pR
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResource,
                                                          const QString &pId)
 {
-    // Let people know that we want our web viewer to be updated with some
+    // Let people know that we want our Web viewer to be updated with some
     // details about the given id
 
     mWebViewer->progressBarWidget()->setEnabled(true);
@@ -334,7 +334,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResourc
 
 void CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing()
 {
-    // We are 'asked' to look nothing up, so 'clean up' our web viewer by going
+    // We are 'asked' to look nothing up, so 'clean up' our Web viewer by going
     // to our home page (i.e. blank page)
 
     mWebViewer->progressBarWidget()->setEnabled(false);

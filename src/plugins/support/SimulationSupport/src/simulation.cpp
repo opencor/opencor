@@ -660,7 +660,7 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    for (auto data : mData.values()) {
+    for (auto data : mData) {
         delete[] data;
     }
 
@@ -767,7 +767,9 @@ void SimulationResults::createDataStore()
     // Reimport our data, if any, and update their array so that it contains the
     // computed values for our start point
 
-    for (auto data : mDataDataStores.keys()) {
+    QList<double *> dataKeys = mDataDataStores.keys();
+
+    for (auto data : dataKeys) {
         DataStore::DataStore *importDataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
 
@@ -1017,9 +1019,10 @@ void SimulationResults::addPoint(double pPoint)
     // Make sure that we have the correct imported data values for the given
     // point, keeping in mind that we may have several runs
 
+    QList<double *> dataKeys = mDataDataStores.keys();
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto data : mDataDataStores.keys()) {
+    for (auto data : dataKeys) {
         DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
@@ -1069,7 +1072,7 @@ double * SimulationResults::points(int pRun) const
 
 double * SimulationResults::constants(int pIndex, int pRun) const
 {
-    // Return our constants data at the given index and for the given run
+    // Return our constants at the given index and for the given run
 
     return mConstants.isEmpty()?
                 nullptr:
@@ -1080,7 +1083,7 @@ double * SimulationResults::constants(int pIndex, int pRun) const
 
 double * SimulationResults::rates(int pIndex, int pRun) const
 {
-    // Return our rates data at the given index and for the given run
+    // Return our rates at the given index and for the given run
 
     return mRates.isEmpty()?
                 nullptr:
@@ -1091,7 +1094,7 @@ double * SimulationResults::rates(int pIndex, int pRun) const
 
 double * SimulationResults::states(int pIndex, int pRun) const
 {
-    // Return our states data at the given index and for the given run
+    // Return our states at the given index and for the given run
 
     return mStates.isEmpty()?
                 nullptr:
@@ -1102,7 +1105,7 @@ double * SimulationResults::states(int pIndex, int pRun) const
 
 double * SimulationResults::algebraic(int pIndex, int pRun) const
 {
-    // Return our algebraic data at the given index and for the given run
+    // Return our algebraic at the given index and for the given run
 
     return mAlgebraic.isEmpty()?
                 nullptr:
@@ -1113,7 +1116,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 double * SimulationResults::data(double *pData, int pIndex, int pRun) const
 {
-    // Return our algebraic data at the given index and for the given run
+    // Return our data at the given index and for the given run
 
     DataStore::DataStoreVariables data = mData.value(pData);
 
@@ -1729,8 +1732,8 @@ void Simulation::run()
         return;
     }
 
-    // Initialise our worker, if we don't already have one and if the
-    // simulation settings we were given are sound
+    // Initialise our worker, if we don't already have one and if the simulation
+    // settings we were given are sound
 
     if ((mWorker == nullptr) && simulationSettingsOk()) {
         // Create and move our worker to a thread

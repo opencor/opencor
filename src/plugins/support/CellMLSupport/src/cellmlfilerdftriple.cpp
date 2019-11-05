@@ -168,8 +168,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     mSubject = new CellmlFileRdfTripleElement(pSubject);
     mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(ModelRegEx)));
-    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource)
-                                                                                    .arg(pId));
+    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource,
+                                                                                         pId));
 }
 
 //==============================================================================
@@ -189,8 +189,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     mSubject = new CellmlFileRdfTripleElement(pSubject);
     mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(BioRegEx)));
-    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource)
-                                                                                    .arg(pId));
+    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource,
+                                                                                         pId));
 }
 
 //==============================================================================

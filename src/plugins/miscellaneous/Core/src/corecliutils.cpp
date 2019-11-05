@@ -256,9 +256,14 @@ QString digitGroupNumber(const QString &pNumber)
 
 QString sizeAsString(quint64 pSize, int pPrecision)
 {
-    std::array<QString, 9> units = { QObject::tr("B"), QObject::tr("KB"),
-                                     QObject::tr("MB"), QObject::tr("GB"),
-                                     QObject::tr("TB"), QObject::tr("PB") };
+    static const std::array<QString, 9> Units = {
+                                                    QObject::tr("B"),
+                                                    QObject::tr("KB"),
+                                                    QObject::tr("MB"),
+                                                    QObject::tr("GB"),
+                                                    QObject::tr("TB"),
+                                                    QObject::tr("PB")
+                                                };
 
     auto i = ulong(qFloor(log(pSize)/log(1024.0)));
     double size = pSize/qPow(1024.0, i);
@@ -266,7 +271,7 @@ QString sizeAsString(quint64 pSize, int pPrecision)
 
     size = qRound(scaling*size)/scaling;
 
-    return QLocale().toString(size)+" "+units[i];
+    return QLocale().toString(size)+" "+Units.at(i);
 }
 
 //==============================================================================
@@ -367,7 +372,7 @@ void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
         pLine = -1;
         pColumn = -1;
     } else {
-        pLine = pString.left(pPosition).count(pEol)+1;
+        pLine = pString.leftRef(pPosition).count(pEol)+1;
         pColumn = pPosition-((pPosition >= pEol.length())?pString.lastIndexOf(pEol, pPosition-pEol.length()):-1);
     }
 }
@@ -861,7 +866,7 @@ bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
     // Determine which of the two serialised attributes should be first based on
     // the attribute name, i.e. ignoring the "=<AttributeValue>" bit
 
-    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf('=')).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf('=')), Qt::CaseInsensitive) < 0;
+    return pSerialisedAttribute1.leftRef(pSerialisedAttribute1.indexOf('=')).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf('=')), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -989,7 +994,9 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     // Manually serialise the elements' attributes
 
-    for (const auto &elementAttribute : elementsAttributes.keys()) {
+    QStringList elementAttributeKeys = elementsAttributes.keys();
+
+    for (const auto &elementAttribute : elementAttributeKeys) {
         res.replace(elementAttribute+R"(="")", elementsAttributes.value(elementAttribute));
     }
 

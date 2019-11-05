@@ -449,7 +449,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     mContextMenu->addMenu(mPlotAgainstMenu);
 
-    // Initialise our two main menu items
+    // Initialise our menu items
 
     retranslateContextMenu();
 

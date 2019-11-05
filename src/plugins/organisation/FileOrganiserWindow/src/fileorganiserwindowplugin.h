@@ -62,9 +62,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mFileOrganiserWindowAction;
+    QAction *mFileOrganiserWindowAction = nullptr;
 
-    FileOrganiserWindowWindow *mFileOrganiserWindowWindow;
+    FileOrganiserWindowWindow *mFileOrganiserWindowWindow = nullptr;
 };
 
 //==============================================================================

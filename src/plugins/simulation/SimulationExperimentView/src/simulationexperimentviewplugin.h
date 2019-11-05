@@ -83,9 +83,9 @@ public:
     PendulumWindow::PendulumWindowWindow * pendulumWindowWindow() const;
 
 private:
-    SimulationExperimentViewWidget *mViewWidget;
+    SimulationExperimentViewWidget *mViewWidget = nullptr;
 
-    PendulumWindow::PendulumWindowWindow *mPendulumWindowWindow;
+    PendulumWindow::PendulumWindowWindow *mPendulumWindowWindow = nullptr;
 };
 
 //==============================================================================

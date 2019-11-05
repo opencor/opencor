@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PMR web viewer dialog
+// PMR Web viewer dialog
 //==============================================================================
 
 #include "plugin.h"
@@ -95,7 +95,7 @@ bool PmrWebViewerDialog::isLoadFinished() const
 
 void PmrWebViewerDialog::load(const QUrl &pUrl)
 {
-    // Get our web viewer to load the given URL
+    // Get our Web viewer to load the given URL
 
     mWebViewer->webView()->load(pUrl);
 }

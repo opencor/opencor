@@ -62,9 +62,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mFileBrowserWindowAction;
+    QAction *mFileBrowserWindowAction = nullptr;
 
-    FileBrowserWindowWindow *mFileBrowserWindowWindow;
+    FileBrowserWindowWindow *mFileBrowserWindowWindow = nullptr;
 };
 
 //==============================================================================

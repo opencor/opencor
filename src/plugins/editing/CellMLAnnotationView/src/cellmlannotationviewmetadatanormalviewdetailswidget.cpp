@@ -228,7 +228,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     mFirstRdfTripleInformation = QString();
     mLastRdfTripleInformation = QString();
 
-    // Populate our web view, but only if there is at least one RDF triple
+    // Populate our Web view, but only if there is at least one RDF triple
 
     CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
 
@@ -257,13 +257,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
         return;
     }
 
-    // Initialise our web view, if needed
+    // Initialise our Web view, if needed
 
     if (mItemsCount == 0) {
         int iconSize = int(16/qApp->devicePixelRatio());
 
-        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize))
-                                                                                   .arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize, QIcon::Disabled)));
+        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize),
+                                                                                        Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize, QIcon::Disabled)));
     }
 
     // Add the item
@@ -536,8 +536,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
         } else {
             // The looked up information is the same, so no need to look it up
             // again
-            // Note: indeed, to look it up again would result in the web view
-            //       flashing (since a 'new' web page would be loaded)...
+            // Note: indeed, to look it up again would result in the Web view
+            //       flashing (since a 'new' Web page would be loaded)...
 
             additionalGuiUpdates(mRdfTripleInformation, mInformationType, Information::No);
         }

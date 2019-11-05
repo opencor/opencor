@@ -130,7 +130,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, &PmrWindowWindow::visibilityChanged,
             this, QOverload<bool>::of(&PmrWindowWindow::retrieveExposures));
 
-    // Create an instance of our PMR web service
+    // Create an instance of our PMR Web service
 
     mPmrWebService = new PMRSupport::PmrWebService(this);
 
@@ -140,7 +140,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
                                             PMRSupport::SettingsPreferencesPmrUrl,
                                             PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
 
-    // Some connections to process responses from our PMR web service
+    // Some connections to process responses from our PMR Web service
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
             this, QOverload<bool>::of(&PmrWindowWindow::busy));
@@ -220,7 +220,7 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 void PmrWindowWindow::update(const QString &pPmrUrl)
 {
-    // Update our PMR web service and then reload ourselves, if needed
+    // Update our PMR Web service and then reload ourselves, if needed
     // Note: we make sure that no busy widget is visible. Indeed, this is in
     //       case an instance wasn't working and we decided to switch to another
     //       that does (in which case the busy widget of the first instance
@@ -357,7 +357,7 @@ void PmrWindowWindow::showError(const QString &pMessage)
 
 void PmrWindowWindow::actionReloadTriggered()
 {
-    // Get the list of exposures from our PMR web service
+    // Get the list of exposures from our PMR Web service
 
     mPmrWebService->requestExposures();
 }

@@ -104,7 +104,7 @@ PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
     connect(this, &PmrWorkspace::workspaceSynchronized,
             workspaceManager, &PmrWorkspaceManager::workspaceSynchronized);
 
-    // Forward our signals to our parent PMR web service
+    // Forward our signals to our parent PMR Web service
 
     connect(this, &PmrWorkspace::information,
             pParent, &PmrWebService::information);
@@ -1405,8 +1405,8 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
     const git_error *gitError = git_error_last();
 
     if (gitError != nullptr) {
-        emit warning(tr("%1\n\nGit message: %2.").arg(pMessage)
-                                                 .arg(Core::formatMessage(gitError->message)));
+        emit warning(tr("%1\n\nGit message: %2.").arg(pMessage,
+                                                      Core::formatMessage(gitError->message)));
     } else {
         emit warning(pMessage);
     }

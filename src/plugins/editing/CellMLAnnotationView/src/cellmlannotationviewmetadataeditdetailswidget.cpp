@@ -536,17 +536,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     mOutputOntologicalTerms->webView()->setHtml(QString());
 
-    // Populate our web view, but only if there is at least one item
+    // Populate our Web view, but only if there is at least one item
 
     bool showBusyWidget = false;
 
     if (!pItems.isEmpty()) {
-        // Initialise our web view
+        // Initialise our Web view
 
         int iconSize = int(16/qApp->devicePixelRatio());
 
-        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", iconSize, iconSize))
-                                                                                   .arg(Core::iconDataUri(":/oxygen/actions/list-add.png", iconSize, iconSize, QIcon::Disabled)));
+        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", iconSize, iconSize),
+                                                                                        Core::iconDataUri(":/oxygen/actions/list-add.png", iconSize, iconSize, QIcon::Disabled)));
 
         // Add the items
 

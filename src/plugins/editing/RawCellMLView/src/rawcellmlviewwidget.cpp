@@ -92,7 +92,7 @@ void RawCellmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    for (auto editingWidget : mEditingWidgets.values()) {
+    for (auto editingWidget : mEditingWidgets) {
         editingWidget->retranslateUi();
     }
 }

@@ -166,19 +166,19 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                             const QString &pQualifier)
 {
-    // The user requested a qualifier to be looked up, so generate a web page
+    // The user requested a qualifier to be looked up, so generate a Web page
     // containing some information about the qualifier
     // Note: ideally, there would be a way to refer to a particular qualifier
     //       using http://biomodels.net/qualifiers/, but that would require
     //       anchors and they don't have any, so instead we use the information
     //       which can be found on that site and present it to the user in the
-    //       form of a web page...
+    //       form of a Web page...
 
     if (pQualifier.isEmpty()) {
         return;
     }
 
-    // Generate the web page containing some information about the qualifier
+    // Generate the Web page containing some information about the qualifier
 
     static const QString ModelIs            = "model:is";
     static const QString ModelIsDerivedFrom = "model:isDerivedFrom";
@@ -268,10 +268,10 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
     // Show the information
 
-    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier)
-                                                                .arg(qualifierSvg)
-                                                                .arg(shortDescription)
-                                                                .arg(longDescription));
+    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier,
+                                                                     qualifierSvg,
+                                                                     shortDescription,
+                                                                     longDescription));
 }
 
 //==============================================================================
