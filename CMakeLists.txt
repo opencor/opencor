@@ -867,6 +867,10 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         # We are using the prebuilt version of our Python package, so build all
         # our plugins
 
+        if(RELEASE_MODE OR NOT WIN32)
+            set(MISCELLANEOUS_PYTHON_CONSOLE_WINDOW miscellaneous/PythonConsoleWindow)
+        endif()
+
         list(APPEND PLUGINS
             thirdParty/libSBML
             thirdParty/PythonPackages
@@ -889,7 +893,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             miscellaneous/Core
             miscellaneous/HelpWindow
             miscellaneous/JupyterKernel
-            miscellaneous/PythonConsoleWindow
+            ${MISCELLANEOUS_PYTHON_CONSOLE_WINDOW}
             miscellaneous/PythonShell
             miscellaneous/WebBrowserWindow
 
