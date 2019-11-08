@@ -45,8 +45,12 @@ PLUGININFO_FUNC ZincWindowPluginInfo()
 
     return new PluginInfo(PluginInfo::Category::Test, true, false,
                           QStringList() << "ZincWidget",
+#if !defined(QT_DEBUG) || !defined(Q_OS_WIN)
                           descriptions,
                           QStringList() << "PythonConsoleWindow");
+#else
+                          descriptions);
+#endif
 }
 
 //==============================================================================
