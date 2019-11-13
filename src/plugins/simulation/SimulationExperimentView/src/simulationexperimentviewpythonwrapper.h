@@ -36,9 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace SimulationExperimentView {
 
 //==============================================================================
@@ -49,7 +46,7 @@ class SimulationExperimentViewPythonWrapper : public QObject
 
 public:
     explicit SimulationExperimentViewPythonWrapper(PyObject *pModule,
-                                                   QObject *pParent = nullptr);
+                                                   QObject *pParent);
 };
 
 //==============================================================================

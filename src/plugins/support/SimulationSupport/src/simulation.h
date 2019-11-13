@@ -405,8 +405,8 @@ private:
     bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
-    void clearResults(const QString &pFileName);
     void runStarting(const QString &pFileName);
+    void clearResults(const QString &pFileName);
 
     void running(bool pIsResuming);
     void paused();

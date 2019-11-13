@@ -441,20 +441,15 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
     mErrorMessage = QString();
 
-    // Try to allocate all the memory we need by adding a run to our
-    // simulation
+    // Try to allocate all the memory we need by adding a run to our simulation
+    // and, if successful, run our simulation
 
-    bool runSimulation = pSimulation->addRun();
-
-    // Run our simulation (after having added a run to our graphs), in
-    // case we were able to allocate all the memory we need
-
-    if (runSimulation) {
+    if (pSimulation->addRun()) {
         // Save the keyboard focus, which will be to our IPython console
 
         focusWidget = QApplication::focusWidget();
 
-        // Let the simulation widget know we are starting
+        // Let people know that we are starting our run
 
         emit pSimulation->runStarting(pSimulation->fileName());
 
