@@ -658,18 +658,18 @@
     </message>
     <message>
         <source>the requested solver property (%1) could not be set</source>
-        <translation type="unfinished"></translation>
+        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>
-        <translation type="unfinished"></translation>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>unable to get simulations&apos;s runtime</source>
-        <translation type="unfinished"></translation>
+        <source>unable to get the simulation&apos;s runtime</source>
+        <translation>incapable d&apos;obtenir le modèle d&apos;exécution de la simulation</translation>
     </message>
 </context>
 </TS>
