@@ -69,10 +69,6 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-class SimulationSupportPythonWrapper;
-
-//==============================================================================
-
 class Simulation;
 class SimulationData;
 class SimulationResults;
