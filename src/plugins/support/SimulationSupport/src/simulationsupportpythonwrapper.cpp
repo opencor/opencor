@@ -215,10 +215,10 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     Py_DECREF(bytes);
 #include "pythonend.h"
 
-    QString ioError = Core::openFile(fileName);
+    QString error = Core::openFile(fileName);
 
-    if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
+    if (!error.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, qPrintable(error));
 
         return nullptr;
     }
@@ -246,10 +246,10 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     Py_DECREF(bytes);
 #include "pythonend.h"
 
-    QString ioError = Core::openRemoteFile(url);
+    QString error = Core::openRemoteFile(url);
 
-    if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
+    if (!error.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, qPrintable(error));
 
         return nullptr;
     }
