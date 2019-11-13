@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for SimulationExperimentView classes
+// Simulation Experiment view Python wrapper
 //==============================================================================
 
 #pragma once

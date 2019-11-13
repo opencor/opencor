@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for SimulationSupport classes
+// Simulation support Python wrapper
 //==============================================================================
 
 #pragma once
