@@ -21,6 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Main
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #ifdef Q_OS_LINUX
     #include "Python.h"
     // Note: this needs to be included before <QObject> to prevent name clashes...
@@ -41,10 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "checkforupdatesdialog.h"
     #include "splashscreenwindow.h"
 #endif
-
-//==============================================================================
-
-#include <Qt>
 
 //==============================================================================
 
