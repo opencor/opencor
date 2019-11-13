@@ -867,8 +867,8 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         # We are using the prebuilt version of our Python package, so build all
         # our plugins
         # Note: on Windows, it's technically very difficult, if not impossible,
-        #       to get a debug version of our PythonConsole window (and of any
-        #       Jupyter-related scripts), so we skip it in that case (see
+        #       to get a debug version of our PythonConsole window, so we skip
+        #       it in that case (see
         #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
 
         if(RELEASE_MODE OR NOT WIN32)
