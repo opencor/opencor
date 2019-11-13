@@ -345,12 +345,12 @@
         <translation>Réinitialiser Paramètres État Modèle</translation>
     </message>
     <message>
-        <source>Reset All Model Parameters</source>
-        <translation>Réinitialiser Tous Paramètres Modèle</translation>
-    </message>
-    <message>
         <source>Reset the state model parameters</source>
         <translation>Réinitialiser les paramètres état du modèle</translation>
+    </message>
+    <message>
+        <source>Reset All Model Parameters</source>
+        <translation>Réinitialiser Tous Paramètres Modèle</translation>
     </message>
     <message>
         <source>Reset all the model parameters</source>
@@ -529,22 +529,6 @@
         <translation>Fichier</translation>
     </message>
     <message>
-        <source>Information:</source>
-        <translation>Information :</translation>
-    </message>
-    <message>
-        <source>Error:</source>
-        <translation>Erreur :</translation>
-    </message>
-    <message>
-        <source>Warning:</source>
-        <translation>Attention :</translation>
-    </message>
-    <message>
-        <source>Fatal:</source>
-        <translation>Fatal :</translation>
-    </message>
-    <message>
         <source>Runtime:</source>
         <translation>Modèle d&apos;exécution :</translation>
     </message>
@@ -571,6 +555,22 @@
     <message>
         <source>none</source>
         <translation>aucun</translation>
+    </message>
+    <message>
+        <source>Information:</source>
+        <translation>Information :</translation>
+    </message>
+    <message>
+        <source>Error:</source>
+        <translation>Erreur :</translation>
+    </message>
+    <message>
+        <source>Warning:</source>
+        <translation>Attention :</translation>
+    </message>
+    <message>
+        <source>Fatal:</source>
+        <translation>Fatal :</translation>
     </message>
     <message>
         <source>the model needs both an ODE and an NLA solver, but none are available</source>
@@ -625,6 +625,14 @@
         <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
     </message>
     <message>
+        <source>the requested solver property (%1) could not be set</source>
+        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
+    </message>
+    <message>
+        <source>the requested solver (%1) could not be found</source>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
         <source>the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)</source>
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 et la variable %4 dans le composant %5 n&apos;ont pas pu être trouvées)</translation>
     </message>
@@ -655,14 +663,6 @@
     <message>
         <source>%1 using %2</source>
         <translation>%1 avec %2</translation>
-    </message>
-    <message>
-        <source>the requested solver property (%1) could not be set</source>
-        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
-    </message>
-    <message>
-        <source>the requested solver (%1) could not be found</source>
-        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
     </message>
 </context>
 <context>
