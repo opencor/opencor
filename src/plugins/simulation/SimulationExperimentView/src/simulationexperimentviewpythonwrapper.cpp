@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "centralwidget.h"
+#include "corecliutils.h"
+#include "filemanager.h"
 #include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
@@ -133,66 +135,35 @@ static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
 #include "pythonend.h"
     }
 
-    char *name;
+    char *string;
     Py_ssize_t len;
 
-    PyBytes_AsStringAndSize(bytes, &name, &len);
+    PyBytes_AsStringAndSize(bytes, &string, &len);
 
-    QString fileName = QString::fromUtf8(name, int(len));
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    Core::checkFileNameOrUrl(QString::fromUtf8(string, int(len)), isLocalFile, fileNameOrUrl);
 
 #include "pythonbegin.h"
     Py_DECREF(bytes);
 #include "pythonend.h"
 
-    QString ioError = Core::centralWidget()->openFile(fileName,
-                                                      Core::File::Type::Local,
-                                                      QString(), false);
+    QString error = isLocalFile?
+                        Core::centralWidget()->openFile(fileNameOrUrl,
+                                                        Core::File::Type::Local,
+                                                        QString(), false):
+                        Core::centralWidget()->openRemoteFile(fileNameOrUrl, false);
 
-    if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
-
-        return nullptr;
-    }
-
-    return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
-}
-
-//==============================================================================
-
-static PyObject * openRemoteSimulation(PyObject *pSelf, PyObject *pArgs)
-{
-    Q_UNUSED(pSelf)
-
-    // Open a remote simulation
-
-    PyObject *bytes;
-
-    if (PyArg_ParseTuple(pArgs, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
-#include "pythonbegin.h"
-        Py_RETURN_NONE;
-#include "pythonend.h"
-    }
-
-    char *name;
-    Py_ssize_t len;
-
-    PyBytes_AsStringAndSize(bytes, &name, &len);
-
-    QString url = QString::fromUtf8(name, int(len));
-
-#include "pythonbegin.h"
-    Py_DECREF(bytes);
-#include "pythonend.h"
-
-    QString ioError = Core::centralWidget()->openRemoteFile(url, false);
-
-    if (!ioError.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(ioError));
+    if (!error.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, qPrintable(error));
 
         return nullptr;
     }
 
-    return initializeSimulation(Core::localFileName(url));
+    return initializeSimulation(isLocalFile?
+                                    fileNameOrUrl:
+                                    Core::FileManager::instance()->fileName(fileNameOrUrl));
 }
 
 //==============================================================================
@@ -235,10 +206,9 @@ SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyO
 {
     // Add some Python wrappers
 
-    static std::array<PyMethodDef, 5> PythonSimulationExperimentViewMethods = {{
+    static std::array<PyMethodDef, 4> PythonSimulationExperimentViewMethods = {{
                                                                                   { "simulation",  simulation, METH_VARARGS, "Current simulation." },
                                                                                   { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
-                                                                                  { "openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation." },
                                                                                   { "closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation." },
                                                                                   { nullptr, nullptr, 0, nullptr }
                                                                               }};
