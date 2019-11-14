@@ -51,7 +51,7 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     setDragDropMode(QAbstractItemView::DragOnly);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     setFrameShape(QFrame::StyledPanel);
-#elif defined(Q_OS_MAC)
+#else
     setFrameShape(QFrame::Panel);
 #endif
     setModel(mModel);

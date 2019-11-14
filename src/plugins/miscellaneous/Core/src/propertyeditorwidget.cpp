@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStandardItem>
 #include <QStyle>
 #include <QStyleOptionViewItem>
+#include <QTimer>
 #include <QVariant>
 
 //==============================================================================
@@ -1104,7 +1105,7 @@ void Property::setColorValue(const QPoint &pPoint)
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
             iconRect.translate(3, 1);
-#elif defined(Q_OS_MAC)
+#else
             iconRect.translate(5, 1);
 #endif
 
@@ -1987,7 +1988,7 @@ void PropertyEditorWidget::updateHeight()
                        +((width() < idealSize.width())?
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
                             horizontalScrollBar()->height():
-#elif defined(Q_OS_LINUX)
+#else
                             horizontalScrollBar()->height()+3:
                             // Note: why on earth does Linux require three more
                             //       pixels?!... Indeed, if we don't add them,
@@ -2031,6 +2032,15 @@ void PropertyEditorWidget::checkCheckState(QStandardItem *pItem)
 
 //==============================================================================
 
+void PropertyEditorWidget::updateFocusProxy()
+{
+    // Set our property's editor as our focus proxy
+
+    setFocusProxy(mPropertyEditor);
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
     // Keep track of some information about the property
@@ -2058,14 +2068,17 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
     // Next, we need to use the property's editor as our focus proxy and make
     // sure that it immediately gets the focus
-    // Note: if we were not to immediately give the focus to our editor, then
-    //       the central widget would give the focus to the previously focused
-    //       widget (see CentralWidget::updateGui()), which is clearly not what
-    //       we want...
-
-    setFocusProxy(pEditor);
+    // Note #1: if we were not to immediately give the focus to our editor, then
+    //          the central widget would give the focus to the previously
+    //          focused widget (see CentralWidget::updateGui()), which is
+    //          clearly not what we want...
+    // Note #2: starting with Qt 5.12.5, we can't immediately set the property's
+    //          editor as our focus proxy (!?). This will indeed crash OpenCOR!
+    //          So, instead, we set it through a single shot...
 
     pEditor->setFocus();
+
+    QTimer::singleShot(0, this, &PropertyEditorWidget::updateFocusProxy);
 }
 
 //==============================================================================

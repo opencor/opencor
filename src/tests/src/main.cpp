@@ -93,7 +93,7 @@ int main(int pArgC, char *pArgV[])
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
             int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, args);
-#elif defined(Q_OS_MAC)
+#else
             int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, args);
 #endif
 
