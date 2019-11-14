@@ -29,18 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlfilemanager.h"
 #include "simulation.h"
 #include "simulationworker.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
-#include <QSet>
-#include <QtMath>
-
-//==============================================================================
-
-#include "libsbmlbegin.h"
-    #include "sbml/math/FormulaParser.h"
-#include "libsbmlend.h"
+#include <QThread>
 
 //==============================================================================
 
@@ -48,17 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
-    #include "sedml/SedPlot2D.h"
-    #include "sedml/SedRepeatedTask.h"
-    #include "sedml/SedSimulation.h"
     #include "sedml/SedUniformTimeCourse.h"
-    #include "sedml/SedVectorRange.h"
 #include "libsedmlend.h"
-
-//==============================================================================
-
-#include <QEventLoop>
-#include <QThread>
 
 //==============================================================================
 
