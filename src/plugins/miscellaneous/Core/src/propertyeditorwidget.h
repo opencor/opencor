@@ -472,6 +472,8 @@ private slots:
 
     void checkCheckState(QStandardItem *pItem);
 
+    void updateFocusProxy();
+
     void editorOpened(QWidget *pEditor);
     void editorClosed();
 
