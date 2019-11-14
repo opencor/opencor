@@ -111,10 +111,6 @@ SimulationObject::SimulationObject(Simulation *pSimulation) :
 
 //==============================================================================
 
-SimulationObject::~SimulationObject() = default;
-
-//==============================================================================
-
 Simulation * SimulationObject::simulation() const
 {
     // Return our simulation

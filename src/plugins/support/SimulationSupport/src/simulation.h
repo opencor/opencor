@@ -114,7 +114,6 @@ class SimulationObject : public QObject
 
 public:
     explicit SimulationObject(Simulation *pSimulation);
-    ~SimulationObject() override;
 
 public slots:
     Simulation * simulation() const;
