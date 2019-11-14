@@ -119,7 +119,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mPmrWindowWidget,
                                                      true, true, true, true));
-#elif defined(Q_OS_MAC)
+#else
     mGui->layout->addWidget(new Core::BorderedWidget(mPmrWindowWidget,
                                                      true, false, false, false));
 #endif

@@ -64,7 +64,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     initStyleOption(&styleOption);
 
     int arrowButtonHeight = style()->subControlRect(QStyle::CC_ScrollBar, &styleOption, QStyle::SC_ScrollBarAddLine, this).height();
-#elif defined(Q_OS_MAC)
+#else
     int arrowButtonHeight = 0;
 #endif
 

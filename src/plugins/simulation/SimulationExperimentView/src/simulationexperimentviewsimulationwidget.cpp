@@ -1396,14 +1396,9 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             mSimulation->resume();
         } else {
             // Try to allocate all the memory we need by adding a run to our
-            // simulation
+            // simulation and, if successful, run our simulation
 
-            bool runSimulation = mSimulation->addRun();
-
-            // Run our simulation (after having added a run to our graphs), in
-            // case we were able to allocate all the memory we need
-
-            if (runSimulation) {
+            if (mSimulation->addRun()) {
                 mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::AddRun);
 
                 mSimulation->run();

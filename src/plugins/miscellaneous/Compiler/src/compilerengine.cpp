@@ -91,7 +91,7 @@ inline std::string functionName(const char *pFunctionName)
 {
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     return pFunctionName;
-#elif defined(Q_OS_MAC)
+#else
     return std::string("_")+pFunctionName;
 #endif
 }

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic pop
-#elif defined(Q_OS_MAC)
+#else
     #pragma clang diagnostic pop
 #endif
 
