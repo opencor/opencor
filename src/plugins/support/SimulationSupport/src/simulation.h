@@ -133,8 +133,6 @@ public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData() override;
 
-    void setSimulationResults(SimulationResults *pSimulationResults);
-
     double * constants() const;
     double * rates() const;
     double * states() const;
@@ -163,8 +161,6 @@ public:
     static void updateParameters(SimulationData *pSimulationData);
 
 private:
-    SimulationResults *mSimulationResults = nullptr;
-
     quint64 mDelay = 0;
 
     double mStartingPoint = 0.0;

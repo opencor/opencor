@@ -144,13 +144,6 @@ SimulationData::~SimulationData()
 
 //==============================================================================
 
-void SimulationData::setSimulationResults(SimulationResults *pSimulationResults)
-{
-    mSimulationResults = pSimulationResults;
-}
-
-//==============================================================================
-
 void SimulationData::reload()
 {
     // Reload ourselves by deleting and recreating our arrays
@@ -1338,10 +1331,6 @@ Simulation::Simulation(const QString &pFileName) :
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
     mImportData = new SimulationImportData(this);
-
-    // Make sure that we can access metadata about result variables
-
-    mData->setSimulationResults(mResults);
 
     // Keep track of any error occurring in our data
 
