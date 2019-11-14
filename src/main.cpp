@@ -106,7 +106,7 @@ int main(int pArgC, char *pArgV[])
     bool tryCliVersion = false;
 #elif defined(Q_OS_LINUX)
     bool tryCliVersion = true;
-#elif defined(Q_OS_MAC)
+#else
     bool tryCliVersion = (pArgC == 1) || (memcmp(pArgV[1], "-psn_", 5) != 0);
 #endif
 

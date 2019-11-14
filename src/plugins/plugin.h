@@ -41,7 +41,7 @@ namespace OpenCOR {
 #elif defined(Q_OS_LINUX)
     static const auto PluginPrefix    = QStringLiteral("lib");
     static const auto PluginExtension = QStringLiteral(".so");
-#elif defined(Q_OS_MAC)
+#else
     static const auto PluginPrefix    = QStringLiteral("lib");
     static const auto PluginExtension = QStringLiteral(".dylib");
 #endif

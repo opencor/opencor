@@ -428,14 +428,14 @@ void CorePlugin::initializePlugin()
     mFilePreviousAction = newAction(QIcon(":/oxygen/actions/go-previous.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                                     QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_Tab),
-#elif defined(Q_OS_MAC)
+#else
                                     QKeySequence(Qt::MetaModifier|Qt::ShiftModifier|Qt::Key_Tab),
 #endif
                                     mainWindow());
     mFileNextAction = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                                 QKeySequence(Qt::ControlModifier|Qt::Key_Tab),
-#elif defined(Q_OS_MAC)
+#else
                                 QKeySequence(Qt::MetaModifier|Qt::Key_Tab),
 #endif
                                     mainWindow());
@@ -443,7 +443,7 @@ void CorePlugin::initializePlugin()
     mFileCloseAction = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
                                  QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::ControlModifier|Qt::Key_W),
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+#else
                                  QKeySequence::Close,
 #endif
                                  mainWindow());

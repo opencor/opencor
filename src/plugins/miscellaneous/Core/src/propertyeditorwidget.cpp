@@ -1105,7 +1105,7 @@ void Property::setColorValue(const QPoint &pPoint)
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
             iconRect.translate(3, 1);
-#elif defined(Q_OS_MAC)
+#else
             iconRect.translate(5, 1);
 #endif
 
@@ -1988,7 +1988,7 @@ void PropertyEditorWidget::updateHeight()
                        +((width() < idealSize.width())?
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
                             horizontalScrollBar()->height():
-#elif defined(Q_OS_LINUX)
+#else
                             horizontalScrollBar()->height()+3:
                             // Note: why on earth does Linux require three more
                             //       pixels?!... Indeed, if we don't add them,

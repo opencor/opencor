@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include <Windows.h>
 #elif defined(Q_OS_LINUX)
     #include <unistd.h>
-#elif defined(Q_OS_MAC)
+#else
     #include <mach/host_info.h>
     #include <mach/mach_host.h>
     #include <sys/sysctl.h>
@@ -188,7 +188,7 @@ quint64 totalMemory()
     res = quint64(memoryStatus.ullTotalPhys);
 #elif defined(Q_OS_LINUX)
     res = quint64(sysconf(_SC_PHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
-#elif defined(Q_OS_MAC)
+#else
     std::array<int, 2> mib = { CTL_HW, HW_MEMSIZE };
 
     size_t len = sizeof(res);
@@ -217,7 +217,7 @@ quint64 freeMemory()
     res = quint64(memoryStatus.ullAvailPhys);
 #elif defined(Q_OS_LINUX)
     res = quint64(sysconf(_SC_AVPHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
-#elif defined(Q_OS_MAC)
+#else
     vm_statistics_data_t vmStats;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"

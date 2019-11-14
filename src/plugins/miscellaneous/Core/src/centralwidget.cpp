@@ -1873,7 +1873,7 @@ void CentralWidget::updateGui()
     if (mContents->currentWidget() != newView) {
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         mContents->setUpdatesEnabled(false);
-#elif defined(Q_OS_MAC)
+#else
         bool hideShowStatusBar =    mainWindow()->statusBar()->isVisible()
                                  && (qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos()))) == nullptr);
 
@@ -1887,7 +1887,7 @@ void CentralWidget::updateGui()
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         mContents->setUpdatesEnabled(true);
-#elif defined(Q_OS_MAC)
+#else
         if (hideShowStatusBar) {
             mainWindow()->statusBar()->show();
         }

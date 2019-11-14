@@ -240,7 +240,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mGui->actionQuit->setShortcuts(QList<QKeySequence>()
                                        << QKeySequence(Qt::AltModifier|Qt::Key_F4)
                                        << QKeySequence(Qt::ControlModifier|Qt::Key_Q));
-#elif defined(Q_OS_MAC)
+#else
     mGui->actionQuit->setShortcut(QKeySequence::Quit);
 #endif
 
@@ -490,7 +490,7 @@ void MainWindow::registerOpencorUrlScheme()
 
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
-#elif defined(Q_OS_MAC)
+#else
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),                                // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
@@ -1008,7 +1008,7 @@ void MainWindow::showSelf()
     //       application is already in the foreground. Fair enough, but it
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+#else
     // We are on Linux or macOS, so we can simply activate the window and raise
     // ourselves
 

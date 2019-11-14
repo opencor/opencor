@@ -136,7 +136,7 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     QString program = "OpenCOR.com";
 #elif defined(Q_OS_LINUX)
     QString program = BuildDir+"/bin/OpenCOR";
-#elif defined(Q_OS_MAC)
+#else
     QString program = BuildDir+"/OpenCOR.app/Contents/MacOS/OpenCOR";
 #endif
 

@@ -1195,7 +1195,7 @@ bool QZipReader::extractAll(const QString &destinationDir) const
 //---OPENCOR--- BEGIN
 #if defined(Q_OS_WIN)
     static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+#else
     static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 #endif
 //---OPENCOR--- END
