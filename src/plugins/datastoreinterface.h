@@ -52,7 +52,7 @@ public:
 private:
     int mReferenceCounter = 1;
 
-    const quint64 mSize;
+    quint64 mSize;
     double *mData = nullptr;
 };
 

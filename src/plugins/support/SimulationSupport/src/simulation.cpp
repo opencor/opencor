@@ -623,16 +623,20 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
-    for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
-        if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i])) {
-            return true;
-        }
-    }
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    if (pCheckConstants) {
-        for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
-            if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i])) {
+    if (runtime != nullptr) {
+        for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
+            if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i])) {
                 return true;
+            }
+        }
+
+        if (pCheckConstants) {
+            for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
+                if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i])) {
+                    return true;
+                }
             }
         }
     }
