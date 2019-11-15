@@ -672,6 +672,7 @@ void SimulationData::checkForModifications()
 }
 
 //==============================================================================
+//---ISSUE1255--- WHAT IS THE EXACT USE OF THIS?...
 
 void SimulationData::updateParameters(SimulationData *pSimulationData)
 {
