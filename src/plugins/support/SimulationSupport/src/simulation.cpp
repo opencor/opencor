@@ -188,7 +188,7 @@ double * SimulationData::algebraic() const
 
 DataStore::DataStoreValues * SimulationData::constantsValues() const
 {
-    // Return our constants DataStoreValues
+    // Return our constants values
 
     return mConstantsValues;
 }
@@ -197,7 +197,7 @@ DataStore::DataStoreValues * SimulationData::constantsValues() const
 
 DataStore::DataStoreValues * SimulationData::ratesValues() const
 {
-    // Return our rates DataStoreValues
+    // Return our rates values
 
     return mRatesValues;
 }
@@ -206,7 +206,7 @@ DataStore::DataStoreValues * SimulationData::ratesValues() const
 
 DataStore::DataStoreValues * SimulationData::statesValues() const
 {
-    // Return our states DataStoreValues
+    // Return our states values
 
     return mStatesValues;
 }
@@ -215,7 +215,7 @@ DataStore::DataStoreValues * SimulationData::statesValues() const
 
 DataStore::DataStoreValues * SimulationData::algebraicValues() const
 {
-    // Return our algebraic DataStoreValues
+    // Return our algebraic values
 
     return mAlgebraicValues;
 }
@@ -677,7 +677,7 @@ void SimulationData::updateParameters(SimulationData *pSimulationData)
 
     pSimulationData->reset(false);
 
-    // Let the simulation view know parameters have changed
+    // Let people know that parameters have changed
 
     emit pSimulationData->updated(pSimulationData->mStartingPoint);
 }

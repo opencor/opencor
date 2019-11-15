@@ -27,13 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "datastoreinterface.h"
 #include "simulationsupportglobal.h"
-#include "simulationsupportpythonwrapper.h"
 #include "solverinterface.h"
-
-//==============================================================================
-
-#include <QEventLoop>
-#include <QVector>
 
 //==============================================================================
 
@@ -48,7 +42,6 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
-    class CellmlFileRuntimeParameter;
 } // namespace CellMLSupport
 
 //==============================================================================
@@ -71,8 +64,20 @@ namespace SimulationSupport {
 
 class Simulation;
 class SimulationData;
-class SimulationResults;
 class SimulationWorker;
+
+//==============================================================================
+// Note: we bind the SimulationData object to the the first parameter of
+//       updateParameters() to create a function object to be called when
+//       simulation parameters are updated...
+
+#if defined(Q_OS_WIN)
+    using SimulationDataUpdatedFunction = std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *>;
+#elif defined(Q_OS_LINUX)
+    using SimulationDataUpdatedFunction = std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type;
+#else
+    using SimulationDataUpdatedFunction = std::__bind<void (*)(SimulationData *), SimulationData *>;
+#endif
 
 //==============================================================================
 

@@ -55,19 +55,6 @@ class SimulationData;
 class SimulationResults;
 
 //==============================================================================
-// Note: we bind the SimulationData object to the the first parameter of
-//       updateParameters() to create a function object to be called when
-//       simulation parameters are updated...
-
-#if defined(Q_OS_WIN)
-    using SimulationDataUpdatedFunction = std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *>;
-#elif defined(Q_OS_LINUX)
-    using SimulationDataUpdatedFunction = std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type;
-#else
-    using SimulationDataUpdatedFunction = std::__bind<void (*)(SimulationData *), SimulationData *>;
-#endif
-
-//==============================================================================
 
 class SimulationSupportPythonWrapper : public QObject
 {
