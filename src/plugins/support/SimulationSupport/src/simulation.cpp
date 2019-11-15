@@ -505,7 +505,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     auto currentConstants = new double[runtime->constantsCount()] {};
 
     if (!pAll) {
-        memcpy(currentConstants, mConstantsArray->data(), size_t(runtime->constantsCount())*Solver::SizeOfDouble);
+        memcpy(currentConstants, constants(), size_t(runtime->constantsCount())*Solver::SizeOfDouble);
     }
 
     // Reset our parameter values
@@ -516,7 +516,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         mStatesArray->reset();
         mAlgebraicArray->reset();
 
-        runtime->initializeConstants()(mConstantsArray->data(), mRatesArray->data(), mStatesArray->data());
+        runtime->initializeConstants()(constants(), rates(), states());
     }
 
     // Recompute our computed constants and variables
@@ -532,7 +532,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     // Use our "current" constants, if needed
 
     if (!pAll) {
-        memcpy(mConstantsArray->data(), currentConstants, size_t(runtime->constantsCount())*Solver::SizeOfDouble);
+        memcpy(constants(), currentConstants, size_t(runtime->constantsCount())*Solver::SizeOfDouble);
     }
 
     delete[] currentConstants;
@@ -570,8 +570,8 @@ void SimulationData::updateInitialValues()
 {
     // Update our initial constants and states
 
-    memcpy(mInitialConstants, mConstantsArray->data(), size_t(mSimulation->runtime()->constantsCount())*Solver::SizeOfDouble);
-    memcpy(mInitialStates, mStatesArray->data(), size_t(mSimulation->runtime()->statesCount())*Solver::SizeOfDouble);
+    memcpy(mInitialConstants, constants(), size_t(mSimulation->runtime()->constantsCount())*Solver::SizeOfDouble);
+    memcpy(mInitialStates, states(), size_t(mSimulation->runtime()->statesCount())*Solver::SizeOfDouble);
 
     // Let people know that everything has been reset by checking for
     // modifications
@@ -589,13 +589,13 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    runtime->computeComputedConstants()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                                        pInitialize? mStatesArray->data(): mDummyStates,
-                                        mAlgebraicArray->data());
-    runtime->computeRates()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                            mStatesArray->data(), mAlgebraicArray->data());
-    runtime->computeVariables()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                                mStatesArray->data(), mAlgebraicArray->data());
+    runtime->computeComputedConstants()(pCurrentPoint, constants(), rates(),
+                                        pInitialize?
+                                            states():
+                                            mDummyStates,
+                                        algebraic());
+    runtime->computeRates()(pCurrentPoint, constants(), rates(), states(), algebraic());
+    runtime->computeVariables()(pCurrentPoint, constants(), rates(), states(), algebraic());
 
     // Let people know that our data has been updated
 
@@ -610,10 +610,8 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    runtime->computeRates()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                            mStatesArray->data(), mAlgebraicArray->data());
-    runtime->computeVariables()(pCurrentPoint, mConstantsArray->data(), mRatesArray->data(),
-                                mStatesArray->data(), mAlgebraicArray->data());
+    runtime->computeRates()(pCurrentPoint, constants(), rates(), states(), algebraic());
+    runtime->computeVariables()(pCurrentPoint, constants(), rates(), states(), algebraic());
 }
 
 //==============================================================================
