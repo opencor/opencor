@@ -125,7 +125,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mSimulation, &SimulationSupport::Simulation::error,
             this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
 
-    connect(mSimulation->data(), &SimulationSupport::SimulationData::modified,
+    connect(mSimulation->data(), &SimulationSupport::SimulationData::dataModified,
             this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
 
     // Allow for things to be dropped on us

@@ -71,8 +71,8 @@ private:
 
     void updateToolTips();
 
-public slots:
-    void updatePointData();
+private slots:
+    void updatePoints();
 };
 
 //==============================================================================

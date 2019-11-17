@@ -65,7 +65,7 @@ public:
                                             QObject *pParent);
 
 private:
-    qint64 mElapsedTime;
+    qint64 mElapsedTime = -1;
     QString mErrorMessage;
 
 public slots:
@@ -82,17 +82,18 @@ public slots:
     // Set a simulation's point data
 
     void setStartingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                          const double &pStartingPoint,
-                          const bool &pRecompute = true);
+                          double pStartingPoint, bool pRecompute = true);
     void setEndingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                        const double &pEndingPoint);
+                        double pEndingPoint);
     void setPointInterval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                          const double &pPointInterval);
+                          double pPointInterval);
 
     // Assign a solver
 
-    void setOdeSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData, const QString &pOdeSolverName);
-    void setNlaSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData, const QString &pNlaSolverName);
+    void setOdeSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                      const QString &pOdeSolverName);
+    void setNlaSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                      const QString &pNlaSolverName);
 
     // Access a simulation's parameter data
 
@@ -112,7 +113,7 @@ public slots:
 
 private slots:
     void error(const QString &pErrorMessage);
-    void simulationFinished(const qint64 &pElapsedTime);
+    void simulationFinished(qint64 pElapsedTime);
 
 signals:
     void gotElapsedTime();

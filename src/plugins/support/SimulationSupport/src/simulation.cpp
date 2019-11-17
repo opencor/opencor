@@ -279,6 +279,10 @@ void SimulationData::setStartingPoint(double pStartingPoint, bool pRecompute)
     if (pRecompute) {
         reset(false);
     }
+
+    // Let people know that our point data has been updated
+
+    emit pointUpdated();
 }
 
 //==============================================================================
@@ -297,6 +301,10 @@ void SimulationData::setEndingPoint(double pEndingPoint)
     // Set our ending point
 
     mEndingPoint = pEndingPoint;
+
+    // Let people know that our point data has been updated
+
+    emit pointUpdated();
 }
 
 //==============================================================================
@@ -315,6 +323,10 @@ void SimulationData::setPointInterval(double pPointInterval)
     // Set our point interval
 
     mPointInterval = pPointInterval;
+
+    // Let people know that our point data has been updated
+
+    emit pointUpdated();
 }
 
 //==============================================================================
@@ -556,7 +568,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     // simulation worker to reset itself
 
     if (!pInitialize) {
-        emit modified(isModified());
+        emit dataModified(isModified());
 
         if (mSimulation->worker() != nullptr) {
             mSimulation->worker()->reset();
@@ -599,7 +611,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
 
     // Let people know that our data has been updated
 
-    emit updated(pCurrentPoint);
+    emit dataUpdated(pCurrentPoint);
 }
 
 //==============================================================================
@@ -668,7 +680,7 @@ void SimulationData::checkForModifications()
 {
     // Let people know whether any of our constants or states has been modified
 
-    emit modified(isModified());
+    emit dataModified(isModified());
 }
 
 //==============================================================================
@@ -682,7 +694,7 @@ void SimulationData::updateParameters(SimulationData *pSimulationData)
 
     // Let people know that parameters have changed
 
-    emit pSimulationData->updated(pSimulationData->mStartingPoint);
+    emit pSimulationData->dataUpdated(pSimulationData->mStartingPoint);
 }
 
 //==============================================================================
@@ -898,7 +910,7 @@ void SimulationResults::createDataStore()
     // Let people know that our (imported) data, if any, has been updated
 
     if (!mDataDataStores.isEmpty()) {
-        emit simulationData->updated(mSimulation->currentPoint());
+        emit simulationData->dataUpdated(mSimulation->currentPoint());
     }
 }
 

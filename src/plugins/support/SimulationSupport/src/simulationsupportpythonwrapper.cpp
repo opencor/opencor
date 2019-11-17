@@ -290,10 +290,9 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
 
 //==============================================================================
 
-SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent) :
-    QObject(pParent),
-    mElapsedTime(-1),
-    mErrorMessage(QString())
+SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule,
+                                                               QObject *pParent) :
+    QObject(pParent)
 {
     Q_UNUSED(pModule)
 
@@ -347,7 +346,7 @@ void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTime)
+void SimulationSupportPythonWrapper::simulationFinished(qint64 pElapsedTime)
 {
     // Save the elapsed time of the simulation
 
@@ -501,42 +500,41 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 //==============================================================================
 
 void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulationData,
-    const double &pStartingPoint, const bool &pRecompute)
+                                                      double pStartingPoint,
+                                                      bool pRecompute)
 {
     pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
-
-    emit pSimulationData->updatedPointData();
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData, const double &pEndingPoint)
+void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData,
+                                                    double pEndingPoint)
 {
     pSimulationData->setEndingPoint(pEndingPoint);
-
-    emit pSimulationData->updatedPointData();
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData, const double &pPointInterval)
+void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData,
+                                                      double pPointInterval)
 {
     pSimulationData->setPointInterval(pPointInterval);
-
-    emit pSimulationData->updatedPointData();
 }
 
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData, const QString &pOdeSolverName)
+void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData,
+                                                  const QString &pOdeSolverName)
 {
     doSetOdeSolver(pSimulationData, pOdeSolverName);
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData, const QString &pNlaSolverName)
+void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData,
+                                                  const QString &pNlaSolverName)
 {
     doSetNlaSolver(pSimulationData, pNlaSolverName);
 }

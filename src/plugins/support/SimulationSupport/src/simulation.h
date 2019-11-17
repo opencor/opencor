@@ -206,10 +206,10 @@ private:
     bool doIsModified(bool pCheckConstants) const;
 
 signals:
-    void updated(double pCurrentPoint);
-    void updatedPointData();
+    void dataUpdated(double pCurrentPoint);
+    void dataModified(bool pIsModified);
 
-    void modified(bool pIsModified);
+    void pointUpdated();
 
     void error(const QString &pMessage);
 

@@ -80,15 +80,15 @@ void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationS
 
     // Keep track of when some of the model's data has changed
 
-    connect(pSimulation->data(), &SimulationSupport::SimulationData::updatedPointData,
-            this, &SimulationExperimentViewInformationSimulationWidget::updatePointData);
+    connect(pSimulation->data(), &SimulationSupport::SimulationData::pointUpdated,
+            this, &SimulationExperimentViewInformationSimulationWidget::updatePoints);
 }
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSimulationWidget::updatePointData()
+void SimulationExperimentViewInformationSimulationWidget::updatePoints()
 {
-    // Update our data
+    // Update our simulation points
 
     mStartingPointProperty->setDoubleValue(mSimulation->data()->startingPoint(), false);
     mEndingPointProperty->setDoubleValue(mSimulation->data()->endingPoint(), false);
