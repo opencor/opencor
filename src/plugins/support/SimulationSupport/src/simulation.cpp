@@ -850,9 +850,9 @@ void SimulationResults::createDataStore()
     DataStore::DataStoreValues *algebraicValues = simulationData->algebraicValues();
 
     for (auto parameter : runtime->parameters()) {
-        DataStore::DataStoreValue *value = nullptr;
-        DataStore::DataStoreVariable *variable = nullptr;
         CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
+        DataStore::DataStoreVariable *variable = nullptr;
+        DataStore::DataStoreValue *value = nullptr;
 
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
             mPointsVariable->setType(int(parameter->type()));
@@ -874,15 +874,15 @@ void SimulationResults::createDataStore()
             value = algebraicValues->at(parameter->index());
         }
 
-        if (value != nullptr) {
-            value->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
-        }
-
         if (variable != nullptr) {
             variable->setType(int(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
+        }
+
+        if (value != nullptr) {
+            value->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
         }
     }
 
@@ -1236,8 +1236,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
-double * SimulationResults::data(double *pData, int pIndex,
-                                       int pRun) const
+double * SimulationResults::data(double *pData, int pIndex, int pRun) const
 {
     // Return our data at the given index and for the given run
 
