@@ -98,10 +98,10 @@ public slots:
 
     OpenCOR::DataStore::DataStoreVariable * points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
-    PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
-    PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
-    PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
-    PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+    PyObject * algebraic(SimulationResults *pSimulationResults) const;
+    PyObject * constants(SimulationResults *pSimulationResults) const;
+    PyObject * states(SimulationResults *pSimulationResults) const;
+    PyObject * rates(SimulationResults *pSimulationResults) const;
 
 private slots:
     void error(const QString &pErrorMessage);
