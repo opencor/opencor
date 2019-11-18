@@ -104,7 +104,7 @@ public slots:
 
     // Access a simulation's result data
 
-    const OpenCOR::DataStore::DataStoreVariable * points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+    OpenCOR::DataStore::DataStoreVariable *points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;

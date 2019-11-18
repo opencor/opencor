@@ -275,6 +275,7 @@ public:
     double * rates(int pIndex, int pRun = -1) const;
     double * states(int pIndex, int pRun = -1) const;
     double * algebraic(int pIndex, int pRun = -1) const;
+
     double * data(double *pData, int pIndex, int pRun = -1) const;
 
     DataStore::DataStoreVariable * pointsVariable() const;
@@ -287,7 +288,7 @@ public:
 private:
     DataStore::DataStore *mDataStore = nullptr;
 
-    DataStore::DataStoreVariable *mPoints = nullptr;
+    DataStore::DataStoreVariable *mPointsVariable = nullptr;
 
     DataStore::DataStoreVariables mConstantsVariables;
     DataStore::DataStoreVariables mRatesVariables;

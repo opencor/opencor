@@ -834,20 +834,20 @@ void SimulationResults::createDataStore()
 
     mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
 
-    mPoints = mDataStore->voi();
+    mPointsVariable = mDataStore->voi();
 
     mConstantsVariables = mDataStore->addVariables(simulationData->constants(), runtime->constantsCount());
     mRatesVariables = mDataStore->addVariables(simulationData->rates(), runtime->ratesCount());
     mStatesVariables = mDataStore->addVariables(simulationData->states(), runtime->statesCount());
     mAlgebraicVariables = mDataStore->addVariables(simulationData->algebraic(), runtime->algebraicCount());
 
+    // Customise our VOI, as well as our constant, rate, state and algebraic
+    // variables
+
     DataStore::DataStoreValues *constantsValues = simulationData->constantsValues();
     DataStore::DataStoreValues *ratesValues = simulationData->ratesValues();
     DataStore::DataStoreValues *statesValues = simulationData->statesValues();
     DataStore::DataStoreValues *algebraicValues = simulationData->algebraicValues();
-
-    // Customise our VOI, as well as our constant, rate, state and algebraic
-    // variables
 
     for (auto parameter : runtime->parameters()) {
         DataStore::DataStoreValue *value = nullptr;
@@ -855,11 +855,10 @@ void SimulationResults::createDataStore()
         CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
 
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
-            mPoints->setType(int(parameter->type()));
-            mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
-                                runtime->voi()->name()));
-            mPoints->setLabel(runtime->voi()->name());
-            mPoints->setUnit(runtime->voi()->unit());
+            mPointsVariable->setType(int(parameter->type()));
+            mPointsVariable->setUri(uri(runtime->voi()->componentHierarchy(), runtime->voi()->name()));
+            mPointsVariable->setLabel(runtime->voi()->name());
+            mPointsVariable->setUnit(runtime->voi()->unit());
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
             variable = mConstantsVariables[parameter->index()];
@@ -926,7 +925,7 @@ void SimulationResults::deleteDataStore()
 
     mDataStore = nullptr;
 
-    mPoints = nullptr;
+    mPointsVariable = nullptr;
 
     mConstantsVariables = DataStore::DataStoreVariables();
     mRatesVariables = DataStore::DataStoreVariables();
@@ -1186,8 +1185,8 @@ double * SimulationResults::points(int pRun) const
 {
     // Return our points for the given run
 
-    return (mPoints != nullptr)?
-                mPoints->values(pRun):
+    return (mPointsVariable != nullptr)?
+                mPointsVariable->values(pRun):
                 nullptr;
 }
 
@@ -1255,7 +1254,7 @@ DataStore::DataStoreVariable * SimulationResults::pointsVariable() const
 {
     // Return our points variable
 
-    return mPoints;
+    return mPointsVariable;
 }
 
 //==============================================================================

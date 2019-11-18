@@ -572,7 +572,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 //==============================================================================
 
-const OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
+OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
 {
     return pSimulationResults->pointsVariable();
 }
