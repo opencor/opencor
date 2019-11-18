@@ -712,7 +712,7 @@ void SimulationData::createArrays()
         mStatesArray = new DataStore::DataStoreArray(quint64(runtime->statesCount()));
         mAlgebraicArray = new DataStore::DataStoreArray(quint64(runtime->algebraicCount()));
 
-        // Create DataStoreValues to hold properties of our model's arrays
+        // Create our various values to hold our model's arrays
 
         mConstantsValues = new DataStore::DataStoreValues(mConstantsArray);
         mRatesValues = new DataStore::DataStoreValues(mRatesArray);
@@ -721,13 +721,13 @@ void SimulationData::createArrays()
 
         // Create our various arrays to keep track of our various initial values
 
-        mDummyStates = new double[mStatesArray->size()]{};
         mInitialConstants = new double[mConstantsArray->size()];
         mInitialStates = new double[mStatesArray->size()];
+        mDummyStates = new double[mStatesArray->size()]{};
     } else {
         mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = nullptr;
         mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = nullptr;
-        mDummyStates = mInitialConstants = mInitialStates = nullptr;
+        mInitialConstants = mInitialStates = mDummyStates = nullptr;
     }
 }
 
@@ -764,16 +764,16 @@ void SimulationData::deleteArrays()
     delete mStatesValues;
     delete mAlgebraicValues;
 
-    delete[] mDummyStates;
     delete[] mInitialConstants;
     delete[] mInitialStates;
+    delete[] mDummyStates;
 
     // Reset our various arrays
     // Note: this shouldn't be needed, but better be safe than sorry...
 
     mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = nullptr;
     mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = nullptr;
-    mDummyStates = mInitialConstants = mInitialStates = nullptr;
+    mInitialConstants = mInitialStates = mDummyStates = nullptr;
 }
 
 //==============================================================================
@@ -834,7 +834,7 @@ void SimulationResults::createDataStore()
 
     mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
 
-    mPointsVariables = mDataStore->voi();
+    mPoints = mDataStore->voi();
 
     mConstantsVariables = mDataStore->addVariables(simulationData->constants(), runtime->constantsCount());
     mRatesVariables = mDataStore->addVariables(simulationData->rates(), runtime->ratesCount());
@@ -855,11 +855,11 @@ void SimulationResults::createDataStore()
         CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
 
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
-            mPointsVariables->setType(int(parameter->type()));
-            mPointsVariables->setUri(uri(runtime->voi()->componentHierarchy(),
+            mPoints->setType(int(parameter->type()));
+            mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
                                 runtime->voi()->name()));
-            mPointsVariables->setLabel(runtime->voi()->name());
-            mPointsVariables->setUnit(runtime->voi()->unit());
+            mPoints->setLabel(runtime->voi()->name());
+            mPoints->setUnit(runtime->voi()->unit());
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
             variable = mConstantsVariables[parameter->index()];
@@ -926,7 +926,7 @@ void SimulationResults::deleteDataStore()
 
     mDataStore = nullptr;
 
-    mPointsVariables = nullptr;
+    mPoints = nullptr;
 
     mConstantsVariables = DataStore::DataStoreVariables();
     mRatesVariables = DataStore::DataStoreVariables();
@@ -1186,8 +1186,8 @@ double * SimulationResults::points(int pRun) const
 {
     // Return our points for the given run
 
-    return (mPointsVariables != nullptr)?
-                mPointsVariables->values(pRun):
+    return (mPoints != nullptr)?
+                mPoints->values(pRun):
                 nullptr;
 }
 
@@ -1255,7 +1255,7 @@ DataStore::DataStoreVariable * SimulationResults::pointsVariable() const
 {
     // Return our points variable
 
-    return mPointsVariables;
+    return mPoints;
 }
 
 //==============================================================================

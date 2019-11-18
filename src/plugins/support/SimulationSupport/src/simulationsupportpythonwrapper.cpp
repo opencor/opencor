@@ -328,9 +328,8 @@ void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
 void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
     // Ask our widget to clear our results
-
-    // Note: we get the widget to do this as it needs to clear all
-    // associated graphs...
+    // Note: we get the widget to do this as it needs to clear all associated
+    //       graphs...
 
     emit pSimulation->clearResults(pSimulation->fileName());
 }

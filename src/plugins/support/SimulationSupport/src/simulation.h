@@ -196,9 +196,9 @@ private:
     DataStore::DataStoreValues *mStatesValues = nullptr;
     DataStore::DataStoreValues *mAlgebraicValues = nullptr;
 
-    double *mDummyStates = nullptr;
     double *mInitialConstants = nullptr;
     double *mInitialStates = nullptr;
+    double *mDummyStates = nullptr;
 
     QMap<DataStore::DataStore *, double *> mData;
 
@@ -287,7 +287,7 @@ public:
 private:
     DataStore::DataStore *mDataStore = nullptr;
 
-    DataStore::DataStoreVariable *mPointsVariables = nullptr;
+    DataStore::DataStoreVariable *mPoints = nullptr;
 
     DataStore::DataStoreVariables mConstantsVariables;
     DataStore::DataStoreVariables mRatesVariables;
