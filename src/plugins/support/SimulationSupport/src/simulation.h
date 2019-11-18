@@ -430,8 +430,8 @@ public slots:
     void reload();
     void rename(const QString &pFileName);
 
-    OpenCOR::SimulationSupport::SimulationData * data() const;
-    OpenCOR::SimulationSupport::SimulationResults * results() const;
+    SimulationData * data() const;
+    SimulationResults * results() const;
 
     int runsCount() const;
     quint64 runSize(int pRun = -1) const;

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QList>
 #include <QObject>
 
 //==============================================================================
@@ -68,43 +67,36 @@ private:
     qint64 mElapsedTime = -1;
     QString mErrorMessage;
 
+signals:
+    void gotElapsedTime();
+
 public slots:
     bool valid(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
-    PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
-
-    void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulation);
-
-    void resetParameters(OpenCOR::SimulationSupport::Simulation *pSimulation);
-
     bool run(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
-    // Set a simulation's point data
+    void resetParameters(OpenCOR::SimulationSupport::Simulation *pSimulation);
+    void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulation);
+
+    PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
 
     void setStartingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                           double pStartingPoint, bool pRecompute = true);
-    void setEndingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                        double pEndingPoint);
+    void setEndingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData, double pEndingPoint);
     void setPointInterval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                           double pPointInterval);
-
-    // Assign a solver
 
     void setOdeSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                       const QString &pOdeSolverName);
     void setNlaSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                       const QString &pNlaSolverName);
 
-    // Access a simulation's parameter data
-
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * constants(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
 
-    // Access a simulation's result data
-
-    OpenCOR::DataStore::DataStoreVariable *points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+    OpenCOR::DataStore::DataStoreVariable * points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
@@ -114,9 +106,6 @@ public slots:
 private slots:
     void error(const QString &pErrorMessage);
     void simulationFinished(qint64 pElapsedTime);
-
-signals:
-    void gotElapsedTime();
 };
 
 //==============================================================================

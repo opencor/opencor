@@ -23,23 +23,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "cellmlfileruntime.h"
-#include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"
 #include "filemanager.h"
 #include "interfaces.h"
 #include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationmanager.h"
-#include "simulationsupportplugin.h"
 #include "simulationsupportpythonwrapper.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
 #include <QApplication>
-#include <QEventLoop>
 #include <QFileInfo>
-#include <QMap>
 #include <QWidget>
 
 //==============================================================================
@@ -53,7 +48,105 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-static void doSetOdeSolver(SimulationData *pSimulationData, const QString &pOdeSolverName)
+bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
+{
+    // Return whether the simulation is valid
+
+    if (!pSimulation->hasBlockingIssues()) {
+        CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
+
+        return (runtime != nullptr) && runtime->isValid();
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
+{
+    // Run the given simulation, but only if it doesn't have blocking issues and
+    // if it is valid
+
+    if (pSimulation->hasBlockingIssues()) {
+        throw std::runtime_error(tr("Cannot run because simulation has blocking issues.").toStdString());
+    }
+
+    if (!valid(pSimulation)) {
+        throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
+    }
+
+    QWidget *focusWidget = nullptr;
+
+    // A successful run will set elapsed time
+
+    mElapsedTime = -1;
+
+    // Clear error message
+
+    mErrorMessage = QString();
+
+    // Try to allocate all the memory we need by adding a run to our simulation
+    // and, if successful, run our simulation
+
+    if (pSimulation->addRun()) {
+        // Save the keyboard focus, which will be to our IPython console
+
+        focusWidget = QApplication::focusWidget();
+
+        // Let people know that we are starting our run
+
+        emit pSimulation->runStarting(pSimulation->fileName());
+
+        // Get the elapsed time when the simulation has finished
+
+        connect(pSimulation, &Simulation::done,
+                this, &SimulationSupportPythonWrapper::simulationFinished);
+
+        // Get error messages from the simulation
+
+        connect(pSimulation, &Simulation::error,
+                this, &SimulationSupportPythonWrapper::error);
+
+        // Use an event loop so we don't busy wait
+
+        QEventLoop waitForCompletion;
+
+        // We use a queued connection because the event is in our thread
+
+        connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
+                &waitForCompletion, &QEventLoop::quit, Qt::QueuedConnection);
+
+        // Start the simulation and wait for it to complete
+
+        pSimulation->run();
+
+        waitForCompletion.exec();
+
+        // Disconnect our signal handlers now that the simulation has finished
+
+        disconnect(pSimulation, nullptr, this, nullptr);
+
+        if (!mErrorMessage.isEmpty()) {
+            throw std::runtime_error(mErrorMessage.toStdString());
+        }
+    } else {
+        throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
+    }
+
+    // Restore the keyboard focus back to IPython
+
+    if (focusWidget != nullptr) {
+        focusWidget->setFocus();
+    }
+
+    return mElapsedTime >= 0;
+}
+
+//==============================================================================
+
+static void doSetOdeSolver(SimulationData *pSimulationData,
+                           const QString &pOdeSolverName)
 {
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pOdeSolverName == solverInterface->solverName()) {
@@ -76,7 +169,8 @@ static void doSetOdeSolver(SimulationData *pSimulationData, const QString &pOdeS
 
 //==============================================================================
 
-static void doSetNlaSolver(SimulationData *pSimulationData, const QString &pNlaSolverName)
+static void doSetNlaSolver(SimulationData *pSimulationData,
+                           const QString &pNlaSolverName)
 {
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pNlaSolverName == solverInterface->solverName()) {
@@ -99,7 +193,7 @@ static void doSetNlaSolver(SimulationData *pSimulationData, const QString &pNlaS
 
 //==============================================================================
 
-static PyObject *initializeSimulation(const QString &pFileName)
+static PyObject * initializeSimulation(const QString &pFileName)
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -356,20 +450,6 @@ void SimulationSupportPythonWrapper::simulationFinished(qint64 pElapsedTime)
 
 //==============================================================================
 
-bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
-{
-    // Is the simulation's model valid?
-
-    if (!pSimulation->hasBlockingIssues()) {
-        CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
-        return (runtime != nullptr) && runtime->isValid();
-    }
-
-    return false;
-}
-
-//==============================================================================
-
 PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 {
     // Return a list of any issues the simulation has
@@ -415,85 +495,6 @@ PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
     }
 
     return issuesList;
-}
-
-//==============================================================================
-
-bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
-{
-    if (pSimulation->hasBlockingIssues()) {
-        throw std::runtime_error(tr("Cannot run because simulation has blocking issues.").toStdString());
-    }
-
-    if (!valid(pSimulation)) {
-        throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
-    }
-
-    QWidget *focusWidget = nullptr;
-
-    // A successful run will set elapsed time
-
-    mElapsedTime = -1;
-
-    // Clear error message
-
-    mErrorMessage = QString();
-
-    // Try to allocate all the memory we need by adding a run to our simulation
-    // and, if successful, run our simulation
-
-    if (pSimulation->addRun()) {
-        // Save the keyboard focus, which will be to our IPython console
-
-        focusWidget = QApplication::focusWidget();
-
-        // Let people know that we are starting our run
-
-        emit pSimulation->runStarting(pSimulation->fileName());
-
-        // Get the elapsed time when the simulation has finished
-
-        connect(pSimulation, &Simulation::done,
-                this, &SimulationSupportPythonWrapper::simulationFinished);
-
-        // Get error messages from the simulation
-
-        connect(pSimulation, &Simulation::error,
-                this, &SimulationSupportPythonWrapper::error);
-
-        // Use an event loop so we don't busy wait
-
-        QEventLoop waitForCompletion;
-
-        // We use a queued connection because the event is in our thread
-
-        connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
-                &waitForCompletion, &QEventLoop::quit, Qt::QueuedConnection);
-
-        // Start the simulation and wait for it to complete
-
-        pSimulation->run();
-
-        waitForCompletion.exec();
-
-        // Disconnect our signal handlers now that the simulation has finished
-
-        disconnect(pSimulation, nullptr, this, nullptr);
-
-        if (!mErrorMessage.isEmpty()) {
-            throw std::runtime_error(mErrorMessage.toStdString());
-        }
-    } else {
-        throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
-    }
-
-    // Restore the keyboard focus back to IPython
-
-    if (focusWidget != nullptr) {
-        focusWidget->setFocus();
-    }
-
-    return mElapsedTime >= 0;
 }
 
 //==============================================================================
@@ -572,7 +573,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 //==============================================================================
 
-OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
+DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
 {
     return pSimulationResults->pointsVariable();
 }
