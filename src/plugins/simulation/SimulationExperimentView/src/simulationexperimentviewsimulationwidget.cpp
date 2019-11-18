@@ -2659,6 +2659,8 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
 bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Customise our simulation widget
+    // Note: make sure that this is in relative sync with
+    //       Simulation::furtherInitialize()...
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();

@@ -35,6 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+namespace libsedml {
+    class SedListOfAlgorithmParameters;
+} // namespace libsedml
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -194,9 +200,9 @@ private:
     double *mInitialConstants = nullptr;
     double *mInitialStates = nullptr;
 
-    SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
-
     QMap<DataStore::DataStore *, double *> mData;
+
+    SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
     void createArrays();
     void deleteArrays();
@@ -399,6 +405,9 @@ private:
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
     bool simulationSettingsOk(bool pEmitSignal = true);
+
+    QString initializeSolver(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                             const QString &pKisaoId) const;
 
 signals:
     void runStarting(const QString &pFileName);

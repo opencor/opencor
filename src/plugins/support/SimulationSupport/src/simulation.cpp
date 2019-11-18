@@ -684,7 +684,6 @@ void SimulationData::checkForModifications()
 }
 
 //==============================================================================
-//---ISSUE1255--- WHAT IS THE EXACT USE OF THIS?...
 
 void SimulationData::updateParameters(SimulationData *pSimulationData)
 {
@@ -1373,14 +1372,51 @@ Simulation::~Simulation()
 
 //==============================================================================
 
+QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                                     const QString &pKisaoId) const
+{
+    // Initialise our solver using the given SED-ML algorithm parameters and
+    // KiSAO id
+
+    SolverInterface *solverInterface = nullptr;
+
+    for (auto coreSolverInterface : Core::solverInterfaces()) {
+        if (coreSolverInterface->id(pKisaoId) == coreSolverInterface->solverName()) {
+            solverInterface = coreSolverInterface;
+
+            mData->setOdeSolverName(coreSolverInterface->solverName());
+
+            break;
+        }
+    }
+
+    if (solverInterface == nullptr) {
+        return tr("the requested solver (%1) could not be found").arg(pKisaoId);
+    }
+
+    for (uint i = 0, iMax = pSedmlAlgorithmParameters->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = pSedmlAlgorithmParameters->get(i);
+        QString parameterKisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
+
+        mData->addOdeSolverProperty(solverInterface->id(parameterKisaoId),
+                                    QString::fromStdString(sedmlAlgorithmParameter->getValue()));
+    }
+
+    return {};
+}
+
+//==============================================================================
+
 QString Simulation::furtherInitialize() const
 {
     // Initialise ourself from a SED-ML document
+    // Note #1: this is used by our Python wrapper...
+    // Note #2: make sure that this is in relative sync with
+    //          SimulationExperimentViewSimulationWidget::furtherInitialize()...
 
     libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
     auto sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
     auto sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
-
     double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
     double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
     double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
@@ -1393,61 +1429,16 @@ QString Simulation::furtherInitialize() const
     mData->setEndingPoint(endingPoint);
     mData->setPointInterval(pointInterval);
 
-    const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
-
-    SolverInterface *odeSolverInterface = nullptr;
-    SolverInterfaces solverInterfaces = Core::solverInterfaces();
-
+    libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
+    QString error = initializeSolver(sedmlAlgorithm->getListOfAlgorithmParameters(),
+                                     kisaoId);
 
-    for (auto solverInterface : solverInterfaces) {
-        if (solverInterface->id(kisaoId) == solverInterface->solverName()) {
-            odeSolverInterface = solverInterface;
-
-            mData->setOdeSolverName(solverInterface->solverName());
-
-            break;
-        }
+    if (!error.isEmpty()) {
+        return error;
     }
 
-    if (odeSolverInterface == nullptr) {
-        return tr("the requested solver (%1) could not be found").arg(kisaoId);
-    }
-
-    for (unsigned int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
-        QString kisaoParameterId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
-        QString id = odeSolverInterface->id(kisaoParameterId);
-
-        QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
-
-        mData->addOdeSolverProperty(id, solverPropertyValue);
-    }
-
-    libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
-
-    if (annotation != nullptr) {
-        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
-
-            if (   (QString::fromStdString(solverPropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                && (QString::fromStdString(solverPropertiesNode.getName()) == SEDMLSupport::SolverProperties)) {
-                for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                    const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
-
-                    if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                        && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
-                        QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
-                        QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
-
-                        mData->addOdeSolverProperty(id, value);
-                    }
-                }
-            }
-        }
-    }
-
-    annotation = sedmlUniformTimeCourse->getAnnotation();
+    libsbml::XMLNode *annotation = sedmlUniformTimeCourse->getAnnotation();
 
     if (annotation != nullptr) {
         bool mustHaveNlaSolver = false;
@@ -1455,17 +1446,15 @@ QString Simulation::furtherInitialize() const
         QString nlaSolverName = QString();
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
+            libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
             if (   (QString::fromStdString(nlaSolverNode.getURI()) == SEDMLSupport::OpencorNamespace)
                 && (QString::fromStdString(nlaSolverNode.getName()) == SEDMLSupport::NlaSolver)) {
-
                 mustHaveNlaSolver = true;
                 nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
-                for (auto solverInterface : solverInterfaces) {
+                for (auto solverInterface : Core::solverInterfaces()) {
                     if (nlaSolverName == solverInterface->solverName()) {
-
                         mData->setNlaSolverName(nlaSolverName);
 
                         hasNlaSolver = true;
@@ -1476,7 +1465,7 @@ QString Simulation::furtherInitialize() const
 
                 if (hasNlaSolver) {
                     for (uint j = 0, jMax = nlaSolverNode.getNumChildren(); j < jMax; ++j) {
-                        const libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
+                        libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
 
                         if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                             && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
@@ -1493,7 +1482,7 @@ QString Simulation::furtherInitialize() const
         }
 
         if (mustHaveNlaSolver && !hasNlaSolver) {
-            return tr("the requested NLA solver (%1) could not be set").arg(nlaSolverName);
+            return tr("the requested solver (%1) could not be found").arg(nlaSolverName);
         }
     }
 

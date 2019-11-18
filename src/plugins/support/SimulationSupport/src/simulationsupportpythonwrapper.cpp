@@ -160,16 +160,16 @@ static PyObject *initializeSimulation(const QString &pFileName)
         if (simulation->fileType() == SimulationSupport::Simulation::FileType::SedmlFile
          || simulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive) {
 
-            const QString initialisationError = simulation->furtherInitialize();
+            QString initializationError = simulation->furtherInitialize();
 
-            if (!initialisationError.isEmpty()) {
+            if (!initializationError.isEmpty()) {
                 // We couldn't complete initialisation so no longer manage the simulation
 
                 simulationManager->unmanage(pFileName);
 
                 // And raise a Python exception
 
-                PyErr_SetString(PyExc_ValueError, qPrintable(initialisationError));
+                PyErr_SetString(PyExc_ValueError, qPrintable(initializationError));
 
                 return nullptr;
             }

@@ -19,10 +19,6 @@
         <source>the requested solver (%1) could not be found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>the requested NLA solver (%1) could not be set</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
