@@ -266,7 +266,7 @@ error:
 // Note: a DataStoreValuesDict is a dictionary sub-class for mapping between the
 //       values of a DataStoreValues list and Python...
 
-PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
+static PyTypeObject DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "OpenCOR.DataStoreValuesDict",                          // tp_name
     sizeof(DataStoreValuesDictObject),                      // tp_basicsize
