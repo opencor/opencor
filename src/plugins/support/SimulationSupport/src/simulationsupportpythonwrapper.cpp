@@ -194,7 +194,7 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
 //==============================================================================
 
-static PyObject *openSimulation(PyObject *self, PyObject *args)
+static PyObject * openSimulation(PyObject *self, PyObject *args)
 {
     Q_UNUSED(self)
 
@@ -225,7 +225,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
 
 //==============================================================================
 
-static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
+static PyObject * openRemoteSimulation(PyObject *self, PyObject *args)
 {
     Q_UNUSED(self)
 
@@ -256,7 +256,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 
 //==============================================================================
 
-static PyObject *closeSimulation(PyObject *self, PyObject *args)
+static PyObject * closeSimulation(PyObject *self, PyObject *args)
 {
     Q_UNUSED(self)
 
