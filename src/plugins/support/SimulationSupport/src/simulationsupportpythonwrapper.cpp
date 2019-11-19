@@ -48,105 +48,8 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
-{
-    // Return whether the simulation is valid
-
-    if (!pSimulation->hasBlockingIssues()) {
-        CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
-
-        return (runtime != nullptr) && runtime->isValid();
-    }
-
-    return false;
-}
-
-//==============================================================================
-
-bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
-{
-    // Run the given simulation, but only if it doesn't have blocking issues and
-    // if it is valid
-
-    if (pSimulation->hasBlockingIssues()) {
-        throw std::runtime_error(tr("Cannot run because simulation has blocking issues.").toStdString());
-    }
-
-    if (!valid(pSimulation)) {
-        throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
-    }
-
-    QWidget *focusWidget = nullptr;
-
-    // A successful run will set elapsed time
-
-    mElapsedTime = -1;
-
-    // Clear error message
-
-    mErrorMessage = QString();
-
-    // Try to allocate all the memory we need by adding a run to our simulation
-    // and, if successful, run our simulation
-
-    if (pSimulation->addRun()) {
-        // Save the keyboard focus, which will be to our IPython console
-
-        focusWidget = QApplication::focusWidget();
-
-        // Let people know that we are starting our run
-
-        emit pSimulation->runStarting(pSimulation->fileName());
-
-        // Get the elapsed time when the simulation has finished
-
-        connect(pSimulation, &Simulation::done,
-                this, &SimulationSupportPythonWrapper::simulationFinished);
-
-        // Get error messages from the simulation
-
-        connect(pSimulation, &Simulation::error,
-                this, &SimulationSupportPythonWrapper::error);
-
-        // Use an event loop so we don't busy wait
-
-        QEventLoop waitForCompletion;
-
-        // We use a queued connection because the event is in our thread
-
-        connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
-                &waitForCompletion, &QEventLoop::quit, Qt::QueuedConnection);
-
-        // Start the simulation and wait for it to complete
-
-        pSimulation->run();
-
-        waitForCompletion.exec();
-
-        // Disconnect our signal handlers now that the simulation has finished
-
-        disconnect(pSimulation, nullptr, this, nullptr);
-
-        if (!mErrorMessage.isEmpty()) {
-            throw std::runtime_error(mErrorMessage.toStdString());
-        }
-    } else {
-        throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
-    }
-
-    // Restore the keyboard focus back to IPython
-
-    if (focusWidget != nullptr) {
-        focusWidget->setFocus();
-    }
-
-    return mElapsedTime >= 0;
-}
-
-//==============================================================================
-
-static void doSetOdeSolver(SimulationData *pSimulationData,
-                           const QString &pOdeSolverName)
+static void setOdeSolver(SimulationData *pSimulationData,
+                         const QString &pOdeSolverName)
 {
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pOdeSolverName == solverInterface->solverName()) {
@@ -169,8 +72,8 @@ static void doSetOdeSolver(SimulationData *pSimulationData,
 
 //==============================================================================
 
-static void doSetNlaSolver(SimulationData *pSimulationData,
-                           const QString &pNlaSolverName)
+static void setNlaSolver(SimulationData *pSimulationData,
+                         const QString &pNlaSolverName)
 {
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pNlaSolverName == solverInterface->solverName()) {
@@ -241,12 +144,12 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
         // Set our solver and its default properties
 
-        doSetOdeSolver(simulation->data(), odeSolverName);
+        setOdeSolver(simulation->data(), odeSolverName);
 
         // Set our NLA solver if we need one
 
         if ((runtime != nullptr) && runtime->needNlaSolver()) {
-            doSetNlaSolver(simulation->data(), nlaSolverName);
+            setNlaSolver(simulation->data(), nlaSolverName);
         }
 
         // Complete initialisation by loading any SED-ML properties
@@ -412,20 +315,99 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
+bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
 {
-    mErrorMessage = pErrorMessage;
+    // Return whether the simulation is valid
+
+    if (!pSimulation->hasBlockingIssues()) {
+        CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
+
+        return (runtime != nullptr) && runtime->isValid();
+    }
+
+    return false;
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
+bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
-    // Ask our widget to clear our results
-    // Note: we get the widget to do this as it needs to clear all associated
-    //       graphs...
+    // Run the given simulation, but only if it doesn't have blocking issues and
+    // if it is valid
 
-    emit pSimulation->clearResults(pSimulation->fileName());
+    if (pSimulation->hasBlockingIssues()) {
+        throw std::runtime_error(tr("Cannot run because simulation has blocking issues.").toStdString());
+    }
+
+    if (!valid(pSimulation)) {
+        throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
+    }
+
+    QWidget *focusWidget = nullptr;
+
+    // A successful run will set elapsed time
+
+    mElapsedTime = -1;
+
+    // Clear error message
+
+    mErrorMessage = QString();
+
+    // Try to allocate all the memory we need by adding a run to our simulation
+    // and, if successful, run our simulation
+
+    if (pSimulation->addRun()) {
+        // Save the keyboard focus, which will be to our IPython console
+
+        focusWidget = QApplication::focusWidget();
+
+        // Let people know that we are starting our run
+
+        emit pSimulation->runStarting(pSimulation->fileName());
+
+        // Get the elapsed time when the simulation has finished
+
+        connect(pSimulation, &Simulation::done,
+                this, &SimulationSupportPythonWrapper::simulationFinished);
+
+        // Get error messages from the simulation
+
+        connect(pSimulation, &Simulation::error,
+                this, &SimulationSupportPythonWrapper::error);
+
+        // Use an event loop so we don't busy wait
+
+        QEventLoop waitForCompletion;
+
+        // We use a queued connection because the event is in our thread
+
+        connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
+                &waitForCompletion, &QEventLoop::quit, Qt::QueuedConnection);
+
+        // Start the simulation and wait for it to complete
+
+        pSimulation->run();
+
+        waitForCompletion.exec();
+
+        // Disconnect our signal handlers now that the simulation has finished
+
+        disconnect(pSimulation, nullptr, this, nullptr);
+
+        if (!mErrorMessage.isEmpty()) {
+            throw std::runtime_error(mErrorMessage.toStdString());
+        }
+    } else {
+        throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
+    }
+
+    // Restore the keyboard focus back to IPython
+
+    if (focusWidget != nullptr) {
+        focusWidget->setFocus();
+    }
+
+    return mElapsedTime >= 0;
 }
 
 //==============================================================================
@@ -439,13 +421,13 @@ void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::simulationFinished(qint64 pElapsedTime)
+void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
-    // Save the elapsed time of the simulation
+    // Ask our widget to clear our results
+    // Note: we get the widget to do this as it needs to clear all associated
+    //       graphs...
 
-    mElapsedTime = pElapsedTime;
-
-    emit gotElapsedTime();
+    emit pSimulation->clearResults(pSimulation->fileName());
 }
 
 //==============================================================================
@@ -522,13 +504,12 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
     pSimulationData->setPointInterval(pPointInterval);
 }
 
-
 //==============================================================================
 
 void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData,
                                                   const QString &pOdeSolverName)
 {
-    doSetOdeSolver(pSimulationData, pOdeSolverName);
+    SimulationSupport::setOdeSolver(pSimulationData, pOdeSolverName);
 }
 
 //==============================================================================
@@ -536,7 +517,7 @@ void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationDat
 void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData,
                                                   const QString &pNlaSolverName)
 {
-    doSetNlaSolver(pSimulationData, pNlaSolverName);
+    SimulationSupport::setNlaSolver(pSimulationData, pNlaSolverName);
 }
 
 //==============================================================================
@@ -604,6 +585,24 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationR
 PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->statesVariables());
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
+{
+    mErrorMessage = pErrorMessage;
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::simulationFinished(qint64 pElapsedTime)
+{
+    // Save the elapsed time of the simulation
+
+    mElapsedTime = pElapsedTime;
+
+    emit gotElapsedTime();
 }
 
 //==============================================================================
