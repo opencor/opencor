@@ -345,8 +345,6 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
     }
 
-    QWidget *focusWidget = nullptr;
-
     // A successful run will set elapsed time
 
     mElapsedTime = -1;
@@ -357,12 +355,13 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
     // Try to allocate all the memory we need by adding a run to our simulation
     // and, if successful, run our simulation
+    // Note: we keep track of our focus widget (which might be our Python
+    //       console window), so that we can give the focus back to it once we
+    //       have run our simulation...
+
+    QWidget *focusWidget = QApplication::focusWidget();
 
     if (pSimulation->addRun()) {
-        // Save the keyboard focus, which will be to our IPython console
-
-        focusWidget = QApplication::focusWidget();
-
         // Let people know that we are starting our run
 
         emit pSimulation->runStarting(pSimulation->fileName());
@@ -403,7 +402,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
     }
 
-    // Restore the keyboard focus back to IPython
+    // Restore the focus to the previous widget
 
     if (focusWidget != nullptr) {
         focusWidget->setFocus();
