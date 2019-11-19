@@ -1,47 +1,63 @@
-# Open our Lorenz SED-ML document
-
 import os
+
 import OpenCOR as oc
 
-s = oc.openSimulation(os.path.dirname(__file__) + '/../sedml/lorenz.sedml')
+
+def run_simulation(file_name):
+    print(' - Open file...')
+
+    simulation = oc.openSimulation(os.path.dirname(__file__) + file_name)
+
+    print(' - Run file...')
+
+    simulation.run()
+
+    print(' - Retrieve simulation results...')
+
+    results = simulation.results()
+
+    print(' - Retrieve states...')
+
+    states = results.states()
+
+    print(' - Retrieve states\' values...')
+
+    x = states['main/x'].values()
+    y = states['main/y'].values()
+    z = states['main/z'].values()
+
+    print(' - Generate 3D plot...')
+
+    plt.axes(projection='3d').plot3D(x, y, z)
+
+    return simulation
+
 
 print('---------------------------------------')
-print('Simulation:')
-print(s)
-
-# Run our Lorenz simulation
-
-s.run()
-
-# Retrieve our simulation results
-
-r = s.results()
-
+print('              CellML file')
 print('---------------------------------------')
-print('Results:')
-print(r)
 
-# Retrieve our states
+cellml = run_simulation('/../cellml/lorenz.cellml')
 
-states = r.states()
-
+print()
 print('---------------------------------------')
-print('States:')
-print(states)
-
-# Retrieve the values for our states
-
-x = states['main/x'].values()
-y = states['main/y'].values()
-z = states['main/z'].values()
-
+print('              SED-ML file')
 print('---------------------------------------')
-print('x, y and z:')
-print(x, y, z)
 
-# Generate a 3D plot for our states
+sedml = run_simulation('/../sedml/lorenz.sedml')
 
-from mpl_toolkits import mplot3d
-import matplotlib.pyplot as plt
+print()
+print('---------------------------------------')
+print('            COMBINE archive')
+print('---------------------------------------')
 
-plt.axes(projection='3d').plot3D(x, y, z)
+omex = run_simulation('/../combine/lorenz.omex')
+
+print()
+print('---------------------------------------')
+print('               Shutdown')
+print('---------------------------------------')
+
+oc.closeSimulation(cellml)
+oc.closeSimulation(sedml)
+oc.closeSimulation(omex)
