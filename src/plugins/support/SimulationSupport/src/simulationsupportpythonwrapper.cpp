@@ -336,19 +336,16 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
     // if it is valid
 
     if (pSimulation->hasBlockingIssues()) {
-        throw std::runtime_error(tr("Cannot run because simulation has blocking issues.").toStdString());
+        throw std::runtime_error(tr("The simulation has blocking issues and cannot therefore be run.").toStdString());
     }
 
     if (!valid(pSimulation)) {
-        throw std::runtime_error(tr("Cannot run because simulation has an invalid runtime.").toStdString());
+        throw std::runtime_error(tr("The simulation has an invalid runtime and cannot therefore be run.").toStdString());
     }
 
-    // A successful run will set elapsed time
+    // Reset our internals
 
     mElapsedTime = -1;
-
-    // Clear error message
-
     mErrorMessage = QString();
 
     // Try to allocate all the memory we need by adding a run to our simulation
