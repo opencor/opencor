@@ -369,6 +369,8 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
                 this, &SimulationSupportPythonWrapper::simulationDone);
 
         // Run our simulation and wait for it to complete
+        // Note: we use a queued connection because the event is in our
+        //       thread...
 
         QEventLoop waitLoop;
 
