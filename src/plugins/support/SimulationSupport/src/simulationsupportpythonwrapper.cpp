@@ -393,6 +393,8 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         disconnect(pSimulation, nullptr, this, nullptr);
 
+        // Throw any error message that may have been generated
+
         if (!mErrorMessage.isEmpty()) {
             throw std::runtime_error(mErrorMessage.toStdString());
         }
@@ -594,6 +596,8 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
 {
+    // Keep track of the given error message
+
     mErrorMessage = pErrorMessage;
 }
 
@@ -601,7 +605,7 @@ void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
 
 void SimulationSupportPythonWrapper::simulationFinished(qint64 pElapsedTime)
 {
-    // Save the elapsed time of the simulation
+    // Save the given elapsed time and let people know that we have got it
 
     mElapsedTime = pElapsedTime;
 
