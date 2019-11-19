@@ -352,7 +352,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
     // and, if successful, run our simulation
     // Note: we keep track of our focus widget (which might be our Python
     //       console window), so that we can give the focus back to it once we
-    //       have run our simulation...
+    //       are done running our simulation...
 
     QWidget *focusWidget = QApplication::focusWidget();
 
@@ -374,7 +374,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         QEventLoop waitLoop;
 
-        connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
+        connect(pSimulation, &Simulation::done,
                 &waitLoop, &QEventLoop::quit,
                 Qt::QueuedConnection);
 
@@ -599,8 +599,6 @@ void SimulationSupportPythonWrapper::simulationDone(qint64 pElapsedTime)
     // Save the given elapsed time and let people know that we have got it
 
     mElapsedTime = pElapsedTime;
-
-    emit gotElapsedTime();
 }
 
 //==============================================================================

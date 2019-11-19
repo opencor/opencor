@@ -67,9 +67,6 @@ private:
     qint64 mElapsedTime = -1;
     QString mErrorMessage;
 
-signals:
-    void gotElapsedTime();
-
 public slots:
     bool valid(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
