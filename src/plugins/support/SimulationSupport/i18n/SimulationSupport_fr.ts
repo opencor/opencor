@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>
-        <translation type="unfinished"></translation>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
     </message>
 </context>
 <context>
@@ -54,12 +54,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Unknown ODE solver.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown NLA solver.</source>
-        <translation type="unfinished"></translation>
+        <source>The requested solver (%1) could not be found.</source>
+        <translation>Le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
     </message>
 </context>
 </TS>

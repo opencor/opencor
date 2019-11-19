@@ -51,6 +51,8 @@ namespace SimulationSupport {
 static void setOdeSolver(SimulationData *pSimulationData,
                          const QString &pOdeSolverName)
 {
+    // Set the given ODE solver for the given simulation data
+
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pOdeSolverName == solverInterface->solverName()) {
             // Set the ODE solver's name
@@ -58,7 +60,7 @@ static void setOdeSolver(SimulationData *pSimulationData,
             pSimulationData->setOdeSolverName(pOdeSolverName);
 
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
-                // Set each ODE solver property's default value
+                // Set each ODE solver property to their default value
 
                 pSimulationData->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
             }
@@ -67,7 +69,7 @@ static void setOdeSolver(SimulationData *pSimulationData,
         }
     }
 
-    throw std::runtime_error(QObject::tr("Unknown ODE solver.").toStdString());
+    throw std::runtime_error(QObject::tr("The requested solver (%1) could not be found.").arg(pOdeSolverName).toStdString());
 }
 
 //==============================================================================
@@ -75,6 +77,8 @@ static void setOdeSolver(SimulationData *pSimulationData,
 static void setNlaSolver(SimulationData *pSimulationData,
                          const QString &pNlaSolverName)
 {
+    // Set the given NLA solver for the given simulation data
+
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pNlaSolverName == solverInterface->solverName()) {
             // Set the NLA solver's name
@@ -82,7 +86,7 @@ static void setNlaSolver(SimulationData *pSimulationData,
             pSimulationData->setNlaSolverName(pNlaSolverName);
 
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
-                // Set each NLA solver property's default value
+                // Set each NLA solver property to their default value
 
                 pSimulationData->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
             }
@@ -91,7 +95,7 @@ static void setNlaSolver(SimulationData *pSimulationData,
         }
     }
 
-    throw std::runtime_error(QObject::tr("Unknown NLA solver.").toStdString());
+    throw std::runtime_error(QObject::tr("The requested solver (%1) could not be found.").arg(pNlaSolverName).toStdString());
 }
 
 //==============================================================================
@@ -509,6 +513,8 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData,
                                                   const QString &pOdeSolverName)
 {
+    // Set the given ODE solver for the given simulation data
+
     SimulationSupport::setOdeSolver(pSimulationData, pOdeSolverName);
 }
 
@@ -517,6 +523,8 @@ void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationDat
 void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData,
                                                   const QString &pNlaSolverName)
 {
+    // Set the given NLA solver for the given simulation data
+
     SimulationSupport::setNlaSolver(pSimulationData, pNlaSolverName);
 }
 
