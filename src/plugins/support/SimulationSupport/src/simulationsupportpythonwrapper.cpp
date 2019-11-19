@@ -170,9 +170,7 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
                 PyErr_SetString(PyExc_ValueError, qPrintable(error));
 
-#include "pythonbegin.h"
-                Py_RETURN_NONE;
-#include "pythonend.h"
+                return nullptr;
             }
         }
 
