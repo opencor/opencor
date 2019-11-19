@@ -39,15 +39,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot run because simulation has blocking issues.</source>
+        <source>The simulation has blocking issues and cannot therefore be run.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot run because simulation has an invalid runtime.</source>
+        <source>The simulation has an invalid runtime and cannot therefore be run.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>We could not allocate the memory required for the simulation.</source>
+        <source>The memory required for the simulation could not be allocated.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

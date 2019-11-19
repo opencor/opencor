@@ -361,32 +361,23 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         emit pSimulation->runStarting(pSimulation->fileName());
 
-        // Get the elapsed time when the simulation has finished
-
-        connect(pSimulation, &Simulation::done,
-                this, &SimulationSupportPythonWrapper::simulationFinished);
-
-        // Get error messages from the simulation
+        // Keep track of any simulation error and of when the simulation is done
 
         connect(pSimulation, &Simulation::error,
-                this, &SimulationSupportPythonWrapper::error);
+                this, &SimulationSupportPythonWrapper::simulationError);
+        connect(pSimulation, &Simulation::done,
+                this, &SimulationSupportPythonWrapper::simulationDone);
 
-        // Use an event loop so we don't busy wait
+        // Run our simulation and wait for it to complete
 
-        QEventLoop waitForCompletion;
-
-        // We use a queued connection because the event is in our thread
+        QEventLoop waitLoop;
 
         connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
-                &waitForCompletion, &QEventLoop::quit, Qt::QueuedConnection);
-
-        // Start the simulation and wait for it to complete
+                &waitLoop, &QEventLoop::quit, Qt::QueuedConnection);
 
         pSimulation->run();
 
-        waitForCompletion.exec();
-
-        // Disconnect our signal handlers now that the simulation has finished
+        waitLoop.exec();
 
         disconnect(pSimulation, nullptr, this, nullptr);
 
@@ -396,7 +387,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
             throw std::runtime_error(mErrorMessage.toStdString());
         }
     } else {
-        throw std::runtime_error(tr("We could not allocate the memory required for the simulation.").toStdString());
+        throw std::runtime_error(tr("The memory required for the simulation could not be allocated.").toStdString());
     }
 
     // Restore the focus to the previous widget
@@ -591,7 +582,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
+void SimulationSupportPythonWrapper::simulationError(const QString &pErrorMessage)
 {
     // Keep track of the given error message
 
@@ -600,7 +591,7 @@ void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::simulationFinished(qint64 pElapsedTime)
+void SimulationSupportPythonWrapper::simulationDone(qint64 pElapsedTime)
 {
     // Save the given elapsed time and let people know that we have got it
 

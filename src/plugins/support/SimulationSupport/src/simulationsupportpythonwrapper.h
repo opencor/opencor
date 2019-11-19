@@ -104,8 +104,8 @@ public slots:
     PyObject * rates(SimulationResults *pSimulationResults) const;
 
 private slots:
-    void error(const QString &pErrorMessage);
-    void simulationFinished(qint64 pElapsedTime);
+    void simulationError(const QString &pErrorMessage);
+    void simulationDone(qint64 pElapsedTime);
 };
 
 //==============================================================================
