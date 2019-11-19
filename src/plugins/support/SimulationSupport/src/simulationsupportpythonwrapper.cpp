@@ -373,7 +373,8 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         QEventLoop waitLoop;
 
         connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
-                &waitLoop, &QEventLoop::quit, Qt::QueuedConnection);
+                &waitLoop, &QEventLoop::quit,
+                Qt::QueuedConnection);
 
         pSimulation->run();
 
