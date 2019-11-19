@@ -3,10 +3,13 @@ import os
 import opencor as oc
 
 
-def run_simulation(file_name):
+def run_simulation(file_name_or_url):
     print(' - Open file...')
 
-    simulation = oc.openSimulation(os.path.dirname(__file__) + file_name)
+    if file_name_or_url.startswith('https://'):
+        simulation = oc.openSimulation(file_name_or_url)
+    else:
+        simulation = oc.openSimulation(os.path.dirname(__file__) + '/' + file_name_or_url)
 
     print(' - Run file...')
 
@@ -26,34 +29,46 @@ def run_simulation(file_name):
     y = states['main/y'].values()
     z = states['main/z'].values()
 
-    return simulation
+    oc.closeSimulation(simulation)
 
 
 print('---------------------------------------')
-print('              CellML file')
+print('           Local CellML file')
 print('---------------------------------------')
 
-cellml = run_simulation('/../cellml/lorenz.cellml')
+run_simulation('../cellml/lorenz.cellml')
 
 print()
 print('---------------------------------------')
-print('              SED-ML file')
+print('          Remote CellML file')
 print('---------------------------------------')
 
-sedml = run_simulation('/../sedml/lorenz.sedml')
-
-print()
-print('---------------------------------------')
-print('            COMBINE archive')
-print('---------------------------------------')
-
-omex = run_simulation('/../combine/lorenz.omex')
+run_simulation('https://raw.githubusercontent.com/agarny/opencor/issue1255/models/tests/cellml/lorenz.cellml')
 
 print()
 print('---------------------------------------')
-print('               Shutdown')
+print('           Local SED-ML file')
 print('---------------------------------------')
 
-oc.closeSimulation(cellml)
-oc.closeSimulation(sedml)
-oc.closeSimulation(omex)
+run_simulation('../sedml/lorenz.sedml')
+
+print()
+print('---------------------------------------')
+print('          Remote SED-ML file')
+print('---------------------------------------')
+
+run_simulation('https://raw.githubusercontent.com/agarny/opencor/issue1255/models/tests/sedml/lorenz.sedml')
+
+print()
+print('---------------------------------------')
+print('         Local COMBINE archive')
+print('---------------------------------------')
+
+run_simulation('../combine/lorenz.omex')
+
+print()
+print('---------------------------------------')
+print('        Remote COMBINE archive')
+print('---------------------------------------')
+
+run_simulation('https://raw.githubusercontent.com/agarny/opencor/issue1255/models/tests/combine/lorenz.omex')
