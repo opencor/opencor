@@ -1,6 +1,6 @@
 import os
 
-import OpenCOR as oc
+import opencor as oc
 
 
 def run_simulation(file_name):
