@@ -897,7 +897,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         // Reset our progress
 
-        mProgress = -1;
+        mProgress = 0;
 
         // Clean up our output, if needed
 
@@ -3568,14 +3568,6 @@ void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTim
     // Stop keeping track of our simulation progress
 
     mProgress = -1;
-
-    // Note: our simulation progress gets reset in resetSimulationProgress(),
-    //       which is called by
-    //       SimulationExperimentViewWidget::checkSimulationResults(). To reset
-    //       our simulation progress here might not always work since our
-    //       simulation is run in a different thread, meaning that a call to
-    //       updateSimulationResults() might occur after we have reset our
-    //       simulation progress...
 }
 
 //==============================================================================
@@ -4316,7 +4308,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // Note: tabBarPixmapSize()-2 because we want a one-pixel wide
             //       border...
 
-            if (newProgress != mProgress) {
+            if ((newProgress != mProgress) && (mProgress != -1)) {
                 // The progress has changed, so keep track of its new value and
                 // update our file tab icon
 
