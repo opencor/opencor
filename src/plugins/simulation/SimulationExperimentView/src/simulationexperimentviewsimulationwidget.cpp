@@ -1212,7 +1212,7 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
 
         tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
-                                    Core::highlightColor());
+                                     Core::highlightColor());
 
         return QIcon(tabBarPixmap);
     }
