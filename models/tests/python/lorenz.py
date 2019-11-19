@@ -1,6 +1,8 @@
 import os
 
 import OpenCOR as oc
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 
 
 def run_simulation(file_name):
