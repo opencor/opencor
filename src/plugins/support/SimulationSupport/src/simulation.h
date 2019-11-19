@@ -432,6 +432,7 @@ public slots:
 
     OpenCOR::SimulationSupport::SimulationData * data() const;
     OpenCOR::SimulationSupport::SimulationResults * results() const;
+    // Note: the full class names are needed for our Python wrappers...
 
     int runsCount() const;
     quint64 runSize(int pRun = -1) const;
