@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
-#include "pythoninterface.h"
 #include "windowinterface.h"
 
 //==============================================================================
@@ -42,14 +41,12 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo();
 
 //==============================================================================
 
-class WebBrowserWindowWidget;
 class WebBrowserWindowWindow;
 
 //==============================================================================
 
 class WebBrowserWindowPlugin : public QObject, public I18nInterface,
-                               public PluginInterface, public PythonInterface,
-                               public WindowInterface
+                               public PluginInterface, public WindowInterface
 {
     Q_OBJECT
 
@@ -57,23 +54,16 @@ class WebBrowserWindowPlugin : public QObject, public I18nInterface,
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::PythonInterface)
     Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
-#include "pythoninterface.inl"
 #include "windowinterface.inl"
-
-    static WebBrowserWindowPlugin * instance();
-
-    WebBrowserWindowWidget * webBrowserWindowWidget() const;
 
 private:
     QAction *mWebBrowserWindowAction = nullptr;
 
-    WebBrowserWindowWidget *mWebBrowserWindowWidget = nullptr;
     WebBrowserWindowWindow *mWebBrowserWindowWindow = nullptr;
 };
 

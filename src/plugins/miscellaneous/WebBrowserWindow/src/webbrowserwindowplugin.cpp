@@ -21,11 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Web Browser window plugin
 //==============================================================================
 
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "webbrowserwindowplugin.h"
 #include "webbrowserwindowwindow.h"
-#include "webbrowserwindowpythonwrapper.h"
 
 //==============================================================================
 
@@ -47,7 +45,7 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour naviguer sur le Web."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
-                          QStringList() << "Core" << "PythonQtSupport" << "WebViewerWidget",
+                          QStringList() << "Core" << "WebViewerWidget",
 #if !defined(QT_DEBUG) || !defined(Q_OS_WIN)
                           descriptions,
                           QStringList() << "PythonConsoleWindow");
@@ -108,12 +106,6 @@ void WebBrowserWindowPlugin::initializePlugin()
     // Create our Web Browser window
 
     mWebBrowserWindowWindow = new WebBrowserWindowWindow(Core::mainWindow());
-
-    // Get the Web Browser window's widget and save it for our Python wrapper
-
-    mWebBrowserWindowWidget = mWebBrowserWindowWindow->widget();
-
-    instance()->mWebBrowserWindowWidget = mWebBrowserWindowWidget;
 }
 
 //==============================================================================
@@ -164,17 +156,6 @@ void WebBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 }
 
 //==============================================================================
-// Python interface
-//==============================================================================
-
-void WebBrowserWindowPlugin::registerPythonClasses(PyObject *pModule)
-{
-    // Register our Python classes
-
-    new WebBrowserWindowPythonWrapper(pModule, this);
-}
-
-//==============================================================================
 // Window interface
 //==============================================================================
 
@@ -201,30 +182,6 @@ QDockWidget * WebBrowserWindowPlugin::windowWidget() const
     // Return our Web Browser window widget
 
     return mWebBrowserWindowWindow;
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-WebBrowserWindowPlugin * WebBrowserWindowPlugin::instance()
-{
-    // Return the 'global' instance of our plugin
-
-    static WebBrowserWindowPlugin instance;
-
-    return static_cast<WebBrowserWindowPlugin *>(Core::globalInstance("OpenCOR::WebBrowserWindow::WebBrowserWindowPlugin::instance()",
-                                                 &instance));
-}
-
-
-//==============================================================================
-
-WebBrowserWindowWidget * WebBrowserWindowPlugin::webBrowserWindowWidget() const
-{
-    // Return our Web Browser window widget
-
-    return mWebBrowserWindowWidget;
 }
 
 //==============================================================================

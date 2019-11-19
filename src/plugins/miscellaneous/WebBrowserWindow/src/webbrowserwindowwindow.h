@@ -62,8 +62,6 @@ public:
     void loadSettings(QSettings &pSettings) override;
     void saveSettings(QSettings &pSettings) const override;
 
-    WebBrowserWindowWidget * widget() const;
-
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
