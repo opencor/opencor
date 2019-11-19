@@ -1,8 +1,6 @@
 import os
 
 import OpenCOR as oc
-import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
 
 
 def run_simulation(file_name):
@@ -27,10 +25,6 @@ def run_simulation(file_name):
     x = states['main/x'].values()
     y = states['main/y'].values()
     z = states['main/z'].values()
-
-    print(' - Generate 3D plot...')
-
-    plt.axes(projection='3d').plot3D(x, y, z)
 
     return simulation
 
