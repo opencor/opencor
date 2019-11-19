@@ -120,12 +120,9 @@ static PyObject * initializeSimulation(const QString &pFileName)
             return PythonQt::priv()->wrapQObject(simulation);
         }
 
-        // Get our runtime
-
-        CellMLSupport::CellmlFileRuntime *runtime = simulation->runtime();
-
-        // Find the solver whose name is first in alphabetical order, as this
-        // is the simulation's solver
+        // Retrieve a default ODE and NLA solver
+        // Note: this is useful in case our simulation is solely based on a
+        //       CellML file...
 
         QString odeSolverName = QString();
         QString nlaSolverName = QString();
@@ -134,59 +131,60 @@ static PyObject * initializeSimulation(const QString &pFileName)
             QString solverName = solverInterface->solverName();
 
             if (solverInterface->solverType() == Solver::Type::Ode) {
-                if (odeSolverName.isEmpty()
-                 || odeSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {
+                if (    odeSolverName.isEmpty()
+                    || (odeSolverName.compare(solverName, Qt::CaseInsensitive) > 0)) {
                     odeSolverName = solverName;
                 }
             } else if (solverInterface->solverType() == Solver::Type::Nla) {
-                if (nlaSolverName.isEmpty()
-                 || nlaSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {
+                if (    nlaSolverName.isEmpty()
+                    || (nlaSolverName.compare(solverName, Qt::CaseInsensitive) > 0)) {
                     nlaSolverName = solverName;
                 }
             }
         }
 
-        // Set our solver and its default properties
+        // Set our default ODE and NLA, if needed, solvers
+
+        CellMLSupport::CellmlFileRuntime *runtime = simulation->runtime();
 
         setOdeSolver(simulation->data(), odeSolverName);
-
-        // Set our NLA solver if we need one
 
         if ((runtime != nullptr) && runtime->needNlaSolver()) {
             setNlaSolver(simulation->data(), nlaSolverName);
         }
 
-        // Complete initialisation by loading any SED-ML properties
+        // Further initialise our simulation, should we be dealing with either
+        // a SED-ML file or a COMBINE archive
+        // Note: this will overwrite the default ODE and NLA solvers that we set
+        //       above...
 
-        if (simulation->fileType() == SimulationSupport::Simulation::FileType::SedmlFile
-         || simulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive) {
+        if (   (simulation->fileType() == SimulationSupport::Simulation::FileType::SedmlFile)
+            || (simulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive)) {
+            QString error = simulation->furtherInitialize();
 
-            QString initializationError = simulation->furtherInitialize();
-
-            if (!initializationError.isEmpty()) {
-                // We couldn't complete initialisation so no longer manage the simulation
+            if (!error.isEmpty()) {
+                // We couldn't complete initialisation, so no longer manage the
+                // simulation and raise a Python exception
 
                 simulationManager->unmanage(pFileName);
 
-                // And raise a Python exception
+                PyErr_SetString(PyExc_ValueError, qPrintable(error));
 
-                PyErr_SetString(PyExc_ValueError, qPrintable(initializationError));
-
-                return nullptr;
+#include "pythonbegin.h"
+                Py_RETURN_NONE;
+#include "pythonend.h"
             }
         }
 
-        // Do we have a valid simulation?
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data), should we have a valid runtime
 
         if ((runtime != nullptr) && runtime->isValid()) {
-            // Reset both the simulation's data and results (well, initialise in the
-            // case of its data)
-
             simulation->data()->reset();
             simulation->results()->reset();
         }
 
-        // Return the simulation as a Python object
+        // Return our simulation object as a Python object
 
         return PythonQt::priv()->wrapQObject(simulation);
     }

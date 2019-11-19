@@ -3,7 +3,7 @@
 import os
 import OpenCOR as oc
 
-s = oc.openSimulation(os.path.dirname(__file__) + '/../sedml/lorenz/lorenz.sedml')
+s = oc.openSimulation(os.path.dirname(__file__) + '/../sedml/lorenz.sedml')
 
 print('---------------------------------------')
 print('Simulation:')
