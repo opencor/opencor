@@ -379,7 +379,7 @@ private slots:
 
     void updateDelayValue(double pDelayValue);
 
-    void simulationRunning(bool pIsResuming);
+    void simulationRunning();
     void simulationPaused();
 
     void simulationDone(qint64 pElapsedTime);

@@ -3516,10 +3516,8 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayVal
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationRunning(bool pIsResuming)
+void SimulationExperimentViewSimulationWidget::simulationRunning()
 {
-    Q_UNUSED(pIsResuming)
-
     // Our simulation is running, so update our simulation mode and check for
     // results
 

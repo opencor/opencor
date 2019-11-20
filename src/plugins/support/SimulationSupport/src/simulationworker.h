@@ -88,7 +88,7 @@ private:
     SimulationWorker *&mSelf;
 
 signals:
-    void running(bool pIsResuming);
+    void running();
     void paused();
 
     void done(qint64 pElapsedTime);
