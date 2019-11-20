@@ -18,8 +18,6 @@ set(NUMERIC_LIBRARY_VERSION 37)
 # Git tag of our Python sources
 
 set(GIT_TAG "opencor-3.7.5")
-# Note: see https://github.com/opencor/opencor/pull/2160#issuecomment-541552006
-#       for the rationale behind using "win-debug" rather than "opencor"...
 
 # Specify where our local package will be installed
 
