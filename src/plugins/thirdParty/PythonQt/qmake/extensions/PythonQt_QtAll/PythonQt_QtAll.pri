@@ -1,4 +1,4 @@
-# If Qt has support for webkit, add it:
+# If Qt has support for QtWebKit, add it:
 qtHaveModule(webkit):CONFIG += PythonQtWebKit
 
 CONFIG += qt

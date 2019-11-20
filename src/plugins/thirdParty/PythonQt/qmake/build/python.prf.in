@@ -1,4 +1,4 @@
-# profile to include and link Python
+# Profile to include and link Python
 
 INCLUDEPATH += @PYTHON_INCLUDE_DIR@
 LIBS        += @PYTHON_LIBRARY@

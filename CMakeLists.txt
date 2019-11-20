@@ -1065,9 +1065,8 @@ endif()
 
 # On Linux, our Python package needs to be directly linked to OpenCOR otherwise
 # Python extension DSOs can't find symbols
-# Note: this is because the lookup scope changes for DSOs that are loaded
-#       using dlopen()...
-#       (See https://www.akkadia.org/drepper/dsohowto.pdf)
+# Note: this is because the lookup scope changes for DSOs that are loaded using
+#       dlopen() (see https://www.akkadia.org/drepper/dsohowto.pdf)...
 
 if(NOT WIN32 AND NOT APPLE)
     include_directories(${PYTHON_INCLUDE_DIR})

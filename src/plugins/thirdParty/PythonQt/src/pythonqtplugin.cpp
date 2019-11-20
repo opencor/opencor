@@ -38,8 +38,8 @@ PLUGININFO_FUNC PythonQtPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to allow the use of Qt with Python."));
-    descriptions.insert("fr", QString::fromUtf8("une extension ..."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to use <a href=\"https://www.qt.io/\">Qt</a> with <a href=\"https://www.python.org/\">Python</a>."));
+    descriptions.insert("fr", QString::fromUtf8("un plugin pour utiliser <a href=\"https://www.qt.io/\">Qt</a> avec <a href=\"https://www.python.org/\">Python</a>"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList() << "Python",

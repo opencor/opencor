@@ -27,10 +27,10 @@ string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     if(WIN32 OR NOT USE_PREBUILT_PYTHONQT_PACKAGE)
-        # If not Windows then we only use the Debug library when we are
-        # actually building PythonQt for debugging
+        # If we are not on Windows then we only use the debug library when we
+        # are actually building PythonQt for debugging
 
-        set(DEBUG_POSTFIX "_d")   # PythonQt uses this for all platforms
+        set(DEBUG_POSTFIX "_d")
     endif()
 endif()
 
@@ -109,7 +109,7 @@ else()
         set(QUIET_MAKE -c)
     else()
         if(NOT APPLE)
-          # Make sure correct value of RPATH is set in library
+            # Make sure that the correct value of RPATH is set
 
             set(QMAKE_LFLAGS_OPTION "QMAKE_LFLAGS+=\\'-Wl,-rpath,\\\$\\\$ORIGIN/../lib\\'")
         elseif()
@@ -126,7 +126,7 @@ else()
         set(QMAKE_DEBUG_OPTION)
     endif()
 
-    # Wrap our WebKit
+    # Wrap our copy of QtWebKit
 
     set(QMAKE_INCLUDE_PATH "INCLUDEPATH+=${QTWEBKIT_INCLUDE_DIR}")
 
@@ -171,7 +171,7 @@ else()
                    ${PROJECT_BINARY_DIR}/build/python.prf
                    @ONLY)
 
-    ExternalProject_Add_Step(${PACKAGE_BUILD} update_configuration
+    ExternalProject_Add_Step(${PACKAGE_BUILD} updateConfiguration
         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
                                          ${PACKAGE_BUILD_DIR}/PythonQtOpenCOR.pro
         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/build/python.prf
@@ -196,17 +196,17 @@ else()
             set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${DEBUG_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
         endif()
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_SHARED_LIBRARY} ${FULL_SHARED_LIBRARY}
                                  DEPENDEES install)
 
         if(APPLE)
-            # Set RPATH in library to enable linking independent of location
+            # Set RPATH to enable linking independent of location
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} set_rpath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
                                      COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} ${FULL_SHARED_LIBRARY}
-                                     DEPENDEES CopyLibrary)
+                                     DEPENDEES copyLibrary)
         endif()
 
     endif()
@@ -247,7 +247,7 @@ add_plugin(PythonQt
 )
 
 # Update our list of Python specific dependencies
-# Note: we use COPY_EXTERNAL_BINARIES_TARGET instead of PROJECT_NAME to prevent
+# Note: we use COPY_EXTERNAL_BINARIES_TARGET rather than PROJECT_NAME to prevent
 #       a cyclic dependency...
 
 set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${COPY_EXTERNAL_BINARIES_TARGET} PARENT_SCOPE)
