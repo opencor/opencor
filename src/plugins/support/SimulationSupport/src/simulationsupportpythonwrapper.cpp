@@ -273,8 +273,6 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
                                                                QObject *pParent) :
     QObject(pParent)
 {
-    Q_UNUSED(pModule)
-
     // Register some OpenCOR classes with Python and add some decorators to
     // ourselves
 
