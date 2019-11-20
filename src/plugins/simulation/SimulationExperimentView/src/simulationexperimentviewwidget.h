@@ -131,9 +131,6 @@ private:
 
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
 
-public slots:
-    void startingRun(const QString &pFileName);
-
 private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
     void contentsWidgetSplitterMoved(const QIntList &pSizes);

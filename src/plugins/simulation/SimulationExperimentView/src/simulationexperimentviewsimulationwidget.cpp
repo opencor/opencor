@@ -127,8 +127,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     connect(mSimulation->data(), &SimulationSupport::SimulationData::dataModified,
             this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
+
     connect(mSimulation->results(), &SimulationSupport::SimulationResults::resultsReset,
             this, &SimulationExperimentViewSimulationWidget::simulationResultsReset);
+    connect(mSimulation->results(), &SimulationSupport::SimulationResults::runAdded,
+            this, &SimulationExperimentViewSimulationWidget::simulationResultsRunAdded);
 
     // Allow for things to be dropped on us
 
@@ -1401,8 +1404,6 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // simulation and, if successful, run our simulation
 
             if (mSimulation->addRun()) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::AddRun);
-
                 mSimulation->run();
             } else {
                 Core::warningMessageBox(tr("Run Simulation"),
@@ -3661,6 +3662,15 @@ void SimulationExperimentViewSimulationWidget::simulationResultsReset()
 
         mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
     setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::simulationResultsRunAdded()
+{
+    // A run has been added, so check our simulation results
+
+    mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::AddRun);
 }
 
 //==============================================================================

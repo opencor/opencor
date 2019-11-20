@@ -339,10 +339,6 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
     QWidget *focusWidget = QApplication::focusWidget();
 
     if (pSimulation->addRun()) {
-        // Let people know that we are starting our run
-
-        emit pSimulation->runStarting(pSimulation->fileName());
-
         // Keep track of any simulation error and of when the simulation is done
 
         connect(pSimulation, &Simulation::error,

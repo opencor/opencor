@@ -307,6 +307,7 @@ private:
 
 signals:
     void resultsReset();
+    void runAdded();
 
 public slots:
     void reload();
@@ -411,8 +412,6 @@ private:
                              const QString &pKisaoId) const;
 
 signals:
-    void runStarting(const QString &pFileName);
-
     void running(bool pIsResuming);
     void paused();
 

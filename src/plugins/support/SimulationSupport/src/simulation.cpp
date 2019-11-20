@@ -1042,14 +1042,21 @@ int SimulationResults::runsCount() const
 
 bool SimulationResults::addRun()
 {
-    // Ask our data store to add a run to itself
+    // Ask our data store to add a run to itself and let people know about it,
+    // if we were able to add one
     // Note: we consider things to be fine if our data store has had no problems
     //       adding a run to itself or if the simulation size is zero...
 
     quint64 simulationSize = mSimulation->size();
 
     if (simulationSize != 0) {
-        return mDataStore->addRun(simulationSize);
+        bool res = mDataStore->addRun(simulationSize);
+
+        if (res) {
+            emit runAdded();
+        }
+
+        return res;
     }
 
     return true;

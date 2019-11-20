@@ -58,12 +58,6 @@ static PyObject * simulation(const QString &pFileName,
             return nullptr;
         }
 
-        // Let the Simulation Experiment view widget know when we start running
-        // a simulation
-
-        QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
-                         pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
-
         // Return our simulation wrapped into a Python object
 
         return PythonQt::priv()->wrapQObject(simulation);

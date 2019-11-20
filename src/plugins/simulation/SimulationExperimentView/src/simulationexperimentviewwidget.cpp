@@ -575,16 +575,6 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::startingRun(const QString &pFileName)
-{
-    // A run is starting for the given file name (after having added a run), so
-    // check its simulation results
-
-    checkSimulationResults(pFileName, SimulationExperimentViewSimulationWidget::Task::AddRun);
-}
-
-//==============================================================================
-
 void SimulationExperimentViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our simulation widget has moved, so keep track of its new
