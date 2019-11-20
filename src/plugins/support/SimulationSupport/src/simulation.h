@@ -126,9 +126,6 @@ class SimulationObject : public QObject
 public:
     explicit SimulationObject(Simulation *pSimulation);
 
-public slots:
-    Simulation * simulation() const;
-
 protected:
     Simulation *mSimulation;
 };

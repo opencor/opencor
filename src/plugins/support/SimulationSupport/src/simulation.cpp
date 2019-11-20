@@ -111,15 +111,6 @@ SimulationObject::SimulationObject(Simulation *pSimulation) :
 
 //==============================================================================
 
-Simulation * SimulationObject::simulation() const
-{
-    // Return our simulation
-
-    return mSimulation;
-}
-
-//==============================================================================
-
 SimulationData::SimulationData(Simulation *pSimulation) :
     SimulationObject(pSimulation),
     mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
