@@ -236,7 +236,6 @@ add_plugin(PythonQt
 
         src/pythonqtplugin.cpp
     PLUGINS
-        Core
         Python
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
