@@ -386,11 +386,11 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
+void SimulationSupportPythonWrapper::reset(Simulation *pSimulation, bool pAll)
 {
     // Reset our simulation
 
-    pSimulation->reset();
+    pSimulation->reset(pAll);
 }
 
 //==============================================================================
