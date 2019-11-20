@@ -194,25 +194,37 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
 //==============================================================================
 
-static PyObject * openSimulation(PyObject *self, PyObject *args)
+static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
 {
-    Q_UNUSED(self)
+    Q_UNUSED(pSelf)
+
+    // Open a simulation
 
     PyObject *bytes;
-    char *name;
-    Py_ssize_t len;
-    if (PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
+
+    if (PyArg_ParseTuple(pArgs, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
 #include "pythonbegin.h"
         Py_RETURN_NONE;
 #include "pythonend.h"
     }
-    PyBytes_AsStringAndSize(bytes, &name, &len);
-    QString fileName = QString::fromUtf8(name, int(len));
+
+    char *string;
+    Py_ssize_t len;
+
+    PyBytes_AsStringAndSize(bytes, &string, &len);
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    Core::checkFileNameOrUrl(QString::fromUtf8(string, int(len)), isLocalFile, fileNameOrUrl);
+
 #include "pythonbegin.h"
     Py_DECREF(bytes);
 #include "pythonend.h"
 
-    QString error = Core::openFile(fileName);
+    QString error = isLocalFile?
+                        Core::openFile(fileNameOrUrl):
+                        Core::openRemoteFile(fileNameOrUrl);
 
     if (!error.isEmpty()) {
         PyErr_SetString(PyExc_IOError, qPrintable(error));
@@ -220,49 +232,20 @@ static PyObject * openSimulation(PyObject *self, PyObject *args)
         return nullptr;
     }
 
-    return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
+    return initializeSimulation(isLocalFile?
+                                    fileNameOrUrl:
+                                    Core::FileManager::instance()->fileName(fileNameOrUrl));
 }
 
 //==============================================================================
 
-static PyObject * openRemoteSimulation(PyObject *self, PyObject *args)
+static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
 {
-    Q_UNUSED(self)
+    Q_UNUSED(pSelf)
 
-    PyObject *bytes;
-    char *name;
-    Py_ssize_t len;
-    if (PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
+    if (PyTuple_Size(pArgs) > 0) {
 #include "pythonbegin.h"
-        Py_RETURN_NONE;
-#include "pythonend.h"
-    }
-    PyBytes_AsStringAndSize(bytes, &name, &len);
-    QString url = QString::fromUtf8(name, int(len));
-#include "pythonbegin.h"
-    Py_DECREF(bytes);
-#include "pythonend.h"
-
-    QString error = Core::openRemoteFile(url);
-
-    if (!error.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(error));
-
-        return nullptr;
-    }
-
-    return initializeSimulation(Core::localFileName(url));
-}
-
-//==============================================================================
-
-static PyObject * closeSimulation(PyObject *self, PyObject *args)
-{
-    Q_UNUSED(self)
-
-    if (PyTuple_Size(args) > 0) {
-#include "pythonbegin.h"
-        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(pArgs, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 #include "pythonend.h"
 
         if (wrappedSimulation != nullptr) {
@@ -305,7 +288,6 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 
     static std::array<PyMethodDef, 4> PythonSimulationSupportMethods = {{
                                                                            { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
-                                                                           { "openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation." },
                                                                            { "closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation." },
                                                                            { nullptr, nullptr, 0, nullptr }
                                                                        }};
