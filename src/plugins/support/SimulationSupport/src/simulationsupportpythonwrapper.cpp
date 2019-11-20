@@ -299,7 +299,7 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 
 bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
 {
-    // Return whether the simulation is valid
+    // Return whether the given simulation is valid
 
     if (!pSimulation->hasBlockingIssues()) {
         CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
@@ -366,7 +366,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         disconnect(pSimulation, nullptr, this, nullptr);
 
-        // Throw any error message that may have been generated
+        // Throw any error message that has been generated
 
         if (!mErrorMessage.isEmpty()) {
             throw std::runtime_error(mErrorMessage.toStdString());
@@ -388,7 +388,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
 void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
 {
-    // Reset our model parameters
+    // Reset our simulation
 
     pSimulation->reset();
 }
@@ -397,7 +397,7 @@ void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
 
 void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
-    // Ask our widget to clear our results
+    // Clear our our widget to clear our results
     // Note: we get the widget to do this as it needs to clear all associated
     //       graphs...
 
