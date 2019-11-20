@@ -155,8 +155,6 @@ QString CORE_EXPORT openFile(const QString &pFileName,
                              const QString &pUrl = QString());
 QString CORE_EXPORT openRemoteFile(const QString &pUrl);
 
-QString CORE_EXPORT localFileName(const QString &pUrl);
-
 QString CORE_EXPORT formatXml(const QString &pXml);
 
 QString CORE_EXPORT cleanContentMathml(const QString &pContentMathml);

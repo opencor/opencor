@@ -654,22 +654,6 @@ QString openRemoteFile(const QString &pUrl)
 
 //==============================================================================
 
-QString localFileName(const QString &pUrl)
-{
-    // Return the local file name, if any
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
-
-    return isLocalFile?
-                pUrl:
-                FileManager::instance()->fileName(fileNameOrUrl);
-}
-
-//==============================================================================
-
 QString formatXml(const QString &pXml)
 {
     // Format the given XML
