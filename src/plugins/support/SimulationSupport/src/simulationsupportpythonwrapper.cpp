@@ -275,7 +275,8 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 {
     Q_UNUSED(pModule)
 
-    // Register some OpenCOR classes with Python and decorators to our ourselves
+    // Register some OpenCOR classes with Python and add some decorators to
+    // ourselves
 
     PythonQtSupport::registerClass(&Simulation::staticMetaObject);
     PythonQtSupport::registerClass(&SimulationData::staticMetaObject);

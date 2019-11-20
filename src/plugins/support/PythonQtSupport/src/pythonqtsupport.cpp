@@ -32,7 +32,7 @@ namespace PythonQtSupport {
 
 void addInstanceDecorators(QObject *pObject)
 {
-    // Add instance decorators for the given object
+    // Add some instance decorators to the given object
 
     PythonQt::self()->addInstanceDecorators(pObject);
 }

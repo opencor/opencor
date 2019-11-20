@@ -342,6 +342,9 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule,
 
     PyType_Ready(&DataStoreValuesDict_Type);
 
+    // Register some OpenCOR classes with Python and add some decorators to
+    // ourselves
+
     PythonQtSupport::registerClass(&DataStore::staticMetaObject);
     PythonQtSupport::registerClass(&DataStoreValue::staticMetaObject);
     PythonQtSupport::registerClass(&DataStoreVariable::staticMetaObject);
