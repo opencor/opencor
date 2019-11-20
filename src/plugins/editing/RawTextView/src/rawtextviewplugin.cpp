@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "editorwidget.h"
 #include "filemanager.h"
 #include "rawtextviewplugin.h"
 #include "rawtextviewwidget.h"
