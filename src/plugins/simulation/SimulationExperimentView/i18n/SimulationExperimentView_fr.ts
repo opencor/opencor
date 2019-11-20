@@ -557,6 +557,10 @@
         <translation>aucun</translation>
     </message>
     <message>
+        <source>%1:</source>
+        <translation>%1 :</translation>
+    </message>
+    <message>
         <source>the model needs both an ODE and an NLA solver, but none are available</source>
         <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
     </message>
@@ -647,10 +651,6 @@
     <message>
         <source>%1 using %2</source>
         <translation>%1 avec %2</translation>
-    </message>
-    <message>
-        <source>%1:</source>
-        <translation>%1 :</translation>
     </message>
     <message>
         <source>Error:</source>

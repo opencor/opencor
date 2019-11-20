@@ -4,6 +4,10 @@
 <context>
     <name>OpenCOR::SimulationSupport::Simulation</name>
     <message>
+        <source>the requested solver (%1) could not be found</source>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
         <source>The model must have at least one ODE or DAE.</source>
         <translation>Le modèle doit avoir au moins une EDO ou EAD.</translation>
     </message>
@@ -14,10 +18,6 @@
     <message>
         <source>the starting point cannot be greater than the ending point</source>
         <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
-    </message>
-    <message>
-        <source>the requested solver (%1) could not be found</source>
-        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
     </message>
 </context>
 <context>
@@ -38,10 +38,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>The requested solver (%1) could not be found.</source>
-        <translation>Le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
-    </message>
-    <message>
         <source>Information</source>
         <translation>Information</translation>
     </message>
@@ -56,6 +52,10 @@
     <message>
         <source>Fatal</source>
         <translation>Fatal</translation>
+    </message>
+    <message>
+        <source>The requested solver (%1) could not be found.</source>
+        <translation>Le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
     </message>
 </context>
 </TS>
