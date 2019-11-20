@@ -955,34 +955,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // it/them
 
             for (const auto &simulationIssue : simulationIssues) {
-                QString issueType;
-
-                switch (simulationIssue.type()) {
-                case SimulationSupport::SimulationIssue::Type::Information:
-                    issueType = tr("Information:");
-
-                    break;
-                case SimulationSupport::SimulationIssue::Type::Error:
-                    issueType = tr("Error:");
-
-                    break;
-                case SimulationSupport::SimulationIssue::Type::Warning:
-                    issueType = tr("Warning:");
-
-                    break;
-                case SimulationSupport::SimulationIssue::Type::Fatal:
-                    issueType = tr("Fatal:");
-
-                    break;
-                }
-
                 if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
                     information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(simulationIssue.line())
                                                                                                                                       .arg(simulationIssue.column())
-                                                                                                                                      .arg(issueType,
+                                                                                                                                      .arg(tr("%1:").arg(simulationIssue.typeAsString()),
                                                                                                                                            Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 } else {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType,
+                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(tr("%1:").arg(simulationIssue.typeAsString()),
                                                                                                                                    Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 }
             }

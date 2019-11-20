@@ -102,6 +102,8 @@ public:
     explicit SimulationIssue(Type pType, const QString &pMessage);
 
     Type type() const;
+    QString typeAsString() const;
+
     int line() const;
     int column() const;
     QString message() const;

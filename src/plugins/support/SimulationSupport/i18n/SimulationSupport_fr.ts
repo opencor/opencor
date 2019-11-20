@@ -23,32 +23,16 @@
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
     <message>
-        <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fatal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The simulation has blocking issues and cannot therefore be run.</source>
-        <translation type="unfinished"></translation>
+        <translation>La simulation a des problèmes blocants et ne peut donc pas être exécutée.</translation>
     </message>
     <message>
         <source>The simulation has an invalid runtime and cannot therefore be run.</source>
-        <translation type="unfinished"></translation>
+        <translation>La simulation a un environnement d&apos;exécution invalide et ne peut donc pas être exécutée.</translation>
     </message>
     <message>
         <source>The memory required for the simulation could not be allocated.</source>
-        <translation type="unfinished"></translation>
+        <translation>La mémoire requise pour la simulation n&apos;a pas pu être allouée.</translation>
     </message>
 </context>
 <context>
@@ -56,6 +40,22 @@
     <message>
         <source>The requested solver (%1) could not be found.</source>
         <translation>Le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation>Fatal</translation>
     </message>
 </context>
 </TS>

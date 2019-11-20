@@ -400,44 +400,23 @@ void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 
 //==============================================================================
 
-PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
+PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 {
-    // Return a list of any issues the simulation has
+    // Return a list of issues the simulation has
 
     PyObject *issuesList = PyList_New(0);
-
     auto simulationIssues = pSimulation->issues();
 
     for (const auto &simulationIssue : simulationIssues) {
-        QString issueType;
         QString information;
-
-        switch (simulationIssue.type()) {
-        case SimulationSupport::SimulationIssue::Type::Information:
-            issueType = tr("Information");
-
-            break;
-        case SimulationSupport::SimulationIssue::Type::Error:
-            issueType = tr("Error");
-
-            break;
-        case SimulationSupport::SimulationIssue::Type::Warning:
-            issueType = tr("Warning");
-
-            break;
-        case SimulationSupport::SimulationIssue::Type::Fatal:
-            issueType = tr("Fatal");
-
-            break;
-        }
 
         if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
             information = QString("[%1:%2] %3: %4.").arg(simulationIssue.line())
-                                                     .arg(simulationIssue.column())
-                                                     .arg(issueType,
-                                                          Core::formatMessage(simulationIssue.message()));
+                                                    .arg(simulationIssue.column())
+                                                    .arg(simulationIssue.typeAsString(),
+                                                         Core::formatMessage(simulationIssue.message()));
         } else {
-            information = QString("%1: %2.").arg(issueType,
+            information = QString("%1: %2.").arg(simulationIssue.typeAsString(),
                                                  Core::formatMessage(simulationIssue.message()));
         }
 
@@ -453,6 +432,8 @@ void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulatio
                                                       double pStartingPoint,
                                                       bool pRecompute)
 {
+    // Set the starting point of our simulation
+
     pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
 }
 
@@ -461,6 +442,8 @@ void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulatio
 void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData,
                                                     double pEndingPoint)
 {
+    // Set the ending point of our simulation
+
     pSimulationData->setEndingPoint(pEndingPoint);
 }
 
@@ -469,6 +452,8 @@ void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationD
 void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData,
                                                       double pPointInterval)
 {
+    // Set the point interval for our simulation
+
     pSimulationData->setPointInterval(pPointInterval);
 }
 
@@ -494,16 +479,10 @@ void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationDat
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
-{
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicValues(),
-                                                                  &(pSimulationData->simulationDataUpdatedFunction()));
-}
-
-//==============================================================================
-
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
+    // Return our constants values
+
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantsValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
 }
@@ -512,6 +491,8 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
+    // Return our rates values
+
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->ratesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
 }
@@ -520,7 +501,19 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
+    // Return our states values
+
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->statesValues(),
+                                                                  &(pSimulationData->simulationDataUpdatedFunction()));
+}
+
+//==============================================================================
+
+PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
+{
+    // Return our algebraic values
+
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
 }
 
@@ -528,20 +521,17 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
 {
+    // Return our points variable
+
     return pSimulationResults->pointsVariable();
-}
-
-//==============================================================================
-
-PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
-{
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->algebraicVariables());
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
 {
+    // Return our constants variables
+
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->constantsVariables());
 }
 
@@ -549,6 +539,8 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulat
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
 {
+    // Return our rates variables
+
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->ratesVariables());
 }
 
@@ -556,7 +548,18 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationR
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
+    // Return our states variables
+
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->statesVariables());
+}
+
+//==============================================================================
+
+PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
+{
+    // Return our algebraic variables
+
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->algebraicVariables());
 }
 
 //==============================================================================

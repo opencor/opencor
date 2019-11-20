@@ -89,17 +89,17 @@ public slots:
     void setNlaSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                       const QString &pNlaSolverName);
 
-    PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * constants(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
+    PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
 
     OpenCOR::DataStore::DataStoreVariable * points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
-    PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+    PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
 private slots:
     void simulationError(const QString &pErrorMessage);

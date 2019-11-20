@@ -77,6 +77,28 @@ SimulationIssue::Type SimulationIssue::type() const
 
 //==============================================================================
 
+QString SimulationIssue::typeAsString() const
+{
+    // Return the issue's type as a string
+
+    switch (mType) {
+    case SimulationSupport::SimulationIssue::Type::Information:
+        return QObject::tr("Information");
+    case SimulationSupport::SimulationIssue::Type::Error:
+        return QObject::tr("Error");
+    case SimulationSupport::SimulationIssue::Type::Warning:
+        return QObject::tr("Warning");
+    case SimulationSupport::SimulationIssue::Type::Fatal:
+        return QObject::tr("Fatal");
+    }
+
+    return "???";
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
+}
+
+//==============================================================================
+
 int SimulationIssue::line() const
 {
     // Return the issue's line
