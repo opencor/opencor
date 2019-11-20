@@ -585,19 +585,6 @@ void SimulationExperimentViewWidget::startingRun(const QString &pFileName)
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::clearSimulationResults(const QString &pFileName)
-{
-    // Clear the simulation results for the given file name
-
-    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
-
-    if (simulationWidget != nullptr) {
-        simulationWidget->clearSimulationResults();
-    }
-}
-
-//==============================================================================
-
 void SimulationExperimentViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our simulation widget has moved, so keep track of its new

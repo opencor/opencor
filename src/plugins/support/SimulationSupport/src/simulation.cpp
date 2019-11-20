@@ -947,6 +947,10 @@ void SimulationResults::reset()
 
     deleteDataStore();
     createDataStore();
+
+    // Let people know that we have been reset
+
+    emit resultsReset();
 }
 
 //==============================================================================

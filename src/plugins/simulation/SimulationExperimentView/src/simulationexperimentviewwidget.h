@@ -133,7 +133,6 @@ private:
 
 public slots:
     void startingRun(const QString &pFileName);
-    void clearSimulationResults(const QString &pFileName);
 
 private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);

@@ -64,12 +64,6 @@ static PyObject * simulation(const QString &pFileName,
         QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
                          pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
 
-        // Let the Simulation Experiment view widget know when we want to clear
-        // simulation results
-
-        QObject::connect(simulation, &SimulationSupport::Simulation::clearResults,
-                         pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::clearSimulationResults);
-
         // Return our simulation wrapped into a Python object
 
         return PythonQt::priv()->wrapQObject(simulation);

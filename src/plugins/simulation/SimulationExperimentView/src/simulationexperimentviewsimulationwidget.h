@@ -390,6 +390,7 @@ private slots:
     void simulationError(const QString &pMessage);
 
     void simulationDataModified(bool pIsModified);
+    void simulationResultsReset();
 
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);

@@ -305,6 +305,9 @@ private:
     double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
                      DataStore::DataStoreVariable *pVariable) const;
 
+signals:
+    void resultsReset();
+
 public slots:
     void reload();
 
@@ -409,7 +412,6 @@ private:
 
 signals:
     void runStarting(const QString &pFileName);
-    void clearResults(const QString &pFileName);
 
     void running(bool pIsResuming);
     void paused();

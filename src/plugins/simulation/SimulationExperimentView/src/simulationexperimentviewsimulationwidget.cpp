@@ -127,6 +127,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     connect(mSimulation->data(), &SimulationSupport::SimulationData::dataModified,
             this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
+    connect(mSimulation->results(), &SimulationSupport::SimulationResults::resultsReset,
+            this, &SimulationExperimentViewSimulationWidget::simulationResultsReset);
 
     // Allow for things to be dropped on us
 
@@ -1453,12 +1455,6 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
         //       realign themselves)...
 
         mSimulation->results()->reset();
-
-        // Update our simulation mode and check for results
-
-        updateSimulationMode();
-
-        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
     setUpdatesEnabled(true);
 }
 
@@ -3650,6 +3646,21 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
 
     mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
     mResetAllModelParametersAction->setEnabled(pIsModified);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::simulationResultsReset()
+{
+    setUpdatesEnabled(false);
+        // Update our simulation mode and check for results
+        // Note: see clearSimulationResults() for the reason behing temporarily
+        //       disabling updates...
+
+        updateSimulationMode();
+
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================

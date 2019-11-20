@@ -397,11 +397,9 @@ void SimulationSupportPythonWrapper::reset(Simulation *pSimulation, bool pAll)
 
 void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
-    // Get our widget to clear our results
-    // Note: we get the widget to do this as it needs to clear all associated
-    //       graphs...
+    // Reset our simulation results
 
-    emit pSimulation->clearResults(pSimulation->fileName());
+    pSimulation->results()->reset();
 }
 
 //==============================================================================
