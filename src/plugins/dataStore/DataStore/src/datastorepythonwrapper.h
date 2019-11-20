@@ -51,7 +51,7 @@ class DataStorePythonWrapper : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent);
+    explicit DataStorePythonWrapper(void *pModule, QObject *pParent);
 
     static DATASTORE_EXPORT PyObject * dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                            SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction);

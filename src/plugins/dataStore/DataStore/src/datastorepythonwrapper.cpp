@@ -319,7 +319,7 @@ static PyTypeObject DataStoreValuesDict_Type = {
 
 //==============================================================================
 
-DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule,
+DataStorePythonWrapper::DataStorePythonWrapper(void *pModule,
                                                QObject *pParent) :
     QObject(pParent)
 {

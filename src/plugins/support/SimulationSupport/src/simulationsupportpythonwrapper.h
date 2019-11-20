@@ -60,8 +60,7 @@ class SimulationSupportPythonWrapper : public QObject
     Q_OBJECT
 
 public:
-    explicit SimulationSupportPythonWrapper(PyObject *pModule,
-                                            QObject *pParent);
+    explicit SimulationSupportPythonWrapper(void *pModule, QObject *pParent);
 
 private:
     qint64 mElapsedTime = -1;

@@ -188,7 +188,7 @@ static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
 
 //==============================================================================
 
-SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyObject *pModule,
+SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(void *pModule,
                                                                              QObject *pParent) :
     QObject(pParent)
 {
@@ -201,7 +201,8 @@ SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyO
                                                                                   { nullptr, nullptr, 0, nullptr }
                                                                               }};
 
-    PyModule_AddFunctions(pModule, PythonSimulationExperimentViewMethods.data());
+    PyModule_AddFunctions(static_cast<PyObject *>(pModule),
+                          PythonSimulationExperimentViewMethods.data());
 }
 
 //==============================================================================

@@ -409,7 +409,7 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 // Python interface
 //==============================================================================
 
-void SimulationExperimentViewPlugin::registerPythonClasses(PyObject *pModule)
+void SimulationExperimentViewPlugin::registerPythonClasses(void *pModule)
 {
     // Register our Python classes
 

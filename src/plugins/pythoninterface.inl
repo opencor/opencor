@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // Note: make sure to update solverInterfaceVersion() whenever you update
     //       this interface...
 
-    VIRTUAL void registerPythonClasses(PyObject *pModule) PURE_OR_OVERRIDE;
+    VIRTUAL void registerPythonClasses(void *pModule) PURE_OR_OVERRIDE;
 #include "interfaceend.h"
 
 //==============================================================================

@@ -59,7 +59,7 @@ void DataStorePlugin::retranslateUi()
 // Python interface
 //==============================================================================
 
-void DataStorePlugin::registerPythonClasses(PyObject *pModule)
+void DataStorePlugin::registerPythonClasses(void *pModule)
 {
     // Register our Python classes
 

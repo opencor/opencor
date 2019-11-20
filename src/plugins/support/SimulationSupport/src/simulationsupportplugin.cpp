@@ -156,7 +156,7 @@ void SimulationSupportPlugin::retranslateUi()
 // Python interface
 //==============================================================================
 
-void SimulationSupportPlugin::registerPythonClasses(PyObject *pModule)
+void SimulationSupportPlugin::registerPythonClasses(void *pModule)
 {
     // Register our Python classes
 

@@ -45,7 +45,7 @@ class SimulationExperimentViewPythonWrapper : public QObject
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewPythonWrapper(PyObject *pModule,
+    explicit SimulationExperimentViewPythonWrapper(void *pModule,
                                                    QObject *pParent);
 };
 

@@ -269,7 +269,7 @@ static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
 
 //==============================================================================
 
-SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule,
+SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(void *pModule,
                                                                QObject *pParent) :
     QObject(pParent)
 {
@@ -290,7 +290,8 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
                                                                            { nullptr, nullptr, 0, nullptr }
                                                                        }};
 
-    PyModule_AddFunctions(pModule, PythonSimulationSupportMethods.data());
+    PyModule_AddFunctions(static_cast<PyObject *>(pModule),
+                          PythonSimulationSupportMethods.data());
 }
 
 //==============================================================================
