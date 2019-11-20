@@ -180,10 +180,10 @@ static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
 #include "pythonend.h"
 
         if (wrappedSimulation != nullptr) {
-            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
-
             // Close the simulation by closing its file, raising an exception if
             // we were unable to do so
+
+            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
 
             if (!Core::centralWidget()->closeFile(simulation->fileName())) {
                 PyErr_SetString(PyExc_IOError, qPrintable(QObject::tr("unable to close the simulation")));

@@ -243,23 +243,22 @@ static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
 {
     Q_UNUSED(pSelf)
 
+    // Close a simulation
+
     if (PyTuple_Size(pArgs) > 0) {
 #include "pythonbegin.h"
         PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(pArgs, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 #include "pythonend.h"
 
         if (wrappedSimulation != nullptr) {
-            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
+            // Close the simulation by asking our file and simulation managers
+            // to umanage it
 
+            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
             QString fileName = simulation->fileName();
 
-            // Close the simulation by asking our manager to no longer manage it
-
-            SimulationManager::instance()->unmanage(simulation->fileName());
-
-            // And tell the file manager that we no longer are using the file
-
             Core::FileManager::instance()->unmanage(fileName);
+            SimulationManager::instance()->unmanage(fileName);
         }
     }
 
