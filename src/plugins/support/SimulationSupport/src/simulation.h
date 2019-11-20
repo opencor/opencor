@@ -411,7 +411,7 @@ signals:
     void runStarting(const QString &pFileName);
     void clearResults(const QString &pFileName);
 
-    void running();
+    void running(bool pIsResuming);
     void paused();
 
     void done(qint64 pElapsedTime);

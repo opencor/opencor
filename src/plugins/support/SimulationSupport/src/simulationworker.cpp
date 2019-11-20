@@ -83,7 +83,7 @@ void SimulationWorker::run()
 {
     // Let people know that we are running
 
-    emit running();
+    emit running(false);
 
     // Set up our ODE solver
 
@@ -233,7 +233,7 @@ void SimulationWorker::run()
 
                 // Let people know that we are running again
 
-                emit running();
+                emit running(true);
 
                 // (Re)start our timer
 
