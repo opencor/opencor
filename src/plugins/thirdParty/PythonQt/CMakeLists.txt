@@ -74,31 +74,31 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6b77a00beb999a37e705d7bcd2843e71f18ef3fa
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 54c3aff5546a1f8c998157872e9ae14949b937d1
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 1fd50ce4736dd3dc52228150fc7ce1ae0f02d0dc
+                                  SHA1_VALUES 0b5ef3fdab16ad993ed02897e411c4b4b557199e
                                               8ef254df6fe1b157d3e9da7a928c16887786f602)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3367e1ffa29a65f9430891d05c24685a3639ecc7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1b460f3ece10121a4a0b023985a87618e703301f
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 929c111ca9ecdb425726dcca676111f5d0f1df4f
+                                  SHA1_VALUES 5ba9235f69f43a5c7db15213d69846f09e888f2d
                                               1c634c8ba4685b29d3c7602f4d5f585313dc2c3c)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 10d6869c90298fe29f49ac3e6b5a35ac21faef9d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6f736a8a2c680410d441a0ab756bd62e4fd95800
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 111b3c3df66274ff6dd5c0355480c2f3910fe956)
+                              SHA1_VALUES 6b7e81922581ae4a960478a7bbb9f94fa9bd2977)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} edadfe667c87893a5b64af1d148a32d603cd96e8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8d60483fb922986edf0af7fd8cd6b9d5d9166798
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7bd353b23b270f2a62be49ea7fc9174e5e2235c2)
+                              SHA1_VALUES c71017eabf3a8d72092a63ae9bea707167dfcc1c)
     endif()
 else()
     # Set platform specific configuration options and tool names
