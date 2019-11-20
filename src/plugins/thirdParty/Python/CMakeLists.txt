@@ -135,9 +135,13 @@ set(PACKAGED_FILES
 )
 
 if(WIN32)
-    list(APPEND PACKAGED_FILES ${SCRIPT_DIR})
+    list(APPEND PACKAGED_FILES
+        ${SCRIPT_DIR}
+    )
 elseif()
-    list(APPEND PACKAGED_FILES ${RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION})
+    list(APPEND PACKAGED_FILES
+        ${RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION}
+    )
 endif()
 
 # Use the pre-built version of our package unless instructed otherwise
@@ -188,25 +192,23 @@ else()
 
     if(WIN32 OR APPLE)
         set(CMAKE_INSTALL_RPATH_OPTION)
-
         set(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
     else()
         set(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
-
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
     # Jupyter and IPython require SQLite3
 
     if(WIN32)
-        set(SQLITE3_RELEASE_YEAR "2019")
         set(SQLITE3_VERSION "3290000")
+        set(SQLITE3_RELEASE_YEAR "2019")
         set(SQLITE3_LIBRARY_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
         if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
             set(SQLITE3_SOURCES_ZIP sqlite-amalgamation-${SQLITE3_VERSION}.zip)
 
-            message("Downloading ${SQLITE3_SOURCES_ZIP}...")
+            message("Downloading '${SQLITE3_SOURCES_ZIP}'...")
 
             file(DOWNLOAD https://sqlite.org/${SQLITE3_RELEASE_YEAR}/${SQLITE3_SOURCES_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
                  SHOW_PROGRESS)
@@ -220,7 +222,7 @@ else()
         if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite3.lib)
             set(SQLITE3_DLL_ZIP sqlite-dll-win64-x64-${SQLITE3_VERSION}.zip)
 
-            message("Downloading ${SQLITE3_DLL_ZIP}...")
+            message("Downloading '${SQLITE3_DLL_ZIP}'...")
 
             file(DOWNLOAD https://sqlite.org/${SQLITE3_RELEASE_YEAR}/${SQLITE3_DLL_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
                  SHOW_PROGRESS)
@@ -259,6 +261,7 @@ else()
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
+
         if(WIN32)
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
@@ -318,7 +321,7 @@ else()
 
             -DINSTALL_DEVELOPMENT=ON
 
-            # IPython and Jupyter need SQLite3
+            # Jupyter needs SQLite3
 
             -DENABLE_SQLITE3=ON
             -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
