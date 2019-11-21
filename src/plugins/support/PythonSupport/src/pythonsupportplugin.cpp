@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QCoreApplication>
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    #include <QDir>
-#endif
+#include <QDir>
 
 //==============================================================================
 
