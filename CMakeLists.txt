@@ -1,5 +1,19 @@
 cmake_minimum_required(VERSION 3.14)
 
+# Specify the compiler we will use.
+# Note: this to be set **before** the project declaration
+
+if(WIN32)
+    set(CMAKE_C_COMPILER cl)
+    set(CMAKE_CXX_COMPILER cl)
+elseif(APPLE)
+    set(CMAKE_C_COMPILER clang)
+    set(CMAKE_CXX_COMPILER clang++)
+else()
+    set(CMAKE_C_COMPILER cc)
+    set(CMAKE_CXX_COMPILER c++)
+endif()
+
 # Project definition
 
 project(OpenCOR)
