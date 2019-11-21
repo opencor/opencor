@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QCoreApplication>
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    #include <QDir>
-#endif
+#include <QDir>
 
 //==============================================================================
 
@@ -119,7 +117,7 @@ void PythonSupportPlugin::initializePlugin()
     }
 #endif
 
-    qputenv("PYTHONHOME", pythonHome.toUtf8());
+    qputenv("PYTHONHOME", QDir::toNativeSeparators(pythonHome).toUtf8());
 
     // Update our system PATH by prepending our Python script directories to it
 
@@ -129,13 +127,13 @@ void PythonSupportPlugin::initializePlugin()
     static const char PathSeparator = ':';
 #endif
 
-    QByteArray path = (pythonHome+"/bin").toUtf8()+PathSeparator+qgetenv("PATH");
+    QString path = pythonHome+"/bin"+PathSeparator+qEnvironmentVariable("PATH");
 
 #ifdef Q_OS_WIN
     path = (pythonHome+"/Scripts").toUtf8()+PathSeparator+path;
 #endif
 
-    qputenv("PATH", path);
+    qputenv("PATH", QDir::toNativeSeparators(path).toUtf8());
 
     // Ensure that the user's Python site directory (in ~/.local, etc.) isn't
     // used
