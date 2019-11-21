@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfile.h"
 #include "cellmlsupportplugin.h"
 #include "coreguiutils.h"
+#include "editorwidget.h"
 #include "filemanager.h"
 #include "rawcellmlviewplugin.h"
 #include "rawcellmlviewwidget.h"

@@ -21,6 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Main
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
+#ifdef Q_OS_LINUX
+    #include "Python.h"
+    // Note: this needs to be included before <QObject> to prevent name clashes...
+#endif
+
+//==============================================================================
+
 #include "cliapplication.h"
 #include "cliutils.h"
 #include "guiapplication.h"
@@ -54,6 +65,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int pArgC, char *pArgV[])
 {
+    // On Linux, our Python package needs to be directly linked to OpenCOR
+    // (otherwise Python extension DSOs can't find symbols), which can be done
+    // by setting Py_NoUserSiteDirectory to 1
+    // Note: this is because the lookup scope changes for DSOs that are loaded
+    //       using dlopen() (see
+    //       https://www.akkadia.org/drepper/dsohowto.pdf)...
+
+#ifdef Q_OS_LINUX
+    Py_NoUserSiteDirectory = 1;
+#endif
+
     // Initialise Qt's message pattern
 
     OpenCOR::initQtMessagePattern();
@@ -106,7 +128,7 @@ int main(int pArgC, char *pArgV[])
     bool tryCliVersion = false;
 #elif defined(Q_OS_LINUX)
     bool tryCliVersion = true;
-#elif defined(Q_OS_MAC)
+#else
     bool tryCliVersion = (pArgC == 1) || (memcmp(pArgV[1], "-psn_", 5) != 0);
 #endif
 

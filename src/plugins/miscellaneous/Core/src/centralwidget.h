@@ -83,7 +83,7 @@ private:
 
 //==============================================================================
 
-class CentralWidget : public Widget
+class CORE_EXPORT CentralWidget : public Widget
 {
     Q_OBJECT
 
@@ -109,10 +109,12 @@ public:
 
     void importRemoteFile(const QString &pFileNameOrUrl);
 
-    void openFile(const QString &pFileName,
-                  File::Type pType = File::Type::Local,
-                  const QString &pUrl = QString());
-    void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
+    QString openFile(const QString &pFileName,
+                     File::Type pType = File::Type::Local,
+                     const QString &pUrl = QString(), bool pShowWarning = true);
+    QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
+
+    bool closeFile(const QString &pFileName);
 
     bool canClose();
 

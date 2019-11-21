@@ -91,7 +91,7 @@ SplashScreenWindow::SplashScreenWindow() :
     newFont.setPointSize(9);
 #elif defined(Q_OS_LINUX)
     newFont.setPointSize(8);
-#elif defined(Q_OS_MAC)
+#else
     newFont.setPointSize(11);
 #endif
 

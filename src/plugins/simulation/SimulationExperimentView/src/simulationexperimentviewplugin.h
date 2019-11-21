@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "plugininfo.h"
 #include "plugininterface.h"
 #include "preferencesinterface.h"
+#include "pythoninterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -61,6 +62,7 @@ class SimulationExperimentViewPlugin : public QObject,
                                        public I18nInterface,
                                        public PluginInterface,
                                        public PreferencesInterface,
+                                       public PythonInterface,
                                        public ViewInterface
 {
     Q_OBJECT
@@ -71,6 +73,7 @@ class SimulationExperimentViewPlugin : public QObject,
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::PreferencesInterface)
+    Q_INTERFACES(OpenCOR::PythonInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
@@ -78,8 +81,12 @@ public:
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "preferencesinterface.inl"
+#include "pythoninterface.inl"
 #include "viewinterface.inl"
 
+    static SimulationExperimentViewPlugin * instance();
+
+    SimulationExperimentViewWidget * viewWidget() const;
     PendulumWindow::PendulumWindowWindow * pendulumWindowWindow() const;
 
 private:

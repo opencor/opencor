@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "editorwidget.h"
 #include "filemanager.h"
 #include "rawsedmlviewplugin.h"
 #include "rawsedmlviewwidget.h"

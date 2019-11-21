@@ -751,8 +751,8 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
 //==============================================================================
 
-void CentralWidget::openFile(const QString &pFileName, File::Type pType,
-                             const QString &pUrl)
+QString CentralWidget::openFile(const QString &pFileName, File::Type pType,
+                                const QString &pUrl, bool pShowWarning)
 {
     // Make sure that modes are available and that the file exists
 
@@ -761,7 +761,7 @@ void CentralWidget::openFile(const QString &pFileName, File::Type pType,
         // if we are not starting OpenCOR, i.e. only if our main window is
         // visible
 
-        if (mainWindow()->isVisible()) {
+        if (pShowWarning && mainWindow()->isVisible()) {
             warningMessageBox(pUrl.isEmpty()?
                                   tr("Open File"):
                                   tr("Open Remote File"),
@@ -770,7 +770,9 @@ void CentralWidget::openFile(const QString &pFileName, File::Type pType,
                                                                                      pFileName));
         }
 
-        return;
+        return tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
+                                                       QDir::toNativeSeparators(pFileName):
+                                                       pFileName);
     }
 
     // Check whether the file is already opened and, if so, select it and leave
@@ -781,7 +783,7 @@ void CentralWidget::openFile(const QString &pFileName, File::Type pType,
         if (mFileNames[i] == fileName) {
             setTabBarCurrentIndex(mFileTabs, i);
 
-            return;
+            return {};
         }
     }
 
@@ -820,6 +822,8 @@ void CentralWidget::openFile(const QString &pFileName, File::Type pType,
     for (auto plugin : mLoadedFileHandlingPlugins) {
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -849,8 +853,12 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
+QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 {
+    // Note: this method is used by the GUI and should be kept in sync with that
+    //       of openRemoteFile() in
+    //       src/plugins/miscellaneous/Core/src/corecliutils.cpp...
+
     // Make sure that pUrl really refers to a remote file
 
     bool isLocalFile;
@@ -865,9 +873,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        openFile(fileNameOrUrl);
-
-        return;
+        return openFile(fileNameOrUrl, File::Type::Local, QString(), pShowWarning);
     }
 
     // Check whether the remote file is already opened and if so select it,
@@ -893,31 +899,37 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
-#ifdef QT_DEBUG
-            FileManager::Status status =
-#endif
-            fileManagerInstance->create(fileNameOrUrl, fileContents);
+            FileManager::Status status = fileManagerInstance->create(fileNameOrUrl, fileContents);
 
-#ifdef QT_DEBUG
+            // Make sure that the file has indeed been created
+
             if (status != FileManager::Status::Created) {
-                qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
-            }
+#ifdef QT_DEBUG
+                qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay, cppcoreguidelines-pro-type-vararg)
+#else
+                return tr("'%1' could not be created.").arg(fileNameOrUrl);
 #endif
-        } else {
-            // We were not able to retrieve the contents of the remote file, so
-            // let the user know about it, after having hidden our busy widget
-
-            if (pShowWarning) {
-                hideBusyWidget();
-
-                warningMessageBox(tr("Open Remote File"),
-                                  tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl,
-                                                                                          formatMessage(errorMessage)));
             }
+
+            return {};
         }
-    } else {
-        openFile(fileName, File::Type::Remote, fileNameOrUrl);
+
+        // We were not able to retrieve the contents of the remote file, so let
+        // the user know about it, after having hidden our busy widget
+
+        hideBusyWidget();
+
+        if (pShowWarning) {
+            warningMessageBox(tr("Open Remote File"),
+                              tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl,
+                                                                                      formatMessage(errorMessage)));
+        }
+
+        return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl,
+                                                        formatMessage(errorMessage));
     }
+
+    return openFile(fileName, File::Type::Remote, fileNameOrUrl, pShowWarning);
 }
 
 //==============================================================================
@@ -1377,6 +1389,21 @@ bool CentralWidget::closeFile(int pIndex)
     // Close the file which index is given
 
     return closeFile(pIndex, false);
+}
+
+//==============================================================================
+
+bool CentralWidget::closeFile(const QString &pFileName)
+{
+    // Close the given file
+
+    int index = mFileNames.indexOf(pFileName);
+
+    if (index != -1) {
+        return closeFile(index, true);
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -1873,7 +1900,7 @@ void CentralWidget::updateGui()
     if (mContents->currentWidget() != newView) {
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         mContents->setUpdatesEnabled(false);
-#elif defined(Q_OS_MAC)
+#else
         bool hideShowStatusBar =    mainWindow()->statusBar()->isVisible()
                                  && (qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos()))) == nullptr);
 
@@ -1887,7 +1914,7 @@ void CentralWidget::updateGui()
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         mContents->setUpdatesEnabled(true);
-#elif defined(Q_OS_MAC)
+#else
         if (hideShowStatusBar) {
             mainWindow()->statusBar()->show();
         }

@@ -1,0 +1,50 @@
+# --------- PythonQt profile -------------------
+# Last changed by $Author: florian $
+# $Id: PythonQt.pro 35381 2006-03-16 13:05:52Z florian $
+# $Source$
+# --------------------------------------------------
+
+TARGET   = PythonQt
+TEMPLATE = lib
+VERSION = 3.2
+
+DESTDIR = @PYTHONQT_INSTALL_DIR@/lib
+
+CONFIG += qt
+CONFIG -= flat
+
+
+# Allow to choose static linking through the environment variable PYTHONQT_STATIC
+PYTHONQT_STATIC = $$(PYTHONQT_STATIC)
+isEmpty(PYTHONQT_STATIC) {
+  CONFIG += dll
+} else {
+  CONFIG += static
+}
+
+DEFINES += PYTHONQT_CATCH_ALL_EXCEPTIONS
+
+contains(QT_MAJOR_VERSION, 5) {
+  QT += widgets core-private
+}
+
+# Qt 5.4 adds this option, but this is not compatible with the Python API
+QMAKE_CXXFLAGS_RELEASE -= -Zc:strictStrings
+
+INCLUDEPATH += $$PWD
+
+include ( build/common.prf )
+include ( build/python.prf )
+
+include ( src/src.pri )
+
+include($${PYTHONQT_GENERATED_PATH}/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
+include($${PYTHONQT_GENERATED_PATH}/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
+
+include ( extensions/PythonQt_QtAll/PythonQt_QtAll.pri )
+
+# We want PythonQt's headers installed
+headers.files = $${HEADERS} $$PWD/src/PythonQtPythonInclude.h
+headers.path = @PYTHONQT_INSTALL_DIR@/include/PythonQt
+
+INSTALLS += target headers

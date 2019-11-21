@@ -314,7 +314,7 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
     setEditTriggers(QAbstractItemView::EditKeyPressed);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     setFrameShape(QFrame::StyledPanel);
-#elif defined(Q_OS_MAC)
+#else
     setFrameShape(QFrame::Panel);
 #endif
     setHeaderHidden(true);

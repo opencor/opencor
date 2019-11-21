@@ -61,6 +61,10 @@ void SimulationExperimentViewInformationSimulationWidget::retranslateUi()
 
 void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
+    // Keep track of the simulation
+
+    mSimulation = pSimulation;
+
     // Iniialise the unit of our different properties
 
     QString unit = pSimulation->runtime()->voi()->unit();
@@ -73,6 +77,22 @@ void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationS
     // reset our simulation the first time round
 
     pSimulation->data()->setStartingPoint(mStartingPointProperty->doubleValue(), false);
+
+    // Keep track of when some of the model's data has changed
+
+    connect(pSimulation->data(), &SimulationSupport::SimulationData::pointUpdated,
+            this, &SimulationExperimentViewInformationSimulationWidget::updatePoints);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationSimulationWidget::updatePoints()
+{
+    // Update our simulation points
+
+    mStartingPointProperty->setDoubleValue(mSimulation->data()->startingPoint(), false);
+    mEndingPointProperty->setDoubleValue(mSimulation->data()->endingPoint(), false);
+    mPointIntervalProperty->setDoubleValue(mSimulation->data()->pointInterval(), false);
 }
 
 //==============================================================================

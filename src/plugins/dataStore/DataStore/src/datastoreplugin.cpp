@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreplugin.h"
+#include "datastorepythonwrapper.h"
 
 //==============================================================================
 
@@ -38,7 +39,7 @@ PLUGININFO_FUNC DataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'un magasin de données."));
 
     return new PluginInfo(PluginInfo::Category::DataStore, false, false,
-                          QStringList() << "Core",
+                          QStringList() << "Core" << "PythonQtSupport",
                           descriptions);
 }
 
@@ -52,6 +53,17 @@ void DataStorePlugin::retranslateUi()
     // Note: even though we don't handle this interface, we still want to
     //       support it since some other aspects of our plugin are
     //       multilingual...
+}
+
+//==============================================================================
+// Python interface
+//==============================================================================
+
+void DataStorePlugin::registerPythonClasses(void *pModule)
+{
+    // Register our Python classes
+
+    new DataStorePythonWrapper(pModule, this);
 }
 
 //==============================================================================

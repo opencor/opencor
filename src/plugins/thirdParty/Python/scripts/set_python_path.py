@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
     Based on `move-virtualenv`, updated for Python 3 and Windows with
     activation script processing removed.
@@ -45,18 +46,16 @@ import re
 import sys
 import logging
 import marshal
-import argparse
-import subprocess
 from types import CodeType
 from collections import OrderedDict
 
 windows = (os.name == 'nt')
 
 python_exe = 'python.exe' if windows else 'python'
-path_slash = '\\' if windows else '/'
-bin_python = path_slash + 'bin' + path_slash + python_exe
+bin_python_re = re.compile(r'\\bin\\(python\.exe)$' if windows
+                           else r'/bin/(python((\d+\.\d+)|(\d+))?)$')
+lib_python_re = re.compile(r'^python\d+\.\d+$')
 
-_pybin_match = re.compile(r'^python\d+\.\d+$')
 
 def update_script(script_filename, new_path, clear_args, extra_args):
     """Updates shebang lines for actual scripts."""
@@ -77,7 +76,7 @@ def update_script(script_filename, new_path, clear_args, extra_args):
         has_quote = True
         quote = line[0]
         end = line[1:].index(quote) + 1
-        args = [line[1:end]] + line[end+1:].split()
+        args = [line[1:end]] + line[end + 1:].split()
     else:
         has_quote = False
         quote = '"'
@@ -86,17 +85,25 @@ def update_script(script_filename, new_path, clear_args, extra_args):
     if not args:
         return
 
-    if not args[0].endswith(bin_python) \
-    or '/usr/bin/env python' in args[0]:
+    bin_python = bin_python_re.search(args[0])
+    if bin_python is None and not line.startswith('/usr/bin/env python'):
         return
 
-    if clear_args: del args[1:]
+    if line.startswith('/usr/bin/env python'):
+        del args[0]
+        new_bin = os.path.join(new_path, 'bin', python_exe)
+    else:
+        new_bin = os.path.join(new_path, 'bin', bin_python[1])
+
+    if clear_args:
+        del args[1:]
+
     arg_set = OrderedDict([(a, None) for a in args[1:]])
     arg_set.update(OrderedDict([(a, None) for a in extra_args]))
     new_args = list(arg_set.keys())
 
     add_quote = (' ' in new_path)
-    new_bin = os.path.join(new_path, 'bin', python_exe)
+
     if new_bin == args[0] and has_quote == add_quote and new_args == args[1:]:
         return
 
@@ -121,27 +128,28 @@ def update_scripts(bin_dir, new_path, clear_args, extra_args):
 def update_pyc(filename, new_path):
     """Updates the filenames stored in pyc files."""
     with open(filename, 'rb') as f:
-        if sys.version_info < (3, 3): magic = f.read(8)
-        else:                         magic = f.read(12)
+        if sys.version_info < (3, 3):
+            magic = f.read(8)
+        else:
+            magic = f.read(12)
         code = marshal.loads(f.read())
 
-    def _make_code(code, filename, consts):
-        return CodeType(code.co_argcount, code.co_kwonlyargcount, code.co_nlocals,
-                        code.co_stacksize, code.co_flags, code.co_code,
-                        tuple(consts), code.co_names, code.co_varnames, filename,
-                        code.co_name, code.co_firstlineno, code.co_lnotab,
-                        code.co_freevars, code.co_cellvars)
+    def _make_code(_code, _filename, consts):
+        return CodeType(_code.co_argcount, _code.co_kwonlyargcount, _code.co_nlocals,
+                        _code.co_stacksize, _code.co_flags, _code.co_code,
+                        tuple(consts), _code.co_names, _code.co_varnames, _filename,
+                        _code.co_name, _code.co_firstlineno, _code.co_lnotab,
+                        _code.co_freevars, _code.co_cellvars)
 
-    def _process(code):
-        new_filename = new_path
+    def _process(_code):
         consts = []
-        for const in code.co_consts:
+        for const in _code.co_consts:
             if type(const) is CodeType:
                 const = _process(const)
             consts.append(const)
-        if new_path != code.co_filename or consts != list(code.co_consts):
-            code = _make_code(code, new_path, consts)
-        return code
+        if new_path != _code.co_filename or consts != list(_code.co_consts):
+            _code = _make_code(_code, new_path, consts)
+        return _code
 
     new_code = _process(code)
 
@@ -152,20 +160,19 @@ def update_pyc(filename, new_path):
             marshal.dump(new_code, f)
 
 
-def update_pycs(lib_dir, new_path, lib_name):
+def update_pycs(lib_dir, new_path):
     """Walks over all pyc files and updates their paths."""
-    files = []
 
-    def get_new_path(filename):
-        filename = os.path.normpath(filename)
-        if filename.startswith(lib_dir.rstrip('/') + '/'):
-            return os.path.join(new_path, filename[len(lib_dir) + 1:])
+    def get_new_path(_filename):
+        _filename = os.path.normpath(_filename)
+        if _filename.startswith(lib_dir.rstrip('/') + '/'):
+            return os.path.join(new_path, _filename[len(lib_dir) + 1:])
 
     for dirname, dirnames, filenames in os.walk(lib_dir):
         for filename in filenames:
             filename = os.path.join(dirname, filename)
             if (filename.endswith(('.pyc', '.pyo'))
-            and not os.path.dirname(filename).endswith('__pycache__')):
+                    and not os.path.dirname(filename).endswith('__pycache__')):
                 local_path = get_new_path(filename)
                 if local_path is not None:
                     update_pyc(filename, local_path)
@@ -175,7 +182,6 @@ def update_paths(base, scripts_dir, clear_args, extra_args):
     """Updates all paths in a virtualenv to a new one."""
     new_path = os.path.abspath(base)
     bin_dir = os.path.join(base, 'bin')
-    lib_dir = None
     lib_name = None
 
     if scripts_dir == 'auto':
@@ -191,34 +197,35 @@ def update_paths(base, scripts_dir, clear_args, extra_args):
         base_lib_dir = os.path.join(base, 'lib')
         if os.path.isdir(base_lib_dir):
             for folder in os.listdir(base_lib_dir):
-                if _pybin_match.match(folder):
+                if lib_python_re.match(folder):
                     lib_name = folder
                     break
 
     if (lib_name is None
-     or not os.path.isdir(scripts_dir)
-     or not os.path.isdir(bin_dir)
-     or not os.path.isfile(os.path.join(bin_dir, python_exe))):
+            or not os.path.isdir(scripts_dir)
+            or not os.path.isdir(bin_dir)
+            or not os.path.isfile(os.path.join(bin_dir, python_exe))):
         print('error: %s does not refer to a Python installation' % base)
         return False
 
     lib_dir = os.path.join(base_lib_dir, lib_name)
 
     update_scripts(scripts_dir, new_path, clear_args, extra_args)
-    update_pycs(lib_dir, new_path, lib_name)
+    update_pycs(lib_dir, new_path)
 
     return True
 
 
-def main():
+if __name__ == '__main__':
+    import argparse
+
     parser = argparse.ArgumentParser(description='Update the path of scripts '
                                                  'to a new Python prefix')
-
     parser.add_argument('-c', '--clear-args', dest='clear_args',
                         default=False, action='store_true',
                         help='Clear all existing arguments to Python')
 
-    parser.add_argument('-u', '--update-path', dest='update_path',
+    parser.add_argument('-u', '--scripts-dir', dest='scripts_dir',
                         help='Path to scripts. Set to "auto" for autodetection')
 
     parser.add_argument('-v', '--verbose', dest='verbose',
@@ -231,14 +238,11 @@ def main():
                         help='Additional arguments to append to Python')
 
     args = parser.parse_args()
-    if not args.update_path:
-        args.update_path = 'auto'
+    if not args.scripts_dir:
+        args.scripts_dir = 'auto'
 
     if not args.verbose:
         logging.disable(logging.INFO)
 
-    sys.exit(0 if update_paths(args.path, args.update_path, args.clear_args, args.extra_args) else 1)
-
-
-if __name__ == '__main__':
-    main()
+    if not update_paths(args.path, args.scripts_dir, args.clear_args, args.extra_args):
+        sys.exit(1)

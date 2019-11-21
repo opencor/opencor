@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cliutils.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -95,6 +96,10 @@ void CliApplication::loadPlugins()
 
         if (qobject_cast<PluginInterface *>(plugin->instance()) != nullptr) {
             mLoadedPluginPlugins << plugin;
+        }
+
+        if (qobject_cast<SolverInterface *>(plugin->instance()) != nullptr) {
+            mLoadedSolverPlugins << plugin;
         }
     }
 

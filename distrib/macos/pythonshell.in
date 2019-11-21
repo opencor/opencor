@@ -1,0 +1,3 @@
+#!/bin/sh
+
+"$(cd "$(dirname "$0")"; pwd)/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@" -c PythonShell $*

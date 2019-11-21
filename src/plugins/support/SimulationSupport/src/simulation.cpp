@@ -36,6 +36,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "libsedmlbegin.h"
+    #include "sedml/SedAlgorithm.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedOneStep.h"
+    #include "sedml/SedUniformTimeCourse.h"
+#include "libsedmlend.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationSupport {
 
@@ -64,6 +73,28 @@ SimulationIssue::Type SimulationIssue::type() const
     // Return the issue's type
 
     return mType;
+}
+
+//==============================================================================
+
+QString SimulationIssue::typeAsString() const
+{
+    // Return the issue's type as a string
+
+    switch (mType) {
+    case SimulationSupport::SimulationIssue::Type::Information:
+        return QObject::tr("Information");
+    case SimulationSupport::SimulationIssue::Type::Error:
+        return QObject::tr("Error");
+    case SimulationSupport::SimulationIssue::Type::Warning:
+        return QObject::tr("Warning");
+    case SimulationSupport::SimulationIssue::Type::Fatal:
+        return QObject::tr("Fatal");
+    }
+
+    return "???";
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================
@@ -102,21 +133,9 @@ SimulationObject::SimulationObject(Simulation *pSimulation) :
 
 //==============================================================================
 
-SimulationObject::~SimulationObject() = default;
-
-//==============================================================================
-
-Simulation * SimulationObject::simulation() const
-{
-    // Return our simulation
-
-    return mSimulation;
-}
-
-//==============================================================================
-
 SimulationData::SimulationData(Simulation *pSimulation) :
-    SimulationObject(pSimulation)
+    SimulationObject(pSimulation),
+    mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
 {
     // Create our various arrays
 
@@ -148,7 +167,7 @@ double * SimulationData::constants() const
 {
     // Return our constants array
 
-    return mConstants;
+    return mConstantsArray->data();
 }
 
 //==============================================================================
@@ -157,7 +176,7 @@ double * SimulationData::rates() const
 {
     // Return our rates array
 
-    return mRates;
+    return mRatesArray->data();
 }
 
 //==============================================================================
@@ -166,7 +185,7 @@ double * SimulationData::states() const
 {
     // Return our states array
 
-    return mStates;
+    return mStatesArray->data();
 }
 
 //==============================================================================
@@ -175,7 +194,43 @@ double * SimulationData::algebraic() const
 {
     // Return our algebraic array
 
-    return mAlgebraic;
+    return mAlgebraicArray->data();
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::constantsValues() const
+{
+    // Return our constants values
+
+    return mConstantsValues;
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::ratesValues() const
+{
+    // Return our rates values
+
+    return mRatesValues;
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::statesValues() const
+{
+    // Return our states values
+
+    return mStatesValues;
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::algebraicValues() const
+{
+    // Return our algebraic values
+
+    return mAlgebraicValues;
 }
 
 //==============================================================================
@@ -237,6 +292,10 @@ void SimulationData::setStartingPoint(double pStartingPoint, bool pRecompute)
     if (pRecompute) {
         reset(false);
     }
+
+    // Let people know that our point data has been updated
+
+    emit pointUpdated();
 }
 
 //==============================================================================
@@ -255,6 +314,10 @@ void SimulationData::setEndingPoint(double pEndingPoint)
     // Set our ending point
 
     mEndingPoint = pEndingPoint;
+
+    // Let people know that our point data has been updated
+
+    emit pointUpdated();
 }
 
 //==============================================================================
@@ -273,6 +336,10 @@ void SimulationData::setPointInterval(double pPointInterval)
     // Set our point interval
 
     mPointInterval = pPointInterval;
+
+    // Let people know that our point data has been updated
+
+    emit pointUpdated();
 }
 
 //==============================================================================
@@ -463,18 +530,18 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     auto currentConstants = new double[runtime->constantsCount()] {};
 
     if (!pAll) {
-        memcpy(currentConstants, mConstants, size_t(runtime->constantsCount())*Solver::SizeOfDouble);
+        memcpy(currentConstants, constants(), size_t(runtime->constantsCount())*Solver::SizeOfDouble);
     }
 
     // Reset our parameter values
 
     if (pInitialize) {
-        memset(mConstants, 0, size_t(runtime->constantsCount())*Solver::SizeOfDouble);
-        memset(mRates, 0, size_t(runtime->ratesCount())*Solver::SizeOfDouble);
-        memset(mStates, 0, size_t(runtime->statesCount())*Solver::SizeOfDouble);
-        memset(mAlgebraic, 0, size_t(runtime->algebraicCount())*Solver::SizeOfDouble);
+        mConstantsArray->reset();
+        mRatesArray->reset();
+        mStatesArray->reset();
+        mAlgebraicArray->reset();
 
-        runtime->initializeConstants()(mConstants, mRates, mStates);
+        runtime->initializeConstants()(constants(), rates(), states());
     }
 
     // Recompute our computed constants and variables
@@ -490,7 +557,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     // Use our "current" constants, if needed
 
     if (!pAll) {
-        memcpy(mConstants, currentConstants, size_t(runtime->constantsCount())*Solver::SizeOfDouble);
+        memcpy(constants(), currentConstants, size_t(runtime->constantsCount())*Solver::SizeOfDouble);
     }
 
     delete[] currentConstants;
@@ -514,7 +581,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     // simulation worker to reset itself
 
     if (!pInitialize) {
-        emit modified(isModified());
+        emit dataModified(isModified());
 
         if (mSimulation->worker() != nullptr) {
             mSimulation->worker()->reset();
@@ -528,8 +595,8 @@ void SimulationData::updateInitialValues()
 {
     // Update our initial constants and states
 
-    memcpy(mInitialConstants, mConstants, size_t(mSimulation->runtime()->constantsCount())*Solver::SizeOfDouble);
-    memcpy(mInitialStates, mStates, size_t(mSimulation->runtime()->statesCount())*Solver::SizeOfDouble);
+    memcpy(mInitialConstants, constants(), size_t(mSimulation->runtime()->constantsCount())*Solver::SizeOfDouble);
+    memcpy(mInitialStates, states(), size_t(mSimulation->runtime()->statesCount())*Solver::SizeOfDouble);
 
     // Let people know that everything has been reset by checking for
     // modifications
@@ -547,15 +614,17 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    runtime->computeComputedConstants()(pCurrentPoint, mConstants, mRates, pInitialize?
-                                            mStates:
-                                            mDummyStates, mAlgebraic);
-    runtime->computeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    runtime->computeComputedConstants()(pCurrentPoint, constants(), rates(),
+                                        pInitialize?
+                                            states():
+                                            mDummyStates,
+                                        algebraic());
+    runtime->computeRates()(pCurrentPoint, constants(), rates(), states(), algebraic());
+    runtime->computeVariables()(pCurrentPoint, constants(), rates(), states(), algebraic());
 
     // Let people know that our data has been updated
 
-    emit updated(pCurrentPoint);
+    emit dataUpdated(pCurrentPoint);
 }
 
 //==============================================================================
@@ -566,8 +635,8 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    runtime->computeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    runtime->computeRates()(pCurrentPoint, constants(), rates(), states(), algebraic());
+    runtime->computeVariables()(pCurrentPoint, constants(), rates(), states(), algebraic());
 }
 
 //==============================================================================
@@ -582,15 +651,15 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
     if (runtime != nullptr) {
-        for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
-            if (!qFuzzyCompare(mStates[i], mInitialStates[i])) {
+        for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
+            if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i])) {
                 return true;
             }
         }
 
         if (pCheckConstants) {
-            for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
-                if (!qFuzzyCompare(mConstants[i], mInitialConstants[i])) {
+            for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
+                if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i])) {
                     return true;
                 }
             }
@@ -624,7 +693,20 @@ void SimulationData::checkForModifications()
 {
     // Let people know whether any of our constants or states has been modified
 
-    emit modified(isModified());
+    emit dataModified(isModified());
+}
+
+//==============================================================================
+
+void SimulationData::updateParameters(SimulationData *pSimulationData)
+{
+    // Recompute our 'computed constants' and 'variables'
+
+    pSimulationData->reset(false);
+
+    // Let people know that parameters have changed
+
+    emit pSimulationData->dataUpdated(pSimulationData->mStartingPoint);
 }
 
 //==============================================================================
@@ -638,19 +720,27 @@ void SimulationData::createArrays()
     if (runtime != nullptr) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[runtime->constantsCount()] {};
-        mRates = new double[runtime->ratesCount()] {};
-        mStates = new double[runtime->statesCount()] {};
-        mDummyStates = new double[runtime->statesCount()] {};
-        mAlgebraic = new double[runtime->algebraicCount()] {};
+        mConstantsArray = new DataStore::DataStoreArray(quint64(runtime->constantsCount()));
+        mRatesArray = new DataStore::DataStoreArray(quint64(runtime->ratesCount()));
+        mStatesArray = new DataStore::DataStoreArray(quint64(runtime->statesCount()));
+        mAlgebraicArray = new DataStore::DataStoreArray(quint64(runtime->algebraicCount()));
+
+        // Create our various values to hold our model's arrays
+
+        mConstantsValues = new DataStore::DataStoreValues(mConstantsArray);
+        mRatesValues = new DataStore::DataStoreValues(mRatesArray);
+        mStatesValues = new DataStore::DataStoreValues(mStatesArray);
+        mAlgebraicValues = new DataStore::DataStoreValues(mAlgebraicArray);
 
         // Create our various arrays to keep track of our various initial values
 
-        mInitialConstants = new double[runtime->constantsCount()] {};
-        mInitialStates = new double[runtime->statesCount()] {};
+        mInitialConstants = new double[mConstantsArray->size()];
+        mInitialStates = new double[mStatesArray->size()];
+        mDummyStates = new double[mStatesArray->size()]{};
     } else {
-        mConstants = mRates = mStates = mDummyStates = mAlgebraic = nullptr;
-        mInitialConstants = mInitialStates = nullptr;
+        mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = nullptr;
+        mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = nullptr;
+        mInitialConstants = mInitialStates = mDummyStates = nullptr;
     }
 }
 
@@ -660,20 +750,52 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
+    if (mConstantsArray != nullptr) {
+        mConstantsArray->release();
+    }
+
+    if (mRatesArray != nullptr) {
+        mRatesArray->release();
+    }
+
+    if (mStatesArray != nullptr) {
+        mStatesArray->release();
+    }
+
+    if (mAlgebraicArray != nullptr) {
+        mAlgebraicArray->release();
+    }
+
     for (auto data : mData) {
         delete[] data;
     }
 
     mData.clear();
 
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
-    delete[] mDummyStates;
-    delete[] mAlgebraic;
+    delete mConstantsValues;
+    delete mRatesValues;
+    delete mStatesValues;
+    delete mAlgebraicValues;
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
+    delete[] mDummyStates;
+
+    // Reset our various arrays
+    // Note: this shouldn't be needed, but better be safe than sorry...
+
+    mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = nullptr;
+    mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = nullptr;
+    mInitialConstants = mInitialStates = mDummyStates = nullptr;
+}
+
+//==============================================================================
+
+SimulationDataUpdatedFunction & SimulationData::simulationDataUpdatedFunction()
+{
+    // Return our simulation data updated function
+
+    return mSimulationDataUpdatedFunction;
 }
 
 //==============================================================================
@@ -725,35 +847,44 @@ void SimulationResults::createDataStore()
 
     mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
 
-    mPoints = mDataStore->voi();
+    mPointsVariable = mDataStore->voi();
 
-    mConstants = mDataStore->addVariables(simulationData->constants(), runtime->constantsCount());
-    mRates = mDataStore->addVariables(simulationData->rates(), runtime->ratesCount());
-    mStates = mDataStore->addVariables(simulationData->states(), runtime->statesCount());
-    mAlgebraic = mDataStore->addVariables(simulationData->algebraic(), runtime->algebraicCount());
+    mConstantsVariables = mDataStore->addVariables(simulationData->constants(), runtime->constantsCount());
+    mRatesVariables = mDataStore->addVariables(simulationData->rates(), runtime->ratesCount());
+    mStatesVariables = mDataStore->addVariables(simulationData->states(), runtime->statesCount());
+    mAlgebraicVariables = mDataStore->addVariables(simulationData->algebraic(), runtime->algebraicCount());
 
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
+    DataStore::DataStoreValues *constantsValues = simulationData->constantsValues();
+    DataStore::DataStoreValues *ratesValues = simulationData->ratesValues();
+    DataStore::DataStoreValues *statesValues = simulationData->statesValues();
+    DataStore::DataStoreValues *algebraicValues = simulationData->algebraicValues();
+
     for (auto parameter : runtime->parameters()) {
-        DataStore::DataStoreVariable *variable = nullptr;
         CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
+        DataStore::DataStoreVariable *variable = nullptr;
+        DataStore::DataStoreValue *value = nullptr;
 
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
-            mPoints->setType(int(parameter->type()));
-            mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
-                                runtime->voi()->name()));
-            mPoints->setLabel(runtime->voi()->name());
-            mPoints->setUnit(runtime->voi()->unit());
+            mPointsVariable->setType(int(parameter->type()));
+            mPointsVariable->setUri(uri(runtime->voi()->componentHierarchy(), runtime->voi()->name()));
+            mPointsVariable->setLabel(runtime->voi()->name());
+            mPointsVariable->setUnit(runtime->voi()->unit());
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
-            variable = mConstants[parameter->index()];
+            variable = mConstantsVariables[parameter->index()];
+            value = constantsValues->at(parameter->index());
         } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
-            variable = mRates[parameter->index()];
+            variable = mRatesVariables[parameter->index()];
+            value = ratesValues->at(parameter->index());
         } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
-            variable = mStates[parameter->index()];
+            variable = mStatesVariables[parameter->index()];
+            value = statesValues->at(parameter->index());
         } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
-            variable = mAlgebraic[parameter->index()];
+            variable = mAlgebraicVariables[parameter->index()];
+            value = algebraicValues->at(parameter->index());
         }
 
         if (variable != nullptr) {
@@ -761,6 +892,10 @@ void SimulationResults::createDataStore()
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
+        }
+
+        if (value != nullptr) {
+            value->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
         }
     }
 
@@ -786,7 +921,7 @@ void SimulationResults::createDataStore()
     // Let people know that our (imported) data, if any, has been updated
 
     if (!mDataDataStores.isEmpty()) {
-        emit simulationData->updated(mSimulation->currentPoint());
+        emit simulationData->dataUpdated(mSimulation->currentPoint());
     }
 }
 
@@ -803,12 +938,12 @@ void SimulationResults::deleteDataStore()
 
     mDataStore = nullptr;
 
-    mPoints = nullptr;
+    mPointsVariable = nullptr;
 
-    mConstants = DataStore::DataStoreVariables();
-    mRates = DataStore::DataStoreVariables();
-    mStates = DataStore::DataStoreVariables();
-    mAlgebraic = DataStore::DataStoreVariables();
+    mConstantsVariables = DataStore::DataStoreVariables();
+    mRatesVariables = DataStore::DataStoreVariables();
+    mStatesVariables = DataStore::DataStoreVariables();
+    mAlgebraicVariables = DataStore::DataStoreVariables();
 
     mData.clear();
 }
@@ -834,6 +969,10 @@ void SimulationResults::reset()
 
     deleteDataStore();
     createDataStore();
+
+    // Let people know that we have been reset
+
+    emit resultsReset();
 }
 
 //==============================================================================
@@ -925,14 +1064,21 @@ int SimulationResults::runsCount() const
 
 bool SimulationResults::addRun()
 {
-    // Ask our data store to add a run to itself
+    // Ask our data store to add a run to itself and let people know about it,
+    // if we were able to add one
     // Note: we consider things to be fine if our data store has had no problems
     //       adding a run to itself or if the simulation size is zero...
 
     quint64 simulationSize = mSimulation->size();
 
     if (simulationSize != 0) {
-        return mDataStore->addRun(simulationSize);
+        bool res = mDataStore->addRun(simulationSize);
+
+        if (res) {
+            emit runAdded();
+        }
+
+        return res;
     }
 
     return true;
@@ -1063,8 +1209,8 @@ double * SimulationResults::points(int pRun) const
 {
     // Return our points for the given run
 
-    return (mPoints != nullptr)?
-                mPoints->values(pRun):
+    return (mPointsVariable != nullptr)?
+                mPointsVariable->values(pRun):
                 nullptr;
 }
 
@@ -1074,9 +1220,9 @@ double * SimulationResults::constants(int pIndex, int pRun) const
 {
     // Return our constants at the given index and for the given run
 
-    return mConstants.isEmpty()?
+    return mConstantsVariables.isEmpty()?
                 nullptr:
-                mConstants[pIndex]->values(pRun);
+                mConstantsVariables[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1085,9 +1231,9 @@ double * SimulationResults::rates(int pIndex, int pRun) const
 {
     // Return our rates at the given index and for the given run
 
-    return mRates.isEmpty()?
+    return mRatesVariables.isEmpty()?
                 nullptr:
-                mRates[pIndex]->values(pRun);
+                mRatesVariables[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1096,9 +1242,9 @@ double * SimulationResults::states(int pIndex, int pRun) const
 {
     // Return our states at the given index and for the given run
 
-    return mStates.isEmpty()?
+    return mStatesVariables.isEmpty()?
                 nullptr:
-                mStates[pIndex]->values(pRun);
+                mStatesVariables[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1107,9 +1253,9 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 {
     // Return our algebraic at the given index and for the given run
 
-    return mAlgebraic.isEmpty()?
+    return mAlgebraicVariables.isEmpty()?
                 nullptr:
-                mAlgebraic[pIndex]->values(pRun);
+                mAlgebraicVariables[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1123,6 +1269,51 @@ double * SimulationResults::data(double *pData, int pIndex, int pRun) const
     return data.isEmpty()?
                 nullptr:
                 data[pIndex]->values(pRun);
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariable * SimulationResults::pointsVariable() const
+{
+    // Return our points variable
+
+    return mPointsVariable;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationResults::constantsVariables() const
+{
+    // Return our constants variables
+
+    return mConstantsVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationResults::ratesVariables() const
+{
+    // Return our rates variables
+
+    return mRatesVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationResults::statesVariables() const
+{
+    // Return our states variables
+
+    return mStatesVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
+{
+    // Return our algebraic variables
+
+    return mAlgebraicVariables;
 }
 
 //==============================================================================
@@ -1199,6 +1390,125 @@ Simulation::~Simulation()
     delete mImportData;
     delete mResults;
     delete mData;
+}
+
+//==============================================================================
+
+QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                                     const QString &pKisaoId) const
+{
+    // Initialise our solver using the given SED-ML algorithm parameters and
+    // KiSAO id
+
+    SolverInterface *solverInterface = nullptr;
+
+    for (auto coreSolverInterface : Core::solverInterfaces()) {
+        if (coreSolverInterface->id(pKisaoId) == coreSolverInterface->solverName()) {
+            solverInterface = coreSolverInterface;
+
+            mData->setOdeSolverName(coreSolverInterface->solverName());
+
+            break;
+        }
+    }
+
+    if (solverInterface == nullptr) {
+        return tr("the requested solver (%1) could not be found").arg(pKisaoId);
+    }
+
+    for (uint i = 0, iMax = pSedmlAlgorithmParameters->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = pSedmlAlgorithmParameters->get(i);
+        QString parameterKisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
+
+        mData->addOdeSolverProperty(solverInterface->id(parameterKisaoId),
+                                    QString::fromStdString(sedmlAlgorithmParameter->getValue()));
+    }
+
+    return {};
+}
+
+//==============================================================================
+
+QString Simulation::furtherInitialize() const
+{
+    // Initialise ourself from a SED-ML document
+    // Note #1: this is used by our Python wrapper...
+    // Note #2: make sure that this is in relative sync with
+    //          SimulationExperimentViewSimulationWidget::furtherInitialize()...
+
+    libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
+    auto sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    auto sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+    double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
+    double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
+    double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
+
+    if (sedmlOneStep != nullptr) {
+        endingPoint += sedmlOneStep->getStep();
+    }
+
+    mData->setStartingPoint(startingPoint);
+    mData->setEndingPoint(endingPoint);
+    mData->setPointInterval(pointInterval);
+
+    libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
+    QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
+    QString error = initializeSolver(sedmlAlgorithm->getListOfAlgorithmParameters(),
+                                     kisaoId);
+
+    if (!error.isEmpty()) {
+        return error;
+    }
+
+    libsbml::XMLNode *annotation = sedmlUniformTimeCourse->getAnnotation();
+
+    if (annotation != nullptr) {
+        bool mustHaveNlaSolver = false;
+        bool hasNlaSolver = false;
+        QString nlaSolverName = QString();
+
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
+
+            if (   (QString::fromStdString(nlaSolverNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                && (QString::fromStdString(nlaSolverNode.getName()) == SEDMLSupport::NlaSolver)) {
+                mustHaveNlaSolver = true;
+                nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
+
+                for (auto solverInterface : Core::solverInterfaces()) {
+                    if (nlaSolverName == solverInterface->solverName()) {
+                        mData->setNlaSolverName(nlaSolverName);
+
+                        hasNlaSolver = true;
+
+                        break;
+                    }
+                }
+
+                if (hasNlaSolver) {
+                    for (uint j = 0, jMax = nlaSolverNode.getNumChildren(); j < jMax; ++j) {
+                        libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
+
+                        if (   (QString::fromStdString(solverPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                            && (QString::fromStdString(solverPropertyNode.getName()) == SEDMLSupport::SolverProperty)) {
+                            QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                            QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
+
+                            mData->addNlaSolverProperty(id, value);
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (mustHaveNlaSolver && !hasNlaSolver) {
+            return tr("the requested solver (%1) could not be found").arg(nlaSolverName);
+        }
+    }
+
+    return {};
 }
 
 //==============================================================================

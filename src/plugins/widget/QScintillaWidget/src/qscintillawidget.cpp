@@ -68,7 +68,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mFont = QFont("Lucida Console", 11);
 #elif defined(Q_OS_LINUX)
     mFont = QFont("Monospace", 9);
-#elif defined(Q_OS_MAC)
+#else
     mFont = QFont("Monaco", 12);
 #endif
 

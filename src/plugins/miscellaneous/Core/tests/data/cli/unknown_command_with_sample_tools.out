@@ -16,6 +16,23 @@ Commands supported by the CellMLTools plugin:
  * Validate <file>:
       validate <file>
 
+Commands supported by the JupyterKernel plugin:
+ * Display the commands supported by the JupyterKernel plugin:
+      help
+ * Start the OpenCOR Jupyter kernel:
+      kernel <connectionFile>
+
+Commands supported by the PythonShell plugin:
+ * Display the commands supported by the PythonShell plugin:
+      help
+ * Run an interactive Python shell in OpenCOR's environment:
+      [python] [<option> ...] [-c <command> | -m <module> | <file> | -] [<argument> ...]
+   where
+      -c <command> executes a program passed in as a string
+      -m <module> runs a library module as a script
+      <file> runs a program read from a script file
+      - runs a program read from the standard input
+
 Commands supported by the SampleTools plugin:
  * Display the commands supported by the SampleTools plugin:
       help

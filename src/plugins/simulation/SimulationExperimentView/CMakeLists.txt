@@ -12,6 +12,7 @@ add_plugin(SimulationExperimentView
         ../../plugininterface.cpp
         ../../preferencesinterface.cpp
         ../../pluginmanager.cpp
+        ../../pythoninterface.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
 
@@ -23,6 +24,7 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewinformationwidget.cpp
         src/simulationexperimentviewplugin.cpp
         src/simulationexperimentviewpreferenceswidget.cpp
+        src/simulationexperimentviewpythonwrapper.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
     UIS
@@ -30,5 +32,6 @@ add_plugin(SimulationExperimentView
     PLUGINS
         GraphPanelWidget
         PendulumWindow
+        PythonQtSupport
         SimulationSupport
 )

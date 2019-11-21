@@ -153,7 +153,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     // Keep track of when some of the model's data has changed
 
-    connect(pSimulation->data(), &SimulationSupport::SimulationData::updated,
+    connect(pSimulation->data(), &SimulationSupport::SimulationData::dataUpdated,
             this, &SimulationExperimentViewInformationParametersWidget::updateParameters);
 }
 

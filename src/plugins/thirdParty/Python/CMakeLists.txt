@@ -3,22 +3,21 @@ project(PythonPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.5.2)
+set(PACKAGE_VERSION 3.7.5)
+
+# Package repository and release tag
+
+set(PACKAGE_REPOSITORY python)
 
 # Version of our library
 
-set(MAJOR_MINOR_LIBRARY_VERSION "3.5")
-set(LIBRARY_VERSION "${MAJOR_MINOR_LIBRARY_VERSION}.2")
+set(MAJOR_MINOR_LIBRARY_VERSION "3.7")
+set(LIBRARY_VERSION "${MAJOR_MINOR_LIBRARY_VERSION}.5")
+set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "opencor")
-
-# Git tags of Python package installers
-
-set(PIP_GIT_TAG "10.0.1")
-set(SETUPTOOLS_GIT_TAG "v39.0.1")
-set(WHEEL_GIT_TAG "0.31.0")
+set(GIT_TAG "opencor-3.7.5")
 
 # Specify where our local package will be installed
 
@@ -30,33 +29,47 @@ string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
 set(PYTHON_ABIFLAGS "m")
 
 if(WIN32)
-    string(REPLACE "." ""
-           NUMERIC_LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION})
-
     set(PYTHON_BUILT_VERSION ${NUMERIC_LIBRARY_VERSION})
+    set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION})
 else()
     set(PYTHON_BUILT_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
+    set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
 endif()
 
-# Name of our package's shared libraries (and of their import libraries, if any)
+# Name of our Python executable and shared library (and import library, if any)
 
 if(WIN32)
     set(PYTHON_EXECUTABLE bin/python.exe)
-    set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    if(RELEASE_MODE)
+        set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    else()
+        set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}_d${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}_d${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    endif()
 else()
-    set(PYTHON_EXECUTABLE bin/python)
+    set(PYTHON_EXECUTABLE bin/python3)
+
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
 
-# Include, library and script directories
+# The base Python directory, library and script directories
 
 if(WIN32)
+    set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
+
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
     set(SCRIPT_DIR Scripts)
 else()
+    if (APPLE)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/Python)
+    else()
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../python)
+    endif()
+
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
     set(SCRIPT_DIR bin)
@@ -122,9 +135,13 @@ set(PACKAGED_FILES
 )
 
 if(WIN32)
-    list(APPEND PACKAGED_FILES ${SCRIPT_DIR})
+    list(APPEND PACKAGED_FILES
+        ${SCRIPT_DIR}
+    )
 elseif()
-    list(APPEND PACKAGED_FILES ${RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION})
+    list(APPEND PACKAGED_FILES
+        ${RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION}
+    )
 endif()
 
 # Use the pre-built version of our package unless instructed otherwise
@@ -135,62 +152,65 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 201c3a0a7621901c7c5da8c121aabff69800ab93
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fc50d6901d87149b237af83efa8b2fa042eda032
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b45336c90f5a8d39067c8873c46eed73e0596d82
-                                              1fb636519bc0d86f181febbac697c842945f645b
-                                              41fcf7de51b0150cb5d526696ab4ea6943fff4aa
-                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              b9d15e7df553a66f8f0a42f27016ff878051196d)
+                                  SHA1_VALUES 9b7803f35877d2681dd5806e2d13c451ada9d212
+                                              784d61ed950a2fa6aeb279e859e28bef1f26dbd3
+                                              599a6df061280855fad67d7c775c242345b0bb2d
+                                              3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
+                                              9589b104a635caccd0aa30920ac78bad73e73b2b)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d50f6daed2740843159cd50c8eee85c87e54c9e7
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES eaec9798ba6c5a1bf4b1cc161b6c7dfc59d1ea80
-                                              6e79fbfa322c9c56189932c9d6007b9e1f55d3af
-                                              c0d0bd4c50ad3f0760b95696d50abe9336ecfe6c
-                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              41e1905467d98d2f0ddfdb273795dfac9e3402f7)
+                                  SHA1_VALUES 123efc2f296ec6decb611cce3b79f3ecc37bc5f4
+                                              4a1087f36f95e89350f59cbf4a7abfdf1273e1e4
+                                              7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
+                                              3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
+                                              5aad26e650203999769c1a06ed7ee3b0c5f836f3)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e3452e617fa525ee46c42ba3fcbb5bff88b6ba97
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 85f8ea811ed7b3912486837e164e12318ed375d1
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c5dbf4f4ff5355481cec920ab09bcab2257408e0
-                                          c1faf41d91676096de6e3d5ac9f2f6cd0177eed0)
+                              SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
+                                          40af4e4c511a9a3a4b6a47446505c1fb60881d59)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f6c20cf56a3adbe2cc2d4003e90ddf17f3068c83
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1cba87d6b63612d68220b99e700129b58ec9c69d
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 15c502637e33f86db2ad9f8bc7b14b24a5c76844
-                                          67b894553bdf5156219d52a9f1656bc1168d23a3
-                                          81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
+                              SHA1_VALUES 64a4e7209f41144c49809e53d9b2a51b27e69b12
+                                          6338b2c1af385ee874996e3ab60ed06b1004f3b7
+                                          561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
     # Set platform-specific configuration options
 
     if(WIN32 OR APPLE)
         set(CMAKE_INSTALL_RPATH_OPTION)
-
         set(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
     else()
         set(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
-
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
     # Jupyter and IPython require SQLite3
 
     if(WIN32)
-        set(SQLITE3_VERSION "3170000")
+        set(SQLITE3_VERSION "3290000")
+        set(SQLITE3_RELEASE_YEAR "2019")
         set(SQLITE3_LIBRARY_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
         if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
             set(SQLITE3_SOURCES_ZIP sqlite-amalgamation-${SQLITE3_VERSION}.zip)
 
-            message("Downloading ${SQLITE3_SOURCES_ZIP}...")
+            message("Downloading '${SQLITE3_SOURCES_ZIP}'...")
 
-            file(DOWNLOAD https://sqlite.org/2017/${SQLITE3_SOURCES_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
+            file(DOWNLOAD https://sqlite.org/${SQLITE3_RELEASE_YEAR}/${SQLITE3_SOURCES_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
                  SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_SOURCES_ZIP}
@@ -202,9 +222,9 @@ else()
         if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite3.lib)
             set(SQLITE3_DLL_ZIP sqlite-dll-win64-x64-${SQLITE3_VERSION}.zip)
 
-            message("Downloading ${SQLITE3_DLL_ZIP}...")
+            message("Downloading '${SQLITE3_DLL_ZIP}'...")
 
-            file(DOWNLOAD https://sqlite.org/2017/${SQLITE3_DLL_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
+            file(DOWNLOAD https://sqlite.org/${SQLITE3_RELEASE_YEAR}/${SQLITE3_DLL_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
                  SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_DLL_ZIP} --format=zip
@@ -222,11 +242,13 @@ else()
         set(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite3/include)
         set(SQLITE3_LIBRARY_DIR /usr/local/opt/sqlite3/lib)
 
-        # Link to SQLite3's static version, so that we don't have to bundle it
+        # Link to SQLite3's static library so we don't have to bundle it
 
         set(SQLITE3_IMPORT_LIBRARY libsqlite3.a)
     else()
         find_package(SQLite3 REQUIRED)
+
+        set(SQLITE3_INCLUDE_DIR ${SQLite3_INCLUDE_DIRS})
 
         get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
         get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLite3_LIBRARIES} NAME)
@@ -239,6 +261,7 @@ else()
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
+
         if(WIN32)
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
@@ -250,19 +273,21 @@ else()
 
     if(WIN32)
         set(APPLY_PATCHES ON)
-        set(BUILD_TYPE Release)
     else()
         set(APPLY_PATCHES OFF)
-        set(BUILD_TYPE ${CMAKE_BUILD_TYPE})
     endif()
 
     # Build Python as an external project
 
-    set(PACKAGE_BUILD PythonBuild)
+    set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
+
+    string(REPLACE ";" "|"
+           PYTHON_OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES}")
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+            ${PACKAGE_BUILD_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -271,9 +296,11 @@ else()
             ${GIT_TAG}
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
+        LIST_SEPARATOR
+            |
         CMAKE_ARGS
             ${CMAKE_ARGS}
-            -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}
 
@@ -294,7 +321,7 @@ else()
 
             -DINSTALL_DEVELOPMENT=ON
 
-            # IPython and Jupyter need SQLite3
+            # Jupyter needs SQLite3
 
             -DENABLE_SQLITE3=ON
             -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
@@ -329,14 +356,14 @@ else()
 
             # Use our OpenSSL
 
-            -DUSE_SYSTEM_OpenSSL=ON
-            -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
-            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
-            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
+            -DUSE_SYSTEM_OpenSSL=OFF
+            -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
+            -DOPENSSL_LIBRARIES=${PYTHON_OPENSSL_LIBRARIES}
 
             # Use our zlib
 
-            -DUSE_SYSTEM_ZLIB=ON
+            -DUSE_SYSTEM_ZLIB=OFF
+            -DUSE_BUILTIN_ZLIB=OFF
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
 
@@ -383,10 +410,9 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-
-        set(INSTALL_STEP copyDlls)
     elseif(APPLE)
         # Fix up the newly installed Python executable and shared library:
         #  - Add RPATH to the Python executable, so that it can use the already
@@ -400,139 +426,69 @@ else()
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
-                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} bin/python
-                                 COMMAND install_name_tool -add_rpath @executable_path/.. bin/python
-                                 COMMAND install_name_tool -add_rpath @executable_path/../.. bin/python
+                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_LIBRARIES_DIR} ${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/.. ${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/../.. ${PYTHON_EXECUTABLE}
                                  COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
                                                                    @rpath/lib/${SHARED_LIBRARY}
-                                                                   bin/python
+                                                                   ${PYTHON_EXECUTABLE}
+                                 COMMAND chmod 755 lib/${SHARED_LIBRARY}
                                  COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-
-        set(INSTALL_STEP setRpath)
-    else()
-        set(INSTALL_STEP install)
-    endif()
-
-    # Clean our site packages directory before installing any packages
-
-    ExternalProject_Add_Step(${PACKAGE_BUILD} cleanSitePackagesDirectory
-                             COMMAND ${CMAKE_COMMAND} -E remove_directory ${RUNTIME_DIR}/site-packages
-                             COMMAND ${CMAKE_COMMAND} -E make_directory ${RUNTIME_DIR}/site-packages
-                             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                             DEPENDEES ${INSTALL_STEP})
-
-    # Use our newly built Python
-
-    if(WIN32)
-        set(BUILT_PYTHON  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
-    elseif(APPLE)
-        set(BUILT_PYTHON  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
-    else()
-        set(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
-    endif()
-
-    # Install the Python package manager and its dependencies
-
-    if(WIN32)
-        # On Windows, we use our version of pip that is modified to create
-        # *-script.py files when installing packages with console scripts, so
-        # that they can then be updated to reference OpenCOR's Python executable
-
-        # Install the Python setuptools package
-
-        set(SETUPTOOLS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/setuptools)
-
-        ExternalProject_Add(installSetuptools
-            DOWNLOAD_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            SOURCE_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            BINARY_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            INSTALL_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/pypa/setuptools.git
-            GIT_TAG
-                ${SETUPTOOLS_GIT_TAG}
-            CONFIGURE_COMMAND
-                ${BUILT_PYTHON} bootstrap.py
-            BUILD_COMMAND
-                ${BUILT_PYTHON} setup.py build
-            INSTALL_COMMAND
-                ${BUILT_PYTHON} setup.py install
-            DEPENDS
-                ${PACKAGE_BUILD}
-        )
-
-        # Install our Python package installer
-
-        set(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
-
-        ExternalProject_Add(installPip
-            DOWNLOAD_DIR
-                ${PIP_SOURCE_DIR}
-            SOURCE_DIR
-                ${PIP_SOURCE_DIR}
-            BINARY_DIR
-                ${PIP_SOURCE_DIR}
-            INSTALL_DIR
-                ${PIP_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/pip.git
-            GIT_TAG
-                opencor_v${PIP_GIT_TAG}
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ${BUILT_PYTHON} setup.py build
-            INSTALL_COMMAND
-                ${BUILT_PYTHON} setup.py install
-            DEPENDS
-                installSetuptools
-        )
-
-        set(CREATE_PACKAGE_TARGET installPip)
-    else()
-        ExternalProject_Add_Step(${PACKAGE_BUILD} installPip
-                                 COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py --no-wheel
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-                                 DEPENDEES cleanSitePackagesDirectory)
-
-        set(CREATE_PACKAGE_TARGET installPip)
     endif()
 
     # Package Python's include files and libraries
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
-                        TARGET ${CREATE_PACKAGE_TARGET})
+                        TARGET ${PACKAGE_BUILD})
 
-    set(DEPENDS_ON ${CREATE_PACKAGE_TARGET})
+    set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
 
 # Allow other external projects to find our copy of Python
 
-set(PYTHON_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 
-set(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
+set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
+set(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+
+set(PYTHON_EXECUTABLE ${ROOT_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
-set(PYTHON_SCRIPT_DIR  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPT_DIR  ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
-set(PYTHON_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
 
 set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
+set(PYTHON_ABI_VERSION ${PYTHON_ABI_VERSION} PARENT_SCOPE)
 set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
 
-# We are not relying on add_plugin() to build Python, so we need to specify some
-# dependencies
+# Add the plugin
 
-add_custom_target(${PROJECT_NAME})
+add_plugin(Python
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/pythonplugin.cpp
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    EXTERNAL_SOURCE_DIR
+        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+    EXTERNAL_DESTINATION_DIR
+        ${ROOT_DIR}
+    DEPENDS_ON
+        ${DEPENDS_ON}
+    BYPRODUCTS
+        ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY}
+)
 
 add_dependencies(${PROJECT_BUILD_TARGET} ${PROJECT_NAME})
 
@@ -543,11 +499,17 @@ endif()
 # Copy a script to update the Python path in copied scripts
 
 file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR})
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}
+     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # And run it
 
 add_custom_command(TARGET ${PROJECT_NAME}
+                   POST_BUILD
                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
+
+# Keep a list of Python specific dependencies
+
+set(PYTHON_DEPENDENCIES ${PROJECT_NAME} PARENT_SCOPE)

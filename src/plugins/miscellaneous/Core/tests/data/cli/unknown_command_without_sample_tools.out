@@ -15,3 +15,20 @@ Commands supported by the CellMLTools plugin:
       cellml_1_0: to export a CellML 1.1 file to CellML 1.0
  * Validate <file>:
       validate <file>
+
+Commands supported by the JupyterKernel plugin:
+ * Display the commands supported by the JupyterKernel plugin:
+      help
+ * Start the OpenCOR Jupyter kernel:
+      kernel <connectionFile>
+
+Commands supported by the PythonShell plugin:
+ * Display the commands supported by the PythonShell plugin:
+      help
+ * Run an interactive Python shell in OpenCOR's environment:
+      [python] [<option> ...] [-c <command> | -m <module> | <file> | -] [<argument> ...]
+   where
+      -c <command> executes a program passed in as a string
+      -m <module> runs a library module as a script
+      <file> runs a program read from a script file
+      - runs a program read from the standard input

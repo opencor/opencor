@@ -512,8 +512,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
     // the statements that are related to computed variables (since we want to
     // be able to recompute those whenever the user modifies a parameter)
     // Note: ideally, we wouldn't have to do that, but the CellML API doesn't
-    //       distinguish between 'proper' and 'computed' constants...
-    //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3499)
+    //       distinguish between 'proper' and 'computed' constants (see
+    //       https://tracker.physiomeproject.org/show_bug.cgi?id=3499)...
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
