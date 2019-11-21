@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "i18ninterface.h"
 #include "plugininfo.h"
+#include "pythoninterface.h"
 
 //==============================================================================
 
@@ -39,16 +40,19 @@ PLUGININFO_FUNC DataStorePluginInfo();
 
 //==============================================================================
 
-class DataStorePlugin : public QObject, public I18nInterface
+class DataStorePlugin : public QObject, public I18nInterface,
+                        public PythonInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.DataStorePlugin" FILE "datastoreplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PythonInterface)
 
 public:
 #include "i18ninterface.inl"
+#include "pythoninterface.inl"
 };
 
 //==============================================================================

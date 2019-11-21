@@ -138,6 +138,10 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
+        # Make our local target depend on having Python fully installed
+
+        add_dependencies(${DOCUMENTATION_BUILD} ${PYTHON_DEPENDENCIES})
+
         # Make our local target depend on our project build target and make our
         # documentation build target depend on our local target
 
@@ -187,6 +191,7 @@ macro(add_plugin PLUGIN_NAME)
         EXTERNAL_BINARIES
         SYSTEM_BINARIES
         DEPENDS_ON
+        BYPRODUCTS
         TESTS
     )
 
@@ -276,8 +281,10 @@ macro(add_plugin PLUGIN_NAME)
     endforeach()
 
     # Create a custom target for copying external binaries
-    # Note: this is to prevent Ninja from getting confused with circular
-    #       references...
+    # Note #1: this is to prevent Ninja from getting confused with circular
+    #          references...
+    # Note #2: we use this target in the PythonQt build script when setting the
+    #          PYTHON_DEPENDENCIES list...
 
     if(   NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL ""
        OR (    NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""
@@ -380,7 +387,8 @@ macro(add_plugin PLUGIN_NAME)
 
         add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR}
+                           BYPRODUCTS ${ARG_BYPRODUCTS})
     endif()
 
     # System binaries

@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpreferenceswidget.h"
+#include "simulationexperimentviewpythonwrapper.h"
+#include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
 //==============================================================================
@@ -53,7 +55,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Category::Simulation, true, false,
-                          QStringList() << "GraphPanelWidget" << "SimulationSupport",
+                          QStringList() << "GraphPanelWidget" << "PythonQtSupport" << "SimulationSupport",
                           descriptions);
 }
 
@@ -235,6 +237,13 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     // shown in our central widget
 
     mViewWidget->hide();
+
+    // Save the view widget for our Python wrapper
+    // Note: indeed, our Python wrapper relies on the global instance of our
+    //       plugin, so we want to make sure that it points to the Simulation
+    //       Experiment view used by OpenCOR...
+
+    instance()->mViewWidget = mViewWidget;
 }
 
 //==============================================================================
@@ -394,6 +403,40 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
     // Return the requested file tab icon
 
     return mViewWidget->fileTabIcon(pFileName);
+}
+
+//==============================================================================
+// Python interface
+//==============================================================================
+
+void SimulationExperimentViewPlugin::registerPythonClasses(void *pModule)
+{
+    // Register our Python classes
+
+    new SimulationExperimentViewPythonWrapper(pModule, this);
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+SimulationExperimentViewPlugin * SimulationExperimentViewPlugin::instance()
+{
+    // Return the 'global' instance of our plugin
+
+    static SimulationExperimentViewPlugin pluginInstance;
+
+    return static_cast<SimulationExperimentViewPlugin *>(Core::globalInstance("OpenCOR::SimulationExperimentView::SimulationExperimentViewPlugin",
+                                                         &pluginInstance));
+}
+
+//==============================================================================
+
+SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() const
+{
+    // Return our view widget
+
+    return mViewWidget;
 }
 
 //==============================================================================

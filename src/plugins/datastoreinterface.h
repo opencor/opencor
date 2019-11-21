@@ -25,12 +25,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "plugininfo.h"
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace DataStore {
+
+//==============================================================================
+
+class DataStoreArray
+{
+public:
+    explicit DataStoreArray(quint64 pSize);
+
+    quint64 size() const;
+
+    double * data() const;
+    double data(quint64 pPosition) const;
+
+    void reset();
+
+    void hold();
+    void release();
+
+private:
+    int mReferenceCounter = 1;
+
+    quint64 mSize;
+    double *mData = nullptr;
+};
+
+//==============================================================================
+
+class DataStoreValue : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreValue(double *pValue = nullptr);
+
+    void setUri(const QString &pUri);
+
+public slots:
+    QString uri() const;
+
+    double value() const;
+    void setValue(double pValue);
+
+private:
+    QString mUri;
+
+    double *mValue;
+};
+
+//==============================================================================
+
+class DataStoreValues : public QList<DataStoreValue *>
+{
+public:
+    explicit DataStoreValues(DataStoreArray *pDataStoreArray);
+    ~DataStoreValues();
+};
 
 //==============================================================================
 
@@ -44,6 +100,8 @@ public:
 
     quint64 size() const;
 
+    DataStoreArray * array() const;
+
     void addValue();
     void addValue(double pValue);
 
@@ -54,8 +112,8 @@ private:
     quint64 mCapacity;
     quint64 mSize = 0;
 
+    DataStoreArray *mArray = nullptr;
     double *mValue;
-    double *mValues;
 };
 
 //==============================================================================
@@ -85,6 +143,8 @@ public:
     void setLabel(const QString &pLabel);
     void setUnit(const QString &pUnit);
 
+    DataStoreArray * array(int pRun = -1) const;
+
     void addValue();
     void addValue(double pValue, int pRun = -1);
 
@@ -102,6 +162,9 @@ public slots:
     quint64 size(int pRun = -1) const;
 
     double value(quint64 pPosition, int pRun = -1) const;
+
+    double value() const;
+    void setValue(double pValue);
 
 private:
     int mType = -1;

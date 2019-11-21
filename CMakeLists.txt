@@ -31,6 +31,7 @@ option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth packag
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of various Python packages" ON)
+option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of the PythonQt package" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
@@ -617,6 +618,13 @@ set(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
 configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
 configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in ${I18N_QRC_FILENAME})
 
+# The Python interface depends on Python headers, so we only include it if we
+# are using the prebuilt version of our Python and QtWebKit packages
+
+if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    set(PYTHON_INTERFACE_FILENAME src/plugins/pythoninterface.cpp)
+endif()
+
 # Files that make up the GUI version of OpenCOR
 
 set(SOURCES
@@ -645,6 +653,7 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    ${PYTHON_INTERFACE_FILENAME}
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -682,6 +691,7 @@ if(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
+        ${PYTHON_INTERFACE_FILENAME}
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -856,10 +866,19 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     if(USE_PREBUILT_PYTHON_PACKAGE)
         # We are using the prebuilt version of our Python package, so build all
         # our plugins
+        # Note: on Windows, it's technically very difficult, if not impossible,
+        #       to get a debug version of our PythonConsole window, so we skip
+        #       it in that case (see
+        #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
+
+        if(RELEASE_MODE OR NOT WIN32)
+            set(MISCELLANEOUS_PYTHONCONSOLEWINDOW miscellaneous/PythonConsoleWindow)
+        endif()
 
         list(APPEND PLUGINS
             thirdParty/libSBML
             thirdParty/PythonPackages
+            thirdParty/PythonQt
 
             dataStore/BioSignalMLDataStore
             dataStore/CSVDataStore
@@ -877,6 +896,9 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             miscellaneous/Compiler
             miscellaneous/Core
             miscellaneous/HelpWindow
+            miscellaneous/JupyterKernel
+            ${MISCELLANEOUS_PYTHONCONSOLEWINDOW}
+            miscellaneous/PythonShell
             miscellaneous/WebBrowserWindow
 
             organisation/FileBrowserWindow
@@ -896,6 +918,8 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             support/CellMLSupport
             support/COMBINESupport
             support/PMRSupport
+            support/PythonQtSupport
+            support/PythonSupport
             support/SEDMLSupport
             support/SimulationSupport
             support/StandardSupport
@@ -952,6 +976,10 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
             add_definitions(-DENABLE_TEST_PLUGINS)
         endif()
+
+        # Let OpenCOR know that we want Python support
+
+        add_definitions(-DPYTHON_SUPPORT)
 
         # Let OpenCOR know about the prebuilt version of our QtWebKit package
         # being used
@@ -1018,6 +1046,7 @@ configure_clang_and_clang_tidy(${CMAKE_PROJECT_NAME})
 if(WIN32)
     target_link_libraries(${CMAKE_PROJECT_NAME}
         ${Qt5Core_QTMAIN_LIBRARIES}
+        ${PYTHON_LIBRARY}
     )
 endif()
 
@@ -1026,6 +1055,28 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         Qt5::${REQUIRED_QT_MODULE}
     )
 endforeach()
+
+# We can't compile Python interface code until after the Python headers are in
+# place
+
+if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+endif()
+
+# On Linux, our Python package needs to be directly linked to OpenCOR otherwise
+# Python extension DSOs can't find symbols
+# Note: this is because the lookup scope changes for DSOs that are loaded using
+#       dlopen() (see https://www.akkadia.org/drepper/dsohowto.pdf)...
+
+if(NOT WIN32 AND NOT APPLE)
+    include_directories(${PYTHON_INCLUDE_DIR})
+
+    target_link_libraries(${CMAKE_PROJECT_NAME}
+        ${PYTHON_LIBRARY}
+    )
+
+    add_dependencies(${CMAKE_PROJECT_NAME} PythonPlugin)
+endif()
 
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
@@ -1049,7 +1100,12 @@ if(WIN32)
     target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
         Qt5::Core
         Qt5::Network
+        ${PYTHON_LIBRARY}
     )
+
+    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+    endif()
 endif()
 
 # Some post-processing specific stuff
@@ -1204,6 +1260,9 @@ else()
     set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 endif()
 
+string(REPLACE "${PROJECT_BUILD_DIR}/" ""
+       RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
+
 if(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
@@ -1275,6 +1334,48 @@ if(WIN32)
     install(FILES ${VBS_FILENAME}
             DESTINATION .)
 
+    # Python runtime libraries and utilities
+
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+            DESTINATION .)
+
+    # Batch files to setup and run Python and Jupyter
+    # Note: on Windows, it's technically very difficult, if not impossible, to
+    #       get a debug version of any of our Jupyter-related scripts, so we
+    #       skip them in that case (see
+    #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
+
+    if(RELEASE_MODE)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
+
+        install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
+                      ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
+                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
+
+        set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
+
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
+
+        install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                      ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
+                      ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
+                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
+                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
+                DESTINATION .)
+    endif()
+
+    set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
+
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
+
+    install(FILES ${PYTHON_SHELL_FILENAME}
+            DESTINATION .)
+
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
     #       file icons (so that it is clear to the user that an extension has
@@ -1319,6 +1420,29 @@ elseif(APPLE)
     install(FILES ${SHELL_SCRIPT_FILENAME}
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+    # Shell scripts to setup and run Python and Jupyter
+
+    set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
+
+    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
+
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
+    set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
+    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
+
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                  ${JUPYTER_LAB_FILENAME}
+                  ${JUPYTER_NOTEBOOK_FILENAME}
+                  ${PYTHON_SHELL_FILENAME}
+            DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()
     # Select TGZ as the packager on Linux
@@ -1384,6 +1508,35 @@ else()
     install(FILES ${SHELL_SCRIPT_FILENAME}
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+    # Python runtime libraries and utilities
+
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/python
+            DESTINATION .
+            USE_SOURCE_PERMISSIONS)
+
+    # Shell scripts to setup and run Python and Jupyter
+
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+
+    install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
+            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
+
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                  ${PYTHON_SHELL_FILENAME}
+            DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
 

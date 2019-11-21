@@ -60,6 +60,7 @@ private:
 
     Plugins mLoadedCliPlugins;
     Plugins mLoadedPluginPlugins;
+    Plugins mLoadedSolverPlugins;
 
     void loadPlugins();
     void includePlugins(const QStringList &pPluginNames,

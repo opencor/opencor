@@ -557,20 +557,8 @@
         <translation>aucun</translation>
     </message>
     <message>
-        <source>Information:</source>
-        <translation>Information :</translation>
-    </message>
-    <message>
-        <source>Error:</source>
-        <translation>Erreur :</translation>
-    </message>
-    <message>
-        <source>Warning:</source>
-        <translation>Attention :</translation>
-    </message>
-    <message>
-        <source>Fatal:</source>
-        <translation>Fatal :</translation>
+        <source>%1:</source>
+        <translation>%1 :</translation>
     </message>
     <message>
         <source>the model needs both an ODE and an NLA solver, but none are available</source>
@@ -663,6 +651,21 @@
     <message>
         <source>%1 using %2</source>
         <translation>%1 avec %2</translation>
+    </message>
+    <message>
+        <source>Error:</source>
+        <translation>Erreur :</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>unable to get the simulation&apos;s runtime</source>
+        <translation>incapable d&apos;obtenir le modèle d&apos;exécution de la simulation</translation>
+    </message>
+    <message>
+        <source>unable to close the simulation</source>
+        <translation>incapable de fermer la simulation</translation>
     </message>
 </context>
 </TS>

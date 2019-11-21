@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
+#include "pythoninterface.h"
 
 //==============================================================================
 
@@ -41,7 +42,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo();
 //==============================================================================
 
 class SimulationSupportPlugin : public QObject, public FileHandlingInterface,
-                                public I18nInterface
+                                public I18nInterface, public PythonInterface
 {
     Q_OBJECT
 
@@ -49,10 +50,12 @@ class SimulationSupportPlugin : public QObject, public FileHandlingInterface,
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PythonInterface)
 
 public:
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
+#include "pythoninterface.inl"
 };
 
 //==============================================================================

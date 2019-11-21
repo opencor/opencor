@@ -3,7 +3,8 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "General",
                          "entries": [
-                           { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
+                           { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                           { "type": "added", "description": "Support for <a href=\"https://www.python.org/\">Python</a>." }
                          ]
                        },
                        { "name": "Editing",

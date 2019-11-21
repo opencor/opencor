@@ -125,8 +125,13 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mSimulation, &SimulationSupport::Simulation::error,
             this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
 
-    connect(mSimulation->data(), &SimulationSupport::SimulationData::modified,
+    connect(mSimulation->data(), &SimulationSupport::SimulationData::dataModified,
             this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
+
+    connect(mSimulation->results(), &SimulationSupport::SimulationResults::resultsReset,
+            this, &SimulationExperimentViewSimulationWidget::simulationResultsReset);
+    connect(mSimulation->results(), &SimulationSupport::SimulationResults::runAdded,
+            this, &SimulationExperimentViewSimulationWidget::simulationResultsRunAdded);
 
     // Allow for things to be dropped on us
 
@@ -897,7 +902,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         // Reset our progress
 
-        mProgress = -1;
+        mProgress = 0;
 
         // Clean up our output, if needed
 
@@ -950,34 +955,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // it/them
 
             for (const auto &simulationIssue : simulationIssues) {
-                QString issueType;
-
-                switch (simulationIssue.type()) {
-                case SimulationSupport::SimulationIssue::Type::Information:
-                    issueType = tr("Information:");
-
-                    break;
-                case SimulationSupport::SimulationIssue::Type::Error:
-                    issueType = tr("Error:");
-
-                    break;
-                case SimulationSupport::SimulationIssue::Type::Warning:
-                    issueType = tr("Warning:");
-
-                    break;
-                case SimulationSupport::SimulationIssue::Type::Fatal:
-                    issueType = tr("Fatal:");
-
-                    break;
-                }
-
                 if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
                     information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(simulationIssue.line())
                                                                                                                                       .arg(simulationIssue.column())
-                                                                                                                                      .arg(issueType,
+                                                                                                                                      .arg(tr("%1:").arg(simulationIssue.typeAsString()),
                                                                                                                                            Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 } else {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType,
+                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(tr("%1:").arg(simulationIssue.typeAsString()),
                                                                                                                                    Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 }
             }
@@ -1212,7 +1196,7 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
 
         tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
-                                    Core::highlightColor());
+                                     Core::highlightColor());
 
         return QIcon(tabBarPixmap);
     }
@@ -1399,8 +1383,6 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // simulation and, if successful, run our simulation
 
             if (mSimulation->addRun()) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::AddRun);
-
                 mSimulation->run();
             } else {
                 Core::warningMessageBox(tr("Run Simulation"),
@@ -1453,12 +1435,6 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
         //       realign themselves)...
 
         mSimulation->results()->reset();
-
-        // Update our simulation mode and check for results
-
-        updateSimulationMode();
-
-        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
     setUpdatesEnabled(true);
 }
 
@@ -2659,6 +2635,8 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
 bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Customise our simulation widget
+    // Note: make sure that this is in relative sync with
+    //       Simulation::furtherInitialize()...
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
@@ -3566,14 +3544,6 @@ void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTim
     // Stop keeping track of our simulation progress
 
     mProgress = -1;
-
-    // Note: our simulation progress gets reset in resetSimulationProgress(),
-    //       which is called by
-    //       SimulationExperimentViewWidget::checkSimulationResults(). To reset
-    //       our simulation progress here might not always work since our
-    //       simulation is run in a different thread, meaning that a call to
-    //       updateSimulationResults() might occur after we have reset our
-    //       simulation progress...
 }
 
 //==============================================================================
@@ -3656,6 +3626,30 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
 
     mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
     mResetAllModelParametersAction->setEnabled(pIsModified);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::simulationResultsReset()
+{
+    setUpdatesEnabled(false);
+        // Update our simulation mode and check for results
+        // Note: see clearSimulationResults() for the reason behing temporarily
+        //       disabling updates...
+
+        updateSimulationMode();
+
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
+    setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::simulationResultsRunAdded()
+{
+    // A run has been added, so check our simulation results
+
+    mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::AddRun);
 }
 
 //==============================================================================
@@ -4314,7 +4308,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // Note: tabBarPixmapSize()-2 because we want a one-pixel wide
             //       border...
 
-            if (newProgress != mProgress) {
+            if ((newProgress != mProgress) && (mProgress != -1)) {
                 // The progress has changed, so keep track of its new value and
                 // update our file tab icon
 

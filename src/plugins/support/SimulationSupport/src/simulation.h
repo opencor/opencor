@@ -31,6 +31,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <functional>
+
+//==============================================================================
+
+namespace libsedml {
+    class SedListOfAlgorithmParameters;
+} // namespace libsedml
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -59,7 +69,21 @@ namespace SimulationSupport {
 //==============================================================================
 
 class Simulation;
+class SimulationData;
 class SimulationWorker;
+
+//==============================================================================
+// Note: we bind the SimulationData object to the the first parameter of
+//       updateParameters() to create a function object to be called when
+//       simulation parameters are updated...
+
+#if defined(Q_OS_WIN)
+    using SimulationDataUpdatedFunction = std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *>;
+#elif defined(Q_OS_LINUX)
+    using SimulationDataUpdatedFunction = std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type;
+#else
+    using SimulationDataUpdatedFunction = std::__bind<void (*)(SimulationData *), SimulationData *>;
+#endif
 
 //==============================================================================
 
@@ -78,6 +102,8 @@ public:
     explicit SimulationIssue(Type pType, const QString &pMessage);
 
     Type type() const;
+    QString typeAsString() const;
+
     int line() const;
     int column() const;
     QString message() const;
@@ -102,9 +128,6 @@ class SimulationObject : public QObject
 public:
     explicit SimulationObject(Simulation *pSimulation);
 
-public slots:
-    Simulation * simulation() const;
-
 protected:
     Simulation *mSimulation;
 };
@@ -127,6 +150,11 @@ public:
 
     void importData(DataStore::DataStoreImportData *pImportData);
 
+    DataStore::DataStoreValues * constantsValues() const;
+    DataStore::DataStoreValues * ratesValues() const;
+    DataStore::DataStoreValues * statesValues() const;
+    DataStore::DataStoreValues * algebraicValues() const;
+
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
     void setEndingPoint(double pEndingPoint);
     void setPointInterval(double pPointInterval);
@@ -136,6 +164,10 @@ public:
 
     void setOdeSolverName(const QString &pOdeSolverName);
     void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
+
+    SimulationDataUpdatedFunction & simulationDataUpdatedFunction();
+
+    static void updateParameters(SimulationData *pSimulationData);
 
 private:
     quint64 mDelay = 0;
@@ -153,16 +185,23 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
-    double *mConstants = nullptr;
-    double *mRates = nullptr;
-    double *mStates = nullptr;
-    double *mDummyStates = nullptr;
-    double *mAlgebraic = nullptr;
+    DataStore::DataStoreArray *mConstantsArray = nullptr;
+    DataStore::DataStoreArray *mRatesArray = nullptr;
+    DataStore::DataStoreArray *mStatesArray = nullptr;
+    DataStore::DataStoreArray *mAlgebraicArray = nullptr;
+
+    DataStore::DataStoreValues *mConstantsValues = nullptr;
+    DataStore::DataStoreValues *mRatesValues = nullptr;
+    DataStore::DataStoreValues *mStatesValues = nullptr;
+    DataStore::DataStoreValues *mAlgebraicValues = nullptr;
 
     double *mInitialConstants = nullptr;
     double *mInitialStates = nullptr;
+    double *mDummyStates = nullptr;
 
     QMap<DataStore::DataStore *, double *> mData;
+
+    SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
     void createArrays();
     void deleteArrays();
@@ -172,8 +211,10 @@ private:
     bool doIsModified(bool pCheckConstants) const;
 
 signals:
-    void updated(double pCurrentPoint);
-    void modified(bool pIsModified);
+    void dataUpdated(double pCurrentPoint);
+    void dataModified(bool pIsModified);
+
+    void pointUpdated();
 
     void error(const QString &pMessage);
 
@@ -233,17 +274,25 @@ public:
     double * rates(int pIndex, int pRun = -1) const;
     double * states(int pIndex, int pRun = -1) const;
     double * algebraic(int pIndex, int pRun = -1) const;
+
     double * data(double *pData, int pIndex, int pRun = -1) const;
+
+    DataStore::DataStoreVariable * pointsVariable() const;
+
+    DataStore::DataStoreVariables constantsVariables() const;
+    DataStore::DataStoreVariables ratesVariables() const;
+    DataStore::DataStoreVariables statesVariables() const;
+    DataStore::DataStoreVariables algebraicVariables() const;
 
 private:
     DataStore::DataStore *mDataStore = nullptr;
 
-    DataStore::DataStoreVariable *mPoints = nullptr;
+    DataStore::DataStoreVariable *mPointsVariable = nullptr;
 
-    DataStore::DataStoreVariables mConstants;
-    DataStore::DataStoreVariables mRates;
-    DataStore::DataStoreVariables mStates;
-    DataStore::DataStoreVariables mAlgebraic;
+    DataStore::DataStoreVariables mConstantsVariables;
+    DataStore::DataStoreVariables mRatesVariables;
+    DataStore::DataStoreVariables mStatesVariables;
+    DataStore::DataStoreVariables mAlgebraicVariables;
 
     QMap<double *, DataStore::DataStoreVariables> mData;
     QMap<double *, DataStore::DataStore *> mDataDataStores;
@@ -257,6 +306,10 @@ private:
 
     double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
                      DataStore::DataStoreVariable *pVariable) const;
+
+signals:
+    void resultsReset();
+    void runAdded();
 
 public slots:
     void reload();
@@ -304,6 +357,8 @@ public:
     ~Simulation() override;
 
     SimulationIssues issues();
+
+    QString furtherInitialize() const;
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
@@ -354,6 +409,9 @@ private:
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
     bool simulationSettingsOk(bool pEmitSignal = true);
+
+    QString initializeSolver(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
+                             const QString &pKisaoId) const;
 
 signals:
     void running(bool pIsResuming);

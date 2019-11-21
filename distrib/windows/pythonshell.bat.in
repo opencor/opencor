@@ -1,0 +1,3 @@
+@ECHO OFF
+
+"%~dp0bin\${CMAKE_PROJECT_NAME}" -c PythonShell %*
