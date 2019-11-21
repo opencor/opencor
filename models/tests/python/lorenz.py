@@ -43,7 +43,7 @@ print('---------------------------------------')
 print('          Remote CellML file')
 print('---------------------------------------')
 
-run_simulation('https://raw.githubusercontent.com/agarny/opencor/issue1255/models/tests/cellml/lorenz.cellml')
+run_simulation('https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml')
 
 print()
 print('---------------------------------------')
@@ -57,7 +57,7 @@ print('---------------------------------------')
 print('          Remote SED-ML file')
 print('---------------------------------------')
 
-run_simulation('https://raw.githubusercontent.com/agarny/opencor/issue1255/models/tests/sedml/lorenz.sedml')
+run_simulation('https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz.sedml')
 
 print()
 print('---------------------------------------')
@@ -71,4 +71,4 @@ print('---------------------------------------')
 print('        Remote COMBINE archive')
 print('---------------------------------------')
 
-run_simulation('https://raw.githubusercontent.com/agarny/opencor/issue1255/models/tests/combine/lorenz.omex')
+run_simulation('https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex')
