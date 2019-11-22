@@ -198,6 +198,49 @@ else()
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
+    if(NOT APPLE)
+        # We build bzip2 for Windows and Linux
+
+        set(BZIP2_VERSION "1.0.8")
+        set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-${BZIP2_VERSION})
+
+        if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/bzlib.h)
+            set(BZIP2_SOURCES bzip2-${BZIP2_VERSION}.tar.gz)
+
+            message("Downloading '${BZIP2_SOURCES}'...")
+
+            file(DOWNLOAD https://sourceware.org/pub/bzip2/${BZIP2_SOURCES} ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCES}
+                 SHOW_PROGRESS)
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCES}
+                            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                            OUTPUT_QUIET)
+        endif()
+
+        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+            message("Building '${BZIP2_LIBRARY}'...")
+
+            if(WIN32)
+                execute_process(COMMAND nmake -f makefile.msc lib
+                                WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
+                                OUTPUT_QUIET)
+            else()
+                execute_process(COMMAND make libbz2.a
+                                WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
+                                OUTPUT_QUIET)
+            endif()
+        endif()
+
+        set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
+        set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+    else()
+        # macOS provides bzip2
+
+        find_package(BZip2 REQUIRED)
+    endif()
+
     # Jupyter and IPython require SQLite3
 
     if(WIN32)
@@ -304,6 +347,11 @@ else()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}
 
+            # Use our C compilers
+
+            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+
             # Options for macOS builds
 
             -DCMAKE_MACOSX_RPATH=1
@@ -353,6 +401,12 @@ else()
             # Build with an appropriate readline
 
             ${PYTHON_READLINE_OPTION}
+
+            # Link to bzip2 library
+
+            -DUSE_SYSTEM_BZip2=OFF
+            -DBZIP2_INCLUDE_DIR=${BZIP2_INCLUDE_DIR}
+            -DBZIP2_LIBRARIES=${BZIP2_LIBRARIES}
 
             # Use our OpenSSL
 
