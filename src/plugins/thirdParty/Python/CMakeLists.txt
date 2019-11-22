@@ -379,11 +379,6 @@ else()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}
 
-            # Use our C compilers
-
-            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-
             # Options for macOS builds
 
             -DCMAKE_MACOSX_RPATH=1

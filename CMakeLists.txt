@@ -1,5 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 
+# Make sure that we are using the compiler we support
+# Note #1: indeed, if we have another compiler, CMake may prefer it over the one
+#          we support since it searches for a compiler in a very specific order
+#          (see https://cmake.org/pipermail/cmake/2013-March/053819.html)...
+# Note #2: yes, this needs to be done before defining our project...
+
+if(WIN32)
+    find_program(C_COMPILER cl)
+    find_program(CXX_COMPILER cl)
+else()
+    find_program(C_COMPILER cc)
+    find_program(CXX_COMPILER c++)
+endif()
+
+set(ENV{CC} ${C_COMPILER})
+set(ENV{CXX} ${CXX_COMPILER})
+
 # Project definition
 
 project(OpenCOR)
