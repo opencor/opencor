@@ -79,6 +79,12 @@ endif()
 
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
+# Make sure the directory exists
+
+file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
+
+# Specify the package's files
+
 set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
@@ -94,6 +100,28 @@ if(WIN32)
     list(APPEND SHA1_FILES
         ${LIBRARY_DIR}/${IMPORT_LIBRARY}
     )
+endif()
+
+if(NOT APPLE)
+    # On Linux we bundle bzip2 with Python
+    # Note: it is statically linked on Windows
+    #       and is provided by macOS...
+
+    if(UNIX)
+        set(BZIP2_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}bz2${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${BZIP2_SHARED_LIBRARY}
+        )
+
+        list(APPEND SHA1_FILES
+            ${LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+        )
+
+        set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY})
+    else()
+        set(BZIP2_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}bz2${CMAKE_STATIC_LIBRARY_SUFFIX})
+    endif()
 endif()
 
 if(NOT APPLE)
@@ -217,8 +245,6 @@ else()
                             OUTPUT_QUIET)
         endif()
 
-        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
-
         if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
             message("Building '${BZIP2_LIBRARY}'...")
 
@@ -227,9 +253,14 @@ else()
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
                                 OUTPUT_QUIET)
             else()
-                execute_process(COMMAND make libbz2.a
+                execute_process(COMMAND make -f Makefile-libbz2_so
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
                                 OUTPUT_QUIET)
+
+                # Copy bzip2's library to the plugin's external binaries directory
+
+                execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+                                                         ${EXTERNAL_BINARIES_DIR})
             endif()
         endif()
 
@@ -299,8 +330,6 @@ else()
 
     if(NOT APPLE)
         # Copy SQLite3's library to the plugin's external binaries directory
-
-        file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
