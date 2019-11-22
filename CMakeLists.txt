@@ -1,19 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
 
-# Specify the compiler we will use.
-# Note: this to be set **before** the project declaration
-
-if(WIN32)
-    set(CMAKE_C_COMPILER cl)
-    set(CMAKE_CXX_COMPILER cl)
-elseif(APPLE)
-    set(CMAKE_C_COMPILER clang)
-    set(CMAKE_CXX_COMPILER clang++)
-else()
-    set(CMAKE_C_COMPILER cc)
-    set(CMAKE_CXX_COMPILER c++)
-endif()
-
 # Project definition
 
 project(OpenCOR)
@@ -65,6 +51,9 @@ endif()
 # Make sure that we are using the compiler we support
 
 if(WIN32)
+    set(CMAKE_C_COMPILER cl)
+    set(CMAKE_CXX_COMPILER cl)
+
     string(REPLACE "." ";"
            CMAKE_CXX_COMPILER_VERSION_LIST "${CMAKE_CXX_COMPILER_VERSION}")
 
@@ -77,11 +66,17 @@ if(WIN32)
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2017 on Windows...")
     endif()
 elseif(APPLE)
+    set(CMAKE_C_COMPILER clang)
+    set(CMAKE_CXX_COMPILER clang++)
+
     if(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
        AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
     endif()
 else()
+    set(CMAKE_C_COMPILER cc)
+    set(CMAKE_CXX_COMPILER c++)
+
     if(    NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"
        AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ on Linux...")
