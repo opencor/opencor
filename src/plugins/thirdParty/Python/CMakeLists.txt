@@ -103,9 +103,13 @@ if(WIN32)
 endif()
 
 if(NOT APPLE)
-    # On Linux we bundle bzip2 with Python
-    # Note: it is statically linked on Windows
-    #       and is provided by macOS...
+    # On Linux and Windows we build bzip2.
+    # Note: it is provided by macOS...
+
+    set(BZIP2_VERSION "1.0.8")
+
+    # On Linux we bundle bzip2 with Python.
+    # Note: it is statically linked on Windows...
 
     if(UNIX)
         set(BZIP2_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}bz2${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -118,7 +122,7 @@ if(NOT APPLE)
             ${LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
         )
 
-        set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY})
+        set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
     else()
         set(BZIP2_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}bz2${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
@@ -229,7 +233,6 @@ else()
     if(NOT APPLE)
         # We build bzip2 for Windows and Linux
 
-        set(BZIP2_VERSION "1.0.8")
         set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-${BZIP2_VERSION})
 
         if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/bzlib.h)
@@ -259,8 +262,8 @@ else()
 
                 # Copy bzip2's library to the plugin's external binaries directory
 
-                execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
-                                                         ${EXTERNAL_BINARIES_DIR})
+                execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY}
+                                                         ${EXTERNAL_BINARIES_DIR}/${BZIP2_SHARED_LIBRARY})
             endif()
         endif()
 
