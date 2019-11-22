@@ -246,29 +246,36 @@ else()
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCES}
                             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
                             OUTPUT_QUIET)
-        endif()
 
-        if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
             message("Building '${BZIP2_LIBRARY}'...")
 
             if(WIN32)
                 execute_process(COMMAND nmake -f makefile.msc lib
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
                                 OUTPUT_QUIET)
+
             else()
                 execute_process(COMMAND make -f Makefile-libbz2_so
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
                                 OUTPUT_QUIET)
 
-                # Copy bzip2's library to the plugin's external binaries directory
+                # Rename bzip2's library and copy it to the plugin's external binaries directory
 
-                execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY}
-                                                         ${EXTERNAL_BINARIES_DIR}/${BZIP2_SHARED_LIBRARY})
+                file(RENAME ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY}
+                            ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY})
+
+                file(COPY ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+                     DESTINATION ${EXTERNAL_BINARIES_DIR}
+                     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
             endif()
         endif()
 
         set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
-        set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+        if(WIN32)
+            set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+        else()
+            set(BZIP2_LIBRARIES ${EXTERNAL_BINARIES_DIR}/${BZIP2_SHARED_LIBRARY})
+        endif()
     else()
         # macOS provides bzip2
 
