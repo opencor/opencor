@@ -22,6 +22,34 @@
                 <key>LSHandlerRank</key>
                 <string>Owner</string>
             </dict>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleTypeIconFile</key>
+                <string>${CMAKE_PROJECT_NAME}.icns</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>sedml</string>
+                </array>
+                <key>CFBundleTypeName</key>
+                <string>SED-ML File</string>
+                <key>LSHandlerRank</key>
+                <string>Owner</string>
+            </dict>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleTypeIconFile</key>
+                <string>${CMAKE_PROJECT_NAME}.icns</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>omex</string>
+                </array>
+                <key>CFBundleTypeName</key>
+                <string>COMBINE Archive</string>
+                <key>LSHandlerRank</key>
+                <string>Owner</string>
+            </dict>
         </array>
         <key>CFBundleExecutable</key>
         <string>${CMAKE_PROJECT_NAME}</string>
