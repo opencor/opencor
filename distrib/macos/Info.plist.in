@@ -57,6 +57,6 @@
         <key>NSPrincipalClass</key>
         <string>NSApplication</string>
         <key>NSRequiresAquaSystemAppearance</key>
-        <string>true</string>
+        <true/>
     </dict>
 </plist>
