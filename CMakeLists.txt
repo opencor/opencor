@@ -1023,6 +1023,15 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     endforeach()
 endif()
 
+# Keep track of whether we are building OpenCOR with Python support
+
+if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
+    set(HAS_PYTHON_SUPPORT TRUE)
+
+    string(REPLACE "${PROJECT_BUILD_DIR}/" ""
+           RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
+endif()
+
 # Fetch parts of our documentation and build it, if we are neither building
 # Python nor QtWebKit
 # Note: we need Python because we rely on Sphinx to build our documentation...
@@ -1085,7 +1094,7 @@ endif()
 # Note: this is because the lookup scope changes for DSOs that are loaded using
 #       dlopen() (see https://www.akkadia.org/drepper/dsohowto.pdf)...
 
-if(NOT WIN32 AND NOT APPLE)
+if(NOT WIN32 AND NOT APPLE AND HAS_PYTHON_SUPPORT)
     include_directories(${PYTHON_INCLUDE_DIR})
 
     target_link_libraries(${CMAKE_PROJECT_NAME}
@@ -1277,13 +1286,6 @@ else()
     set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 endif()
 
-if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
-    set(HAS_PYTHON TRUE)
-
-    string(REPLACE "${PROJECT_BUILD_DIR}/" ""
-           RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
-endif()
-
 if(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
@@ -1366,7 +1368,7 @@ if(WIN32)
     #       skip them in that case (see
     #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
 
-    if(HAS_PYTHON)
+    if(HAS_PYTHON_SUPPORT)
         if(RELEASE_MODE)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
@@ -1447,7 +1449,7 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    if(HAS_PYTHON)
+    if(HAS_PYTHON_SUPPORT)
         set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
 
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
@@ -1543,7 +1545,7 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    if(HAS_PYTHON)
+    if(HAS_PYTHON_SUPPORT)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
 
         install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
