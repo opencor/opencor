@@ -1262,6 +1262,8 @@ endif()
 
 # Package OpenCOR
 
+set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${CMAKE_PROJECT_NAME})
+
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
@@ -1411,11 +1413,13 @@ if(WIN32)
         ")
     endif()
 elseif(APPLE)
-    # Select PackageMaker and ZIP as the packagers on macOS
+    # Select productbuild and ZIP as the packagers on macOS
 
-    set(CPACK_GENERATOR PackageMaker ZIP)
+    set(CPACK_GENERATOR productbuild ZIP)
     set(CPACK_SYSTEM_NAME "macOS")
     set(CPACK_PROJECT_CONFIG_FILE ${PLATFORM_DISTRIB_DIR}/package.cmake)
+
+    set(CPACK_COMPONENTS_ALL ${CMAKE_PROJECT_NAME})
 
     set(CPACK_RESOURCE_FILE_WELCOME "${PLATFORM_DISTRIB_DIR}/welcome.txt")
     set(CPACK_RESOURCE_FILE_README "${DISTRIB_DIR}/readMe.txt")
