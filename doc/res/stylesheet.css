@@ -6,8 +6,11 @@ body {
 
 a {
     color: rgb(103, 103, 103);
-    outline: 0;
     text-decoration: none;
+}
+
+a:focus {
+    outline: 0;
 }
 
 a:hover {
