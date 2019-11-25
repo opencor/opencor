@@ -994,10 +994,6 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             add_definitions(-DENABLE_TEST_PLUGINS)
         endif()
 
-        # Let OpenCOR know that we want Python support
-
-        add_definitions(-DPYTHON_SUPPORT)
-
         # Let OpenCOR know about the prebuilt version of our QtWebKit package
         # being used
 
@@ -1023,10 +1019,13 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     endforeach()
 endif()
 
-# Keep track of whether we are building OpenCOR with Python support
+# Keep track of whether we are building OpenCOR with Python support and, if so,
+# let OpenCOR know about it
 
 if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
-    set(HAS_PYTHON_SUPPORT TRUE)
+    set(PYTHON_SUPPORT TRUE)
+
+    add_definitions(-DPYTHON_SUPPORT)
 
     string(REPLACE "${PROJECT_BUILD_DIR}/" ""
            RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
@@ -1094,7 +1093,7 @@ endif()
 # Note: this is because the lookup scope changes for DSOs that are loaded using
 #       dlopen() (see https://www.akkadia.org/drepper/dsohowto.pdf)...
 
-if(NOT WIN32 AND NOT APPLE AND HAS_PYTHON_SUPPORT)
+if(NOT WIN32 AND NOT APPLE AND PYTHON_SUPPORT)
     include_directories(${PYTHON_INCLUDE_DIR})
 
     target_link_libraries(${CMAKE_PROJECT_NAME}
@@ -1368,7 +1367,7 @@ if(WIN32)
     #       skip them in that case (see
     #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
 
-    if(HAS_PYTHON_SUPPORT)
+    if(PYTHON_SUPPORT)
         if(RELEASE_MODE)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
@@ -1449,7 +1448,7 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    if(HAS_PYTHON_SUPPORT)
+    if(PYTHON_SUPPORT)
         set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
 
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
@@ -1545,7 +1544,7 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    if(HAS_PYTHON_SUPPORT)
+    if(PYTHON_SUPPORT)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
 
         install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
