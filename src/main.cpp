@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#if defined(PYTHON_SUPPORT) and defined(Q_OS_LINUX)
+#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     #include "Python.h"
     // Note: this needs to be included before <QObject> to prevent name clashes...
 #endif
