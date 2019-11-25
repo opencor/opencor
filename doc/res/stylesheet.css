@@ -63,7 +63,7 @@ div.copyright div.right {
 }
 
 div.copyright div a.copyright:hover {
-    margin: 0
+    margin: 0;
     border: 0;
     background: none;
 }
