@@ -30,7 +30,7 @@ if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d7253d1fa612d24c08b0dd1b9b8f8f7fa2f751a1
+                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0943cd1413a302c943d6e613f44775ca216e8374
                           SHA1_FILES ${SHA1_FILES}
                           SHA1_VALUES 6d8f2e89ef80e7f0f3fc4307e3b286a212664dd7)
 else()
