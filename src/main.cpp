@@ -72,7 +72,7 @@ int main(int pArgC, char *pArgV[])
     //       using dlopen() (see
     //       https://www.akkadia.org/drepper/dsohowto.pdf)...
 
-#if defined(PYTHON_SUPPORT) and defined(Q_OS_LINUX)
+#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     Py_NoUserSiteDirectory = 1;
 #endif
 
