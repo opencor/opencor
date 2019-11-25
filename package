@@ -17,15 +17,7 @@ origDir=`pwd`
 
 cd ${appDir}/build
 
-if [ "`uname -s`" = "Linux" ]; then
-    cpack
-else
-    if [ -f /Applications/PackageMaker.app/Contents/MacOS/PackageMaker ]; then
-        cpack -G PackageMaker -D CPACK_INSTALL_PREFIX=/Applications/OpenCOR
-    fi
-
-    cpack -G ZIP -D CPACK_INSTALL_PREFIX=.
-fi
+cpack
 
 exitCode=$?
 

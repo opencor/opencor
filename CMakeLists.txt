@@ -1412,11 +1412,10 @@ if(WIN32)
     endif()
 elseif(APPLE)
     # Select PackageMaker and ZIP as the packagers on macOS
-    # Note: this is actually done within the package script, so that the ZIP
-    #       package can be done 'properly', i.e. we don't have the full tree
-    #       structure in the ZIP file...
 
+    set(CPACK_GENERATOR PackageMaker ZIP)
     set(CPACK_SYSTEM_NAME "macOS")
+    set(CPACK_PROJECT_CONFIG_FILE ${PLATFORM_DISTRIB_DIR}/package.cmake)
 
     set(CPACK_RESOURCE_FILE_WELCOME "${PLATFORM_DISTRIB_DIR}/welcome.txt")
     set(CPACK_RESOURCE_FILE_README "${DISTRIB_DIR}/readMe.txt")
