@@ -102,16 +102,19 @@ if(WIN32)
     )
 endif()
 
+# Do a few things that are specific to Windows and Linux
+
 if(NOT APPLE)
-    # On Linux and Windows we build bzip2.
-    # Note: it is provided by macOS...
+    # Build bzip2
+    # Note: bzip2 is provided by macOS...
 
     set(BZIP2_VERSION "1.0.8")
 
-    # On Linux we bundle bzip2 with Python.
-    # Note: it is statically linked on Windows...
+    # Statically link bzip2 on Windows while bundle it on Linux
 
-    if(UNIX)
+    if(WIN32)
+        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
+    else()
         set(BZIP2_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}bz2${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         list(APPEND EXTERNAL_BINARIES
@@ -123,13 +126,9 @@ if(NOT APPLE)
         )
 
         set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
-    else()
-        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
-endif()
 
-if(NOT APPLE)
-    # On Windows and Linux, we bundle SQLite3 with Python
+    # Bundle SQLite3 with Python
     # Note: it is statically linked on macOS...
 
     set(SQLITE3_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sqlite3${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -231,8 +230,12 @@ else()
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
-    if(NOT APPLE)
-        # We build bzip2 for Windows and Linux
+    if(APPLE)
+        # macOS provides bzip2
+
+        find_package(BZip2 REQUIRED)
+    else()
+        # Build bzip2 for Windows and Linux
 
         set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-opencor-${BZIP2_VERSION})
 
@@ -241,8 +244,7 @@ else()
 
             message("Downloading '${BZIP2_SOURCE_ARCHIVE}'...")
 
-            file(DOWNLOAD https://github.com/opencor/bzip2/archive/opencor-${BZIP2_VERSION}.tar.gz
-                          ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCE_ARCHIVE}
+            file(DOWNLOAD https://github.com/opencor/bzip2/archive/opencor-${BZIP2_VERSION}.tar.gz ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCE_ARCHIVE}
                  SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCE_ARCHIVE}
@@ -260,7 +262,8 @@ else()
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
                                 OUTPUT_QUIET)
 
-                # Rename bzip2's library and copy it to the plugin's external binaries directory
+                # Rename bzip2's library and copy it to the plugin's external
+                # binaries directory
 
                 file(RENAME ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY}
                             ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY})
@@ -272,15 +275,12 @@ else()
         endif()
 
         set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
+
         if(WIN32)
             set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
         else()
             set(BZIP2_LIBRARIES ${EXTERNAL_BINARIES_DIR}/${BZIP2_SHARED_LIBRARY})
         endif()
-    else()
-        # macOS provides bzip2
-
-        find_package(BZip2 REQUIRED)
     endif()
 
     # Jupyter and IPython require SQLite3
@@ -422,7 +422,7 @@ else()
 
             -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
 
-            # Disable extension modules that we don't use or the platform
+            # Disable extension modules that we don't use or that the platform
             # doesn't provide
 
             -DENABLE_BSDDB=OFF
@@ -439,7 +439,7 @@ else()
 
             ${PYTHON_READLINE_OPTION}
 
-            # Link to bzip2 library
+            # Link to the bzip2 library
 
             -DUSE_SYSTEM_BZip2=OFF
             -DBZIP2_INCLUDE_DIR=${BZIP2_INCLUDE_DIR}
