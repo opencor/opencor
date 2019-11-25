@@ -9,12 +9,9 @@ a {
     text-decoration: none;
 }
 
-a:focus {
-    outline: 0;
-}
-
-a:hover {
+a:focus, a:hover {
     margin: -1px;
+    outline: 0;
     border: 1px solid rgba(103, 103, 103, 0.13);
     background: rgba(103, 103, 103, 0.05);
     color: rgb(103, 103, 103);
