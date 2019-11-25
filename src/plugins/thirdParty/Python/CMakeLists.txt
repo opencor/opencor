@@ -124,7 +124,7 @@ if(NOT APPLE)
 
         set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
     else()
-        set(BZIP2_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}bz2${CMAKE_STATIC_LIBRARY_SUFFIX})
+        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
 endif()
 
@@ -254,7 +254,6 @@ else()
                 execute_process(COMMAND nmake -f makefile.msc lib
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
                                 OUTPUT_QUIET)
-
             else()
                 execute_process(COMMAND make -f Makefile-libbz2_so
                                 WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
