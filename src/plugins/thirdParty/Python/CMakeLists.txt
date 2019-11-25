@@ -233,17 +233,18 @@ else()
     if(NOT APPLE)
         # We build bzip2 for Windows and Linux
 
-        set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-${BZIP2_VERSION})
+        set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-opencor-${BZIP2_VERSION})
 
         if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/bzlib.h)
-            set(BZIP2_SOURCES bzip2-${BZIP2_VERSION}.tar.gz)
+            set(BZIP2_SOURCE_ARCHIVE bzip2-${BZIP2_VERSION}.tar.gz)
 
-            message("Downloading '${BZIP2_SOURCES}'...")
+            message("Downloading '${BZIP2_SOURCE_ARCHIVE}'...")
 
-            file(DOWNLOAD https://sourceware.org/pub/bzip2/${BZIP2_SOURCES} ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCES}
+            file(DOWNLOAD https://github.com/opencor/bzip2/archive/opencor-${BZIP2_VERSION}.tar.gz
+                          ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCE_ARCHIVE}
                  SHOW_PROGRESS)
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCES}
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCE_ARCHIVE}
                             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
                             OUTPUT_QUIET)
 
