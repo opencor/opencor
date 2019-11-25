@@ -1,17 +1,17 @@
 body {
-    padding: 13px 0px;
+    padding: 13px 0;
     font-family: "Arial", "Sans-Serif";
     font-size: 10pt;
 }
 
 a {
     color: rgb(103, 103, 103);
-    outline: 0px;
     text-decoration: none;
 }
 
-a:hover {
+a:focus, a:hover {
     margin: -1px;
+    outline: 0;
     border: 1px solid rgba(103, 103, 103, 0.13);
     background: rgba(103, 103, 103, 0.05);
     color: rgb(103, 103, 103);
@@ -20,19 +20,19 @@ a:hover {
 a.noHover:hover {
     /* This prevents anchors from looking like a link */
 
-    margin: 0px;
-    border: 0px;
+    margin: 0;
+    border: 0;
     background: rgba(255, 255, 255, 0);
 }
 
 div.contents {
-    border-radius: 0px 0px 13px 13px;
+    border-radius: 0 0 13px 13px;
 }
 
 div.copyright {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 19px;
     border-top: 1px solid rgba(161, 161, 161, 0.39);
@@ -63,29 +63,29 @@ div.copyright div.right {
 }
 
 div.copyright div a.copyright:hover {
-    margin: 0px;
-    border: 0px;
+    margin: 0;
+    border: 0;
     background: none;
 }
 
 div.copyright div img.twitter {
     position: relative;
     top: -15px;
-    border: 0px;
+    border: 0;
 }
 
 div.copyright div img.vpr {
     position: relative;
     top: 4px;
-    border: 0px;
+    border: 0;
 }
 
 div.header {
     z-index: 999;
     padding: 3px;
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 23px;
     background: rgb(103, 103, 103);
@@ -131,7 +131,7 @@ div.oldDownload {
 }
 
 div.section {
-    margin: 1.5em 0em 0.5em 0em;
+    margin: 1.5em 0 0.5em 0;
     /* Note: the margin is so that it is rendered like a <p>, which is  */
     /*        necessary if we want to use a section at the beginning of */
     /*        a page (because of our fixed header at the top)...        */
@@ -229,7 +229,7 @@ table.changes td.topSeparator {
 }
 
 ul {
-    margin: 7px 0px;
+    margin: 7px 0;
 }
 
 ul > li {
@@ -238,5 +238,5 @@ ul > li {
 }
 
 ul > li > ul {
-    margin: 0px;
+    margin: 0;
 }
