@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
 
-# Make sure that we are using the compiler we support
-# Note #1: indeed, if we have another compiler, CMake may prefer it over the one
-#          we support since it searches for a compiler in a very specific order
-#          (see https://cmake.org/pipermail/cmake/2013-March/053819.html)...
+# Make sure that we are using the compilers we support
+# Note #1: indeed, if other compilers are installed on a developer's machine
+#          then CMake may prefer them over the ones we support since it searches
+#          for a compiler in a very specific order (see
+#          https://cmake.org/pipermail/cmake/2013-March/053819.html)...
 # Note #2: yes, this needs to be done before defining our project...
 
 if(WIN32)
@@ -159,14 +160,14 @@ endif()
 set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
 
 if(WIN32)
-    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 else()
     if(APPLE)
         set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
     endif()
 
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 endif()
 
@@ -179,7 +180,7 @@ endif()
 if(NOT WIN32 AND NOT APPLE)
     set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
+    execute_process(COMMAND ${C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
     if(NOT RESULT EQUAL 0)
@@ -220,7 +221,7 @@ if(WIN32)
     if(CLCACHE)
         set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
-        execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+        execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
                         RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
         if(RESULT EQUAL 0)
@@ -337,13 +338,27 @@ set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
 set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
 # A few constants to help us with building an external project
+# Note: the idea is to ensure that we compile external projects using the exact
+#       same compilers than the ones we want to use in the first place (i.e.
+#       C_COMPILER and CXX_COMPILER), as well as take advantage of ccache, if
+#       available, and ensure that RPATH is properly handled on macOS...
+
+set(CMAKE_ARGS
+    -DCMAKE_C_COMPILER=${C_COMPILER}
+    -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+)
 
 if(CCACHE)
-    set(CMAKE_ARGS -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE})
+    list(APPEND CMAKE_ARGS
+        -DCMAKE_C_COMPILER_LAUNCHER=${CCACHE}
+        -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE}
+    )
 endif()
 
 if(APPLE)
-    set(CMAKE_ARGS ${CMAKE_ARGS} -DCMAKE_MACOSX_RPATH=ON)
+    list(APPEND CMAKE_ARGS
+        -DCMAKE_MACOSX_RPATH=ON
+    )
 endif()
 
 if(WIN32)
