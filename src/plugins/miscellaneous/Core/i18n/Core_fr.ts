@@ -327,118 +327,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Sample</source>
-        <translation>Exemple</translation>
-    </message>
-    <message>
-        <source>Test</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Invalid</source>
-        <translation>Invalide</translation>
-    </message>
-    <message>
-        <source>Data store</source>
-        <translation>Magasin de données</translation>
-    </message>
-    <message>
-        <source>Editing</source>
-        <translation>Édition</translation>
-    </message>
-    <message>
-        <source>Miscellaneous</source>
-        <translation>Divers</translation>
-    </message>
-    <message>
-        <source>Organisation</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Simulation</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Solver</source>
-        <translation>Solveur</translation>
-    </message>
-    <message>
-        <source>Support</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Third-party</source>
-        <translation>Externe</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation>Outils</translation>
-    </message>
-    <message>
-        <source>Widget</source>
-        <translation>Gadget</translation>
-    </message>
-    <message>
-        <source>Plugins that illustrate various plugin-related aspects.</source>
-        <translation>Extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
-    </message>
-    <message>
-        <source>Plugins to test things.</source>
-        <translation>Extensions pour tester des choses.</translation>
-    </message>
-    <message>
-        <source>Plugins that are not valid.</source>
-        <translation>Extensions qui ne sont pas valides.</translation>
-    </message>
-    <message>
-        <source>Plugins to store and manipulate data.</source>
-        <translation>Extensions pour stocker et manipuler des données.</translation>
-    </message>
-    <message>
-        <source>Plugins to edit files.</source>
-        <translation>Extensions pour éditer des fichiers.</translation>
-    </message>
-    <message>
-        <source>Plugins that do not fit in any other category.</source>
-        <translation>Extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
-    </message>
-    <message>
-        <source>Plugins to organise files.</source>
-        <translation>Extensions pour organiser des fichiers.</translation>
-    </message>
-    <message>
-        <source>Plugins to simulate files.</source>
-        <translation>Extensions pour simuler des fichiers.</translation>
-    </message>
-    <message>
-        <source>Plugins to access various solvers.</source>
-        <translation>Extensions pour accéder différents solveurs.</translation>
-    </message>
-    <message>
-        <source>Plugins to support various third-party libraries.</source>
-        <translation>Extensions pour supporter différentes librairies externes.</translation>
-    </message>
-    <message>
-        <source>Plugins to access various third-party libraries.</source>
-        <translation>Extensions pour accéder différentes librairies externes.</translation>
-    </message>
-    <message>
-        <source>Plugins to access various tools.</source>
-        <translation>Extensions pour accéder différents outils.</translation>
-    </message>
-    <message>
-        <source>Plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
-        <translation>Extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
-    </message>
-    <message>
-        <source>No Internet connection available.</source>
-        <translation>Aucune connexion Internet disponible.</translation>
-    </message>
-    <message>
-        <source>Copyright</source>
-        <translation>Tous droits réservés</translation>
-    </message>
-    <message>
         <source>B</source>
         <translation>o</translation>
     </message>
@@ -483,18 +371,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>&apos;%1&apos; could not be opened.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be created.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
-    </message>
-    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
@@ -513,22 +389,6 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation>Ouvrir Fichier</translation>
-    </message>
-    <message>
-        <source>Open Remote File</source>
-        <translation>Ouvrir Fichier À Distance</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
 </context>
 </TS>
