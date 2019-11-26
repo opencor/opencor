@@ -16,16 +16,16 @@ QString openFile(const QString &pFileName, const File::Type &pType,
 
         if (pShowWarning && mainWindow()->isVisible()) {
             warningMessageBox(pUrl.isEmpty()?
-                                  tr("Open File"):
-                                  tr("Open Remote File"),
-                              tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
-                                                                                     QDir::toNativeSeparators(pFileName):
-                                                                                     pFileName));
+                                  QObject::tr("Open File"):
+                                  QObject::tr("Open Remote File"),
+                              QObject::tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
+                                                                                              QDir::toNativeSeparators(pFileName):
+                                                                                              pFileName));
         }
 
-        return tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
-                                                       QDir::toNativeSeparators(pFileName):
-                                                       pFileName);
+        return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
+                                                                QDir::toNativeSeparators(pFileName):
+                                                                pFileName);
     }
 #endif
 

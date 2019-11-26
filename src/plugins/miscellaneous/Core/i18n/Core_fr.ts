@@ -2,25 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::Core</name>
-    <message>
-        <source>Open File</source>
-        <translation>Ouvrir Fichier</translation>
-    </message>
-    <message>
-        <source>Open Remote File</source>
-        <translation>Ouvrir Fichier À Distance</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::Core::CentralWidget</name>
     <message>
         <source>Editing</source>
@@ -61,18 +42,6 @@
     <message>
         <source>Open</source>
         <translation>Ouvrir</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be created.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
     <message>
         <source>File Modified</source>
@@ -544,6 +513,22 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>Ouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>Open Remote File</source>
+        <translation>Ouvrir Fichier À Distance</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
 </context>
 </TS>
