@@ -1263,8 +1263,6 @@ endif()
 
 # Package OpenCOR
 
-set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${CMAKE_PROJECT_NAME})
-
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
@@ -1414,6 +1412,8 @@ if(WIN32)
     endif()
 elseif(APPLE)
     # Select productbuild and ZIP as the packagers on macOS
+
+    set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${CMAKE_PROJECT_NAME})
 
     set(CPACK_GENERATOR productbuild ZIP)
     set(CPACK_SYSTEM_NAME "macOS")
