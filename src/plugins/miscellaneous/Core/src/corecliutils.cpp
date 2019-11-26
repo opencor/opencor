@@ -574,21 +574,7 @@ void doNothing(const quint64 *pMax, const bool *pStopped)
 
 //==============================================================================
 
-QString openFile(const QString &pFileName, const File::Type &pType,
-                 const QString &pUrl)
-{
-    // Register the file with our file manager and get its status
-
-    FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
-
-    if (fileStatus == FileManager::Status::DoesNotExist) {
-        return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
-                                                                QDir::toNativeSeparators(pFileName):
-                                                                pFileName);
-    }
-
-    return {};
-}
+#include "openfile.cpp.inl"
 
 //==============================================================================
 

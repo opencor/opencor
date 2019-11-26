@@ -751,80 +751,9 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
 //==============================================================================
 
-QString CentralWidget::openFile(const QString &pFileName, File::Type pType,
-                                const QString &pUrl, bool pShowWarning)
-{
-    // Make sure that modes are available and that the file exists
-
-    if ((mModeTabs->count() == 0) || !QFile::exists(pFileName)) {
-        // Let the user know about us not being able to open the file, but only
-        // if we are not starting OpenCOR, i.e. only if our main window is
-        // visible
-
-        if (pShowWarning && mainWindow()->isVisible()) {
-            warningMessageBox(pUrl.isEmpty()?
-                                  tr("Open File"):
-                                  tr("Open Remote File"),
-                              tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
-                                                                                     QDir::toNativeSeparators(pFileName):
-                                                                                     pFileName));
-        }
-
-        return tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
-                                                       QDir::toNativeSeparators(pFileName):
-                                                       pFileName);
-    }
-
-    // Check whether the file is already opened and, if so, select it and leave
-
-    QString fileName = canonicalFileName(pFileName);
-
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
-        if (mFileNames[i] == fileName) {
-            setTabBarCurrentIndex(mFileTabs, i);
-
-            return {};
-        }
-    }
-
-    // Register the file with our file manager
-
-    FileManager::instance()->manage(fileName, pType, pUrl);
-
-    // Create a new tab, insert it just after the current tab, set the full name
-    // of the file as the tool tip for the new tab, and make the new tab the
-    // current one
-    // Note #1: mFileNames is, for example, used to retrieve the name of a file,
-    //          which we want to close (see closeFile()), so we must make sure
-    //          that the order of its contents matches that of the tabs...
-    // Note #2: rather than using mFileNames, we could have used a tab's tool
-    //          tip, but this makes it a bit tricky to handle with regards to
-    //          connections and therefore with regards to some events triggering
-    //          updateGui() to be called when the tool tip has not yet been
-    //          assigned...
-
-    int fileTabIndex = mFileTabs->currentIndex()+1;
-
-    mFileNames.insert(fileTabIndex, fileName);
-    mFileTabs->insertTab(fileTabIndex, QString());
-
-    updateFileTab(fileTabIndex);
-
-    setTabBarCurrentIndex(mFileTabs, fileTabIndex);
-
-    // Everything went fine, so let our plugins know that our file has been
-    // opened
-    // Note: this requires using mLoadedFileHandlingPlugins, but it will not be
-    //       set when we come here following OpenCOR's loading of settings,
-    //       hence we do something similar to what is done in
-    //       settingsLoaded()...
-
-    for (auto plugin : mLoadedFileHandlingPlugins) {
-        qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
-    }
-
-    return {};
-}
+#define GUI_SUPPORT
+    #include "openfile.cpp.inl"
+#undef GUI_SUPPORT
 
 //==============================================================================
 
