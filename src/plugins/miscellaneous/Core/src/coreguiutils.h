@@ -64,7 +64,7 @@ class CentralWidget;
 
 //==============================================================================
 
-#include "coreguiutils.h.inl"
+#include "guiutils.h.inl"
 
 //==============================================================================
 // Note: both guiutils.h and coreguiutils.h must specifically define
