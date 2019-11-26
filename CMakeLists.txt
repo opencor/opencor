@@ -635,13 +635,6 @@ set(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
 configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
 configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in ${I18N_QRC_FILENAME})
 
-# The Python interface depends on Python headers, so we only include it if we
-# are using the prebuilt version of our Python and QtWebKit packages
-
-if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
-    set(PYTHON_INTERFACE_FILENAME src/plugins/pythoninterface.cpp)
-endif()
-
 # Files that make up the GUI version of OpenCOR
 
 set(SOURCES
@@ -670,7 +663,7 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-    ${PYTHON_INTERFACE_FILENAME}
+    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -708,7 +701,7 @@ if(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
-        ${PYTHON_INTERFACE_FILENAME}
+        src/plugins/pythoninterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
