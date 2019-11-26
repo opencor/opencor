@@ -1,14 +1,6 @@
 Jupyter
 =======
 
-Starting Jupyter Notebook
--------------------------
-
-::
-
-    ./jupyter.sh notebook --notebook-dir=NOTEBOOK_DIRECTORY
-
-
 Debugging
 ---------
 
