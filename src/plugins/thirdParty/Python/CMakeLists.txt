@@ -79,6 +79,12 @@ endif()
 
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
+# Make sure that our package's binaries directory exists
+# Note: indeed, this is needed to prevent issues when building Python on
+#       Windows...
+
+file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
+
 # Specify the package's files
 
 set(EXTERNAL_BINARIES
