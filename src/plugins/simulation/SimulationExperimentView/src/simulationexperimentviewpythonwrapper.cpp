@@ -109,50 +109,9 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
 //==============================================================================
 
-static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
-{
-    Q_UNUSED(pSelf)
-
-    // Open a simulation
-
-    PyObject *bytes;
-
-    if (PyArg_ParseTuple(pArgs, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
-#include "pythonbegin.h"
-        Py_RETURN_NONE;
-#include "pythonend.h"
-    }
-
-    char *string;
-    Py_ssize_t len;
-
-    PyBytes_AsStringAndSize(bytes, &string, &len);
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    Core::checkFileNameOrUrl(QString::fromUtf8(string, int(len)), isLocalFile, fileNameOrUrl);
-
-#include "pythonbegin.h"
-    Py_DECREF(bytes);
-#include "pythonend.h"
-
-    QString error = isLocalFile?
-                        Core::centralWidget()->openFile(fileNameOrUrl,
-                                                        Core::File::Type::Local,
-                                                        QString(), false):
-                        Core::centralWidget()->openRemoteFile(fileNameOrUrl, false);
-
-    if (!error.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(error));
-
-        return nullptr;
-    }
-
-    return initializeSimulation(isLocalFile?
-                                    fileNameOrUrl:
-                                    Core::FileManager::instance()->fileName(fileNameOrUrl));
-}
+#define GUI_SUPPORT
+    #include "opensimulation.cpp.inl"
+#undef GUI_SUPPORT
 
 //==============================================================================
 
