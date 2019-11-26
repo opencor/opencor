@@ -57,5 +57,9 @@
         <source>The requested solver (%1) could not be found.</source>
         <translation>Le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
     </message>
+    <message>
+        <source>unable to close the simulation</source>
+        <translation>incapable de fermer la simulation</translation>
+    </message>
 </context>
 </TS>

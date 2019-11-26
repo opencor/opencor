@@ -663,5 +663,9 @@
         <source>unable to get the simulation&apos;s runtime</source>
         <translation>incapable d&apos;obtenir le modèle d&apos;exécution de la simulation</translation>
     </message>
+    <message>
+        <source>unable to close the simulation</source>
+        <translation>incapable de fermer la simulation</translation>
+    </message>
 </context>
 </TS>
