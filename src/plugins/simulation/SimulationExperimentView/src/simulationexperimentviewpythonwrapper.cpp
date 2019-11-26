@@ -115,35 +115,9 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
 //==============================================================================
 
-static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
-{
-    Q_UNUSED(pSelf)
-
-    // Close a simulation
-
-    if (PyTuple_Size(pArgs) > 0) {
-#include "pythonbegin.h"
-        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(pArgs, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-#include "pythonend.h"
-
-        if (wrappedSimulation != nullptr) {
-            // Close the simulation by closing its file, raising an exception if
-            // we were unable to do so
-
-            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
-
-            if (!Core::centralWidget()->closeFile(simulation->fileName())) {
-                PyErr_SetString(PyExc_IOError, qPrintable(QObject::tr("unable to close the simulation")));
-
-                return nullptr;
-            }
-        }
-    }
-
-#include "pythonbegin.h"
-    Py_RETURN_NONE;
-#include "pythonend.h"
-}
+#define GUI_SUPPORT
+    #include "closesimulation.cpp.inl"
+#undef GUI_SUPPORT
 
 //==============================================================================
 
