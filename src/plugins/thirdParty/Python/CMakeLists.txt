@@ -79,6 +79,14 @@ endif()
 
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
+# Make sure that our package's binaries directory exists
+# Note: indeed, this is needed to prevent issues when building Python on
+#       Windows...
+
+file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
+
+# Specify the package's files
+
 set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
@@ -96,8 +104,33 @@ if(WIN32)
     )
 endif()
 
+# Do a few things that are specific to Windows and Linux
+
 if(NOT APPLE)
-    # On Windows and Linux, we bundle SQLite3 with Python
+    # Build bzip2
+    # Note: bzip2 is provided by macOS...
+
+    set(BZIP2_VERSION "1.0.8")
+
+    # Statically link bzip2 on Windows while bundle it on Linux
+
+    if(WIN32)
+        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
+    else()
+        set(BZIP2_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}bz2${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${BZIP2_SHARED_LIBRARY}
+        )
+
+        list(APPEND SHA1_FILES
+            ${LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+        )
+
+        set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
+    endif()
+
+    # Bundle SQLite3 with Python
     # Note: it is statically linked on macOS...
 
     set(SQLITE3_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sqlite3${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -152,24 +185,24 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fc50d6901d87149b237af83efa8b2fa042eda032
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c42fd1f8b7b6b353050f26c7f7bf4c8837feb94e
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9b7803f35877d2681dd5806e2d13c451ada9d212
-                                              784d61ed950a2fa6aeb279e859e28bef1f26dbd3
+                                  SHA1_VALUES b91fa989e51c4fd707cd47a2892352dccffb4547
+                                              83015dd7093c524670eed86ea1c2001ab09068df
                                               599a6df061280855fad67d7c775c242345b0bb2d
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              9589b104a635caccd0aa30920ac78bad73e73b2b)
+                                              62c54e5ddfeb5992696b973f88915958d3eb0c49)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d50f6daed2740843159cd50c8eee85c87e54c9e7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 114569320cbde211238ac64030b558057869544e
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 123efc2f296ec6decb611cce3b79f3ecc37bc5f4
-                                              4a1087f36f95e89350f59cbf4a7abfdf1273e1e4
+                                  SHA1_VALUES 64adb27b2f362b14174eb6e661badce125214f6d
+                                              5d1eea99cf91fd272b0cd952a5d0c0bdc967e287
                                               7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              5aad26e650203999769c1a06ed7ee3b0c5f836f3)
+                                              eaa161d1c56423bd41b37258da196946d0f0c4e4)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -180,11 +213,12 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                           40af4e4c511a9a3a4b6a47446505c1fb60881d59)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1cba87d6b63612d68220b99e700129b58ec9c69d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8a32d24a1275a1bbaf2cef7811f6cd5a21b370bf
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 64a4e7209f41144c49809e53d9b2a51b27e69b12
-                                          6338b2c1af385ee874996e3ab60ed06b1004f3b7
+                              SHA1_VALUES 06aec6cd236cefb7206f1f6f43fa6220e398adff
+                                          dad9acba5c825edab5af6e825ae1715d0842e825
+                                          57534423f92eb3a881b8dc781efb6857cc257874
                                           561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
@@ -196,6 +230,59 @@ else()
     else()
         set(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
+    endif()
+
+    if(APPLE)
+        # macOS provides bzip2
+
+        find_package(BZip2 REQUIRED)
+    else()
+        # Build bzip2 for Windows and Linux
+
+        set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-opencor-${BZIP2_VERSION})
+
+        if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/bzlib.h)
+            set(BZIP2_SOURCE_ARCHIVE bzip2-${BZIP2_VERSION}.tar.gz)
+
+            message("Downloading '${BZIP2_SOURCE_ARCHIVE}'...")
+
+            file(DOWNLOAD https://github.com/opencor/bzip2/archive/opencor-${BZIP2_VERSION}.tar.gz ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCE_ARCHIVE}
+                 SHOW_PROGRESS)
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCE_ARCHIVE}
+                            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                            OUTPUT_QUIET)
+
+            message("Building '${BZIP2_LIBRARY}'...")
+
+            if(WIN32)
+                execute_process(COMMAND nmake -f makefile.msc lib
+                                WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
+                                OUTPUT_QUIET)
+            else()
+                execute_process(COMMAND make -f Makefile-libbz2_so
+                                WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
+                                OUTPUT_QUIET)
+
+                # Rename bzip2's library and copy it to the plugin's external
+                # binaries directory
+
+                file(RENAME ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY}
+                            ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY})
+
+                file(COPY ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+                     DESTINATION ${EXTERNAL_BINARIES_DIR}
+                     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+            endif()
+        endif()
+
+        set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
+
+        if(WIN32)
+            set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+        else()
+            set(BZIP2_LIBRARIES ${EXTERNAL_BINARIES_DIR}/${BZIP2_SHARED_LIBRARY})
+        endif()
     endif()
 
     # Jupyter and IPython require SQLite3
@@ -257,8 +344,6 @@ else()
     if(NOT APPLE)
         # Copy SQLite3's library to the plugin's external binaries directory
 
-        file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
-
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
@@ -301,6 +386,8 @@ else()
         CMAKE_ARGS
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}
 
@@ -337,7 +424,7 @@ else()
 
             -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
 
-            # Disable extension modules that we don't use or the platform
+            # Disable extension modules that we don't use or that the platform
             # doesn't provide
 
             -DENABLE_BSDDB=OFF
@@ -353,6 +440,12 @@ else()
             # Build with an appropriate readline
 
             ${PYTHON_READLINE_OPTION}
+
+            # Link to the bzip2 library
+
+            -DUSE_SYSTEM_BZip2=OFF
+            -DBZIP2_INCLUDE_DIR=${BZIP2_INCLUDE_DIR}
+            -DBZIP2_LIBRARIES=${BZIP2_LIBRARIES}
 
             # Use our OpenSSL
 
