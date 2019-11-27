@@ -33,12 +33,12 @@ QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameter
 
     if (solverInterface == nullptr) {
 #ifdef GUI_SUPPORT
-        simulationError(QObject::tr("the requested solver (%1) could not be found").arg(pKisaoId),
+        simulationError(QObject::tr("the requested solver (%1) could not be found.").arg(pKisaoId),
                         Error::InvalidSimulationEnvironment);
 
         return false;
 #else
-        return QObject::tr("the requested solver (%1) could not be found").arg(pKisaoId);
+        return QObject::tr("the requested solver (%1) could not be found.").arg(pKisaoId);
 #endif
     }
 
@@ -103,7 +103,7 @@ QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameter
         }
 
         if (!propertySet) {
-            simulationError(QObject::tr("the requested solver property (%1) could not be set").arg(parameterKisaoId),
+            simulationError(QObject::tr("the requested solver property (%1) could not be set.").arg(parameterKisaoId),
                             Error::InvalidSimulationEnvironment);
 
             return false;

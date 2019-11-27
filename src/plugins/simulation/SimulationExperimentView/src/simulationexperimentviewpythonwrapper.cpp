@@ -50,10 +50,26 @@ static PyObject * simulation(const QString &pFileName,
     SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);
 
     if (simulation != nullptr) {
-        if (simulation->runtime() == nullptr) {
-            // The simulation is missing a runtime, so raise a Python exception
+        // Check if something is wrong with our simulation and, if so, raise a
+        // Python exception
+        // Note: there may be several issues, but only the first one needs to be
+        //       raised since Python obviously gives control back to the user as
+        //       soon as an exception is raised...
 
-            PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("unable to get the simulation's runtime")));
+        SimulationSupport::SimulationIssues simulationIssues = simulation->issues();
+
+        if (!simulationIssues.isEmpty()) {
+            auto simulationIssue = simulationIssues.first();
+
+            if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
+                PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("[%1:%2] %3: %4.").arg(simulationIssue.line())
+                                                                                           .arg(simulationIssue.column())
+                                                                                           .arg(simulationIssue.typeAsString(),
+                                                                                                Core::formatMessage(simulationIssue.message().toHtmlEscaped()))));
+            } else {
+                PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("%1: %2.").arg(simulationIssue.typeAsString(),
+                                                                                        Core::formatMessage(simulationIssue.message().toHtmlEscaped()))));
+            }
 
             return nullptr;
         }

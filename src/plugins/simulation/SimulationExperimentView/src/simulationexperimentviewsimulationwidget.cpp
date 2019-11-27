@@ -651,7 +651,7 @@ void SimulationExperimentViewSimulationWidget::changeEvent(QEvent *pEvent)
     // update our output widget while keeping its scrollbars, if any, still at
     // the same position
 
-    if (isVisible() && (pEvent->type() == QEvent::EnabledChange)) {
+    if (pEvent->type() == QEvent::EnabledChange) {
         int horizontalSliderPosition = mOutputWidget->horizontalScrollBar()->sliderPosition();
         int verticalSliderPosition = mOutputWidget->verticalScrollBar()->sliderPosition();
 
@@ -862,9 +862,9 @@ void SimulationExperimentViewSimulationWidget::updateInvalidModelMessageWidget()
 //==============================================================================
 
 static const char *OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
-static const char *OutputGood = R"( class="good")";
-static const char *OutputInfo = R"( class="info")";
-static const char *OutputBad  = R"( class="bad")";
+static const char *OutputGood = R"(class="good")";
+static const char *OutputInfo = R"(class="info")";
+static const char *OutputBad  = R"(class="bad")";
 static const char *OutputBrLn = "<br/>\n";
 
 //==============================================================================
@@ -890,8 +890,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     //       CellML file)...
 
     mContentsWidget->setUpdatesEnabled(false);
-        // Stop keeping track of certain things (so that updatePlot() doesn't
-        // get called unnecessarily)
+        // Stop tracking certain things (so that updatePlot() doesn't get called
+        // unnecessarily)
         // Note: see the corresponding code towards the end of this method...
 
         SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
@@ -902,7 +902,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         // Reset our progress
 
-        mProgress = 0;
+        mProgress = -1;
 
         // Clean up our output, if needed
 
@@ -932,8 +932,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 // A VOI could be retrieved for our CellML file, so we can also
                 // output the model type
 
-                information +=  QString()+"<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
-                               +QString(QString()+OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
+                information +=  QString()+"<span "+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
+                               +QString(QString()+OutputTab+"<strong>"+tr("Model type:")+"</strong> <span "+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
             } else {
                 // We couldn't retrieve a VOI, which means that we either don't
                 // have a runtime or we have one, but it's not valid or it's
@@ -946,7 +946,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
                 updateInvalidModelMessageWidget();
 
-                information += QString()+"<span"+OutputBad+">"+((runtime != nullptr)?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+                information += QString()+"<span "+OutputBad+">"+((runtime != nullptr)?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
             }
         }
 
@@ -956,13 +956,19 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
             for (const auto &simulationIssue : simulationIssues) {
                 if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(simulationIssue.line())
-                                                                                                                                      .arg(simulationIssue.column())
-                                                                                                                                      .arg(tr("%1:").arg(simulationIssue.typeAsString()),
-                                                                                                                                           Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
+                    information +=  OutputTab
+                                   +tr("<span %1><strong>[%2:%3] %4:</strong> %5.</span>").arg(OutputBad)
+                                                                                          .arg(simulationIssue.line())
+                                                                                          .arg(simulationIssue.column())
+                                                                                          .arg(simulationIssue.typeAsString(),
+                                                                                               Core::formatMessage(simulationIssue.message().toHtmlEscaped()))
+                                   +OutputBrLn;
                 } else {
-                    information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(tr("%1:").arg(simulationIssue.typeAsString()),
-                                                                                                                                   Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
+                    information +=  OutputTab
+                                   +tr("<span %1><strong>%2:</strong> %3.</span>").arg(OutputBad,
+                                                                                       simulationIssue.typeAsString(),
+                                                                                       Core::formatMessage(simulationIssue.message().toHtmlEscaped()))
+                                   +OutputBrLn;
                 }
             }
         }
@@ -2993,7 +2999,7 @@ void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTim
             solversInformation += "+"+mSimulation->data()->nlaSolverName();
         }
 
-        output(QString(QString()+OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 using %2").arg(Core::formatTime(pElapsedTime),
+        output(QString(QString()+OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span "+OutputInfo+">"+tr("%1 using %2").arg(Core::formatTime(pElapsedTime),
                                                                                                                                     solversInformation)+"</span>."+OutputBrLn));
     }
 
@@ -3003,9 +3009,11 @@ void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTim
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
-    // Stop keeping track of our simulation progress
+    // Stop tracking our simulation progress and reset our file tab icon
 
     mProgress = -1;
+
+    resetFileTabIcon();
 }
 
 //==============================================================================
@@ -3021,8 +3029,7 @@ void SimulationExperimentViewSimulationWidget::resetProgressBar()
 
 void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 {
-    // Stop tracking our simulation progress and let people know that our file
-    // tab icon should be reset
+    // Let people know that our file tab icon should be reset
 
     static const QIcon NoIcon = QIcon();
 
@@ -3064,7 +3071,7 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
     updateInvalidModelMessageWidget();
 
-    output(QString()+OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
+    output(QString()+OutputTab+"<span "+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
 }
 
 //==============================================================================
@@ -3770,7 +3777,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // Note: tabBarPixmapSize()-2 because we want a one-pixel wide
             //       border...
 
-            if ((newProgress != mProgress) && (mProgress != -1)) {
+            if ((newProgress != mProgress)) {
                 // The progress has changed, so keep track of its new value and
                 // update our file tab icon
 

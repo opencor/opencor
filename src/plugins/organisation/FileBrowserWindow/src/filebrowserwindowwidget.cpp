@@ -346,8 +346,8 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
     // Go to the previous/next item and move the last item from our list of
     // items to our list of other items
 
-    // First, we must stop keeping track of the change of item otherwise it's
-    // going to mess things up
+    // First, we must stop tracking the change of item otherwise it's going to
+    // mess things up
 
     disconnect(selectionModel(), &QItemSelectionModel::currentChanged,
                this, &FileBrowserWindowWidget::itemChanged);
