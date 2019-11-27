@@ -648,10 +648,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>unable to get the simulation&apos;s runtime.</source>
-        <translation>incapable d&apos;obtenir le modèle d&apos;exécution de la simulation.</translation>
-    </message>
-    <message>
         <source>unable to close the simulation.</source>
         <translation>incapable de fermer la simulation.</translation>
     </message>
@@ -670,6 +666,14 @@
     <message>
         <source>the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).</source>
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée).</translation>
+    </message>
+    <message>
+        <source>[%1:%2] %3: %4.</source>
+        <translation type="unfinished">[%1:%2] %3 : %4.</translation>
+    </message>
+    <message>
+        <source>%1: %2.</source>
+        <translation type="unfinished">%1 : %2.</translation>
     </message>
 </context>
 </TS>
