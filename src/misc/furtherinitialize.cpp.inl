@@ -117,7 +117,7 @@ QString Simulation::furtherInitialize() const
                             }
 
                             if (!propertySet) {
-                                simulationError(QObject::tr("the requested solver property (%1) could not be set").arg(id),
+                                simulationError(QObject::tr("the requested solver property (%1) could not be set.").arg(id),
                                                 Error::InvalidSimulationEnvironment);
 
                                 return false;
@@ -133,7 +133,7 @@ QString Simulation::furtherInitialize() const
                 }
 #ifdef GUI_SUPPORT
 
-                simulationError(QObject::tr("the requested solver (%1) could not be found").arg(nlaSolverName),
+                simulationError(QObject::tr("the requested solver (%1) could not be found.").arg(nlaSolverName),
                                 Error::InvalidSimulationEnvironment);
 
                 return false;
@@ -143,7 +143,7 @@ QString Simulation::furtherInitialize() const
 #ifndef GUI_SUPPORT
 
         if (mustHaveNlaSolver && !hasNlaSolver) {
-            return QObject::tr("the requested solver (%1) could not be found").arg(nlaSolverName);
+            return QObject::tr("the requested solver (%1) could not be found.").arg(nlaSolverName);
         }
 #endif
     }
@@ -360,28 +360,28 @@ QString Simulation::furtherInitialize() const
 
             if (xParameter == nullptr) {
                 if (yParameter == nullptr) {
-                    simulationError(QObject::tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()),
-                                                                                                                                                                                          xCellmlVariable,
-                                                                                                                                                                                          xCellmlComponent,
-                                                                                                                                                                                          yCellmlVariable,
-                                                                                                                                                                                          yCellmlComponent),
+                    simulationError(QObject::tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found).").arg(QString::fromStdString(sedmlCurve->getId()),
+                                                                                                                                                                                           xCellmlVariable,
+                                                                                                                                                                                           xCellmlComponent,
+                                                                                                                                                                                           yCellmlVariable,
+                                                                                                                                                                                           yCellmlComponent),
                                     Error::InvalidSimulationEnvironment);
 
                     return false;
                 }
 
-                simulationError(QObject::tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()),
-                                                                                                                                                  xCellmlVariable,
-                                                                                                                                                  xCellmlComponent),
+                simulationError(QObject::tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).").arg(QString::fromStdString(sedmlCurve->getId()),
+                                                                                                                                                   xCellmlVariable,
+                                                                                                                                                   xCellmlComponent),
                                 Error::InvalidSimulationEnvironment);
 
                 return false;
             }
 
             if (yParameter == nullptr) {
-                simulationError(QObject::tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()),
-                                                                                                                                                  yCellmlVariable,
-                                                                                                                                                  yCellmlComponent),
+                simulationError(QObject::tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).").arg(QString::fromStdString(sedmlCurve->getId()),
+                                                                                                                                                   yCellmlVariable,
+                                                                                                                                                   yCellmlComponent),
                                 Error::InvalidSimulationEnvironment);
 
                 return false;

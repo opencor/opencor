@@ -53,7 +53,7 @@ static PyObject * simulation(const QString &pFileName,
         if (simulation->runtime() == nullptr) {
             // The simulation is missing a runtime, so raise a Python exception
 
-            PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("unable to get the simulation's runtime")));
+            PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("unable to get the simulation's runtime.")));
 
             return nullptr;
         }
