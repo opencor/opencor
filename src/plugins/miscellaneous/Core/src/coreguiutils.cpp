@@ -162,6 +162,8 @@ Plugin * currentViewPlugin()
 
 QString allFilters(const QStringList &pFilters)
 {
+    // Return all the filters as a string
+
     QStringList filters = pFilters;
 
     filters.sort(Qt::CaseInsensitive);
