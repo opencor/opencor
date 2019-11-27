@@ -16,4 +16,11 @@
         <translation>Données :</translation>
     </message>
 </context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>invalid value.</source>
+        <translation>valeur invalide.</translation>
+    </message>
+</context>
 </TS>
