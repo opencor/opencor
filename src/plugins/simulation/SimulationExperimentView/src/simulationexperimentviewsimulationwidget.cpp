@@ -890,8 +890,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     //       CellML file)...
 
     mContentsWidget->setUpdatesEnabled(false);
-        // Stop keeping track of certain things (so that updatePlot() doesn't
-        // get called unnecessarily)
+        // Stop tracking certain things (so that updatePlot() doesn't get called
+        // unnecessarily)
         // Note: see the corresponding code towards the end of this method...
 
         SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
@@ -3003,7 +3003,7 @@ void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTim
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
-    // Stop keeping track of our simulation progress
+    // Stop tracking our simulation progress
 
     mProgress = -1;
 }
@@ -3021,8 +3021,7 @@ void SimulationExperimentViewSimulationWidget::resetProgressBar()
 
 void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 {
-    // Stop tracking our simulation progress and let people know that our file
-    // tab icon should be reset
+    // Let people know that our file tab icon should be reset
 
     static const QIcon NoIcon = QIcon();
 
