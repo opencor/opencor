@@ -2,8 +2,8 @@
 QString CentralWidget::openFile(const QString &pFileName, File::Type pType,
                                 const QString &pUrl, bool pShowWarning)
 #else
-QString openFile(const QString &pFileName, const File::Type &pType,
-                 const QString &pUrl)
+QString cliOpenFile(const QString &pFileName, const File::Type &pType,
+                    const QString &pUrl)
 #endif
 {
     // Make sure that modes are available and that the file exists

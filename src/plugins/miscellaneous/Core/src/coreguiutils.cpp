@@ -432,6 +432,54 @@ QString getEmptyDirectory(const QString &pCaption, const QString &pDirName)
 
 //==============================================================================
 
+QString CORE_EXPORT guiOpenFile(const QString &pFileName, File::Type pType,
+                                const QString &pUrl, bool pShowWarning)
+{
+    // Open the given file
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->openFile(pFileName, pType, pUrl, pShowWarning);
+    }
+
+    return QObject::tr("there is no central widget, so the file cannot be opened.");
+    // Note: we should never reach this point...
+}
+
+//==============================================================================
+
+QString guiOpenRemoteFile(const QString &pUrl, bool pShowWarning)
+{
+    // Open the given remote file
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->openRemoteFile(pUrl, pShowWarning);
+    }
+
+    return QObject::tr("there is no central widget, so the remote file cannot be opened.");
+    // Note: we should never reach this point...
+}
+
+//==============================================================================
+
+bool guiCloseFile(const QString &pFileName)
+{
+    // Close the given file
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->closeFile(pFileName);
+    }
+
+    return false;
+}
+
+//==============================================================================
+
 void setFocusTo(QWidget *pWidget)
 {
     // Give the focus to pWidget, but then revert the focus back to whoever had

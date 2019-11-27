@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "file.h"
 
 //==============================================================================
 
@@ -137,6 +138,15 @@ QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  bool pEmptyDir = false);
 QString CORE_EXPORT getEmptyDirectory(const QString &pCaption,
                                       const QString &pDirName = QString());
+
+QString CORE_EXPORT guiOpenFile(const QString &pFileName,
+                                File::Type pType = File::Type::Local,
+                                const QString &pUrl = QString(),
+                                bool pShowWarning = true);
+QString CORE_EXPORT guiOpenRemoteFile(const QString &pUrl,
+                                      bool pShowWarning = true);
+
+bool CORE_EXPORT guiCloseFile(const QString &pFileName);
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
