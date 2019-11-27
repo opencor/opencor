@@ -651,7 +651,7 @@ void SimulationExperimentViewSimulationWidget::changeEvent(QEvent *pEvent)
     // update our output widget while keeping its scrollbars, if any, still at
     // the same position
 
-    if (isVisible() && (pEvent->type() == QEvent::EnabledChange)) {
+    if (pEvent->type() == QEvent::EnabledChange) {
         int horizontalSliderPosition = mOutputWidget->horizontalScrollBar()->sliderPosition();
         int verticalSliderPosition = mOutputWidget->verticalScrollBar()->sliderPosition();
 
