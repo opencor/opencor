@@ -99,6 +99,7 @@ macro(update_language_files TARGET_NAME)
         if(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
             execute_process(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
                                                              -ts ${TS_FILE}
+                                                             -I ${CMAKE_SOURCE_DIR}/src/misc
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                             OUTPUT_QUIET)
             execute_process(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
