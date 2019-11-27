@@ -61,5 +61,13 @@
         <source>unable to close the simulation</source>
         <translation>incapable de fermer la simulation</translation>
     </message>
+    <message>
+        <source>the requested solver (%1) could not be found</source>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
+        <source>the requested solver property (%1) could not be set</source>
+        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
+    </message>
 </context>
 </TS>

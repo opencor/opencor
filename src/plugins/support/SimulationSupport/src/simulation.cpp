@@ -1394,38 +1394,7 @@ Simulation::~Simulation()
 
 //==============================================================================
 
-QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameters *pSedmlAlgorithmParameters,
-                                     const QString &pKisaoId) const
-{
-    // Initialise our solver using the given SED-ML algorithm parameters and
-    // KiSAO id
-
-    SolverInterface *solverInterface = nullptr;
-
-    for (auto coreSolverInterface : Core::solverInterfaces()) {
-        if (coreSolverInterface->id(pKisaoId) == coreSolverInterface->solverName()) {
-            solverInterface = coreSolverInterface;
-
-            mData->setOdeSolverName(coreSolverInterface->solverName());
-
-            break;
-        }
-    }
-
-    if (solverInterface == nullptr) {
-        return tr("the requested solver (%1) could not be found").arg(pKisaoId);
-    }
-
-    for (uint i = 0, iMax = pSedmlAlgorithmParameters->getNumAlgorithmParameters(); i < iMax; ++i) {
-        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = pSedmlAlgorithmParameters->get(i);
-        QString parameterKisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
-
-        mData->addOdeSolverProperty(solverInterface->id(parameterKisaoId),
-                                    QString::fromStdString(sedmlAlgorithmParameter->getValue()));
-    }
-
-    return {};
-}
+#include "initializesolver.cpp.inl"
 
 //==============================================================================
 
