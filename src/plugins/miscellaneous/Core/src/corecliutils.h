@@ -151,7 +151,7 @@ void CORE_EXPORT doNothing(quint64 pMax);
 void CORE_EXPORT doNothing(const quint64 *pMax, const bool *pStopped = nullptr);
 
 QString CORE_EXPORT cliOpenFile(const QString &pFileName,
-                                const File::Type &pType = File::Type::Local,
+                                File::Type pType = File::Type::Local,
                                 const QString &pUrl = QString());
 QString CORE_EXPORT cliOpenRemoteFile(const QString &pUrl);
 
