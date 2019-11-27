@@ -1401,9 +1401,8 @@ Simulation::~Simulation()
 QString Simulation::furtherInitialize() const
 {
     // Initialise ourself from a SED-ML document
-    // Note #1: this is used by our Python wrapper...
-    // Note #2: make sure that this is in relative sync with
-    //          SimulationExperimentViewSimulationWidget::furtherInitialize()...
+    // Note: make sure that this is in relative sync with
+    //       SimulationExperimentViewSimulationWidget::furtherInitialize()...
 
     libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
     auto sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
