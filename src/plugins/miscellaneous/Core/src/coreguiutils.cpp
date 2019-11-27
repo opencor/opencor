@@ -160,6 +160,21 @@ Plugin * currentViewPlugin()
 
 //==============================================================================
 
+QString currentFileName()
+{
+    // Return our current file name
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        return centralWidget->currentFileName();
+    }
+
+    return {};
+}
+
+//==============================================================================
+
 QString allFilters(const QStringList &pFilters)
 {
     // Return all the filters as a string

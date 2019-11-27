@@ -116,6 +116,8 @@ void CORE_EXPORT hideCentralBusyWidget();
 
 Plugin CORE_EXPORT * currentViewPlugin();
 
+QString CORE_EXPORT currentFileName();
+
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = nullptr);

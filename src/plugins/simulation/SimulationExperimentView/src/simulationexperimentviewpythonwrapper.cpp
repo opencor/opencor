@@ -96,7 +96,7 @@ static PyObject * simulation(PyObject *pSelf,  PyObject *pArgs)
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
 
     if (simulationExperimentViewWidget != nullptr) {
-        return simulation(Core::centralWidget()->currentFileName(), simulationExperimentViewWidget);
+        return simulation(Core::currentFileName(), simulationExperimentViewWidget);
     }
 
 #include "pythonbegin.h"
