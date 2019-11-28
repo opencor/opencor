@@ -289,7 +289,9 @@ else()
         set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
     else()
         # Find bzip2 under macOS and Linux
+
         # Note: macOS provides bzip2
+
         # Note: We assume `libbz2-dev` has been installed for Ubuntu
 
         find_package(BZip2 REQUIRED)
@@ -341,7 +343,7 @@ else()
         set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
         set(LIBLZMA_LIBRARIES /usr/local/lib/liblzma.a)
     else()
-        # Assume we have installed the `liblzma-dev` package
+        # Note: We assume `liblzma-dev` has been installed for Ubuntu
 
         find_package(LibLZMA REQUIRED)
 
@@ -393,6 +395,8 @@ else()
         set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
         set(SQLite3_LIBRARIES /usr/local/opt/sqlite3/lib/libsqlite3.a)
     else()
+        # Note: We assume `libsqlite3-dev` has been installed for Ubuntu
+
         find_package(SQLite3 REQUIRED)
 
         get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
