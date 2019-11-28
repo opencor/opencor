@@ -976,7 +976,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
 
 //==============================================================================
 
-CellmlFileRuntimeParameter *CellmlFileRuntime::voi() const
+CellmlFileRuntimeParameter * CellmlFileRuntime::voi() const
 {
     // Return our VOI, if any
 

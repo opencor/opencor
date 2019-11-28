@@ -36,36 +36,12 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
     </message>
     <message>
-        <source>Open File</source>
-        <translation>Ouvrir Fichier</translation>
-    </message>
-    <message>
         <source>Open Remote File</source>
         <translation>Ouvrir Fichier À Distance</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
-    </message>
-    <message>
         <source>Open</source>
         <translation>Ouvrir</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be created.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
     <message>
         <source>File Modified</source>
@@ -351,6 +327,98 @@
 <context>
     <name>QObject</name>
     <message>
+        <source>B</source>
+        <translation>o</translation>
+    </message>
+    <message>
+        <source>KB</source>
+        <translation>Ko</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation>Mo</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>Go</translation>
+    </message>
+    <message>
+        <source>TB</source>
+        <translation>To</translation>
+    </message>
+    <message>
+        <source>PB</source>
+        <translation>Po</translation>
+    </message>
+    <message>
+        <source>d</source>
+        <translation>j</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>s</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ms</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
+    </message>
+    <message>
+        <source>Please choose a writable directory.</source>
+        <translation>Veuillez choisir un répertoire accessible en écriture.</translation>
+    </message>
+    <message>
+        <source>Please choose an empty directory.</source>
+        <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>Ouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>Open Remote File</source>
+        <translation>Ouvrir Fichier À Distance</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be created.</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
+    </message>
+    <message>
         <source>Sample</source>
         <translation>Exemple</translation>
     </message>
@@ -463,80 +531,12 @@
         <translation>Tous droits réservés</translation>
     </message>
     <message>
-        <source>B</source>
-        <translation>o</translation>
+        <source>there is no central widget, so the file cannot be opened.</source>
+        <translation>il n&apos;y a pas de widget central, le fichier ne peut donc pas être ouvert.</translation>
     </message>
     <message>
-        <source>KB</source>
-        <translation>Ko</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation>Mo</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>Go</translation>
-    </message>
-    <message>
-        <source>TB</source>
-        <translation>To</translation>
-    </message>
-    <message>
-        <source>PB</source>
-        <translation>Po</translation>
-    </message>
-    <message>
-        <source>d</source>
-        <translation>j</translation>
-    </message>
-    <message>
-        <source>h</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>m</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>ms</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be created.</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être créé.</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
-        <translation>&apos;%1&apos; n&apos;a pas pu être ouvert (%2).</translation>
-    </message>
-    <message>
-        <source>All Files</source>
-        <translation>Tous Fichiers</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
-    </message>
-    <message>
-        <source>Please choose a writable directory.</source>
-        <translation>Veuillez choisir un répertoire accessible en écriture.</translation>
-    </message>
-    <message>
-        <source>Please choose an empty directory.</source>
-        <translation>Veuillez choisir un répertoire vide.</translation>
+        <source>there is no central widget, so the remote file cannot be opened.</source>
+        <translation>il n&apos;y a pas de widget central, le fichier à distance ne peut donc pas être ouvert.</translation>
     </message>
 </context>
 </TS>

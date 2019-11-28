@@ -400,8 +400,8 @@ if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
     if(WIN32)
         set(ICU_VERSION 57)
     elseif(NOT APPLE)
-        add_subdirectory(${PLATFORM_DISTRIB_DIR}/icu)
-        add_subdirectory(${PLATFORM_DISTRIB_DIR}/mesa)
+        add_subdirectory(src/3rdparty/linux/icu)
+        add_subdirectory(src/3rdparty/linux/mesa)
     endif()
 endif()
 
@@ -1278,8 +1278,6 @@ endif()
 
 # Package OpenCOR
 
-set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${CMAKE_PROJECT_NAME})
-
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
@@ -1429,6 +1427,8 @@ if(WIN32)
     endif()
 elseif(APPLE)
     # Select productbuild and ZIP as the packagers on macOS
+
+    set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${CMAKE_PROJECT_NAME})
 
     set(CPACK_GENERATOR productbuild ZIP)
     set(CPACK_SYSTEM_NAME "macOS")

@@ -557,10 +557,6 @@
         <translation>aucun</translation>
     </message>
     <message>
-        <source>%1:</source>
-        <translation>%1 :</translation>
-    </message>
-    <message>
         <source>the model needs both an ODE and an NLA solver, but none are available</source>
         <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
     </message>
@@ -613,22 +609,6 @@
         <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
     </message>
     <message>
-        <source>the requested solver property (%1) could not be set</source>
-        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée</translation>
-    </message>
-    <message>
-        <source>the requested solver (%1) could not be found</source>
-        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
-    </message>
-    <message>
-        <source>the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)</source>
-        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 et la variable %4 dans le composant %5 n&apos;ont pas pu être trouvées)</translation>
-    </message>
-    <message>
-        <source>the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)</source>
-        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée)</translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
@@ -656,16 +636,44 @@
         <source>Error:</source>
         <translation>Erreur :</translation>
     </message>
+    <message>
+        <source>&lt;span %1&gt;&lt;strong&gt;[%2:%3] %4:&lt;/strong&gt; %5.&lt;/span&gt;</source>
+        <translation>&lt;span %1&gt;&lt;strong&gt;[%2:%3] %4 :&lt;/strong&gt; %5.&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;span %1&gt;&lt;strong&gt;%2:&lt;/strong&gt; %3.&lt;/span&gt;</source>
+        <translation>&lt;span %1&gt;&lt;strong&gt;%2 :&lt;/strong&gt; %3.&lt;/span&gt;</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>unable to get the simulation&apos;s runtime</source>
-        <translation>incapable d&apos;obtenir le modèle d&apos;exécution de la simulation</translation>
+        <source>unable to close the simulation.</source>
+        <translation>incapable de fermer la simulation.</translation>
     </message>
     <message>
-        <source>unable to close the simulation</source>
-        <translation>incapable de fermer la simulation</translation>
+        <source>the requested solver (%1) could not be found.</source>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
+    </message>
+    <message>
+        <source>the requested solver property (%1) could not be set.</source>
+        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée.</translation>
+    </message>
+    <message>
+        <source>the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found).</source>
+        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 et la variable %4 dans le composant %5 n&apos;ont pas pu être trouvées).</translation>
+    </message>
+    <message>
+        <source>the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).</source>
+        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée).</translation>
+    </message>
+    <message>
+        <source>[%1:%2] %3: %4.</source>
+        <translation type="unfinished">[%1:%2] %3 : %4.</translation>
+    </message>
+    <message>
+        <source>%1: %2.</source>
+        <translation type="unfinished">%1 : %2.</translation>
     </message>
 </context>
 </TS>

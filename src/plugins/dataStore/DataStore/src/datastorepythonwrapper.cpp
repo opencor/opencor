@@ -129,7 +129,7 @@ static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
         return 0;
     }
 
-    PyErr_SetString(PyExc_TypeError, "Invalid value");
+    PyErr_SetString(PyExc_TypeError, qPrintable(QObject::tr("invalid value.")));
 
     return -1;
 }

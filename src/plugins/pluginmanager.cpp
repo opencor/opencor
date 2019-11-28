@@ -120,11 +120,11 @@ PluginManager::PluginManager(bool pGuiMode) :
 
         if (pluginInfo != nullptr) {
             // Keep track of the plugin itself, should it be selectable and
-            // requested by the user (if we are in GUI mode) or have CLI support
-            // (if we are in CLI mode)
+            // requested by the user (if we are in GUI mode), or have CLI
+            // support or is a solver (if we are in CLI mode)
 
             if (   ( pGuiMode && pluginInfo->isSelectable() && Plugin::load(pluginName))
-                || (!pGuiMode && pluginInfo->hasCliSupport())) {
+                || (!pGuiMode && (pluginInfo->hasCliSupport() || (pluginInfo->category() == PluginInfo::Category::Solver)))) {
                 // Keep track of the plugin's dependencies
 
                 neededPlugins << pluginsInfo.value(pluginName)->fullDependencies();
