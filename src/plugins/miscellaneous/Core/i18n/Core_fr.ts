@@ -444,7 +444,7 @@
     </message>
     <message>
         <source>Organisation</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Simulation</source>
