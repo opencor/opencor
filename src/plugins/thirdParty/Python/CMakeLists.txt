@@ -17,7 +17,7 @@ set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "opencor-3.7.5")
+set(GIT_TAG "opencor")
 
 # Specify where our local package will be installed
 
@@ -130,6 +130,23 @@ if(NOT APPLE)
         set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
     endif()
 
+    # Bundle liblzma with Python
+    # Note: it is statically linked on macOS...
+
+    if(WIN32)
+        set(LZMA_SHARED_LIBRARY liblzma${CMAKE_SHARED_LIBRARY_SUFFIX})
+    else()
+        set(LZMA_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}lzma${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif()
+
+    list(APPEND EXTERNAL_BINARIES
+        ${LZMA_SHARED_LIBRARY}
+    )
+
+    list(APPEND SHA1_FILES
+        ${LIBRARY_DIR}/${LZMA_SHARED_LIBRARY}
+    )
+
     # Bundle SQLite3 with Python
     # Note: it is statically linked on macOS...
 
@@ -144,7 +161,17 @@ if(NOT APPLE)
     )
 
     if(WIN32)
-        # On Windows, we also need the import library
+        # On Windows, we also need import libraries
+
+        set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LZMA_IMPORT_LIBRARY}
+        )
+
+        list(APPEND SHA1_FILES
+            ${LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
+        )
 
         set(SQLITE3_IMPORT_LIBRARY ${CMAKE_IMPORT_LIBRARY_PREFIX}sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
@@ -285,6 +312,55 @@ else()
         endif()
     endif()
 
+    # Find or build the lzma library
+
+    if(WIN32)
+        # Download `xz` for Windows, which includes `lzma`
+
+        set(XZ_VERSION 5.2.4)
+
+        set(XZ_PACKAGE_DIR ${PROJECT_BINARY_DIR}/xz-${XZ_VERSION})
+
+        set(LZMA_IMPORT_LIBRARY_DIR ${XZ_PACKAGE_DIR}/doc)
+        set(LZMA_LIBRARY_DIR ${XZ_PACKAGE_DIR}/bin_x86-64)
+
+        if(NOT EXISTS ${XZ_PACKAGE_DIR}/include/lzma.h)
+            set(XZ_ARCHIVE xz-${XZ_VERSION}-windows.7z)
+
+            message("Downloading '${XZ_ARCHIVE}'...")
+
+            file(DOWNLOAD https://tukaani.org/xz/${XZ_ARCHIVE} ${PROJECT_BINARY_DIR}/downloads/${XZ_ARCHIVE}
+                 SHOW_PROGRESS)
+
+            file(MAKE_DIRECTORY ${XZ_PACKAGE_DIR})
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xJf ${PROJECT_BINARY_DIR}/downloads/${XZ_ARCHIVE}
+                            WORKING_DIRECTORY ${XZ_PACKAGE_DIR}
+                            OUTPUT_QUIET)
+
+            message("Building LZMA import library...")
+
+            execute_process(COMMAND lib /verbose /def:liblzma.def /out:${LZMA_IMPORT_LIBRARY} /machine:x64
+                            WORKING_DIRECTORY ${LZMA_IMPORT_LIBRARY_DIR}
+                            OUTPUT_QUIET)
+        endif()
+
+        set(LIBLZMA_INCLUDE_DIRS ${XZ_PACKAGE_DIR}/include)
+        set(LIBLZMA_LIBRARIES ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY})
+
+    elseif(APPLE)
+        # Use Homebrew's LZMA and link with static library so we don't have to bundle it
+
+        set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
+        set(LIBLZMA_LIBRARIES /usr/local/lib/liblzma.a)
+    else()
+        # Assume we have installed the `liblzma-dev` package
+
+        find_package(LibLZMA REQUIRED)
+
+        get_filename_component(LZMA_LIBRARY_DIR ${LIBLZMA_LIBRARIES} DIRECTORY)
+    endif()
+
     # Jupyter and IPython require SQLite3
 
     if(WIN32)
@@ -342,12 +418,18 @@ else()
     endif()
 
     if(NOT APPLE)
-        # Copy SQLite3's library to the plugin's external binaries directory
+        # Copy shared libraries to the plugin's external binaries directory
+
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY}
+                                                         ${EXTERNAL_BINARIES_DIR})
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
         if(WIN32)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         endif()
@@ -445,6 +527,12 @@ else()
             -DBZIP2_INCLUDE_DIR=${BZIP2_INCLUDE_DIR}
             -DBZIP2_LIBRARIES=${BZIP2_LIBRARIES}
 
+            # Link to the LZMA library
+
+            -DUSE_SYSTEM_LZMA=OFF
+            -DLIBLZMA_INCLUDE_DIRS=${LIBLZMA_INCLUDE_DIRS}
+            -DLIBLZMA_LIBRARIES=${LIBLZMA_LIBRARIES}
+
             # Use our OpenSSL
 
             -DUSE_SYSTEM_OpenSSL=OFF
@@ -501,6 +589,7 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
