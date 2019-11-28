@@ -382,7 +382,7 @@ else()
                             OUTPUT_QUIET)
         endif()
 
-        if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite3.lib)
+        if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
             set(SQLITE3_DLL_ZIP sqlite-dll-win64-x64-${SQLITE3_VERSION}.zip)
 
             message("Downloading '${SQLITE3_DLL_ZIP}'...")
@@ -393,28 +393,22 @@ else()
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_DLL_ZIP} --format=zip
                             WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                             OUTPUT_QUIET)
-            execute_process(COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64
+            execute_process(COMMAND lib /verbose /def:sqlite3.def /out:${SQLITE3_IMPORT_LIBRARY} /machine:x64
                             WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                             OUTPUT_QUIET)
         endif()
 
-        set(SQLITE3_INCLUDE_DIR ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
+        set(SQLite3_INCLUDE_DIRS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
+        set(SQLite3_LIBRARIES ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
     elseif(APPLE)
         # Use Homebrew's SQLite3
 
-        set(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite3/include)
-        set(SQLITE3_LIBRARY_DIR /usr/local/opt/sqlite3/lib)
-
-        # Link to SQLite3's static library so we don't have to bundle it
-
-        set(SQLITE3_IMPORT_LIBRARY libsqlite3.a)
+        set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
+        set(SQLite3_LIBRARIES /usr/local/opt/sqlite3/lib/libsqlite3.a)
     else()
         find_package(SQLite3 REQUIRED)
 
-        set(SQLITE3_INCLUDE_DIR ${SQLite3_INCLUDE_DIRS})
-
         get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
-        get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLite3_LIBRARIES} NAME)
     endif()
 
     if(NOT APPLE)
@@ -488,12 +482,6 @@ else()
 
             -DINSTALL_DEVELOPMENT=ON
 
-            # Jupyter needs SQLite3
-
-            -DENABLE_SQLITE3=ON
-            -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
-            -DSQLITE3_LIBRARY=${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
-
             # Turn off things we don't want
 
             -DINSTALL_MANUAL=OFF
@@ -538,6 +526,12 @@ else()
             -DUSE_SYSTEM_OpenSSL=OFF
             -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
             -DOPENSSL_LIBRARIES=${PYTHON_OPENSSL_LIBRARIES}
+
+            # Jupyter needs SQLite3
+
+            -DENABLE_SQLITE3=ON
+            -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
+            -DSQLITE3_LIBRARY=${SQLite3_LIBRARIES}
 
             # Use our zlib
 
