@@ -530,5 +530,13 @@
         <source>Copyright</source>
         <translation>Tous droits réservés</translation>
     </message>
+    <message>
+        <source>there is no central widget, so the file cannot be opened.</source>
+        <translation>il n&apos;y a pas de widget central, le fichier ne peut donc pas être ouvert.</translation>
+    </message>
+    <message>
+        <source>there is no central widget, so the remote file cannot be opened.</source>
+        <translation>il n&apos;y a pas de widget central, le fichier à distance ne peut donc pas être ouvert.</translation>
+    </message>
 </context>
 </TS>
