@@ -259,12 +259,10 @@ else()
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
-    if(APPLE)
-        # macOS provides bzip2
+    # Find or build the bzip2 library
 
-        find_package(BZip2 REQUIRED)
-    else()
-        # Build bzip2 for Windows and Linux
+    if(WIN32)
+        # Build bzip2 for Windows
 
         set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-opencor-${BZIP2_VERSION})
 
@@ -282,33 +280,22 @@ else()
 
             message("Building '${BZIP2_LIBRARY}'...")
 
-            if(WIN32)
-                execute_process(COMMAND nmake -f makefile.msc lib
-                                WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
-                                OUTPUT_QUIET)
-            else()
-                execute_process(COMMAND make -f Makefile-libbz2_so
-                                WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
-                                OUTPUT_QUIET)
-
-                # Rename bzip2's library and copy it to the plugin's external
-                # binaries directory
-
-                file(RENAME ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY}
-                            ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY})
-
-                file(COPY ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
-                     DESTINATION ${EXTERNAL_BINARIES_DIR}
-                     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
-            endif()
+            execute_process(COMMAND nmake -f makefile.msc lib
+                            WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
+                            OUTPUT_QUIET)
         endif()
 
         set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
+        set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+    else()
+        # Find bzip2 under macOS and Linux
+        # Note: macOS provides bzip2
+        # Note: We assume `libbz2-dev` has been installed for Ubuntu
 
-        if(WIN32)
-            set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
-        else()
-            set(BZIP2_LIBRARIES ${EXTERNAL_BINARIES_DIR}/${BZIP2_SHARED_LIBRARY})
+        find_package(BZip2 REQUIRED)
+
+        if(NOT APPLE)
+            get_filename_component(BZIP2_LIBRARY_DIR ${BZIP2_LIBRARIES} DIRECTORY)
         endif()
     endif()
 
@@ -420,7 +407,14 @@ else()
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
-        if(WIN32)
+        if(UNIX)
+            # We also need to copy bzip2 library for Unix
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+        else()
+            # We also need import libraries for Windows
+
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
 
