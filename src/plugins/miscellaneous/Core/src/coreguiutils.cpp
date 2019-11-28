@@ -160,8 +160,25 @@ Plugin * currentViewPlugin()
 
 //==============================================================================
 
+QString currentFileName()
+{
+    // Return our current file name
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        return centralWidget->currentFileName();
+    }
+
+    return {};
+}
+
+//==============================================================================
+
 QString allFilters(const QStringList &pFilters)
 {
+    // Return all the filters as a string
+
     QStringList filters = pFilters;
 
     filters.sort(Qt::CaseInsensitive);
@@ -411,6 +428,54 @@ QString getEmptyDirectory(const QString &pCaption, const QString &pDirName)
     // Retrieve and return the name of an empty directory
 
     return getDirectory(pCaption, pDirName, true);
+}
+
+//==============================================================================
+
+QString CORE_EXPORT guiOpenFile(const QString &pFileName, File::Type pType,
+                                const QString &pUrl, bool pShowWarning)
+{
+    // Open the given file
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->openFile(pFileName, pType, pUrl, pShowWarning);
+    }
+
+    return QObject::tr("there is no central widget, so the file cannot be opened.");
+    // Note: we should never reach this point...
+}
+
+//==============================================================================
+
+QString guiOpenRemoteFile(const QString &pUrl, bool pShowWarning)
+{
+    // Open the given remote file
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->openRemoteFile(pUrl, pShowWarning);
+    }
+
+    return QObject::tr("there is no central widget, so the remote file cannot be opened.");
+    // Note: we should never reach this point...
+}
+
+//==============================================================================
+
+bool guiCloseFile(const QString &pFileName)
+{
+    // Close the given file
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->closeFile(pFileName);
+    }
+
+    return false;
 }
 
 //==============================================================================

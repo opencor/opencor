@@ -150,10 +150,10 @@ bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 void CORE_EXPORT doNothing(quint64 pMax);
 void CORE_EXPORT doNothing(const quint64 *pMax, const bool *pStopped = nullptr);
 
-QString CORE_EXPORT openFile(const QString &pFileName,
-                             const File::Type &pType = File::Type::Local,
-                             const QString &pUrl = QString());
-QString CORE_EXPORT openRemoteFile(const QString &pUrl);
+QString CORE_EXPORT cliOpenFile(const QString &pFileName,
+                                File::Type pType = File::Type::Local,
+                                const QString &pUrl = QString());
+QString CORE_EXPORT cliOpenRemoteFile(const QString &pUrl);
 
 QString CORE_EXPORT formatXml(const QString &pXml);
 

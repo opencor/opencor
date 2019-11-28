@@ -1,7 +1,7 @@
 #ifdef GUI_SUPPORT
 QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 #else
-QString openRemoteFile(const QString &pUrl)
+QString cliOpenRemoteFile(const QString &pUrl)
 #endif
 {
     // Make sure that pUrl really refers to a remote file
@@ -21,7 +21,7 @@ QString openRemoteFile(const QString &pUrl)
 #ifdef GUI_SUPPORT
         return openFile(fileNameOrUrl, File::Type::Local, QString(), pShowWarning);
 #else
-        return openFile(fileNameOrUrl);
+        return cliOpenFile(fileNameOrUrl);
 #endif
     }
 
@@ -106,6 +106,6 @@ QString openRemoteFile(const QString &pUrl)
 #ifdef GUI_SUPPORT
     return openFile(fileName, File::Type::Remote, fileNameOrUrl, pShowWarning);
 #else
-    return openFile(fileName, File::Type::Remote, fileNameOrUrl);
+    return cliOpenFile(fileName, File::Type::Remote, fileNameOrUrl);
 #endif
 }
