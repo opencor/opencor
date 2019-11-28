@@ -650,8 +650,18 @@ void SimulationExperimentViewSimulationWidget::changeEvent(QEvent *pEvent)
     // Check whether we are becoming enabled/disabled, in which case we want to
     // update our output widget while keeping its scrollbars, if any, still at
     // the same position
+    // Note: we used to do this only when we were visible, but in some cases
+    //       (e.g. when running a simulation from our Python console) this may
+    //       result in our output widget not being re-enabled. So, now, we
+    //       want to update our output widget even when it's not visible.
+    //       However, to be able to do so, we must have been visible at least
+    //       once, hence our use of mCanHandleChangeEvent...
 
-    if (pEvent->type() == QEvent::EnabledChange) {
+    if (isVisible()) {
+        mCanHandleChangeEvent = true;
+    }
+
+    if (mCanHandleChangeEvent && (pEvent->type() == QEvent::EnabledChange)) {
         int horizontalSliderPosition = mOutputWidget->horizontalScrollBar()->sliderPosition();
         int verticalSliderPosition = mOutputWidget->verticalScrollBar()->sliderPosition();
 

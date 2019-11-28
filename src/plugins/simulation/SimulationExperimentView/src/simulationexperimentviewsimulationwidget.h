@@ -239,6 +239,8 @@ private:
 
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
+    bool mCanHandleChangeEvent = false;
+
     QTextEdit *mOutputWidget;
     QString mOutputMessage;
 
