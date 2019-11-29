@@ -40,6 +40,7 @@ private:
 private slots:
     void initTestCase();
 
+    void formatMessage();
     void sizeAsStringTests();
     void formatTimeTests();
     void sha1Tests();
