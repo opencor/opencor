@@ -392,13 +392,13 @@ QString formatMessage(const QString &pMessage, bool pLowerCase, bool pDotDotDot)
     // Return the message after making sure that it ends with "...", if
     // requested
 
-    int subsize = message.size();
+    int subSize = message.size();
 
-    while ((subsize != 0) && (message[subsize-1] == '.')) {
-        --subsize;
+    while ((subSize != 0) && (message[subSize-1] == '.')) {
+        --subSize;
     }
 
-    return message.left(subsize)+(pDotDotDot?DotDotDot:QString());
+    return message.left(subSize)+(pDotDotDot?DotDotDot:QString());
 }
 
 //==============================================================================
