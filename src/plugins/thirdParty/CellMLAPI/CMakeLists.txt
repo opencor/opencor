@@ -243,7 +243,7 @@ else()
         set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
         set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577")
     elseif(NOT APPLE)
-        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-deprecated -Wno-misleading-indentation -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
     endif()
 
     # Build the CellML API as an external project
