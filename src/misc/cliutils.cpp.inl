@@ -377,11 +377,14 @@ QString formatMessage(const QString &pMessage, bool pLowerCase, bool pDotDotDot)
         return pDotDotDot?DotDotDot:QString();
     }
 
-    // Upper/lower the case of the first character, unless the message is one
-    // character long (!!) or unless its second character is in lower case
+    // Upper/lower the case of the first character if:
+    //  - the message is one character long (!!), or its second character is in
+    //    lower case or of space type; and
+    //  - it doesn't start with CellML
 
-    if (    (message.size() <= 1)
-        || ((message.size() > 1) && message[1].isLower())) {
+    if (    (    (message.size() == 1)
+             || ((message.size() > 1) && (message[1].isLower() || message[1].isSpace())))
+        && !message.startsWith("CellML")) {
         if (pLowerCase) {
             message[0] = message[0].toLower();
         } else {
