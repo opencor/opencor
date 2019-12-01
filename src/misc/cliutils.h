@@ -48,7 +48,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto HomePageUrl = QStringLiteral("http://www.opencor.ws/");
+static const auto HomePageUrl = QStringLiteral("https://opencor.ws/");
 
 //==============================================================================
 // Note: both cliutils.h and corecliutils.h must specifically define

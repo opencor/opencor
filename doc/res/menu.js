@@ -307,7 +307,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                             { "menuItems": [
                                 { "level": 0, "label": "Home", "link": "index.html" },
                                 { "separator": true },
-                                { "level": 0, "label": "OpenCOR tutorial", "link": "http://tutorial-on-cellml-opencor-and-pmr.readthedocs.io/en/latest/index.html", "directLink": true },
+                                { "level": 0, "label": "OpenCOR tutorial", "link": "https://tutorial-on-cellml-opencor-and-pmr.readthedocs.io/en/latest/index.html", "directLink": true },
                                 { "separator": true },
                                 { "level": 0, "label": "What is new?", "link": "whatIsNew.html" },
                                 { "separator": true },

@@ -4,11 +4,11 @@ Python in OpenCOR
 IPython console window
 ----------------------
 
-A dockable window running `IPython <http://ipython.readthedocs.io/en/stable/index.html>`_ that includes `NumPy <http://www.numpy.org>`_, `Scipy library <https://scipy.org/scipylib/index.html>`_ and `matplotlib <http://matplotlib.org/>`_.
+A dockable window running `IPython <https://ipython.readthedocs.io/en/stable/index.html>`_ that includes `NumPy <https://numpy.org/>`_, `Scipy library <https://scipy.org/scipylib/index.html>`_ and `matplotlib <https://matplotlib.org/>`_.
 
 If not visible then enable it from OpenCOR's menu: ``View/Windows/PythonQtConsole``.
 
-An IPython tutorial is `here <http://ipython.readthedocs.io/en/stable/interactive/tutorial.html>`_. Some keys are different than in the tutorial:
+An IPython tutorial is `here <https://ipython.readthedocs.io/en/stable/interactive/tutorial.html>`_. Some keys are different than in the tutorial:
 
     ``Control-Enter``
         start multi-line input.
