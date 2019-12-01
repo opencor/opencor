@@ -17,7 +17,7 @@ set(NUMERIC_LIBRARY_VERSION 37)
 
 # Git tag of our Python sources
 
-set(GIT_TAG "opencor")
+set(GIT_TAG "opencor-3.7.5")
 
 # Specify where our local package will be installed
 
@@ -212,40 +212,45 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c42fd1f8b7b6b353050f26c7f7bf4c8837feb94e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 878e2fcebbf35d7fdb97eadb633bdc5ebf974ac7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b91fa989e51c4fd707cd47a2892352dccffb4547
-                                              83015dd7093c524670eed86ea1c2001ab09068df
+                                  SHA1_VALUES 89ac7f192dc7868b2e06cd62324e06eb82f1ffb3
+                                              e87ec400ec5e77c0a73860b999ceaae5fd7c1c01
                                               599a6df061280855fad67d7c775c242345b0bb2d
+                                              0b14ddd87cbe6a7c186ee55737eca4cee363dc47
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              62c54e5ddfeb5992696b973f88915958d3eb0c49)
+                                              6b18ad09e35ab061e837b221192258ce59667277
+                                              3a94214f7737077c327ce0c69b1d56039560f9ae)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 114569320cbde211238ac64030b558057869544e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d8e460ff4fcb5a38a26dd5001688a9cf296dbc9b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 64adb27b2f362b14174eb6e661badce125214f6d
-                                              5d1eea99cf91fd272b0cd952a5d0c0bdc967e287
+                                  SHA1_VALUES 2f57b9010257750d11848884e3814f21b31a00c8
+                                              02092fc4b32b62bb009a71b67190701714c092c4
                                               7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
+                                              0b14ddd87cbe6a7c186ee55737eca4cee363dc47
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              eaa161d1c56423bd41b37258da196946d0f0c4e4)
+                                              b9bc2ec69fbfd0dc24ed6b65504d372ade8d5de7
+                                              701edf33206f3a1757480869e2a1f89e23afa7d3)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 85f8ea811ed7b3912486837e164e12318ed375d1
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f9bfffda06db7002cb5a927373026293d4b6bdb5
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
-                                          40af4e4c511a9a3a4b6a47446505c1fb60881d59)
+                              SHA1_VALUES 093ac9aec869547e7b2817467474c24c6920e174
+                                          12cb8a2c0bcf557aaf6e6bc359c9c252e6f32320)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8a32d24a1275a1bbaf2cef7811f6cd5a21b370bf
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6d9ad358816df273bd0fce4e176aeb94fb76dcc
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 06aec6cd236cefb7206f1f6f43fa6220e398adff
-                                          dad9acba5c825edab5af6e825ae1715d0842e825
-                                          57534423f92eb3a881b8dc781efb6857cc257874
+                              SHA1_VALUES ad55b200ba7a7d2498afd5b9f63c5ac19822a606
+                                          1a887bd6842d6c0fcffbfd1384c28a461a19ff66
+                                          e31279667a5265975fe0bcda6bc7822fac6e0a3f
+                                          8fad95e8c2db2ca60f65c455d8bcc66ff5f33459
                                           561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
