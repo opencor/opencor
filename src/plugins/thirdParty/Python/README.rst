@@ -1,24 +1,9 @@
-Dependencies
-============
+The following dependencies are needed to build Python.
 
-macOS
------
+- **Linux:** `bzip2 <https://www.sourceware.org/bzip2/>`__, `libffi <https://sourceware.org/libffi/>`__, `LZMA <https://tukaani.org/xz/>`__, `readline <https://savannah.gnu.org/projects/readline>`__ and `SQLite3 <https://www.sqlite.org/index.html>`__, which can be installed using:
 
-* SQLite: ``brew install sqlite3``
-* lzma: ``brew install xz``
+  ``sudo apt install libbz2-dev libffi-dev liblzma-dev libreadline-dev libsqlite3-dev``.
 
+- **macOS:** `LZMA <https://tukaani.org/xz/>`__ and `SQLite3 <https://www.sqlite.org/index.html>`__, which can be installed using:
 
-Ubuntu
-------
-
-* bzip2: ``sudo apt-get install libbz2-dev``
-* libffi: ``sudo apt install libffi-dev``
-* lzma: ``sudo apt-get install liblzma-dev``
-* readline: ``sudo apt-get install libreadline-dev``
-* SQLite: ``sudo apt install libsqlite3-dev``
-
-
-Windows
--------
-
-* We download and build bzip2, xz (lzma) and SQLite3 as part of the Python build.
+  ``brew install sqlite3 xz``
