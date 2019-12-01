@@ -3,7 +3,7 @@ project(PythonPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.7.5)
+set(PACKAGE_VERSION 3.7.5.1)
 
 # Package repository and release tag
 
@@ -130,7 +130,7 @@ if(NOT APPLE)
         set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
     endif()
 
-    # Bundle liblzma with Python
+    # Bundle LZMA with Python
     # Note: it is statically linked on macOS...
 
     if(WIN32)
@@ -259,11 +259,9 @@ else()
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
-    # Find or build the bzip2 library
+    # Build bzip2 on Windows and find it on Linux and macOS
 
     if(WIN32)
-        # Build bzip2 for Windows
-
         set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-opencor-${BZIP2_VERSION})
 
         if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/bzlib.h)
@@ -288,12 +286,6 @@ else()
         set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
         set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
     else()
-        # Find bzip2 under macOS and Linux
-
-        # Note: macOS provides bzip2
-
-        # Note: We assume `libbz2-dev` has been installed for Ubuntu
-
         find_package(BZip2 REQUIRED)
 
         if(NOT APPLE)
@@ -301,15 +293,12 @@ else()
         endif()
     endif()
 
-    # Find or build the lzma library
+    # Build LZMA on Windows and find it on Linux and macOS
+    # Note: on Windows, we download XZ since it includes LZMA...
 
     if(WIN32)
-        # Download `xz` for Windows, which includes `lzma`
-
         set(XZ_VERSION 5.2.4)
-
         set(XZ_PACKAGE_DIR ${PROJECT_BINARY_DIR}/xz-${XZ_VERSION})
-
         set(LZMA_IMPORT_LIBRARY_DIR ${XZ_PACKAGE_DIR}/doc)
         set(LZMA_LIBRARY_DIR ${XZ_PACKAGE_DIR}/bin_x86-64)
 
@@ -327,7 +316,7 @@ else()
                             WORKING_DIRECTORY ${XZ_PACKAGE_DIR}
                             OUTPUT_QUIET)
 
-            message("Building LZMA import library...")
+            message("Building '${LZMA_IMPORT_LIBRARY}'...")
 
             execute_process(COMMAND lib /verbose /def:liblzma.def /out:${LZMA_IMPORT_LIBRARY} /machine:x64
                             WORKING_DIRECTORY ${LZMA_IMPORT_LIBRARY_DIR}
@@ -336,15 +325,10 @@ else()
 
         set(LIBLZMA_INCLUDE_DIRS ${XZ_PACKAGE_DIR}/include)
         set(LIBLZMA_LIBRARIES ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY})
-
     elseif(APPLE)
-        # Use Homebrew's LZMA and link with static library so we don't have to bundle it
-
         set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
         set(LIBLZMA_LIBRARIES /usr/local/lib/liblzma.a)
     else()
-        # Note: We assume `liblzma-dev` has been installed for Ubuntu
-
         find_package(LibLZMA REQUIRED)
 
         get_filename_component(LZMA_LIBRARY_DIR ${LIBLZMA_LIBRARIES} DIRECTORY)
@@ -390,39 +374,33 @@ else()
         set(SQLite3_INCLUDE_DIRS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
         set(SQLite3_LIBRARIES ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
     elseif(APPLE)
-        # Use Homebrew's SQLite3
-
         set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
         set(SQLite3_LIBRARIES /usr/local/opt/sqlite3/lib/libsqlite3.a)
     else()
-        # Note: We assume `libsqlite3-dev` has been installed for Ubuntu
-
         find_package(SQLite3 REQUIRED)
 
         get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
     endif()
 
     if(NOT APPLE)
-        # Copy shared libraries to the plugin's external binaries directory
+        # Copy the LZMA and SQLite3 libraries to the plugin's external binaries
+        # directory
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
-
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
-        if(UNIX)
-            # We also need to copy bzip2 library for Unix
+        # On Windows, we also need the LZMA and SQLite3 import libraries while
+        # the bzip2 library on Linux
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
-                                                             ${EXTERNAL_BINARIES_DIR})
-        else()
-            # We also need import libraries for Windows
-
+        if(WIN32)
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
-
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+        else()
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         endif()
     endif()
@@ -519,7 +497,7 @@ else()
             -DLIBLZMA_INCLUDE_DIRS=${LIBLZMA_INCLUDE_DIRS}
             -DLIBLZMA_LIBRARIES=${LIBLZMA_LIBRARIES}
 
-            # Use our OpenSSL
+            # Use our copy of OpenSSL
 
             -DUSE_SYSTEM_OpenSSL=OFF
             -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
@@ -531,7 +509,7 @@ else()
             -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
             -DSQLITE3_LIBRARY=${SQLite3_LIBRARIES}
 
-            # Use our zlib
+            # Use our copy of zlib
 
             -DUSE_SYSTEM_ZLIB=OFF
             -DUSE_BUILTIN_ZLIB=OFF
