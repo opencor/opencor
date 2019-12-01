@@ -6,4 +6,4 @@ The following dependencies are needed to build Python.
 
 - **macOS:** `LZMA <https://tukaani.org/xz/>`__ and `SQLite3 <https://www.sqlite.org/index.html>`__, which can be installed using:
 
-  ``brew install sqlite3 xz``
+  ``brew install sqlite xz``
