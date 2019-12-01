@@ -3,7 +3,7 @@ project(PythonPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.7.5.1)
+set(PACKAGE_VERSION 3.7.5)
 
 # Package repository and release tag
 
