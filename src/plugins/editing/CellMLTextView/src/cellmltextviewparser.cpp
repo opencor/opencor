@@ -953,10 +953,10 @@ bool CellmlTextViewParser::usingToken(QDomNode &pDomNode)
 
 QString CellmlTextViewParser::processCommentString(const QString &pComment)
 {
-    // From https://www.w3.org/TR/xml/#sec-comments, we can see that XML
-    // comments cannot have "--" within them, yet we want to allow them in a
-    // comment and one way to allow this is by replacing all occurrences of "--"
-    // with its corresponding decimal HTML entity
+    // From https://w3.org/TR/xml/#sec-comments, we can see that XML comments
+    // cannot have "--" within them, yet we want to allow them in a comment and
+    // one way to allow this is by replacing all occurrences of "--" with its
+    // corresponding decimal HTML entity
 
     QString realComment = pComment;
 
@@ -2992,7 +2992,7 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
         // Note #1: the check against the previous operator only makes sense for
         //          n-ary operators, i.e. "plus", "times", "and", "or" and
         //          "xor"...
-        // Note #2: see http://www.w3.org/TR/MathML2/chapter4.html#contm.funopqual
+        // Note #2: see http://w3.org/TR/MathML2/chapter4.html#contm.funopqual
         //          for more information...
 
         static const CellmlTextViewScanner::Tokens NaryOperators = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Plus

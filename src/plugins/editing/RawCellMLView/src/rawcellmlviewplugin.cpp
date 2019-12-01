@@ -45,8 +45,8 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to edit <a href="http://www.cellml.org/">CellML</a> files using an <a href="https://www.w3.org/XML/">XML</a> editor.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="http://www.cellml.org/">CellML</a> à l'aide d'un éditeur <a href="https://www.w3.org/XML/">XML</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to edit <a href="http://cellml.org/">CellML</a> files using an <a href="https://w3.org/XML">XML</a> editor.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="http://cellml.org/">CellML</a> à l'aide d'un éditeur <a href="https://w3.org/XML">XML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "CellMLEditingView",

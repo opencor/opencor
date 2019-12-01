@@ -69,8 +69,7 @@ int main(int pArgC, char *pArgV[])
     // (otherwise Python extension DSOs can't find symbols), which can be done
     // by setting Py_NoUserSiteDirectory to 1
     // Note: this is because the lookup scope changes for DSOs that are loaded
-    //       using dlopen() (see
-    //       https://www.akkadia.org/drepper/dsohowto.pdf)...
+    //       using dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
 #if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     Py_NoUserSiteDirectory = 1;
