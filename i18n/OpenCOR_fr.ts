@@ -250,8 +250,8 @@
         <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
     </message>
     <message>
-        <source>the plugin should be the core plugin, but it does not support the core interface.</source>
-        <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
+        <source>the plugin claims to be the core plugin, but it does not support the core interface.</source>
+        <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
     </message>
     <message>
         <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
