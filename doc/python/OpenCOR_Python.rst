@@ -4,11 +4,11 @@ Python in OpenCOR
 IPython console window
 ----------------------
 
-A dockable window running `IPython <https://ipython.readthedocs.io/en/stable/index.html>`_ that includes `NumPy <https://numpy.org/>`_, `Scipy library <https://scipy.org/scipylib/index.html>`_ and `matplotlib <https://matplotlib.org/>`_.
+A dockable window running `IPython <https://ipython.readthedocs.io/en/stable/index.html>`__ that includes `NumPy <https://numpy.org/>`__, `Scipy library <https://scipy.org/scipylib/index.html>`__ and `matplotlib <https://matplotlib.org/>`__.
 
 If not visible then enable it from OpenCOR's menu: ``View/Windows/PythonQtConsole``.
 
-An IPython tutorial is `here <https://ipython.readthedocs.io/en/stable/interactive/tutorial.html>`_. Some keys are different than in the tutorial:
+An IPython tutorial is `here <https://ipython.readthedocs.io/en/stable/interactive/tutorial.html>`__. Some keys are different than in the tutorial:
 
     ``Control-Enter``
         start multi-line input.
@@ -151,7 +151,7 @@ Sample code
 matplotlib example
 ------------------
 
-A matplotlib tutorial is `available here <https://matplotlib.org/users/pyplot_tutorial.html>`_.
+A matplotlib tutorial is `available here <https://matplotlib.org/users/pyplot_tutorial.html>`__.
 
 .. code:: python
 
