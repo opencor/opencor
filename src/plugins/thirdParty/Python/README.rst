@@ -6,7 +6,7 @@ The following dependencies are needed to build Python.
 
     sudo apt install libbz2-dev libffi-dev liblzma-dev libreadline-dev libsqlite3-dev
 
-- **macOS:** `LZMA <https://tukaani.org/xz/>`__ and `SQLite3 <https://sqlite.org/>`__, which can be installed using:
+- **macOS:** `LZMA <https://tukaani.org/xz/>`__ and `SQLite3 <https://sqlite.org/>`__, which can be installed using (if needed, install `Homebrew <https://brew.sh/>`__):
 
   ::
 
