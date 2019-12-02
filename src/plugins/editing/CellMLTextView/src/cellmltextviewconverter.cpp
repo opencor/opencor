@@ -2696,7 +2696,7 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
     // it is in the tmp-documentation namespace
 
     if (   (pDomNode.parentNode() == mModelNode)
-        && (pDomNode.namespaceURI() == CellMLSupport::TmpDocumentation)) {
+        && (pDomNode.namespaceURI() == CellMLSupport::TmpDocumentationNamespace)) {
         mDocumentationNode = pDomNode.cloneNode();
     }
 }
