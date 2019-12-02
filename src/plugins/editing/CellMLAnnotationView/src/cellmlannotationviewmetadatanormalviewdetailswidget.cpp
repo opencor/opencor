@@ -332,16 +332,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
                                                                         InformationType pInformationType)
 {
+    // Keep track of the RDF triple information and type
+
+    mRdfTripleInformation = pRdfTripleInformation;
+
     // Retrieve the RDF triple information
 
     QStringList rdfTripleInformation = pRdfTripleInformation.split('|');
     QString qualifier = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
     QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
     QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[2];
-
-    // Keep track of the RDF triple information and type
-
-    mRdfTripleInformation = pRdfTripleInformation;
 
     // (Un)highlight/(un)select our various RDF triple information
 
