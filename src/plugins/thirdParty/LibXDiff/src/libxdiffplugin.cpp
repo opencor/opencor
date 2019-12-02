@@ -38,8 +38,8 @@ PLUGININFO_FUNC LibXDiffPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://www.xmailserver.org/xdiff-lib.html">LibXDiff</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://www.xmailserver.org/xdiff-lib.html">LibXDiff</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://xmailserver.org/xdiff-lib.html">LibXDiff</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://xmailserver.org/xdiff-lib.html">LibXDiff</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
