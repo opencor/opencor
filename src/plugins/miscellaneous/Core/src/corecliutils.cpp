@@ -654,7 +654,7 @@ void cleanPresentationMathml(QDomElement *pDomElement)
     // Merge successive child mrow elements, as long as their parent is not an
     // element that requires a specific number of arguments (which could become
     // wrong if we were to merge two successive mrow elements)
-    // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
+    // Note: see https://w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
     //       list of the elements to check...
 
     static const QString Mfrac      = "mfrac";

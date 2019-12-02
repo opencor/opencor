@@ -1319,7 +1319,7 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     // Note: this is based on QwtLegend::renderLegend() and it fixes a problem
     //       with the layout when it has its expanding directions set to
     //       horizontal. More information on this issue can be found at
-    //       http://www.qtcentre.org/threads/68983-Problem-with-QwtDynGridLayout-layoutItems()...
+    //       https://qtcentre.org/threads/68983-Problem-with-QwtDynGridLayout-layoutItems()...
 
     if (!mActive) {
         return;

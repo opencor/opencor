@@ -34,8 +34,8 @@ PLUGININFO_FUNC QScintillaWidgetPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://www.riverbankcomputing.com/software/qscintilla/intro">QScintilla</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://www.riverbankcomputing.com/software/qscintilla/intro">QScintilla</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           QStringList() << "Core" << "QScintilla",
