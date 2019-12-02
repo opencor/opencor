@@ -441,6 +441,8 @@ QString CORE_EXPORT guiOpenFile(const QString &pFileName, File::Type pType,
 
     if (centralWidget != nullptr) {
         centralWidget->openFile(pFileName, pType, pUrl, pShowWarning);
+
+        return {};
     }
 
     return QObject::tr("there is no central widget, so the file cannot be opened.");
@@ -457,6 +459,8 @@ QString guiOpenRemoteFile(const QString &pUrl, bool pShowWarning)
 
     if (centralWidget != nullptr) {
         centralWidget->openRemoteFile(pUrl, pShowWarning);
+
+        return {};
     }
 
     return QObject::tr("there is no central widget, so the remote file cannot be opened.");
@@ -472,7 +476,7 @@ bool guiCloseFile(const QString &pFileName)
     CentralWidget *centralWidget = Core::centralWidget();
 
     if (centralWidget != nullptr) {
-        centralWidget->closeFile(pFileName);
+        return centralWidget->closeFile(pFileName);
     }
 
     return false;
