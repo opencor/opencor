@@ -79,9 +79,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     // Determine the type of the RDF triple
 
     // Note: at this stage, we only recognise model and bio(logy) qualifiers as
-    //       described at http://biomodels.net/qualifiers/. This means that the
-    //       predicate of the RDF triple must have one of the following two
-    //       forms:
+    //       described at https://co.mbine.org/standards/qualifiers. This means
+    //       that the predicate of the RDF triple must have one of the following
+    //       two forms:
     //
     //          http://biomodels.net/model-qualifiers/<xxx>
     //          http://biomodels.net/biology-qualifiers/<yyy>

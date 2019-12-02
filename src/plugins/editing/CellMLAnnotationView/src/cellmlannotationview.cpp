@@ -34,7 +34,7 @@ QString resourceUrl(const QString &pResource)
 {
     // Return the URL for the given resource
 
-    return "http://identifiers.org/"+pResource+"/?redirect=true";
+    return "https://identifiers.org/"+pResource+"/?redirect=true";
 }
 
 //==============================================================================
@@ -43,7 +43,7 @@ QString idUrl(const QString &pResource, const QString &pId)
 {
     // Return the URL for the given resource
 
-    return "http://identifiers.org/"+pResource+"/"+pId+"/?profile=most_reliable&redirect=true";
+    return "https://identifiers.org/"+pResource+"/"+pId+"/?profile=most_reliable&redirect=true";
 }
 
 //==============================================================================

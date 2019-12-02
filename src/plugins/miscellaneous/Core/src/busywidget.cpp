@@ -20,7 +20,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 // Busy widget
 //==============================================================================
-// Note: this widget is adapted from http://fgnass.github.io/spin.js/...
+// Note: this widget is adapted from https://spin.js.org/...
 //==============================================================================
 
 #include "busywidget.h"

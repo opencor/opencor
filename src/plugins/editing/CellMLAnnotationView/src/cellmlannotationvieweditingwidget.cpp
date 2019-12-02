@@ -169,10 +169,10 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
     // The user requested a qualifier to be looked up, so generate a Web page
     // containing some information about the qualifier
     // Note: ideally, there would be a way to refer to a particular qualifier
-    //       using http://biomodels.net/qualifiers/, but that would require
-    //       anchors and they don't have any, so instead we use the information
-    //       which can be found on that site and present it to the user in the
-    //       form of a Web page...
+    //       using https://co.mbine.org/standards/qualifiers, but that would
+    //       require anchors and they don't have any, so instead we use the
+    //       information which can be found on that site and present it to the
+    //       user in the form of a Web page...
 
     if (pQualifier.isEmpty()) {
         return;

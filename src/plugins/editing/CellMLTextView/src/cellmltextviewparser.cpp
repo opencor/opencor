@@ -2992,7 +2992,7 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
         // Note #1: the check against the previous operator only makes sense for
         //          n-ary operators, i.e. "plus", "times", "and", "or" and
         //          "xor"...
-        // Note #2: see http://w3.org/TR/MathML2/chapter4.html#contm.funopqual
+        // Note #2: see https://w3.org/TR/MathML2/chapter4.html#contm.funopqual
         //          for more information...
 
         static const CellmlTextViewScanner::Tokens NaryOperators = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Plus
