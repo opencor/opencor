@@ -358,8 +358,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
-        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
+        <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;https://cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
+        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;https://cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>Sample</source>
