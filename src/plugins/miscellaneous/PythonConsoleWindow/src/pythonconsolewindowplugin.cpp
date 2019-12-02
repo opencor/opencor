@@ -40,8 +40,8 @@ PLUGININFO_FUNC PythonConsoleWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to interact with Python."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour interagir avec Python."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to interact with <a href=\"https://python.org/\">Python</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour interagir avec <a href=\"https://python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           QStringList() << "Core" << "PythonQtSupport",
