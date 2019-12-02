@@ -265,11 +265,16 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         //       since we know it will only work for a plugin that uses an old
         //       version of PluginInfo...
 
-        mStatus = (Plugin::info(pFileName) != nullptr)?Status::OldPlugin:Status::NotPlugin;
+        if (Plugin::info(pFileName) != nullptr) {
+            // We are dealing with a plugin, but one that uses an old version of
+            // PluginInfo
 
-        if (mStatus == Status::NotPlugin) {
-            // Apparently, we are not dealing with a plugin, so load it so that
-            // we can retrieve its corresponding error
+            mStatus = Status::OldPlugin;
+        } else {
+            // We are not dealing with a plugin, so load it so that we can
+            // retrieve its corresponding error
+
+            mStatus = Status::NotPlugin;
 
             QPluginLoader pluginLoader(pFileName);
 
