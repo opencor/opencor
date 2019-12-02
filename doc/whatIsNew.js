@@ -56,6 +56,11 @@ var jsonData = { "versions": [
                        },
                        { "name": "Support",
                          "entries": [
+                           { "type": "subCategory", "name": "CellML support",
+                             "entries": [
+                               { "type": "improved", "description": "Loading of <a href=\"https://cellml.org/\">CellML</a> files." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "COMBINE support",
                              "entries": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
