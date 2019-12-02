@@ -964,7 +964,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
 
         if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_0)
             || (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
-            pExtra = tr(R"(the <a href="https://github.com/cellmlapi/cellml-api/">CellML validation service</a> cannot be used in this view, so only validation against the <a href="http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.)");
+            pExtra = tr(R"(the <a href="https://github.com/cellmlapi/cellml-api/">CellML validation service</a> cannot be used in this view, so only validation against the <a href="https://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.)");
         }
 
         return res;

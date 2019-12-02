@@ -118,7 +118,7 @@ void CheckForUpdatesEngine::check()
         } else {
             mStatus =  tr("The version information is mal-formatted.")
                       +"<br/>"
-                      +tr(R"(Please <a href="http://opencor.ws/user/contactUs.html">contact us</a> about this error.)");
+                      +tr(R"(Please <a href="https://opencor.ws/user/contactUs.html">contact us</a> about this error.)");
         }
     } else {
         mStatus = formatMessage(errorMessage, false, true);
@@ -255,10 +255,10 @@ void CheckForUpdatesDialog::updateGui()
 {
     // Determine the status of our check
 
-    static const QString WhatIsNewUrl = "http://opencor.ws/user/whatIsNew.html?#";
+    static const QString WhatIsNewUrl = "https://opencor.ws/user/whatIsNew.html?#";
 
-    QString versionInformation = tr(R"(<a href="%1">%2 %3</a> is ready for you to <a href="http://opencor.ws/downloads/">download</a>.)");
-    QString snapshotInformation = tr(R"(The <a href="%1">latest snapshot</a> (%2) is ready for you to <a href="http://opencor.ws/downloads/">download</a>.)");
+    QString versionInformation = tr(R"(<a href="%1">%2 %3</a> is ready for you to <a href="https://opencor.ws/downloads/">download</a>.)");
+    QString snapshotInformation = tr(R"(The <a href="%1">latest snapshot</a> (%2) is ready for you to <a href="https://opencor.ws/downloads/">download</a>.)");
 
     if (mEngine->status().isEmpty()) {
         if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked) {
