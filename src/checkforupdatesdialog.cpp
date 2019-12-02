@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -64,7 +64,7 @@ void CheckForUpdatesEngine::check()
 
     mNewerVersions.clear();
 
-    if (readFile("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
+    if (readFile("https://opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
         QJsonParseError jsonParseError = QJsonParseError();
         QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
@@ -118,7 +118,7 @@ void CheckForUpdatesEngine::check()
         } else {
             mStatus =  tr("The version information is mal-formatted.")
                       +"<br/>"
-                      +tr(R"(Please <a href="http://opencor.ws/user/contactUs.html">contact us</a> about this error.)");
+                      +tr(R"(Please <a href="https://opencor.ws/user/contactUs.html">contact us</a> about this error.)");
         }
     } else {
         mStatus = formatMessage(errorMessage, false, true);
@@ -255,10 +255,10 @@ void CheckForUpdatesDialog::updateGui()
 {
     // Determine the status of our check
 
-    static const QString WhatIsNewUrl = "http://opencor.ws/user/whatIsNew.html?#";
+    static const QString WhatIsNewUrl = "https://opencor.ws/user/whatIsNew.html?#";
 
-    QString versionInformation = tr(R"(<a href="%1">%2 %3</a> is ready for you to <a href="http://opencor.ws/downloads/">download</a>.)");
-    QString snapshotInformation = tr(R"(The <a href="%1">latest snapshot</a> (%2) is ready for you to <a href="http://opencor.ws/downloads/">download</a>.)");
+    QString versionInformation = tr(R"(<a href="%1">%2 %3</a> is ready for you to <a href="https://opencor.ws/downloads/">download</a>.)");
+    QString snapshotInformation = tr(R"(The <a href="%1">latest snapshot</a> (%2) is ready for you to <a href="https://opencor.ws/downloads/">download</a>.)");
 
     if (mEngine->status().isEmpty()) {
         if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked) {

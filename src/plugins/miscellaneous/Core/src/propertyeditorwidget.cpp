@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -915,7 +915,7 @@ void Property::setDoubleValue(double pDoubleValue, bool pEmitSignal)
 {
     // Set our value, should it be of double type
     // Note: we want as much precision as possible, hence we use a precision of
-    //       15 decimals (see http://en.wikipedia.org/wiki/Double_precision)...
+    //       15 decimals (see https://en.wikipedia.org/wiki/Double_precision)...
 
     if (mType == Type::Double) {
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);

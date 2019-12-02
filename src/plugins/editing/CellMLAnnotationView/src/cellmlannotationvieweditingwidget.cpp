@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -169,10 +169,10 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
     // The user requested a qualifier to be looked up, so generate a Web page
     // containing some information about the qualifier
     // Note: ideally, there would be a way to refer to a particular qualifier
-    //       using http://biomodels.net/qualifiers/, but that would require
-    //       anchors and they don't have any, so instead we use the information
-    //       which can be found on that site and present it to the user in the
-    //       form of a Web page...
+    //       using https://co.mbine.org/standards/qualifiers, but that would
+    //       require anchors and they don't have any, so instead we use the
+    //       information which can be found on that site and present it to the
+    //       user in the form of a Web page...
 
     if (pQualifier.isEmpty()) {
         return;

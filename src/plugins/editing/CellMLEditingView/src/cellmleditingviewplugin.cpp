@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -46,8 +46,8 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin that provides core <a href="http://www.cellml.org/">CellML</a> editing view facilities.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui fournit les fonctionalités de base d'une vue d'édition <a href="http://www.cellml.org/">CellML</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that provides core <a href="https://cellml.org/">CellML</a> editing view facilities.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui fournit les fonctionalités de base d'une vue d'édition <a href="https://cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           QStringList() << "CellMLSupport" << "EditingView" << "MathMLViewerWidget",

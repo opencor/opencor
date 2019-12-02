@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -964,7 +964,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
 
         if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_0)
             || (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
-            pExtra = tr(R"(the <a href="https://github.com/cellmlapi/cellml-api/">CellML validation service</a> cannot be used in this view, so only validation against the <a href="http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.)");
+            pExtra = tr(R"(the <a href="https://github.com/cellmlapi/cellml-api/">CellML validation service</a> cannot be used in this view, so only validation against the <a href="https://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.)");
         }
 
         return res;

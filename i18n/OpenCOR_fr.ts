@@ -165,12 +165,12 @@
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
     <message>
-        <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
-        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; (%2) is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; (%2) est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
+        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; (%2) is ready for you to &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
+        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; (%2) est prêt à être &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No newer version or snapshot of %1 is available.</source>
@@ -188,8 +188,8 @@
         <translation>Les informations sur la version sont mal formatées.</translation>
     </message>
     <message>
-        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
-        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+        <source>Please &lt;a href=&quot;https://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;https://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
     </message>
 </context>
 <context>
@@ -358,8 +358,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
-        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
+        <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;https://cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
+        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;https://cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>Sample</source>

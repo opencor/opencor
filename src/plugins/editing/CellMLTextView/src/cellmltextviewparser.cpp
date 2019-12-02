@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -953,10 +953,10 @@ bool CellmlTextViewParser::usingToken(QDomNode &pDomNode)
 
 QString CellmlTextViewParser::processCommentString(const QString &pComment)
 {
-    // From https://www.w3.org/TR/xml/#sec-comments, we can see that XML
-    // comments cannot have "--" within them, yet we want to allow them in a
-    // comment and one way to allow this is by replacing all occurrences of "--"
-    // with its corresponding decimal HTML entity
+    // From https://w3.org/TR/xml/#sec-comments, we can see that XML comments
+    // cannot have "--" within them, yet we want to allow them in a comment and
+    // one way to allow this is by replacing all occurrences of "--" with its
+    // corresponding decimal HTML entity
 
     QString realComment = pComment;
 
@@ -2992,7 +2992,7 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
         // Note #1: the check against the previous operator only makes sense for
         //          n-ary operators, i.e. "plus", "times", "and", "or" and
         //          "xor"...
-        // Note #2: see http://www.w3.org/TR/MathML2/chapter4.html#contm.funopqual
+        // Note #2: see https://w3.org/TR/MathML2/chapter4.html#contm.funopqual
         //          for more information...
 
         static const CellmlTextViewScanner::Tokens NaryOperators = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Plus

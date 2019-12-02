@@ -4,7 +4,7 @@ _____________________________________________________________________________
                        File Association
 _____________________________________________________________________________
 
- Based on code taken from http://nsis.sourceforge.net/File_Association
+ Based on code taken from https://nsis.sourceforge.io/File_Association
 
  Usage in script:
  1. !include "FileAssociation.nsh"
