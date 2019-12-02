@@ -107,7 +107,7 @@ bool JupyterKernelPlugin::runKernel(const QStringList &pArguments, int &pRes)
     }
 
     // Run the the kernel using our connection file
-    // Note: any backslashes in the filename need to be escaped for Python
+    // Note: any backslashes in the filename need to be escaped for Python...
 
     static const QString JupyterKernel = R"PYTHON(
 import matplotlib
