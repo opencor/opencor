@@ -863,7 +863,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
         if (textContent.isEmpty()) {
             linkToolTip = tr("Add Term");
         } else {
-            linkToolTip = mUrls.contains(textContent)?tr("Look Up Resource"):tr("Look Up Id");
+            linkToolTip = mUrls.contains(textContent)?
+                              tr("Look Up Resource"):
+                              tr("Look Up Id");
         }
     }
 
