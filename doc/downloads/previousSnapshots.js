@@ -1,3 +1,5 @@
+/* exported jsonData */
+
 var jsonData = { "versions": [
                    { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 9, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
