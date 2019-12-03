@@ -443,7 +443,11 @@ void CliApplication::status() const
 
             break;
         case Plugin::Status::InvalidCorePlugin:
-            pluginInfo += "the plugin should be the core plugin, but it does not support the core interface.";
+            pluginInfo += "the plugin claims to be the core plugin, but it does not support the core interface.";
+
+            break;
+        case Plugin::Status::NeededSelectablePlugin:
+            pluginInfo += "the plugin claims to be selectable, but it is needed.";
 
             break;
         case Plugin::Status::NotCliPluginNoCliSupport:
