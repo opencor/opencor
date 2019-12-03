@@ -254,6 +254,10 @@
         <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
     </message>
     <message>
+        <source>the plugin claims to be selectable, but it is needed.</source>
+        <translation>l&apos;extension prétend être sélectionnable, mais elle est nécessaire.</translation>
+    </message>
+    <message>
         <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
         <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
     </message>

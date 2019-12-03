@@ -59,17 +59,19 @@ namespace OpenCOR {
 //==============================================================================
 
 Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
-               const QString &pErrorMessage, bool pLoad,
+               const QString &pErrorMessage, bool pLoad, bool pNeeded,
                PluginManager *pPluginManager) :
     mName(name(pFileName)),
     mInfo(pInfo),
     mErrorMessage(pErrorMessage)
 {
     if (pInfo != nullptr) {
-        // We are dealing with a plugin, so try to load it, but only if the user
-        // wants
+        // We are dealing with a plugin, so try to load it (if needed), but
+        // before that make sure that it is not both needed and selectable
 
-        if (pLoad) {
+        if (pNeeded && pInfo->isSelectable()) {
+            mStatus = Status::NeededSelectablePlugin;
+        } else if (pLoad) {
             // Make sure that the plugin's dependencies, if any, are loaded
             // before loading the plugin itself
             // Note: normally, we would only do this on Windows systems since,
