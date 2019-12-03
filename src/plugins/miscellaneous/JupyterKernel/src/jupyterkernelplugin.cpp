@@ -26,6 +26,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QCoreApplication>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace JupyterKernel {
 
@@ -133,18 +137,20 @@ matplotlib.rcParamsOrig['backend'] = matplotlib.rcParams['backend']
 # Minimal customisation of the standard IPython kernel
 
 class OpenCORKernel(IPythonKernel):
-    implementation = 'OpenCOR'
-    implementation_version = '0.6'
+    implementation = '%1'
+    implementation_version = '%2'
     banner = "Jupyter kernel for OpenCOR"
 
 if __name__ == '__main__':
     from ipykernel.kernelapp import IPKernelApp
 
-    IPKernelApp.connection_file = '%1'
+    IPKernelApp.connection_file = '%3'
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(JupyterKernel.arg(QString(pArguments[0]).replace("\\", "\\\\")));
+    PythonQtSupport::evaluateScript(JupyterKernel.arg(qApp->applicationName(),
+                                                      qApp->applicationVersion(),
+                                                      QString(pArguments[0]).replace("\\", "\\\\")));
 
     return true;
 }
