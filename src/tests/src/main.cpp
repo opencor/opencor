@@ -38,14 +38,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 int main(int pArgC, char *pArgV[])
 {
-    // Retrieve the different arguments that were passed
-
-    QStringList args = QStringList();
-
-    for (int i = 1; i < pArgC; ++i) {
-        args << pArgV[i];
-    }
-
     // The different groups of tests that are to be run
     // Note: -1 for iMax because tests ends with our separator...
 
@@ -91,9 +83,9 @@ int main(int pArgC, char *pArgV[])
             // Execute the test itself
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, args);
+            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, QStringList());
 #else
-            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, args);
+            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, QStringList());
 #endif
 
             if (testRes != 0) {
