@@ -1,5 +1,3 @@
-/* exported jsonData */
-
 var jsonData = { "versions": [
                    { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 9, "year": 2019,
                      "categories": [
