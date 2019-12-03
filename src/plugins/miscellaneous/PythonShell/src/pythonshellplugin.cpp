@@ -121,9 +121,9 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
     fedisableexcept(FE_OVERFLOW);
 #endif
 
-    char *oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
+    char *locale = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
 
-    if (oldloc == nullptr) {
+    if (locale == nullptr) {
         std::cerr << "Out of memory." << std::endl;
 
         pRes = 1;
@@ -139,7 +139,7 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
         argV[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), nullptr);
 
         if (argV[i] == nullptr) {
-            PyMem_RawFree(oldloc);
+            PyMem_RawFree(locale);
 
             std::cerr << "Fatal Python error: unable to decode the command line argument #" << i+1 << "." << std::endl;
 
@@ -153,9 +153,9 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     argVCopy[argC] = argV[argC] = nullptr;
 
-    setlocale(LC_ALL, oldloc);
+    setlocale(LC_ALL, locale);
 
-    PyMem_RawFree(oldloc);
+    PyMem_RawFree(locale);
 
     pRes = Py_Main(argC, argV);
 
