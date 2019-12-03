@@ -40,7 +40,7 @@ int main(int pArgC, char *pArgV[])
 {
     // Retrieve the requested tests, if any
 
-    QStringList requestedTests = QStringList();
+    QStringList requestedTests;
 
     for (int i = 1; i < pArgC; ++i) {
         requestedTests << pArgV[i];
