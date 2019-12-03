@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tags for our libraries
 
-set(GIT_TAG v5.12.0)
+set(GIT_TAG v5.212.0-alpha3-opencor)
 set(GIT_TAG_LIBJPEG 1.5.90)
 set(GIT_TAG_LIBPNG v1.6.34)
 set(GIT_TAG_ZLIB v1.2.11)
