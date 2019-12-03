@@ -2696,7 +2696,6 @@ double GraphPanelPlotWidget::maxY() const
     // Return our maximum Y value
 
     return axisScaleDiv(QwtPlot::yLeft).upperBound();
-
 }
 
 //==============================================================================

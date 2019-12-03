@@ -37,14 +37,14 @@ if (   document.location.protocol !== "file:"
                 elementEvent.nonInter = false;
                 elementEvent.loc = href;
 
-                if (href.match(/^mailto\:/i)) {
+                if (href.match(/^mailto:/i)) {
                     elementEvent.category = "Emails";
                     elementEvent.action = "Click email address";
-                    elementEvent.label = elementEvent.label.replace(/^mailto\: /, "");
+                    elementEvent.label = elementEvent.label.replace(/^mailto: /, "");
                 } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
                     elementEvent.category = "Downloads";
                     elementEvent.action = "Click download file";
-                } else if (    href.match(/^https?\:/i)
+                } else if (    href.match(/^https?:/i)
                            && !href.match(/opencor\.ws/i)) {
                     elementEvent.category = "External links";
                     elementEvent.action = "Click external link";

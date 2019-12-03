@@ -238,7 +238,6 @@ void SimulationWorker::run()
                 // (Re)start our timer
 
                 timer.start();
-
             }
         }
 
