@@ -59,17 +59,19 @@ namespace OpenCOR {
 //==============================================================================
 
 Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
-               const QString &pErrorMessage, bool pLoad,
+               const QString &pErrorMessage, bool pLoad, bool pNeeded,
                PluginManager *pPluginManager) :
     mName(name(pFileName)),
     mInfo(pInfo),
     mErrorMessage(pErrorMessage)
 {
     if (pInfo != nullptr) {
-        // We are dealing with a plugin, so try to load it, but only if the user
-        // wants
+        // We are dealing with a plugin, so try to load it (if needed), but
+        // before that make sure that it is not both needed and selectable
 
-        if (pLoad) {
+        if (pNeeded && pInfo->isSelectable()) {
+            mStatus = Status::NeededSelectablePlugin;
+        } else if (pLoad) {
             // Make sure that the plugin's dependencies, if any, are loaded
             // before loading the plugin itself
             // Note: normally, we would only do this on Windows systems since,
@@ -265,11 +267,16 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         //       since we know it will only work for a plugin that uses an old
         //       version of PluginInfo...
 
-        mStatus = (Plugin::info(pFileName) != nullptr)?Status::OldPlugin:Status::NotPlugin;
+        if (Plugin::info(pFileName) != nullptr) {
+            // We are dealing with a plugin, but one that uses an old version of
+            // PluginInfo
 
-        if (mStatus == Status::NotPlugin) {
-            // Apparently, we are not dealing with a plugin, so load it so that
-            // we can retrieve its corresponding error
+            mStatus = Status::OldPlugin;
+        } else {
+            // We are not dealing with a plugin, so load it so that we can
+            // retrieve its corresponding error
+
+            mStatus = Status::NotPlugin;
 
             QPluginLoader pluginLoader(pFileName);
 

@@ -75,13 +75,14 @@ public:
         OldPlugin,
         NotCorePlugin,
         InvalidCorePlugin,
+        NeededSelectablePlugin,
         NotCliPluginNoCliSupport,
         NotCliPluginNoCliInterface,
         MissingOrInvalidDependencies
     };
 
     explicit Plugin(const QString &pFileName, PluginInfo *pInfo,
-                    const QString &pErrorMessage, bool pLoad,
+                    const QString &pErrorMessage, bool pLoad, bool pNeeded,
                     PluginManager *pPluginManager);
     ~Plugin() override;
 

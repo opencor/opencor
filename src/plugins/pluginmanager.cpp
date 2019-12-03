@@ -171,7 +171,8 @@ PluginManager::PluginManager(bool pGuiMode) :
         auto plugin = new Plugin(pluginFileName,
                                  pluginsInfo.value(pluginName),
                                  pluginsError.value(pluginName),
-                                 plugins.contains(pluginName), this);
+                                 plugins.contains(pluginName),
+                                 neededPlugins.contains(pluginName), this);
 
         // Keep track of the plugin and of the Core plugin, in particular, if it
         // is loaded
