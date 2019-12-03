@@ -1019,7 +1019,6 @@ QVector<QZipReader::FileInfo> QZipReader::fileInfoList() const
     for (int i = 0; i < numFileHeaders; ++i)
         files.append(d->fillFileInfo(i));
     return files;
-
 }
 
 /*!
