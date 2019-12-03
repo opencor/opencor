@@ -47,6 +47,7 @@ int main(int pArgC, char *pArgV[])
     }
 
     // The different groups of tests that are to be run
+    // Note: -1 for iMax because tests ends with our separator...
 
     QString tests = OpenCOR::fileContents(":/tests").first();
     QMap<QString, QStringList> testsGroups;
@@ -54,8 +55,6 @@ int main(int pArgC, char *pArgV[])
     QString testGroup;
 
     for (int i = 0, iMax = testItems.count()-1; i < iMax; i += 2) {
-        // Note: -1 because tests ends with our separator...
-
         testGroup = testItems[i];
 
         testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems[i+1]);
