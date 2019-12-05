@@ -425,7 +425,7 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
         return pDataStoreVariable->value(pPosition, pRun);
     }
 
-    throw std::runtime_error(tr("The 'NoneType' object is not subscriptable."));
+    throw std::runtime_error(tr("The 'NoneType' object is not subscriptable.").toStdString());
 }
 
 //==============================================================================
