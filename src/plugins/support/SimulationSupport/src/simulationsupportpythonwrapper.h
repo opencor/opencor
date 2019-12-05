@@ -94,6 +94,8 @@ public slots:
     PyObject * states(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
 
+    OpenCOR::DataStore::DataStore * data_store(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+
     OpenCOR::DataStore::DataStoreVariable * voi(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;

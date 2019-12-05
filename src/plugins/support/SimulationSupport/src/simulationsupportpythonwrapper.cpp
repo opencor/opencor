@@ -455,6 +455,15 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 
 //==============================================================================
 
+DataStore::DataStore * SimulationSupportPythonWrapper::data_store(SimulationResults *pSimulationResults) const
+{
+    // Return the data store for the given simulation results
+
+    return pSimulationResults->dataStore();
+}
+
+//==============================================================================
+
 DataStore::DataStoreVariable * SimulationSupportPythonWrapper::voi(SimulationResults *pSimulationResults) const
 {
     // Return the VOI variable for the given simulation results
