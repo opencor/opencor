@@ -417,7 +417,7 @@ void SimulationSupportPythonWrapper::set_nla_solver(SimulationData *pSimulationD
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    // Return our constants values
+    // Return the constants values of the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantsValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -427,7 +427,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    // Return our rates values
+    // Return the rates values of the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->ratesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -437,7 +437,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    // Return our states values
+    // Return the states values of the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->statesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -447,7 +447,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    // Return our algebraic values
+    // Return the algebraic values of the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -457,7 +457,7 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 
 DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
 {
-    // Return our points variable
+    // Return the points variable of the given simulation results
 
     return pSimulationResults->pointsVariable();
 }
@@ -466,7 +466,7 @@ DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(Simulation
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
 {
-    // Return our constants variables
+    // Return the constants variables of the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->constantsVariables());
 }
@@ -475,7 +475,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulat
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
 {
-    // Return our rates variables
+    // Return the rates variables of the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->ratesVariables());
 }
@@ -484,7 +484,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationR
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
-    // Return our states variables
+    // Return the states variables of the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->statesVariables());
 }
@@ -493,7 +493,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
 {
-    // Return our algebraic variables
+    // Return the algebraic variables of the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->algebraicVariables());
 }
