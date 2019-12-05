@@ -325,7 +325,7 @@ void SimulationSupportPythonWrapper::reset(Simulation *pSimulation, bool pAll)
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
+void SimulationSupportPythonWrapper::clear_results(Simulation *pSimulation)
 {
     // Reset the given simulation results
 
@@ -362,9 +362,9 @@ PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulationData,
-                                                      double pStartingPoint,
-                                                      bool pRecompute)
+void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulationData,
+                                                        double pStartingPoint,
+                                                        bool pRecompute)
 {
     // Set the starting point of the given simulation data
 
@@ -373,8 +373,8 @@ void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulatio
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData,
-                                                    double pEndingPoint)
+void SimulationSupportPythonWrapper::set_ending_point(SimulationData *pSimulationData,
+                                                      double pEndingPoint)
 {
     // Set the ending point of the given simulation data
 
@@ -383,8 +383,8 @@ void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationD
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData,
-                                                      double pPointInterval)
+void SimulationSupportPythonWrapper::set_point_interval(SimulationData *pSimulationData,
+                                                        double pPointInterval)
 {
     // Set the point interval of the given simulation data
 
@@ -393,8 +393,8 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData,
-                                                  const QString &pOdeSolverName)
+void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationData,
+                                                    const QString &pOdeSolverName)
 {
     // Set the given ODE solver of the given simulation data
 
@@ -403,8 +403,8 @@ void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationDat
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData,
-                                                  const QString &pNlaSolverName)
+void SimulationSupportPythonWrapper::set_nla_solver(SimulationData *pSimulationData,
+                                                    const QString &pNlaSolverName)
 {
     // Set the given NLA solver of the given simulation data
 
