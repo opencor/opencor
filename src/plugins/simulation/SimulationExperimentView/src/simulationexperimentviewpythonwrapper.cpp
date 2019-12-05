@@ -144,9 +144,9 @@ SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(voi
     // Add some Python wrappers
 
     static std::array<PyMethodDef, 4> PythonSimulationExperimentViewMethods = {{
-                                                                                  { "simulation",  simulation, METH_VARARGS, "The current simulation." },
                                                                                   { "open_simulation", openSimulation, METH_VARARGS, "Open a simulation." },
                                                                                   { "close_simulation", closeSimulation, METH_VARARGS, "Close a simulation." },
+                                                                                  { "simulation",  simulation, METH_VARARGS, "The current simulation." },
                                                                                   { nullptr, nullptr, 0, nullptr }
                                                                               }};
 
