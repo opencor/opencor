@@ -7,9 +7,9 @@ def run_simulation(file_name_or_url):
     print(' - Open file...')
 
     if file_name_or_url.startswith('https://'):
-        simulation = oc.openSimulation(file_name_or_url)
+        simulation = oc.open_simulation(file_name_or_url)
     else:
-        simulation = oc.openSimulation(os.path.dirname(__file__) + '/' + file_name_or_url)
+        simulation = oc.open_simulation(os.path.dirname(__file__) + '/' + file_name_or_url)
 
     print(' - Run file...')
 
@@ -29,7 +29,7 @@ def run_simulation(file_name_or_url):
     y = states['main/y'].values()
     z = states['main/z'].values()
 
-    oc.closeSimulation(simulation)
+    oc.close_simulation(simulation)
 
 
 print('---------------------------------------')
