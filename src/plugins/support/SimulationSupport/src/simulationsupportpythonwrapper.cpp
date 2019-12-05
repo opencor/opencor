@@ -51,7 +51,8 @@ namespace SimulationSupport {
 static void setOdeSolver(SimulationData *pSimulationData,
                          const QString &pOdeSolverName)
 {
-    // Set the given ODE solver for the given simulation data
+    // Set the ODE solver of the given simulation data using the given ODE
+    // solver name
 
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pOdeSolverName == solverInterface->solverName()) {
@@ -77,7 +78,8 @@ static void setOdeSolver(SimulationData *pSimulationData,
 static void setNlaSolver(SimulationData *pSimulationData,
                          const QString &pNlaSolverName)
 {
-    // Set the given NLA solver for the given simulation data
+    // Set the NLA solver of the given simulation data using the given NLA
+    // solver name
 
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pNlaSolverName == solverInterface->solverName()) {
@@ -316,7 +318,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
 void SimulationSupportPythonWrapper::reset(Simulation *pSimulation, bool pAll)
 {
-    // Reset our simulation
+    // Reset the given simulation
 
     pSimulation->reset(pAll);
 }
@@ -325,7 +327,7 @@ void SimulationSupportPythonWrapper::reset(Simulation *pSimulation, bool pAll)
 
 void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
-    // Reset our simulation results
+    // Reset the given simulation results
 
     pSimulation->results()->reset();
 }
@@ -334,7 +336,7 @@ void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 
 PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 {
-    // Return a list of issues the simulation has
+    // Return a list of issues the given simulation has, if any
 
     PyObject *issuesList = PyList_New(0);
     auto simulationIssues = pSimulation->issues();
@@ -364,7 +366,7 @@ void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulatio
                                                       double pStartingPoint,
                                                       bool pRecompute)
 {
-    // Set the starting point of our simulation
+    // Set the starting point of the given simulation data
 
     pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
 }
@@ -374,7 +376,7 @@ void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulatio
 void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData,
                                                     double pEndingPoint)
 {
-    // Set the ending point of our simulation
+    // Set the ending point of the given simulation data
 
     pSimulationData->setEndingPoint(pEndingPoint);
 }
@@ -384,7 +386,7 @@ void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationD
 void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData,
                                                       double pPointInterval)
 {
-    // Set the point interval for our simulation
+    // Set the point interval of the given simulation data
 
     pSimulationData->setPointInterval(pPointInterval);
 }
@@ -394,7 +396,7 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData,
                                                   const QString &pOdeSolverName)
 {
-    // Set the given ODE solver for the given simulation data
+    // Set the given ODE solver of the given simulation data
 
     SimulationSupport::setOdeSolver(pSimulationData, pOdeSolverName);
 }
@@ -404,7 +406,7 @@ void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationDat
 void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData,
                                                   const QString &pNlaSolverName)
 {
-    // Set the given NLA solver for the given simulation data
+    // Set the given NLA solver of the given simulation data
 
     SimulationSupport::setNlaSolver(pSimulationData, pNlaSolverName);
 }
