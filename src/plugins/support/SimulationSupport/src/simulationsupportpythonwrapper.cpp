@@ -51,7 +51,7 @@ namespace SimulationSupport {
 static void setOdeSolver(SimulationData *pSimulationData,
                          const QString &pOdeSolverName)
 {
-    // Set the ODE solver of the given simulation data using the given ODE
+    // Set the ODE solver for the given simulation data using the given ODE
     // solver name
 
     for (auto solverInterface : Core::solverInterfaces()) {
@@ -78,7 +78,7 @@ static void setOdeSolver(SimulationData *pSimulationData,
 static void setNlaSolver(SimulationData *pSimulationData,
                          const QString &pNlaSolverName)
 {
-    // Set the NLA solver of the given simulation data using the given NLA
+    // Set the NLA solver for the given simulation data using the given NLA
     // solver name
 
     for (auto solverInterface : Core::solverInterfaces()) {
@@ -366,7 +366,7 @@ void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulat
                                                         double pStartingPoint,
                                                         bool pRecompute)
 {
-    // Set the starting point of the given simulation data
+    // Set the starting point for the given simulation data
 
     pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
 }
@@ -376,7 +376,7 @@ void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulat
 void SimulationSupportPythonWrapper::set_ending_point(SimulationData *pSimulationData,
                                                       double pEndingPoint)
 {
-    // Set the ending point of the given simulation data
+    // Set the ending point for the given simulation data
 
     pSimulationData->setEndingPoint(pEndingPoint);
 }
@@ -386,7 +386,7 @@ void SimulationSupportPythonWrapper::set_ending_point(SimulationData *pSimulatio
 void SimulationSupportPythonWrapper::set_point_interval(SimulationData *pSimulationData,
                                                         double pPointInterval)
 {
-    // Set the point interval of the given simulation data
+    // Set the point interval for the given simulation data
 
     pSimulationData->setPointInterval(pPointInterval);
 }
@@ -396,7 +396,7 @@ void SimulationSupportPythonWrapper::set_point_interval(SimulationData *pSimulat
 void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationData,
                                                     const QString &pOdeSolverName)
 {
-    // Set the ODE solver of the given simulation data using the given ODE
+    // Set the ODE solver for the given simulation data using the given ODE
     // solver name
 
     SimulationSupport::setOdeSolver(pSimulationData, pOdeSolverName);
@@ -407,7 +407,7 @@ void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationD
 void SimulationSupportPythonWrapper::set_nla_solver(SimulationData *pSimulationData,
                                                     const QString &pNlaSolverName)
 {
-    // Set the NLA solver of the given simulation data using the given NLA
+    // Set the NLA solver for the given simulation data using the given NLA
     // solver name
 
     SimulationSupport::setNlaSolver(pSimulationData, pNlaSolverName);
@@ -417,7 +417,7 @@ void SimulationSupportPythonWrapper::set_nla_solver(SimulationData *pSimulationD
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    // Return the constants values of the given simulation data
+    // Return the constants values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantsValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -427,7 +427,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    // Return the rates values of the given simulation data
+    // Return the rates values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->ratesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -437,7 +437,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    // Return the states values of the given simulation data
+    // Return the states values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->statesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -447,7 +447,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    // Return the algebraic values of the given simulation data
+    // Return the algebraic values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -457,7 +457,7 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 
 DataStore::DataStoreVariable * SimulationSupportPythonWrapper::voi(SimulationResults *pSimulationResults) const
 {
-    // Return the VOI variable of the given simulation results
+    // Return the VOI variable for the given simulation results
 
     return pSimulationResults->pointsVariable();
 }
@@ -466,7 +466,7 @@ DataStore::DataStoreVariable * SimulationSupportPythonWrapper::voi(SimulationRes
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
 {
-    // Return the constants variables of the given simulation results
+    // Return the constants variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->constantsVariables());
 }
@@ -475,7 +475,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulat
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
 {
-    // Return the rates variables of the given simulation results
+    // Return the rates variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->ratesVariables());
 }
@@ -484,7 +484,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationR
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
-    // Return the states variables of the given simulation results
+    // Return the states variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->statesVariables());
 }
@@ -493,7 +493,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
 {
-    // Return the algebraic variables of the given simulation results
+    // Return the algebraic variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->algebraicVariables());
 }
@@ -502,7 +502,7 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulat
 
 void SimulationSupportPythonWrapper::simulationError(const QString &pErrorMessage)
 {
-    // Keep track of the given error message
+    // Keep track for the given error message
 
     mErrorMessage = pErrorMessage;
 }
