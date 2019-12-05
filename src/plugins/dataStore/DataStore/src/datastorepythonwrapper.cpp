@@ -354,42 +354,6 @@ DataStorePythonWrapper::DataStorePythonWrapper(void *pModule,
 
 //==============================================================================
 
-double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
-                                     quint64 pPosition, int pRun) const
-{
-    // Return the value of the given data store variable at the given position
-    // and for the given run
-
-    if (   (pDataStoreVariable != nullptr)
-        && (pDataStoreVariable->array() != nullptr)) {
-        return pDataStoreVariable->value(pPosition, pRun);
-    }
-
-    throw std::runtime_error("'NoneType' object is not subscriptable.");
-}
-
-//==============================================================================
-
-PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
-                                          int pRun) const
-{
-    // Create and return a NumPy array for the given data store variable and run
-
-    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
-
-    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
-        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
-
-        return numPyArray->numPyArray();
-    }
-
-#include "pythonbegin.h"
-    Py_RETURN_NONE;
-#include "pythonend.h"
-}
-
-//==============================================================================
-
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                        SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
@@ -446,6 +410,42 @@ PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
     // dictionary
 
     return dataStoreVariablesDict(pDataStore->voiAndVariables());
+}
+
+//==============================================================================
+
+double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
+                                     quint64 pPosition, int pRun) const
+{
+    // Return the value of the given data store variable at the given position
+    // and for the given run
+
+    if (   (pDataStoreVariable != nullptr)
+        && (pDataStoreVariable->array() != nullptr)) {
+        return pDataStoreVariable->value(pPosition, pRun);
+    }
+
+    throw std::runtime_error("'NoneType' object is not subscriptable.");
+}
+
+//==============================================================================
+
+PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
+                                          int pRun) const
+{
+    // Create and return a NumPy array for the given data store variable and run
+
+    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
+
+    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
+        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
+
+        return numPyArray->numPyArray();
+    }
+
+#include "pythonbegin.h"
+    Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================

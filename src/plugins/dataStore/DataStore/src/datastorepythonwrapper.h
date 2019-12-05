@@ -58,13 +58,13 @@ public:
     static DATASTORE_EXPORT PyObject * dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
+    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
+    PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
+
     double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                  quint64 pPosition, int pRun = -1) const;
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                       int pRun = -1) const;
-
-    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
-    PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
 };
 
 //==============================================================================
