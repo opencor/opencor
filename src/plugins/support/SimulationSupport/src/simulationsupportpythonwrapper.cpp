@@ -455,9 +455,9 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 
 //==============================================================================
 
-DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
+DataStore::DataStoreVariable * SimulationSupportPythonWrapper::voi(SimulationResults *pSimulationResults) const
 {
-    // Return the points variable of the given simulation results
+    // Return the VOI variable of the given simulation results
 
     return pSimulationResults->pointsVariable();
 }

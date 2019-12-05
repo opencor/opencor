@@ -404,7 +404,7 @@ PyObject * DataStorePythonWrapper::variables(DataStore *pDataStore)
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
+PyObject * DataStorePythonWrapper::voi_and_variables(DataStore *pDataStore)
 {
     // Return the VOI and variables in the given data store as a Python
     // dictionary
