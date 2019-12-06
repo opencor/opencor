@@ -3807,17 +3807,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       quint64 pSimulationResultsSize,
-                                                                       Task pTask)
-{
-    // Update our simulation results
-
-    updateSimulationResults(pSimulationWidget, pSimulationResultsSize, -1, pTask);
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file

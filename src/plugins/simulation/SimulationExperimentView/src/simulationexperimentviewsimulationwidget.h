@@ -168,8 +168,6 @@ public:
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
                                  int pSimulationRun, Task pTask);
-    void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 quint64 pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
 
