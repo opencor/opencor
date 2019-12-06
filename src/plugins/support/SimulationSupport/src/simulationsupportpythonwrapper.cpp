@@ -276,9 +276,11 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         // Keep track of any simulation error and of when the simulation is done
 
         connect(pSimulation, &Simulation::error,
-                this, &SimulationSupportPythonWrapper::simulationError);
+                this, &SimulationSupportPythonWrapper::simulationError,
+                Qt::UniqueConnection);
         connect(pSimulation, &Simulation::done,
-                this, &SimulationSupportPythonWrapper::simulationDone);
+                this, &SimulationSupportPythonWrapper::simulationDone,
+                Qt::UniqueConnection);
 
         // Run our simulation and wait for it to complete
         // Note: we use a queued connection because the event is in our
@@ -293,8 +295,6 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         pSimulation->run();
 
         waitLoop.exec();
-
-        disconnect(pSimulation, nullptr, this, nullptr);
 
         // Throw any error message that has been generated
 
