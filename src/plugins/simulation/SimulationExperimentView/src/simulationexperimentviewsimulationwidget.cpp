@@ -1200,6 +1200,10 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
 {
     // Return a file tab icon that shows the given file's simulation progress
 
+    static const QIcon NoIcon = QIcon();
+
+    QIcon res = NoIcon;
+
     if (!isVisible() && (mProgress != -1)) {
         // Create an image that shows the progress of our simulation
 
@@ -1214,15 +1218,10 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
                                      Core::highlightColor());
 
-        return QIcon(tabBarPixmap);
+        res = QIcon(tabBarPixmap);
     }
 
-    // No simulation object currently exists for the model, so return a null
-    // icon
-
-    static const QIcon NoIcon = QIcon();
-
-    return NoIcon;
+    return res;
 }
 
 //==============================================================================
