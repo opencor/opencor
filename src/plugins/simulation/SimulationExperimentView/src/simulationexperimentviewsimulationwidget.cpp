@@ -3043,7 +3043,9 @@ void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 
     static const QIcon NoIcon = QIcon();
 
-    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mSimulation->fileName(), NoIcon);
+    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
+                                        mSimulation->fileName(),
+                                        NoIcon);
 }
 
 //==============================================================================
