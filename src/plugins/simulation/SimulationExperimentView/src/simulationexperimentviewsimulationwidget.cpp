@@ -1196,8 +1196,23 @@ int SimulationExperimentViewSimulationWidget::tabBarPixmapSize() const
 
 //==============================================================================
 
-QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
+QIcon SimulationExperimentViewSimulationWidget::doFileTabIcon(bool pForEmitting)
 {
+    // Check whether we should reset our progress
+    // Note: this is needed in case a simulation was run from Python, in
+    //       which case mProgress may have been updated after a simulation has
+    //       completed (because the GUI, a simulation and a Python script are
+    //       all run in their own thread, so no guarantee about which event is
+    //       going to be handled first), so we need to reset it here if we are
+    //       not asking for the file tab icon in order to emit a signal (see
+    //       SimulationExperimentViewSimulationWidget::updateSimulationResults()
+    //       vs. CentralWidget::updateFileTab() and
+    //       CentralWidget::updateFileTabIcons()...
+
+    if (!pForEmitting && !mSimulation->isRunning() && !mSimulation->isPaused()) {
+        mProgress = -1;
+    }
+
     // Return a file tab icon that shows the given file's simulation progress
 
     static const QIcon NoIcon = QIcon();
@@ -1222,6 +1237,15 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
     }
 
     return res;
+}
+
+//==============================================================================
+
+QIcon SimulationExperimentViewSimulationWidget::fileTabIcon()
+{
+    // Return our file tab icon
+
+    return doFileTabIcon(false);
 }
 
 //==============================================================================
@@ -3799,7 +3823,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                 emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
                                                     simulationFileName,
-                                                    fileTabIcon());
+                                                    doFileTabIcon(true));
             }
         }
     }
