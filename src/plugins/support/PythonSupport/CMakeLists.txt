@@ -14,4 +14,6 @@ ADD_PLUGIN(PythonSupport
         Core
         Python
         PythonPackages
+    TESTS
+        tests
 )
