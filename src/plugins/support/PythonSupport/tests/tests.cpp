@@ -29,6 +29,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QtTest/QtTest>
+
+//==============================================================================
+
 void Tests::basicTests()
 {
     // Some very basic tests to make sure that we have access to libSBML

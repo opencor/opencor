@@ -37,6 +37,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QtTest/QtTest>
+
+//==============================================================================
+
 void ParsingTests::basicTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;

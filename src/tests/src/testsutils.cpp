@@ -25,6 +25,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QCryptographicHash>
+#include <QDir>
 #include <QFile>
 #include <QIODevice>
 #include <QProcess>
