@@ -19,6 +19,16 @@ def run_simulation(title: str, file_name_or_url: str, first: bool = True) -> obj
         simulation = oc.open_simulation(
             os.path.dirname(__file__) + '/../../../../../../models/tests/' + file_name_or_url)
 
+    print(' - Check file...')
+    print('    - Valid: ' + ('YES' if simulation.valid() else 'NO'))
+
+    issues = simulation.issues()
+
+    if issues:
+        print('    - Issues:\n       - ' + '\n       - '.join(simulation.issues()))
+    else:
+        print('    - Issues: N/A')
+
     print(' - Run file...')
 
     simulation.run()
