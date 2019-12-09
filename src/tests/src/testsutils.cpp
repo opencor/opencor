@@ -168,7 +168,7 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     //  - Removing all occurrences of the CR character.
 
     pOutput = output.remove(dirName())
-                    .replace('\\', '/')
+                    .replace("\\\\", "/")
                     .remove('\r')
                     .split('\n');
 
