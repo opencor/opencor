@@ -1,10 +1,9 @@
 import math
+import opencor as oc
 import os
 
-import opencor as oc
 
-
-def run_simulation(title, file_name_or_url, first=True):
+def run_simulation(title: str, file_name_or_url: str, first: bool = True) -> object:
     if not first:
         print()
 
@@ -17,7 +16,8 @@ def run_simulation(title, file_name_or_url, first=True):
     if file_name_or_url.startswith('https://'):
         simulation = oc.open_simulation(file_name_or_url)
     else:
-        simulation = oc.open_simulation(os.path.dirname(__file__) + '/../../../../../../models/tests/' + file_name_or_url)
+        simulation = oc.open_simulation(
+            os.path.dirname(__file__) + '/../../../../../../models/tests/' + file_name_or_url)
 
     print(' - Run file...')
 
