@@ -2,13 +2,13 @@
           Unknown local file
 ---------------------------------------
  - Open simulation
-OSError("'src/plugins/support/PythonSupport/tests/data/../../../../../../models/tests/unknown' could not be opened.")
+ - OSError("'src/plugins/support/PythonSupport/tests/data/../../../../../../models/tests/unknown' could not be opened.")
 
 ---------------------------------------
           Unknown remote file
 ---------------------------------------
  - Open simulation
-OSError("'https://unknown' could not be opened (host unknown not found).")
+ - OSError("'https://unknown' could not be opened (host unknown not found).")
 
 ---------------------------------------
           Invalid local file
@@ -29,7 +29,7 @@ OSError("'https://unknown' could not be opened (host unknown not found).")
           - States : n/a
           - Rates : n/a
           - Algebraic : n/a
-RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
+ - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
           Invalid remote file
@@ -50,7 +50,7 @@ RuntimeError('std::runtime_error: The simulation has an invalid runtime and cann
           - States : n/a
           - Rates : n/a
           - Algebraic : n/a
-RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
+ - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
            Local CellML file
