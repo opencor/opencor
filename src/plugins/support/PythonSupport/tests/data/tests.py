@@ -3,14 +3,31 @@ import opencor as oc
 import os
 
 
-def initial_values(data, type):
+def print_values(values):
+    values_len = len(values)
+    if values_len > 6:
+        print('[ %f, %f, %f, ..., %f, %f, %f ]' %
+              (values[0], values[1], values[2], values[values_len - 3], values[values_len - 2],
+               values[values_len - 1]))
+    else:
+        print('[ ', end='')
+        print(*values, sep=", ", end='')
+        print(' ]')
+
+
+def values(data, type):
     if data:
-        print('    - ' + type + ':')
+        print('       - ' + type + ':')
 
         for item in data.values():
-            print('       - %s = %f' % (item.uri(), item.value()))
+            print('          - ' + item.uri() + ' = ', end='')
+
+            try:
+                print_values(item.values())
+            except:
+                print(item.value())
     else:
-        print('    - ' + type + ': N/A')
+        print('       - ' + type + ': N/A')
 
 
 def run_simulation(simulation, step):
@@ -20,30 +37,19 @@ def run_simulation(simulation, step):
 
     simulation.run()
 
-    # Retrieve the simulation results and its corresponding data store, VOI,
-    # constants, rates, states and algebraic information
-
-    print('    - Retrieve simulation results...')
+    # Retrieve the number of data points and output some or all of the
+    # simulation values
 
     results = simulation.results()
-    data_store = results.data_store()
-    voi = results.voi()
-    constants = results.constants()
-    rates = results.rates()
-    states = results.states()
-    algebraic = results.algebraic()
-
-    print('      - VOI: ' + voi.name() + ' (' + voi.unit() + ')')
-
-    print('    - Retrieve states...')
-
     states = results.states()
 
-    print('    - Retrieve states\' values...')
+    print('    - Number of points: %d' % len(states['main/x'].values()))
+    print('    - Result values:')
 
-    x = states['main/x'].values()
-    y = states['main/y'].values()
-    z = states['main/z'].values()
+    values(results.constants(), "Constants")
+    values(states, "States")
+    values(results.rates(), "Rates")
+    values(results.algebraic(), "Algebraic")
 
 
 def test_simulation(title, file_name_or_url, first=True):
@@ -84,11 +90,12 @@ def test_simulation(title, file_name_or_url, first=True):
     print('    - Starting point: %f' % data.starting_point())
     print('    - Ending point:   %f' % data.ending_point())
     print('    - Point interval: %f' % data.point_interval())
+    print('    - Initial values:')
 
-    initial_values(data.constants(), "Constants")
-    initial_values(data.states(), "States")
-    initial_values(data.rates(), "Rates")
-    initial_values(data.algebraic(), "Algebraic")
+    values(data.constants(), "Constants")
+    values(data.states(), "States")
+    values(data.rates(), "Rates")
+    values(data.algebraic(), "Algebraic")
 
     # Run the simulation using the default settings
 
