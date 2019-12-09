@@ -1,4 +1,16 @@
 ---------------------------------------
+          Unknown local file
+---------------------------------------
+ - Open file...
+OSError("'src/plugins/support/PythonSupport/tests/data/../../../../../../models/tests/unknown' could not be opened.")
+
+---------------------------------------
+          Unknown remote file
+---------------------------------------
+ - Open file...
+OSError("'https://unknown' could not be opened (host unknown not found).")
+
+---------------------------------------
            Local CellML file
 ---------------------------------------
  - Open file...

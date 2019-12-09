@@ -40,7 +40,18 @@ def run_simulation(title, file_name_or_url, first=True):
     oc.close_simulation(simulation)
 
 
-run_simulation('Local CellML file', 'cellml/lorenz.cellml')
+try:
+    run_simulation('Unknown local file', 'unknown')
+except Exception as e:
+    print(repr(e))
+
+try:
+    run_simulation('Unknown remote file',
+                   'https://unknown', False)
+except Exception as e:
+    print(repr(e))
+
+run_simulation('Local CellML file', 'cellml/lorenz.cellml', False)
 run_simulation('Remote CellML file',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml', False)
 

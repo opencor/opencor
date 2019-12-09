@@ -162,7 +162,7 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     QDir::setCurrent(origPath);
 #endif
 
-    pOutput = output.remove('\r').split('\n');
+    pOutput = output.remove(dirName()).remove('\r').split('\n');
 
     return process.exitCode();
 }
