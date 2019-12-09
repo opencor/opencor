@@ -2,4 +2,4 @@
 
 TITLE Running the ${CMAKE_PROJECT_NAME} environment...
 
-"%~dp0bin\${CMAKE_PROJECT_NAME}" %*
+%~dp0bin\${CMAKE_PROJECT_NAME} %*
