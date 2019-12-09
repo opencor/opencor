@@ -157,12 +157,17 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     }
 
     // Clean up our output by:
-    //  - Making any path relative rather than absolute;
+    //  - Replacing escaped backslashes with a non-escaped one;
+    //  - Making paths relative rather than absolute;
     //  - Replacing backslashes with forward slashes; and
     //  - Removing all occurrences of the CR character.
+    // Note: the idea is to be able to compare our output indepedent of where
+    //       the test was run from and of which operating system it was run
+    //       on...
 
-    pOutput = output.remove(dirName())
-                    .replace("\\\\", "/")
+    pOutput = output.replace("\\\\", "\\")
+                    .remove(dirName())
+                    .replace("\\", "/")
                     .remove('\r')
                     .split('\n');
 
