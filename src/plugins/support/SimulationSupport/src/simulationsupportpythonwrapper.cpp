@@ -63,7 +63,7 @@ static void setOdeSolver(SimulationData *pSimulationData,
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Set each ODE solver property to their default value
 
-                pSimulationData->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+                pSimulationData->setOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
             }
 
             return;
@@ -90,7 +90,7 @@ static void setNlaSolver(SimulationData *pSimulationData,
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Set each NLA solver property to their default value
 
-                pSimulationData->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+                pSimulationData->setNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
             }
 
             return;

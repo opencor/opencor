@@ -2450,7 +2450,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
                 //       retrieve the value of list properties as a string
                 //       rather than an index...
 
-                mSimulation->data()->addOdeSolverProperty(property->id(),
+                mSimulation->data()->setOdeSolverProperty(property->id(),
                                                           property->variantValue(false));
 
                 needOdeSolverGuiUpdate = true;
@@ -2489,7 +2489,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
                 //       retrieve the value of list properties as a string
                 //       rather than an index...
 
-                mSimulation->data()->addNlaSolverProperty(property->id(),
+                mSimulation->data()->setNlaSolverProperty(property->id(),
                                                           property->variantValue(false),
                                                           pResetNlaSolver);
 

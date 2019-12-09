@@ -110,7 +110,7 @@ QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameter
         }
 #else
 
-        mData->addOdeSolverProperty(solverInterface->id(parameterKisaoId),
+        mData->setOdeSolverProperty(solverInterface->id(parameterKisaoId),
                                     QString::fromStdString(sedmlAlgorithmParameter->getValue()));
 #endif
     }

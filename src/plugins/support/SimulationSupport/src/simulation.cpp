@@ -403,10 +403,10 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 
 //==============================================================================
 
-void SimulationData::addOdeSolverProperty(const QString &pName,
+void SimulationData::setOdeSolverProperty(const QString &pName,
                                           const QVariant &pValue)
 {
-    // Add an ODE solver property
+    // Set an ODE solver property
 
     if (mSimulation->runtime() != nullptr) {
         mOdeSolverProperties.insert(pName, pValue);
@@ -472,10 +472,10 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 
 //==============================================================================
 
-void SimulationData::addNlaSolverProperty(const QString &pName,
+void SimulationData::setNlaSolverProperty(const QString &pName,
                                           const QVariant &pValue, bool pReset)
 {
-    // Add an NLA solver property
+    // Set an NLA solver property
 
     if ((   mSimulation->runtime() != nullptr)
          && mSimulation->runtime()->needNlaSolver()) {

@@ -363,7 +363,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
             //       the value of list properties as a string rather than an
             //       index...
 
-            pSimulation->data()->addNlaSolverProperty(property->id(),
+            pSimulation->data()->setNlaSolverProperty(property->id(),
                                                       property->variantValue(false),
                                                       false);
         }
