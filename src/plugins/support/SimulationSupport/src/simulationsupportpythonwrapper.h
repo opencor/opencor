@@ -77,10 +77,15 @@ public slots:
 
     PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
 
+    double starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                             double pStartingPoint, bool pRecompute = true);
+
+    double ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                           double pEndingPoint);
+
+    double point_interval(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_point_interval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                             double pPointInterval);
 

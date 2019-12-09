@@ -362,6 +362,15 @@ PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 
 //==============================================================================
 
+double SimulationSupportPythonWrapper::starting_point(SimulationData *pSimulationData)
+{
+    // Return the starting point for the given simulation data
+
+    return pSimulationData->startingPoint();
+}
+
+//==============================================================================
+
 void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulationData,
                                                         double pStartingPoint,
                                                         bool pRecompute)
@@ -373,12 +382,30 @@ void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulat
 
 //==============================================================================
 
+double SimulationSupportPythonWrapper::ending_point(SimulationData *pSimulationData)
+{
+    // Return the ending point for the given simulation data
+
+    return pSimulationData->endingPoint();
+}
+
+//==============================================================================
+
 void SimulationSupportPythonWrapper::set_ending_point(SimulationData *pSimulationData,
                                                       double pEndingPoint)
 {
     // Set the ending point for the given simulation data
 
     pSimulationData->setEndingPoint(pEndingPoint);
+}
+
+//==============================================================================
+
+double SimulationSupportPythonWrapper::point_interval(SimulationData *pSimulationData)
+{
+    // Return the point interval for the given simulation data
+
+    return pSimulationData->pointInterval();
 }
 
 //==============================================================================
