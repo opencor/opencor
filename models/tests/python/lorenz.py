@@ -1,15 +1,23 @@
+import math
 import os
 
 import opencor as oc
 
 
-def run_simulation(file_name_or_url):
+def run_simulation(title, file_name_or_url, first=True):
+    if not first:
+        print()
+
+    print('---------------------------------------')
+    print(' ' * math.floor((39 - len(title)) / 2) + title)
+    print('---------------------------------------')
+
     print(' - Open file...')
 
     if file_name_or_url.startswith('https://'):
-        simulation = oc.openSimulation(file_name_or_url)
+        simulation = oc.open_simulation(file_name_or_url)
     else:
-        simulation = oc.openSimulation(os.path.dirname(__file__) + '/' + file_name_or_url)
+        simulation = oc.open_simulation(os.path.dirname(__file__) + '/' + file_name_or_url)
 
     print(' - Run file...')
 
@@ -29,46 +37,17 @@ def run_simulation(file_name_or_url):
     y = states['main/y'].values()
     z = states['main/z'].values()
 
-    oc.closeSimulation(simulation)
+    oc.close_simulation(simulation)
 
 
-print('---------------------------------------')
-print('           Local CellML file')
-print('---------------------------------------')
+run_simulation('Local CellML file', '../cellml/lorenz.cellml')
+run_simulation('Remote CellML file',
+               'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml', False)
 
-run_simulation('../cellml/lorenz.cellml')
+run_simulation('Local SED-ML file', '../sedml/lorenz.sedml', False)
+run_simulation('Remote SED-ML file',
+               'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz.sedml', False)
 
-print()
-print('---------------------------------------')
-print('          Remote CellML file')
-print('---------------------------------------')
-
-run_simulation('https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml')
-
-print()
-print('---------------------------------------')
-print('           Local SED-ML file')
-print('---------------------------------------')
-
-run_simulation('../sedml/lorenz.sedml')
-
-print()
-print('---------------------------------------')
-print('          Remote SED-ML file')
-print('---------------------------------------')
-
-run_simulation('https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz.sedml')
-
-print()
-print('---------------------------------------')
-print('         Local COMBINE archive')
-print('---------------------------------------')
-
-run_simulation('../combine/lorenz.omex')
-
-print()
-print('---------------------------------------')
-print('        Remote COMBINE archive')
-print('---------------------------------------')
-
-run_simulation('https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex')
+run_simulation('Local COMBINE archive', '../combine/lorenz.omex', False)
+run_simulation('Remote COMBINE archive',
+               'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex', False)

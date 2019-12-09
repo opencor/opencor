@@ -73,27 +73,30 @@ public slots:
 
     void reset(OpenCOR::SimulationSupport::Simulation *pSimulation,
                bool pAll = true);
-    void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulation);
+    void clear_results(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
     PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
 
-    void setStartingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                          double pStartingPoint, bool pRecompute = true);
-    void setEndingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData, double pEndingPoint);
-    void setPointInterval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                          double pPointInterval);
+    void set_starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                            double pStartingPoint, bool pRecompute = true);
+    void set_ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                          double pEndingPoint);
+    void set_point_interval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                            double pPointInterval);
 
-    void setOdeSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                      const QString &pOdeSolverName);
-    void setNlaSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                      const QString &pNlaSolverName);
+    void set_ode_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                        const QString &pOdeSolverName);
+    void set_nla_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                        const QString &pNlaSolverName);
 
     PyObject * constants(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
 
-    OpenCOR::DataStore::DataStoreVariable * points(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+    OpenCOR::DataStore::DataStore * data_store(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+
+    OpenCOR::DataStore::DataStoreVariable * voi(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;

@@ -4,7 +4,7 @@ static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
 
     // Close a simulation
 
-    if (PyTuple_Size(pArgs) > 0) {
+    if (PyTuple_Size(pArgs) == 1) {
 #include "pythonbegin.h"
         PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(pArgs, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 #include "pythonend.h"
