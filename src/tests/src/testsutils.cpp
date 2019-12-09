@@ -162,7 +162,15 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     QDir::setCurrent(origPath);
 #endif
 
-    pOutput = output.remove(dirName()).remove('\r').split('\n');
+    // Clean up our output by:
+    //  - Making any path relative rather than absolute;
+    //  - Replacing backslashes with forward slashes; and
+    //  - Removing all occurrences of the CR character.
+
+    pOutput = output.remove(dirName())
+                    .replace('\\', '/')
+                    .remove('\r')
+                    .split('\n');
 
     return process.exitCode();
 }
