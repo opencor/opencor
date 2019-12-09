@@ -420,6 +420,15 @@ void SimulationSupportPythonWrapper::set_point_interval(SimulationData *pSimulat
 
 //==============================================================================
 
+QString SimulationSupportPythonWrapper::ode_solver_name(SimulationData *pSimulationData)
+{
+    // Return the name of the ODE solver for the given simulation data
+
+    return pSimulationData->odeSolverName();
+}
+
+//==============================================================================
+
 void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationData,
                                                     const QString &pOdeSolverName)
 {
@@ -427,6 +436,15 @@ void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationD
     // solver name
 
     SimulationSupport::setOdeSolver(pSimulationData, pOdeSolverName);
+}
+
+//==============================================================================
+
+QString SimulationSupportPythonWrapper::nla_solver_name(SimulationData *pSimulationData)
+{
+    // Return the name of the NLA solver for the given simulation data
+
+    return pSimulationData->nlaSolverName();
 }
 
 //==============================================================================

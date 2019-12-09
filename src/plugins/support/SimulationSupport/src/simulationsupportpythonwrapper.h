@@ -89,8 +89,11 @@ public slots:
     void set_point_interval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                             double pPointInterval);
 
+    QString ode_solver_name(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_ode_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                         const QString &pOdeSolverName);
+
+    QString nla_solver_name(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_nla_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                         const QString &pNlaSolverName);
 
