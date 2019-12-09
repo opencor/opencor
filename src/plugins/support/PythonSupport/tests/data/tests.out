@@ -1,105 +1,761 @@
 ---------------------------------------
           Unknown local file
 ---------------------------------------
- - Open simulation...
+ - Open simulation
 OSError("'src/plugins/support/PythonSupport/tests/data/../../../../../../models/tests/unknown' could not be opened.")
 
 ---------------------------------------
           Unknown remote file
 ---------------------------------------
- - Open simulation...
+ - Open simulation
 OSError("'https://unknown' could not be opened (host unknown not found).")
 
 ---------------------------------------
           Invalid local file
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: NO
+ - Open simulation
+ - Check simulation:
+    - Valid: no
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
- - Run simulation...
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 1000.000000
+       - Point interval: 1.000000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants : n/a
+          - States : n/a
+          - Rates : n/a
+          - Algebraic : n/a
 RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
           Invalid remote file
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: NO
+ - Open simulation
+ - Check simulation:
+    - Valid: no
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
- - Run simulation...
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 1000.000000
+       - Point interval: 1.000000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants : n/a
+          - States : n/a
+          - Rates : n/a
+          - Algebraic : n/a
 RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
            Local CellML file
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: YES
-    - Issues: N/A
- - Run simulation...
- - Retrieve simulation results...
- - Retrieve states...
- - Retrieve states' values...
+ - Open simulation
+ - Check simulation:
+    - Valid: yes
+    - Issues: n/a
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 1000.000000
+       - Point interval: 1.000000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 1001
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, -9.378558, -8.173536, ..., 6.674816, 9.005203, -0.396076 ]
+          - main/y = [ 1.000000, -8.357009, -9.562056, ..., 10.277727, 2.199525, -1.346778 ]
+          - main/z = [ 1.000000, 29.362317, 24.620753, ..., 17.818973, 34.534023, 18.916650 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 10.215491, -13.885195, ..., 36.029116, -68.056788, -9.507023 ]
+          - main/y/prime = [ 26.000000, 21.133580, -18.058339, ..., 57.678756, -61.039726, -2.250919 ]
+          - main/z/prime = [ -1.666670, 0.077082, 12.500385, ..., 21.084617, -72.283676, -49.911036 ]
+       - Algebraic : n/a
+ - New settings:
+    - Starting point: 10.000000
+    - Ending point: 30.000000
+    - Point interval: 0.100000
+    - ODE solver: Heun
+ - Run simulation [2]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 2.129077, 6.516799, ..., -13.641183, -10.140708, -4.616582 ]
+          - main/y = [ 1.000000, 4.460078, 13.679288, ..., -14.326282, -3.900874, -0.686010 ]
+          - main/z = [ 1.000000, 1.112284, 4.152666, ..., 33.126533, 35.232860, 28.082468 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 23.310003, 71.624884, ..., -6.850993, 62.398333, 39.305719 ]
+          - main/y/prime = [ 26.000000, 52.785951, 141.728999, ..., 84.258253, 77.247199, 1.066730 ]
+          - main/z/prime = [ -1.666670, 6.529756, 78.071380, ..., 107.089894, -54.396784, -71.719656 ]
+       - Algebraic : n/a
+ - Run simulation [3]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = -4.616581526464568
+             - main/y = -0.6860096060170033
+             - main/z = 28.082467947857783
+          - Rates:
+             - main/x/prime = 39.30571920447565
+             - main/y/prime = 1.0667296106226867
+             - main/z/prime = -71.71965552839858
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ -4.616582, -2.369997, -2.410575, ..., 0.909386, 1.553701, 3.386036 ]
+          - main/y = [ -0.686010, -1.507755, -3.233197, ..., 1.162295, 2.648079, 6.205241 ]
+          - main/z = [ 28.082468, 21.776500, 17.140918, ..., 15.651276, 12.185154, 10.261878 ]
+       - Rates:
+          - main/x/prime = [ 39.305719, 8.622413, -8.226216, ..., 2.529087, 10.943782, 28.192047 ]
+          - main/y/prime = [ 1.066730, -13.241918, -22.943436, ..., 10.067462, 21.923463, 53.856686 ]
+          - main/z/prime = [ -71.719656, -54.497365, -37.915309, ..., -40.679813, -28.379462, -6.353870 ]
+       - Algebraic : n/a
 
 ---------------------------------------
           Remote CellML file
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: YES
-    - Issues: N/A
- - Run simulation...
- - Retrieve simulation results...
- - Retrieve states...
- - Retrieve states' values...
+ - Open simulation
+ - Check simulation:
+    - Valid: yes
+    - Issues: n/a
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 1000.000000
+       - Point interval: 1.000000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 1001
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, -9.378558, -8.173536, ..., 6.674816, 9.005203, -0.396076 ]
+          - main/y = [ 1.000000, -8.357009, -9.562056, ..., 10.277727, 2.199525, -1.346778 ]
+          - main/z = [ 1.000000, 29.362317, 24.620753, ..., 17.818973, 34.534023, 18.916650 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 10.215491, -13.885195, ..., 36.029116, -68.056788, -9.507023 ]
+          - main/y/prime = [ 26.000000, 21.133580, -18.058339, ..., 57.678756, -61.039726, -2.250919 ]
+          - main/z/prime = [ -1.666670, 0.077082, 12.500385, ..., 21.084617, -72.283676, -49.911036 ]
+       - Algebraic : n/a
+ - New settings:
+    - Starting point: 10.000000
+    - Ending point: 30.000000
+    - Point interval: 0.100000
+    - ODE solver: Heun
+ - Run simulation [2]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 2.129077, 6.516799, ..., -13.641183, -10.140708, -4.616582 ]
+          - main/y = [ 1.000000, 4.460078, 13.679288, ..., -14.326282, -3.900874, -0.686010 ]
+          - main/z = [ 1.000000, 1.112284, 4.152666, ..., 33.126533, 35.232860, 28.082468 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 23.310003, 71.624884, ..., -6.850993, 62.398333, 39.305719 ]
+          - main/y/prime = [ 26.000000, 52.785951, 141.728999, ..., 84.258253, 77.247199, 1.066730 ]
+          - main/z/prime = [ -1.666670, 6.529756, 78.071380, ..., 107.089894, -54.396784, -71.719656 ]
+       - Algebraic : n/a
+ - Run simulation [3]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = -4.616581526464568
+             - main/y = -0.6860096060170033
+             - main/z = 28.082467947857783
+          - Rates:
+             - main/x/prime = 39.30571920447565
+             - main/y/prime = 1.0667296106226867
+             - main/z/prime = -71.71965552839858
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ -4.616582, -2.369997, -2.410575, ..., 0.909386, 1.553701, 3.386036 ]
+          - main/y = [ -0.686010, -1.507755, -3.233197, ..., 1.162295, 2.648079, 6.205241 ]
+          - main/z = [ 28.082468, 21.776500, 17.140918, ..., 15.651276, 12.185154, 10.261878 ]
+       - Rates:
+          - main/x/prime = [ 39.305719, 8.622413, -8.226216, ..., 2.529087, 10.943782, 28.192047 ]
+          - main/y/prime = [ 1.066730, -13.241918, -22.943436, ..., 10.067462, 21.923463, 53.856686 ]
+          - main/z/prime = [ -71.719656, -54.497365, -37.915309, ..., -40.679813, -28.379462, -6.353870 ]
+       - Algebraic : n/a
 
 ---------------------------------------
            Local SED-ML file
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: YES
-    - Issues: N/A
- - Run simulation...
- - Retrieve simulation results...
- - Retrieve states...
- - Retrieve states' values...
+ - Open simulation
+ - Check simulation:
+    - Valid: yes
+    - Issues: n/a
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 50.000000
+       - Point interval: 0.001000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 50001
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
+          - main/y = [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
+          - main/z = [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
+          - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
+          - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
+       - Algebraic : n/a
+ - New settings:
+    - Starting point: 10.000000
+    - Ending point: 30.000000
+    - Point interval: 0.100000
+    - ODE solver: Heun
+ - Run simulation [2]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 2.129077, 6.516799, ..., -13.641183, -10.140708, -4.616582 ]
+          - main/y = [ 1.000000, 4.460078, 13.679288, ..., -14.326282, -3.900874, -0.686010 ]
+          - main/z = [ 1.000000, 1.112284, 4.152666, ..., 33.126533, 35.232860, 28.082468 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 23.310003, 71.624884, ..., -6.850993, 62.398333, 39.305719 ]
+          - main/y/prime = [ 26.000000, 52.785951, 141.728999, ..., 84.258253, 77.247199, 1.066730 ]
+          - main/z/prime = [ -1.666670, 6.529756, 78.071380, ..., 107.089894, -54.396784, -71.719656 ]
+       - Algebraic : n/a
+ - Run simulation [3]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = -4.616581526464568
+             - main/y = -0.6860096060170033
+             - main/z = 28.082467947857783
+          - Rates:
+             - main/x/prime = 39.30571920447565
+             - main/y/prime = 1.0667296106226867
+             - main/z/prime = -71.71965552839858
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ -4.616582, -2.369997, -2.410575, ..., 0.909386, 1.553701, 3.386036 ]
+          - main/y = [ -0.686010, -1.507755, -3.233197, ..., 1.162295, 2.648079, 6.205241 ]
+          - main/z = [ 28.082468, 21.776500, 17.140918, ..., 15.651276, 12.185154, 10.261878 ]
+       - Rates:
+          - main/x/prime = [ 39.305719, 8.622413, -8.226216, ..., 2.529087, 10.943782, 28.192047 ]
+          - main/y/prime = [ 1.066730, -13.241918, -22.943436, ..., 10.067462, 21.923463, 53.856686 ]
+          - main/z/prime = [ -71.719656, -54.497365, -37.915309, ..., -40.679813, -28.379462, -6.353870 ]
+       - Algebraic : n/a
 
 ---------------------------------------
           Remote SED-ML file
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: YES
-    - Issues: N/A
- - Run simulation...
- - Retrieve simulation results...
- - Retrieve states...
- - Retrieve states' values...
+ - Open simulation
+ - Check simulation:
+    - Valid: yes
+    - Issues: n/a
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 50.000000
+       - Point interval: 0.001000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 50001
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
+          - main/y = [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
+          - main/z = [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
+          - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
+          - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
+       - Algebraic : n/a
+ - New settings:
+    - Starting point: 10.000000
+    - Ending point: 30.000000
+    - Point interval: 0.100000
+    - ODE solver: Heun
+ - Run simulation [2]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 2.129077, 6.516799, ..., -13.641183, -10.140708, -4.616582 ]
+          - main/y = [ 1.000000, 4.460078, 13.679288, ..., -14.326282, -3.900874, -0.686010 ]
+          - main/z = [ 1.000000, 1.112284, 4.152666, ..., 33.126533, 35.232860, 28.082468 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 23.310003, 71.624884, ..., -6.850993, 62.398333, 39.305719 ]
+          - main/y/prime = [ 26.000000, 52.785951, 141.728999, ..., 84.258253, 77.247199, 1.066730 ]
+          - main/z/prime = [ -1.666670, 6.529756, 78.071380, ..., 107.089894, -54.396784, -71.719656 ]
+       - Algebraic : n/a
+ - Run simulation [3]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = -4.616581526464568
+             - main/y = -0.6860096060170033
+             - main/z = 28.082467947857783
+          - Rates:
+             - main/x/prime = 39.30571920447565
+             - main/y/prime = 1.0667296106226867
+             - main/z/prime = -71.71965552839858
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ -4.616582, -2.369997, -2.410575, ..., 0.909386, 1.553701, 3.386036 ]
+          - main/y = [ -0.686010, -1.507755, -3.233197, ..., 1.162295, 2.648079, 6.205241 ]
+          - main/z = [ 28.082468, 21.776500, 17.140918, ..., 15.651276, 12.185154, 10.261878 ]
+       - Rates:
+          - main/x/prime = [ 39.305719, 8.622413, -8.226216, ..., 2.529087, 10.943782, 28.192047 ]
+          - main/y/prime = [ 1.066730, -13.241918, -22.943436, ..., 10.067462, 21.923463, 53.856686 ]
+          - main/z/prime = [ -71.719656, -54.497365, -37.915309, ..., -40.679813, -28.379462, -6.353870 ]
+       - Algebraic : n/a
 
 ---------------------------------------
          Local COMBINE archive
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: YES
-    - Issues: N/A
- - Run simulation...
- - Retrieve simulation results...
- - Retrieve states...
- - Retrieve states' values...
+ - Open simulation
+ - Check simulation:
+    - Valid: yes
+    - Issues: n/a
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 50.000000
+       - Point interval: 0.001000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 50001
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
+          - main/y = [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
+          - main/z = [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
+          - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
+          - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
+       - Algebraic : n/a
+ - New settings:
+    - Starting point: 10.000000
+    - Ending point: 30.000000
+    - Point interval: 0.100000
+    - ODE solver: Heun
+ - Run simulation [2]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 2.129077, 6.516799, ..., -13.641183, -10.140708, -4.616582 ]
+          - main/y = [ 1.000000, 4.460078, 13.679288, ..., -14.326282, -3.900874, -0.686010 ]
+          - main/z = [ 1.000000, 1.112284, 4.152666, ..., 33.126533, 35.232860, 28.082468 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 23.310003, 71.624884, ..., -6.850993, 62.398333, 39.305719 ]
+          - main/y/prime = [ 26.000000, 52.785951, 141.728999, ..., 84.258253, 77.247199, 1.066730 ]
+          - main/z/prime = [ -1.666670, 6.529756, 78.071380, ..., 107.089894, -54.396784, -71.719656 ]
+       - Algebraic : n/a
+ - Run simulation [3]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = -4.616581526464568
+             - main/y = -0.6860096060170033
+             - main/z = 28.082467947857783
+          - Rates:
+             - main/x/prime = 39.30571920447565
+             - main/y/prime = 1.0667296106226867
+             - main/z/prime = -71.71965552839858
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ -4.616582, -2.369997, -2.410575, ..., 0.909386, 1.553701, 3.386036 ]
+          - main/y = [ -0.686010, -1.507755, -3.233197, ..., 1.162295, 2.648079, 6.205241 ]
+          - main/z = [ 28.082468, 21.776500, 17.140918, ..., 15.651276, 12.185154, 10.261878 ]
+       - Rates:
+          - main/x/prime = [ 39.305719, 8.622413, -8.226216, ..., 2.529087, 10.943782, 28.192047 ]
+          - main/y/prime = [ 1.066730, -13.241918, -22.943436, ..., 10.067462, 21.923463, 53.856686 ]
+          - main/z/prime = [ -71.719656, -54.497365, -37.915309, ..., -40.679813, -28.379462, -6.353870 ]
+       - Algebraic : n/a
 
 ---------------------------------------
         Remote COMBINE archive
 ---------------------------------------
- - Open simulation...
- - Check simulation...
-    - Valid: YES
-    - Issues: N/A
- - Run simulation...
- - Retrieve simulation results...
- - Retrieve states...
- - Retrieve states' values...
+ - Open simulation
+ - Check simulation:
+    - Valid: yes
+    - Issues: n/a
+ - Run simulation [1]
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 50.000000
+       - Point interval: 0.001000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 50001
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
+          - main/y = [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
+          - main/z = [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
+          - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
+          - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
+       - Algebraic : n/a
+ - New settings:
+    - Starting point: 10.000000
+    - Ending point: 30.000000
+    - Point interval: 0.100000
+    - ODE solver: Heun
+ - Run simulation [2]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = 1.0
+             - main/y = 1.0
+             - main/z = 1.0
+          - Rates:
+             - main/x/prime = 0.0
+             - main/y/prime = 26.0
+             - main/z/prime = -1.6666699999999999
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ 1.000000, 2.129077, 6.516799, ..., -13.641183, -10.140708, -4.616582 ]
+          - main/y = [ 1.000000, 4.460078, 13.679288, ..., -14.326282, -3.900874, -0.686010 ]
+          - main/z = [ 1.000000, 1.112284, 4.152666, ..., 33.126533, 35.232860, 28.082468 ]
+       - Rates:
+          - main/x/prime = [ 0.000000, 23.310003, 71.624884, ..., -6.850993, 62.398333, 39.305719 ]
+          - main/y/prime = [ 26.000000, 52.785951, 141.728999, ..., 84.258253, 77.247199, 1.066730 ]
+          - main/z/prime = [ -1.666670, 6.529756, 78.071380, ..., 107.089894, -54.396784, -71.719656 ]
+       - Algebraic : n/a
+ - Run simulation [3]
+    - Settings:
+       - Starting point: 10.000000
+       - Ending point: 30.000000
+       - Point interval: 0.100000
+       - ODE solver: Heun
+       - Initial values:
+          - Constants:
+             - main/sigma = 10.0
+             - main/rho = 28.0
+             - main/beta = 2.66667
+          - States:
+             - main/x = -4.616581526464568
+             - main/y = -0.6860096060170033
+             - main/z = 28.082467947857783
+          - Rates:
+             - main/x/prime = 39.30571920447565
+             - main/y/prime = 1.0667296106226867
+             - main/z/prime = -71.71965552839858
+          - Algebraic : n/a
+    - Result values:
+       - Number of points: 201
+       - Constants:
+          - main/sigma = [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
+          - main/rho = [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
+          - main/beta = [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
+       - States:
+          - main/x = [ -4.616582, -2.369997, -2.410575, ..., 0.909386, 1.553701, 3.386036 ]
+          - main/y = [ -0.686010, -1.507755, -3.233197, ..., 1.162295, 2.648079, 6.205241 ]
+          - main/z = [ 28.082468, 21.776500, 17.140918, ..., 15.651276, 12.185154, 10.261878 ]
+       - Rates:
+          - main/x/prime = [ 39.305719, 8.622413, -8.226216, ..., 2.529087, 10.943782, 28.192047 ]
+          - main/y/prime = [ 1.066730, -13.241918, -22.943436, ..., 10.067462, 21.923463, 53.856686 ]
+          - main/z/prime = [ -71.719656, -54.497365, -37.915309, ..., -40.679813, -28.379462, -6.353870 ]
+       - Algebraic : n/a
