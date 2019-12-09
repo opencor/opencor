@@ -870,7 +870,7 @@ void SimulationResults::createDataStore()
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
             mPointsVariable->setType(int(parameter->type()));
             mPointsVariable->setUri(uri(runtime->voi()->componentHierarchy(), runtime->voi()->name()));
-            mPointsVariable->setLabel(runtime->voi()->name());
+            mPointsVariable->setName(runtime->voi()->name());
             mPointsVariable->setUnit(runtime->voi()->unit());
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
@@ -890,7 +890,7 @@ void SimulationResults::createDataStore()
         if (variable != nullptr) {
             variable->setType(int(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
-            variable->setLabel(parameter->formattedName());
+            variable->setName(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
 
@@ -1003,7 +1003,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 
         variable->setType(int(parameter->type()));
         variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
-        variable->setLabel(parameter->formattedName());
+        variable->setName(parameter->formattedName());
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
     }
 

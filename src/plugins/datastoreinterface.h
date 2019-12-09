@@ -140,7 +140,7 @@ public:
     void setType(int pType);
 
     void setUri(const QString &pUri);
-    void setLabel(const QString &pLabel);
+    void setName(const QString &pName);
     void setUnit(const QString &pUnit);
 
     DataStoreArray * array(int pRun = -1) const;
@@ -156,7 +156,7 @@ public slots:
     int runsCount() const;
 
     QString uri() const;
-    QString label() const;
+    QString name() const;
     QString unit() const;
 
     quint64 size(int pRun = -1) const;

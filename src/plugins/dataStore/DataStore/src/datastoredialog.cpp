@@ -176,7 +176,7 @@ DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
                 auto dataItem = new QStandardItem(variableIcon.isNull()?
                                                       ErrorNodeIcon:
                                                       variableIcon,
-                                                  variable->label());
+                                                  variable->name());
 
                 dataItem->setCheckable(true);
                 dataItem->setCheckState(Qt::Checked);
