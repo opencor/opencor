@@ -92,10 +92,14 @@ public slots:
     QString ode_solver_name(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_ode_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                         const QString &pName);
+    void set_ode_solver_property(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                                 const QString &pName, const QVariant &pValue);
 
     QString nla_solver_name(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_nla_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                         const QString &pName);
+    void set_nla_solver_property(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                                 const QString &pName, const QVariant &pValue);
 
     PyObject * constants(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
