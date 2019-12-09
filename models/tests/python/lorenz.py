@@ -43,9 +43,11 @@ def run_simulation(title, file_name_or_url, first=True):
 run_simulation('Local CellML file', '../cellml/lorenz.cellml')
 run_simulation('Remote CellML file',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml', False)
+
 run_simulation('Local SED-ML file', '../sedml/lorenz.sedml', False)
 run_simulation('Remote SED-ML file',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz.sedml', False)
+
 run_simulation('Local COMBINE archive', '../combine/lorenz.omex', False)
 run_simulation('Remote COMBINE archive',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex', False)
