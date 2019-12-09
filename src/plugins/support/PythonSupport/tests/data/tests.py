@@ -15,25 +15,39 @@ def print_values(values):
         print(' ]')
 
 
-def values(data, type):
+def values(data, type, indent=''):
     if data:
-        print('       - %s:' % type)
+        print('%s       - %s:' % (indent, type))
 
         for item in data.values():
-            print('          - %s = ' % item.uri(), end='')
+            print('%s          - %s = ' % (indent, item.uri()), end='')
 
             try:
                 print_values(item.values())
             except:
                 print(item.value())
     else:
-        print('       - %s : n/a' % type)
+        print('%s       - %s : n/a' % (indent, type))
 
 
 def run_simulation(simulation, step):
     # Run the simulation
 
-    print(' - Run simulation... [%d]' % step)
+    print(' - Run simulation [%d]' % step)
+    print('    - Settings:')
+
+    data = simulation.data()
+
+    print('       - Starting point: %f' % data.starting_point())
+    print('       - Ending point: %f' % data.ending_point())
+    print('       - Point interval: %f' % data.point_interval())
+    print('       - ODE solver: %s' % data.ode_solver_name())
+    print('       - Initial values:')
+
+    values(data.constants(), 'Constants', '   ')
+    values(data.states(), 'States', '   ')
+    values(data.rates(), 'Rates', '   ')
+    values(data.algebraic(), 'Algebraic', '   ')
 
     simulation.run()
 
@@ -43,13 +57,13 @@ def run_simulation(simulation, step):
     results = simulation.results()
     states = results.states()
 
-    print('    - Number of points: %d' % len(states['main/x'].values()))
     print('    - Result values:')
+    print('       - Number of points: %d' % len(states['main/x'].values()))
 
-    values(results.constants(), "Constants")
-    values(states, "States")
-    values(results.rates(), "Rates")
-    values(results.algebraic(), "Algebraic")
+    values(results.constants(), 'Constants')
+    values(states, 'States')
+    values(results.rates(), 'Rates')
+    values(results.algebraic(), 'Algebraic')
 
 
 def test_simulation(title, file_name_or_url, first=True):
@@ -64,7 +78,7 @@ def test_simulation(title, file_name_or_url, first=True):
 
     # Open the simulation
 
-    print(' - Open simulation...')
+    print(' - Open simulation')
 
     if file_name_or_url.startswith('https://'):
         simulation = oc.open_simulation(file_name_or_url)
@@ -75,7 +89,7 @@ def test_simulation(title, file_name_or_url, first=True):
     # Check whether the simulation is valid and has issues, and list some
     # information about it
 
-    print(' - Check simulation...')
+    print(' - Check simulation:')
     print('    - Valid: %s' % ('yes' if simulation.valid() else 'no'))
 
     issues = simulation.issues()
@@ -85,21 +99,34 @@ def test_simulation(title, file_name_or_url, first=True):
     else:
         print('    - Issues: n/a')
 
-    data = simulation.data()
-
-    print('    - Starting point: %f' % data.starting_point())
-    print('    - Ending point:   %f' % data.ending_point())
-    print('    - Point interval: %f' % data.point_interval())
-    print('    - Initial values:')
-
-    values(data.constants(), "Constants")
-    values(data.states(), "States")
-    values(data.rates(), "Rates")
-    values(data.algebraic(), "Algebraic")
-
     # Run the simulation using the default settings
 
     run_simulation(simulation, 1)
+
+    # Change a few simulation settings and rerun the simulation
+
+    simulation.reset()
+    simulation.clear_results()
+
+    data = simulation.data()
+
+    data.set_starting_point(10)
+    data.set_ending_point(30)
+    data.set_point_interval(0.1)
+    data.set_ode_solver('Heun')
+    data.set_ode_solver_property('Step', 0.01)
+
+    print(' - New settings:')
+    print('    - Starting point: %f' % data.starting_point())
+    print('    - Ending point: %f' % data.ending_point())
+    print('    - Point interval: %f' % data.point_interval())
+    print('    - ODE solver: %s' % data.ode_solver_name())
+
+    run_simulation(simulation, 2)
+
+    # Further run the simulation
+
+    run_simulation(simulation, 3)
 
     # Close the simulation
 
