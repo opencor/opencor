@@ -3,7 +3,7 @@ import opencor as oc
 import os
 
 
-def test_simulation(title: str, file_name_or_url: str, first: bool = True) -> None:
+def test_simulation(title, file_name_or_url, first = True):
     if not first:
         print()
 
