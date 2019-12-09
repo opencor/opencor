@@ -61,6 +61,18 @@ try:
 except Exception as e:
     print(repr(e))
 
+try:
+    run_simulation('Invalid local file', 'cellml/underconstrained_model.cellml', False)
+except Exception as e:
+    print(repr(e))
+
+try:
+    run_simulation('Invalid remote file',
+                   'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/underconstrained_model.cellml',
+                   False)
+except Exception as e:
+    print(repr(e))
+
 run_simulation('Local CellML file', 'cellml/lorenz.cellml', False)
 run_simulation('Remote CellML file',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml', False)

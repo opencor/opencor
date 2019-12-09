@@ -11,6 +11,28 @@ OSError("'src/plugins/support/PythonSupport/tests/data/../../../../../../models/
 OSError("'https://unknown' could not be opened (host unknown not found).")
 
 ---------------------------------------
+          Invalid local file
+---------------------------------------
+ - Open file...
+ - Check file...
+    - Valid: NO
+    - Issues:
+       - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
+ - Run file...
+RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
+
+---------------------------------------
+          Invalid remote file
+---------------------------------------
+ - Open file...
+ - Check file...
+    - Valid: NO
+    - Issues:
+       - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
+ - Run file...
+RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
+
+---------------------------------------
            Local CellML file
 ---------------------------------------
  - Open file...
