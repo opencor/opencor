@@ -11,7 +11,7 @@ def test_simulation(title: str, file_name_or_url: str, first: bool = True) -> No
     print(' ' * math.floor((39 - len(title)) / 2) + title)
     print('---------------------------------------')
 
-    print(' - Open file...')
+    print(' - Open simulation...')
 
     if file_name_or_url.startswith('https://'):
         simulation = oc.open_simulation(file_name_or_url)
@@ -19,7 +19,7 @@ def test_simulation(title: str, file_name_or_url: str, first: bool = True) -> No
         simulation = oc.open_simulation(
             os.path.dirname(__file__) + '/../../../../../../models/tests/' + file_name_or_url)
 
-    print(' - Check file...')
+    print(' - Check simulation...')
     print('    - Valid: ' + ('YES' if simulation.valid() else 'NO'))
 
     issues = simulation.issues()
@@ -29,7 +29,7 @@ def test_simulation(title: str, file_name_or_url: str, first: bool = True) -> No
     else:
         print('    - Issues: N/A')
 
-    print(' - Run file...')
+    print(' - Run simulation...')
 
     simulation.run()
 
