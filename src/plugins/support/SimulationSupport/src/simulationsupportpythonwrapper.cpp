@@ -372,12 +372,11 @@ double SimulationSupportPythonWrapper::starting_point(SimulationData *pSimulatio
 //==============================================================================
 
 void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulationData,
-                                                        double pStartingPoint,
-                                                        bool pRecompute)
+                                                        double pStartingPoint)
 {
     // Set the starting point for the given simulation data
 
-    pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
+    pSimulationData->setStartingPoint(pStartingPoint);
 }
 
 //==============================================================================

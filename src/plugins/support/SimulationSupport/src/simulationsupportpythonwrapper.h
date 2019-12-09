@@ -79,7 +79,7 @@ public slots:
 
     double starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                            double pStartingPoint, bool pRecompute = true);
+                            double pStartingPoint);
 
     double ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
