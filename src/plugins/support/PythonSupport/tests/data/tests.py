@@ -17,17 +17,17 @@ def print_values(values):
 
 def values(data, type):
     if data:
-        print('       - ' + type + ':')
+        print('       - %s:' % type)
 
         for item in data.values():
-            print('          - ' + item.uri() + ' = ', end='')
+            print('          - %s = ' % item.uri(), end='')
 
             try:
                 print_values(item.values())
             except:
                 print(item.value())
     else:
-        print('       - ' + type + ': N/A')
+        print('       - %s : n/a' % type)
 
 
 def run_simulation(simulation, step):
@@ -76,14 +76,14 @@ def test_simulation(title, file_name_or_url, first=True):
     # information about it
 
     print(' - Check simulation...')
-    print('    - Valid: ' + ('YES' if simulation.valid() else 'NO'))
+    print('    - Valid: %s' % ('yes' if simulation.valid() else 'no'))
 
     issues = simulation.issues()
 
     if issues:
-        print('    - Issues:\n       - ' + '\n       - '.join(issues))
+        print('    - Issues:\n       - %s' % '\n       - '.join(issues))
     else:
-        print('    - Issues: N/A')
+        print('    - Issues: n/a')
 
     data = simulation.data()
 
