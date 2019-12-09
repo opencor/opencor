@@ -156,12 +156,6 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
         output += process.readAll();
     }
 
-    // Go back to our original directory
-
-#ifdef Q_OS_WIN
-    QDir::setCurrent(origPath);
-#endif
-
     // Clean up our output by:
     //  - Making any path relative rather than absolute;
     //  - Replacing backslashes with forward slashes; and
@@ -171,6 +165,12 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
                     .replace("\\\\", "/")
                     .remove('\r')
                     .split('\n');
+
+    // Go back to our original directory
+
+#ifdef Q_OS_WIN
+    QDir::setCurrent(origPath);
+#endif
 
     return process.exitCode();
 }
