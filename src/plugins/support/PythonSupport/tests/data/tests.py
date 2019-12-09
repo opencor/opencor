@@ -17,7 +17,7 @@ def run_simulation(title, file_name_or_url, first=True):
     if file_name_or_url.startswith('https://'):
         simulation = oc.open_simulation(file_name_or_url)
     else:
-        simulation = oc.open_simulation(os.path.dirname(__file__) + '/' + file_name_or_url)
+        simulation = oc.open_simulation(os.path.dirname(__file__) + '/../../../../../../models/tests/' + file_name_or_url)
 
     print(' - Run file...')
 
@@ -40,14 +40,14 @@ def run_simulation(title, file_name_or_url, first=True):
     oc.close_simulation(simulation)
 
 
-run_simulation('Local CellML file', '../cellml/lorenz.cellml')
+run_simulation('Local CellML file', 'cellml/lorenz.cellml')
 run_simulation('Remote CellML file',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml', False)
 
-run_simulation('Local SED-ML file', '../sedml/lorenz.sedml', False)
+run_simulation('Local SED-ML file', 'sedml/lorenz.sedml', False)
 run_simulation('Remote SED-ML file',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz.sedml', False)
 
-run_simulation('Local COMBINE archive', '../combine/lorenz.omex', False)
+run_simulation('Local COMBINE archive', 'combine/lorenz.omex', False)
 run_simulation('Remote COMBINE archive',
                'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex', False)
