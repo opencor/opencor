@@ -39,8 +39,8 @@ void Tests::basicTests()
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/tests.py"), output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/tests.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out")));
 }
 
 //==============================================================================

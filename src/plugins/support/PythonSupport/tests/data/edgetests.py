@@ -1,5 +1,5 @@
 import opencor as oc
-from tests import *
+from basictests import *
 
 if __name__ == '__main__':
     # Test for an unknown local/remote file
