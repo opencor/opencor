@@ -6,6 +6,13 @@ sys.dont_write_bytecode = True
 from basictests import *
 
 if __name__ == '__main__':
+    # Test for no file name or URL provided
+
+    try:
+        test_simulation('No file name or URL provided', '')
+    except Exception as e:
+        print(' - %s' % repr(e))
+
     # Test for an unknown local/remote file
 
     try:

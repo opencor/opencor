@@ -9,7 +9,9 @@ QString cliOpenFile(const QString &pFileName, File::Type pType,
     // Make sure that modes are available and that the file exists
 
 #ifdef GUI_SUPPORT
-    if ((mModeTabs->count() == 0) || !QFile::exists(pFileName)) {
+    if (    (mModeTabs->count() == 0)
+        || !QFileInfo(pFileName).isFile()
+        || !QFile::exists(pFileName)) {
         // Let the user know about us not being able to open the file, but only
         // if we are not starting OpenCOR, i.e. only if our main window is
         // visible
@@ -23,6 +25,12 @@ QString cliOpenFile(const QString &pFileName, File::Type pType,
                                                                                               pFileName));
         }
 
+        return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
+                                                                QDir::toNativeSeparators(pFileName):
+                                                                pFileName);
+    }
+#else
+    if (!QFileInfo(pFileName).isFile() || !QFile::exists(pFileName)) {
         return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
                                                                 QDir::toNativeSeparators(pFileName):
                                                                 pFileName);
@@ -51,6 +59,8 @@ QString cliOpenFile(const QString &pFileName, File::Type pType,
         return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
                                                                 QDir::toNativeSeparators(pFileName):
                                                                 pFileName);
+        // Note: we should never reach this point (since we test for the file
+        //       existence above), but better be safe than sorry...
     }
 
     // Create a new tab, insert it just after the current tab, set the full name

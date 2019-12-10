@@ -16,9 +16,15 @@ def open_simulation(file_name_or_url):
     if file_name_or_url.startswith('https://'):
         return oc.open_simulation(file_name_or_url)
     else:
-        os.chdir(os.path.dirname(__file__) + '/../../../../../..')
+        original_directory = os.getcwd()
 
-        return oc.open_simulation('models/tests/' + file_name_or_url)
+        os.chdir(os.path.dirname(__file__) + '/../../../../../../models/tests/')
+
+        simulation = oc.open_simulation(file_name_or_url)
+
+        os.chdir(original_directory)
+
+        return simulation
 
 
 def print_values(data):

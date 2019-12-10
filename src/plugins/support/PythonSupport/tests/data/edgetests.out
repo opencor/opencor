@@ -1,8 +1,13 @@
 ---------------------------------------
+     No file name or URL provided
+---------------------------------------
+ - Open simulation
+ - OSError("'' could not be opened.")
+---------------------------------------
           Unknown local file
 ---------------------------------------
  - Open simulation
- - OSError("'models/tests/unknown' could not be opened.")
+ - OSError("'unknown' could not be opened.")
 
 ---------------------------------------
           Unknown remote file
