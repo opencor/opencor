@@ -6,38 +6,29 @@ sys.dont_write_bytecode = True
 from basictests import *
 
 
-def edge_test_data_store_variable(variable):
-    print('          - Name: %s' % variable.name())
-    print('          - Unit: %s' % variable.unit())
-    print('          - URI: %s' % variable.uri())
-    print('          - value(-1): %f' % variable.value(-1))
-    print('          - value(-1, -2): %f' % variable.value(-1, -2))
-    print('          - value(-1, -1): %f' % variable.value(-1, -1))
-    print('          - value(-1, 0): %f' % variable.value(-1, 0))
-    print('          - value(-1, 1): %f' % variable.value(-1, 1))
-    print('          - value(0): %f' % variable.value(0))
-    print('          - value(0, -2): %f' % variable.value(0, -2))
-    print('          - value(0, -1): %f' % variable.value(0, -1))
-    print('          - value(0, 0): %f' % variable.value(0, 0))
-    print('          - value(0, 1): %f' % variable.value(0, 1))
-    print('          - value(50000): %f' % variable.value(50000))
-    print('          - value(50000, -2): %f' % variable.value(50000, -2))
-    print('          - value(50000, -1): %f' % variable.value(50000, -1))
-    print('          - value(50000, 0): %f' % variable.value(50000, 0))
-    print('          - value(50000, 1): %f' % variable.value(50000, 1))
-    print('          - value(50001): %f' % variable.value(50001))
-    print('          - value(50001, -2): %f' % variable.value(50001, -2))
-    print('          - value(50001, -1): %f' % variable.value(50001, -1))
-    print('          - value(50001, 0): %f' % variable.value(50001, 0))
-    print('          - value(50001, 1): %f' % variable.value(50001, 1))
-    print('          - values(-2): ', end='')
-    print_values(variable.values(-2))
-    print('          - values(-1): ', end='')
-    print_values(variable.values(-1))
-    print('          - values(0): ', end='')
-    print_values(variable.values(0))
-    print('          - values(1): ', end='')
-    print_values(variable.values(1))
+def edge_test_data_store_variable_index(variable, index, indent):
+    print('%s          - value(%d): %f' % (indent, index, variable.value(index)))
+
+    for run in range(variable.runs_count() + 3):
+        print('%s          - value(%d, %d): %f' % (indent, index, run - 2, variable.value(index, run - 2)))
+
+
+def edge_test_data_store_variable(variable, name, indent=''):
+    print('%s       - Test %s:' % (indent, name))
+    print('%s          - Name: %s' % (indent, variable.name()))
+    print('%s          - Unit: %s' % (indent, variable.unit()))
+    print('%s          - URI: %s' % (indent, variable.uri()))
+
+    values_count = variable.values_count()
+
+    edge_test_data_store_variable_index(variable, -1, indent)
+    edge_test_data_store_variable_index(variable, 0, indent)
+    edge_test_data_store_variable_index(variable, values_count - 1, indent)
+    edge_test_data_store_variable_index(variable, values_count, indent)
+
+    for run in range(variable.runs_count() + 3):
+        print('%s          - values(%d): ' % (indent, run - 2), end='')
+        print_values(variable.values(run - 2))
 
 
 def edge_test_simulation_results(simulation):
@@ -45,9 +36,7 @@ def edge_test_simulation_results(simulation):
 
     results = simulation.results()
 
-    print('       - Test SimulationResults.voi():')
-
-    edge_test_data_store_variable(results.voi())
+    edge_test_data_store_variable(results.voi(), 'SimulationResults.voi()')
 
 
 if __name__ == '__main__':
