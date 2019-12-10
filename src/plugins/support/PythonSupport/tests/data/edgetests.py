@@ -1,4 +1,8 @@
 import opencor as oc
+import sys
+
+sys.dont_write_bytecode = True
+
 from basictests import *
 
 if __name__ == '__main__':
