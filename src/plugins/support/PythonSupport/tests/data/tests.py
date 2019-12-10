@@ -99,7 +99,9 @@ def test_simulation(title, file_name_or_url, first=True):
     else:
         print('    - Issues: n/a')
 
-    # Run the simulation using the default settings
+    # Run #1: run the simulation using the default settings, except if we are
+    #         dealing with a CellML file, in which case we set a few initial
+    #         settings
 
     if file_name_or_url.endswith('.cellml'):
         data = simulation.data()
@@ -113,7 +115,7 @@ def test_simulation(title, file_name_or_url, first=True):
 
     run_simulation(simulation, 1)
 
-    # Change a few simulation settings and rerun the simulation
+    # Run #2: change a few settings and rerun the simulation
 
     simulation.reset()
     simulation.clear_results()
@@ -134,7 +136,7 @@ def test_simulation(title, file_name_or_url, first=True):
 
     run_simulation(simulation, 2)
 
-    # Further run the simulation
+    # Run #3: carry on from the previous run
 
     run_simulation(simulation, 3)
 
