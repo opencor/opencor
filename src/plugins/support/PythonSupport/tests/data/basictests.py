@@ -1,5 +1,7 @@
 import opencor as oc
+
 from math import floor
+from os import path
 
 
 def header(title, first):
@@ -15,7 +17,7 @@ def open_simulation(file_name_or_url):
     if file_name_or_url.startswith('https://'):
         return oc.open_simulation(file_name_or_url)
     else:
-        return oc.open_simulation('models/tests/' + file_name_or_url)
+        return oc.open_simulation(path.dirname(__file__) + '/../../../../../../models/tests/' + file_name_or_url)
 
 
 def print_values(data):
