@@ -8,7 +8,7 @@
  - Initial settings:
     - Ending point: 50.000000
     - Point interval: 0.001000
- - Run simulation [1]
+ - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
        - Ending point: 50.000000
@@ -48,7 +48,7 @@
     - Ending point: 30.000000
     - Point interval: 0.100000
     - ODE solver: Euler (forward)
- - Run simulation [2]
+ - Run simulation [2]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -83,7 +83,7 @@
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
        - Algebraic : n/a
- - Run simulation [3]
+ - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -129,7 +129,7 @@
  - Initial settings:
     - Ending point: 50.000000
     - Point interval: 0.001000
- - Run simulation [1]
+ - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
        - Ending point: 50.000000
@@ -169,7 +169,7 @@
     - Ending point: 30.000000
     - Point interval: 0.100000
     - ODE solver: Euler (forward)
- - Run simulation [2]
+ - Run simulation [2]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -204,7 +204,7 @@
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
        - Algebraic : n/a
- - Run simulation [3]
+ - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -247,7 +247,7 @@
  - Check simulation:
     - Valid: yes
     - Issues: n/a
- - Run simulation [1]
+ - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
        - Ending point: 50.000000
@@ -287,7 +287,7 @@
     - Ending point: 30.000000
     - Point interval: 0.100000
     - ODE solver: Euler (forward)
- - Run simulation [2]
+ - Run simulation [2]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -322,7 +322,7 @@
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
        - Algebraic : n/a
- - Run simulation [3]
+ - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -365,7 +365,7 @@
  - Check simulation:
     - Valid: yes
     - Issues: n/a
- - Run simulation [1]
+ - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
        - Ending point: 50.000000
@@ -405,7 +405,7 @@
     - Ending point: 30.000000
     - Point interval: 0.100000
     - ODE solver: Euler (forward)
- - Run simulation [2]
+ - Run simulation [2]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -440,7 +440,7 @@
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
        - Algebraic : n/a
- - Run simulation [3]
+ - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -483,7 +483,7 @@
  - Check simulation:
     - Valid: yes
     - Issues: n/a
- - Run simulation [1]
+ - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
        - Ending point: 50.000000
@@ -523,7 +523,7 @@
     - Ending point: 30.000000
     - Point interval: 0.100000
     - ODE solver: Euler (forward)
- - Run simulation [2]
+ - Run simulation [2]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -558,7 +558,7 @@
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
        - Algebraic : n/a
- - Run simulation [3]
+ - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -601,7 +601,7 @@
  - Check simulation:
     - Valid: yes
     - Issues: n/a
- - Run simulation [1]
+ - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
        - Ending point: 50.000000
@@ -641,7 +641,7 @@
     - Ending point: 30.000000
     - Point interval: 0.100000
     - ODE solver: Euler (forward)
- - Run simulation [2]
+ - Run simulation [2]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
@@ -676,7 +676,7 @@
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
        - Algebraic : n/a
- - Run simulation [3]
+ - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
        - Ending point: 30.000000
