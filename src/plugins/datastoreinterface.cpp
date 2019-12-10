@@ -266,9 +266,11 @@ double DataStoreVariableRun::value(quint64 pPosition) const
 {
     // Return the value at the given position
 
-    Q_ASSERT(pPosition < mSize);
+    if (pPosition < mSize) {
+        return mArray->data()[pPosition];
+    }
 
-    return mArray->data()[pPosition];
+    return qQNaN();
 }
 
 //==============================================================================
@@ -505,15 +507,17 @@ double DataStoreVariable::value(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
-    Q_ASSERT(!mRuns.isEmpty());
+    if (!mRuns.isEmpty()) {
+        if (pRun == -1) {
+            return mRuns.last()->value(pPosition);
+        }
 
-    if (pRun == -1) {
-        return mRuns.last()->value(pPosition);
+        if ((pRun >= 0) && (pRun < mRuns.count())) {
+            return mRuns[pRun]->value(pPosition);
+        }
     }
 
-    Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
-
-    return mRuns[pRun]->value(pPosition);
+    return qQNaN();
 }
 
 //==============================================================================
