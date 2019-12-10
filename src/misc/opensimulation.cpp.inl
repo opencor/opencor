@@ -2,7 +2,7 @@ static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
 {
     Q_UNUSED(pSelf)
 
-    // Open a simulation
+    // Retrieve the file name of the simulation to open
 
     PyObject *bytes;
 
@@ -25,6 +25,8 @@ static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
 #include "pythonbegin.h"
     Py_DECREF(bytes);
 #include "pythonend.h"
+
+    // Open the simulation
 
     QString error = isLocalFile?
 #ifdef GUI_SUPPORT
