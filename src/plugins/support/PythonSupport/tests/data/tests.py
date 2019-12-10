@@ -3,15 +3,15 @@ import opencor as oc
 import os
 
 
-def print_values(values):
-    values_len = len(values)
-    if values_len > 6:
+def print_values(data):
+    data_len = len(data)
+    if data_len > 6:
         print('[ %f, %f, %f, ..., %f, %f, %f ]' %
-              (values[0], values[1], values[2], values[values_len - 3], values[values_len - 2],
-               values[values_len - 1]))
+              (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2],
+               data[data_len - 1]))
     else:
         print('[ ', end='')
-        print(*values, sep=", ", end='')
+        print(*data, sep=", ", end='')
         print(' ]')
 
 

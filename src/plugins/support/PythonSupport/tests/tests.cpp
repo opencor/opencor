@@ -35,7 +35,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 void Tests::basicTests()
 {
-    // Some very basic tests to make sure that we have access to libSBML
+    // Some basic tests to make sure that we can use our Python wrappers
 
     QStringList output;
 
