@@ -1,9 +1,9 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+appDir=$(cd $(dirname $0); pwd)
 
-${appDir}/clean
-${appDir}/make $*
+$appDir/clean
+$appDir/make $*
 
 exitCode=$?
 
@@ -15,7 +15,7 @@ echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 origDir=`pwd`
 
-cd ${appDir}/build
+cd $appDir/build
 
 cpack
 
@@ -24,13 +24,13 @@ exitCode=$?
 if [ "`uname -s`" = "Darwin" ]; then
     packageName="OpenCOR-`date '+%Y-%m-%d'`-macOS"
 
-    mkdir ${packageName}
+    mkdir $packageName
 
-    mv ${packageName}.pkg ${packageName}
+    mv $packageName.pkg $packageName
 
-    hdiutil create -srcfolder ${packageName} ${packageName}.dmg
+    hdiutil create -srcfolder $packageName $packageName.dmg
 
-    rm -fr ${packageName}
+    rm -fr $packageName
 fi
 
 cd $origDir

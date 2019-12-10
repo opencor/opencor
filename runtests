@@ -2,16 +2,16 @@
 
 echo "\033[44;37;1mRunning OpenCOR's tests...\033[0m"
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+appDir=$(cd $(dirname $0); pwd)
 
 if [ "`uname -s`" = "Linux" ]; then
-    OPENCOR_TESTS_EXE=${appDir}/build/bin/runtests
+    appTestsExe=$appDir/build/bin/runtests
 else
-    OPENCOR_TESTS_EXE=${appDir}/build/OpenCOR.app/Contents/MacOS/runtests
+    appTestsExe=$appDir/build/OpenCOR.app/Contents/MacOS/runtests
 fi
 
-if [ -f ${OPENCOR_TESTS_EXE} ]; then
-    ${OPENCOR_TESTS_EXE} "$@"
+if [ -f $appTestsExe ]; then
+    $appTestsExe "$@"
 else
     echo "OpenCOR's tests must first be built before being run."
 fi
