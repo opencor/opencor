@@ -101,6 +101,16 @@ def test_simulation(title, file_name_or_url, first=True):
 
     # Run the simulation using the default settings
 
+    if file_name_or_url.endswith('.cellml'):
+        data = simulation.data()
+
+        data.set_ending_point(50.0)
+        data.set_point_interval(0.001)
+
+        print(' - Initial settings:')
+        print('    - Ending point: %f' % data.ending_point())
+        print('    - Point interval: %f' % data.point_interval())
+
     run_simulation(simulation, 1)
 
     # Change a few simulation settings and rerun the simulation
