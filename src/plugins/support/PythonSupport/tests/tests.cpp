@@ -45,6 +45,18 @@ void Tests::basicTests()
 
 //==============================================================================
 
+void Tests::edgeTests()
+{
+    // Some edge tests to make sure that we can safely use our Python wrappers
+
+    QStringList output;
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/edgetests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/edgetests.out")));
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================

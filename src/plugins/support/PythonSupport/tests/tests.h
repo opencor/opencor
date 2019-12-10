@@ -35,6 +35,7 @@ class Tests : public QObject
 
 private slots:
     void basicTests();
+    void edgeTests();
 };
 
 //==============================================================================
