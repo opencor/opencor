@@ -1,5 +1,21 @@
-from math import floor
 import opencor as oc
+from math import floor
+
+
+def header(title, first):
+    if not first:
+        print()
+
+    print('---------------------------------------')
+    print(' ' * floor((39 - len(title)) / 2) + title)
+    print('---------------------------------------')
+
+
+def open_simulation(file_name_or_url):
+    if file_name_or_url.startswith('https://'):
+        return oc.open_simulation(file_name_or_url)
+    else:
+        return oc.open_simulation('models/tests/' + file_name_or_url)
 
 
 def print_values(data):
@@ -32,7 +48,7 @@ def values(data, type, indent=''):
 def run_simulation(simulation, step):
     # Run the simulation
 
-    print(' - Run simulation [%d]' % step)
+    print(' - Run simulation [%d]:' % step)
     print('    - Settings:')
 
     data = simulation.data()
@@ -66,23 +82,15 @@ def run_simulation(simulation, step):
 
 
 def test_simulation(title, file_name_or_url, first=True):
-    if not first:
-        print()
-
     # Header
 
-    print('---------------------------------------')
-    print(' ' * floor((39 - len(title)) / 2) + title)
-    print('---------------------------------------')
+    header(title, first)
 
     # Open the simulation
 
     print(' - Open simulation')
 
-    if file_name_or_url.startswith('https://'):
-        simulation = oc.open_simulation(file_name_or_url)
-    else:
-        simulation = oc.open_simulation('models/tests/' + file_name_or_url)
+    simulation = open_simulation(file_name_or_url)
 
     # Check whether the simulation is valid and has issues, and list some
     # information about it
