@@ -30,6 +30,14 @@ def edge_test_data_store_variable(variable):
     print('          - value(50001, -1): %f' % variable.value(50001, -1))
     print('          - value(50001, 0): %f' % variable.value(50001, 0))
     print('          - value(50001, 1): %f' % variable.value(50001, 1))
+    print('          - values(-2): ', end='')
+    print_values(variable.values(-2))
+    print('          - values(-1): ', end='')
+    print_values(variable.values(-1))
+    print('          - values(0): ', end='')
+    print_values(variable.values(0))
+    print('          - values(1): ', end='')
+    print_values(variable.values(1))
 
 
 def edge_test_simulation_results(simulation):

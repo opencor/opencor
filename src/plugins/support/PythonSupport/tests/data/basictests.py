@@ -28,15 +28,19 @@ def open_simulation(file_name_or_url):
 
 
 def print_values(data):
-    data_len = len(data)
-    if data_len > 6:
-        print('[ %f, %f, %f, ..., %f, %f, %f ]' %
-              (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2],
-               data[data_len - 1]))
+    if data is None:
+        print('n/a')
     else:
-        print('[ ', end='')
-        print(*data, sep=", ", end='')
-        print(' ]')
+        data_len = len(data)
+
+        if data_len > 6:
+            print('[ %f, %f, %f, ..., %f, %f, %f ]' %
+                  (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2],
+                   data[data_len - 1]))
+        else:
+            print('[ ', end='')
+            print(*data, sep=", ", end='')
+            print(' ]')
 
 
 def values(data, type, indent=''):
