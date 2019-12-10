@@ -123,7 +123,7 @@ def test_simulation(title, file_name_or_url, first=True):
     data.set_starting_point(10.0)
     data.set_ending_point(30.0)
     data.set_point_interval(0.1)
-    data.set_ode_solver('Heun')
+    data.set_ode_solver('Euler (forward)')
     data.set_ode_solver_property('Step', 0.01)
 
     print(' - New settings:')
