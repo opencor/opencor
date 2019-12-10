@@ -266,11 +266,9 @@ double DataStoreVariableRun::value(quint64 pPosition) const
 {
     // Return the value at the given position
 
-    if (pPosition < mSize) {
-        return mArray->data()[pPosition];
-    }
-
-    return qQNaN();
+    return (pPosition < mSize)?
+               mArray->data()[pPosition]:
+               qQNaN();
 }
 
 //==============================================================================
@@ -507,17 +505,17 @@ double DataStoreVariable::value(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
-    if (!mRuns.isEmpty()) {
-        if (pRun == -1) {
-            return mRuns.last()->value(pPosition);
-        }
-
-        if ((pRun >= 0) && (pRun < mRuns.count())) {
-            return mRuns[pRun]->value(pPosition);
-        }
+    if (mRuns.isEmpty()) {
+        return qQNaN();
     }
 
-    return qQNaN();
+    if (pRun == -1) {
+        return mRuns.last()->value(pPosition);
+    }
+
+    return ((pRun >= 0) && (pRun < mRuns.count()))?
+               mRuns[pRun]->value(pPosition):
+               qQNaN();
 }
 
 //==============================================================================
