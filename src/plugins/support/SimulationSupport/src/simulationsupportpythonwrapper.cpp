@@ -575,6 +575,26 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulat
 
 //==============================================================================
 
+int SimulationSupportPythonWrapper::runs_count(DataStore::DataStoreVariable *pDataStoreVariable) const
+{
+    // Return the number of runs for the given data store variable
+
+    return pDataStoreVariable->runsCount();
+}
+
+//==============================================================================
+
+quint64 SimulationSupportPythonWrapper::values_count(DataStore::DataStoreVariable *pDataStoreVariable,
+                                                     int pRun) const
+{
+    // Return the number of values in the given run of the given data store
+    // variable
+
+    return pDataStoreVariable->size(pRun);
+}
+
+//==============================================================================
+
 void SimulationSupportPythonWrapper::simulationError(const QString &pErrorMessage)
 {
     // Keep track for the given error message

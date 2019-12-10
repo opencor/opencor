@@ -115,6 +115,10 @@ public slots:
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
+    int runs_count(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
+    quint64 values_count(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
+                         int pRun = -1) const;
+
 private slots:
     void simulationError(const QString &pErrorMessage);
     void simulationDone(qint64 pElapsedTime);
