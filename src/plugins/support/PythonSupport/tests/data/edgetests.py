@@ -31,12 +31,24 @@ def edge_test_data_store_variable(variable, name, indent=''):
         print_values(variable.values(run - 2))
 
 
+def edge_test_data_store_variables(variables, name):
+    print('       - Test SimulationResults.%s():' % name)
+    print('          - Size: %d' % len(variables))
+
+    for uri, variable in variables.items():
+        edge_test_data_store_variable(variable, uri, '   ')
+
+
 def edge_test_simulation_results(simulation):
     print('    - Test the SimulationResults class:')
 
     results = simulation.results()
 
     edge_test_data_store_variable(results.voi(), 'SimulationResults.voi()')
+    edge_test_data_store_variables(results.constants(), 'constants')
+    edge_test_data_store_variables(results.states(), 'states')
+    edge_test_data_store_variables(results.rates(), 'rates')
+    edge_test_data_store_variables(results.algebraic(), 'algebraic')
 
 
 if __name__ == '__main__':
