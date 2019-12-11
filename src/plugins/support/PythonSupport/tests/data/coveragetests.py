@@ -74,9 +74,9 @@ if __name__ == '__main__':
     except Exception as e:
         print(' - %s' % repr(e))
 
-    # Test various edge cases using a valid SED-ML file
+    # Coverage tests for SimulationResults using a valid SED-ML file
 
-    header('Various edge cases', False)
+    header('Coverage tests for SimulationResults', False)
 
     simulation = open_simulation('sedml/lorenz.sedml')
 
