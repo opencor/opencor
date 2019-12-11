@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     header('SimulationData coverage tests', False)
 
-    simulation = open_simulation('sedml/lorenz.sedml')
+    simulation = open_simulation('cellml/parabola_variant_dae_model.cellml')
 
     data = simulation.data()
 
