@@ -92,4 +92,12 @@ if __name__ == '__main__':
     edge_test_data_store_variables(results.rates(), 'SimulationResults.rates()')
     edge_test_data_store_variables(results.algebraic(), 'SimulationResults.algebraic()')
 
+    print('    - Test SimulationResults.data_store():')
+
+    data_store = results.data_store()
+
+    edge_test_data_store_variable(data_store.voi(), 'DataStore.voi()', '   ')
+    edge_test_data_store_variables(data_store.variables(), 'DataStore.variables()', '   ')
+    edge_test_data_store_variables(data_store.voi_and_variables(), 'DataStore.voi_and_variables()', '   ')
+
     oc.close_simulation(simulation)
