@@ -29,7 +29,10 @@ def open_simulation(file_name_or_url):
 
 
 def rounded_value(value):
-    return 0.0 if 0.001 * round(1000.0 * value) == 0.0 else value
+    if math.isnan(value):
+        return value
+    else:
+        return 0.0 if 0.001 * round(1000.0 * value) == 0.0 else value
 
 
 def print_values(data):
