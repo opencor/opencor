@@ -35,12 +35,18 @@ def print_values(data):
         data_len = len(data)
 
         if data_len > 6:
-            print('[ %f, %f, %f, ..., %f, %f, %f ]' %
+            print('[ %.3f, %.3f, %.3f, ..., %.3f, %.3f, %.3f ]' %
                   (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2],
                    data[data_len - 1]))
         else:
             print('[ ', end='')
-            print(*data, sep=", ", end='')
+
+            for i in range(data_len):
+                if i:
+                    print(', ', end='')
+
+                print('%.3f' % data[i], end='')
+
             print(' ]')
 
 
