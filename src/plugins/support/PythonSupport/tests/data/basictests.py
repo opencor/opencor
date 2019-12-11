@@ -3,7 +3,7 @@ import opencor as oc
 import os
 
 
-def header(title, first):
+def header(title, first=True):
     if not first:
         print()
 
@@ -18,7 +18,7 @@ def open_simulation(file_name_or_url):
     else:
         original_directory = os.getcwd()
 
-        os.chdir(os.path.dirname(__file__) + '/../../../../../../models/tests/')
+        os.chdir(os.path.dirname(__file__) + '/../../../../../../models/')
 
         simulation = oc.open_simulation(file_name_or_url)
 
@@ -167,18 +167,18 @@ def test_simulation(title, file_name_or_url, first=True):
 if __name__ == '__main__':
     # Test for a local/remote CellML file
 
-    test_simulation('Local CellML file', 'cellml/lorenz.cellml')
+    test_simulation('Local CellML file', 'tests/cellml/lorenz.cellml')
     test_simulation('Remote CellML file',
                     'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/lorenz.cellml', False)
 
     # Test for a local/remote SED-ML file
 
-    test_simulation('Local SED-ML file', 'sedml/lorenz.sedml', False)
+    test_simulation('Local SED-ML file', 'tests/sedml/lorenz.sedml', False)
     test_simulation('Remote SED-ML file',
                     'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz.sedml', False)
 
     # Test for a local/remote COMBINE archive
 
-    test_simulation('Local COMBINE archive', 'combine/lorenz.omex', False)
+    test_simulation('Local COMBINE archive', 'tests/combine/lorenz.omex', False)
     test_simulation('Remote COMBINE archive',
                     'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex', False)

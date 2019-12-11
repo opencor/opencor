@@ -113,7 +113,7 @@ if __name__ == '__main__':
     # Test for an invalid local/remote file
 
     try:
-        test_simulation('Invalid local file', 'cellml/underconstrained_model.cellml', False)
+        test_simulation('Invalid local file', 'tests/cellml/underconstrained_model.cellml', False)
     except Exception as e:
         print(' - %s' % repr(e))
 
@@ -131,7 +131,7 @@ if __name__ == '__main__':
 
     header('SimulationData coverage tests', False)
 
-    simulation = open_simulation('cellml/parabola_variant_dae_model.cellml')
+    simulation = open_simulation('tests/cellml/parabola_variant_dae_model.cellml')
 
     data = simulation.data()
 
