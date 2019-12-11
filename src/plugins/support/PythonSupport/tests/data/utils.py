@@ -30,11 +30,12 @@ def open_simulation(file_name_or_url):
 
 def rounded_value(value):
     if math.isnan(value):
-        return float('NaN')
+        return 'nan'
     else:
-        value = 0.01 * round(100.0 * value)
+        # value = 0.01 * round(100.0 * value)
 
-        return 0.0 if value == 0.0 else value
+        # return '%f' % 0.0 if value == 0.0 else value
+        return '%f' % value
 
 
 def print_values(data):
@@ -43,7 +44,7 @@ def print_values(data):
     else:
         data_len = len(data)
 
-        print('[ %.2f, %.2f, %.2f, ..., %.2f, %.2f, %.2f ]'
+        print('[ %s, %s, %s, ..., %s, %s, %s ]'
               % (rounded_value(data[0]),
                  rounded_value(data[1]),
                  rounded_value(data[2]),
