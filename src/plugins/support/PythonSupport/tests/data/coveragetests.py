@@ -6,7 +6,7 @@ sys.dont_write_bytecode = True
 from basictests import *
 
 
-def edge_test_data_store_values(values, name, indent=''):
+def test_data_store_values(values, name, indent=''):
     print('%s - Test %s:' % (indent, name))
     print('%s    - Size: %d' % (indent, len(values)))
 
