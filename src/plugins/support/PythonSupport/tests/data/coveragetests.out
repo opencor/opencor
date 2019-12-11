@@ -110,6 +110,12 @@
        - Test value properly set: yes
  - Test SimulationData.algebraic():
     - Size: 0
+       - Starting point: 0.000000
+       - Test Starting point properly set: yes
+       - Ending point: 50.000000
+       - Test Ending point properly set: yes
+       - Point interval: 0.001000
+       - Test Point interval properly set: yes
 
 ---------------------------------------
    SimulationResults coverage tests

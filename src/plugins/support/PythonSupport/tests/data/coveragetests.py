@@ -19,6 +19,19 @@ def test_data_store_values(values, name, indent=''):
         print('%s       - Test value properly set: %s' % (indent, "yes" if value.value() == test_value else "no"))
 
 
+def test_simulation_data_property(get_method, set_method, description):
+    orig_value = get_method()
+    test_value = 123.456789
+
+    print('       - %s: %f' % (description, orig_value))
+
+    set_method(test_value)
+
+    print('       - Test %s properly set: %s' % (description, "yes" if get_method() == test_value else "no"))
+
+    set_method(orig_value)
+
+
 def test_data_store_variable_index(variable, index, indent):
     print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
 
@@ -99,6 +112,10 @@ if __name__ == '__main__':
     test_data_store_values(data.states(), 'SimulationData.states()')
     test_data_store_values(data.rates(), 'SimulationData.rates()')
     test_data_store_values(data.algebraic(), 'SimulationData.algebraic()')
+
+    test_simulation_data_property(data.starting_point, data.set_starting_point, 'Starting point')
+    test_simulation_data_property(data.ending_point, data.set_ending_point, 'Ending point')
+    test_simulation_data_property(data.point_interval, data.set_point_interval, 'Point interval')
 
     # Coverage tests for SimulationResults
 
