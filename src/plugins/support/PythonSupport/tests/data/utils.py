@@ -28,6 +28,10 @@ def open_simulation(file_name_or_url):
         return simulation
 
 
+def rounded_value(value):
+    return 0.0 if 0.001 * round(1000.0 * value) == 0.0 else value
+
+
 def print_values(data):
     if data is None:
         print('None')
@@ -35,12 +39,12 @@ def print_values(data):
         data_len = len(data)
 
         print('[ %.3f, %.3f, %.3f, ..., %.3f, %.3f, %.3f ]'
-              % (0.0 if data[0] == 0.0 else data[0],
-                 0.0 if data[1] == 0.0 else data[1],
-                 0.0 if data[2] == 0.0 else data[2],
-                 0.0 if data[data_len - 3] == 0.0 else data[data_len - 3],
-                 0.0 if data[data_len - 2] == 0.0 else data[data_len - 2],
-                 0.0 if data[data_len - 1] == 0.0 else data[data_len - 1]))
+              % (rounded_value(data[0]),
+                 rounded_value(data[1]),
+                 rounded_value(data[2]),
+                 rounded_value(data[data_len - 3]),
+                 rounded_value(data[data_len - 2]),
+                 rounded_value(data[data_len - 1])))
 
 
 def values(data, type, indent=''):
