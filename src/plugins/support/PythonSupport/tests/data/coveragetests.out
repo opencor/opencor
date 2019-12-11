@@ -116,6 +116,10 @@
        - Test ending point properly set: yes
        - Point interval: 0.001000
        - Test point interval properly set: yes
+       - ODE solver: CVODE
+       - Test ODE solver properly set: yes
+       - ODE solver property: 1.0
+       - Test ODE solver property properly set: yes
 
 ---------------------------------------
    SimulationResults coverage tests

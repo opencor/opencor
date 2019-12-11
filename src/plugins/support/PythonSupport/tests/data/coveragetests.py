@@ -101,6 +101,8 @@ if __name__ == '__main__':
         print(' - %s' % repr(e))
 
     # Coverage tests for SimulationData
+    # Note: the only thing that we are not testing is set_nla_solver() since
+    #       OpenCOR currently comes with only one such solver...
 
     header('SimulationData coverage tests', False)
 
@@ -116,6 +118,26 @@ if __name__ == '__main__':
     test_simulation_data_property(data.starting_point, data.set_starting_point, 'Starting point')
     test_simulation_data_property(data.ending_point, data.set_ending_point, 'Ending point')
     test_simulation_data_property(data.point_interval, data.set_point_interval, 'Point interval')
+
+    orig_ode_solver_name = data.ode_solver_name()
+    test_ode_solver_name = 'Euler (forward)'
+
+    print('       - ODE solver: %s' % orig_ode_solver_name)
+
+    data.set_ode_solver(test_ode_solver_name)
+
+    print('       - Test ODE solver properly set: %s' % "yes" if data.ode_solver_name() == test_ode_solver_name else "no")
+
+    orig_ode_solver_property = data.ode_solver_property('Step')
+    test_ode_solver_property = 123.456789
+
+    print('       - ODE solver property: %s' % orig_ode_solver_property)
+
+    data.set_ode_solver_property('Step', test_ode_solver_property)
+
+    print('       - Test ODE solver property properly set: %s' % "yes" if data.ode_solver_property('Step') == test_ode_solver_property else "no")
+
+    data.set_ode_solver(orig_ode_solver_name)
 
     # Coverage tests for SimulationResults
 
