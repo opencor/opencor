@@ -32,10 +32,9 @@ def rounded_value(value):
     if math.isnan(value):
         return 'nan'
     else:
-        # value = 0.01 * round(100.0 * value)
+        value = 0.001 * round(1000.0 * value)
 
-        # return '%f' % 0.0 if value == 0.0 else value
-        return '%f' % value
+        return '%.3f' % 0.0 if value == 0.0 else value
 
 
 def print_values(data):
