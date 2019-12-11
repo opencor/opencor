@@ -108,6 +108,10 @@
        - Test ODE solver properly set: yes
        - ODE solver property: 1.0
        - Test ODE solver property properly set: yes
+       - DAE solver: KINSOL
+       - Test DAE solver properly set: yes
+       - DAE solver property: 200
+       - Test DAE solver property properly set: yes
 
 ---------------------------------------
    SimulationResults coverage tests

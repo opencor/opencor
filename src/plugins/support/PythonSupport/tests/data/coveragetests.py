@@ -125,8 +125,9 @@ if __name__ == '__main__':
         print(' - %s' % repr(e))
 
     # Coverage tests for SimulationData
-    # Note: the only thing that we are not testing is set_nla_solver() since
-    #       OpenCOR currently comes with only one such solver...
+    # Note: the only method that we can't check whether it works (although it
+    #       should!) is set_nla_solver() since OpenCOR currently comes with only
+    #       one NLA solver...
 
     header('SimulationData coverage tests', False)
 
@@ -146,6 +147,9 @@ if __name__ == '__main__':
     test_simulation_data_solver(data.ode_solver_name, data.set_ode_solver, 'Euler (forward)',
                                 data.ode_solver_property, data.set_ode_solver_property, 'Step',
                                 'ODE')
+    test_simulation_data_solver(data.nla_solver_name, data.set_nla_solver, 'KINSOL',
+                                data.nla_solver_property, data.set_nla_solver_property, 'MaximumNumberOfIterations',
+                                'DAE')
 
     # Coverage tests for SimulationResults
 
