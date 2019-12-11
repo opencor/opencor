@@ -19,14 +19,14 @@ def test_data_store_values(values, name, indent=''):
         print('%s       - Test value properly set: %s' % (indent, "yes" if value.value() == test_value else "no"))
 
 
-def edge_test_data_store_variable_index(variable, index, indent):
+def test_data_store_variable_index(variable, index, indent):
     print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
 
     for run in range(variable.runs_count() + 3):
         print('%s    - value(%d, %d): %f' % (indent, index, run - 2, variable.value(index, run - 2)))
 
 
-def edge_test_data_store_variable(variable, name, indent=''):
+def test_data_store_variable(variable, name, indent=''):
     print('%s - Test %s:' % (indent, name))
     print('%s    - Name: %s' % (indent, variable.name()))
     print('%s    - Unit: %s' % (indent, variable.unit()))
@@ -34,22 +34,22 @@ def edge_test_data_store_variable(variable, name, indent=''):
 
     values_count = variable.values_count()
 
-    edge_test_data_store_variable_index(variable, -1, indent)
-    edge_test_data_store_variable_index(variable, 0, indent)
-    edge_test_data_store_variable_index(variable, values_count - 1, indent)
-    edge_test_data_store_variable_index(variable, values_count, indent)
+    test_data_store_variable_index(variable, -1, indent)
+    test_data_store_variable_index(variable, 0, indent)
+    test_data_store_variable_index(variable, values_count - 1, indent)
+    test_data_store_variable_index(variable, values_count, indent)
 
     for run in range(variable.runs_count() + 3):
         print('%s    - values(%d): ' % (indent, run - 2), end='')
         print_values(variable.values(run - 2))
 
 
-def edge_test_data_store_variables(variables, name, indent=''):
+def test_data_store_variables(variables, name, indent=''):
     print('%s - Test %s:' % (indent, name))
     print('%s    - Size: %d' % (indent, len(variables)))
 
     for uri, variable in variables.items():
-        edge_test_data_store_variable(variable, uri, indent + '   ')
+        test_data_store_variable(variable, uri, indent + '   ')
 
 
 if __name__ == '__main__':
@@ -95,10 +95,10 @@ if __name__ == '__main__':
 
     data = simulation.data()
 
-    edge_test_data_store_values(data.constants(), 'SimulationData.constants()')
-    edge_test_data_store_values(data.states(), 'SimulationData.states()')
-    edge_test_data_store_values(data.rates(), 'SimulationData.rates()')
-    edge_test_data_store_values(data.algebraic(), 'SimulationData.algebraic()')
+    test_data_store_values(data.constants(), 'SimulationData.constants()')
+    test_data_store_values(data.states(), 'SimulationData.states()')
+    test_data_store_values(data.rates(), 'SimulationData.rates()')
+    test_data_store_values(data.algebraic(), 'SimulationData.algebraic()')
 
     # Coverage tests for SimulationResults
 
@@ -109,18 +109,18 @@ if __name__ == '__main__':
 
     results = simulation.results()
 
-    edge_test_data_store_variable(results.voi(), 'SimulationResults.voi()')
-    edge_test_data_store_variables(results.constants(), 'SimulationResults.constants()')
-    edge_test_data_store_variables(results.states(), 'SimulationResults.states()')
-    edge_test_data_store_variables(results.rates(), 'SimulationResults.rates()')
-    edge_test_data_store_variables(results.algebraic(), 'SimulationResults.algebraic()')
+    test_data_store_variable(results.voi(), 'SimulationResults.voi()')
+    test_data_store_variables(results.constants(), 'SimulationResults.constants()')
+    test_data_store_variables(results.states(), 'SimulationResults.states()')
+    test_data_store_variables(results.rates(), 'SimulationResults.rates()')
+    test_data_store_variables(results.algebraic(), 'SimulationResults.algebraic()')
 
     print('    - Test SimulationResults.data_store():')
 
     data_store = results.data_store()
 
-    edge_test_data_store_variable(data_store.voi(), 'DataStore.voi()', '   ')
-    edge_test_data_store_variables(data_store.variables(), 'DataStore.variables()', '   ')
-    edge_test_data_store_variables(data_store.voi_and_variables(), 'DataStore.voi_and_variables()', '   ')
+    test_data_store_variable(data_store.voi(), 'DataStore.voi()', '   ')
+    test_data_store_variables(data_store.variables(), 'DataStore.variables()', '   ')
+    test_data_store_variables(data_store.voi_and_variables(), 'DataStore.voi_and_variables()', '   ')
 
     oc.close_simulation(simulation)
