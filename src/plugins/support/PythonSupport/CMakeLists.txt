@@ -15,5 +15,9 @@ ADD_PLUGIN(PythonSupport
         Python
         PythonPackages
     TESTS
-        tests
+        basictests
+        coveragetests
+        hodgkinhuxley1952tests
+        noble1962tests
+        vanderpol1928tests
 )

@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Python support tests
+// Python support van der Pol 1928 tests
 //==============================================================================
 
 #pragma once
@@ -29,16 +29,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-class Tests : public QObject
+class VanDerPol1928Tests : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void basicTests();
-    void coverageTests();
-    void hodgkinHuxley1952Tests();
-    void noble1962Tests();
-    void vanDerPol1928Tests();
+    void tests();
 };
 
 //==============================================================================
