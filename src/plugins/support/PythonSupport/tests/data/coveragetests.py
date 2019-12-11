@@ -27,7 +27,7 @@ def test_simulation_data_property(get_method, set_method, description):
 
     set_method(test_value)
 
-    print('       - Test %s properly set: %s' % (description, "yes" if get_method() == test_value else "no"))
+    print('       - Test %s properly set: %s' % (description.lower(), "yes" if get_method() == test_value else "no"))
 
     set_method(orig_value)
 
