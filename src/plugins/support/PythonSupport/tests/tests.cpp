@@ -70,6 +70,18 @@ void Tests::hh52Tests()
 
 //==============================================================================
 
+void Tests::n62Tests()
+{
+    // Some tests to make sure that the N62 model works fine
+
+    QStringList output;
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/n62tests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/n62tests.out")));
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
