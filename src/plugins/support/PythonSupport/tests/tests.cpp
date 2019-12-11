@@ -82,6 +82,18 @@ void Tests::n62Tests()
 
 //==============================================================================
 
+void Tests::vdP28Tests()
+{
+    // Some tests to make sure that the vdP28 model works fine
+
+    QStringList output;
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/vdp28tests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/vdp28tests.out")));
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================

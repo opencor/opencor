@@ -38,6 +38,7 @@ private slots:
     void coverageTests();
     void hh52Tests();
     void n62Tests();
+    void vdP28Tests();
 };
 
 //==============================================================================
