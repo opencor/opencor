@@ -58,38 +58,38 @@ void Tests::coverageTests()
 
 //==============================================================================
 
-void Tests::hh52Tests()
+void Tests::hodgkinHuxley1952Tests()
 {
-    // Some tests to make sure that the HH52 model works fine
+    // Some tests to make sure that the Hodgkin–Huxley 1952 model works fine
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hh52tests.py"), output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hh52tests.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hodgkinhuxley1952tests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hodgkinhuxley1952tests.out")));
 }
 
 //==============================================================================
 
-void Tests::n62Tests()
+void Tests::noble1962Tests()
 {
-    // Some tests to make sure that the N62 model works fine
+    // Some tests to make sure that the Noble 1962 model works fine
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/n62tests.py"), output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/n62tests.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/noble1962tests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/noble1962tests.out")));
 }
 
 //==============================================================================
 
-void Tests::vdP28Tests()
+void Tests::vanDerPol1928Tests()
 {
-    // Some tests to make sure that the vdP28 model works fine
+    // Some tests to make sure that the van der Pol 1928 model works fine
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/vdp28tests.py"), output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/vdp28tests.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/vanderpol1928tests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/vanderpol1928tests.out")));
 }
 
 //==============================================================================

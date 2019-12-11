@@ -36,9 +36,9 @@ class Tests : public QObject
 private slots:
     void basicTests();
     void coverageTests();
-    void hh52Tests();
-    void n62Tests();
-    void vdP28Tests();
+    void hodgkinHuxley1952Tests();
+    void noble1962Tests();
+    void vanDerPol1928Tests();
 };
 
 //==============================================================================
