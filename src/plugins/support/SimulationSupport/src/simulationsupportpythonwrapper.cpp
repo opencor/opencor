@@ -438,6 +438,16 @@ void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationD
 
 //==============================================================================
 
+QVariant SimulationSupportPythonWrapper::ode_solver_property(SimulationData *pSimulationData,
+                                                             const QString &pName)
+{
+    // Return the value for the given ODE solver property
+
+    return pSimulationData->odeSolverProperty(pName);
+}
+
+//==============================================================================
+
 void SimulationSupportPythonWrapper::set_ode_solver_property(SimulationData *pSimulationData,
                                                              const QString &pName,
                                                              const QVariant &pValue)
@@ -446,6 +456,16 @@ void SimulationSupportPythonWrapper::set_ode_solver_property(SimulationData *pSi
     // name and value
 
     pSimulationData->setOdeSolverProperty(pName, pValue);
+}
+
+//==============================================================================
+
+QVariant SimulationSupportPythonWrapper::nla_solver_property(SimulationData *pSimulationData,
+                                                             const QString &pName)
+{
+    // Return the value for the given NLA solver property
+
+    return pSimulationData->nlaSolverProperty(pName);
 }
 
 //==============================================================================

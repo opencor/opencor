@@ -234,7 +234,10 @@ public slots:
     Solver::Solver::Properties odeSolverProperties() const;
     Solver::Solver::Properties nlaSolverProperties() const;
 
+    QVariant odeSolverProperty(const QString &pName) const;
     void setOdeSolverProperty(const QString &pName, const QVariant &pValue);
+
+    QVariant nlaSolverProperty(const QString &pName) const;
     void setNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               bool pReset = true);
 

@@ -403,6 +403,17 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 
 //==============================================================================
 
+QVariant SimulationData::odeSolverProperty(const QString &pName) const
+{
+    // Return the value of the given ODE solver property
+
+    return (mSimulation->runtime() != nullptr)?
+                mOdeSolverProperties.value(pName):
+                QVariant();
+}
+
+//==============================================================================
+
 void SimulationData::setOdeSolverProperty(const QString &pName,
                                           const QVariant &pValue)
 {
@@ -468,6 +479,17 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
             && mSimulation->runtime()->needNlaSolver())?
                 mNlaSolverProperties:
                 Solver::Solver::Properties();
+}
+
+//==============================================================================
+
+QVariant SimulationData::nlaSolverProperty(const QString &pName) const
+{
+    // Return the value of the given NLA solver property
+
+    return (mSimulation->runtime() != nullptr)?
+                mNlaSolverProperties.value(pName):
+                QVariant();
 }
 
 //==============================================================================
