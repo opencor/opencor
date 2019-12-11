@@ -14,9 +14,9 @@ def edge_test_data_store_values(values, name, indent=''):
         print('%s    - %s:' % (indent, uri))
         print('%s       - URI: %s' % (indent, value.uri()))
         print('%s       - Value: %f' % (indent, value.value()))
-        new_value = 123.456789
-        value.set_value(new_value)
-        print('%s       - New value properly set: %s' % (indent, "yes" if value.value() == new_value else "no"))
+        test_value = 123.456789
+        value.set_value(test_value)
+        print('%s       - Test value properly set: %s' % (indent, "yes" if value.value() == test_value else "no"))
 
 
 def edge_test_data_store_variable_index(variable, index, indent):
