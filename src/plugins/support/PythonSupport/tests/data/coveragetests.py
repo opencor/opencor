@@ -32,6 +32,30 @@ def test_simulation_data_property(get_method, set_method, description):
     set_method(orig_value)
 
 
+def test_simulation_data_solver(solver_name_method, set_solver_method, test_solver_name,
+                                solver_property_method, set_solver_property_method, solver_property_name,
+                                solver_type):
+    orig_solver_name = solver_name_method()
+
+    print('       - %s solver: %s' % (solver_type, orig_solver_name))
+
+    set_solver_method(test_solver_name)
+
+    print('       - Test %s solver properly set: %s'
+          % (solver_type, "yes" if solver_name_method() == test_solver_name else "no"))
+
+    test_ode_solver_property = 123.456789
+
+    print('       - %s solver property: %s' % (solver_type, solver_property_method(solver_property_name)))
+
+    set_solver_property_method(solver_property_name, test_ode_solver_property)
+
+    print('       - Test %s solver property properly set: %s'
+          % (solver_type, "yes" if solver_property_method(solver_property_name) == test_ode_solver_property else "no"))
+
+    set_solver_method(orig_solver_name)
+
+
 def test_data_store_variable_index(variable, index, indent):
     print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
 
@@ -119,25 +143,9 @@ if __name__ == '__main__':
     test_simulation_data_property(data.ending_point, data.set_ending_point, 'Ending point')
     test_simulation_data_property(data.point_interval, data.set_point_interval, 'Point interval')
 
-    orig_ode_solver_name = data.ode_solver_name()
-    test_ode_solver_name = 'Euler (forward)'
-
-    print('       - ODE solver: %s' % orig_ode_solver_name)
-
-    data.set_ode_solver(test_ode_solver_name)
-
-    print('       - Test ODE solver properly set: %s' % "yes" if data.ode_solver_name() == test_ode_solver_name else "no")
-
-    orig_ode_solver_property = data.ode_solver_property('Step')
-    test_ode_solver_property = 123.456789
-
-    print('       - ODE solver property: %s' % orig_ode_solver_property)
-
-    data.set_ode_solver_property('Step', test_ode_solver_property)
-
-    print('       - Test ODE solver property properly set: %s' % "yes" if data.ode_solver_property('Step') == test_ode_solver_property else "no")
-
-    data.set_ode_solver(orig_ode_solver_name)
+    test_simulation_data_solver(data.ode_solver_name, data.set_ode_solver, 'Euler (forward)',
+                                data.ode_solver_property, data.set_ode_solver_property, 'Step',
+                                'ODE')
 
     # Coverage tests for SimulationResults
 
