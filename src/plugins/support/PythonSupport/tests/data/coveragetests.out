@@ -64,6 +64,54 @@
  - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
+     SimulationData coverage tests
+---------------------------------------
+ - Test SimulationData.constants():
+    - Size: 3
+    - main/sigma:
+       - URI: main/sigma
+       - Value: 10.000000
+       - New value properly set: yes
+    - main/rho:
+       - URI: main/rho
+       - Value: 28.000000
+       - New value properly set: yes
+    - main/beta:
+       - URI: main/beta
+       - Value: 2.666670
+       - New value properly set: yes
+ - Test SimulationData.states():
+    - Size: 3
+    - main/x:
+       - URI: main/x
+       - Value: 1.000000
+       - New value properly set: yes
+    - main/y:
+       - URI: main/y
+       - Value: 1.000000
+       - New value properly set: yes
+    - main/z:
+       - URI: main/z
+       - Value: 1.000000
+       - New value properly set: yes
+ - Test SimulationData.rates():
+    - Size: 3
+    - main/x/prime:
+       - URI: main/x/prime
+       - Value: 0.000000
+       - New value properly set: yes
+    - main/y/prime:
+       - URI: main/y/prime
+       - Value: 26.000000
+       - New value properly set: yes
+    - main/z/prime:
+       - URI: main/z/prime
+       - Value: -1.666670
+       - New value properly set: yes
+ - Test SimulationData.algebraic():
+    - Size: 0
+
+---------------------------------------
    SimulationResults coverage tests
 ---------------------------------------
  - Test SimulationResults.voi():

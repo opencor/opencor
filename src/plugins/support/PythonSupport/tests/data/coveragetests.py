@@ -6,6 +6,19 @@ sys.dont_write_bytecode = True
 from basictests import *
 
 
+def edge_test_data_store_values(values, name, indent=''):
+    print('%s - Test %s:' % (indent, name))
+    print('%s    - Size: %d' % (indent, len(values)))
+
+    for uri, value in values.items():
+        print('%s    - %s:' % (indent, uri))
+        print('%s       - URI: %s' % (indent, value.uri()))
+        print('%s       - Value: %f' % (indent, value.value()))
+        new_value = 123.456789
+        value.set_value(new_value)
+        print('%s       - New value properly set: %s' % (indent, "yes" if value.value() == new_value else "no"))
+
+
 def edge_test_data_store_variable_index(variable, index, indent):
     print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
 
@@ -74,12 +87,24 @@ if __name__ == '__main__':
     except Exception as e:
         print(' - %s' % repr(e))
 
+    # Coverage tests for SimulationData
+
+    header('SimulationData coverage tests', False)
+
+    simulation = open_simulation('sedml/lorenz.sedml')
+
+    data = simulation.data()
+
+    edge_test_data_store_values(data.constants(), 'SimulationData.constants()')
+    edge_test_data_store_values(data.states(), 'SimulationData.states()')
+    edge_test_data_store_values(data.rates(), 'SimulationData.rates()')
+    edge_test_data_store_values(data.algebraic(), 'SimulationData.algebraic()')
+
     # Coverage tests for SimulationResults
 
     header('SimulationResults coverage tests', False)
 
-    simulation = open_simulation('sedml/lorenz.sedml')
-
+    simulation.reset()
     simulation.run()
 
     results = simulation.results()
