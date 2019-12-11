@@ -58,6 +58,18 @@ void Tests::coverageTests()
 
 //==============================================================================
 
+void Tests::hh52Tests()
+{
+    // Some tests to make sure that the HH52 model works fine
+
+    QStringList output;
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hh52tests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hh52tests.out")));
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================

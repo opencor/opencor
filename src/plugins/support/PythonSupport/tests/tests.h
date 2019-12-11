@@ -36,6 +36,7 @@ class Tests : public QObject
 private slots:
     void basicTests();
     void coverageTests();
+    void hh52Tests();
 };
 
 //==============================================================================
