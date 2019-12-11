@@ -3,7 +3,6 @@ import sys
 
 sys.dont_write_bytecode = True
 
-from basictests import *
 from utils import *
 
 if __name__ == '__main__':

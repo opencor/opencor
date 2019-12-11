@@ -3,7 +3,7 @@ import sys
 
 sys.dont_write_bytecode = True
 
-from basictests import *
+from utils import *
 
 
 def test_data_store_values(values, name, indent=''):
