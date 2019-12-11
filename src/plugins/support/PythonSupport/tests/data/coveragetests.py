@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
     # Coverage tests for SimulationResults using a valid SED-ML file
 
-    header('Coverage tests for SimulationResults', False)
+    header('SimulationResults coverage tests', False)
 
     simulation = open_simulation('sedml/lorenz.sedml')
 

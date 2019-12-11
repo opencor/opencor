@@ -4,7 +4,7 @@
  - Open simulation
  - Check simulation:
     - Valid: yes
-    - Issues: n/a
+    - Issues: none
  - Initial settings:
     - Ending point: 50.000000
     - Point interval: 0.001000
@@ -27,7 +27,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 50001
        - Constants:
@@ -42,7 +42,7 @@
           - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - New settings:
     - Starting point: 10.000000
     - Ending point: 30.000000
@@ -67,7 +67,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -82,7 +82,7 @@
           - main/x/prime = [ 0.000000, 22.169088, 65.286220, ..., 17.721866, 8.317026, 13.854955 ]
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
@@ -102,7 +102,7 @@
              - main/x/prime = 13.854954733292573
              - main/y/prime = 25.441049101152547
              - main/z/prime = -28.928160467751443
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -117,7 +117,7 @@
           - main/x/prime = [ 13.854955, 31.952609, 66.568568, ..., -9.945965, 6.562756, 21.618295 ]
           - main/y/prime = [ 25.441049, 59.575124, 100.957585, ..., 12.070140, 19.676929, 41.398055 ]
           - main/z/prime = [ -28.928160, -1.346980, 94.300303, ..., -56.021906, -40.142833, -18.862229 ]
-       - Algebraic : n/a
+       - Algebraic: empty
 
 ---------------------------------------
           Remote CellML file
@@ -125,7 +125,7 @@
  - Open simulation
  - Check simulation:
     - Valid: yes
-    - Issues: n/a
+    - Issues: none
  - Initial settings:
     - Ending point: 50.000000
     - Point interval: 0.001000
@@ -148,7 +148,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 50001
        - Constants:
@@ -163,7 +163,7 @@
           - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - New settings:
     - Starting point: 10.000000
     - Ending point: 30.000000
@@ -188,7 +188,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -203,7 +203,7 @@
           - main/x/prime = [ 0.000000, 22.169088, 65.286220, ..., 17.721866, 8.317026, 13.854955 ]
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
@@ -223,7 +223,7 @@
              - main/x/prime = 13.854954733292573
              - main/y/prime = 25.441049101152547
              - main/z/prime = -28.928160467751443
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -238,7 +238,7 @@
           - main/x/prime = [ 13.854955, 31.952609, 66.568568, ..., -9.945965, 6.562756, 21.618295 ]
           - main/y/prime = [ 25.441049, 59.575124, 100.957585, ..., 12.070140, 19.676929, 41.398055 ]
           - main/z/prime = [ -28.928160, -1.346980, 94.300303, ..., -56.021906, -40.142833, -18.862229 ]
-       - Algebraic : n/a
+       - Algebraic: empty
 
 ---------------------------------------
            Local SED-ML file
@@ -246,7 +246,7 @@
  - Open simulation
  - Check simulation:
     - Valid: yes
-    - Issues: n/a
+    - Issues: none
  - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
@@ -266,7 +266,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 50001
        - Constants:
@@ -281,7 +281,7 @@
           - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - New settings:
     - Starting point: 10.000000
     - Ending point: 30.000000
@@ -306,7 +306,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -321,7 +321,7 @@
           - main/x/prime = [ 0.000000, 22.169088, 65.286220, ..., 17.721866, 8.317026, 13.854955 ]
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
@@ -341,7 +341,7 @@
              - main/x/prime = 13.854954733292573
              - main/y/prime = 25.441049101152547
              - main/z/prime = -28.928160467751443
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -356,7 +356,7 @@
           - main/x/prime = [ 13.854955, 31.952609, 66.568568, ..., -9.945965, 6.562756, 21.618295 ]
           - main/y/prime = [ 25.441049, 59.575124, 100.957585, ..., 12.070140, 19.676929, 41.398055 ]
           - main/z/prime = [ -28.928160, -1.346980, 94.300303, ..., -56.021906, -40.142833, -18.862229 ]
-       - Algebraic : n/a
+       - Algebraic: empty
 
 ---------------------------------------
           Remote SED-ML file
@@ -364,7 +364,7 @@
  - Open simulation
  - Check simulation:
     - Valid: yes
-    - Issues: n/a
+    - Issues: none
  - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
@@ -384,7 +384,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 50001
        - Constants:
@@ -399,7 +399,7 @@
           - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - New settings:
     - Starting point: 10.000000
     - Ending point: 30.000000
@@ -424,7 +424,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -439,7 +439,7 @@
           - main/x/prime = [ 0.000000, 22.169088, 65.286220, ..., 17.721866, 8.317026, 13.854955 ]
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
@@ -459,7 +459,7 @@
              - main/x/prime = 13.854954733292573
              - main/y/prime = 25.441049101152547
              - main/z/prime = -28.928160467751443
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -474,7 +474,7 @@
           - main/x/prime = [ 13.854955, 31.952609, 66.568568, ..., -9.945965, 6.562756, 21.618295 ]
           - main/y/prime = [ 25.441049, 59.575124, 100.957585, ..., 12.070140, 19.676929, 41.398055 ]
           - main/z/prime = [ -28.928160, -1.346980, 94.300303, ..., -56.021906, -40.142833, -18.862229 ]
-       - Algebraic : n/a
+       - Algebraic: empty
 
 ---------------------------------------
          Local COMBINE archive
@@ -482,7 +482,7 @@
  - Open simulation
  - Check simulation:
     - Valid: yes
-    - Issues: n/a
+    - Issues: none
  - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
@@ -502,7 +502,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 50001
        - Constants:
@@ -517,7 +517,7 @@
           - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - New settings:
     - Starting point: 10.000000
     - Ending point: 30.000000
@@ -542,7 +542,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -557,7 +557,7 @@
           - main/x/prime = [ 0.000000, 22.169088, 65.286220, ..., 17.721866, 8.317026, 13.854955 ]
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
@@ -577,7 +577,7 @@
              - main/x/prime = 13.854954733292573
              - main/y/prime = 25.441049101152547
              - main/z/prime = -28.928160467751443
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -592,7 +592,7 @@
           - main/x/prime = [ 13.854955, 31.952609, 66.568568, ..., -9.945965, 6.562756, 21.618295 ]
           - main/y/prime = [ 25.441049, 59.575124, 100.957585, ..., 12.070140, 19.676929, 41.398055 ]
           - main/z/prime = [ -28.928160, -1.346980, 94.300303, ..., -56.021906, -40.142833, -18.862229 ]
-       - Algebraic : n/a
+       - Algebraic: empty
 
 ---------------------------------------
         Remote COMBINE archive
@@ -600,7 +600,7 @@
  - Open simulation
  - Check simulation:
     - Valid: yes
-    - Issues: n/a
+    - Issues: none
  - Run simulation [1]:
     - Settings:
        - Starting point: 0.000000
@@ -620,7 +620,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 50001
        - Constants:
@@ -635,7 +635,7 @@
           - main/x/prime = [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - main/y/prime = [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - main/z/prime = [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - New settings:
     - Starting point: 10.000000
     - Ending point: 30.000000
@@ -660,7 +660,7 @@
              - main/x/prime = 0.0
              - main/y/prime = 26.0
              - main/z/prime = -1.6666699999999999
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -675,7 +675,7 @@
           - main/x/prime = [ 0.000000, 22.169088, 65.286220, ..., 17.721866, 8.317026, 13.854955 ]
           - main/y/prime = [ 26.000000, 49.636783, 131.836202, ..., -2.738288, 8.813772, 25.441049 ]
           - main/z/prime = [ -1.666670, 5.616605, 63.379775, ..., -59.612804, -43.676565, -28.928160 ]
-       - Algebraic : n/a
+       - Algebraic: empty
  - Run simulation [3]:
     - Settings:
        - Starting point: 10.000000
@@ -695,7 +695,7 @@
              - main/x/prime = 13.854954733292573
              - main/y/prime = 25.441049101152547
              - main/z/prime = -28.928160467751443
-          - Algebraic : n/a
+          - Algebraic: empty
     - Result values:
        - Number of points: 201
        - Constants:
@@ -710,4 +710,4 @@
           - main/x/prime = [ 13.854955, 31.952609, 66.568568, ..., -9.945965, 6.562756, 21.618295 ]
           - main/y/prime = [ 25.441049, 59.575124, 100.957585, ..., 12.070140, 19.676929, 41.398055 ]
           - main/z/prime = [ -28.928160, -1.346980, 94.300303, ..., -56.021906, -40.142833, -18.862229 ]
-       - Algebraic : n/a
+       - Algebraic: empty

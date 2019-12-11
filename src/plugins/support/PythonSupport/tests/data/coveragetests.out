@@ -33,10 +33,10 @@
        - Point interval: 0.001000
        - ODE solver: CVODE
        - Initial values:
-          - Constants : n/a
-          - States : n/a
-          - Rates : n/a
-          - Algebraic : n/a
+          - Constants: empty
+          - States: empty
+          - Rates: empty
+          - Algebraic: empty
  - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
@@ -57,14 +57,14 @@
        - Point interval: 0.001000
        - ODE solver: CVODE
        - Initial values:
-          - Constants : n/a
-          - States : n/a
-          - Rates : n/a
-          - Algebraic : n/a
+          - Constants: empty
+          - States: empty
+          - Rates: empty
+          - Algebraic: empty
  - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
-          Various edge cases
+   SimulationResults coverage tests
 ---------------------------------------
  - Run simulation:
     - Test SimulationResults.voi():
@@ -91,10 +91,10 @@
           - value(50001, -1): nan
           - value(50001, 0): nan
           - value(50001, 1): nan
-       - values(-2): n/a
+       - values(-2): None
        - values(-1): [ 0.000000, 0.001000, 0.002000, ..., 49.998000, 49.999000, 50.000000 ]
        - values(0): [ 0.000000, 0.001000, 0.002000, ..., 49.998000, 49.999000, 50.000000 ]
-       - values(1): n/a
+       - values(1): None
     - Test SimulationResults.constants():
        - Size: 3
        - Test main/sigma:
@@ -121,10 +121,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
           - values(0): [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
-          - values(1): n/a
+          - values(1): None
        - Test main/rho:
           - Name: rho
           - Unit: dimensionless
@@ -149,10 +149,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
           - values(0): [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
-          - values(1): n/a
+          - values(1): None
        - Test main/beta:
           - Name: beta
           - Unit: dimensionless
@@ -177,10 +177,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
           - values(0): [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
-          - values(1): n/a
+          - values(1): None
     - Test SimulationResults.states():
        - Size: 3
        - Test main/x:
@@ -207,10 +207,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
           - values(0): [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
-          - values(1): n/a
+          - values(1): None
        - Test main/y:
           - Name: y
           - Unit: dimensionless
@@ -235,10 +235,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
           - values(0): [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
-          - values(1): n/a
+          - values(1): None
        - Test main/z:
           - Name: z
           - Unit: dimensionless
@@ -263,10 +263,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
           - values(0): [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
-          - values(1): n/a
+          - values(1): None
     - Test SimulationResults.rates():
        - Size: 3
        - Test main/x/prime:
@@ -293,10 +293,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
           - values(0): [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
-          - values(1): n/a
+          - values(1): None
        - Test main/y/prime:
           - Name: y'
           - Unit: dimensionless/dimensionless
@@ -321,10 +321,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
           - values(0): [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
-          - values(1): n/a
+          - values(1): None
        - Test main/z/prime:
           - Name: z'
           - Unit: dimensionless/dimensionless
@@ -349,10 +349,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
           - values(0): [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-          - values(1): n/a
+          - values(1): None
     - Test SimulationResults.algebraic():
        - Size: 0
     - Test SimulationResults.data_store():
@@ -380,10 +380,10 @@
              - value(50001, -1): nan
              - value(50001, 0): nan
              - value(50001, 1): nan
-          - values(-2): n/a
+          - values(-2): None
           - values(-1): [ 0.000000, 0.001000, 0.002000, ..., 49.998000, 49.999000, 50.000000 ]
           - values(0): [ 0.000000, 0.001000, 0.002000, ..., 49.998000, 49.999000, 50.000000 ]
-          - values(1): n/a
+          - values(1): None
        - Test DataStore.variables():
           - Size: 9
           - Test main/beta:
@@ -410,10 +410,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
              - values(0): [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/rho:
              - Name: rho
              - Unit: dimensionless
@@ -438,10 +438,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
              - values(0): [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/sigma:
              - Name: sigma
              - Unit: dimensionless
@@ -466,10 +466,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
              - values(0): [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/x:
              - Name: x
              - Unit: dimensionless
@@ -494,10 +494,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
              - values(0): [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/x/prime:
              - Name: x'
              - Unit: dimensionless/dimensionless
@@ -522,10 +522,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
              - values(0): [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/y:
              - Name: y
              - Unit: dimensionless
@@ -550,10 +550,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
              - values(0): [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/y/prime:
              - Name: y'
              - Unit: dimensionless/dimensionless
@@ -578,10 +578,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
              - values(0): [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/z:
              - Name: z
              - Unit: dimensionless
@@ -606,10 +606,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
              - values(0): [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/z/prime:
              - Name: z'
              - Unit: dimensionless/dimensionless
@@ -634,10 +634,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
              - values(0): [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-             - values(1): n/a
+             - values(1): None
        - Test DataStore.voi_and_variables():
           - Size: 10
           - Test main/beta:
@@ -664,10 +664,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
              - values(0): [ 2.666670, 2.666670, 2.666670, ..., 2.666670, 2.666670, 2.666670 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/rho:
              - Name: rho
              - Unit: dimensionless
@@ -692,10 +692,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
              - values(0): [ 28.000000, 28.000000, 28.000000, ..., 28.000000, 28.000000, 28.000000 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/sigma:
              - Name: sigma
              - Unit: dimensionless
@@ -720,10 +720,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
              - values(0): [ 10.000000, 10.000000, 10.000000, ..., 10.000000, 10.000000, 10.000000 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/t:
              - Name: t
              - Unit: dimensionless
@@ -748,10 +748,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 0.000000, 0.001000, 0.002000, ..., 49.998000, 49.999000, 50.000000 ]
              - values(0): [ 0.000000, 0.001000, 0.002000, ..., 49.998000, 49.999000, 50.000000 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/x:
              - Name: x
              - Unit: dimensionless
@@ -776,10 +776,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
              - values(0): [ 1.000000, 1.000130, 1.000517, ..., 1.418729, 1.430217, 1.441809 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/x/prime:
              - Name: x'
              - Unit: dimensionless/dimensionless
@@ -804,10 +804,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
              - values(0): [ 0.000000, 0.258590, 0.514440, ..., 11.436065, 11.539941, 11.644895 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/y:
              - Name: y
              - Unit: dimensionless
@@ -832,10 +832,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
              - values(0): [ 1.000000, 1.025989, 1.051961, ..., 2.562336, 2.584211, 2.606299 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/y/prime:
              - Name: y'
              - Unit: dimensionless/dimensionless
@@ -860,10 +860,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
              - values(0): [ 26.000000, 25.979173, 25.965265, ..., 21.770076, 21.981315, 22.194533 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/z:
              - Name: z
              - Unit: dimensionless
@@ -888,10 +888,10 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
              - values(0): [ 1.000000, 0.998349, 0.996728, ..., 10.849148, 10.823916, 10.798812 ]
-             - values(1): n/a
+             - values(1): None
           - Test main/z/prime:
              - Name: z'
              - Unit: dimensionless/dimensionless
@@ -916,7 +916,7 @@
                 - value(50001, -1): nan
                 - value(50001, 0): nan
                 - value(50001, 1): nan
-             - values(-2): n/a
+             - values(-2): None
              - values(-1): [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
              - values(0): [ -1.666670, -1.636144, -1.605440, ..., -25.295837, -25.167829, -25.039083 ]
-             - values(1): n/a
+             - values(1): None

@@ -29,7 +29,7 @@ def open_simulation(file_name_or_url):
 
 def print_values(data):
     if data is None:
-        print('n/a')
+        print('None')
     else:
         data_len = len(data)
 
@@ -55,7 +55,7 @@ def values(data, type, indent=''):
             except:
                 print(item.value())
     else:
-        print('%s       - %s : n/a' % (indent, type))
+        print('%s       - %s: empty' % (indent, type))
 
 
 def run_simulation(simulation, step):
@@ -116,7 +116,7 @@ def test_simulation(title, file_name_or_url, first=True):
     if issues:
         print('    - Issues:\n       - %s' % '\n       - '.join(issues))
     else:
-        print('    - Issues: n/a')
+        print('    - Issues: none')
 
     # Run #1: run the simulation using the default settings, except if we are
     #         dealing with a CellML file, in which case we set a few initial
