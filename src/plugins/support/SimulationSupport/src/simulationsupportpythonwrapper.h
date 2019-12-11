@@ -40,6 +40,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace DataStore {
+    class DataStore;
     class DataStoreVariable;
 } // namespace DataStore
 
