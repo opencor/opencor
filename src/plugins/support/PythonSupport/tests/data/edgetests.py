@@ -31,12 +31,12 @@ def edge_test_data_store_variable(variable, name, indent=''):
         print_values(variable.values(run - 2))
 
 
-def edge_test_data_store_variables(variables, name):
-    print('    - Test %s:' % name)
-    print('       - Size: %d' % len(variables))
+def edge_test_data_store_variables(variables, name, indent=''):
+    print('%s    - Test %s:' % (indent, name))
+    print('%s       - Size: %d' % (indent, len(variables)))
 
     for uri, variable in variables.items():
-        edge_test_data_store_variable(variable, uri, '   ')
+        edge_test_data_store_variable(variable, uri, indent + '   ')
 
 
 if __name__ == '__main__':
