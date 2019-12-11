@@ -7,17 +7,17 @@ from basictests import *
 
 
 def edge_test_data_store_variable_index(variable, index, indent):
-    print('%s          - value(%d): %f' % (indent, index, variable.value(index)))
+    print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
 
     for run in range(variable.runs_count() + 3):
-        print('%s          - value(%d, %d): %f' % (indent, index, run - 2, variable.value(index, run - 2)))
+        print('%s    - value(%d, %d): %f' % (indent, index, run - 2, variable.value(index, run - 2)))
 
 
 def edge_test_data_store_variable(variable, name, indent=''):
-    print('%s    - Test %s:' % (indent, name))
-    print('%s       - Name: %s' % (indent, variable.name()))
-    print('%s       - Unit: %s' % (indent, variable.unit()))
-    print('%s       - URI: %s' % (indent, variable.uri()))
+    print('%s - Test %s:' % (indent, name))
+    print('%s    - Name: %s' % (indent, variable.name()))
+    print('%s    - Unit: %s' % (indent, variable.unit()))
+    print('%s    - URI: %s' % (indent, variable.uri()))
 
     values_count = variable.values_count()
 
@@ -27,13 +27,13 @@ def edge_test_data_store_variable(variable, name, indent=''):
     edge_test_data_store_variable_index(variable, values_count, indent)
 
     for run in range(variable.runs_count() + 3):
-        print('%s       - values(%d): ' % (indent, run - 2), end='')
+        print('%s    - values(%d): ' % (indent, run - 2), end='')
         print_values(variable.values(run - 2))
 
 
 def edge_test_data_store_variables(variables, name, indent=''):
-    print('%s    - Test %s:' % (indent, name))
-    print('%s       - Size: %d' % (indent, len(variables)))
+    print('%s - Test %s:' % (indent, name))
+    print('%s    - Size: %d' % (indent, len(variables)))
 
     for uri, variable in variables.items():
         edge_test_data_store_variable(variable, uri, indent + '   ')
@@ -74,13 +74,11 @@ if __name__ == '__main__':
     except Exception as e:
         print(' - %s' % repr(e))
 
-    # Coverage tests for SimulationResults using a valid SED-ML file
+    # Coverage tests for SimulationResults
 
     header('SimulationResults coverage tests', False)
 
     simulation = open_simulation('sedml/lorenz.sedml')
-
-    print(' - Run simulation:')
 
     simulation.run()
 
