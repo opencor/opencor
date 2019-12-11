@@ -45,14 +45,15 @@ void Tests::basicTests()
 
 //==============================================================================
 
-void Tests::edgeTests()
+void Tests::coverageTests()
 {
-    // Some edge tests to make sure that we can safely use our Python wrappers
+    // Some coverage tests to make sure that we test all of our Python wrappers
+    // and that they can be safely used
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/edgetests.py"), output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/edgetests.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.py"), output));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.out")));
 }
 
 //==============================================================================
