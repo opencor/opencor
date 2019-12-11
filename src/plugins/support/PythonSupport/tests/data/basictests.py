@@ -45,17 +45,17 @@ def print_values(data):
 
 def values(data, type, indent=''):
     if data:
-        print('%s       - %s:' % (indent, type))
+        print('%s    - %s:' % (indent, type))
 
         for item in data.values():
-            print('%s          - %s = ' % (indent, item.uri()), end='')
+            print('%s       - %s = ' % (indent, item.uri()), end='')
 
             try:
                 print_values(item.values())
             except:
                 print(item.value())
     else:
-        print('%s       - %s: empty' % (indent, type))
+        print('%s    - %s: empty' % (indent, type))
 
 
 def run_simulation(simulation, step):
@@ -72,10 +72,10 @@ def run_simulation(simulation, step):
     print('       - ODE solver: %s' % data.ode_solver_name())
     print('       - Initial values:')
 
-    values(data.constants(), 'Constants', '   ')
-    values(data.states(), 'States', '   ')
-    values(data.rates(), 'Rates', '   ')
-    values(data.algebraic(), 'Algebraic', '   ')
+    values(data.constants(), 'Constants', '      ')
+    values(data.states(), 'States', '      ')
+    values(data.rates(), 'Rates', '      ')
+    values(data.algebraic(), 'Algebraic', '      ')
 
     simulation.run()
 
@@ -88,10 +88,10 @@ def run_simulation(simulation, step):
     print('    - Result values:')
     print('       - Number of points: %d' % len(states['main/x'].values()))
 
-    values(results.constants(), 'Constants')
-    values(states, 'States')
-    values(results.rates(), 'Rates')
-    values(results.algebraic(), 'Algebraic')
+    values(results.constants(), 'Constants', '   ')
+    values(states, 'States', '   ')
+    values(results.rates(), 'Rates', '   ')
+    values(results.algebraic(), 'Algebraic', '   ')
 
 
 def test_simulation(title, file_name_or_url, first=True):
