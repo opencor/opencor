@@ -394,7 +394,7 @@ void SimulationData::setOdeSolverName(const QString &pOdeSolverName)
 
 Solver::Solver::Properties SimulationData::odeSolverProperties() const
 {
-    // Return our ODE solver's properties
+    // Return our ODE solver properties
 
     return (mSimulation->runtime() != nullptr)?
                 mOdeSolverProperties:
@@ -462,7 +462,7 @@ void SimulationData::setNlaSolverName(const QString &pNlaSolverName,
 
 Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 {
-    // Return our NLA solver's properties
+    // Return our NLA solver properties
 
     return (   (mSimulation->runtime() != nullptr)
             && mSimulation->runtime()->needNlaSolver())?
