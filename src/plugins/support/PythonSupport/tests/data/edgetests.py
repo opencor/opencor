@@ -14,10 +14,10 @@ def edge_test_data_store_variable_index(variable, index, indent):
 
 
 def edge_test_data_store_variable(variable, name, indent=''):
-    print('%s       - Test %s:' % (indent, name))
-    print('%s          - Name: %s' % (indent, variable.name()))
-    print('%s          - Unit: %s' % (indent, variable.unit()))
-    print('%s          - URI: %s' % (indent, variable.uri()))
+    print('%s    - Test %s:' % (indent, name))
+    print('%s       - Name: %s' % (indent, variable.name()))
+    print('%s       - Unit: %s' % (indent, variable.unit()))
+    print('%s       - URI: %s' % (indent, variable.uri()))
 
     values_count = variable.values_count()
 
@@ -27,28 +27,16 @@ def edge_test_data_store_variable(variable, name, indent=''):
     edge_test_data_store_variable_index(variable, values_count, indent)
 
     for run in range(variable.runs_count() + 3):
-        print('%s          - values(%d): ' % (indent, run - 2), end='')
+        print('%s       - values(%d): ' % (indent, run - 2), end='')
         print_values(variable.values(run - 2))
 
 
 def edge_test_data_store_variables(variables, name):
-    print('       - Test SimulationResults.%s():' % name)
-    print('          - Size: %d' % len(variables))
+    print('    - Test %s:' % name)
+    print('       - Size: %d' % len(variables))
 
     for uri, variable in variables.items():
         edge_test_data_store_variable(variable, uri, '   ')
-
-
-def edge_test_simulation_results(simulation):
-    print('    - Test the SimulationResults class:')
-
-    results = simulation.results()
-
-    edge_test_data_store_variable(results.voi(), 'SimulationResults.voi()')
-    edge_test_data_store_variables(results.constants(), 'constants')
-    edge_test_data_store_variables(results.states(), 'states')
-    edge_test_data_store_variables(results.rates(), 'rates')
-    edge_test_data_store_variables(results.algebraic(), 'algebraic')
 
 
 if __name__ == '__main__':
@@ -96,6 +84,12 @@ if __name__ == '__main__':
 
     simulation.run()
 
-    edge_test_simulation_results(simulation)
+    results = simulation.results()
+
+    edge_test_data_store_variable(results.voi(), 'SimulationResults.voi()')
+    edge_test_data_store_variables(results.constants(), 'SimulationResults.constants()')
+    edge_test_data_store_variables(results.states(), 'SimulationResults.states()')
+    edge_test_data_store_variables(results.rates(), 'SimulationResults.rates()')
+    edge_test_data_store_variables(results.algebraic(), 'SimulationResults.algebraic()')
 
     oc.close_simulation(simulation)
