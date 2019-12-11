@@ -41,6 +41,7 @@ namespace OpenCOR {
 
 namespace DataStore {
     class DataStore;
+    class DataStoreValue;
     class DataStoreVariable;
 } // namespace DataStore
 
@@ -115,6 +116,9 @@ public slots:
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+
+    void set_value(OpenCOR::DataStore::DataStoreValue *pDataStoreValue,
+                   double pValue);
 
     int runs_count(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
     quint64 values_count(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,

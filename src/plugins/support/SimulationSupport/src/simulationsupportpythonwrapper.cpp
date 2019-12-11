@@ -575,6 +575,16 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulat
 
 //==============================================================================
 
+void SimulationSupportPythonWrapper::set_value(DataStore::DataStoreValue *pDataStoreValue,
+                                               double pValue)
+{
+    // Set the value for the given data store value
+
+    pDataStoreValue->setValue(pValue);
+}
+
+//==============================================================================
+
 int SimulationSupportPythonWrapper::runs_count(DataStore::DataStoreVariable *pDataStoreVariable) const
 {
     // Return the number of runs for the given data store variable
