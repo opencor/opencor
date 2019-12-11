@@ -34,20 +34,13 @@ def print_values(data):
     else:
         data_len = len(data)
 
-        if data_len > 6:
-            print('[ %.3f, %.3f, %.3f, ..., %.3f, %.3f, %.3f ]' %
-                  (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2],
-                   data[data_len - 1]))
-        else:
-            print('[ ', end='')
-
-            for i in range(data_len):
-                if i:
-                    print(', ', end='')
-
-                print('%.3f' % data[i], end='')
-
-            print(' ]')
+        print('[ %.3f, %.3f, %.3f, ..., %.3f, %.3f, %.3f ]'
+              % (0.0 if data[0] == 0.0 else data[0],
+                 0.0 if data[1] == 0.0 else data[1],
+                 0.0 if data[2] == 0.0 else data[2],
+                 0.0 if data[data_len - 3] == 0.0 else data[data_len - 3],
+                 0.0 if data[data_len - 2] == 0.0 else data[data_len - 2],
+                 0.0 if data[data_len - 1] == 0.0 else data[data_len - 1]))
 
 
 def values(data, type, indent=''):
