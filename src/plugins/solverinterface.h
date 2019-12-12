@@ -115,7 +115,7 @@ QString objectAddress(QObject *pObject);
 
 NlaSolver * nlaSolver(const QString &pObjectAddress);
 
-void setNlaSolver(QObject *pObject, NlaSolver *pGlobalNlaSolver);
+void setNlaSolver(QObject *pObject, NlaSolver *pNlaSolver);
 
 //==============================================================================
 

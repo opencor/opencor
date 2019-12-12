@@ -152,12 +152,12 @@ NlaSolver * nlaSolver(const QString &pObjectAddress)
 
 //==============================================================================
 
-void setNlaSolver(QObject *pObject, NlaSolver *pGlobalNlaSolver)
+void setNlaSolver(QObject *pObject, NlaSolver *pNlaSolver)
 {
     // Keep track of the runtime's NLA solver
 
     pObject->setProperty(objectAddress(pObject).toUtf8().constData(),
-                         quint64(pGlobalNlaSolver));
+                         quint64(pNlaSolver));
 }
 
 //==============================================================================
