@@ -3,7 +3,7 @@ import sys
 
 sys.dont_write_bytecode = True
 
-from utils import *
+import utils
 
 
 def test_data_store_values(values, name, indent=''):
@@ -57,10 +57,11 @@ def test_simulation_data_solver(solver_name_method, set_solver_method, test_solv
 
 
 def test_data_store_variable_index(variable, index, indent):
-    print('%s    - value(%d): %s' % (indent, index, rounded_value(variable.value(index))))
+    print('%s    - value(%d): %s' % (indent, index, utils.rounded_value(variable.value(index))))
 
     for run in range(variable.runs_count() + 3):
-        print('%s    - value(%d, %d): %s' % (indent, index, run - 2, rounded_value(variable.value(index, run - 2))))
+        print('%s    - value(%d, %d): %s'
+              % (indent, index, run - 2, utils.rounded_value(variable.value(index, run - 2))))
 
 
 def test_data_store_variable(variable, name, indent=''):
@@ -78,7 +79,7 @@ def test_data_store_variable(variable, name, indent=''):
 
     for run in range(variable.runs_count() + 3):
         print('%s    - values(%d): ' % (indent, run - 2), end='')
-        print_values(variable.values(run - 2))
+        utils.print_values(variable.values(run - 2))
 
 
 def test_data_store_variables(variables, name, indent=''):
@@ -93,34 +94,34 @@ if __name__ == '__main__':
     # Test for no file name or URL provided
 
     try:
-        test_simulation('No file name or URL provided', '')
+        utils.test_simulation('No file name or URL provided', '')
     except Exception as e:
         print(' - %s' % repr(e))
 
     # Test for an unknown local/remote file
 
     try:
-        test_simulation('Unknown local file', 'unknown')
+        utils.test_simulation('Unknown local file', 'unknown')
     except Exception as e:
         print(' - %s' % repr(e))
 
     try:
-        test_simulation('Unknown remote file',
-                        'https://unknown', False)
+        utils.test_simulation('Unknown remote file',
+                              'https://unknown', False)
     except Exception as e:
         print(' - %s' % repr(e))
 
     # Test for an invalid local/remote file
 
     try:
-        test_simulation('Invalid local file', 'tests/cellml/underconstrained_model.cellml', False)
+        utils.test_simulation('Invalid local file', 'tests/cellml/underconstrained_model.cellml', False)
     except Exception as e:
         print(' - %s' % repr(e))
 
     try:
-        test_simulation('Invalid remote file',
-                        'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/underconstrained_model.cellml',
-                        False)
+        utils.test_simulation('Invalid remote file',
+                              'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/underconstrained_model.cellml',
+                              False)
     except Exception as e:
         print(' - %s' % repr(e))
 
@@ -129,9 +130,9 @@ if __name__ == '__main__':
     #       should!) is set_nla_solver() since OpenCOR currently comes with only
     #       one NLA solver...
 
-    header('SimulationData coverage tests', False)
+    utils.header('SimulationData coverage tests', False)
 
-    simulation = open_simulation('tests/cellml/parabola_variant_dae_model.cellml')
+    simulation = utils.open_simulation('tests/cellml/parabola_variant_dae_model.cellml')
 
     data = simulation.data()
 
@@ -153,7 +154,7 @@ if __name__ == '__main__':
 
     # Coverage tests for SimulationResults
 
-    header('SimulationResults coverage tests', False)
+    utils.header('SimulationResults coverage tests', False)
 
     simulation.reset()
     simulation.run()

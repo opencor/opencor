@@ -16,25 +16,25 @@ def header(title, first=True):
 def open_simulation(file_name_or_url):
     if file_name_or_url.startswith('https://'):
         return oc.open_simulation(file_name_or_url)
-    else:
-        original_directory = os.getcwd()
 
-        os.chdir(os.path.dirname(__file__) + '/../../../../../../models/')
+    original_directory = os.getcwd()
 
-        simulation = oc.open_simulation(file_name_or_url)
+    os.chdir(os.path.dirname(__file__) + '/../../../../../../models/')
 
-        os.chdir(original_directory)
+    simulation = oc.open_simulation(file_name_or_url)
 
-        return simulation
+    os.chdir(original_directory)
+
+    return simulation
 
 
 def rounded_value(value):
     if math.isnan(value):
         return 'nan'
-    else:
-        value = 0.01 * round(100.0 * value)
 
-        return '%.2f' % 0.0 if value == 0.0 else value
+    value = 0.01 * round(100.0 * value)
+
+    return '%.2f' % 0.0 if value == 0.0 else value
 
 
 def print_values(data):
@@ -52,19 +52,19 @@ def print_values(data):
                  rounded_value(data[data_len - 1])))
 
 
-def values(data, type, indent=''):
+def values(data, data_type, indent=''):
     if data:
-        print('%s    - %s:' % (indent, type))
+        print('%s    - %s:' % (indent, data_type))
 
         for item in data.values():
             print('%s       - %s = ' % (indent, item.uri()), end='')
 
             try:
                 print_values(item.values())
-            except:
+            except Exception:
                 print(item.value())
     else:
-        print('%s    - %s: empty' % (indent, type))
+        print('%s    - %s: empty' % (indent, data_type))
 
 
 def run_simulation(simulation, step):
