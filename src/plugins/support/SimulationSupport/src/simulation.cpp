@@ -531,11 +531,10 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     if (runtime->needNlaSolver()) {
         // Set our NLA solver
-        // Note: we unset it at the end of this method...
 
         nlaSolver = static_cast<Solver::NlaSolver *>(nlaSolverInterface()->solverInstance());
 
-        Solver::setNlaSolver(runtime->address(), nlaSolver);
+        Solver::setNlaSolver(runtime, nlaSolver);
 
         // Keep track of any error that might be reported by our NLA solver
 
@@ -595,8 +594,6 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     if (nlaSolver != nullptr) {
         delete nlaSolver;
-
-        Solver::unsetNlaSolver(runtime->address());
     }
 
     // Let people know whether our data is clean, i.e. not modified, and ask our

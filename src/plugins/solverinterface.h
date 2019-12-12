@@ -111,10 +111,11 @@ public:
 
 //==============================================================================
 
-NlaSolver * nlaSolver(const QString &pRuntimeAddress);
+QString objectAddress(QObject *pObject);
 
-void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver);
-void unsetNlaSolver(const QString &pRuntimeAddress);
+NlaSolver * nlaSolver(const QString &pObjectAddress);
+
+void setNlaSolver(QObject *pObject, NlaSolver *pGlobalNlaSolver);
 
 //==============================================================================
 

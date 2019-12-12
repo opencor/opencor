@@ -25,10 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QCoreApplication>
-
-//==============================================================================
-
 void doNonLinearSolve(char *pRuntime,
                       void (*pFunction)(double *, double *, void *),
                       double *pParameters, int pSize, void *pUserData)
@@ -135,32 +131,33 @@ NlaSolver::~NlaSolver() = default;
 
 //==============================================================================
 
-NlaSolver * nlaSolver(const QString &pRuntimeAddress)
+QString objectAddress(QObject *pObject)
+{
+    // Return the given object's address as a string
+
+    return QString::number(quint64(pObject));
+}
+
+//==============================================================================
+
+NlaSolver * nlaSolver(const QString &pObjectAddress)
 {
     // Return the runtime's NLA solver
 
-    QVariant res = qApp->property(pRuntimeAddress.toUtf8().constData());
+    QObject *object = reinterpret_cast<NlaSolver *>(QVariant(pObjectAddress).toULongLong());
+    QVariant res = object->property(pObjectAddress.toUtf8().constData());
 
     return res.isValid()?reinterpret_cast<NlaSolver *>(res.toULongLong()):nullptr;
 }
 
 //==============================================================================
 
-void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
+void setNlaSolver(QObject *pObject, NlaSolver *pGlobalNlaSolver)
 {
     // Keep track of the runtime's NLA solver
 
-    qApp->setProperty(pRuntimeAddress.toUtf8().constData(),
-                      quint64(pGlobalNlaSolver));
-}
-
-//==============================================================================
-
-void unsetNlaSolver(const QString &pRuntimeAddress)
-{
-    // Stop tracking the runtime's NLA solver
-
-    qApp->setProperty(pRuntimeAddress.toUtf8().constData(), QVariant::Invalid);
+    pObject->setProperty(objectAddress(pObject).toUtf8().constData(),
+                         quint64(pGlobalNlaSolver));
 }
 
 //==============================================================================
