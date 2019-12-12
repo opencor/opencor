@@ -17,10 +17,10 @@
        - sodium_channel/sodium_channel_h_gate/h = [ 0.600000, 0.600320, 0.601379, ..., 0.595994, 0.595994, 0.595994 ]
        - potassium_channel/potassium_channel_n_gate/n = [ 0.325000, 0.323275, 0.321330, ..., 0.317732, 0.317732, 0.317732 ]
     - Rates:
-       - membrane/V/prime = [ 0.600769, 0.192366, 0.055336, ..., 0.000000, 0.000000, 0.000000 ]
+       - membrane/V/prime = [ 0.600769, 0.192366, 0.055336, ..., -0.000000, -0.000000, -0.000000 ]
        - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.012386, -0.001248, -0.000501, ..., -0.000000, -0.000000, -0.000000 ]
        - sodium_channel/sodium_channel_h_gate/h/prime = [ -0.000456, 0.000829, 0.001190, ..., 0.000000, 0.000000, 0.000000 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.001342, -0.001926, -0.001902, ..., -0.000000, -0.000000, -0.000000 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.001342, -0.001926, -0.001902, ..., 0.000000, 0.000000, 0.000000 ]
     - Algebraic:
        - membrane/i_Stim = [ 0.000000, 0.000000, 0.000000, ..., 0.000000, 0.000000, 0.000000 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.223564, 0.218621, 0.216816, ..., 0.223620, 0.223620, 0.223620 ]
