@@ -37,6 +37,19 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QString platformDir()
+{
+#if defined(Q_OS_WIN)
+    return "windows";
+#elif defined(Q_OS_LINUX)
+    return "linux";
+#else
+    return "macos";
+#endif
+}
+
+//==============================================================================
+
 QString dirOrFileName(const QString &pDirOrFileName)
 {
     // Format and return the given directory or file name, so that it can be
