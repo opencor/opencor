@@ -25,10 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QCoreApplication>
-
-//==============================================================================
-
 void doNonLinearSolve(char *pRuntime,
                       void (*pFunction)(double *, double *, void *),
                       double *pParameters, int pSize, void *pUserData)
@@ -135,32 +131,34 @@ NlaSolver::~NlaSolver() = default;
 
 //==============================================================================
 
-NlaSolver * nlaSolver(const QString &pRuntimeAddress)
+QString objectAddress(QObject *pObject)
+{
+    // Return the given object's address as a string
+
+    return QString::number(quint64(pObject));
+}
+
+//==============================================================================
+
+NlaSolver * nlaSolver(const QString &pObjectAddress)
 {
     // Return the runtime's NLA solver
 
-    QVariant res = qApp->property(pRuntimeAddress.toUtf8().constData());
+    QObject *object = reinterpret_cast<NlaSolver *>(QVariant(pObjectAddress).toULongLong());
 
-    return res.isValid()?reinterpret_cast<NlaSolver *>(res.toULongLong()):nullptr;
+    return reinterpret_cast<NlaSolver *>(QVariant(object->objectName()).toULongLong());
 }
 
 //==============================================================================
 
-void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
+void setNlaSolver(QObject *pObject, NlaSolver *pNlaSolver)
 {
     // Keep track of the runtime's NLA solver
+    // Note: normally, we would use QObject::setProperty(), but it doesn't play
+    //       well on Windows without a GUI (see https://bit.ly/2YCpzew). So,
+    //       instead, we use QObject::setObjectName() (!!)...
 
-    qApp->setProperty(pRuntimeAddress.toUtf8().constData(),
-                      quint64(pGlobalNlaSolver));
-}
-
-//==============================================================================
-
-void unsetNlaSolver(const QString &pRuntimeAddress)
-{
-    // Stop tracking the runtime's NLA solver
-
-    qApp->setProperty(pRuntimeAddress.toUtf8().constData(), QVariant::Invalid);
+    pObject->setObjectName(objectAddress(pNlaSolver));
 }
 
 //==============================================================================

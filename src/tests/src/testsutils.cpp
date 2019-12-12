@@ -25,6 +25,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QCryptographicHash>
+#include <QDir>
 #include <QFile>
 #include <QIODevice>
 #include <QProcess>
@@ -32,6 +34,29 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+QString targetPlatformDir()
+{
+#ifdef QT_DEBUG
+#if defined(Q_OS_WIN)
+    return "windows/debug";
+#elif defined(Q_OS_LINUX)
+    return "linux/debug";
+#else
+    return "macos/debug";
+#endif
+#else
+#if defined(Q_OS_WIN)
+    return "windows/release";
+#elif defined(Q_OS_LINUX)
+    return "linux/release";
+#else
+    return "macos/release";
+#endif
+#endif
+}
 
 //==============================================================================
 
@@ -154,13 +179,26 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
         output += process.readAll();
     }
 
+    // Clean up our output by:
+    //  - Replacing escaped backslashes with a non-escaped one;
+    //  - Making paths relative rather than absolute;
+    //  - Replacing backslashes with forward slashes; and
+    //  - Removing all occurrences of the CR character.
+    // Note: the idea is to be able to compare our output indepedent of where
+    //       the test was run from and of which operating system it was run
+    //       on...
+
+    pOutput = output.replace("\\\\", "\\")
+                    .remove(dirName())
+                    .replace("\\", "/")
+                    .remove('\r')
+                    .split('\n');
+
     // Go back to our original directory
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
 #endif
-
-    pOutput = output.remove('\r').split('\n');
 
     return process.exitCode();
 }

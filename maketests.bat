@@ -1,3 +1,3 @@
 @ECHO OFF
 
-CALL "%~dp0scripts\genericmake" Tests %*
+CALL %~dp0scripts\genericmake Tests %*

@@ -97,7 +97,7 @@ void BiosignalmlDataStoreExporterWorker::run()
                                                                 voi->values(i),
                                                                 voi->size(i));
 
-            clock->set_label(voi->label().toStdString());
+            clock->set_label(voi->name().toStdString());
 
             // Determine what should be exported (minus the VOI, which should
             // always be exported in the case of a BioSignalML file)
@@ -127,7 +127,7 @@ void BiosignalmlDataStoreExporterWorker::run()
             bsml::HDF5::SignalArray::size_type n = 0;
 
             for (auto variable : variables) {
-                (*signalArray)[n]->set_label(variable->label().toStdString());
+                (*signalArray)[n]->set_label(variable->name().toStdString());
 
                 ++n;
             }

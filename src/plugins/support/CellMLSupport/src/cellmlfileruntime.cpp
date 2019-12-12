@@ -585,15 +585,6 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
 //==============================================================================
 
-QString CellmlFileRuntime::address() const
-{
-    // Return our address as a string
-
-    return QString::number(quint64(this));
-}
-
-//==============================================================================
-
 bool CellmlFileRuntime::isValid() const
 {
     // The runtime is valid if no issues were found
@@ -969,7 +960,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     // new parameter to all our calls to doNonLinearSolve() so that
     // doNonLinearSolve() can retrieve the correct instance of our NLA solver
 
-    res.replace("do_nonlinearsolve(", QString(R"(doNonLinearSolve("%1", )").arg(address()));
+    res.replace("do_nonlinearsolve(", QString(R"(doNonLinearSolve("%1", )").arg(Solver::objectAddress(this)));
 
     return res;
 }

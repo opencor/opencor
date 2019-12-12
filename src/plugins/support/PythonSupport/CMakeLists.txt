@@ -14,4 +14,10 @@ ADD_PLUGIN(PythonSupport
         Core
         Python
         PythonPackages
+    TESTS
+        basictests
+        coveragetests
+        hodgkinhuxley1952tests
+        noble1962tests
+        vanderpol1928tests
 )

@@ -40,6 +40,8 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace DataStore {
+    class DataStore;
+    class DataStoreValue;
     class DataStoreVariable;
 } // namespace DataStore
 
@@ -77,17 +79,35 @@ public slots:
 
     PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
 
+    double starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_starting_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                            double pStartingPoint, bool pRecompute = true);
+                            double pStartingPoint);
+
+    double ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_ending_point(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                           double pEndingPoint);
+
+    double point_interval(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_point_interval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                             double pPointInterval);
 
+    QString ode_solver_name(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_ode_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                        const QString &pOdeSolverName);
+                        const QString &pName);
+
+    QVariant ode_solver_property(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                                 const QString &pName);
+    void set_ode_solver_property(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                                 const QString &pName, const QVariant &pValue);
+
+    QString nla_solver_name(OpenCOR::SimulationSupport::SimulationData *pSimulationData);
     void set_nla_solver(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
-                        const QString &pNlaSolverName);
+                        const QString &pName);
+
+    QVariant nla_solver_property(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                                 const QString &pName);
+    void set_nla_solver_property(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                                 const QString &pName, const QVariant &pValue);
 
     PyObject * constants(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
@@ -102,6 +122,13 @@ public slots:
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+
+    void set_value(OpenCOR::DataStore::DataStoreValue *pDataStoreValue,
+                   double pValue);
+
+    int runs_count(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
+    quint64 values_count(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
+                         int pRun = -1) const;
 
 private slots:
     void simulationError(const QString &pErrorMessage);

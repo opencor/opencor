@@ -140,8 +140,6 @@ public:
 
     void update(CellmlFile *pCellmlFile, bool pAll = true);
 
-    QString address() const;
-
     bool isValid() const;
 
     bool needNlaSolver() const;
