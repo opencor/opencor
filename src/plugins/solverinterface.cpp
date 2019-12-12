@@ -145,9 +145,8 @@ NlaSolver * nlaSolver(const QString &pObjectAddress)
     // Return the runtime's NLA solver
 
     QObject *object = reinterpret_cast<NlaSolver *>(QVariant(pObjectAddress).toULongLong());
-    QVariant res = object->property(pObjectAddress.toUtf8().constData());
 
-    return res.isValid()?reinterpret_cast<NlaSolver *>(res.toULongLong()):nullptr;
+    return reinterpret_cast<NlaSolver *>(QVariant(object->objectName()).toULongLong());
 }
 
 //==============================================================================
@@ -155,9 +154,11 @@ NlaSolver * nlaSolver(const QString &pObjectAddress)
 void setNlaSolver(QObject *pObject, NlaSolver *pNlaSolver)
 {
     // Keep track of the runtime's NLA solver
+    // Note: normally, we would use QObject::setProperty(), but it doesn't play
+    //       well on Windows without a GUI (see https://bit.ly/2YCpzew). So,
+    //       instead, we use QObject::setObjectName() (!!)...
 
-    pObject->setProperty(objectAddress(pObject).toUtf8().constData(),
-                         quint64(pNlaSolver));
+    pObject->setObjectName(objectAddress(pNlaSolver));
 }
 
 //==============================================================================
