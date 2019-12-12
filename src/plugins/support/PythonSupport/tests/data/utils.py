@@ -28,28 +28,14 @@ def open_simulation(file_name_or_url):
     return simulation
 
 
-def rounded_value(value):
-    if math.isnan(value):
-        return 'nan'
-
-    value = 0.01 * round(100.0 * value)
-
-    return '%.2f' % 0.0 if value == 0.0 else value
-
-
 def print_values(data):
     if data is None:
         print('None')
     else:
         data_len = len(data)
 
-        print('[ %s, %s, %s, ..., %s, %s, %s ]'
-              % (rounded_value(data[0]),
-                 rounded_value(data[1]),
-                 rounded_value(data[2]),
-                 rounded_value(data[data_len - 3]),
-                 rounded_value(data[data_len - 2]),
-                 rounded_value(data[data_len - 1])))
+        print('[ %f, %f, %f, ..., %f, %f, %f ]'
+              % (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2], data[data_len - 1]))
 
 
 def values(data, data_type, indent=''):

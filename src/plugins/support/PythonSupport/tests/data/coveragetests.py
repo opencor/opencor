@@ -57,11 +57,11 @@ def test_simulation_data_solver(solver_name_method, set_solver_method, test_solv
 
 
 def test_data_store_variable_index(variable, index, indent):
-    print('%s    - value(%d): %s' % (indent, index, utils.rounded_value(variable.value(index))))
+    print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
 
     for run in range(variable.runs_count() + 3):
-        print('%s    - value(%d, %d): %s'
-              % (indent, index, run - 2, utils.rounded_value(variable.value(index, run - 2))))
+        print('%s    - value(%d, %d): %f'
+              % (indent, index, run - 2, variable.value(index, run - 2)))
 
 
 def test_data_store_variable(variable, name, indent=''):
