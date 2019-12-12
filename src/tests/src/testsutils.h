@@ -33,7 +33,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QString platformDir();
+QString targetPlatformDir();
 
 QString dirName(const QString &pDirName = QString());
 QString fileName(const QString &pFileName);

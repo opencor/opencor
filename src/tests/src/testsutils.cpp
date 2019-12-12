@@ -37,14 +37,24 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QString platformDir()
+QString targetPlatformDir()
 {
+#ifdef QT_DEBUG
 #if defined(Q_OS_WIN)
-    return "windows";
+    return "windows/debug";
 #elif defined(Q_OS_LINUX)
-    return "linux";
+    return "linux/debug";
 #else
-    return "macos";
+    return "macos/debug";
+#endif
+#else
+#if defined(Q_OS_WIN)
+    return "windows/release";
+#elif defined(Q_OS_LINUX)
+    return "linux/release";
+#else
+    return "macos/release";
+#endif
 #endif
 }
 
