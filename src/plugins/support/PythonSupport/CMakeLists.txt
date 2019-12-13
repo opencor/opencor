@@ -18,6 +18,7 @@ ADD_PLUGIN(PythonSupport
         basictests
         coveragetests
         hodgkinhuxley1952tests
+        importstests
         noble1962tests
         vanderpol1928tests
 )
