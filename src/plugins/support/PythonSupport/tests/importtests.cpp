@@ -18,24 +18,39 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Python support imports tests
+// Python support import tests
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
-class ImportsTests : public QObject
+#include "importtests.h"
+
+//==============================================================================
+
+#include <QtTest/QtTest>
+
+//==============================================================================
+
+void ImportTests::tests()
 {
-    Q_OBJECT
+    // Some basic tests to make sure that we can import the Python modules that
+    // we are supposed to ship
 
-private slots:
-    void tests();
-};
+    QStringList output;
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/importtests.py"), output));
+#if defined(Q_OS_WIN) && defined(QT_DEBUG)
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/importtests.out").arg(OpenCOR::targetPlatformDir()))));
+#else
+    QCOMPARE(output, QStringList() << QString());
+#endif
+}
+
+//==============================================================================
+
+QTEST_GUILESS_MAIN(ImportTests)
 
 //==============================================================================
 // End of file

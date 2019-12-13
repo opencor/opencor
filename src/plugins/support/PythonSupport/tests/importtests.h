@@ -18,38 +18,24 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Python support imports tests
+// Python support import tests
 //==============================================================================
 
-#include "../../../../tests/src/testsutils.h"
-
-//==============================================================================
-
-#include "importstests.h"
+#pragma once
 
 //==============================================================================
 
-#include <QtTest/QtTest>
+#include <QObject>
 
 //==============================================================================
 
-void ImportsTests::tests()
+class ImportTests : public QObject
 {
-    // Some basic tests to make sure that we can use our Python wrappers
+    Q_OBJECT
 
-    QStringList output;
-
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/importstests.py"), output));
-#if defined(Q_OS_WIN) && defined(QT_DEBUG)
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/importstests.out").arg(OpenCOR::targetPlatformDir()))));
-#else
-    QCOMPARE(output, QStringList() << QString());
-#endif
-}
-
-//==============================================================================
-
-QTEST_GUILESS_MAIN(ImportsTests)
+private slots:
+    void tests();
+};
 
 //==============================================================================
 // End of file
