@@ -51,7 +51,8 @@ namespace SimulationSupport {
 static void setOdeSolver(SimulationData *pSimulationData,
                          const QString &pOdeSolverName)
 {
-    // Set the given ODE solver for the given simulation data
+    // Set the ODE solver for the given simulation data using the given ODE
+    // solver name
 
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pOdeSolverName == solverInterface->solverName()) {
@@ -62,7 +63,7 @@ static void setOdeSolver(SimulationData *pSimulationData,
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Set each ODE solver property to their default value
 
-                pSimulationData->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+                pSimulationData->setOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
             }
 
             return;
@@ -77,7 +78,8 @@ static void setOdeSolver(SimulationData *pSimulationData,
 static void setNlaSolver(SimulationData *pSimulationData,
                          const QString &pNlaSolverName)
 {
-    // Set the given NLA solver for the given simulation data
+    // Set the NLA solver for the given simulation data using the given NLA
+    // solver name
 
     for (auto solverInterface : Core::solverInterfaces()) {
         if (pNlaSolverName == solverInterface->solverName()) {
@@ -88,7 +90,7 @@ static void setNlaSolver(SimulationData *pSimulationData,
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Set each NLA solver property to their default value
 
-                pSimulationData->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+                pSimulationData->setNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
             }
 
             return;
@@ -218,8 +220,8 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(void *pModule,
     // Add some Python wrappers
 
     static std::array<PyMethodDef, 4> PythonSimulationSupportMethods = {{
-                                                                           { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
-                                                                           { "closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation." },
+                                                                           { "open_simulation", openSimulation, METH_VARARGS, "Open a simulation." },
+                                                                           { "close_simulation", closeSimulation, METH_VARARGS, "Close a simulation." },
                                                                            { nullptr, nullptr, 0, nullptr }
                                                                        }};
 
@@ -274,9 +276,11 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         // Keep track of any simulation error and of when the simulation is done
 
         connect(pSimulation, &Simulation::error,
-                this, &SimulationSupportPythonWrapper::simulationError);
+                this, &SimulationSupportPythonWrapper::simulationError,
+                Qt::UniqueConnection);
         connect(pSimulation, &Simulation::done,
-                this, &SimulationSupportPythonWrapper::simulationDone);
+                this, &SimulationSupportPythonWrapper::simulationDone,
+                Qt::UniqueConnection);
 
         // Run our simulation and wait for it to complete
         // Note: we use a queued connection because the event is in our
@@ -291,8 +295,6 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         pSimulation->run();
 
         waitLoop.exec();
-
-        disconnect(pSimulation, nullptr, this, nullptr);
 
         // Throw any error message that has been generated
 
@@ -316,16 +318,16 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
 void SimulationSupportPythonWrapper::reset(Simulation *pSimulation, bool pAll)
 {
-    // Reset our simulation
+    // Reset the given simulation
 
     pSimulation->reset(pAll);
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
+void SimulationSupportPythonWrapper::clear_results(Simulation *pSimulation)
 {
-    // Reset our simulation results
+    // Reset the given simulation results
 
     pSimulation->results()->reset();
 }
@@ -334,7 +336,7 @@ void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 
 PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 {
-    // Return a list of issues the simulation has
+    // Return a list of issues the given simulation has, if any
 
     PyObject *issuesList = PyList_New(0);
     auto simulationIssues = pSimulation->issues();
@@ -360,60 +362,148 @@ PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulationData,
-                                                      double pStartingPoint,
-                                                      bool pRecompute)
+double SimulationSupportPythonWrapper::starting_point(SimulationData *pSimulationData)
 {
-    // Set the starting point of our simulation
+    // Return the starting point for the given simulation data
 
-    pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
+    return pSimulationData->startingPoint();
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData,
-                                                    double pEndingPoint)
+void SimulationSupportPythonWrapper::set_starting_point(SimulationData *pSimulationData,
+                                                        double pStartingPoint)
 {
-    // Set the ending point of our simulation
+    // Set the starting point for the given simulation data
+
+    pSimulationData->setStartingPoint(pStartingPoint);
+}
+
+//==============================================================================
+
+double SimulationSupportPythonWrapper::ending_point(SimulationData *pSimulationData)
+{
+    // Return the ending point for the given simulation data
+
+    return pSimulationData->endingPoint();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::set_ending_point(SimulationData *pSimulationData,
+                                                      double pEndingPoint)
+{
+    // Set the ending point for the given simulation data
 
     pSimulationData->setEndingPoint(pEndingPoint);
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData,
-                                                      double pPointInterval)
+double SimulationSupportPythonWrapper::point_interval(SimulationData *pSimulationData)
 {
-    // Set the point interval for our simulation
+    // Return the point interval for the given simulation data
+
+    return pSimulationData->pointInterval();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::set_point_interval(SimulationData *pSimulationData,
+                                                        double pPointInterval)
+{
+    // Set the point interval for the given simulation data
 
     pSimulationData->setPointInterval(pPointInterval);
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData,
-                                                  const QString &pOdeSolverName)
+QString SimulationSupportPythonWrapper::ode_solver_name(SimulationData *pSimulationData)
 {
-    // Set the given ODE solver for the given simulation data
+    // Return the name of the ODE solver for the given simulation data
 
-    SimulationSupport::setOdeSolver(pSimulationData, pOdeSolverName);
+    return pSimulationData->odeSolverName();
 }
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData,
-                                                  const QString &pNlaSolverName)
+void SimulationSupportPythonWrapper::set_ode_solver(SimulationData *pSimulationData,
+                                                    const QString &pName)
 {
-    // Set the given NLA solver for the given simulation data
+    // Set the ODE solver for the given simulation data using the given name
 
-    SimulationSupport::setNlaSolver(pSimulationData, pNlaSolverName);
+    SimulationSupport::setOdeSolver(pSimulationData, pName);
+}
+
+//==============================================================================
+
+QVariant SimulationSupportPythonWrapper::ode_solver_property(SimulationData *pSimulationData,
+                                                             const QString &pName)
+{
+    // Return the value for the given ODE solver property
+
+    return pSimulationData->odeSolverProperty(pName);
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::set_ode_solver_property(SimulationData *pSimulationData,
+                                                             const QString &pName,
+                                                             const QVariant &pValue)
+{
+    // Set the ODE solver property for the given simulation data using the given
+    // name and value
+
+    pSimulationData->setOdeSolverProperty(pName, pValue);
+}
+
+//==============================================================================
+
+QVariant SimulationSupportPythonWrapper::nla_solver_property(SimulationData *pSimulationData,
+                                                             const QString &pName)
+{
+    // Return the value for the given NLA solver property
+
+    return pSimulationData->nlaSolverProperty(pName);
+}
+
+//==============================================================================
+
+QString SimulationSupportPythonWrapper::nla_solver_name(SimulationData *pSimulationData)
+{
+    // Return the name of the NLA solver for the given simulation data
+
+    return pSimulationData->nlaSolverName();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::set_nla_solver(SimulationData *pSimulationData,
+                                                    const QString &pName)
+{
+    // Set the NLA solver for the given simulation data using the given name
+
+    SimulationSupport::setNlaSolver(pSimulationData, pName);
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::set_nla_solver_property(SimulationData *pSimulationData,
+                                                             const QString &pName,
+                                                             const QVariant &pValue)
+{
+    // Set the NLA solver property for the given simulation data using the given
+    // name and value
+
+    pSimulationData->setNlaSolverProperty(pName, pValue);
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    // Return our constants values
+    // Return the constants values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantsValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -423,7 +513,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    // Return our rates values
+    // Return the rates values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->ratesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -433,7 +523,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    // Return our states values
+    // Return the states values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->statesValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -443,7 +533,7 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    // Return our algebraic values
+    // Return the algebraic values for the given simulation data
 
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicValues(),
                                                                   &(pSimulationData->simulationDataUpdatedFunction()));
@@ -451,9 +541,18 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 
 //==============================================================================
 
-DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
+DataStore::DataStore * SimulationSupportPythonWrapper::data_store(SimulationResults *pSimulationResults) const
 {
-    // Return our points variable
+    // Return the data store for the given simulation results
+
+    return pSimulationResults->dataStore();
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariable * SimulationSupportPythonWrapper::voi(SimulationResults *pSimulationResults) const
+{
+    // Return the VOI variable for the given simulation results
 
     return pSimulationResults->pointsVariable();
 }
@@ -462,7 +561,7 @@ DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(Simulation
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
 {
-    // Return our constants variables
+    // Return the constants variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->constantsVariables());
 }
@@ -471,7 +570,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulat
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
 {
-    // Return our rates variables
+    // Return the rates variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->ratesVariables());
 }
@@ -480,7 +579,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationR
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
-    // Return our states variables
+    // Return the states variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->statesVariables());
 }
@@ -489,16 +588,46 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
 {
-    // Return our algebraic variables
+    // Return the algebraic variables for the given simulation results
 
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->algebraicVariables());
 }
 
 //==============================================================================
 
+void SimulationSupportPythonWrapper::set_value(DataStore::DataStoreValue *pDataStoreValue,
+                                               double pValue)
+{
+    // Set the value for the given data store value
+
+    pDataStoreValue->setValue(pValue);
+}
+
+//==============================================================================
+
+int SimulationSupportPythonWrapper::runs_count(DataStore::DataStoreVariable *pDataStoreVariable) const
+{
+    // Return the number of runs for the given data store variable
+
+    return pDataStoreVariable->runsCount();
+}
+
+//==============================================================================
+
+quint64 SimulationSupportPythonWrapper::values_count(DataStore::DataStoreVariable *pDataStoreVariable,
+                                                     int pRun) const
+{
+    // Return the number of values in the given run of the given data store
+    // variable
+
+    return pDataStoreVariable->size(pRun);
+}
+
+//==============================================================================
+
 void SimulationSupportPythonWrapper::simulationError(const QString &pErrorMessage)
 {
-    // Keep track of the given error message
+    // Keep track for the given error message
 
     mErrorMessage = pErrorMessage;
 }

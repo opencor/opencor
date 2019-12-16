@@ -146,7 +146,7 @@ public:
 
     SimulationExperimentViewContentsWidget * contentsWidget() const;
 
-    QIcon fileTabIcon() const;
+    QIcon fileTabIcon();
 
     bool import(const QString &pFileName, bool pShowWarning = true);
     bool save(const QString &pFileName);
@@ -168,8 +168,6 @@ public:
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
                                  int pSimulationRun, Task pTask);
-    void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 quint64 pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
 
@@ -320,6 +318,8 @@ private:
     QString fileName(const QString &pFileName, const QString &pBaseFileName,
                      const QString &pFileExtension, const QString &pCaption,
                      const QStringList &pFileFilters);
+
+    QIcon doFileTabIcon(bool pForEmitting);
 
     void addSedmlSimulationAlgorithm(libsedml::SedAlgorithm *pAlgorithm,
                                      SolverInterface *pSolverInterface,

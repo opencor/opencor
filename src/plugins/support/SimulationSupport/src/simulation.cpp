@@ -394,7 +394,7 @@ void SimulationData::setOdeSolverName(const QString &pOdeSolverName)
 
 Solver::Solver::Properties SimulationData::odeSolverProperties() const
 {
-    // Return our ODE solver's properties
+    // Return our ODE solver properties
 
     return (mSimulation->runtime() != nullptr)?
                 mOdeSolverProperties:
@@ -403,10 +403,21 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 
 //==============================================================================
 
-void SimulationData::addOdeSolverProperty(const QString &pName,
+QVariant SimulationData::odeSolverProperty(const QString &pName) const
+{
+    // Return the value of the given ODE solver property
+
+    return (mSimulation->runtime() != nullptr)?
+                mOdeSolverProperties.value(pName):
+                QVariant();
+}
+
+//==============================================================================
+
+void SimulationData::setOdeSolverProperty(const QString &pName,
                                           const QVariant &pValue)
 {
-    // Add an ODE solver property
+    // Set an ODE solver property
 
     if (mSimulation->runtime() != nullptr) {
         mOdeSolverProperties.insert(pName, pValue);
@@ -462,7 +473,7 @@ void SimulationData::setNlaSolverName(const QString &pNlaSolverName,
 
 Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 {
-    // Return our NLA solver's properties
+    // Return our NLA solver properties
 
     return (   (mSimulation->runtime() != nullptr)
             && mSimulation->runtime()->needNlaSolver())?
@@ -472,10 +483,21 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 
 //==============================================================================
 
-void SimulationData::addNlaSolverProperty(const QString &pName,
+QVariant SimulationData::nlaSolverProperty(const QString &pName) const
+{
+    // Return the value of the given NLA solver property
+
+    return (mSimulation->runtime() != nullptr)?
+                mNlaSolverProperties.value(pName):
+                QVariant();
+}
+
+//==============================================================================
+
+void SimulationData::setNlaSolverProperty(const QString &pName,
                                           const QVariant &pValue, bool pReset)
 {
-    // Add an NLA solver property
+    // Set an NLA solver property
 
     if ((   mSimulation->runtime() != nullptr)
          && mSimulation->runtime()->needNlaSolver()) {
@@ -509,11 +531,10 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     if (runtime->needNlaSolver()) {
         // Set our NLA solver
-        // Note: we unset it at the end of this method...
 
         nlaSolver = static_cast<Solver::NlaSolver *>(nlaSolverInterface()->solverInstance());
 
-        Solver::setNlaSolver(runtime->address(), nlaSolver);
+        Solver::setNlaSolver(runtime, nlaSolver);
 
         // Keep track of any error that might be reported by our NLA solver
 
@@ -573,8 +594,6 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     if (nlaSolver != nullptr) {
         delete nlaSolver;
-
-        Solver::unsetNlaSolver(runtime->address());
     }
 
     // Let people know whether our data is clean, i.e. not modified, and ask our
@@ -870,7 +889,7 @@ void SimulationResults::createDataStore()
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
             mPointsVariable->setType(int(parameter->type()));
             mPointsVariable->setUri(uri(runtime->voi()->componentHierarchy(), runtime->voi()->name()));
-            mPointsVariable->setLabel(runtime->voi()->name());
+            mPointsVariable->setName(runtime->voi()->name());
             mPointsVariable->setUnit(runtime->voi()->unit());
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
@@ -890,7 +909,7 @@ void SimulationResults::createDataStore()
         if (variable != nullptr) {
             variable->setType(int(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
-            variable->setLabel(parameter->formattedName());
+            variable->setName(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
 
@@ -1003,7 +1022,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 
         variable->setType(int(parameter->type()));
         variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
-        variable->setLabel(parameter->formattedName());
+        variable->setName(parameter->formattedName());
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
     }
 

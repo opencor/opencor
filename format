@@ -1,12 +1,12 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+appDir=$(cd $(dirname $0); pwd)
 
-if [ -d "${appDir}/src" ]; then
+if [ -d $appDir/src ]; then
     echo "\033[44;37;1mFormatting OpenCOR...\033[0m"
 
     if [ "`hash clang-format 2>&1`" = "" ]; then
-        for i in `find ${appDir}/src -name "*.cpp" -o -name "*.h" | sort | egrep -v "(3rdparty|\/ext\/|\/qzip)"`; do
+        for i in `find $appDir/src -name "*.cpp" -o -name "*.h" | sort | egrep -v "(3rdparty|\/ext\/|\/qzip)"`; do
             echo "Formatting $i..."
 
             clang-format -i -style=file $i

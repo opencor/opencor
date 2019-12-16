@@ -1,3 +1,3 @@
 @ECHO OFF
 
-CALL "%~dp0scripts\genericclean" all
+CALL %~dp0scripts\genericclean all

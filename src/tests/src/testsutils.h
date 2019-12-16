@@ -29,15 +29,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QtTest/QtTest>
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
 
-QString dirName(const QString &pDirName);
+QString targetPlatformDir();
+
+QString dirName(const QString &pDirName = QString());
 QString fileName(const QString &pFileName);
 
 QByteArray rawFileContents(const QString &pFileName);

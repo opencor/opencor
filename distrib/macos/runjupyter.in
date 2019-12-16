@@ -1,12 +1,12 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)/../../../../.."
+appDir=$(cd $(dirname $0); pwd)/../../../../..
 
-export PATH="${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS":$PATH
+export PATH=$appDir/@CMAKE_PROJECT_NAME@.app/Contents/MacOS:$PATH
 
-"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python"             \
-"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/set_python_path.py" \
-"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python"                        \
+$appDir/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python             \
+$appDir/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/set_python_path.py \
+$appDir/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python                        \
 -s
 
-"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter" $*
+$appDir/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter $*

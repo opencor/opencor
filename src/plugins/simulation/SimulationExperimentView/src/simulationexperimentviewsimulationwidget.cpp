@@ -1196,9 +1196,28 @@ int SimulationExperimentViewSimulationWidget::tabBarPixmapSize() const
 
 //==============================================================================
 
-QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
+QIcon SimulationExperimentViewSimulationWidget::doFileTabIcon(bool pForEmitting)
 {
+    // Check whether we should reset our progress
+    // Note: this is needed in case a simulation was run from Python, in
+    //       which case mProgress may have been updated after a simulation has
+    //       completed (because the GUI, a simulation and a Python script are
+    //       all run in their own thread, so no guarantee about which event is
+    //       going to be handled first), so we need to reset it here if we are
+    //       not asking for the file tab icon in order to emit a signal (see
+    //       SimulationExperimentViewSimulationWidget::updateSimulationResults()
+    //       vs. CentralWidget::updateFileTab() and
+    //       CentralWidget::updateFileTabIcons()...
+
+    if (!pForEmitting && !mSimulation->isRunning() && !mSimulation->isPaused()) {
+        mProgress = -1;
+    }
+
     // Return a file tab icon that shows the given file's simulation progress
+
+    static const QIcon NoIcon = QIcon();
+
+    QIcon res = NoIcon;
 
     if (!isVisible() && (mProgress != -1)) {
         // Create an image that shows the progress of our simulation
@@ -1214,15 +1233,19 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
                                      Core::highlightColor());
 
-        return QIcon(tabBarPixmap);
+        res = QIcon(tabBarPixmap);
     }
 
-    // No simulation object currently exists for the model, so return a null
-    // icon
+    return res;
+}
 
-    static const QIcon NoIcon = QIcon();
+//==============================================================================
 
-    return NoIcon;
+QIcon SimulationExperimentViewSimulationWidget::fileTabIcon()
+{
+    // Return our file tab icon
+
+    return doFileTabIcon(false);
 }
 
 //==============================================================================
@@ -2427,7 +2450,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
                 //       retrieve the value of list properties as a string
                 //       rather than an index...
 
-                mSimulation->data()->addOdeSolverProperty(property->id(),
+                mSimulation->data()->setOdeSolverProperty(property->id(),
                                                           property->variantValue(false));
 
                 needOdeSolverGuiUpdate = true;
@@ -2466,7 +2489,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
                 //       retrieve the value of list properties as a string
                 //       rather than an index...
 
-                mSimulation->data()->addNlaSolverProperty(property->id(),
+                mSimulation->data()->setNlaSolverProperty(property->id(),
                                                           property->variantValue(false),
                                                           pResetNlaSolver);
 
@@ -3043,7 +3066,9 @@ void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 
     static const QIcon NoIcon = QIcon();
 
-    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mSimulation->fileName(), NoIcon);
+    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
+                                        mSimulation->fileName(),
+                                        NoIcon);
 }
 
 //==============================================================================
@@ -3798,21 +3823,10 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                 emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
                                                     simulationFileName,
-                                                    fileTabIcon());
+                                                    doFileTabIcon(true));
             }
         }
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       quint64 pSimulationResultsSize,
-                                                                       Task pTask)
-{
-    // Update our simulation results
-
-    updateSimulationResults(pSimulationWidget, pSimulationResultsSize, -1, pTask);
 }
 
 //==============================================================================

@@ -90,14 +90,13 @@ void SimulationWorker::run()
     auto odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
 
     // Set up our NLA solver, if needed
-    // Note: we unset it at the end of this method...
 
     Solver::NlaSolver *nlaSolver = nullptr;
 
     if (mRuntime->needNlaSolver()) {
         nlaSolver = static_cast<Solver::NlaSolver *>(mSimulation->data()->nlaSolverInterface()->solverInstance());
 
-        Solver::setNlaSolver(mRuntime->address(), nlaSolver);
+        Solver::setNlaSolver(mRuntime, nlaSolver);
     }
 
     // Keep track of any error that might be reported by any of our solvers
@@ -254,8 +253,6 @@ void SimulationWorker::run()
 
     if (nlaSolver != nullptr) {
         delete nlaSolver;
-
-        Solver::unsetNlaSolver(mRuntime->address());
     }
 
     // Reset our simulation owner's knowledge of us

@@ -124,7 +124,7 @@ QString Simulation::furtherInitialize() const
                             }
 #else
 
-                            mData->addNlaSolverProperty(id, value);
+                            mData->setNlaSolverProperty(id, value);
 #endif
                         }
                     }

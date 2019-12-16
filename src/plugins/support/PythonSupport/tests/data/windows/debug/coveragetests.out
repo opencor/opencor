@@ -1,0 +1,719 @@
+---------------------------------------
+     No file name or URL provided
+---------------------------------------
+ - Open simulation
+ - OSError("'' could not be opened.")
+---------------------------------------
+          Unknown local file
+---------------------------------------
+ - Open simulation
+ - OSError("'unknown' could not be opened.")
+
+---------------------------------------
+          Unknown remote file
+---------------------------------------
+ - Open simulation
+ - OSError("'https://unknown' could not be opened (host unknown not found).")
+
+---------------------------------------
+          Invalid local file
+---------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
+ - Initial settings:
+    - Ending point: 50.000000
+    - Point interval: 0.001000
+ - Run simulation [1]:
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 50.000000
+       - Point interval: 0.001000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants: empty
+          - States: empty
+          - Rates: empty
+          - Algebraic: empty
+ - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
+
+---------------------------------------
+          Invalid remote file
+---------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
+ - Initial settings:
+    - Ending point: 50.000000
+    - Point interval: 0.001000
+ - Run simulation [1]:
+    - Settings:
+       - Starting point: 0.000000
+       - Ending point: 50.000000
+       - Point interval: 0.001000
+       - ODE solver: CVODE
+       - Initial values:
+          - Constants: empty
+          - States: empty
+          - Rates: empty
+          - Algebraic: empty
+ - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
+
+---------------------------------------
+     SimulationData coverage tests
+---------------------------------------
+ - Test SimulationData.constants():
+    - Size: 3
+    - main/offset:
+       - URI: main/offset
+       - Value: 3.000000
+       - Test value properly set: yes
+    - main/offset2:
+       - URI: main/offset2
+       - Value: -3.000000
+       - Test value properly set: yes
+    - main/z:
+       - URI: main/z
+       - Value: 3.000000
+       - Test value properly set: yes
+ - Test SimulationData.states():
+    - Size: 1
+    - main/y:
+       - URI: main/y
+       - Value: 3.000000
+       - Test value properly set: yes
+ - Test SimulationData.rates():
+    - Size: 1
+    - main/y/prime:
+       - URI: main/y/prime
+       - Value: -0.000000
+       - Test value properly set: yes
+ - Test SimulationData.algebraic():
+    - Size: 1
+    - main/x:
+       - URI: main/x
+       - Value: 3.000000
+       - Test value properly set: yes
+       - Starting point: 0.000000
+       - Test starting point properly set: yes
+       - Ending point: 1000.000000
+       - Test ending point properly set: yes
+       - Point interval: 1.000000
+       - Test point interval properly set: yes
+       - ODE solver: CVODE
+       - Test ODE solver properly set: yes
+       - ODE solver property: 1.0
+       - Test ODE solver property properly set: yes
+       - DAE solver: KINSOL
+       - Test DAE solver properly set: yes
+       - DAE solver property: 200
+       - Test DAE solver property properly set: yes
+
+---------------------------------------
+   SimulationResults coverage tests
+---------------------------------------
+ - Test SimulationResults.voi():
+    - Name: time
+    - Unit: dimensionless
+    - URI: main/time
+    - value(-1): nan
+    - value(-1, -2): nan
+    - value(-1, -1): nan
+    - value(-1, 0): nan
+    - value(-1, 1): nan
+    - value(0): 0.000000
+    - value(0, -2): nan
+    - value(0, -1): 0.000000
+    - value(0, 0): 0.000000
+    - value(0, 1): nan
+    - value(1000): 1000.000000
+    - value(1000, -2): nan
+    - value(1000, -1): 1000.000000
+    - value(1000, 0): 1000.000000
+    - value(1000, 1): nan
+    - value(1001): nan
+    - value(1001, -2): nan
+    - value(1001, -1): nan
+    - value(1001, 0): nan
+    - value(1001, 1): nan
+    - values(-2): None
+    - values(-1): [ 0.000000, 1.000000, 2.000000, ..., 998.000000, 999.000000, 1000.000000 ]
+    - values(0): [ 0.000000, 1.000000, 2.000000, ..., 998.000000, 999.000000, 1000.000000 ]
+    - values(1): None
+ - Test SimulationResults.constants():
+    - Size: 3
+    - Test main/offset:
+       - Name: offset
+       - Unit: dimensionless
+       - URI: main/offset
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): 3.000000
+       - value(0, -2): nan
+       - value(0, -1): 3.000000
+       - value(0, 0): 3.000000
+       - value(0, 1): nan
+       - value(1000): 3.000000
+       - value(1000, -2): nan
+       - value(1000, -1): 3.000000
+       - value(1000, 0): 3.000000
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+       - values(0): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+       - values(1): None
+    - Test main/offset2:
+       - Name: offset2
+       - Unit: dimensionless
+       - URI: main/offset2
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): -3.000000
+       - value(0, -2): nan
+       - value(0, -1): -3.000000
+       - value(0, 0): -3.000000
+       - value(0, 1): nan
+       - value(1000): -3.000000
+       - value(1000, -2): nan
+       - value(1000, -1): -3.000000
+       - value(1000, 0): -3.000000
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ -3.000000, -3.000000, -3.000000, ..., -3.000000, -3.000000, -3.000000 ]
+       - values(0): [ -3.000000, -3.000000, -3.000000, ..., -3.000000, -3.000000, -3.000000 ]
+       - values(1): None
+    - Test main/z:
+       - Name: z
+       - Unit: dimensionless
+       - URI: main/z
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): 3.000000
+       - value(0, -2): nan
+       - value(0, -1): 3.000000
+       - value(0, 0): 3.000000
+       - value(0, 1): nan
+       - value(1000): 3.000000
+       - value(1000, -2): nan
+       - value(1000, -1): 3.000000
+       - value(1000, 0): 3.000000
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+       - values(0): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+       - values(1): None
+ - Test SimulationResults.states():
+    - Size: 1
+    - Test main/y:
+       - Name: y
+       - Unit: dimensionless
+       - URI: main/y
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): 3.000000
+       - value(0, -2): nan
+       - value(0, -1): 3.000000
+       - value(0, 0): 3.000000
+       - value(0, 1): nan
+       - value(1000): -548.853957
+       - value(1000, -2): nan
+       - value(1000, -1): -548.853957
+       - value(1000, 0): -548.853957
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ 3.000000, 1.693805, 1.606672, ..., -690.414439, 1499.474123, -548.853957 ]
+       - values(0): [ 3.000000, 1.693805, 1.606672, ..., -690.414439, 1499.474123, -548.853957 ]
+       - values(1): None
+ - Test SimulationResults.rates():
+    - Size: 1
+    - Test main/y/prime:
+       - Name: y'
+       - Unit: dimensionless/dimensionless
+       - URI: main/y/prime
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): -0.000000
+       - value(0, -2): nan
+       - value(0, -1): -0.000000
+       - value(0, 0): -0.000000
+       - value(0, 1): nan
+       - value(1000): -2790.118513
+       - value(1000, -2): nan
+       - value(1000, -1): -2790.118513
+       - value(1000, 0): -2790.118513
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ -0.000000, -2.727892, 4.540815, ..., 2652.710027, 158.550217, -2790.118513 ]
+       - values(0): [ -0.000000, -2.727892, 4.540815, ..., 2652.710027, 158.550217, -2790.118513 ]
+       - values(1): None
+ - Test SimulationResults.algebraic():
+    - Size: 1
+    - Test main/x:
+       - Name: x
+       - Unit: dimensionless
+       - URI: main/x
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): 3.000000
+       - value(0, -2): nan
+       - value(0, -1): 3.000000
+       - value(0, 0): 3.000000
+       - value(0, 1): nan
+       - value(1000): 1000003.000000
+       - value(1000, -2): nan
+       - value(1000, -1): 1000003.000000
+       - value(1000, 0): 1000003.000000
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ 3.000000, 4.000000, 7.000000, ..., 996007.000000, 998004.000000, 1000003.000000 ]
+       - values(0): [ 3.000000, 4.000000, 7.000000, ..., 996007.000000, 998004.000000, 1000003.000000 ]
+       - values(1): None
+    - Test SimulationResults.data_store():
+    - Test DataStore.voi():
+       - Name: time
+       - Unit: dimensionless
+       - URI: main/time
+       - value(-1): nan
+       - value(-1, -2): nan
+       - value(-1, -1): nan
+       - value(-1, 0): nan
+       - value(-1, 1): nan
+       - value(0): 0.000000
+       - value(0, -2): nan
+       - value(0, -1): 0.000000
+       - value(0, 0): 0.000000
+       - value(0, 1): nan
+       - value(1000): 1000.000000
+       - value(1000, -2): nan
+       - value(1000, -1): 1000.000000
+       - value(1000, 0): 1000.000000
+       - value(1000, 1): nan
+       - value(1001): nan
+       - value(1001, -2): nan
+       - value(1001, -1): nan
+       - value(1001, 0): nan
+       - value(1001, 1): nan
+       - values(-2): None
+       - values(-1): [ 0.000000, 1.000000, 2.000000, ..., 998.000000, 999.000000, 1000.000000 ]
+       - values(0): [ 0.000000, 1.000000, 2.000000, ..., 998.000000, 999.000000, 1000.000000 ]
+       - values(1): None
+    - Test DataStore.variables():
+       - Size: 6
+       - Test main/offset:
+          - Name: offset
+          - Unit: dimensionless
+          - URI: main/offset
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): 3.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 3.000000
+          - value(1000, 0): 3.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(0): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(1): None
+       - Test main/offset2:
+          - Name: offset2
+          - Unit: dimensionless
+          - URI: main/offset2
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): -3.000000
+          - value(0, -2): nan
+          - value(0, -1): -3.000000
+          - value(0, 0): -3.000000
+          - value(0, 1): nan
+          - value(1000): -3.000000
+          - value(1000, -2): nan
+          - value(1000, -1): -3.000000
+          - value(1000, 0): -3.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ -3.000000, -3.000000, -3.000000, ..., -3.000000, -3.000000, -3.000000 ]
+          - values(0): [ -3.000000, -3.000000, -3.000000, ..., -3.000000, -3.000000, -3.000000 ]
+          - values(1): None
+       - Test main/x:
+          - Name: x
+          - Unit: dimensionless
+          - URI: main/x
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): 1000003.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 1000003.000000
+          - value(1000, 0): 1000003.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 4.000000, 7.000000, ..., 996007.000000, 998004.000000, 1000003.000000 ]
+          - values(0): [ 3.000000, 4.000000, 7.000000, ..., 996007.000000, 998004.000000, 1000003.000000 ]
+          - values(1): None
+       - Test main/y:
+          - Name: y
+          - Unit: dimensionless
+          - URI: main/y
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): -548.853957
+          - value(1000, -2): nan
+          - value(1000, -1): -548.853957
+          - value(1000, 0): -548.853957
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 1.693805, 1.606672, ..., -690.414439, 1499.474123, -548.853957 ]
+          - values(0): [ 3.000000, 1.693805, 1.606672, ..., -690.414439, 1499.474123, -548.853957 ]
+          - values(1): None
+       - Test main/y/prime:
+          - Name: y'
+          - Unit: dimensionless/dimensionless
+          - URI: main/y/prime
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): -0.000000
+          - value(0, -2): nan
+          - value(0, -1): -0.000000
+          - value(0, 0): -0.000000
+          - value(0, 1): nan
+          - value(1000): -2790.118513
+          - value(1000, -2): nan
+          - value(1000, -1): -2790.118513
+          - value(1000, 0): -2790.118513
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ -0.000000, -2.727892, 4.540815, ..., 2652.710027, 158.550217, -2790.118513 ]
+          - values(0): [ -0.000000, -2.727892, 4.540815, ..., 2652.710027, 158.550217, -2790.118513 ]
+          - values(1): None
+       - Test main/z:
+          - Name: z
+          - Unit: dimensionless
+          - URI: main/z
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): 3.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 3.000000
+          - value(1000, 0): 3.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(0): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(1): None
+    - Test DataStore.voi_and_variables():
+       - Size: 7
+       - Test main/offset:
+          - Name: offset
+          - Unit: dimensionless
+          - URI: main/offset
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): 3.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 3.000000
+          - value(1000, 0): 3.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(0): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(1): None
+       - Test main/offset2:
+          - Name: offset2
+          - Unit: dimensionless
+          - URI: main/offset2
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): -3.000000
+          - value(0, -2): nan
+          - value(0, -1): -3.000000
+          - value(0, 0): -3.000000
+          - value(0, 1): nan
+          - value(1000): -3.000000
+          - value(1000, -2): nan
+          - value(1000, -1): -3.000000
+          - value(1000, 0): -3.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ -3.000000, -3.000000, -3.000000, ..., -3.000000, -3.000000, -3.000000 ]
+          - values(0): [ -3.000000, -3.000000, -3.000000, ..., -3.000000, -3.000000, -3.000000 ]
+          - values(1): None
+       - Test main/time:
+          - Name: time
+          - Unit: dimensionless
+          - URI: main/time
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 0.000000
+          - value(0, -2): nan
+          - value(0, -1): 0.000000
+          - value(0, 0): 0.000000
+          - value(0, 1): nan
+          - value(1000): 1000.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 1000.000000
+          - value(1000, 0): 1000.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 0.000000, 1.000000, 2.000000, ..., 998.000000, 999.000000, 1000.000000 ]
+          - values(0): [ 0.000000, 1.000000, 2.000000, ..., 998.000000, 999.000000, 1000.000000 ]
+          - values(1): None
+       - Test main/x:
+          - Name: x
+          - Unit: dimensionless
+          - URI: main/x
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): 1000003.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 1000003.000000
+          - value(1000, 0): 1000003.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 4.000000, 7.000000, ..., 996007.000000, 998004.000000, 1000003.000000 ]
+          - values(0): [ 3.000000, 4.000000, 7.000000, ..., 996007.000000, 998004.000000, 1000003.000000 ]
+          - values(1): None
+       - Test main/y:
+          - Name: y
+          - Unit: dimensionless
+          - URI: main/y
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): -548.853957
+          - value(1000, -2): nan
+          - value(1000, -1): -548.853957
+          - value(1000, 0): -548.853957
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 1.693805, 1.606672, ..., -690.414439, 1499.474123, -548.853957 ]
+          - values(0): [ 3.000000, 1.693805, 1.606672, ..., -690.414439, 1499.474123, -548.853957 ]
+          - values(1): None
+       - Test main/y/prime:
+          - Name: y'
+          - Unit: dimensionless/dimensionless
+          - URI: main/y/prime
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): -0.000000
+          - value(0, -2): nan
+          - value(0, -1): -0.000000
+          - value(0, 0): -0.000000
+          - value(0, 1): nan
+          - value(1000): -2790.118513
+          - value(1000, -2): nan
+          - value(1000, -1): -2790.118513
+          - value(1000, 0): -2790.118513
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ -0.000000, -2.727892, 4.540815, ..., 2652.710027, 158.550217, -2790.118513 ]
+          - values(0): [ -0.000000, -2.727892, 4.540815, ..., 2652.710027, 158.550217, -2790.118513 ]
+          - values(1): None
+       - Test main/z:
+          - Name: z
+          - Unit: dimensionless
+          - URI: main/z
+          - value(-1): nan
+          - value(-1, -2): nan
+          - value(-1, -1): nan
+          - value(-1, 0): nan
+          - value(-1, 1): nan
+          - value(0): 3.000000
+          - value(0, -2): nan
+          - value(0, -1): 3.000000
+          - value(0, 0): 3.000000
+          - value(0, 1): nan
+          - value(1000): 3.000000
+          - value(1000, -2): nan
+          - value(1000, -1): 3.000000
+          - value(1000, 0): 3.000000
+          - value(1000, 1): nan
+          - value(1001): nan
+          - value(1001, -2): nan
+          - value(1001, -1): nan
+          - value(1001, 0): nan
+          - value(1001, 1): nan
+          - values(-2): None
+          - values(-1): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(0): [ 3.000000, 3.000000, 3.000000, ..., 3.000000, 3.000000, 3.000000 ]
+          - values(1): None
