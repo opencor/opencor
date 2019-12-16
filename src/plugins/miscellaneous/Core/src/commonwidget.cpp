@@ -181,7 +181,11 @@ void CommonWidget::hideBusyWidget(bool pForceHiding)
     //       progress busy widget, so that we can see its final state...
 
     if (--mCounter == 0) {
-        QCoreApplication::processEvents();
+        QTime timeLimit= QTime::currentTime().addMSecs(39);
+
+        while (QTime::currentTime() < timeLimit) {
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 13);
+        }
 
         if (mParent == centralWidget()) {
             mainWindow()->setEnabled(true);
