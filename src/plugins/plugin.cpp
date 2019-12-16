@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -59,17 +59,19 @@ namespace OpenCOR {
 //==============================================================================
 
 Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
-               const QString &pErrorMessage, bool pLoad,
+               const QString &pErrorMessage, bool pLoad, bool pNeeded,
                PluginManager *pPluginManager) :
     mName(name(pFileName)),
     mInfo(pInfo),
     mErrorMessage(pErrorMessage)
 {
     if (pInfo != nullptr) {
-        // We are dealing with a plugin, so try to load it, but only if the user
-        // wants
+        // We are dealing with a plugin, so try to load it (if needed), but
+        // before that make sure that it is not both needed and selectable
 
-        if (pLoad) {
+        if (pNeeded && pInfo->isSelectable()) {
+            mStatus = Status::NeededSelectablePlugin;
+        } else if (pLoad) {
             // Make sure that the plugin's dependencies, if any, are loaded
             // before loading the plugin itself
             // Note: normally, we would only do this on Windows systems since,
@@ -265,11 +267,16 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         //       since we know it will only work for a plugin that uses an old
         //       version of PluginInfo...
 
-        mStatus = (Plugin::info(pFileName) != nullptr)?Status::OldPlugin:Status::NotPlugin;
+        if (Plugin::info(pFileName) != nullptr) {
+            // We are dealing with a plugin, but one that uses an old version of
+            // PluginInfo
 
-        if (mStatus == Status::NotPlugin) {
-            // Apparently, we are not dealing with a plugin, so load it so that
-            // we can retrieve its corresponding error
+            mStatus = Status::OldPlugin;
+        } else {
+            // We are not dealing with a plugin, so load it so that we can
+            // retrieve its corresponding error
+
+            mStatus = Status::NotPlugin;
 
             QPluginLoader pluginLoader(pFileName);
 

@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -83,7 +83,7 @@ namespace Core {
 
 //==============================================================================
 
-#include "corecliutils.cpp.inl"
+#include "cliutils.cpp.inl"
 
 //==============================================================================
 
@@ -574,83 +574,11 @@ void doNothing(const quint64 *pMax, const bool *pStopped)
 
 //==============================================================================
 
-QString openFile(const QString &pFileName, const File::Type &pType,
-                 const QString &pUrl)
-{
-    // Register the file with our file manager and get its status
-
-    FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
-
-    if (fileStatus == FileManager::Status::DoesNotExist) {
-        return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
-                                                                QDir::toNativeSeparators(pFileName):
-                                                                pFileName);
-    }
-
-    return {};
-}
+#include "openfile.cpp.inl"
 
 //==============================================================================
 
-QString openRemoteFile(const QString &pUrl)
-{
-    // Note: this method is used by our Python wrapper and should be kept in
-    //       sync with that of CentralWidget::openRemoteFile() in
-    //       src/plugins/miscellaneous/Core/src/centralwidget.cpp...
-
-    // Make sure that pUrl really refers to a remote file
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
-
-    if (isLocalFile) {
-        // It looks like the user tried to open a local file using a URL, e.g.
-        //     file:///home/me/mymodel.cellml
-        // rather than a local file name, e.g.
-        //     /home/me/mymodel.cellml
-        // so open the file as a local file and leave
-
-        return openFile(fileNameOrUrl);
-    }
-
-    // Check whether the remote file is already opened and if so select it,
-    // otherwise retrieve its contents
-
-    FileManager *fileManagerInstance = FileManager::instance();
-    QString fileName = fileManagerInstance->fileName(fileNameOrUrl);
-
-    if (fileName.isEmpty()) {
-        // The remote file isn't already opened, so download its contents
-
-        QByteArray fileContents;
-        QString errorMessage;
-
-        if (readFile(fileNameOrUrl, fileContents, &errorMessage)) {
-            // We were able to retrieve the contents of the remote file, so save
-            // it locally
-
-            fileName = Core::temporaryFileName();
-
-            if (!writeFile(fileName, fileContents)) {
-#ifdef QT_DEBUG
-                qFatal("FATAL ERROR | %s:%d: '%s' could not be created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay, cppcoreguidelines-pro-type-vararg)
-#else
-                return QObject::tr("'%1' could not be created.").arg(fileNameOrUrl);
-#endif
-            }
-        } else {
-            // We were not able to retrieve the contents of the remote file, so let
-            // the user know about it
-
-            return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl,
-                                                                     formatMessage(errorMessage));
-        }
-    }
-
-    return openFile(fileName, File::Type::Remote, fileNameOrUrl);
-}
+#include "openremotefile.cpp.inl"
 
 //==============================================================================
 
@@ -726,7 +654,7 @@ void cleanPresentationMathml(QDomElement *pDomElement)
     // Merge successive child mrow elements, as long as their parent is not an
     // element that requires a specific number of arguments (which could become
     // wrong if we were to merge two successive mrow elements)
-    // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
+    // Note: see https://w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
     //       list of the elements to check...
 
     static const QString Mfrac      = "mfrac";

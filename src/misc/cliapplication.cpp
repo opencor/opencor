@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -443,7 +443,11 @@ void CliApplication::status() const
 
             break;
         case Plugin::Status::InvalidCorePlugin:
-            pluginInfo += "the plugin should be the core plugin, but it does not support the core interface.";
+            pluginInfo += "the plugin claims to be the core plugin, but it does not support the core interface.";
+
+            break;
+        case Plugin::Status::NeededSelectablePlugin:
+            pluginInfo += "the plugin claims to be selectable, but it is needed.";
 
             break;
         case Plugin::Status::NotCliPluginNoCliSupport:

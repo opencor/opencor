@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -36,10 +36,10 @@ PLUGININFO_FUNC PythonShellPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Python shell plugin."));
-    descriptions.insert("fr", QString::fromUtf8("le plugin shell Python."));
+    descriptions.insert("en", QString::fromUtf8("the <a href=\"https://python.org/\">Python</a> shell plugin."));
+    descriptions.insert("fr", QString::fromUtf8("le plugin shell <a href=\"https://python.org/\">Python</a>."));
 
-    return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, false, true,
                           QStringList() << "Core" << "PythonQtSupport" << "SimulationSupport",
                           descriptions);
 }
@@ -121,9 +121,9 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
     fedisableexcept(FE_OVERFLOW);
 #endif
 
-    char *oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
+    char *locale = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
 
-    if (oldloc == nullptr) {
+    if (locale == nullptr) {
         std::cerr << "Out of memory." << std::endl;
 
         pRes = 1;
@@ -139,7 +139,7 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
         argV[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), nullptr);
 
         if (argV[i] == nullptr) {
-            PyMem_RawFree(oldloc);
+            PyMem_RawFree(locale);
 
             std::cerr << "Fatal Python error: unable to decode the command line argument #" << i+1 << "." << std::endl;
 
@@ -153,9 +153,9 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     argVCopy[argC] = argV[argC] = nullptr;
 
-    setlocale(LC_ALL, oldloc);
+    setlocale(LC_ALL, locale);
 
-    PyMem_RawFree(oldloc);
+    PyMem_RawFree(locale);
 
     pRes = Py_Main(argC, argV);
 

@@ -165,12 +165,12 @@
 <context>
     <name>OpenCOR::CheckForUpdatesDialog</name>
     <message>
-        <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; is ready for you to &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;%2 %3&lt;/a&gt; est prêt à être &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
-        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; (%2) is ready for you to &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
-        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; (%2) est prêt à être &lt;a href=&quot;http://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
+        <source>The &lt;a href=&quot;%1&quot;&gt;latest snapshot&lt;/a&gt; (%2) is ready for you to &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;download&lt;/a&gt;.</source>
+        <translation>Le &lt;a href=&quot;%1&quot;&gt;dernier snapshot&lt;/a&gt; (%2) est prêt à être &lt;a href=&quot;https://opencor.ws/downloads/&quot;&gt;téléchargé&lt;/a&gt;.</translation>
     </message>
     <message>
         <source>No newer version or snapshot of %1 is available.</source>
@@ -188,8 +188,8 @@
         <translation>Les informations sur la version sont mal formatées.</translation>
     </message>
     <message>
-        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
-        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+        <source>Please &lt;a href=&quot;https://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;https://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
     </message>
 </context>
 <context>
@@ -250,8 +250,12 @@
         <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
     </message>
     <message>
-        <source>the plugin should be the core plugin, but it does not support the core interface.</source>
-        <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
+        <source>the plugin claims to be the core plugin, but it does not support the core interface.</source>
+        <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
+    </message>
+    <message>
+        <source>the plugin claims to be selectable, but it is needed.</source>
+        <translation>l&apos;extension prétend être sélectionnable, mais elle est nécessaire.</translation>
     </message>
     <message>
         <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
@@ -358,8 +362,120 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
-        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
+        <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;https://cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
+        <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;https://cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Invalid</source>
+        <translation>Invalide</translation>
+    </message>
+    <message>
+        <source>Data store</source>
+        <translation>Magasin de données</translation>
+    </message>
+    <message>
+        <source>Editing</source>
+        <translation>Édition</translation>
+    </message>
+    <message>
+        <source>Miscellaneous</source>
+        <translation>Divers</translation>
+    </message>
+    <message>
+        <source>Organisation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Simulation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Solver</source>
+        <translation>Solveur</translation>
+    </message>
+    <message>
+        <source>Support</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Third-party</source>
+        <translation>Externe</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Outils</translation>
+    </message>
+    <message>
+        <source>Widget</source>
+        <translation>Gadget</translation>
+    </message>
+    <message>
+        <source>Plugins that illustrate various plugin-related aspects.</source>
+        <translation>Extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
+    </message>
+    <message>
+        <source>Plugins to test things.</source>
+        <translation>Extensions pour tester des choses.</translation>
+    </message>
+    <message>
+        <source>Plugins that are not valid.</source>
+        <translation>Extensions qui ne sont pas valides.</translation>
+    </message>
+    <message>
+        <source>Plugins to store and manipulate data.</source>
+        <translation>Extensions pour stocker et manipuler des données.</translation>
+    </message>
+    <message>
+        <source>Plugins to edit files.</source>
+        <translation>Extensions pour éditer des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins that do not fit in any other category.</source>
+        <translation>Extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
+    </message>
+    <message>
+        <source>Plugins to organise files.</source>
+        <translation>Extensions pour organiser des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to simulate files.</source>
+        <translation>Extensions pour simuler des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various solvers.</source>
+        <translation>Extensions pour accéder différents solveurs.</translation>
+    </message>
+    <message>
+        <source>Plugins to support various third-party libraries.</source>
+        <translation>Extensions pour supporter différentes librairies externes.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various third-party libraries.</source>
+        <translation>Extensions pour accéder différentes librairies externes.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various tools.</source>
+        <translation>Extensions pour accéder différents outils.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
+        <translation>Extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
+    </message>
+    <message>
+        <source>No Internet connection available.</source>
+        <translation>Aucune connexion Internet disponible.</translation>
+    </message>
+    <message>
+        <source>Copyright</source>
+        <translation>Tous droits réservés</translation>
     </message>
 </context>
 </TS>

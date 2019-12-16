@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -25,9 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef Q_OS_LINUX
+#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     #include "Python.h"
-    // Note: this needs to be included before <QObject> to prevent name clashes...
+    // Note: this needs to be included before <QObject> to prevent name
+    //       clashes...
 #endif
 
 //==============================================================================
@@ -69,10 +70,9 @@ int main(int pArgC, char *pArgV[])
     // (otherwise Python extension DSOs can't find symbols), which can be done
     // by setting Py_NoUserSiteDirectory to 1
     // Note: this is because the lookup scope changes for DSOs that are loaded
-    //       using dlopen() (see
-    //       https://www.akkadia.org/drepper/dsohowto.pdf)...
+    //       using dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
-#ifdef Q_OS_LINUX
+#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     Py_NoUserSiteDirectory = 1;
 #endif
 

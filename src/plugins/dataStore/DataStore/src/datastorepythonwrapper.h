@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -58,13 +58,13 @@ public:
     static DATASTORE_EXPORT PyObject * dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
+    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
+    PyObject * voi_and_variables(OpenCOR::DataStore::DataStore *pDataStore);
+
     double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                  quint64 pPosition, int pRun = -1) const;
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                       int pRun = -1) const;
-
-    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
-    PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
 };
 
 //==============================================================================

@@ -83,6 +83,9 @@ endmacro()
 macro(update_language_files TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
+    # Note: we use ERROR_QUIET with lupdate because it does generate some
+    #       "errors" for our .cpp.inl files even though everything is fine with
+    #       them...
 
     set(LANGUAGES fr)
     set(INPUT_FILES)
@@ -99,8 +102,10 @@ macro(update_language_files TARGET_NAME)
         if(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
             execute_process(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
                                                              -ts ${TS_FILE}
+                                                             -I ${CMAKE_SOURCE_DIR}/src/misc
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                            OUTPUT_QUIET)
+                            OUTPUT_QUIET
+                            ERROR_QUIET)
             execute_process(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
                                                               -qm ${QM_FILE}
                             OUTPUT_QUIET)

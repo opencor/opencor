@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -332,16 +332,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
                                                                         InformationType pInformationType)
 {
+    // Keep track of the RDF triple information and type
+
+    mRdfTripleInformation = pRdfTripleInformation;
+
     // Retrieve the RDF triple information
 
     QStringList rdfTripleInformation = pRdfTripleInformation.split('|');
     QString qualifier = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
     QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
     QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[2];
-
-    // Keep track of the RDF triple information and type
-
-    mRdfTripleInformation = pRdfTripleInformation;
 
     // (Un)highlight/(un)select our various RDF triple information
 

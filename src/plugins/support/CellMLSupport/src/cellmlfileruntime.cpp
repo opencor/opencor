@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -585,15 +585,6 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
 //==============================================================================
 
-QString CellmlFileRuntime::address() const
-{
-    // Return our address as a string
-
-    return QString::number(quint64(this));
-}
-
-//==============================================================================
-
 bool CellmlFileRuntime::isValid() const
 {
     // The runtime is valid if no issues were found
@@ -969,14 +960,14 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     // new parameter to all our calls to doNonLinearSolve() so that
     // doNonLinearSolve() can retrieve the correct instance of our NLA solver
 
-    res.replace("do_nonlinearsolve(", QString(R"(doNonLinearSolve("%1", )").arg(address()));
+    res.replace("do_nonlinearsolve(", QString(R"(doNonLinearSolve("%1", )").arg(Solver::objectAddress(this)));
 
     return res;
 }
 
 //==============================================================================
 
-CellmlFileRuntimeParameter *CellmlFileRuntime::voi() const
+CellmlFileRuntimeParameter * CellmlFileRuntime::voi() const
 {
     // Return our VOI, if any
 

@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -90,14 +90,13 @@ void SimulationWorker::run()
     auto odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
 
     // Set up our NLA solver, if needed
-    // Note: we unset it at the end of this method...
 
     Solver::NlaSolver *nlaSolver = nullptr;
 
     if (mRuntime->needNlaSolver()) {
         nlaSolver = static_cast<Solver::NlaSolver *>(mSimulation->data()->nlaSolverInterface()->solverInstance());
 
-        Solver::setNlaSolver(mRuntime->address(), nlaSolver);
+        Solver::setNlaSolver(mRuntime, nlaSolver);
     }
 
     // Keep track of any error that might be reported by any of our solvers
@@ -238,7 +237,6 @@ void SimulationWorker::run()
                 // (Re)start our timer
 
                 timer.start();
-
             }
         }
 
@@ -255,8 +253,6 @@ void SimulationWorker::run()
 
     if (nlaSolver != nullptr) {
         delete nlaSolver;
-
-        Solver::unsetNlaSolver(mRuntime->address());
     }
 
     // Reset our simulation owner's knowledge of us

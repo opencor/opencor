@@ -1,5 +1,23 @@
 cmake_minimum_required(VERSION 3.14)
 
+# Make sure that we are using the compilers we support
+# Note #1: indeed, if other compilers are installed on a developer's machine
+#          then CMake may prefer them over the ones we support since it searches
+#          for a compiler in a very specific order (see
+#          https://cmake.org/pipermail/cmake/2013-March/053819.html)...
+# Note #2: yes, this needs to be done before defining our project...
+
+if(WIN32)
+    find_program(C_COMPILER cl)
+    find_program(CXX_COMPILER cl)
+else()
+    find_program(C_COMPILER cc)
+    find_program(CXX_COMPILER c++)
+endif()
+
+set(ENV{CC} ${C_COMPILER})
+set(ENV{CXX} ${CXX_COMPILER})
+
 # Project definition
 
 project(OpenCOR)
@@ -139,14 +157,14 @@ endif()
 set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
 
 if(WIN32)
-    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 else()
     if(APPLE)
         set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
     endif()
 
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 endif()
 
@@ -159,7 +177,7 @@ endif()
 if(NOT WIN32 AND NOT APPLE)
     set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
+    execute_process(COMMAND ${C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
     if(NOT RESULT EQUAL 0)
@@ -200,7 +218,7 @@ if(WIN32)
     if(CLCACHE)
         set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
-        execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+        execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
                         RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
         if(RESULT EQUAL 0)
@@ -317,13 +335,27 @@ set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
 set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
 # A few constants to help us with building an external project
+# Note: the idea is to ensure that we compile external projects using the exact
+#       same compilers than the ones we want to use in the first place (i.e.
+#       C_COMPILER and CXX_COMPILER), as well as take advantage of ccache, if
+#       available, and ensure that RPATH is properly handled on macOS...
+
+set(CMAKE_ARGS
+    -DCMAKE_C_COMPILER=${C_COMPILER}
+    -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+)
 
 if(CCACHE)
-    set(CMAKE_ARGS -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE})
+    list(APPEND CMAKE_ARGS
+        -DCMAKE_C_COMPILER_LAUNCHER=${CCACHE}
+        -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE}
+    )
 endif()
 
 if(APPLE)
-    set(CMAKE_ARGS ${CMAKE_ARGS} -DCMAKE_MACOSX_RPATH=ON)
+    list(APPEND CMAKE_ARGS
+        -DCMAKE_MACOSX_RPATH=ON
+    )
 endif()
 
 if(WIN32)
@@ -365,8 +397,8 @@ if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
     if(WIN32)
         set(ICU_VERSION 57)
     elseif(NOT APPLE)
-        add_subdirectory(${PLATFORM_DISTRIB_DIR}/icu)
-        add_subdirectory(${PLATFORM_DISTRIB_DIR}/mesa)
+        add_subdirectory(src/3rdparty/linux/icu)
+        add_subdirectory(src/3rdparty/linux/mesa)
     endif()
 endif()
 
@@ -615,13 +647,6 @@ set(I18N_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/i18n.qrc)
 configure_file(${CMAKE_SOURCE_DIR}/res/common.qrc.in ${COMMON_QRC_FILENAME})
 configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in ${I18N_QRC_FILENAME})
 
-# The Python interface depends on Python headers, so we only include it if we
-# are using the prebuilt version of our Python and QtWebKit packages
-
-if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
-    set(PYTHON_INTERFACE_FILENAME src/plugins/pythoninterface.cpp)
-endif()
-
 # Files that make up the GUI version of OpenCOR
 
 set(SOURCES
@@ -650,7 +675,7 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-    ${PYTHON_INTERFACE_FILENAME}
+    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -688,7 +713,7 @@ if(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
-        ${PYTHON_INTERFACE_FILENAME}
+        src/plugins/pythoninterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -973,10 +998,6 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             add_definitions(-DENABLE_TEST_PLUGINS)
         endif()
 
-        # Let OpenCOR know that we want Python support
-
-        add_definitions(-DPYTHON_SUPPORT)
-
         # Let OpenCOR know about the prebuilt version of our QtWebKit package
         # being used
 
@@ -1000,6 +1021,18 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     foreach(PLUGIN ${PLUGINS})
         add_subdirectory(src/plugins/${PLUGIN})
     endforeach()
+endif()
+
+# Keep track of whether we are building OpenCOR with Python support and, if so,
+# let OpenCOR know about it
+
+if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
+    set(PYTHON_SUPPORT TRUE)
+
+    add_definitions(-DPYTHON_SUPPORT)
+
+    string(REPLACE "${PROJECT_BUILD_DIR}/" ""
+           RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
 endif()
 
 # Fetch parts of our documentation and build it, if we are neither building
@@ -1062,9 +1095,9 @@ endif()
 # On Linux, our Python package needs to be directly linked to OpenCOR otherwise
 # Python extension DSOs can't find symbols
 # Note: this is because the lookup scope changes for DSOs that are loaded using
-#       dlopen() (see https://www.akkadia.org/drepper/dsohowto.pdf)...
+#       dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
-if(NOT WIN32 AND NOT APPLE)
+if(NOT WIN32 AND NOT APPLE AND PYTHON_SUPPORT)
     include_directories(${PYTHON_INCLUDE_DIR})
 
     target_link_libraries(${CMAKE_PROJECT_NAME}
@@ -1256,9 +1289,6 @@ else()
     set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 endif()
 
-string(REPLACE "${PROJECT_BUILD_DIR}/" ""
-       RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
-
 if(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
@@ -1341,36 +1371,38 @@ if(WIN32)
     #       skip them in that case (see
     #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
 
-    if(RELEASE_MODE)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
+    if(PYTHON_SUPPORT)
+        if(RELEASE_MODE)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
 
-        install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
-                      ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
-                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
+            install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
+                          ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
+                    DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
 
-        set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
+            set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
 
-        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
+            configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
 
-        install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                      ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
-                      ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
-                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
-                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
+            install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                          ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
+                          ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
+                          ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
+                          ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
+                    DESTINATION .)
+        endif()
+
+        set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
+
+        configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
+
+        install(FILES ${PYTHON_SHELL_FILENAME}
                 DESTINATION .)
     endif()
-
-    set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
-
-    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
-
-    install(FILES ${PYTHON_SHELL_FILENAME}
-            DESTINATION .)
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
@@ -1390,12 +1422,15 @@ if(WIN32)
         ")
     endif()
 elseif(APPLE)
-    # Select PackageMaker and ZIP as the packagers on macOS
-    # Note: this is actually done within the package script, so that the ZIP
-    #       package can be done 'properly', i.e. we don't have the full tree
-    #       structure in the ZIP file...
+    # Select productbuild and ZIP as the packagers on macOS
 
+    set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${CMAKE_PROJECT_NAME})
+
+    set(CPACK_GENERATOR productbuild ZIP)
     set(CPACK_SYSTEM_NAME "macOS")
+    set(CPACK_PROJECT_CONFIG_FILE ${PLATFORM_DISTRIB_DIR}/package.cmake)
+
+    set(CPACK_COMPONENTS_ALL ${CMAKE_PROJECT_NAME})
 
     set(CPACK_RESOURCE_FILE_WELCOME "${PLATFORM_DISTRIB_DIR}/welcome.txt")
     set(CPACK_RESOURCE_FILE_README "${DISTRIB_DIR}/readMe.txt")
@@ -1420,26 +1455,28 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
+    if(PYTHON_SUPPORT)
+        set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
-    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
-    set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
-    set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
-    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+        set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+        set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
+        set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
+        set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
-    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
-    install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                  ${JUPYTER_LAB_FILENAME}
-                  ${JUPYTER_NOTEBOOK_FILENAME}
-                  ${PYTHON_SHELL_FILENAME}
-            DESTINATION .
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                      ${JUPYTER_LAB_FILENAME}
+                      ${JUPYTER_NOTEBOOK_FILENAME}
+                      ${PYTHON_SHELL_FILENAME}
+                DESTINATION .
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    endif()
 else()
     # Select TGZ as the packager on Linux
 
@@ -1514,26 +1551,28 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+    if(PYTHON_SUPPORT)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
 
-    install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
-            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
+                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
-    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+        set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+        set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
-    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
-    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
-    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+        configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
-    install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                  ${PLATFORM_DISTRIB_DIR}/jupyterlab
-                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook
-                  ${PYTHON_SHELL_FILENAME}
-            DESTINATION .
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                      ${PLATFORM_DISTRIB_DIR}/jupyterlab
+                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                      ${PYTHON_SHELL_FILENAME}
+                DESTINATION .
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    endif()
 endif()
 
 # Specify the package file name, depending on whether we are generating a

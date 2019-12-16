@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -50,13 +50,13 @@ static const auto CellmlRefVersion = Cellml_1_1;
 
 //==============================================================================
 
-static const auto Cellml_1_0_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.0#");
-static const auto Cellml_1_1_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.1#");
-static const auto TmpDocumentation     = QStringLiteral("http://cellml.org/tmp-documentation");
-static const auto CmetaIdNamespace     = QStringLiteral("http://www.cellml.org/metadata/1.0#");
-static const auto MathmlNamespace      = QStringLiteral("http://www.w3.org/1998/Math/MathML");
-static const auto RdfNamespace         = QStringLiteral("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-static const auto XlinkNamespace       = QStringLiteral("http://www.w3.org/1999/xlink");
+static const auto Cellml_1_0_Namespace      = QStringLiteral("http://www.cellml.org/cellml/1.0#");
+static const auto Cellml_1_1_Namespace      = QStringLiteral("http://www.cellml.org/cellml/1.1#");
+static const auto TmpDocumentationNamespace = QStringLiteral("http://cellml.org/tmp-documentation");
+static const auto CmetaIdNamespace          = QStringLiteral("http://www.cellml.org/metadata/1.0#");
+static const auto MathmlNamespace           = QStringLiteral("http://www.w3.org/1998/Math/MathML");
+static const auto RdfNamespace              = QStringLiteral("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+static const auto XlinkNamespace            = QStringLiteral("http://www.w3.org/1999/xlink");
 
 //==============================================================================
 

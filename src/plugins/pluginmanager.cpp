@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -121,11 +121,11 @@ PluginManager::PluginManager(bool pGuiMode) :
 
         if (pluginInfo != nullptr) {
             // Keep track of the plugin itself, should it be selectable and
-            // requested by the user (if we are in GUI mode) or have CLI support
-            // (if we are in CLI mode)
+            // requested by the user (if we are in GUI mode), or have CLI
+            // support or is a solver (if we are in CLI mode)
 
             if (   ( pGuiMode && pluginInfo->isSelectable() && Plugin::load(pluginName))
-                || (!pGuiMode && pluginInfo->hasCliSupport())) {
+                || (!pGuiMode && (pluginInfo->hasCliSupport() || (pluginInfo->category() == PluginInfo::Category::Solver)))) {
                 // Keep track of the plugin's dependencies
 
                 neededPlugins << pluginsInfo.value(pluginName)->fullDependencies();
@@ -197,7 +197,8 @@ PluginManager::PluginManager(bool pGuiMode) :
         auto plugin = new Plugin(pluginFileName,
                                  pluginsInfo.value(pluginName),
                                  pluginsError.value(pluginName),
-                                 plugins.contains(pluginName), this);
+                                 plugins.contains(pluginName),
+                                 neededPlugins.contains(pluginName), this);
 
         // Keep track of the plugin and of the Core plugin, in particular, if it
         // is loaded

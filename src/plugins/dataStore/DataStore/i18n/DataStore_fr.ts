@@ -16,4 +16,18 @@
         <translation>Données :</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::DataStore::DataStorePythonWrapper</name>
+    <message>
+        <source>The &apos;NoneType&apos; object is not subscriptable.</source>
+        <translation>L&apos;objet &apos;NoneType&apos; n&apos;est pas enregistrable.</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>invalid value.</source>
+        <translation>valeur invalide.</translation>
+    </message>
+</context>
 </TS>

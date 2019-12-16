@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -140,7 +140,7 @@ public:
     void setType(int pType);
 
     void setUri(const QString &pUri);
-    void setLabel(const QString &pLabel);
+    void setName(const QString &pName);
     void setUnit(const QString &pUnit);
 
     DataStoreArray * array(int pRun = -1) const;
@@ -156,7 +156,7 @@ public slots:
     int runsCount() const;
 
     QString uri() const;
-    QString label() const;
+    QString name() const;
     QString unit() const;
 
     quint64 size(int pRun = -1) const;

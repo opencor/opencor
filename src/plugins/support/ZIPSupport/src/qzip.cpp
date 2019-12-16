@@ -304,7 +304,7 @@ static QDateTime readMSDosDate(const uchar *src)
     return QDateTime(QDate(tm_year, tm_mon, tm_mday), QTime(tm_hour, tm_min, tm_sec));
 }
 
-// for details, see http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+// for details, see http://pkware.com/documents/casestudies/APPNOTE.TXT
 
 enum HostOS {
     HostFAT      = 0,
@@ -1019,7 +1019,6 @@ QVector<QZipReader::FileInfo> QZipReader::fileInfoList() const
     for (int i = 0; i < numFileHeaders; ++i)
         files.append(d->fillFileInfo(i));
     return files;
-
 }
 
 /*!

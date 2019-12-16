@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -97,7 +97,7 @@ void BiosignalmlDataStoreExporterWorker::run()
                                                                 voi->values(i),
                                                                 voi->size(i));
 
-            clock->set_label(voi->label().toStdString());
+            clock->set_label(voi->name().toStdString());
 
             // Determine what should be exported (minus the VOI, which should
             // always be exported in the case of a BioSignalML file)
@@ -127,7 +127,7 @@ void BiosignalmlDataStoreExporterWorker::run()
             bsml::HDF5::SignalArray::size_type n = 0;
 
             for (auto variable : variables) {
-                (*signalArray)[n]->set_label(variable->label().toStdString());
+                (*signalArray)[n]->set_label(variable->name().toStdString());
 
                 ++n;
             }

@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -23,6 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "jupyterkernelplugin.h"
 #include "pythonqtsupport.h"
+
+//==============================================================================
+
+#include <QCoreApplication>
 
 //==============================================================================
 
@@ -38,7 +42,7 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
     descriptions.insert("en", QString::fromUtf8(R"(the <a href="https://jupyter.org/">Jupyter</a> kernel plugin.)"));
     descriptions.insert("fr", QString::fromUtf8(R"(le plugin du noyau <a href="https://jupyter.org/">Jupyter</a>.)"));
 
-    return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, false, true,
                           QStringList() << "Core" << "SimulationSupport",
                           descriptions);
 }
@@ -107,7 +111,7 @@ bool JupyterKernelPlugin::runKernel(const QStringList &pArguments, int &pRes)
     }
 
     // Run the the kernel using our connection file
-    // Note: any backslashes in the filename need to be escaped for Python
+    // Note: any backslashes in the filename need to be escaped for Python...
 
     static const QString JupyterKernel = R"PYTHON(
 import matplotlib
@@ -133,18 +137,20 @@ matplotlib.rcParamsOrig['backend'] = matplotlib.rcParams['backend']
 # Minimal customisation of the standard IPython kernel
 
 class OpenCORKernel(IPythonKernel):
-    implementation = 'OpenCOR'
-    implementation_version = '0.6'
+    implementation = '%1'
+    implementation_version = '%2'
     banner = "Jupyter kernel for OpenCOR"
 
 if __name__ == '__main__':
     from ipykernel.kernelapp import IPKernelApp
 
-    IPKernelApp.connection_file = '%1'
+    IPKernelApp.connection_file = '%3'
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(JupyterKernel.arg(QString(pArguments[0]).replace("\\", "\\\\")));
+    PythonQtSupport::evaluateScript(JupyterKernel.arg(qApp->applicationName(),
+                                                      qApp->applicationVersion(),
+                                                      QString(pArguments[0]).replace("\\", "\\\\")));
 
     return true;
 }

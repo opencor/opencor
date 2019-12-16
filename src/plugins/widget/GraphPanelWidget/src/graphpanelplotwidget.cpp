@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -1319,7 +1319,7 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     // Note: this is based on QwtLegend::renderLegend() and it fixes a problem
     //       with the layout when it has its expanding directions set to
     //       horizontal. More information on this issue can be found at
-    //       http://www.qtcentre.org/threads/68983-Problem-with-QwtDynGridLayout-layoutItems()...
+    //       https://qtcentre.org/threads/68983-Problem-with-QwtDynGridLayout-layoutItems()...
 
     if (!mActive) {
         return;
@@ -2696,7 +2696,6 @@ double GraphPanelPlotWidget::maxY() const
     // Return our maximum Y value
 
     return axisScaleDiv(QwtPlot::yLeft).upperBound();
-
 }
 
 //==============================================================================

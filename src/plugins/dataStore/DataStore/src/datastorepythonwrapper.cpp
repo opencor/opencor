@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -129,7 +129,7 @@ static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
         return 0;
     }
 
-    PyErr_SetString(PyExc_TypeError, "Invalid value");
+    PyErr_SetString(PyExc_TypeError, qPrintable(QObject::tr("invalid value.")));
 
     return -1;
 }
@@ -354,42 +354,6 @@ DataStorePythonWrapper::DataStorePythonWrapper(void *pModule,
 
 //==============================================================================
 
-double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
-                                     quint64 pPosition, int pRun) const
-{
-    // Return the value of the given data store variable at the given position
-    // and for the given run
-
-    if (   (pDataStoreVariable != nullptr)
-        && (pDataStoreVariable->array() != nullptr)) {
-        return pDataStoreVariable->value(pPosition, pRun);
-    }
-
-    throw std::runtime_error("'NoneType' object is not subscriptable.");
-}
-
-//==============================================================================
-
-PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
-                                          int pRun) const
-{
-    // Create and return a NumPy array for the given data store variable and run
-
-    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
-
-    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
-        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
-
-        return numPyArray->numPyArray();
-    }
-
-#include "pythonbegin.h"
-    Py_RETURN_NONE;
-#include "pythonend.h"
-}
-
-//==============================================================================
-
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                        SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
@@ -440,12 +404,48 @@ PyObject * DataStorePythonWrapper::variables(DataStore *pDataStore)
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
+PyObject * DataStorePythonWrapper::voi_and_variables(DataStore *pDataStore)
 {
     // Return the VOI and variables in the given data store as a Python
     // dictionary
 
     return dataStoreVariablesDict(pDataStore->voiAndVariables());
+}
+
+//==============================================================================
+
+double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
+                                     quint64 pPosition, int pRun) const
+{
+    // Return the value of the given data store variable at the given position
+    // and for the given run
+
+    if (   (pDataStoreVariable != nullptr)
+        && (pDataStoreVariable->array() != nullptr)) {
+        return pDataStoreVariable->value(pPosition, pRun);
+    }
+
+    throw std::runtime_error(tr("The 'NoneType' object is not subscriptable.").toStdString());
+}
+
+//==============================================================================
+
+PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
+                                          int pRun) const
+{
+    // Create and return a NumPy array for the given data store variable and run
+
+    DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
+
+    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
+        auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
+
+        return numPyArray->numPyArray();
+    }
+
+#include "pythonbegin.h"
+    Py_RETURN_NONE;
+#include "pythonend.h"
 }
 
 //==============================================================================

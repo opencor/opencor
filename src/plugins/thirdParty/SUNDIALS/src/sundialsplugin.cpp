@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -34,8 +34,8 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access the <a href="http://computation.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="http://computation.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="http://computation.llnl.gov/projects/sundials/idas">IDAS</a> and <a href="http://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> solvers from <a href="http://computation.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les solveurs <a href="http://computation.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="http://computation.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="http://computation.llnl.gov/projects/sundials/idas">IDAS</a> et <a href="http://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> de <a href="http://computation.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access the <a href="https://computation.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computation.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computation.llnl.gov/projects/sundials/idas">IDAS</a> and <a href="https://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> solvers from <a href="https://computation.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les solveurs <a href="https://computation.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computation.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computation.llnl.gov/projects/sundials/idas">IDAS</a> et <a href="https://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> de <a href="https://computation.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),

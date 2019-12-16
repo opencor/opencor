@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -146,7 +146,7 @@ public:
 
     SimulationExperimentViewContentsWidget * contentsWidget() const;
 
-    QIcon fileTabIcon() const;
+    QIcon fileTabIcon();
 
     bool import(const QString &pFileName, bool pShowWarning = true);
     bool save(const QString &pFileName);
@@ -168,8 +168,6 @@ public:
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
                                  int pSimulationRun, Task pTask);
-    void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 quint64 pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
 
@@ -238,6 +236,8 @@ private:
     bool mRunActionEnabled = true;
 
     Core::UserMessageWidget *mInvalidModelMessageWidget;
+
+    bool mCanHandleChangeEvent = false;
 
     QTextEdit *mOutputWidget;
     QString mOutputMessage;
@@ -318,6 +318,8 @@ private:
     QString fileName(const QString &pFileName, const QString &pBaseFileName,
                      const QString &pFileExtension, const QString &pCaption,
                      const QStringList &pFileFilters);
+
+    QIcon doFileTabIcon(bool pForEmitting);
 
     void addSedmlSimulationAlgorithm(libsedml::SedAlgorithm *pAlgorithm,
                                      SolverInterface *pSolverInterface,

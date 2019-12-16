@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -50,10 +50,26 @@ static PyObject * simulation(const QString &pFileName,
     SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);
 
     if (simulation != nullptr) {
-        if (simulation->runtime() == nullptr) {
-            // The simulation is missing a runtime, so raise a Python exception
+        // Check if something is wrong with our simulation and, if so, raise a
+        // Python exception
+        // Note: there may be several issues, but only the first one needs to be
+        //       raised since Python obviously gives control back to the user as
+        //       soon as an exception is raised...
 
-            PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("unable to get the simulation's runtime")));
+        SimulationSupport::SimulationIssues simulationIssues = simulation->issues();
+
+        if (!simulationIssues.isEmpty()) {
+            auto simulationIssue = simulationIssues.first();
+
+            if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
+                PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("[%1:%2] %3: %4.").arg(simulationIssue.line())
+                                                                                           .arg(simulationIssue.column())
+                                                                                           .arg(simulationIssue.typeAsString(),
+                                                                                                Core::formatMessage(simulationIssue.message().toHtmlEscaped()))));
+            } else {
+                PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("%1: %2.").arg(simulationIssue.typeAsString(),
+                                                                                        Core::formatMessage(simulationIssue.message().toHtmlEscaped()))));
+            }
 
             return nullptr;
         }
@@ -80,7 +96,7 @@ static PyObject * simulation(PyObject *pSelf,  PyObject *pArgs)
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
 
     if (simulationExperimentViewWidget != nullptr) {
-        return simulation(Core::centralWidget()->currentFileName(), simulationExperimentViewWidget);
+        return simulation(Core::currentFileName(), simulationExperimentViewWidget);
     }
 
 #include "pythonbegin.h"
@@ -109,82 +125,15 @@ static PyObject * initializeSimulation(const QString &pFileName)
 
 //==============================================================================
 
-static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
-{
-    Q_UNUSED(pSelf)
-
-    // Open a simulation
-
-    PyObject *bytes;
-
-    if (PyArg_ParseTuple(pArgs, "O&", PyUnicode_FSConverter, &bytes) == 0) { // NOLINT(cppcoreguidelines-pro-type-vararg)
-#include "pythonbegin.h"
-        Py_RETURN_NONE;
-#include "pythonend.h"
-    }
-
-    char *string;
-    Py_ssize_t len;
-
-    PyBytes_AsStringAndSize(bytes, &string, &len);
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    Core::checkFileNameOrUrl(QString::fromUtf8(string, int(len)), isLocalFile, fileNameOrUrl);
-
-#include "pythonbegin.h"
-    Py_DECREF(bytes);
-#include "pythonend.h"
-
-    QString error = isLocalFile?
-                        Core::centralWidget()->openFile(fileNameOrUrl,
-                                                        Core::File::Type::Local,
-                                                        QString(), false):
-                        Core::centralWidget()->openRemoteFile(fileNameOrUrl, false);
-
-    if (!error.isEmpty()) {
-        PyErr_SetString(PyExc_IOError, qPrintable(error));
-
-        return nullptr;
-    }
-
-    return initializeSimulation(isLocalFile?
-                                    fileNameOrUrl:
-                                    Core::FileManager::instance()->fileName(fileNameOrUrl));
-}
+#define GUI_SUPPORT
+    #include "opensimulation.cpp.inl"
+#undef GUI_SUPPORT
 
 //==============================================================================
 
-static PyObject * closeSimulation(PyObject *pSelf, PyObject *pArgs)
-{
-    Q_UNUSED(pSelf)
-
-    // Close a simulation
-
-    if (PyTuple_Size(pArgs) > 0) {
-#include "pythonbegin.h"
-        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(pArgs, 0)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-#include "pythonend.h"
-
-        if (wrappedSimulation != nullptr) {
-            // Close the simulation by closing its file, raising an exception if
-            // we were unable to do so
-
-            auto simulation = static_cast<SimulationSupport::Simulation *>(wrappedSimulation->_objPointerCopy);
-
-            if (!Core::centralWidget()->closeFile(simulation->fileName())) {
-                PyErr_SetString(PyExc_IOError, qPrintable(QObject::tr("unable to close the simulation")));
-
-                return nullptr;
-            }
-        }
-    }
-
-#include "pythonbegin.h"
-    Py_RETURN_NONE;
-#include "pythonend.h"
-}
+#define GUI_SUPPORT
+    #include "closesimulation.cpp.inl"
+#undef GUI_SUPPORT
 
 //==============================================================================
 
@@ -195,9 +144,9 @@ SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(voi
     // Add some Python wrappers
 
     static std::array<PyMethodDef, 4> PythonSimulationExperimentViewMethods = {{
+                                                                                  { "open_simulation", openSimulation, METH_VARARGS, "Open a simulation." },
+                                                                                  { "close_simulation", closeSimulation, METH_VARARGS, "Close a simulation." },
                                                                                   { "simulation",  simulation, METH_VARARGS, "The current simulation." },
-                                                                                  { "openSimulation", openSimulation, METH_VARARGS, "Open a simulation." },
-                                                                                  { "closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation." },
                                                                                   { nullptr, nullptr, 0, nullptr }
                                                                               }};
 

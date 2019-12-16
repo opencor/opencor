@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QCoreApplication>
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    #include <QDir>
-#endif
+#include <QDir>
 
 //==============================================================================
 
@@ -53,8 +51,8 @@ PLUGININFO_FUNC PythonSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://www.python.org/">Python</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://www.python.org/">Python</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://python.org/">Python</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://python.org/">Python</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "Python" << "PythonPackages",
@@ -119,7 +117,7 @@ void PythonSupportPlugin::initializePlugin()
     }
 #endif
 
-    qputenv("PYTHONHOME", pythonHome.toUtf8());
+    qputenv("PYTHONHOME", QDir::toNativeSeparators(pythonHome).toUtf8());
 
     // Update our system PATH by prepending our Python script directories to it
 
@@ -129,13 +127,13 @@ void PythonSupportPlugin::initializePlugin()
     static const char PathSeparator = ':';
 #endif
 
-    QByteArray path = (pythonHome+"/bin").toUtf8()+PathSeparator+qgetenv("PATH");
+    QString path = pythonHome+"/bin"+PathSeparator+qEnvironmentVariable("PATH");
 
 #ifdef Q_OS_WIN
     path = (pythonHome+"/Scripts").toUtf8()+PathSeparator+path;
 #endif
 
-    qputenv("PATH", path);
+    qputenv("PATH", QDir::toNativeSeparators(path).toUtf8());
 
     // Ensure that the user's Python site directory (in ~/.local, etc.) isn't
     // used

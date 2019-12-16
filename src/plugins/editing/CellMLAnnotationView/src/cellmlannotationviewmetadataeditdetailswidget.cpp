@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -863,7 +863,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
         if (textContent.isEmpty()) {
             linkToolTip = tr("Add Term");
         } else {
-            linkToolTip = mUrls.contains(textContent)?tr("Look Up Resource"):tr("Look Up Id");
+            linkToolTip = mUrls.contains(textContent)?
+                              tr("Look Up Resource"):
+                              tr("Look Up Id");
         }
     }
 

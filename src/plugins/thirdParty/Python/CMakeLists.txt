@@ -79,6 +79,14 @@ endif()
 
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
+# Make sure that our package's binaries directory exists
+# Note: indeed, this is needed to prevent issues when building Python on
+#       Windows...
+
+file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
+
+# Specify the package's files
+
 set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
@@ -96,8 +104,50 @@ if(WIN32)
     )
 endif()
 
+# Do a few things that are specific to Windows and Linux
+
 if(NOT APPLE)
-    # On Windows and Linux, we bundle SQLite3 with Python
+    # Build bzip2
+    # Note: bzip2 is provided by macOS...
+
+    set(BZIP2_VERSION "1.0.8")
+
+    # Statically link bzip2 on Windows while bundle it on Linux
+
+    if(WIN32)
+        set(BZIP2_LIBRARY libbz2${CMAKE_STATIC_LIBRARY_SUFFIX})
+    else()
+        set(BZIP2_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}bz2${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${BZIP2_SHARED_LIBRARY}
+        )
+
+        list(APPEND SHA1_FILES
+            ${LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
+        )
+
+        set(BZIP2_LIBRARY ${BZIP2_SHARED_LIBRARY}.${BZIP2_VERSION})
+    endif()
+
+    # Bundle LZMA with Python
+    # Note: it is statically linked on macOS...
+
+    if(WIN32)
+        set(LZMA_SHARED_LIBRARY liblzma${CMAKE_SHARED_LIBRARY_SUFFIX})
+    else()
+        set(LZMA_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}lzma${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif()
+
+    list(APPEND EXTERNAL_BINARIES
+        ${LZMA_SHARED_LIBRARY}
+    )
+
+    list(APPEND SHA1_FILES
+        ${LIBRARY_DIR}/${LZMA_SHARED_LIBRARY}
+    )
+
+    # Bundle SQLite3 with Python
     # Note: it is statically linked on macOS...
 
     set(SQLITE3_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sqlite3${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -111,7 +161,17 @@ if(NOT APPLE)
     )
 
     if(WIN32)
-        # On Windows, we also need the import library
+        # On Windows, we also need import libraries
+
+        set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LZMA_IMPORT_LIBRARY}
+        )
+
+        list(APPEND SHA1_FILES
+            ${LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
+        )
 
         set(SQLITE3_IMPORT_LIBRARY ${CMAKE_IMPORT_LIBRARY_PREFIX}sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
@@ -152,39 +212,45 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fc50d6901d87149b237af83efa8b2fa042eda032
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 878e2fcebbf35d7fdb97eadb633bdc5ebf974ac7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9b7803f35877d2681dd5806e2d13c451ada9d212
-                                              784d61ed950a2fa6aeb279e859e28bef1f26dbd3
+                                  SHA1_VALUES 89ac7f192dc7868b2e06cd62324e06eb82f1ffb3
+                                              e87ec400ec5e77c0a73860b999ceaae5fd7c1c01
                                               599a6df061280855fad67d7c775c242345b0bb2d
+                                              0b14ddd87cbe6a7c186ee55737eca4cee363dc47
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              9589b104a635caccd0aa30920ac78bad73e73b2b)
+                                              6b18ad09e35ab061e837b221192258ce59667277
+                                              3a94214f7737077c327ce0c69b1d56039560f9ae)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d50f6daed2740843159cd50c8eee85c87e54c9e7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d8e460ff4fcb5a38a26dd5001688a9cf296dbc9b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 123efc2f296ec6decb611cce3b79f3ecc37bc5f4
-                                              4a1087f36f95e89350f59cbf4a7abfdf1273e1e4
+                                  SHA1_VALUES 2f57b9010257750d11848884e3814f21b31a00c8
+                                              02092fc4b32b62bb009a71b67190701714c092c4
                                               7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
+                                              0b14ddd87cbe6a7c186ee55737eca4cee363dc47
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              5aad26e650203999769c1a06ed7ee3b0c5f836f3)
+                                              b9bc2ec69fbfd0dc24ed6b65504d372ade8d5de7
+                                              701edf33206f3a1757480869e2a1f89e23afa7d3)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 85f8ea811ed7b3912486837e164e12318ed375d1
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bdd08ebae1b333334dfc216f2fa33e0e9f2cbd67
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
-                                          40af4e4c511a9a3a4b6a47446505c1fb60881d59)
+                                          a5bb84978412350b916071805f2632fcce4dac25)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1cba87d6b63612d68220b99e700129b58ec9c69d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6d9ad358816df273bd0fce4e176aeb94fb76dcc
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 64a4e7209f41144c49809e53d9b2a51b27e69b12
-                                          6338b2c1af385ee874996e3ab60ed06b1004f3b7
+                              SHA1_VALUES ad55b200ba7a7d2498afd5b9f63c5ac19822a606
+                                          1a887bd6842d6c0fcffbfd1384c28a461a19ff66
+                                          e31279667a5265975fe0bcda6bc7822fac6e0a3f
+                                          8fad95e8c2db2ca60f65c455d8bcc66ff5f33459
                                           561eee6b2f229c953eae711f40b25e834fb1124a)
     endif()
 else()
@@ -196,6 +262,81 @@ else()
     else()
         set(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
+    endif()
+
+    # Build bzip2 on Windows and find it on Linux and macOS
+
+    if(WIN32)
+        set(BZIP2_LIBRARY_DIR ${PROJECT_BINARY_DIR}/bzip2-opencor-${BZIP2_VERSION})
+
+        if(NOT EXISTS ${BZIP2_LIBRARY_DIR}/bzlib.h)
+            set(BZIP2_SOURCE_ARCHIVE bzip2-${BZIP2_VERSION}.tar.gz)
+
+            message("Downloading '${BZIP2_SOURCE_ARCHIVE}'...")
+
+            file(DOWNLOAD https://github.com/opencor/bzip2/archive/opencor-${BZIP2_VERSION}.tar.gz ${PROJECT_BINARY_DIR}/downloads/${BZIP2_SOURCE_ARCHIVE}
+                 SHOW_PROGRESS)
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf downloads/${BZIP2_SOURCE_ARCHIVE}
+                            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                            OUTPUT_QUIET)
+
+            message("Building '${BZIP2_LIBRARY}'...")
+
+            execute_process(COMMAND nmake -f makefile.msc lib
+                            WORKING_DIRECTORY ${BZIP2_LIBRARY_DIR}
+                            OUTPUT_QUIET)
+        endif()
+
+        set(BZIP2_INCLUDE_DIR ${BZIP2_LIBRARY_DIR})
+        set(BZIP2_LIBRARIES ${BZIP2_LIBRARY_DIR}/${BZIP2_LIBRARY})
+    else()
+        find_package(BZip2 REQUIRED)
+
+        if(NOT APPLE)
+            get_filename_component(BZIP2_LIBRARY_DIR ${BZIP2_LIBRARIES} DIRECTORY)
+        endif()
+    endif()
+
+    # Build LZMA on Windows and find it on Linux and macOS
+    # Note: on Windows, we download XZ since it includes LZMA...
+
+    if(WIN32)
+        set(XZ_VERSION 5.2.4)
+        set(XZ_PACKAGE_DIR ${PROJECT_BINARY_DIR}/xz-${XZ_VERSION})
+        set(LZMA_IMPORT_LIBRARY_DIR ${XZ_PACKAGE_DIR}/doc)
+        set(LZMA_LIBRARY_DIR ${XZ_PACKAGE_DIR}/bin_x86-64)
+
+        if(NOT EXISTS ${XZ_PACKAGE_DIR}/include/lzma.h)
+            set(XZ_ARCHIVE xz-${XZ_VERSION}-windows.7z)
+
+            message("Downloading '${XZ_ARCHIVE}'...")
+
+            file(DOWNLOAD https://tukaani.org/xz/${XZ_ARCHIVE} ${PROJECT_BINARY_DIR}/downloads/${XZ_ARCHIVE}
+                 SHOW_PROGRESS)
+
+            file(MAKE_DIRECTORY ${XZ_PACKAGE_DIR})
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xJf ${PROJECT_BINARY_DIR}/downloads/${XZ_ARCHIVE}
+                            WORKING_DIRECTORY ${XZ_PACKAGE_DIR}
+                            OUTPUT_QUIET)
+
+            message("Building '${LZMA_IMPORT_LIBRARY}'...")
+
+            execute_process(COMMAND lib /verbose /def:liblzma.def /out:${LZMA_IMPORT_LIBRARY} /machine:x64
+                            WORKING_DIRECTORY ${LZMA_IMPORT_LIBRARY_DIR}
+                            OUTPUT_QUIET)
+        endif()
+
+        set(LIBLZMA_INCLUDE_DIRS ${XZ_PACKAGE_DIR}/include)
+        set(LIBLZMA_LIBRARIES ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY})
+    elseif(APPLE)
+        set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
+        set(LIBLZMA_LIBRARIES /usr/local/lib/liblzma.a)
+    else()
+        find_package(LibLZMA REQUIRED)
+
+        get_filename_component(LZMA_LIBRARY_DIR ${LIBLZMA_LIBRARIES} DIRECTORY)
     endif()
 
     # Jupyter and IPython require SQLite3
@@ -219,7 +360,7 @@ else()
                             OUTPUT_QUIET)
         endif()
 
-        if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite3.lib)
+        if(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
             set(SQLITE3_DLL_ZIP sqlite-dll-win64-x64-${SQLITE3_VERSION}.zip)
 
             message("Downloading '${SQLITE3_DLL_ZIP}'...")
@@ -230,40 +371,41 @@ else()
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_DLL_ZIP} --format=zip
                             WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                             OUTPUT_QUIET)
-            execute_process(COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64
+            execute_process(COMMAND lib /verbose /def:sqlite3.def /out:${SQLITE3_IMPORT_LIBRARY} /machine:x64
                             WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                             OUTPUT_QUIET)
         endif()
 
-        set(SQLITE3_INCLUDE_DIR ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
+        set(SQLite3_INCLUDE_DIRS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
+        set(SQLite3_LIBRARIES ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
     elseif(APPLE)
-        # Use Homebrew's SQLite3
-
-        set(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite3/include)
-        set(SQLITE3_LIBRARY_DIR /usr/local/opt/sqlite3/lib)
-
-        # Link to SQLite3's static library so we don't have to bundle it
-
-        set(SQLITE3_IMPORT_LIBRARY libsqlite3.a)
+        set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
+        set(SQLite3_LIBRARIES /usr/local/opt/sqlite3/lib/libsqlite3.a)
     else()
         find_package(SQLite3 REQUIRED)
 
-        set(SQLITE3_INCLUDE_DIR ${SQLite3_INCLUDE_DIRS})
-
         get_filename_component(SQLITE3_LIBRARY_DIR ${SQLite3_LIBRARIES} DIRECTORY)
-        get_filename_component(SQLITE3_IMPORT_LIBRARY ${SQLite3_LIBRARIES} NAME)
     endif()
 
     if(NOT APPLE)
-        # Copy SQLite3's library to the plugin's external binaries directory
+        # Copy the LZMA and SQLite3 libraries to the plugin's external binaries
+        # directory
 
-        file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
-
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY}
+                                                         ${EXTERNAL_BINARIES_DIR})
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
+        # On Windows, we also need the LZMA and SQLite3 import libraries while
+        # the bzip2 library on Linux
+
         if(WIN32)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+        else()
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         endif()
     endif()
@@ -321,12 +463,6 @@ else()
 
             -DINSTALL_DEVELOPMENT=ON
 
-            # Jupyter needs SQLite3
-
-            -DENABLE_SQLITE3=ON
-            -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
-            -DSQLITE3_LIBRARY=${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
-
             # Turn off things we don't want
 
             -DINSTALL_MANUAL=OFF
@@ -337,7 +473,7 @@ else()
 
             -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
 
-            # Disable extension modules that we don't use or the platform
+            # Disable extension modules that we don't use or that the platform
             # doesn't provide
 
             -DENABLE_BSDDB=OFF
@@ -354,13 +490,31 @@ else()
 
             ${PYTHON_READLINE_OPTION}
 
-            # Use our OpenSSL
+            # Link to the bzip2 library
+
+            -DUSE_SYSTEM_BZip2=OFF
+            -DBZIP2_INCLUDE_DIR=${BZIP2_INCLUDE_DIR}
+            -DBZIP2_LIBRARIES=${BZIP2_LIBRARIES}
+
+            # Link to the LZMA library
+
+            -DUSE_SYSTEM_LZMA=OFF
+            -DLIBLZMA_INCLUDE_DIRS=${LIBLZMA_INCLUDE_DIRS}
+            -DLIBLZMA_LIBRARIES=${LIBLZMA_LIBRARIES}
+
+            # Use our copy of OpenSSL
 
             -DUSE_SYSTEM_OpenSSL=OFF
             -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
             -DOPENSSL_LIBRARIES=${PYTHON_OPENSSL_LIBRARIES}
 
-            # Use our zlib
+            # Jupyter needs SQLite3
+
+            -DENABLE_SQLITE3=ON
+            -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
+            -DSQLITE3_LIBRARY=${SQLite3_LIBRARIES}
+
+            # Use our copy of zlib
 
             -DUSE_SYSTEM_ZLIB=OFF
             -DUSE_BUILTIN_ZLIB=OFF
@@ -410,6 +564,7 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
@@ -459,7 +614,7 @@ set(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 set(PYTHON_EXECUTABLE ${ROOT_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
-set(PYTHON_SCRIPT_DIR  ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPT_DIR ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
 

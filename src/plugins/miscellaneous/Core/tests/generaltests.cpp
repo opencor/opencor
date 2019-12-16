@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -36,6 +36,165 @@ void GeneralTests::initTestCase()
 
     mString = "1\n11\n121\n1331\n14641";
     mEol = "\n";
+}
+
+//==============================================================================
+
+void GeneralTests::formatMessage()
+{
+    // Test the formatMessage() method
+
+    QCOMPARE(OpenCOR::Core::formatMessage(""), "");
+    QCOMPARE(OpenCOR::Core::formatMessage("", true), "");
+    QCOMPARE(OpenCOR::Core::formatMessage("", true, true), "...");
+    QCOMPARE(OpenCOR::Core::formatMessage("", true, false), "");
+    QCOMPARE(OpenCOR::Core::formatMessage("", false), "");
+    QCOMPARE(OpenCOR::Core::formatMessage("", false, true), "...");
+    QCOMPARE(OpenCOR::Core::formatMessage("", false, false), "");
+
+    QCOMPARE(OpenCOR::Core::formatMessage(" "), "");
+    QCOMPARE(OpenCOR::Core::formatMessage(" ", true), "");
+    QCOMPARE(OpenCOR::Core::formatMessage(" ", true, true), "...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" ", true, false), "");
+    QCOMPARE(OpenCOR::Core::formatMessage(" ", false), "");
+    QCOMPARE(OpenCOR::Core::formatMessage(" ", false, true), "...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" ", false, false), "");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("a"), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("a", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("a", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("a", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage("a", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("A"), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("A", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("A", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("A", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage("A", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("a "), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("a ", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("a ", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a ", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("a ", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage("a ", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a ", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("A "), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("A ", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("A ", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A ", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage("A ", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage("A ", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A ", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage(" a"), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage(" A"), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage(" a "), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a ", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a ", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a ", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a ", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a ", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" a ", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage(" A "), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A ", true), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A ", true, true), "a...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A ", true, false), "a");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A ", false), "A");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A ", false, true), "A...");
+    QCOMPARE(OpenCOR::Core::formatMessage(" A ", false, false), "A");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("ab"), "ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("ab", true), "ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("ab", true, true), "ab...");
+    QCOMPARE(OpenCOR::Core::formatMessage("ab", true, false), "ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("ab", false), "Ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("ab", false, true), "Ab...");
+    QCOMPARE(OpenCOR::Core::formatMessage("ab", false, false), "Ab");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab"), "ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab", true), "ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab", true, true), "ab...");
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab", true, false), "ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab", false), "Ab");
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab", false, true), "Ab...");
+    QCOMPARE(OpenCOR::Core::formatMessage("Ab", false, false), "Ab");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("aB"), "aB");
+    QCOMPARE(OpenCOR::Core::formatMessage("aB", true), "aB");
+    QCOMPARE(OpenCOR::Core::formatMessage("aB", true, true), "aB...");
+    QCOMPARE(OpenCOR::Core::formatMessage("aB", true, false), "aB");
+    QCOMPARE(OpenCOR::Core::formatMessage("aB", false), "aB");
+    QCOMPARE(OpenCOR::Core::formatMessage("aB", false, true), "aB...");
+    QCOMPARE(OpenCOR::Core::formatMessage("aB", false, false), "aB");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("AB"), "AB");
+    QCOMPARE(OpenCOR::Core::formatMessage("AB", true), "AB");
+    QCOMPARE(OpenCOR::Core::formatMessage("AB", true, true), "AB...");
+    QCOMPARE(OpenCOR::Core::formatMessage("AB", true, false), "AB");
+    QCOMPARE(OpenCOR::Core::formatMessage("AB", false), "AB");
+    QCOMPARE(OpenCOR::Core::formatMessage("AB", false, true), "AB...");
+    QCOMPARE(OpenCOR::Core::formatMessage("AB", false, false), "AB");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("a b"), "a b");
+    QCOMPARE(OpenCOR::Core::formatMessage("a b", true), "a b");
+    QCOMPARE(OpenCOR::Core::formatMessage("a b", true, true), "a b...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a b", true, false), "a b");
+    QCOMPARE(OpenCOR::Core::formatMessage("a b", false), "A b");
+    QCOMPARE(OpenCOR::Core::formatMessage("a b", false, true), "A b...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a b", false, false), "A b");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("A b"), "a b");
+    QCOMPARE(OpenCOR::Core::formatMessage("A b", true), "a b");
+    QCOMPARE(OpenCOR::Core::formatMessage("A b", true, true), "a b...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A b", true, false), "a b");
+    QCOMPARE(OpenCOR::Core::formatMessage("A b", false), "A b");
+    QCOMPARE(OpenCOR::Core::formatMessage("A b", false, true), "A b...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A b", false, false), "A b");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("a B"), "a B");
+    QCOMPARE(OpenCOR::Core::formatMessage("a B", true), "a B");
+    QCOMPARE(OpenCOR::Core::formatMessage("a B", true, true), "a B...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a B", true, false), "a B");
+    QCOMPARE(OpenCOR::Core::formatMessage("a B", false), "A B");
+    QCOMPARE(OpenCOR::Core::formatMessage("a B", false, true), "A B...");
+    QCOMPARE(OpenCOR::Core::formatMessage("a B", false, false), "A B");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("A B"), "a B");
+    QCOMPARE(OpenCOR::Core::formatMessage("A B", true), "a B");
+    QCOMPARE(OpenCOR::Core::formatMessage("A B", true, true), "a B...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A B", true, false), "a B");
+    QCOMPARE(OpenCOR::Core::formatMessage("A B", false), "A B");
+    QCOMPARE(OpenCOR::Core::formatMessage("A B", false, true), "A B...");
+    QCOMPARE(OpenCOR::Core::formatMessage("A B", false, false), "A B");
+
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML"), "CellML");
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML", true), "CellML");
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML", true, true), "CellML...");
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML", true, false), "CellML");
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML", false), "CellML");
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML", false, true), "CellML...");
+    QCOMPARE(OpenCOR::Core::formatMessage("CellML", false, false), "CellML");
 }
 
 //==============================================================================

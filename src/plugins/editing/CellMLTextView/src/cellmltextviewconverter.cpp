@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -2696,7 +2696,7 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
     // it is in the tmp-documentation namespace
 
     if (   (pDomNode.parentNode() == mModelNode)
-        && (pDomNode.namespaceURI() == CellMLSupport::TmpDocumentation)) {
+        && (pDomNode.namespaceURI() == CellMLSupport::TmpDocumentationNamespace)) {
         mDocumentationNode = pDomNode.cloneNode();
     }
 }

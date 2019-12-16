@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -84,9 +84,11 @@ double DataStoreArray::data(quint64 pPosition) const
 {
     // Return the data value at the given position
 
-    Q_ASSERT((pPosition < mSize) && (mData != nullptr));
+    if ((pPosition < mSize) && (mData != nullptr)) {
+        return mData[pPosition];
+    }
 
-    return mData[pPosition];
+    return qQNaN();
 }
 
 //==============================================================================
@@ -152,9 +154,11 @@ double DataStoreValue::value() const
 {
     // Return our value
 
-    Q_ASSERT(mValue != nullptr);
+    if (mValue != nullptr) {
+        return *mValue;
+    }
 
-    return *mValue;
+    return qQNaN();
 }
 
 //==============================================================================
@@ -163,9 +167,9 @@ void DataStoreValue::setValue(double pValue)
 {
     // Set our value
 
-    Q_ASSERT(mValue != nullptr);
-
-    *mValue = pValue;
+    if (mValue != nullptr) {
+        *mValue = pValue;
+    }
 }
 
 //==============================================================================
@@ -231,11 +235,11 @@ void DataStoreVariableRun::addValue()
 {
     // Set the value of the variable at the given position
 
-    Q_ASSERT((mSize < mCapacity) && (mValue != nullptr));
+    if ((mSize < mCapacity) && (mValue != nullptr)) {
+        mArray->data()[mSize] = *mValue;
 
-    mArray->data()[mSize] = *mValue;
-
-    ++mSize;
+        ++mSize;
+    }
 }
 
 //==============================================================================
@@ -244,11 +248,11 @@ void DataStoreVariableRun::addValue(double pValue)
 {
     // Set the value of the variable at the given position using the given value
 
-    Q_ASSERT(mSize < mCapacity);
+    if (mSize < mCapacity) {
+        mArray->data()[mSize] = pValue;
 
-    mArray->data()[mSize] = pValue;
-
-    ++mSize;
+        ++mSize;
+    }
 }
 
 //==============================================================================
@@ -266,9 +270,9 @@ double DataStoreVariableRun::value(quint64 pPosition) const
 {
     // Return the value at the given position
 
-    Q_ASSERT(pPosition < mSize);
-
-    return mArray->data()[pPosition];
+    return (pPosition < mSize)?
+               mArray->data()[pPosition]:
+               qQNaN();
 }
 
 //==============================================================================
@@ -399,20 +403,20 @@ void DataStoreVariable::setUri(const QString &pUri)
 
 //==============================================================================
 
-QString DataStoreVariable::label() const
+QString DataStoreVariable::name() const
 {
-    // Return our label
+    // Return our name
 
     return mName;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setLabel(const QString &pLabel)
+void DataStoreVariable::setName(const QString &pName)
 {
-    // Set our label
+    // Set our name
 
-    mName = pLabel;
+    mName = pName;
 }
 
 //==============================================================================
@@ -477,9 +481,9 @@ void DataStoreVariable::addValue()
 {
     // Add a value to our current (i.e. last) run
 
-    Q_ASSERT(!mRuns.isEmpty());
-
-    mRuns.last()->addValue();
+    if (!mRuns.isEmpty()) {
+        mRuns.last()->addValue();
+    }
 }
 
 //==============================================================================
@@ -488,14 +492,12 @@ void DataStoreVariable::addValue(double pValue, int pRun)
 {
     // Add the given value to our current (i.e. last) run
 
-    Q_ASSERT(!mRuns.isEmpty());
-
-    if (pRun == -1) {
-        mRuns.last()->addValue(pValue);
-    } else {
-        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
-
-        mRuns[pRun]->addValue(pValue);
+    if (!mRuns.isEmpty()) {
+        if (pRun == -1) {
+            mRuns.last()->addValue(pValue);
+        } else if ((pRun >= 0) && (pRun < mRuns.count())) {
+            mRuns[pRun]->addValue(pValue);
+        }
     }
 }
 
@@ -505,15 +507,17 @@ double DataStoreVariable::value(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
-    Q_ASSERT(!mRuns.isEmpty());
+    if (mRuns.isEmpty()) {
+        return qQNaN();
+    }
 
     if (pRun == -1) {
         return mRuns.last()->value(pPosition);
     }
 
-    Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
-
-    return mRuns[pRun]->value(pPosition);
+    return ((pRun >= 0) && (pRun < mRuns.count()))?
+               mRuns[pRun]->value(pPosition):
+               qQNaN();
 }
 
 //==============================================================================
@@ -541,9 +545,11 @@ double DataStoreVariable::value() const
 {
     // Return the value to be added next
 
-    Q_ASSERT(mValue != nullptr);
+    if (mValue != nullptr) {
+        return *mValue;
+    }
 
-    return *mValue;
+    return qQNaN();
 }
 
 //==============================================================================
@@ -552,9 +558,9 @@ void DataStoreVariable::setValue(double pValue)
 {
     // Set the value to be added next
 
-    Q_ASSERT(mValue != nullptr);
-
-    *mValue = pValue;
+    if (mValue != nullptr) {
+        *mValue = pValue;
+    }
 }
 
 //==============================================================================

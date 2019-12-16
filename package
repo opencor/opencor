@@ -1,9 +1,9 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"
+appDir=$(cd $(dirname $0); pwd)
 
-${appDir}/clean
-${appDir}/make $*
+$appDir/clean
+$appDir/make $*
 
 exitCode=$?
 
@@ -15,19 +15,23 @@ echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 origDir=`pwd`
 
-cd ${appDir}/build
+cd $appDir/build
 
-if [ "`uname -s`" = "Linux" ]; then
-    cpack
-else
-    if [ -f /Applications/PackageMaker.app/Contents/MacOS/PackageMaker ]; then
-        cpack -G PackageMaker -D CPACK_INSTALL_PREFIX=/Applications/OpenCOR
-    fi
-
-    cpack -G ZIP -D CPACK_INSTALL_PREFIX=.
-fi
+cpack
 
 exitCode=$?
+
+if [ "`uname -s`" = "Darwin" ]; then
+    packageName="OpenCOR-`date '+%Y-%m-%d'`-macOS"
+
+    mkdir $packageName
+
+    mv $packageName.pkg $packageName
+
+    hdiutil create -srcfolder $packageName $packageName.dmg
+
+    rm -fr $packageName
+fi
 
 cd $origDir
 

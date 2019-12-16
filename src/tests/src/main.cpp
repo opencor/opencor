@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -38,27 +38,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int pArgC, char *pArgV[])
 {
-    // Retrieve the different arguments that were passed
+    // Retrieve the requested tests, if any
 
-    QStringList args = QStringList();
+    QStringList requestedTests;
 
     for (int i = 1; i < pArgC; ++i) {
-        args << pArgV[i];
+        requestedTests << pArgV[i];
     }
 
     // The different groups of tests that are to be run
+    // Note: -1 for iMax because tests ends with our separator...
 
     QString tests = OpenCOR::fileContents(":/tests").first();
     QMap<QString, QStringList> testsGroups;
     QStringList testItems = tests.split('|');
     QString testGroup;
+    QString testTest;
+    bool addTest;
+    int nbOfTests = 0;
 
     for (int i = 0, iMax = testItems.count()-1; i < iMax; i += 2) {
-        // Note: -1 because tests ends with our separator...
-
         testGroup = testItems[i];
+        testTest = testItems[i+1];
 
-        testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems[i+1]);
+        if (pArgC == 1) {
+            addTest = true;
+        } else {
+            addTest = false;
+
+            for (const auto &requestedTest : requestedTests) {
+                QStringList requestedTestItems = requestedTest.split("::");
+                QString requestedTestGroup = requestedTestItems[0];
+                QString requestedTestTest = (requestedTestItems.count() > 1)?requestedTestItems[1].toLower():QString();
+
+                if (   (testGroup == requestedTestGroup)
+                    && (   requestedTestTest.isEmpty()
+                        || (testTest == requestedTestTest))) {
+                    addTest = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (addTest) {
+            testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testTest);
+
+            ++nbOfTests;
+        }
     }
 
     // On Windows, go to the directory that contains our plugins, so that we can
@@ -92,9 +119,9 @@ int main(int pArgC, char *pArgV[])
             // Execute the test itself
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, args);
+            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, QStringList());
 #else
-            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, args);
+            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, QStringList());
 #endif
 
             if (testRes != 0) {
@@ -111,14 +138,23 @@ int main(int pArgC, char *pArgV[])
 
     // Reporting
 
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
+    if (nbOfTests != 0) {
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
+    }
+
     std::cout << "********* Reporting *********" << std::endl;
     std::cout << std::endl;
 
     if (failedTests.isEmpty()) {
-        std::cout << "All the tests passed!" << std::endl;
+        if (nbOfTests == 0) {
+            std::cout << "No tests were run!" << std::endl;
+        } else if (nbOfTests == 1) {
+            std::cout << "The test passed!" << std::endl;
+        } else {
+            std::cout << "All the tests passed!" << std::endl;
+        }
     } else {
         if (failedTests.count() == 1) {
             std::cout << "The following test failed:" << std::endl;

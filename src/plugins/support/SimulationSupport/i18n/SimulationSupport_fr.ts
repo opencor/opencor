@@ -4,10 +4,6 @@
 <context>
     <name>OpenCOR::SimulationSupport::Simulation</name>
     <message>
-        <source>the requested solver (%1) could not be found</source>
-        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
-    </message>
-    <message>
         <source>The model must have at least one ODE or DAE.</source>
         <translation>Le modèle doit avoir au moins une EDO ou EAD.</translation>
     </message>
@@ -56,6 +52,26 @@
     <message>
         <source>The requested solver (%1) could not be found.</source>
         <translation>Le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
+    </message>
+    <message>
+        <source>unable to close the simulation.</source>
+        <translation>incapable de fermer la simulation.</translation>
+    </message>
+    <message>
+        <source>the requested solver (%1) could not be found.</source>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé.</translation>
+    </message>
+    <message>
+        <source>the requested solver property (%1) could not be set.</source>
+        <translation>la propriété demandée (%1) du solveur n&apos;a pas pu être spécifiée.</translation>
+    </message>
+    <message>
+        <source>the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found).</source>
+        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 et la variable %4 dans le composant %5 n&apos;ont pas pu être trouvées).</translation>
+    </message>
+    <message>
+        <source>the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).</source>
+        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée).</translation>
     </message>
 </context>
 </TS>

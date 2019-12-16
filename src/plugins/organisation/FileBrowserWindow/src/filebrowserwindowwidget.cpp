@@ -9,11 +9,11 @@ the Free Software Foundation, either version 3 of the License, or
 
 OpenCOR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
@@ -346,8 +346,8 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
     // Go to the previous/next item and move the last item from our list of
     // items to our list of other items
 
-    // First, we must stop keeping track of the change of item otherwise it's
-    // going to mess things up
+    // First, we must stop tracking the change of item otherwise it's going to
+    // mess things up
 
     disconnect(selectionModel(), &QItemSelectionModel::currentChanged,
                this, &FileBrowserWindowWidget::itemChanged);
