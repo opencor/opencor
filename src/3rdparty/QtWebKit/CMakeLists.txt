@@ -20,7 +20,7 @@ set(GIT_TAG_ZLIB v1.2.11)
 
 # Release tag
 
-set(RELEASE_TAG v5.12.0)
+set(RELEASE_TAG v5.212.0-alpha3-opencor)
 
 # Specify where our local package will be installed
 
