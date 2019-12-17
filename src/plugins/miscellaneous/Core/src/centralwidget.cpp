@@ -1859,7 +1859,7 @@ void CentralWidget::updateNoViewMsg()
     Plugin *fileViewPlugin = viewPlugin(fileTabIndex);
 
     if (fileViewPlugin != nullptr) {
-        if (Core::FileManager::instance()->isNew(mFileNames[fileTabIndex])) {
+        if (FileManager::instance()->isNew(mFileNames[fileTabIndex])) {
             mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support new files...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
         } else {
             mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
