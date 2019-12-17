@@ -520,6 +520,22 @@ void FileManager::setDependencies(const QString &pFileName,
 
 //==============================================================================
 
+bool FileManager::isDependency(const QString &pFileName) const
+{
+    // Return whether the given file is a dependency of one of the files we are
+    // managing
+
+    for (auto file : mFiles) {
+        if (file->dependencies().contains(pFileName)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//==============================================================================
+
 void FileManager::reload(const QString &pFileName)
 {
     // Make sure that the given file is managed

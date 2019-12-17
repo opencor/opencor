@@ -132,6 +132,8 @@ public:
     QStringList dependencies(const QString &pFileName) const;
     void setDependencies(const QString &pFileName, const QStringList &pDependencies);
 
+    bool isDependency(const QString &pFileName) const;
+
     void reload(const QString &pFileName);
 
     Status create(const QString &pUrl = QString(),
