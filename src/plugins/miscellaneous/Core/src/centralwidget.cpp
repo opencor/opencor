@@ -1222,9 +1222,17 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileClosed(fileName);
         }
 
-        // Unregister the file from our file manager
+        // Unregister the file from our file manager, but not if it is a remote
+        // file that is a dependency of another (e.g. a remote CellML file that
+        // is a dependency of a local/remote SED-ML file) since otherwise we
+        // will lose track of it (see issue #2191)
 
-        FileManager::instance()->unmanage(fileName);
+        FileManager *fileManagerInstance = FileManager::instance();
+
+        if (   !fileManagerInstance->isRemote(fileName)
+            || !fileManagerInstance->isDependency(fileName)) {
+            fileManagerInstance->unmanage(fileName);
+        }
 
         // Update our modified settings
 
