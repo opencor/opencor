@@ -59,13 +59,6 @@ if(ENABLE_TEST_PLUGINS)
     option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 endif()
 
-# Determine whether we are using the prebuilt version of our Python and QtWebKit
-# packages
-
-if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_QTWEBKIT_PACKAGE)
-    set(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES ON)
-endif()
-
 # Make sure that we are using the compiler we support
 
 if(WIN32)
@@ -396,20 +389,16 @@ endif()
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
 
-if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
-    if(WIN32)
-        set(ICU_VERSION 57)
-    elseif(NOT APPLE)
-        add_subdirectory(src/3rdparty/linux/icu)
-        add_subdirectory(src/3rdparty/linux/mesa)
-    endif()
+if(WIN32)
+    set(ICU_VERSION 57)
+elseif(NOT APPLE)
+    add_subdirectory(src/3rdparty/linux/icu)
+    add_subdirectory(src/3rdparty/linux/mesa)
 endif()
 
-# Retrieve or build our copy of QtWebKit, but only if we are not building Python
+# Retrieve or build our copy of QtWebKit
 
-if(USE_PREBUILT_PYTHON_PACKAGE)
-    add_subdirectory(src/3rdparty/QtWebKit)
-endif()
+add_subdirectory(src/3rdparty/QtWebKit)
 
 # Required Qt modules
 
@@ -423,7 +412,7 @@ set(REQUIRED_QT_MODULES
     Widgets
 )
 
-if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     set(WEBKIT WebKit)
     set(WEBKITWIDGETS WebKitWidgets)
 
@@ -448,7 +437,7 @@ if(APPLE)
         set(TEST Test)
     endif()
 
-    if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         set(WEBKIT WebKit)
         set(WEBKITWIDGETS WebKitWidgets)
     endif()
@@ -1043,7 +1032,7 @@ endif()
 # Python nor QtWebKit
 # Note: we need Python because we rely on Sphinx to build our documentation...
 
-if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+if(USE_PREBUILT_PYTHON_PACKAGE)
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
                                                                ${PROJECT_BUILD_DIR}/doc)
 
@@ -1336,7 +1325,7 @@ if(WIN32)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
-    if(USE_PREBUILT_PYTHON_AND_QTWEBKIT_PACKAGES)
+    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         foreach(QT_LIBRARY icudt icuin icuuc)
             windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
         endforeach()
