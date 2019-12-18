@@ -612,9 +612,7 @@ QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory
         res = new QStandardItem(categoryName);
 
         for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
-            QStandardItem *categoryItem = rootItem->child(i);
-
-            if (nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text())) < 0) {
+            if (nonDiacriticCategoryName < nonDiacriticString(rootItem->child(i)->text())) {
                 inserted = true;
 
                 mModel->invisibleRootItem()->insertRow(i, res);
@@ -640,7 +638,8 @@ QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory
 
 void PluginsDialog::treeViewCollapsed(const QModelIndex &pIndex)
 {
-    // We don't want plugin categories to be collapse, so cancel all collapsings
+    // We don't want plugin categories to be collapsed, so cancel all
+    // collapsings
 
     mGui->treeView->expand(pIndex);
 }

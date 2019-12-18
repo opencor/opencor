@@ -302,7 +302,7 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCate
         res = new QStandardItem(categoryName);
 
         for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
-            if (nonDiacriticCategoryName.compare(nonDiacriticString(rootItem->child(i)->text())) < 0) {
+            if (nonDiacriticCategoryName < nonDiacriticString(rootItem->child(i)->text())) {
                 inserted = true;
 
                 mModel->invisibleRootItem()->insertRow(i, res);
