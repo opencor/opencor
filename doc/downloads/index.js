@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> don't ask to confirm the overwriting of a file when on macOS 10.15 (see issue <a href=\"https://github.com/opencor/opencor/issues/2261\">#2261</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> can now reopen a remote <a href=\"https://cellml.org/\">CellML</a> file from a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file (see issue <a href=\"https://github.com/opencor/opencor/issues/2191\">#2191</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/qtwebkit/qtwebkit/wiki\">QtWebKit</a> to v5.212.0-alpha3 (see issue <a href=\"https://github.com/opencor/opencor/issues/2252\">#2252</a>)." }
                      ]
