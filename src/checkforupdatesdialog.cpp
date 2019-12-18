@@ -109,7 +109,7 @@ void CheckForUpdatesEngine::check()
                 // Check whether the version is newer and, if so, add it to our
                 // list
 
-                if (mApplicationDate.compare(versionDate) < 0) {
+                if (mApplicationDate < versionDate) {
                     mNewerVersions << versionVersion;
                 }
             }

@@ -345,6 +345,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             // Check whether the save file already exists
 
             if (   resInfo.exists()
+                && (   (QSysInfo::productType() != "osx")
+                    || (QSysInfo::productVersion() < "10.15"))
                 && questionMessageBox(pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(QDir::toNativeSeparators(res))) == QMessageBox::No) {
                 continue;

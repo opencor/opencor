@@ -595,52 +595,15 @@ void PluginsDialog::apply()
 
 QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
-    // Return the given category item, after having created it, if it didn't
-    // already exist
-
-    QStandardItem *res = mCategoryItems.value(pCategory);
-
-    if (res == nullptr) {
-        // No category item exists for the given category, so create one and add
-        // it to our data model (and this in the right place)
-
-        bool inserted = false;
-        QStandardItem *rootItem = mModel->invisibleRootItem();
-        QString categoryName = pluginCategoryName(pCategory);
-        QString nonDiacriticCategoryName = nonDiacriticString(categoryName);
-
-        res = new QStandardItem(categoryName);
-
-        for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
-            QStandardItem *categoryItem = rootItem->child(i);
-
-            if (nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text())) < 0) {
-                inserted = true;
-
-                mModel->invisibleRootItem()->insertRow(i, res);
-
-                break;
-            }
-        }
-
-        if (!inserted) {
-            mModel->invisibleRootItem()->appendRow(res);
-        }
-
-        // Keep track of the relationship between our new item and its category
-
-        mCategoryItems.insert(pCategory, res);
-        mItemCategories.insert(res, pCategory);
-    }
-
-    return res;
+#include "plugincategoryitem.cpp.inl"
 }
 
 //==============================================================================
 
 void PluginsDialog::treeViewCollapsed(const QModelIndex &pIndex)
 {
-    // We don't want plugin categories to be collapse, so cancel all collapsings
+    // We don't want plugin categories to be collapsed, so cancel all
+    // collapsings
 
     mGui->treeView->expand(pIndex);
 }
