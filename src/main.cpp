@@ -199,6 +199,16 @@ int main(int pArgC, char *pArgV[])
         return 0;
     }
 
+    // Create and show our splash screen, if we are not in debug mode
+
+#ifndef QT_DEBUG
+    auto splashScreen = new OpenCOR::SplashScreenWindow();
+
+    splashScreen->show();
+
+    guiApp->processEvents();
+#endif
+
     // Initialise the GUI version of OpenCOR
 
     QString appDate = QString();
@@ -260,14 +270,6 @@ int main(int pArgC, char *pArgV[])
     }
 #endif
 
-    // Create and show our splash screen, if we are not in debug mode
-
-#ifndef QT_DEBUG
-    auto splashScreen = new OpenCOR::SplashScreenWindow();
-
-    splashScreen->show();
-#endif
-
     // Create our main window
 
     auto win = new OpenCOR::MainWindow(appDate);
@@ -285,37 +287,16 @@ int main(int pArgC, char *pArgV[])
 
     win->show();
 
-    // By default, we can and should execute our application
-
-    bool canExecuteAplication = true;
-
     // Close and delete our splash screen once our main window is visible, if we
     // are not in debug mode
 
 #ifndef QT_DEBUG
     splashScreen->closeAndDeleteAfter(win);
-
-    // Make sure that our main window is in the foreground, unless the user
-    // decided to close our main window while we were showing our splash screen
-    // Note: indeed, on Linux, to show our splash screen may result in our main
-    //       window being shown in the background...
-
-    if (!OpenCOR::aboutToQuit()) {
-        win->showSelf();
-    } else {
-        canExecuteAplication = false;
-    }
 #endif
 
-    // Execute our application, if possible
+    // Execute our application
 
-    int res;
-
-    if (canExecuteAplication) {
-        res = OpenCOR::GuiApplication::exec();
-    } else {
-        res = 0;
-    }
+    int res = OpenCOR::GuiApplication::exec();
 
     // Keep track of our application file (in case we need to restart OpenCOR)
 
