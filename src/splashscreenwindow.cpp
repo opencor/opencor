@@ -171,17 +171,6 @@ void SplashScreenWindow::closeEvent(QCloseEvent *pEvent)
 
 //==============================================================================
 
-void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
-{
-    // Accept the event and hide ourselves
-
-    pEvent->accept();
-
-    hide();
-}
-
-//==============================================================================
-
 } // namespace OpenCOR
 
 //==============================================================================
