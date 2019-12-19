@@ -153,9 +153,9 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
 #endif
     }
 
-    // Close ourselves with a bit of a delay
+    // Delete ourselves with a bit of a delay
 
-    QTimer::singleShot(500, this, &SplashScreenWindow::close);
+    QTimer::singleShot(500, this, &SplashScreenWindow::deleteLater);
 }
 
 //==============================================================================
