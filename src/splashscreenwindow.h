@@ -48,7 +48,7 @@ public:
     explicit SplashScreenWindow();
     ~SplashScreenWindow() override;
 
-    void closeAndDeleteAfter(QWidget *pWindow);
+    void deleteLater(QWidget *pWindow);
 
 protected:
     void closeEvent(QCloseEvent *pEvent) override;
