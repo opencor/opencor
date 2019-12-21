@@ -295,7 +295,7 @@ int main(int pArgC, char *pArgV[])
     // are not in debug mode
 
 #ifndef QT_DEBUG
-    splashScreen->closeAndDeleteAfter(win);
+    splashScreen->deleteLater(win);
 
     // Make sure that our main window is in the foreground, unless the user
     // decided to close our main window while we were showing our splash screen
