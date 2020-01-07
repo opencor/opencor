@@ -205,6 +205,16 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initApplication(&appDate);
 
+    // Create and show our splash screen, if we are not in debug mode
+
+#ifndef QT_DEBUG
+    auto splashScreen = new OpenCOR::SplashScreenWindow();
+
+    splashScreen->show();
+
+    guiApp->processEvents();
+#endif
+
     // Check whether we want to check for new versions at startup and, if so,
     // whether a new version of OpenCOR is available
 
@@ -260,14 +270,6 @@ int main(int pArgC, char *pArgV[])
     }
 #endif
 
-    // Create and show our splash screen, if we are not in debug mode
-
-#ifndef QT_DEBUG
-    auto splashScreen = new OpenCOR::SplashScreenWindow();
-
-    splashScreen->show();
-#endif
-
     // Create our main window
 
     auto win = new OpenCOR::MainWindow(appDate);
@@ -293,7 +295,7 @@ int main(int pArgC, char *pArgV[])
     // are not in debug mode
 
 #ifndef QT_DEBUG
-    splashScreen->closeAndDeleteAfter(win);
+    splashScreen->deleteLater(win);
 
     // Make sure that our main window is in the foreground, unless the user
     // decided to close our main window while we were showing our splash screen

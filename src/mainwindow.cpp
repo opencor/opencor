@@ -396,6 +396,10 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
+        // Keep track of the fact that we are about to quit
+
+        qApp->setProperty("OpenCOR::aboutToQuit()", true);
+
         // Delete any Web inspector window (which may have been created through
         // our use of QtWebKit)
 

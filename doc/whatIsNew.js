@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 13, "month": 12, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 20, "month": 12, "year": 2019,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -49,6 +49,7 @@ var jsonData = { "versions": [
                                { "type": "improved", "description": "Plotting of simulations." },
                                { "type": "fixed", "description": "Issue with handling the Graph Panel properties." },
                                { "type": "fixed", "description": "Various issues with saving a file under a new name." },
+                               { "type": "fixed", "description": "Issue with reopening a remote <a href=\"https://cellml.org/\">CellML</a> file from a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file." },
                                { "type": "fixed", "description": "Issue with a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> not necessarily saving all of a solver's properties." },
                                { "type": "fixed", "description": "Issue with a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> being considered modified after changing languages." }
                              ]

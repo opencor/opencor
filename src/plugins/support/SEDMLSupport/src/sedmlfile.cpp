@@ -1346,15 +1346,6 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 
             if (QFile::exists(cellmlFileName)) {
                 mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
-
-                // Set our CellML file and its dependencies, if any, as
-                // dependencies for ourselves, if we don't have an owner
-
-                if (!hasOwner) {
-                    fileManagerInstance->setDependencies(realFileName,
-                                                         QStringList() << mCellmlFile->fileName()
-                                                                       << mCellmlFile->dependencies());
-                }
             } else {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                           tr("%1 could not be found").arg(modelSource));
@@ -1398,6 +1389,15 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             }
 
             Core::hideCentralBusyWidget();
+        }
+
+        // Set our CellML file and its dependencies, if any, as dependencies for
+        // ourselves, if we don't have an owner
+
+        if (!hasOwner && (mCellmlFile != nullptr)) {
+            fileManagerInstance->setDependencies(realFileName,
+                                                 QStringList() << mCellmlFile->fileName()
+                                                               << mCellmlFile->dependencies());
         }
     }
 

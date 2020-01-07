@@ -2537,7 +2537,7 @@ void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
     // To change the title of our Y axis may have some effects on the alignment
     // with our neighbours, so update ourselves
 
-    if (axisTitle(QwtPlot::yLeft) != oldAxisTitle) {
+    if (axisTitle(QwtPlot::yLeft).text() != oldAxisTitle.text()) {
         updateGui(false, true);
     }
 }

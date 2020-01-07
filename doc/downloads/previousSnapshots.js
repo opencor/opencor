@@ -1,4 +1,32 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 12, "year": 2019, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> Replaced our use of <a href=\"https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/PackageMakerUserGuide/Introduction/Introduction.html\">PackageMaker</a> with that of productbuild on <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2210\">#2210</a>). A selectable plugin cannot be needed by another plugin (see issue <a href=\"https://github.com/opencor/opencor/issues/2247\">#2247</a>)." },
+                       { "change": "<strong>Python support:</strong> added (initial) support for <a href=\"https://python.org/\">Python</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1255\">#1255</a>). Added some <a href=\"https://python.org/\">Python</a>-based tests (see issue <a href=\"https://github.com/opencor/opencor/issues/2178\">#2178</a>). Now update the environment variable <code>PATH</code> using <code>\\</code> rather than <code>/</code> on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/2219\">#2219</a>). Merged our duplicated code (see issue <a href=\"https://github.com/opencor/opencor/issues/2225\">#2225</a>). Don't make our JupyterKernel and PythonShell plugins selectable (see issue <a href=\"https://github.com/opencor/opencor/issues/2245\">#2245</a>). Make sure that \"implementation\" and \"implementation_version\" are properly set in the JupyterKernel plugin (see issue <a href=\"https://github.com/opencor/opencor/issues/2250\">#2250</a>)." },
+                       { "change": "<strong>CellML support:</strong> fixed an issue with the CellML API wrongly allowing code generation for non-runnable models (see issue <a href=\"https://github.com/opencor/opencor/issues/2240\">#2240</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> added support left and right triangle symbols (see issue <a href=\"https://github.com/opencor/opencor/issues/2173\">#2173</a>)." },
+                       { "change": "<strong>Simulation support:</strong> don't require all our solvers to be installed anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/2234\">#2234</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> properly handle the Graph Panel properties (see issue <a href=\"https://github.com/opencor/opencor/issues/2171\">#2171</a>). Make sure that curves are plotted with all of their original settings when reloading a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file (see issue <a href=\"https://github.com/opencor/opencor/issues/2176\">#2176</a>). Make sure that all of a solver's properties get saved to a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file (see issue <a href=\"https://github.com/opencor/opencor/issues/2185\">#2185</a>). Don't access our central widget directly anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/2218\">#2218</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"https://openssl.org/\">OpenSSL</a> library to version 1.1.1d (see issue <a href=\"https://github.com/opencor/opencor/issues/2157\">#2157</a>). Upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 9.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2161\">#2161</a>). Upgraded the <a href=\"https://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 5.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2198\">#2198</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.11.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/2208\">#2208</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 19.2.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/2230\">#2230</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 9, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
@@ -66,7 +94,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> prebuilt third-party libraries are now installed under <a href=\"https://github.com/opencor/opencor/tree/master/ext\"><code>[OpenCOR]/ext</code></a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2126\">#2126</a>)." },
-                       { "change": "<strong>CellML Text view:</strong> can once again read a CellML file that has no XML processing instruction (see issue <a href=\"https://github.com/opencor/opencor/issues/2125\">#2125</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> can once again read a <a href=\"https://cellml.org/\">CellML</a> file that has no XML processing instruction (see issue <a href=\"https://github.com/opencor/opencor/issues/2125\">#2125</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> properly disable the `Reset All Model Parameters` button (see issue <a href=\"https://github.com/opencor/opencor/issues/2116\">#2116</a>). Fixed an issue with the plotting of simulation data being potentially (very) choppy (see issue <a href=\"https://github.com/opencor/opencor/issues/2118\">#2118</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.4.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2122\">#2122</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.28.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2123\">#2123</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 19.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2124\">#2124</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.11.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2131\">#2131</a>)." }
                      ]
@@ -139,7 +167,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>SED-ML support:</strong> fixed our detection of SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2082\">#2082</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> fixed our detection of <a href=\"https://sed-ml.github.io/\">SED-ML</a> file (see issue <a href=\"https://github.com/opencor/opencor/issues/2082\">#2082</a>)." },
                        { "change": "<strong>Simulation support:</strong> generalised the reporting of a simulation's issues (see issue <a href=\"https://github.com/opencor/opencor/issues/2080\">#2080</a>)." }
                      ]
                    },
@@ -215,7 +243,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>General:</strong> upgraded to Qt 5.12.0 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1910\">#1910</a>)." },
                        { "change": "<strong>COMBINE support:</strong> now recognise files that have a master attribute of \"1\" rather than \"true\" (see issue <a href=\"https://github.com/opencor/opencor/issues/1912\">#1912</a>)." },
                        { "change": "<strong>Graph Panel widget:</strong> fixed a small problem with the scale range of an axis in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1941\">#1941</a>)." },
-                       { "change": "<strong>CellML Annotation view:</strong> prevent OpenCOR from crashing after a CellML file has been rendered invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1958\">#1958</a>)." },
+                       { "change": "<strong>CellML Annotation view:</strong> prevent OpenCOR from crashing after a <a href=\"https://cellml.org/\">CellML</a> file has been rendered invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1958\">#1958</a>)." },
                        { "change": "<strong>CellML Text view:</strong> improved Unicode support (see issue <a href=\"https://github.com/opencor/opencor/issues/1926\">#1926</a>)." },
                        { "change": "<strong>CellML tools:</strong> can now validate a <a href=\"https://cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1964\">#1964</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> added basic support for the import of external data (see issue <a href=\"https://github.com/opencor/opencor/issues/1845\">#1845</a>). Ensure that graph panels are always properly aligned (see issue <a href=\"https://github.com/opencor/opencor/issues/1956\">#1956</a>). Fixed various issues with saving a file under a new name (see issue <a href=\"https://github.com/opencor/opencor/issues/1967\">#1967</a>)." },
