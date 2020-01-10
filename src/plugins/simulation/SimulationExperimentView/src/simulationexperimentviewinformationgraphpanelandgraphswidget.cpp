@@ -149,6 +149,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     pointCoordinatesProperties[1]->setName(tr("Width"));
     pointCoordinatesProperties[2]->setName(tr("Colour"));
     pointCoordinatesProperties[3]->setName(tr("Font colour"));
+    pointCoordinatesProperties[4]->setName(tr("Font size"));
 
     // Surrounding area
 
@@ -191,8 +192,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     zoomRegionProperties[1]->setName(tr("Width"));
     zoomRegionProperties[2]->setName(tr("Colour"));
     zoomRegionProperties[3]->setName(tr("Font colour"));
-    zoomRegionProperties[4]->setName(tr("Filled"));
-    zoomRegionProperties[5]->setName(tr("Fill colour"));
+    zoomRegionProperties[4]->setName(tr("Font size"));
+    zoomRegionProperties[5]->setName(tr("Filled"));
+    zoomRegionProperties[6]->setName(tr("Fill colour"));
 }
 
 //==============================================================================
@@ -1085,6 +1087,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesFontColor(), pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesFontSize(), pointCoordinatesProperty);
 
     // Surrounding area
 
@@ -1121,6 +1124,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionWidth(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionColor(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionFontColor(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionFontSize(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->zoomRegionFilled(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionFillColor(), zoomRegionProperty);
 
@@ -1505,6 +1509,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
         graphPanelPlot->setPointCoordinatesColor(pProperty->colorValue());
     } else if (pProperty == pointCoordinatesProperties[3]) {
         graphPanelPlot->setPointCoordinatesFontColor(pProperty->colorValue());
+    } else if (pProperty == pointCoordinatesProperties[4]) {
+        graphPanelPlot->setPointCoordinatesFontSize(pProperty->integerValue());
 
     // Surrounding area
 
@@ -1543,8 +1549,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     } else if (pProperty == zoomRegionProperties[3]) {
         graphPanelPlot->setZoomRegionFontColor(pProperty->colorValue());
     } else if (pProperty == zoomRegionProperties[4]) {
-        graphPanelPlot->setZoomRegionFilled(pProperty->booleanValue());
+        graphPanelPlot->setZoomRegionFontSize(pProperty->integerValue());
     } else if (pProperty == zoomRegionProperties[5]) {
+        graphPanelPlot->setZoomRegionFilled(pProperty->booleanValue());
+    } else if (pProperty == zoomRegionProperties[6]) {
         graphPanelPlot->setZoomRegionFillColor(pProperty->colorValue());
     }
 }

@@ -206,6 +206,16 @@ QString Simulation::furtherInitialize() const
                             graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::FontSize) {
                             graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+
+                            // Note: the below is in case we are dealing with an
+                            //       old SED-ML file where we had only one font
+                            //       size property for all the different bits of
+                            //       text. So, here, we use the current value to
+                            //       initialise our different font size
+                            //       properties...
+
+                            pointCoordinatesProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
+                            zoomRegionProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::ForegroundColor) {
                             graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Height) {
@@ -251,6 +261,8 @@ QString Simulation::furtherInitialize() const
                                     pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
                                 } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::FontColor) {
                                     pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
+                                } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::FontSize) {
+                                    pointCoordinatesProperties[4]->setValue(pointCoordinatesPropertyNodeValue);
                                 }
                             }
 
@@ -324,10 +336,12 @@ QString Simulation::furtherInitialize() const
                                     zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
                                 } else if (zoomRegionPropertyNodeName == SEDMLSupport::FontColor) {
                                     zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
+                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::FontSize) {
+                                    zoomRegionProperties[4]->setValue(zoomRegionPropertyNodeValue);
                                 } else if (zoomRegionPropertyNodeName == SEDMLSupport::Filled) {
-                                    zoomRegionProperties[4]->setBooleanValue(zoomRegionPropertyNodeValue == TrueValue);
+                                    zoomRegionProperties[5]->setBooleanValue(zoomRegionPropertyNodeValue == TrueValue);
                                 } else if (zoomRegionPropertyNodeName == SEDMLSupport::FillColor) {
-                                    zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
+                                    zoomRegionProperties[6]->setValue(zoomRegionPropertyNodeValue);
                                 }
                             }
                         }

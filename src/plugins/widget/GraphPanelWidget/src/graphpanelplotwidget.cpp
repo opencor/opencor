@@ -964,6 +964,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
                         mOwner->pointCoordinatesFontColor(),
+                        mOwner->pointCoordinatesFontSize(),
                         (mOwner->pointCoordinatesStyle() == Qt::NoPen)?
                             0:
                             mOwner->pointCoordinatesWidth(),
@@ -994,6 +995,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         drawCoordinates(&painter, zoomRegionRect.topLeft(),
                         mOwner->zoomRegionColor(),
                         mOwner->zoomRegionFontColor(),
+                        mOwner->zoomRegionFontSize(),
                         (mOwner->zoomRegionStyle() == Qt::NoPen)?
                             0:
                             mOwner->zoomRegionWidth(),
@@ -1001,6 +1003,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         drawCoordinates(&painter, zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()),
                         mOwner->zoomRegionColor(),
                         mOwner->zoomRegionFontColor(),
+                        mOwner->zoomRegionFontSize(),
                         (mOwner->zoomRegionStyle() == Qt::NoPen)?
                             0:
                             mOwner->zoomRegionWidth(),
@@ -1072,12 +1075,12 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
+                                                  const int &pFontSize,
                                                   int pLineWidth,
                                                   Position pPosition,
                                                   bool pCanMovePosition)
 {
-    // Retrieve the size of coordinates as they will appear on the screen,
-    // which means using the same font as the one used for the axes
+    // Retrieve the size of coordinates as they will appear on the screen
     // Note #1: normally, pPoint would be a QPointF, but we want the coordinates
     //          to be drawn relative to something (see paintEvent()) and the
     //          only way to guarantee that everything will be painted as
@@ -1092,7 +1095,11 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     //          coordinatesRect will be empty if there is no style for showing
     //          the coordinates of a point or zooming in a region...
 
-    pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
+    QFont newFont = mOwner->font();
+
+    newFont.setPointSize(pFontSize);
+
+    pPainter->setFont(newFont);
 
     QPointF point = mOwner->canvasPoint(pPoint);
     QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
@@ -2090,6 +2097,10 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         mLegend->setFontSize(pFontSize);
 
+        // Point coordinates
+
+        mPointCoordinatesFontSize = pFontSize;
+
         // Title
 
         setTitle(title().text());
@@ -2111,6 +2122,10 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         setAxisFont(QwtPlot::yLeft, newFont);
         setTitleAxisY(titleAxisY());
+
+        // Zoom region
+
+        mZoomRegionFontSize = pFontSize;
 
         // Our new font size may have some effects on the alignment with our
         // neighbours, so update ourselves
@@ -2335,6 +2350,26 @@ void GraphPanelPlotWidget::setPointCoordinatesFontColor(const QColor &pPointCoor
 
     if (pPointCoordinatesFontColor != mPointCoordinatesFontColor) {
         mPointCoordinatesFontColor = pPointCoordinatesFontColor;
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::pointCoordinatesFontSize() const
+{
+    // Return our point coordinates font size
+
+    return mPointCoordinatesFontSize;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesFontSize(int pPointCoordinatesFontSize)
+{
+    // Set our point coordinates font size
+
+    if (pPointCoordinatesFontSize != mPointCoordinatesFontSize) {
+        mPointCoordinatesFontSize = pPointCoordinatesFontSize;
     }
 }
 
@@ -2619,6 +2654,26 @@ void GraphPanelPlotWidget::setZoomRegionFontColor(const QColor &pZoomRegionFontC
 
     if (pZoomRegionFontColor != mZoomRegionFontColor) {
         mZoomRegionFontColor = pZoomRegionFontColor;
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::zoomRegionFontSize() const
+{
+    // Return our zoom region font size
+
+    return mZoomRegionFontSize;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFontSize(int pZoomRegionFontSize)
+{
+    // Set our zoom region font size
+
+    if (pZoomRegionFontSize != mZoomRegionFontSize) {
+        mZoomRegionFontSize = pZoomRegionFontSize;
     }
 }
 

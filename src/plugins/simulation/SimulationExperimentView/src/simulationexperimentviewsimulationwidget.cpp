@@ -1917,7 +1917,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                         +SedmlProperty.arg(SEDMLSupport::Color,
                                                            pointCoordinatesProperties[2]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                           pointCoordinatesProperties[3]->stringValue()));
+                                                           pointCoordinatesProperties[3]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::FontSize,
+                                                           pointCoordinatesProperties[4]->stringValue()));
 
         // Surrounding area
 
@@ -1967,10 +1969,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                            zoomRegionProperties[2]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FontColor,
                                                            zoomRegionProperties[3]->stringValue())
-                                        +SedmlProperty.arg(SEDMLSupport::Filled,
+                                        +SedmlProperty.arg(SEDMLSupport::FontSize,
                                                            zoomRegionProperties[4]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Filled,
+                                                           zoomRegionProperties[5]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                           zoomRegionProperties[5]->stringValue()));
+                                                           zoomRegionProperties[6]->stringValue()));
 
         // Add our properties as an annotation
 

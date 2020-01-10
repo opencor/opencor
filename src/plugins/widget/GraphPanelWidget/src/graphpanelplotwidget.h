@@ -285,8 +285,9 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor, int pLineWidth,
-                         Position pPosition, bool pCanMovePosition = true);
+                         const QColor &pForegroundColor, const int &pFontSize,
+                         int pLineWidth, Position pPosition,
+                         bool pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -462,6 +463,9 @@ public:
     QColor pointCoordinatesFontColor() const;
     void setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor);
 
+    int pointCoordinatesFontSize() const;
+    void setPointCoordinatesFontSize(int pPointCoordinatesFontSize);
+
     QColor surroundingAreaBackgroundColor() const;
     void setSurroundingAreaBackgroundColor(const QColor &pSurroundingAreaBackgroundColor);
 
@@ -493,6 +497,9 @@ public:
 
     QColor zoomRegionFontColor() const;
     void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
+
+    int zoomRegionFontSize() const;
+    void setZoomRegionFontSize(int pZoomRegionFontSize);
 
     bool zoomRegionFilled() const;
     void setZoomRegionFilled(bool pZoomRegionFilled);
@@ -562,6 +569,7 @@ private:
     int mPointCoordinatesWidth = 1;
     QColor mPointCoordinatesColor;
     QColor mPointCoordinatesFontColor = Qt::white;
+    int mPointCoordinatesFontSize = 10;
 
     QColor mSurroundingAreaBackgroundColor;
     QColor mSurroundingAreaForegroundColor;
@@ -570,6 +578,7 @@ private:
     int mZoomRegionWidth = 1;
     QColor mZoomRegionColor;
     QColor mZoomRegionFontColor = Qt::white;
+    int mZoomRegionFontSize = 10;
     bool mZoomRegionFilled = true;
     QColor mZoomRegionFillColor;
 

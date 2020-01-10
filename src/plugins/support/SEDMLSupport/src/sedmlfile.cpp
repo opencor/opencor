@@ -1050,6 +1050,16 @@ bool SedmlFile::isSupported()
                                     && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, FontColor)) {
                                     return false;
                                 }
+
+                                if (    (pointCoordinatesPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(pointCoordinatesPropertyNode.getLine()),
+                                                              int(pointCoordinatesPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(pointCoordinatesPropertyNodeName));
+
+                                    return false;
+                                }
                             }
 
                         // Surrounding area
@@ -1153,6 +1163,16 @@ bool SedmlFile::isSupported()
 
                                 if (    (zoomRegionPropertyNodeName == FontColor)
                                     && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FontColor)) {
+                                    return false;
+                                }
+
+                                if (    (zoomRegionPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(zoomRegionPropertyNode.getLine()),
+                                                              int(zoomRegionPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(zoomRegionPropertyNodeName));
+
                                     return false;
                                 }
 
