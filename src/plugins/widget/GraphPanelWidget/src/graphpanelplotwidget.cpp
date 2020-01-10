@@ -2097,10 +2097,6 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         mLegend->setFontSize(pFontSize);
 
-        // Point coordinates
-
-        mPointCoordinatesFontSize = pFontSize;
-
         // Title
 
         setTitle(title().text());
@@ -2122,10 +2118,6 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         setAxisFont(QwtPlot::yLeft, newFont);
         setTitleAxisY(titleAxisY());
-
-        // Zoom region
-
-        mZoomRegionFontSize = pFontSize;
 
         // Our new font size may have some effects on the alignment with our
         // neighbours, so update ourselves
