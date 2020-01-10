@@ -185,6 +185,12 @@ QString Simulation::furtherInitialize() const
 
         if (annotation != nullptr) {
             Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
+            Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+            Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
+            Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
+            Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
+            Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
+            Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
             for (uint j = 0, jMax = annotation->getNumChildren(); j < jMax; ++j) {
                 libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(j);
@@ -209,8 +215,6 @@ QString Simulation::furtherInitialize() const
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                                    && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::GridLines)) {
-                            Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
-
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
@@ -234,8 +238,6 @@ QString Simulation::furtherInitialize() const
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                                    && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::PointCoordinates)) {
-                            Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
-
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
@@ -256,8 +258,6 @@ QString Simulation::furtherInitialize() const
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                                    && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::SurroundingArea)) {
-                            Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
-
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
@@ -279,8 +279,6 @@ QString Simulation::furtherInitialize() const
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                                    && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::XAxis)) {
-                            Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
-
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
@@ -297,8 +295,6 @@ QString Simulation::furtherInitialize() const
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                                    && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::YAxis)) {
-                            Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
-
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
@@ -315,8 +311,6 @@ QString Simulation::furtherInitialize() const
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
                                    && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::ZoomRegion)) {
-                            Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
-
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
