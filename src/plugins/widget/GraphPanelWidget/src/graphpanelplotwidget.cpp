@@ -1566,7 +1566,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAutoFillBackground(true);
     setBackgroundColor(Qt::white);
-    setFontSize(10, true);
+    setFontSize(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
     setForegroundColor(Qt::black);
 
     QColor pointCoordinatesColor = Qt::darkCyan;
@@ -1609,8 +1609,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setAxisAutoScale(QwtPlot::xBottom, false);
     setAxisAutoScale(QwtPlot::yLeft, false);
 
-    setFontSizeAxisX(10, true);
-    setFontSizeAxisY(10, true);
+    setFontSizeAxisX(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
+    setFontSizeAxisY(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
 
     // Attach a grid to ourselves
 

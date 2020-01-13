@@ -1087,9 +1087,9 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == XAxis)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                // Note: we don't need to check for the title since
-                                //       it is a string and that it can therefore
-                                //       have any value...
+                                // Note: we don't need to check for the title
+                                //       since it is a string and that it can
+                                //       therefore have any value...
 
                                 libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
@@ -1122,9 +1122,9 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == YAxis)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                // Note: we don't need to check for the title since
-                                //       it is a string and that it can therefore
-                                //       have any value...
+                                // Note: we don't need to check for the title
+                                //       since it is a string and that it can
+                                //       therefore have any value...
 
                                 libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
