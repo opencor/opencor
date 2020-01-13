@@ -2459,9 +2459,9 @@ void GraphPanelPlotWidget::setFontSizeAxisX(int pFontSizeAxisX,
 {
     // Set our X axis font size
 
-    QFont fontAxisX = axisFont(QwtPlot::xBottom);
+    if (pForceSetting || (pFontSizeAxisX != fontSizeAxisX())) {
+        QFont fontAxisX = axisFont(QwtPlot::xBottom);
 
-    if (pForceSetting || (pFontSizeAxisX != fontAxisX.pointSize())) {
         fontAxisX.setPointSize(pFontSizeAxisX);
 
         setAxisFont(QwtPlot::xBottom, fontAxisX);
@@ -2533,9 +2533,9 @@ void GraphPanelPlotWidget::setFontSizeAxisY(int pFontSizeAxisY,
 {
     // Set our Y axis font size
 
-    QFont fontAxisY = axisFont(QwtPlot::yLeft);
+    if (pForceSetting || (pFontSizeAxisY != fontSizeAxisY())) {
+        QFont fontAxisY = axisFont(QwtPlot::yLeft);
 
-    if (pForceSetting || (pFontSizeAxisY != fontAxisY.pointSize())) {
         fontAxisY.setPointSize(pFontSizeAxisY);
 
         setAxisFont(QwtPlot::yLeft, fontAxisY);
