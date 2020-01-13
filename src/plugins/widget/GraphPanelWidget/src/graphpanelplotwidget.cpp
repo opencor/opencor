@@ -1575,7 +1575,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAutoFillBackground(true);
     setBackgroundColor(Qt::white);
-    setFontSize(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
+    setFontSize(10);
     setForegroundColor(Qt::black);
 
     QColor pointCoordinatesColor = Qt::darkCyan;
@@ -1618,8 +1618,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setAxisAutoScale(QwtPlot::xBottom, false);
     setAxisAutoScale(QwtPlot::yLeft, false);
 
-    setFontSizeAxisX(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
-    setFontSizeAxisY(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
+    setFontSizeAxisX(10);
+    setFontSizeAxisY(10);
 
     // Attach a grid to ourselves
 
@@ -1638,7 +1638,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     insertLegend(mLegend);
 
-    setLegendFontSize(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
+    setLegendFontSize(10);
 
     connect(mLegend, &GraphPanelPlotLegendWidget::graphToggled,
             this, &GraphPanelPlotWidget::graphToggled);
@@ -2096,11 +2096,11 @@ int GraphPanelPlotWidget::fontSize() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
+void GraphPanelPlotWidget::setFontSize(int pFontSize)
 {
     // Set our font size
 
-    if (pForceSetting || (pFontSize != fontSize())) {
+    if (pFontSize != fontSize()) {
         QFont newFont = font();
 
         newFont.setPointSize(pFontSize);
@@ -2228,12 +2228,11 @@ int GraphPanelPlotWidget::legendFontSize() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendFontSize(int pLegendFontSize,
-                                             bool pForceSetting)
+void GraphPanelPlotWidget::setLegendFontSize(int pLegendFontSize)
 {
     // Set our legend font size
 
-    if (pForceSetting || (pLegendFontSize != legendFontSize())) {
+    if (pLegendFontSize != legendFontSize()) {
         mLegend->setFontSize(pLegendFontSize);
 
         // To change the font size of our legen may have some effects on the
@@ -2482,12 +2481,11 @@ int GraphPanelPlotWidget::fontSizeAxisX() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSizeAxisX(int pFontSizeAxisX,
-                                            bool pForceSetting)
+void GraphPanelPlotWidget::setFontSizeAxisX(int pFontSizeAxisX)
 {
     // Set our X axis font size
 
-    if (pForceSetting || (pFontSizeAxisX != fontSizeAxisX())) {
+    if (pFontSizeAxisX != fontSizeAxisX()) {
         QFont fontAxisX = axisFont(QwtPlot::xBottom);
 
         fontAxisX.setPointSize(pFontSizeAxisX);
@@ -2556,12 +2554,11 @@ int GraphPanelPlotWidget::fontSizeAxisY() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSizeAxisY(int pFontSizeAxisY,
-                                            bool pForceSetting)
+void GraphPanelPlotWidget::setFontSizeAxisY(int pFontSizeAxisY)
 {
     // Set our Y axis font size
 
-    if (pForceSetting || (pFontSizeAxisY != fontSizeAxisY())) {
+    if (pFontSizeAxisY != fontSizeAxisY()) {
         QFont fontAxisY = axisFont(QwtPlot::yLeft);
 
         fontAxisY.setPointSize(pFontSizeAxisY);

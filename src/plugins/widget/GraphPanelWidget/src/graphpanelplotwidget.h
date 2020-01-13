@@ -434,7 +434,7 @@ public:
     void setBackgroundColor(const QColor &pBackgroundColor);
 
     int fontSize() const;
-    void setFontSize(int pFontSize, bool pForceSetting = false);
+    void setFontSize(int pFontSize);
 
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
@@ -449,7 +449,7 @@ public:
     void setGridLinesColor(const QColor &pGridLinesColor);
 
     int legendFontSize() const;
-    void setLegendFontSize(int pLegendFontSize, bool pForceSetting = false);
+    void setLegendFontSize(int pLegendFontSize);
 
     bool isLegendVisible() const;
     void setLegendVisible(bool pLegendVisible);
@@ -478,7 +478,7 @@ public:
     void setTitle(const QString &pTitle);
 
     int fontSizeAxisX() const;
-    void setFontSizeAxisX(int pFontSizeAxisX, bool pForceSetting = false);
+    void setFontSizeAxisX(int pFontSizeAxisX);
 
     bool logAxisX() const;
     void setLogAxisX(bool pLogAxisX);
@@ -487,7 +487,7 @@ public:
     void setTitleAxisX(const QString &pTitleAxisX);
 
     int fontSizeAxisY() const;
-    void setFontSizeAxisY(int pFontSizeAxisY, bool pForceSetting = false);
+    void setFontSizeAxisY(int pFontSizeAxisY);
 
     bool logAxisY() const;
     void setLogAxisY(bool pLogAxisY);
