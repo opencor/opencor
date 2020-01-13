@@ -212,7 +212,7 @@ QString Simulation::furtherInitialize() const
 
                                 // Note: the below is in case we are dealing
                                 //       with an old SED-ML file where we had
-                                //       only one font size property for all the
+                                //       only one font size property for all our
                                 //       different bits of text. So, here, we
                                 //       use the current value to initialise our
                                 //       different font size properties...
