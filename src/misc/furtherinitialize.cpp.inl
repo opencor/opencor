@@ -200,171 +200,188 @@ QString Simulation::furtherInitialize() const
                     && (QString::fromStdString(sedmlPlot2dPropertiesNode.getName()) == SEDMLSupport::Properties)) {
                     for (uint k = 0, kMax = sedmlPlot2dPropertiesNode.getNumChildren(); k < kMax; ++k) {
                         libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(k);
-                        QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
-                        QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
 
-                        if (sedmlPlot2dPropertyNodeName == SEDMLSupport::BackgroundColor) {
-                            graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
-                        } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::FontSize) {
-                            graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+                        if (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                            QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
+                            QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
 
-                            // Note: the below is in case we are dealing with an
-                            //       old SED-ML file where we had only one font
-                            //       size property for all the different bits of
-                            //       text. So, here, we use the current value to
-                            //       initialise our different font size
-                            //       properties...
+                            if (sedmlPlot2dPropertyNodeName == SEDMLSupport::BackgroundColor) {
+                                graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::FontSize) {
+                                graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
 
-                            legendProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
-                            pointCoordinatesProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
-                            xAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
-                            yAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
-                            zoomRegionProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
-                        } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::ForegroundColor) {
-                            graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
-                        } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Height) {
-                            graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
+                                // Note: the below is in case we are dealing
+                                //       with an old SED-ML file where we had
+                                //       only one font size property for all the
+                                //       different bits of text. So, here, we
+                                //       use the current value to initialise our
+                                //       different font size properties...
 
-                        // Grid lines
+                                legendProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                                pointCoordinatesProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
+                                xAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                                yAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                                zoomRegionProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::ForegroundColor) {
+                                graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Height) {
+                                graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
 
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::GridLines)) {
-                            for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
-                                QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
+                            // Grid lines
 
-                                if (gridLinesPropertyNodeName == SEDMLSupport::Style) {
-                                    gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
-                                } else if (gridLinesPropertyNodeName == SEDMLSupport::Width) {
-                                    gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
-                                } else if (gridLinesPropertyNodeName == SEDMLSupport::Color) {
-                                    gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
-                                }
-                            }
-
-                        // Legend
-
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::Legend)) {
-                            if (!sedmlPlot2dPropertyNodeValue.isEmpty()) {
-                                legendProperties[1]->setBooleanValue(sedmlPlot2dPropertyNodeValue == TrueValue);
-                            } else {
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::GridLines) {
                                 for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                    libsbml::XMLNode &legendPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                    QString legendPropertyNodeName = QString::fromStdString(legendPropertyNode.getName());
-                                    QString legendPropertyNodeValue = QString::fromStdString(legendPropertyNode.getChild(0).getCharacters());
+                                    libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
 
-                                    if (legendPropertyNodeName == SEDMLSupport::FontSize) {
-                                        legendProperties[0]->setValue(legendPropertyNodeValue);
-                                    } else if (legendPropertyNodeName == SEDMLSupport::Visible) {
-                                        legendProperties[1]->setBooleanValue(legendPropertyNodeValue == TrueValue);
+                                    if (QString::fromStdString(gridLinesPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                        QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
+                                        QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
+
+                                        if (gridLinesPropertyNodeName == SEDMLSupport::Style) {
+                                            gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
+                                        } else if (gridLinesPropertyNodeName == SEDMLSupport::Width) {
+                                            gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
+                                        } else if (gridLinesPropertyNodeName == SEDMLSupport::Color) {
+                                            gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
+                                        }
                                     }
                                 }
-                            }
 
-                        // Point coordinates
+                            // Legend
 
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::PointCoordinates)) {
-                            for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
-                                QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Legend) {
+                                if (!sedmlPlot2dPropertyNodeValue.isEmpty()) {
+                                    legendProperties[1]->setBooleanValue(sedmlPlot2dPropertyNodeValue == TrueValue);
+                                } else {
+                                    for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                        libsbml::XMLNode &legendPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
 
-                                if (pointCoordinatesPropertyNodeName == SEDMLSupport::Style) {
-                                    pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
-                                } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::Width) {
-                                    pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
-                                } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::Color) {
-                                    pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
-                                } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::FontColor) {
-                                    pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
-                                } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::FontSize) {
-                                    pointCoordinatesProperties[4]->setValue(pointCoordinatesPropertyNodeValue);
+                                        if (QString::fromStdString(legendPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                            QString legendPropertyNodeName = QString::fromStdString(legendPropertyNode.getName());
+                                            QString legendPropertyNodeValue = QString::fromStdString(legendPropertyNode.getChild(0).getCharacters());
+
+                                            if (legendPropertyNodeName == SEDMLSupport::FontSize) {
+                                                legendProperties[0]->setValue(legendPropertyNodeValue);
+                                            } else if (legendPropertyNodeName == SEDMLSupport::Visible) {
+                                                legendProperties[1]->setBooleanValue(legendPropertyNodeValue == TrueValue);
+                                            }
+                                        }
+                                    }
                                 }
-                            }
 
-                        // Surrounding area
+                            // Point coordinates
 
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::SurroundingArea)) {
-                            for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
-                                QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::PointCoordinates) {
+                                for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                    libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
 
-                                if (surroundingAreaPropertyNodeName == SEDMLSupport::BackgroundColor) {
-                                    surroundingAreaProperties[0]->setValue(surroundingAreaPropertyNodeValue);
-                                } else if (surroundingAreaPropertyNodeName == SEDMLSupport::ForegroundColor) {
-                                    surroundingAreaProperties[1]->setValue(surroundingAreaPropertyNodeValue);
+                                    if (QString::fromStdString(pointCoordinatesPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                        QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
+                                        QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
+
+                                        if (pointCoordinatesPropertyNodeName == SEDMLSupport::Style) {
+                                            pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
+                                        } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::Width) {
+                                            pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
+                                        } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::Color) {
+                                            pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
+                                        } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::FontColor) {
+                                            pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
+                                        } else if (pointCoordinatesPropertyNodeName == SEDMLSupport::FontSize) {
+                                            pointCoordinatesProperties[4]->setValue(pointCoordinatesPropertyNodeValue);
+                                        }
+                                    }
                                 }
-                            }
 
-                        // Title
+                            // Surrounding area
 
-                        } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Title) {
-                            graphPanelProperties[7]->setValue(sedmlPlot2dPropertyNodeValue);
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::SurroundingArea) {
+                                for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                    libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
 
-                        // X axis
+                                    if (QString::fromStdString(surroundingAreaPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                        QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
+                                        QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
 
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::XAxis)) {
-                            for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
-                                QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
-
-                                if (xAxisPropertyNodeName == SEDMLSupport::FontSize) {
-                                    xAxisProperties[0]->setValue(xAxisPropertyNodeValue);
-                                } else if (xAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
-                                    xAxisProperties[1]->setBooleanValue(xAxisPropertyNodeValue == TrueValue);
-                                } else if (xAxisPropertyNodeName == SEDMLSupport::Title) {
-                                    xAxisProperties[2]->setValue(xAxisPropertyNodeValue);
+                                        if (surroundingAreaPropertyNodeName == SEDMLSupport::BackgroundColor) {
+                                            surroundingAreaProperties[0]->setValue(surroundingAreaPropertyNodeValue);
+                                        } else if (surroundingAreaPropertyNodeName == SEDMLSupport::ForegroundColor) {
+                                            surroundingAreaProperties[1]->setValue(surroundingAreaPropertyNodeValue);
+                                        }
+                                    }
                                 }
-                            }
 
-                        // Y axis
+                            // Title
 
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::YAxis)) {
-                            for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
-                                QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Title) {
+                                graphPanelProperties[7]->setValue(sedmlPlot2dPropertyNodeValue);
 
-                                if (yAxisPropertyNodeName == SEDMLSupport::FontSize) {
-                                    yAxisProperties[0]->setValue(yAxisPropertyNodeValue);
-                                } else if (yAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
-                                    yAxisProperties[1]->setBooleanValue(yAxisPropertyNodeValue == TrueValue);
-                                } else if (yAxisPropertyNodeName == SEDMLSupport::Title) {
-                                    yAxisProperties[2]->setValue(yAxisPropertyNodeValue);
+                            // X axis
+
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::XAxis) {
+                                for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                    libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+
+                                    if (QString::fromStdString(xAxisPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                        QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
+                                        QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
+
+                                        if (xAxisPropertyNodeName == SEDMLSupport::FontSize) {
+                                            xAxisProperties[0]->setValue(xAxisPropertyNodeValue);
+                                        } else if (xAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
+                                            xAxisProperties[1]->setBooleanValue(xAxisPropertyNodeValue == TrueValue);
+                                        } else if (xAxisPropertyNodeName == SEDMLSupport::Title) {
+                                            xAxisProperties[2]->setValue(xAxisPropertyNodeValue);
+                                        }
+                                    }
                                 }
-                            }
 
-                        // Zoom region
+                            // Y axis
 
-                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::ZoomRegion)) {
-                            for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
-                                QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
-                                QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::YAxis) {
+                                for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                    libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
 
-                                if (zoomRegionPropertyNodeName == SEDMLSupport::Style) {
-                                    zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
-                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::Width) {
-                                    zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
-                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::Color) {
-                                    zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
-                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::FontColor) {
-                                    zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
-                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::FontSize) {
-                                    zoomRegionProperties[4]->setValue(zoomRegionPropertyNodeValue);
-                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::Filled) {
-                                    zoomRegionProperties[5]->setBooleanValue(zoomRegionPropertyNodeValue == TrueValue);
-                                } else if (zoomRegionPropertyNodeName == SEDMLSupport::FillColor) {
-                                    zoomRegionProperties[6]->setValue(zoomRegionPropertyNodeValue);
+                                    if (QString::fromStdString(yAxisPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                        QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
+                                        QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+
+                                        if (yAxisPropertyNodeName == SEDMLSupport::FontSize) {
+                                            yAxisProperties[0]->setValue(yAxisPropertyNodeValue);
+                                        } else if (yAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
+                                            yAxisProperties[1]->setBooleanValue(yAxisPropertyNodeValue == TrueValue);
+                                        } else if (yAxisPropertyNodeName == SEDMLSupport::Title) {
+                                            yAxisProperties[2]->setValue(yAxisPropertyNodeValue);
+                                        }
+                                    }
+                                }
+
+                            // Zoom region
+
+                            } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::ZoomRegion) {
+                                for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                    libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+
+                                    if (QString::fromStdString(zoomRegionPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                        QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
+                                        QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
+
+                                        if (zoomRegionPropertyNodeName == SEDMLSupport::Style) {
+                                            zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
+                                        } else if (zoomRegionPropertyNodeName == SEDMLSupport::Width) {
+                                            zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
+                                        } else if (zoomRegionPropertyNodeName == SEDMLSupport::Color) {
+                                            zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
+                                        } else if (zoomRegionPropertyNodeName == SEDMLSupport::FontColor) {
+                                            zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
+                                        } else if (zoomRegionPropertyNodeName == SEDMLSupport::FontSize) {
+                                            zoomRegionProperties[4]->setValue(zoomRegionPropertyNodeValue);
+                                        } else if (zoomRegionPropertyNodeName == SEDMLSupport::Filled) {
+                                            zoomRegionProperties[5]->setBooleanValue(zoomRegionPropertyNodeValue == TrueValue);
+                                        } else if (zoomRegionPropertyNodeName == SEDMLSupport::FillColor) {
+                                            zoomRegionProperties[6]->setValue(zoomRegionPropertyNodeValue);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -439,54 +456,57 @@ QString Simulation::furtherInitialize() const
                         && (QString::fromStdString(curvePropertiesNode.getName()) == SEDMLSupport::Properties)) {
                         for (uint l = 0, lMax = curvePropertiesNode.getNumChildren(); l < lMax; ++l) {
                             libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(l);
-                            QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
-                            QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            // Selected
+                            if (QString::fromStdString(curvePropertyNode.getURI()) == SEDMLSupport::OpencorNamespace) {
+                                QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
+                                QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            if (curvePropertyNodeName == SEDMLSupport::Selected) {
-                                selected = curvePropertyNodeValue == TrueValue;
+                                // Selected
 
-                            // Title
+                                if (curvePropertyNodeName == SEDMLSupport::Selected) {
+                                    selected = curvePropertyNodeValue == TrueValue;
 
-                            } else if (curvePropertyNodeName == SEDMLSupport::Title) {
-                                title = curvePropertyNodeValue;
+                                // Title
 
-                            // Line
+                                } else if (curvePropertyNodeName == SEDMLSupport::Title) {
+                                    title = curvePropertyNodeValue;
 
-                            } else if (curvePropertyNodeName == SEDMLSupport::Line) {
-                                for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
-                                    libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
-                                    QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
-                                    QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
+                                // Line
 
-                                    if (linePropertyNodeName == SEDMLSupport::Style) {
-                                        lineStyle = SEDMLSupport::lineStyle(linePropertyNodeValue);
-                                    } else if (linePropertyNodeName == SEDMLSupport::Width) {
-                                        lineWidth = linePropertyNodeValue.toInt();
-                                    } else if (linePropertyNodeName == SEDMLSupport::Color) {
-                                        lineColor.setNamedColor(linePropertyNodeValue);
+                                } else if (curvePropertyNodeName == SEDMLSupport::Line) {
+                                    for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
+                                        libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
+                                        QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                        QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
+
+                                        if (linePropertyNodeName == SEDMLSupport::Style) {
+                                            lineStyle = SEDMLSupport::lineStyle(linePropertyNodeValue);
+                                        } else if (linePropertyNodeName == SEDMLSupport::Width) {
+                                            lineWidth = linePropertyNodeValue.toInt();
+                                        } else if (linePropertyNodeName == SEDMLSupport::Color) {
+                                            lineColor.setNamedColor(linePropertyNodeValue);
+                                        }
                                     }
-                                }
 
-                            // Symbol
+                                // Symbol
 
-                            } else if (curvePropertyNodeName == SEDMLSupport::Symbol) {
-                                for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
-                                    libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
-                                    QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
-                                    QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
+                                } else if (curvePropertyNodeName == SEDMLSupport::Symbol) {
+                                    for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
+                                        libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
+                                        QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                        QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
-                                    if (symbolPropertyNodeName == SEDMLSupport::Style) {
-                                        symbolStyle = SEDMLSupport::symbolStyle(symbolPropertyNodeValue);
-                                    } else if (symbolPropertyNodeName == SEDMLSupport::Size) {
-                                        symbolSize = symbolPropertyNodeValue.toInt();
-                                    } else if (symbolPropertyNodeName == SEDMLSupport::Color) {
-                                        symbolColor.setNamedColor(symbolPropertyNodeValue);
-                                    } else if (symbolPropertyNodeName == SEDMLSupport::Filled) {
-                                        symbolFilled = symbolPropertyNodeValue == TrueValue;
-                                    } else if (symbolPropertyNodeName == SEDMLSupport::FillColor) {
-                                        symbolFillColor.setNamedColor(symbolPropertyNodeValue);
+                                        if (symbolPropertyNodeName == SEDMLSupport::Style) {
+                                            symbolStyle = SEDMLSupport::symbolStyle(symbolPropertyNodeValue);
+                                        } else if (symbolPropertyNodeName == SEDMLSupport::Size) {
+                                            symbolSize = symbolPropertyNodeValue.toInt();
+                                        } else if (symbolPropertyNodeName == SEDMLSupport::Color) {
+                                            symbolColor.setNamedColor(symbolPropertyNodeValue);
+                                        } else if (symbolPropertyNodeName == SEDMLSupport::Filled) {
+                                            symbolFilled = symbolPropertyNodeValue == TrueValue;
+                                        } else if (symbolPropertyNodeName == SEDMLSupport::FillColor) {
+                                            symbolFillColor.setNamedColor(symbolPropertyNodeValue);
+                                        }
                                     }
                                 }
                             }
