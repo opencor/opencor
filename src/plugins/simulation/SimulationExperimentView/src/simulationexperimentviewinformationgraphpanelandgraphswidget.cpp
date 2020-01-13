@@ -170,8 +170,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     graphPanelProperties[8]->setName(tr("X axis"));
 
-    xAxisProperties[0]->setName(tr("Logarithmic scale"));
-    xAxisProperties[1]->setName(tr("Title"));
+    xAxisProperties[0]->setName(tr("Font size"));
+    xAxisProperties[1]->setName(tr("Logarithmic scale"));
+    xAxisProperties[2]->setName(tr("Title"));
 
     // Y axis
 
@@ -179,8 +180,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     graphPanelProperties[9]->setName(tr("Y axis"));
 
-    yAxisProperties[0]->setName(tr("Logarithmic scale"));
-    yAxisProperties[1]->setName(tr("Title"));
+    yAxisProperties[0]->setName(tr("Font size"));
+    yAxisProperties[1]->setName(tr("Logarithmic scale"));
+    yAxisProperties[2]->setName(tr("Title"));
 
     // Zoom region
 
@@ -1104,6 +1106,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     Core::Property *xAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSizeAxisX(), xAxisProperty);
     mGraphPanelPropertyEditor->addBooleanProperty(xAxisProperty);
     mGraphPanelPropertyEditor->addStringProperty(xAxisProperty);
 
@@ -1111,6 +1114,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     Core::Property *yAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSizeAxisY(), yAxisProperty);
     mGraphPanelPropertyEditor->addBooleanProperty(yAxisProperty);
     mGraphPanelPropertyEditor->addStringProperty(yAxisProperty);
 
@@ -1527,15 +1531,19 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     // X axis
 
     } else if (pProperty == xAxisProperties[0]) {
-        graphPanelPlot->setLogAxisX(pProperty->booleanValue());
+        graphPanelPlot->setFontSizeAxisX(pProperty->integerValue());
     } else if (pProperty == xAxisProperties[1]) {
+        graphPanelPlot->setLogAxisX(pProperty->booleanValue());
+    } else if (pProperty == xAxisProperties[2]) {
         graphPanelPlot->setTitleAxisX(pProperty->value());
 
     // Y axis
 
     } else if (pProperty == yAxisProperties[0]) {
-        graphPanelPlot->setLogAxisY(pProperty->booleanValue());
+        graphPanelPlot->setFontSizeAxisY(pProperty->integerValue());
     } else if (pProperty == yAxisProperties[1]) {
+        graphPanelPlot->setLogAxisY(pProperty->booleanValue());
+    } else if (pProperty == yAxisProperties[2]) {
         graphPanelPlot->setTitleAxisY(pProperty->value());
 
     // Zoom region

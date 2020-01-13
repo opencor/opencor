@@ -215,6 +215,8 @@ QString Simulation::furtherInitialize() const
                             //       properties...
 
                             pointCoordinatesProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
+                            xAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                            yAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                             zoomRegionProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::ForegroundColor) {
                             graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
@@ -296,10 +298,12 @@ QString Simulation::furtherInitialize() const
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                                 QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
-                                if (xAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
-                                    xAxisProperties[0]->setBooleanValue(xAxisPropertyNodeValue == TrueValue);
+                                if (xAxisPropertyNodeName == SEDMLSupport::FontSize) {
+                                    xAxisProperties[0]->setValue(xAxisPropertyNodeValue);
+                                } else if (xAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
+                                    xAxisProperties[1]->setBooleanValue(xAxisPropertyNodeValue == TrueValue);
                                 } else if (xAxisPropertyNodeName == SEDMLSupport::Title) {
-                                    xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
+                                    xAxisProperties[2]->setValue(xAxisPropertyNodeValue);
                                 }
                             }
 
@@ -312,10 +316,12 @@ QString Simulation::furtherInitialize() const
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                                 QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
-                                if (yAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
-                                    yAxisProperties[0]->setBooleanValue(yAxisPropertyNodeValue == TrueValue);
+                                if (yAxisPropertyNodeName == SEDMLSupport::FontSize) {
+                                    yAxisProperties[0]->setValue(yAxisPropertyNodeValue);
+                                } else if (yAxisPropertyNodeName == SEDMLSupport::LogarithmicScale) {
+                                    yAxisProperties[1]->setBooleanValue(yAxisPropertyNodeValue == TrueValue);
                                 } else if (yAxisPropertyNodeName == SEDMLSupport::Title) {
-                                    yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
+                                    yAxisProperties[2]->setValue(yAxisPropertyNodeValue);
                                 }
                             }
 

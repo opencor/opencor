@@ -1941,20 +1941,24 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
         Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
         annotation += SedmlProperty.arg(SEDMLSupport::XAxis,
-                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                         SedmlProperty.arg(SEDMLSupport::FontSize,
                                                            xAxisProperties[0]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                           xAxisProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Title,
-                                                           xAxisProperties[1]->stringValue()));
+                                                           xAxisProperties[2]->stringValue()));
 
         // Y axis
 
         Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
         annotation += SedmlProperty.arg(SEDMLSupport::YAxis,
-                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                         SedmlProperty.arg(SEDMLSupport::FontSize,
                                                            yAxisProperties[0]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                           yAxisProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Title,
-                                                           yAxisProperties[1]->stringValue()));
+                                                           yAxisProperties[2]->stringValue()));
 
         // Zoom region
 

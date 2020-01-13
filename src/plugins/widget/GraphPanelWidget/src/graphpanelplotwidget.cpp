@@ -1609,6 +1609,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setAxisAutoScale(QwtPlot::xBottom, false);
     setAxisAutoScale(QwtPlot::yLeft, false);
 
+    setFontSizeAxisX(10, true);
+    setFontSizeAxisY(10, true);
+
     // Attach a grid to ourselves
 
     mGrid = new QwtPlotGrid();
@@ -2101,24 +2104,6 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         setTitle(title().text());
 
-        // X axis
-
-        newFont = axisFont(QwtPlot::xBottom);
-
-        newFont.setPointSize(pFontSize);
-
-        setAxisFont(QwtPlot::xBottom, newFont);
-        setTitleAxisX(titleAxisX());
-
-        // Y axis
-
-        newFont = axisFont(QwtPlot::yLeft);
-
-        newFont.setPointSize(pFontSize);
-
-        setAxisFont(QwtPlot::yLeft, newFont);
-        setTitleAxisY(titleAxisY());
-
         // Our new font size may have some effects on the alignment with our
         // neighbours, so update ourselves
 
@@ -2456,11 +2441,40 @@ void GraphPanelPlotWidget::setTitle(const QString &pTitle)
         QFont newFont = title.font();
 
         newFont.setPointSize(2*fontSize());
+//---ISSUE2271--- WE WILL EVENTUALLY HAVE TO REMOVE THAT SCALING FACTOR AND,
+//                INSTEAD, HAVE THE MAIN FONT SIZE PROPERTY SCALED DOUBLED WHEN
+//                DEALING WITH AN OLD SED-ML FILE...
 
         title.setColor(mSurroundingAreaForegroundColor);
         title.setFont(newFont);
 
         QwtPlot::setTitle(title);
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::fontSizeAxisX() const
+{
+    // Return our X axis font size
+
+    return axisFont(QwtPlot::xBottom).pointSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setFontSizeAxisX(int pFontSizeAxisX,
+                                            bool pForceSetting)
+{
+    // Set our X axis font size
+
+    QFont fontAxisX = axisFont(QwtPlot::xBottom);
+
+    if (pForceSetting || (pFontSizeAxisX != fontAxisX.pointSize())) {
+        fontAxisX.setPointSize(pFontSizeAxisX);
+
+        setAxisFont(QwtPlot::xBottom, fontAxisX);
+        setTitleAxisX(titleAxisX());
     }
 }
 
@@ -2510,6 +2524,37 @@ void GraphPanelPlotWidget::setTitleAxisX(const QString &pTitleAxisX)
     // Set the title for our X axis
 
     setTitleAxis(QwtPlot::xBottom, pTitleAxisX);
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::fontSizeAxisY() const
+{
+    // Return our Y axis font size
+
+    return axisFont(QwtPlot::yLeft).pointSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setFontSizeAxisY(int pFontSizeAxisY,
+                                            bool pForceSetting)
+{
+    // Set our Y axis font size
+
+    QFont fontAxisY = axisFont(QwtPlot::yLeft);
+
+    if (pForceSetting || (pFontSizeAxisY != fontAxisY.pointSize())) {
+        fontAxisY.setPointSize(pFontSizeAxisY);
+
+        setAxisFont(QwtPlot::yLeft, fontAxisY);
+        setTitleAxisY(titleAxisY());
+
+        // To change the font size of our Y axis may have some effects on the
+        // alignment with our neighbours, so update ourselves
+
+        updateGui(false, true);
+    }
 }
 
 //==============================================================================
@@ -3275,7 +3320,9 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
     QwtText newAxisTitle = QwtText(pTitleAxis);
     QFont newAxisTitleFont = newAxisTitle.font();
 
-    newAxisTitleFont.setPointSizeF(1.25*fontSize());
+    newAxisTitleFont.setPointSizeF(1.25*((pAxisId == QwtPlot::xBottom)?
+                                            fontSizeAxisX():
+                                            fontSizeAxisY()));
 
     newAxisTitle.setColor(mSurroundingAreaForegroundColor);
     newAxisTitle.setFont(newAxisTitleFont);

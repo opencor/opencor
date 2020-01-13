@@ -474,11 +474,17 @@ public:
 
     void setTitle(const QString &pTitle);
 
+    int fontSizeAxisX() const;
+    void setFontSizeAxisX(int pFontSizeAxisX, bool pForceSetting = false);
+
     bool logAxisX() const;
     void setLogAxisX(bool pLogAxisX);
 
     QString titleAxisX() const;
     void setTitleAxisX(const QString &pTitleAxisX);
+
+    int fontSizeAxisY() const;
+    void setFontSizeAxisY(int pFontSizeAxisY, bool pForceSetting = false);
 
     bool logAxisY() const;
     void setLogAxisY(bool pLogAxisY);

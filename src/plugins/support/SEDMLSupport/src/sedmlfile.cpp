@@ -1095,6 +1095,16 @@ bool SedmlFile::isSupported()
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                                 QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
+                                if (    (xAxisPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(xAxisPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(xAxisPropertyNode.getLine()),
+                                                              int(xAxisPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(xAxisPropertyNodeName));
+
+                                    return false;
+                                }
+
                                 if (   (xAxisPropertyNodeName == LogarithmicScale)
                                     && (xAxisPropertyNodeValue != TrueValue)
                                     && (xAxisPropertyNodeValue != FalseValue)) {
@@ -1119,6 +1129,16 @@ bool SedmlFile::isSupported()
                                 libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                                 QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+
+                                if (    (yAxisPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(yAxisPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(yAxisPropertyNode.getLine()),
+                                                              int(yAxisPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(yAxisPropertyNodeName));
+
+                                    return false;
+                                }
 
                                 if (   (yAxisPropertyNodeName == LogarithmicScale)
                                     && (yAxisPropertyNodeValue != TrueValue)
