@@ -1279,6 +1279,15 @@ void GraphPanelPlotLegendWidget::setChecked(GraphPanelPlotGraph *pGraph,
 
 //==============================================================================
 
+int GraphPanelPlotLegendWidget::fontSize() const
+{
+    // Return our font size
+
+    return mFontSize;
+}
+
+//==============================================================================
+
 void GraphPanelPlotLegendWidget::setFontSize(int pFontSize)
 {
     // Set our font size
@@ -1628,6 +1637,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // corresponding graphs has been toggled
 
     insertLegend(mLegend);
+
+    setLegendFontSize(10, true);   //---ISSUE2271--- IS THAT REALLY NEEDED?...
 
     connect(mLegend, &GraphPanelPlotLegendWidget::graphToggled,
             this, &GraphPanelPlotWidget::graphToggled);
@@ -2096,18 +2107,9 @@ void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 
         setFont(newFont);
 
-        // Legend
-
-        mLegend->setFontSize(pFontSize);
-
         // Title
 
         setTitle(title().text());
-
-        // Our new font size may have some effects on the alignment with our
-        // neighbours, so update ourselves
-
-        updateGui(false, true);
     }
 }
 
@@ -2212,6 +2214,32 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
         mGrid->setMajorPen(newPen);
 
         replot();
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::legendFontSize() const
+{
+    // Return our legend font size
+
+    return mLegend->fontSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setLegendFontSize(int pLegendFontSize,
+                                             bool pForceSetting)
+{
+    // Set our legend font size
+
+    if (pForceSetting || (pLegendFontSize != legendFontSize())) {
+        mLegend->setFontSize(pLegendFontSize);
+
+        // To change the font size of our legen may have some effects on the
+        // alignment with our neighbours, so update ourselves
+
+        updateGui(false, true);
     }
 }
 

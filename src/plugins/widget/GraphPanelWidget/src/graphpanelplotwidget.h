@@ -325,7 +325,9 @@ public:
 
     void setChecked(GraphPanelPlotGraph *pGraph, bool pChecked);
 
+    int fontSize() const;
     void setFontSize(int pFontSize);
+
     void setBackgroundColor(const QColor &pBackgroundColor);
     void setForegroundColor(const QColor &pForegroundColor);
 
@@ -445,6 +447,9 @@ public:
 
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
+
+    int legendFontSize() const;
+    void setLegendFontSize(int pLegendFontSize, bool pForceSetting = false);
 
     bool isLegendVisible() const;
     void setLegendVisible(bool pLegendVisible);

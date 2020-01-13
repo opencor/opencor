@@ -1902,8 +1902,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         // Legend
 
+        Core::Properties legendProperties = graphPanelProperties[4]->properties();
+
         annotation += SedmlProperty.arg(SEDMLSupport::Legend,
-                                        graphPanelProperties[4]->stringValue());
+                                         SedmlProperty.arg(SEDMLSupport::FontSize,
+                                                           legendProperties[0]->stringValue())
+                                        +SedmlProperty.arg(SEDMLSupport::Visible,
+                                                           legendProperties[1]->stringValue()));
 
         // Point coordinates
 

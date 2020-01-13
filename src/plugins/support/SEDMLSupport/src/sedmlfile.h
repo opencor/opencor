@@ -97,6 +97,7 @@ static const auto Selected         = QStringLiteral("selected");
 static const auto Size             = QStringLiteral("size");
 static const auto Style            = QStringLiteral("style");
 static const auto Title            = QStringLiteral("title");
+static const auto Visible          = QStringLiteral("visible");
 static const auto Width            = QStringLiteral("width");
 
 //==============================================================================

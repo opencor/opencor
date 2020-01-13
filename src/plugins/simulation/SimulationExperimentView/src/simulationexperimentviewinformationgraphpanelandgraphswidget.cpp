@@ -137,7 +137,12 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     // Legend
 
+    Core::Properties legendProperties = graphPanelProperties[4]->properties();
+
     graphPanelProperties[4]->setName(tr("Legend"));
+
+    legendProperties[0]->setName(tr("Font size"));
+    legendProperties[1]->setName(tr("Visible"));
 
     // Point coordinates
 
@@ -1077,7 +1082,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Legend
 
-    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendVisible());
+    Core::Property *legendProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->legendFontSize(), legendProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendVisible(), legendProperty);
 
     // Point coordinates
 
@@ -1474,6 +1482,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
     Core::Properties properties = propertyEditor->properties();
     Core::Properties gridLinesProperties = properties[3]->properties();
+    Core::Properties legendProperties = properties[4]->properties();
     Core::Properties pointCoordinatesProperties = properties[5]->properties();
     Core::Properties surroundingAreaProperties = properties[6]->properties();
     Core::Properties xAxisProperties = properties[8]->properties();
@@ -1500,7 +1509,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Legend
 
-    } else if (pProperty == properties[4]) {
+    } else if (pProperty == legendProperties[0]) {
+        graphPanelPlot->setLegendFontSize(pProperty->integerValue());
+    } else if (pProperty == legendProperties[1]) {
         graphPanelPlot->setLegendVisible(pProperty->booleanValue());
 
     // Point coordinates

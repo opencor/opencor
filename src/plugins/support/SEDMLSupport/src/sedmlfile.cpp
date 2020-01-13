@@ -1007,15 +1007,44 @@ bool SedmlFile::isSupported()
 
                         // Legend
 
-                        } else if (   (plot2dPropertyNodeName == Legend)
-                                   && (plot2dPropertyNodeValue != TrueValue)
-                                   && (plot2dPropertyNodeValue != FalseValue)) {
+                        } else if (    (plot2dPropertyNodeName == Legend)
+                                   && !plot2dPropertyNodeValue.isEmpty()
+                                   &&  (plot2dPropertyNodeValue != TrueValue)
+                                   &&  (plot2dPropertyNodeValue != FalseValue)) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
                                                       tr("the '%1' property must have a value of 'true' or 'false'").arg(Legend));
 
                             return false;
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == Legend)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                libsbml::XMLNode &legendPropertyNode = plot2dPropertyNode.getChild(l);
+                                QString legendPropertyNodeName = QString::fromStdString(legendPropertyNode.getName());
+                                QString legendPropertyNodeValue = QString::fromStdString(legendPropertyNode.getChild(0).getCharacters());
+
+                                if (    (legendPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(legendPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(legendPropertyNode.getLine()),
+                                                              int(legendPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(legendPropertyNodeName));
+
+                                    return false;
+                                }
+
+                                if (   (legendPropertyNodeName == Visible)
+                                    && (legendPropertyNodeValue != TrueValue)
+                                    && (legendPropertyNodeValue != FalseValue)) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(legendPropertyNode.getLine()),
+                                                              int(legendPropertyNode.getColumn()),
+                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(LogarithmicScale));
+
+                                    return false;
+                                }
+                            }
 
                         // Point coordinates
 

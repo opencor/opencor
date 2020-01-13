@@ -186,6 +186,7 @@ QString Simulation::furtherInitialize() const
         if (annotation != nullptr) {
             Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
             Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+            Core::Properties legendProperties = graphPanelProperties[4]->properties();
             Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
             Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
             Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
@@ -214,6 +215,7 @@ QString Simulation::furtherInitialize() const
                             //       initialise our different font size
                             //       properties...
 
+                            legendProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                             pointCoordinatesProperties[4]->setValue(sedmlPlot2dPropertyNodeValue);
                             xAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                             yAxisProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
@@ -243,8 +245,23 @@ QString Simulation::furtherInitialize() const
 
                         // Legend
 
-                        } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::Legend) {
-                            graphPanelProperties[4]->setBooleanValue(sedmlPlot2dPropertyNodeValue == TrueValue);
+                        } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
+                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::Legend)) {
+                            if (!sedmlPlot2dPropertyNodeValue.isEmpty()) {
+                                legendProperties[1]->setBooleanValue(sedmlPlot2dPropertyNodeValue == TrueValue);
+                            } else {
+                                for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                    libsbml::XMLNode &legendPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
+                                    QString legendPropertyNodeName = QString::fromStdString(legendPropertyNode.getName());
+                                    QString legendPropertyNodeValue = QString::fromStdString(legendPropertyNode.getChild(0).getCharacters());
+
+                                    if (legendPropertyNodeName == SEDMLSupport::FontSize) {
+                                        legendProperties[0]->setValue(legendPropertyNodeValue);
+                                    } else if (legendPropertyNodeName == SEDMLSupport::Visible) {
+                                        legendProperties[1]->setBooleanValue(legendPropertyNodeValue == TrueValue);
+                                    }
+                                }
+                            }
 
                         // Point coordinates
 
