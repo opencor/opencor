@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <sedML level="1" version="3" xmlns="http://sed-ml.org/sed-ml/level1/version3" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <listOfSimulations>
-        <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="60" outputEndTime="3" outputStartTime="0">
+        <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="60" outputEndTime="3000" outputStartTime="0">
             <algorithm kisaoID="KISAO:0000019">
                 <listOfAlgorithmParameters>
                     <algorithmParameter kisaoID="KISAO:0000211" value="1e-07"/>
@@ -20,7 +20,7 @@
         </uniformTimeCourse>
     </listOfSimulations>
     <listOfModels>
-        <model id="model" language="urn:sedml:language:cellml.1_0" source="http://models.cellml.org/workspace/noble_1962/rawfile/475d6caafc5dde9556b19fadde0c79b641f7c36d/noble_1962.cellml"/>
+        <model id="model" language="urn:sedml:language:cellml.1_0" source="../../../noble_model_1962.cellml"/>
     </listOfModels>
     <listOfTasks>
         <repeatedTask id="repeatedTask" range="once" resetModel="true">
@@ -152,9 +152,9 @@
     <listOfOutputs>
         <plot2D id="plot1">
             <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
+                <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#13000080</backgroundColor>
-                    <fontSize>30</fontSize>
+                    <fontSize>15</fontSize>
                     <foregroundColor>#000080</foregroundColor>
                     <height>5</height>
                     <gridLines>
@@ -162,16 +162,12 @@
                         <width>1</width>
                         <color>#80000080</color>
                     </gridLines>
-                    <legend>
-                        <fontSize>15</fontSize>
-                        <visible>true</visible>
-                    </legend>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#000080</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>15</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#dbdbe4</backgroundColor>
@@ -179,12 +175,10 @@
                     </surroundingArea>
                     <title>Membrane potential</title>
                     <xAxis>
-                        <fontSize>15</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
-                        <fontSize>15</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title>mV</title>
                     </yAxis>
@@ -193,7 +187,6 @@
                         <width>1</width>
                         <color>#000080</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>15</fontSize>
                         <filled>true</filled>
                         <fillColor>#30000080</fillColor>
                     </zoomRegion>
@@ -224,9 +217,9 @@
         </plot2D>
         <plot2D id="plot2">
             <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
+                <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#12108001</backgroundColor>
-                    <fontSize>20</fontSize>
+                    <fontSize>10</fontSize>
                     <foregroundColor>#108001</foregroundColor>
                     <height>4</height>
                     <gridLines>
@@ -234,16 +227,12 @@
                         <width>1</width>
                         <color>#80108001</color>
                     </gridLines>
-                    <legend>
-                        <fontSize>10</fontSize>
-                        <visible>true</visible>
-                    </legend>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#108001</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#dde4dc</backgroundColor>
@@ -251,12 +240,10 @@
                     </surroundingArea>
                     <title>Currents</title>
                     <xAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title>nA</title>
                     </yAxis>
@@ -265,7 +252,6 @@
                         <width>1</width>
                         <color>#108001</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30108001</fillColor>
                     </zoomRegion>
@@ -336,9 +322,9 @@
         </plot2D>
         <plot2D id="plot3">
             <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
+                <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#13800002</backgroundColor>
-                    <fontSize>20</fontSize>
+                    <fontSize>10</fontSize>
                     <foregroundColor>#800002</foregroundColor>
                     <height>3</height>
                     <gridLines>
@@ -346,16 +332,12 @@
                         <width>1</width>
                         <color>#80800002</color>
                     </gridLines>
-                    <legend>
-                        <fontSize>10</fontSize>
-                        <visible>true</visible>
-                    </legend>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#800002</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#e4dbdb</backgroundColor>
@@ -363,12 +345,10 @@
                     </surroundingArea>
                     <title>Gating variables</title>
                     <xAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title>ms</title>
                     </xAxis>
                     <yAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title>Dimensionless</title>
                     </yAxis>
@@ -377,7 +357,6 @@
                         <width>1</width>
                         <color>#800002</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30800002</fillColor>
                     </zoomRegion>

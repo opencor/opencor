@@ -88,9 +88,9 @@
     <listOfOutputs>
         <plot2D id="plot1">
             <annotation>
-                <properties xmlns="http://www.opencor.ws/">
+                <properties version="2" xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>10</fontSize>
+                    <fontSize>20</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <gridLines>
@@ -98,12 +98,16 @@
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>true</legend>
+                    <legend>
+                        <fontSize>10</fontSize>
+                        <visible>true</visible>
+                    </legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#ececec</backgroundColor>
@@ -111,10 +115,12 @@
                     </surroundingArea>
                     <title/>
                     <xAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -123,6 +129,7 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
@@ -153,9 +160,9 @@
         </plot2D>
         <plot2D id="plot2">
             <annotation>
-                <properties xmlns="http://www.opencor.ws/">
+                <properties version="2" xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>10</fontSize>
+                    <fontSize>20</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <gridLines>
@@ -163,12 +170,16 @@
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>true</legend>
+                    <legend>
+                        <fontSize>10</fontSize>
+                        <visible>true</visible>
+                    </legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#ececec</backgroundColor>
@@ -176,10 +187,12 @@
                     </surroundingArea>
                     <title/>
                     <xAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -188,6 +201,7 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
@@ -218,9 +232,9 @@
         </plot2D>
         <plot2D id="plot3">
             <annotation>
-                <properties xmlns="http://www.opencor.ws/">
+                <properties version="2" xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>10</fontSize>
+                    <fontSize>20</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <gridLines>
@@ -228,12 +242,16 @@
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>true</legend>
+                    <legend>
+                        <fontSize>10</fontSize>
+                        <visible>true</visible>
+                    </legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#ececec</backgroundColor>
@@ -241,10 +259,12 @@
                     </surroundingArea>
                     <title/>
                     <xAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -253,6 +273,7 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
