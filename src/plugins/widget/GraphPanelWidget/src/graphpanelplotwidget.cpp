@@ -2226,13 +2226,13 @@ bool GraphPanelPlotWidget::isLegendVisible() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendVisible(bool pLegendActive)
+void GraphPanelPlotWidget::setLegendVisible(bool pLegendVisible)
 {
     // Show/hide our legend
 
-    if (pLegendActive != isLegendVisible()) {
-        mLegend->setActive(pLegendActive);
-        mLegendAction->setChecked(pLegendActive);
+    if (pLegendVisible != isLegendVisible()) {
+        mLegend->setActive(pLegendVisible);
+        mLegendAction->setChecked(pLegendVisible);
 
         // To show/hide our legend may have some effects on the alignment with
         // our neighbours, so update ourselves

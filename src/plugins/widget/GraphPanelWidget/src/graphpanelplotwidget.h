@@ -447,7 +447,7 @@ public:
     void setGridLinesColor(const QColor &pGridLinesColor);
 
     bool isLegendVisible() const;
-    void setLegendVisible(bool pLegendActive);
+    void setLegendVisible(bool pLegendVisible);
 
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
