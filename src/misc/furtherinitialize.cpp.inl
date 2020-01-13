@@ -228,7 +228,7 @@ QString Simulation::furtherInitialize() const
                         // Grid lines
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::GridLines)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::GridLines)) {
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
@@ -246,7 +246,7 @@ QString Simulation::furtherInitialize() const
                         // Legend
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::Legend)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::Legend)) {
                             if (!sedmlPlot2dPropertyNodeValue.isEmpty()) {
                                 legendProperties[1]->setBooleanValue(sedmlPlot2dPropertyNodeValue == TrueValue);
                             } else {
@@ -266,7 +266,7 @@ QString Simulation::furtherInitialize() const
                         // Point coordinates
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::PointCoordinates)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::PointCoordinates)) {
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
@@ -288,7 +288,7 @@ QString Simulation::furtherInitialize() const
                         // Surrounding area
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::SurroundingArea)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::SurroundingArea)) {
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
@@ -309,7 +309,7 @@ QString Simulation::furtherInitialize() const
                         // X axis
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::XAxis)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::XAxis)) {
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
@@ -327,7 +327,7 @@ QString Simulation::furtherInitialize() const
                         // Y axis
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::YAxis)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::YAxis)) {
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
@@ -345,7 +345,7 @@ QString Simulation::furtherInitialize() const
                         // Zoom region
 
                         } else if (   (QString::fromStdString(sedmlPlot2dPropertyNode.getURI()) == SEDMLSupport::OpencorNamespace)
-                                   && (QString::fromStdString(sedmlPlot2dPropertyNode.getName()) == SEDMLSupport::ZoomRegion)) {
+                                   && (sedmlPlot2dPropertyNodeName == SEDMLSupport::ZoomRegion)) {
                             for (uint l = 0, lMax = sedmlPlot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(l);
                                 QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
