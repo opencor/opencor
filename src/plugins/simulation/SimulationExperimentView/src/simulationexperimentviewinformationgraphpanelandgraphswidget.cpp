@@ -356,7 +356,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
             graphPanelPlot->setBackgroundColor(pGraphPanelWidgetProperties.backgroundColor());
             graphPanelPlot->setForegroundColor(pGraphPanelWidgetProperties.foregroundColor());
-            graphPanelPlot->setLegendActive(pGraphPanelWidgetProperties.legend());
+            graphPanelPlot->setLegendVisible(pGraphPanelWidgetProperties.legend());
         }
 
         // Populate our graph panel property editor
@@ -1077,7 +1077,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Legend
 
-    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendActive());
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendVisible());
 
     // Point coordinates
 
@@ -1430,7 +1430,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     //       title being also changed...
 
     if ((newTitle != oldTitle) || graphSymbolUpdated) {
-        graph->plot()->updateGui(false, graph->plot()->isLegendActive());
+        graph->plot()->updateGui(false, graph->plot()->isLegendVisible());
     }
 
     if (   (oldParameterX != graph->parameterX())
@@ -1501,7 +1501,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     // Legend
 
     } else if (pProperty == properties[4]) {
-        graphPanelPlot->setLegendActive(pProperty->booleanValue());
+        graphPanelPlot->setLegendVisible(pProperty->booleanValue());
 
     // Point coordinates
 

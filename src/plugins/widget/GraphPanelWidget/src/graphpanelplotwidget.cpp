@@ -1708,7 +1708,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // We want our legend to be active by default
 
-    setLegendActive(true);
+    setLegendVisible(true);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -2217,20 +2217,20 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::isLegendActive() const
+bool GraphPanelPlotWidget::isLegendVisible() const
 {
-    // Return whether we have an active legend
+    // Return whether our legend is visible
 
     return mLegend->isActive();
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
+void GraphPanelPlotWidget::setLegendVisible(bool pLegendActive)
 {
     // Show/hide our legend
 
-    if (pLegendActive != isLegendActive()) {
+    if (pLegendActive != isLegendVisible()) {
         mLegend->setActive(pLegendActive);
         mLegendAction->setChecked(pLegendActive);
 
@@ -2239,15 +2239,6 @@ void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
 
         updateGui(false, true);
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::setLegendWidth(int pLegendWidth)
-{
-    // Set our legend's width
-
-    mLegend->setMinimumWidth(pLegendWidth);
 }
 
 //==============================================================================
@@ -3735,7 +3726,7 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     // To remove a graph may affect our GUI (and that of our neighbours), so
     // update it
 
-    updateGui(false, isLegendActive());
+    updateGui(false, isLegendVisible());
 
     return true;
 }
