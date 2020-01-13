@@ -2489,6 +2489,11 @@ void GraphPanelPlotWidget::setFontSizeAxisX(int pFontSizeAxisX)
 
         setAxisFont(QwtPlot::xBottom, fontAxisX);
         setTitleAxisX(titleAxisX());
+
+        // To change the font size of our X axis may have some effects on the
+        // alignment with our neighbours, so update ourselves
+
+        updateGui(false, true);
     }
 }
 
