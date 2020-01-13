@@ -2458,10 +2458,7 @@ void GraphPanelPlotWidget::setTitle(const QString &pTitle)
         QwtText title = QwtText(pTitle);
         QFont newFont = title.font();
 
-        newFont.setPointSize(2*fontSize());
-//---ISSUE2271--- WE WILL EVENTUALLY HAVE TO REMOVE THAT SCALING FACTOR AND,
-//                INSTEAD, HAVE THE MAIN FONT SIZE PROPERTY SCALED DOUBLED WHEN
-//                DEALING WITH AN OLD SED-ML FILE...
+        newFont.setPointSize(fontSize());
 
         title.setColor(mSurroundingAreaForegroundColor);
         title.setFont(newFont);

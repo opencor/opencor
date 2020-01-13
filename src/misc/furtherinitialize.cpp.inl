@@ -198,6 +198,16 @@ QString Simulation::furtherInitialize() const
 
                 if (   (QString::fromStdString(sedmlPlot2dPropertiesNode.getURI()) == SEDMLSupport::OpencorNamespace)
                     && (QString::fromStdString(sedmlPlot2dPropertiesNode.getName()) == SEDMLSupport::Properties)) {
+#ifdef GUI_SUPPORT
+                    std::string versionValue = sedmlPlot2dPropertiesNode.getAttrValue(qPrintable(SEDMLSupport::Version));
+                    int version = SEDMLSupport::VersionValue;
+
+                    try {
+                        version = versionValue.empty()?1:std::stoi(versionValue);
+                    } catch (...) {
+                    }
+#endif
+
                     for (uint k = 0, kMax = sedmlPlot2dPropertiesNode.getNumChildren(); k < kMax; ++k) {
                         libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(k);
 
@@ -208,7 +218,11 @@ QString Simulation::furtherInitialize() const
                             if (sedmlPlot2dPropertyNodeName == SEDMLSupport::BackgroundColor) {
                                 graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                             } else if (sedmlPlot2dPropertyNodeName == SEDMLSupport::FontSize) {
-                                graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+                                if (version == 1) {
+                                    graphPanelProperties[1]->setValue(QString::number(2*sedmlPlot2dPropertyNodeValue.toInt()));
+                                } else {
+                                    graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+                                }
 
                                 // Note: the below is in case we are dealing
                                 //       with an old SED-ML file where we had

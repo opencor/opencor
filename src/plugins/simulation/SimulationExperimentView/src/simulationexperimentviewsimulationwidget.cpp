@@ -1987,10 +1987,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         // Add our properties as an annotation
 
-        sedmlPlot2d->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
-                                               "    %3"
+        sedmlPlot2d->appendAnnotation(QString(R"(<%1 %2="%3" xmlns="%4">)"
+                                               "    %5"
                                                "</%1>").arg(SEDMLSupport::Properties,
-                                                            SEDMLSupport::OpencorNamespace,
+                                                            SEDMLSupport::Version)
+                                                       .arg(SEDMLSupport::VersionValue)
+                                                       .arg(SEDMLSupport::OpencorNamespace,
                                                             annotation).toStdString());
 
         // Keep track of the graph panel's graphs, if any
