@@ -1107,16 +1107,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *xAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSizeAxisX(), xAxisProperty);
-    mGraphPanelPropertyEditor->addBooleanProperty(xAxisProperty);
-    mGraphPanelPropertyEditor->addStringProperty(xAxisProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisX(), xAxisProperty);
+    mGraphPanelPropertyEditor->addStringProperty(graphPanelPlot->titleAxisX(), xAxisProperty);
 
     // Y axis
 
     Core::Property *yAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSizeAxisY(), yAxisProperty);
-    mGraphPanelPropertyEditor->addBooleanProperty(yAxisProperty);
-    mGraphPanelPropertyEditor->addStringProperty(yAxisProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisY(), yAxisProperty);
+    mGraphPanelPropertyEditor->addStringProperty(graphPanelPlot->titleAxisY(), yAxisProperty);
 
     // Zoom region
 
