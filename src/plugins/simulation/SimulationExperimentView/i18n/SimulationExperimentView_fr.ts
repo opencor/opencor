@@ -159,6 +159,10 @@
         <source>Size</source>
         <translation>Taille</translation>
     </message>
+    <message>
+        <source>Visible</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationParametersWidget</name>
@@ -669,11 +673,11 @@
     </message>
     <message>
         <source>[%1:%2] %3: %4.</source>
-        <translation type="unfinished">[%1:%2] %3 : %4.</translation>
+        <translation>[%1:%2] %3 : %4.</translation>
     </message>
     <message>
         <source>%1: %2.</source>
-        <translation type="unfinished">%1 : %2.</translation>
+        <translation>%1 : %2.</translation>
     </message>
 </context>
 </TS>
