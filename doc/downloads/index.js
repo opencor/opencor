@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Simulation Experiment view:</strong> can now customise the font size of the different bits of text in a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2271\">#2271</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 9.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2269\">#2269</a>)." }
                      ]
                    },
