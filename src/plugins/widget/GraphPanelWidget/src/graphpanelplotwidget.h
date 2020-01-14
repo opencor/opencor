@@ -285,8 +285,9 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor, int pLineWidth,
-                         Position pPosition, bool pCanMovePosition = true);
+                         const QColor &pForegroundColor, const int &pFontSize,
+                         int pLineWidth, Position pPosition,
+                         bool pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -324,7 +325,9 @@ public:
 
     void setChecked(GraphPanelPlotGraph *pGraph, bool pChecked);
 
+    int fontSize() const;
     void setFontSize(int pFontSize);
+
     void setBackgroundColor(const QColor &pBackgroundColor);
     void setForegroundColor(const QColor &pForegroundColor);
 
@@ -431,7 +434,7 @@ public:
     void setBackgroundColor(const QColor &pBackgroundColor);
 
     int fontSize() const;
-    void setFontSize(int pFontSize, bool pForceSetting = false);
+    void setFontSize(int pFontSize);
 
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
@@ -445,10 +448,11 @@ public:
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
 
-    bool isLegendActive() const;
-    void setLegendActive(bool pLegendActive);
+    int legendFontSize() const;
+    void setLegendFontSize(int pLegendFontSize);
 
-    void setLegendWidth(int pLegendWidth);
+    bool isLegendVisible() const;
+    void setLegendVisible(bool pLegendVisible);
 
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
@@ -462,6 +466,9 @@ public:
     QColor pointCoordinatesFontColor() const;
     void setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor);
 
+    int pointCoordinatesFontSize() const;
+    void setPointCoordinatesFontSize(int pPointCoordinatesFontSize);
+
     QColor surroundingAreaBackgroundColor() const;
     void setSurroundingAreaBackgroundColor(const QColor &pSurroundingAreaBackgroundColor);
 
@@ -470,11 +477,17 @@ public:
 
     void setTitle(const QString &pTitle);
 
+    int fontSizeAxisX() const;
+    void setFontSizeAxisX(int pFontSizeAxisX);
+
     bool logAxisX() const;
     void setLogAxisX(bool pLogAxisX);
 
     QString titleAxisX() const;
     void setTitleAxisX(const QString &pTitleAxisX);
+
+    int fontSizeAxisY() const;
+    void setFontSizeAxisY(int pFontSizeAxisY);
 
     bool logAxisY() const;
     void setLogAxisY(bool pLogAxisY);
@@ -493,6 +506,9 @@ public:
 
     QColor zoomRegionFontColor() const;
     void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
+
+    int zoomRegionFontSize() const;
+    void setZoomRegionFontSize(int pZoomRegionFontSize);
 
     bool zoomRegionFilled() const;
     void setZoomRegionFilled(bool pZoomRegionFilled);
@@ -562,6 +578,7 @@ private:
     int mPointCoordinatesWidth = 1;
     QColor mPointCoordinatesColor;
     QColor mPointCoordinatesFontColor = Qt::white;
+    int mPointCoordinatesFontSize = 10;
 
     QColor mSurroundingAreaBackgroundColor;
     QColor mSurroundingAreaForegroundColor;
@@ -570,6 +587,7 @@ private:
     int mZoomRegionWidth = 1;
     QColor mZoomRegionColor;
     QColor mZoomRegionFontColor = Qt::white;
+    int mZoomRegionFontSize = 10;
     bool mZoomRegionFilled = true;
     QColor mZoomRegionFillColor;
 

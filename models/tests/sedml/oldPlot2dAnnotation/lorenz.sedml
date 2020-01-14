@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <sedML level="1" version="3" xmlns="http://sed-ml.org/sed-ml/level1/version3" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <listOfSimulations>
-        <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="1000" outputEndTime="1000" outputStartTime="0">
+        <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="50000" outputEndTime="50" outputStartTime="0">
             <algorithm kisaoID="KISAO:0000019">
                 <listOfAlgorithmParameters>
                     <algorithmParameter kisaoID="KISAO:0000211" value="1e-07"/>
@@ -20,7 +20,7 @@
         </uniformTimeCourse>
     </listOfSimulations>
     <listOfModels>
-        <model id="model" language="urn:sedml:language:cellml.1_0" source="../../noble_model_1962.cellml"/>
+        <model id="model" language="urn:sedml:language:cellml.1_0" source="../../cellml/lorenz.cellml"/>
     </listOfModels>
     <listOfTasks>
         <repeatedTask id="repeatedTask" range="once" resetModel="true">
@@ -38,7 +38,7 @@
     <listOfDataGenerators>
         <dataGenerator id="xDataGenerator1_1">
             <listOfVariables>
-                <variable id="xVariable1_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable1_1" target="/cellml:model/cellml:component[@name='main']/cellml:variable[@name='t']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable1_1 </ci>
@@ -46,7 +46,7 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator1_1">
             <listOfVariables>
-                <variable id="yVariable1_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="yVariable1_1" target="/cellml:model/cellml:component[@name='main']/cellml:variable[@name='x']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable1_1 </ci>
@@ -54,7 +54,7 @@
         </dataGenerator>
         <dataGenerator id="xDataGenerator2_1">
             <listOfVariables>
-                <variable id="xVariable2_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable2_1" target="/cellml:model/cellml:component[@name='main']/cellml:variable[@name='x']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable2_1 </ci>
@@ -62,7 +62,7 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator2_1">
             <listOfVariables>
-                <variable id="yVariable2_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="yVariable2_1" target="/cellml:model/cellml:component[@name='main']/cellml:variable[@name='y']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable2_1 </ci>
@@ -70,7 +70,7 @@
         </dataGenerator>
         <dataGenerator id="xDataGenerator3_1">
             <listOfVariables>
-                <variable id="xVariable3_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable3_1" target="/cellml:model/cellml:component[@name='main']/cellml:variable[@name='x']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable3_1 </ci>
@@ -78,35 +78,19 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator3_1">
             <listOfVariables>
-                <variable id="yVariable3_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="yVariable3_1" target="/cellml:model/cellml:component[@name='main']/cellml:variable[@name='z']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable3_1 </ci>
-            </math>
-        </dataGenerator>
-        <dataGenerator id="xDataGenerator4_1">
-            <listOfVariables>
-                <variable id="xVariable4_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
-            </listOfVariables>
-            <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <ci> xVariable4_1 </ci>
-            </math>
-        </dataGenerator>
-        <dataGenerator id="yDataGenerator4_1">
-            <listOfVariables>
-                <variable id="yVariable4_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
-            </listOfVariables>
-            <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <ci> yVariable4_1 </ci>
             </math>
         </dataGenerator>
     </listOfDataGenerators>
     <listOfOutputs>
         <plot2D id="plot1">
             <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
+                <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>20</fontSize>
+                    <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <gridLines>
@@ -114,16 +98,12 @@
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>
-                        <fontSize>10</fontSize>
-                        <visible>false</visible>
-                    </legend>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#ececec</backgroundColor>
@@ -131,12 +111,10 @@
                     </surroundingArea>
                     <title/>
                     <xAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -145,7 +123,6 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
@@ -156,7 +133,7 @@
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
                             <selected>true</selected>
-                            <title/>
+                            <title>x vs. t</title>
                             <line>
                                 <style>solid</style>
                                 <width>2</width>
@@ -165,7 +142,7 @@
                             <symbol>
                                 <style>none</style>
                                 <size>8</size>
-                                <color>#000080</color>
+                                <color>#0072bd</color>
                                 <filled>true</filled>
                                 <fillColor>#ffffff</fillColor>
                             </symbol>
@@ -176,9 +153,9 @@
         </plot2D>
         <plot2D id="plot2">
             <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
+                <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>20</fontSize>
+                    <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <gridLines>
@@ -186,16 +163,12 @@
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>
-                        <fontSize>10</fontSize>
-                        <visible>false</visible>
-                    </legend>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#ececec</backgroundColor>
@@ -203,12 +176,10 @@
                     </surroundingArea>
                     <title/>
                     <xAxis>
-                        <fontSize>10</fontSize>
-                        <logarithmicScale>true</logarithmicScale>
+                        <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -217,27 +188,26 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
                 </properties>
             </annotation>
             <listOfCurves>
-                <curve id="curve2_1" logX="true" logY="false" xDataReference="xDataGenerator2_1" yDataReference="yDataGenerator2_1">
+                <curve id="curve2_1" logX="false" logY="false" xDataReference="xDataGenerator2_1" yDataReference="yDataGenerator2_1">
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
                             <selected>true</selected>
-                            <title/>
+                            <title>y vs. x</title>
                             <line>
                                 <style>solid</style>
                                 <width>2</width>
-                                <color>#0072bd</color>
+                                <color>#d95319</color>
                             </line>
                             <symbol>
                                 <style>none</style>
                                 <size>8</size>
-                                <color>#000080</color>
+                                <color>#0072bd</color>
                                 <filled>true</filled>
                                 <fillColor>#ffffff</fillColor>
                             </symbol>
@@ -248,9 +218,9 @@
         </plot2D>
         <plot2D id="plot3">
             <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
+                <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>20</fontSize>
+                    <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <gridLines>
@@ -258,16 +228,12 @@
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>
-                        <fontSize>10</fontSize>
-                        <visible>false</visible>
-                    </legend>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
                         <backgroundColor>#ececec</backgroundColor>
@@ -275,13 +241,11 @@
                     </surroundingArea>
                     <title/>
                     <xAxis>
-                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
-                        <fontSize>10</fontSize>
-                        <logarithmicScale>true</logarithmicScale>
+                        <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
                     <zoomRegion>
@@ -289,99 +253,26 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
                 </properties>
             </annotation>
             <listOfCurves>
-                <curve id="curve3_1" logX="false" logY="true" xDataReference="xDataGenerator3_1" yDataReference="yDataGenerator3_1">
+                <curve id="curve3_1" logX="false" logY="false" xDataReference="xDataGenerator3_1" yDataReference="yDataGenerator3_1">
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
                             <selected>true</selected>
-                            <title/>
+                            <title>z vs. x</title>
                             <line>
                                 <style>solid</style>
                                 <width>2</width>
-                                <color>#0072bd</color>
+                                <color>#edb120</color>
                             </line>
                             <symbol>
                                 <style>none</style>
                                 <size>8</size>
-                                <color>#000080</color>
-                                <filled>true</filled>
-                                <fillColor>#ffffff</fillColor>
-                            </symbol>
-                        </properties>
-                    </annotation>
-                </curve>
-            </listOfCurves>
-        </plot2D>
-        <plot2D id="plot4">
-            <annotation>
-                <properties version="2" xmlns="http://www.opencor.ws/">
-                    <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>20</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
-                    <height>1</height>
-                    <gridLines>
-                        <style>dot</style>
-                        <width>1</width>
-                        <color>#a0a0a4</color>
-                    </gridLines>
-                    <legend>
-                        <fontSize>10</fontSize>
-                        <visible>false</visible>
-                    </legend>
-                    <pointCoordinates>
-                        <style>dash</style>
-                        <width>1</width>
-                        <color>#b0008080</color>
-                        <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
-                    </pointCoordinates>
-                    <surroundingArea>
-                        <backgroundColor>#ececec</backgroundColor>
-                        <foregroundColor>#000000</foregroundColor>
-                    </surroundingArea>
-                    <title/>
-                    <xAxis>
-                        <fontSize>10</fontSize>
-                        <logarithmicScale>true</logarithmicScale>
-                        <title/>
-                    </xAxis>
-                    <yAxis>
-                        <fontSize>10</fontSize>
-                        <logarithmicScale>true</logarithmicScale>
-                        <title/>
-                    </yAxis>
-                    <zoomRegion>
-                        <style>solid</style>
-                        <width>1</width>
-                        <color>#b0800000</color>
-                        <fontColor>#ffffff</fontColor>
-                        <fontSize>10</fontSize>
-                        <filled>true</filled>
-                        <fillColor>#30ffff00</fillColor>
-                    </zoomRegion>
-                </properties>
-            </annotation>
-            <listOfCurves>
-                <curve id="curve4_1" logX="true" logY="true" xDataReference="xDataGenerator4_1" yDataReference="yDataGenerator4_1">
-                    <annotation>
-                        <properties xmlns="http://www.opencor.ws/">
-                            <selected>true</selected>
-                            <title/>
-                            <line>
-                                <style>solid</style>
-                                <width>2</width>
                                 <color>#0072bd</color>
-                            </line>
-                            <symbol>
-                                <style>none</style>
-                                <size>8</size>
-                                <color>#000080</color>
                                 <filled>true</filled>
                                 <fillColor>#ffffff</fillColor>
                             </symbol>
