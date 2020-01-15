@@ -21,14 +21,6 @@ cpack
 
 exitCode=$?
 
-if [ "`uname -s`" = "Darwin" ]; then
-    packageName="OpenCOR-`date '+%Y-%m-%d'`-macOS"
-
-    hdiutil create -srcfolder $packageName.pkg $packageName.dmg
-
-    rm -f $packageName.pkg
-fi
-
 cd $origDir
 
 if [ $exitCode -eq 0 ]; then
