@@ -86,11 +86,11 @@ void SedmlEditingViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve and set our sizes
 
-    static const int availableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
-    static const QVariantList defaultEditingWidgetSizes = QVariantList() << 0.91*availableGeometryHeight
-                                                                         << 0.09*availableGeometryHeight;
+    static const int AvailableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
+    static const QVariantList DefaultEditingWidgetSizes = QVariantList() << 0.91*AvailableGeometryHeight
+                                                                         << 0.09*AvailableGeometryHeight;
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSedmlEditingViewWidgetSizes, defaultEditingWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSedmlEditingViewWidgetSizes, DefaultEditingWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 

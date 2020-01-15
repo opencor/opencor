@@ -78,23 +78,23 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
-    static const QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
-    static const int availableGeometryHeight = availableGeometry.height();
-    static const int availableGeometryWidth = availableGeometry.width();
-    static const double panelsRelativeWidth = 0.25*availableGeometryWidth;
-    static const QVariantList defaultContentsWidgetSizes = QVariantList() << panelsRelativeWidth
-                                                                          << 0.75*availableGeometryWidth;
-    static const QVariantList defaultSimulationWidgetSizes = QVariantList() << 0.93*availableGeometryHeight
-                                                                            << 0.07*availableGeometryHeight;
+    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
+    static const int AvailableGeometryHeight = AvailableGeometry.height();
+    static const int AvailableGeometryWidth = AvailableGeometry.width();
+    static const double PanelsRelativeWidth = 0.25*AvailableGeometryWidth;
+    static const QVariantList DefaultContentsWidgetSizes = QVariantList() << PanelsRelativeWidth
+                                                                          << 0.75*AvailableGeometryWidth;
+    static const QVariantList DefaultSimulationWidgetSizes = QVariantList() << 0.93*AvailableGeometryHeight
+                                                                            << 0.07*AvailableGeometryHeight;
 
-    mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, defaultContentsWidgetSizes).toList());
-    mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, defaultSimulationWidgetSizes).toList());
+    mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, DefaultContentsWidgetSizes).toList());
+    mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, DefaultSimulationWidgetSizes).toList());
 
     // Retrieve the collapsed states of our collapsible widget
 
-    static const QVariantList defaultCollapsed = QVariantList() << false << false << false;
+    static const QVariantList DefaultCollapsed = QVariantList() << false << false << false;
 
-    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings.value(SettingsCollapsed, defaultCollapsed).toList());
+    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings.value(SettingsCollapsed, DefaultCollapsed).toList());
 
     // Retrieve our graph panel /graphs mode
 
@@ -108,17 +108,17 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
     //       start OpenCOR, we have docked windows on both sides of our central
     //       widget)...
 
-    static const QVariantList defaultTwoColumnWidths = QVariantList() << 0.27*panelsRelativeWidth
-                                                                      << 0.27*panelsRelativeWidth;
-    static const QVariantList defaultThreeColumnWidths = QVariantList() << 0.18*panelsRelativeWidth
-                                                                        << 0.18*panelsRelativeWidth
-                                                                        << 0.18*panelsRelativeWidth;
+    static const QVariantList DefaultTwoColumnWidths = QVariantList() << 0.27*PanelsRelativeWidth
+                                                                      << 0.27*PanelsRelativeWidth;
+    static const QVariantList DefaultThreeColumnWidths = QVariantList() << 0.18*PanelsRelativeWidth
+                                                                        << 0.18*PanelsRelativeWidth
+                                                                        << 0.18*PanelsRelativeWidth;
 
-    mSimulationColumnWidths = qVariantListToIntList(pSettings.value(SettingsSimulationColumnWidths, defaultThreeColumnWidths).toList());
-    mSolversColumnWidths = qVariantListToIntList(pSettings.value(SettingsSolversColumnWidths, defaultThreeColumnWidths).toList());
-    mGraphPanelColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphPanelColumnWidths, defaultTwoColumnWidths).toList());
-    mGraphsColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphsColumnWidths, defaultTwoColumnWidths).toList());
-    mParametersColumnWidths = qVariantListToIntList(pSettings.value(SettingsParametersColumnWidths, defaultThreeColumnWidths).toList());
+    mSimulationColumnWidths = qVariantListToIntList(pSettings.value(SettingsSimulationColumnWidths, DefaultThreeColumnWidths).toList());
+    mSolversColumnWidths = qVariantListToIntList(pSettings.value(SettingsSolversColumnWidths, DefaultThreeColumnWidths).toList());
+    mGraphPanelColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphPanelColumnWidths, DefaultTwoColumnWidths).toList());
+    mGraphsColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphsColumnWidths, DefaultTwoColumnWidths).toList());
+    mParametersColumnWidths = qVariantListToIntList(pSettings.value(SettingsParametersColumnWidths, DefaultThreeColumnWidths).toList());
 }
 
 //==============================================================================

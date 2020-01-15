@@ -65,17 +65,17 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings &pSettings)
     //       some information between the different instances, so we have to do
     //       it here instead...
 
-    static const QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
-    static const int availableGeometryWidth = availableGeometry.width();
-    static const int availableGeometryHeight = availableGeometry.height();
-    static const QVariantList defaultEditingWidgetSizes = QVariantList() << 0.25*availableGeometryWidth
-                                                                         << 0.75*availableGeometryWidth;
-    static const QVariantList defaultMetadataDetailsWidgetSizes = QVariantList() << 0.25*availableGeometryHeight
-                                                                                 << 0.25*availableGeometryHeight
-                                                                                 << 0.50*availableGeometryHeight;
+    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
+    static const int AvailableGeometryWidth = AvailableGeometry.width();
+    static const int AvailableGeometryHeight = AvailableGeometry.height();
+    static const QVariantList DefaultEditingWidgetSizes = QVariantList() << 0.25*AvailableGeometryWidth
+                                                                         << 0.75*AvailableGeometryWidth;
+    static const QVariantList DefaultMetadataDetailsWidgetSizes = QVariantList() << 0.25*AvailableGeometryHeight
+                                                                                 << 0.25*AvailableGeometryHeight
+                                                                                 << 0.50*AvailableGeometryHeight;
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewEditingWidgetSizes, DefaultEditingWidgetSizes).toList());
+    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, DefaultMetadataDetailsWidgetSizes).toList());
 }
 
 //==============================================================================
