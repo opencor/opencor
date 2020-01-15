@@ -84,8 +84,8 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
     static const double PanelsRelativeWidth = 0.25*AvailableGeometryWidth;
     static const QVariantList DefaultContentsWidgetSizes = QVariantList() << PanelsRelativeWidth
                                                                           << 0.75*AvailableGeometryWidth;
-    static const QVariantList DefaultSimulationWidgetSizes = QVariantList() << 0.93*AvailableGeometryHeight
-                                                                            << 0.07*AvailableGeometryHeight;
+    static const QVariantList DefaultSimulationWidgetSizes = QVariantList() << 0.91*AvailableGeometryHeight
+                                                                            << 0.09*AvailableGeometryHeight;
 
     mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, DefaultContentsWidgetSizes).toList());
     mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, DefaultSimulationWidgetSizes).toList());
