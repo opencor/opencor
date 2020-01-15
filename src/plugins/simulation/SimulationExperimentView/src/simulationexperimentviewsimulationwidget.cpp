@@ -511,8 +511,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSplitterWidget->addWidget(mContentsWidget);
     mSplitterWidget->addWidget(simulationOutputWidget);
 
-    mSplitterWidget->setSizes(QIntList() << availableGeometry.height() << 1);
-
     layout->addWidget(mSplitterWidget);
 
     // Create our (thin) simulation progress widget
@@ -1171,9 +1169,7 @@ void SimulationExperimentViewSimulationWidget::setSizes(const QIntList &pSizes)
     // Set the sizes of our spliter widget, but only if there effectively are
     // some
 
-    if (!pSizes.isEmpty()) {
-        mSplitterWidget->setSizes(pSizes);
-    }
+    mSplitterWidget->setSizes(pSizes);
 }
 
 //==============================================================================

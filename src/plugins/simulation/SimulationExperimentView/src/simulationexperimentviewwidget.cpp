@@ -62,8 +62,8 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
 
 //==============================================================================
 
-static const char *SettingsSizes                  = "Sizes";
 static const char *SettingsContentsSizes          = "ContentsSizes";
+static const char *SettingsSimulationSizes        = "SimulationSizes";
 static const char *SettingsCollapsed              = "Collapsed";
 static const char *SettingsGraphPanelGraphsMode   = "GraphPanelGraphsMode";
 static const char *SettingsSimulationColumnWidths = "SimulationColumnWidths";
@@ -78,33 +78,47 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
-    int availableGeometryWidth = qApp->primaryScreen()->availableGeometry().width();
-    QVariantList defaultContentsSizes = QVariantList() << 0.25*availableGeometryWidth
-                                                       << 0.75*availableGeometryWidth;
+    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
+    static const int AvailableGeometryHeight = AvailableGeometry.height();
+    static const int AvailableGeometryWidth = AvailableGeometry.width();
+    static const double PanelsRelativeWidth = 0.25*AvailableGeometryWidth;
+    static const QVariantList DefaultContentsWidgetSizes = QVariantList() << PanelsRelativeWidth
+                                                                          << 0.75*AvailableGeometryWidth;
+    static const QVariantList DefaultSimulationWidgetSizes = QVariantList() << 0.93*AvailableGeometryHeight
+                                                                            << 0.07*AvailableGeometryHeight;
 
-    mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSizes).toList());
-    mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, defaultContentsSizes).toList());
+    mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, DefaultContentsWidgetSizes).toList());
+    mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, DefaultSimulationWidgetSizes).toList());
 
     // Retrieve the collapsed states of our collapsible widget
 
-    static const QVariantList defaultCollapsed = QVariantList() << false << false << false;
+    static const QVariantList DefaultCollapsed = QVariantList() << false << false << false;
 
-    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings.value(SettingsCollapsed, defaultCollapsed).toList());
+    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings.value(SettingsCollapsed, DefaultCollapsed).toList());
 
     // Retrieve our graph panel /graphs mode
 
     mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings.value(SettingsGraphPanelGraphsMode, int(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs)).toInt());
 
     // Retrieve the columns' width of our various property editors
+    // Note: we use 54% because the width of our property editor widgets'
+    //       columns is not constrained. So, rather than providing relative
+    //       widths, we must provide absolute widths and we end up with good
+    //       absolute widths by using 54% (to account for the fact that, when we
+    //       start OpenCOR, we have docked windows on both sides of our central
+    //       widget)...
 
-    static const QVariantList defaultThreeColumnWidths = QVariantList() << 100 << 100 << 100;
-    static const QVariantList defaultTwoColumnWidths = QVariantList() << 100 << 100;
+    static const QVariantList DefaultTwoColumnWidths = QVariantList() << 0.27*PanelsRelativeWidth
+                                                                      << 0.27*PanelsRelativeWidth;
+    static const QVariantList DefaultThreeColumnWidths = QVariantList() << 0.18*PanelsRelativeWidth
+                                                                        << 0.18*PanelsRelativeWidth
+                                                                        << 0.18*PanelsRelativeWidth;
 
-    mSimulationColumnWidths = qVariantListToIntList(pSettings.value(SettingsSimulationColumnWidths, defaultThreeColumnWidths).toList());
-    mSolversColumnWidths = qVariantListToIntList(pSettings.value(SettingsSolversColumnWidths, defaultThreeColumnWidths).toList());
-    mGraphPanelColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphPanelColumnWidths, defaultTwoColumnWidths).toList());
-    mGraphsColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphsColumnWidths, defaultTwoColumnWidths).toList());
-    mParametersColumnWidths = qVariantListToIntList(pSettings.value(SettingsParametersColumnWidths, defaultThreeColumnWidths).toList());
+    mSimulationColumnWidths = qVariantListToIntList(pSettings.value(SettingsSimulationColumnWidths, DefaultThreeColumnWidths).toList());
+    mSolversColumnWidths = qVariantListToIntList(pSettings.value(SettingsSolversColumnWidths, DefaultThreeColumnWidths).toList());
+    mGraphPanelColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphPanelColumnWidths, DefaultTwoColumnWidths).toList());
+    mGraphsColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphsColumnWidths, DefaultTwoColumnWidths).toList());
+    mParametersColumnWidths = qVariantListToIntList(pSettings.value(SettingsParametersColumnWidths, DefaultThreeColumnWidths).toList());
 }
 
 //==============================================================================
@@ -114,8 +128,8 @@ void SimulationExperimentViewWidget::saveSettings(QSettings &pSettings) const
     // Keep track of the sizes of our simulation widget and those of its
     // contents widget
 
-    pSettings.setValue(SettingsSizes, qIntListToVariantList(mSimulationWidgetSizes));
     pSettings.setValue(SettingsContentsSizes, qIntListToVariantList(mContentsWidgetSizes));
+    pSettings.setValue(SettingsSimulationSizes, qIntListToVariantList(mSimulationWidgetSizes));
 
     // Keep track of the collapsed states of our collapsible widget
 
