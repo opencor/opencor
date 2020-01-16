@@ -3,11 +3,11 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 19.2.6)
+set(PACKAGE_VERSION 19.3.2)
 
 # Git tag for our library
 
-set(GIT_TAG v19.2.6)
+set(GIT_TAG v19.3.2)
 
 # Specify where our local package will be installed
 
@@ -30,9 +30,9 @@ if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0943cd1413a302c943d6e613f44775ca216e8374
+                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5404f50c9077550c07eda77e0485531d16976990
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 6d8f2e89ef80e7f0f3fc4307e3b286a212664dd7)
+                          SHA1_VALUES 6557a462bc6f1d8d94dcd8ff6b67ea7a1ccafe58)
 else()
     # Build Mesa as an external project
 
@@ -55,7 +55,7 @@ else()
         CONFIGURE_COMMAND
             ""
         BUILD_COMMAND
-            scons build=release libgl-xlib
+            scons force_scons=1 build=release libgl-xlib
         INSTALL_COMMAND
             cp ${PACKAGE_BUILD_DIR}/build/linux-x86_64/gallium/targets/libgl-xlib/${SHARED_LIBRARY} <INSTALL_DIR>/lib
         BUILD_BYPRODUCTS
