@@ -3149,7 +3149,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsReset()
 {
     setUpdatesEnabled(false);
         // Update our simulation mode and check for results
-        // Note: see clearSimulationResults() for the reason behing temporarily
+        // Note: see clearSimulationResults() for the reason behind temporarily
         //       disabling updates...
 
         updateSimulationMode();
