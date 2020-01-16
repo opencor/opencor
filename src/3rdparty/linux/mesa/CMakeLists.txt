@@ -55,7 +55,7 @@ else()
         CONFIGURE_COMMAND
             ""
         BUILD_COMMAND
-            scons build=release libgl-xlib
+            scons force_scons=1 build=release libgl-xlib
         INSTALL_COMMAND
             cp ${PACKAGE_BUILD_DIR}/build/linux-x86_64/gallium/targets/libgl-xlib/${SHARED_LIBRARY} <INSTALL_DIR>/lib
         BUILD_BYPRODUCTS
