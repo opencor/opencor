@@ -30,9 +30,9 @@ if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0943cd1413a302c943d6e613f44775ca216e8374
+                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5404f50c9077550c07eda77e0485531d16976990
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 6d8f2e89ef80e7f0f3fc4307e3b286a212664dd7)
+                          SHA1_VALUES 6557a462bc6f1d8d94dcd8ff6b67ea7a1ccafe58)
 else()
     # Build Mesa as an external project
 
