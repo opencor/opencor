@@ -396,7 +396,8 @@ void CorePlugin::initializePlugin()
                                       QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_O),
                                       mainWindow());
 
-    mFileReloadAction = newAction(mainWindow());
+    mFileReloadAction = newAction(QKeySequence(Qt::ControlModifier|Qt::Key_R),
+                                  mainWindow());
 
     mFileDuplicateAction = newAction(QKeySequence(Qt::ControlModifier|Qt::Key_D),
                                      mainWindow());
