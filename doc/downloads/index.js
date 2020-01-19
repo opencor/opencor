@@ -20,7 +20,7 @@ var jsonData = { "versions": [
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 12, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
-                       { "name": "Windows", "supported": "Windows 7 and later",
+                       { "name": "Windows", "supported": "Windows 10",
                          "files": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
