@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 12, "year": 2019, "type": 2, "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 1, "year": 2020, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 10",
                          "files": [
@@ -32,7 +32,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
                          "files": [
-                           { "extension": ".dmg" }, { "extension": ".zip" }
+                           { "extension": ".pkg" }, { "extension": ".zip" }
                          ]
                        }
                      ],
