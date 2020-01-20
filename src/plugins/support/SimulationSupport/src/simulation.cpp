@@ -977,21 +977,25 @@ void SimulationResults::reload()
 
     mDataDataStores.clear();
 
-    reset();
+    reset(true);
 }
 
 //==============================================================================
 
-void SimulationResults::reset()
+void SimulationResults::reset(bool pReloading)
 {
     // Reset our data store by deleting it and then recreating it
 
     deleteDataStore();
     createDataStore();
 
-    // Let people know that we have been reset
+    // Let people know that we have been reset, but only if we are not reloading
+    // since otherwise our GUI may crash due our checking for results (see
+    // https://github.com/opencor/opencor/issues/2290)
 
-    emit resultsReset();
+    if (!pReloading) {
+        emit resultsReset();
+    }
 }
 
 //==============================================================================

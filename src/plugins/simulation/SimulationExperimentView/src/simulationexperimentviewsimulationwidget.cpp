@@ -193,7 +193,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mResetAllModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetAllModelParameters);
     connect(mClearSimulationResultsAction, &QAction::triggered,
-            this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
+            this, &SimulationExperimentViewSimulationWidget::clearSimulationResults);
     connect(mDevelopmentModeAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::developmentMode);
     connect(mAddGraphPanelAction, &QAction::triggered,
@@ -877,7 +877,7 @@ static const char *OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
+void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 {
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
@@ -914,7 +914,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         // Clean up our output, if needed
 
-        if (pReloadingView) {
+        if (pReloading) {
             mOutputMessage = QString();
         }
 
@@ -1001,8 +1001,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // Note: to clear our simualtion data will also update our
             //       simulation mode, so we are fine...
 
-            if (pReloadingView) {
-                clearSimulationResults();
+            if (pReloading) {
+                clearSimulationResults(pReloading);
             } else {
                 updateSimulationMode();
             }
@@ -1099,12 +1099,12 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
             // Initialise our simulation
 
-            initializeSimulation();
+            initializeSimulation(pReloading);
 
             // Now, we can safely update our parameters widget since our model
             // parameters have been computed
 
-            mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloadingView);
+            mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloading);
         }
 
         // Resume the tracking of certain things
@@ -1126,7 +1126,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             initializeGui(mValidSimulationEnvironment);
 
             if (mValidSimulationEnvironment) {
-                initializeSimulation();
+                initializeSimulation(pReloading);
             }
         }
     mContentsWidget->setUpdatesEnabled(true);
@@ -1460,7 +1460,7 @@ void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pReloading)
 {
     setUpdatesEnabled(false);
         // Clear our simulation results
@@ -1469,7 +1469,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
         //       were to have several graph panels since they would try to
         //       realign themselves)...
 
-        mSimulation->results()->reset();
+        mSimulation->results()->reset(pReloading);
     setUpdatesEnabled(true);
 }
 
@@ -2718,13 +2718,13 @@ void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulati
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initializeSimulation()
+void SimulationExperimentViewSimulationWidget::initializeSimulation(bool pReloading)
 {
     // Reset both the simulation's data and results (well, initialise in the
     // case of its data)
 
     mSimulation->data()->reset();
-    mSimulation->results()->reset();
+    mSimulation->results()->reset(pReloading);
 
     // Retrieve our simulation and solvers properties since they may have an
     // effect on our parameter values (as well as result in some solver
@@ -3981,6 +3981,8 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
     mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
 
     // Check whether any of our graph panel / graphs properties has changed
+    // Note: we check that allPropertyValues is not empty since it may be when
+    //       reloading...
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
@@ -3990,17 +3992,25 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
     for (auto graphPanel : graphPanelsWidget->graphPanels()) {
         Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
 
-        mGraphPanelPropertiesModified.insert(propertyEditor,
-                                             mGraphPanelProperties.contains(propertyEditor)?
-                                                 allPropertyValues(propertyEditor) != mGraphPanelProperties.value(propertyEditor):
-                                                 true);
+        if (mGraphPanelProperties.contains(propertyEditor)) {
+            QVariantList allPropertyValues = this->allPropertyValues(propertyEditor);
+
+            if (!allPropertyValues.isEmpty()) {
+                mGraphPanelPropertiesModified.insert(propertyEditor,
+                                                     allPropertyValues != mGraphPanelProperties.value(propertyEditor));
+            }
+        }
 
         propertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
 
-        mGraphsPropertiesModified.insert(propertyEditor,
-                                         mGraphsProperties.contains(propertyEditor)?
-                                             allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor):
-                                             true);
+        if (mGraphsProperties.contains(propertyEditor)) {
+            QVariantList allPropertyValues = this->allPropertyValues(propertyEditor);
+
+            if (!allPropertyValues.isEmpty()) {
+                mGraphsPropertiesModified.insert(propertyEditor,
+                                                 allPropertyValues != mGraphsProperties.value(propertyEditor));
+            }
+        }
     }
 
     // Update our file's modified status

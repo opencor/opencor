@@ -66,7 +66,7 @@ public:
     void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation,
-                    bool pReloadingView = false);
+                    bool pReloading = false);
     void finalize();
 
     void importData(DataStore::DataStoreImportData *pImportData);

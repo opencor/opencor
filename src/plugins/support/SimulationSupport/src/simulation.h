@@ -317,7 +317,7 @@ signals:
 public slots:
     void reload();
 
-    void reset();
+    void reset(bool pReloading = false);
 
     int runsCount() const;
 

@@ -139,7 +139,7 @@ public:
 
     void retranslateUi() override;
 
-    void initialize(bool pReloadingView = false);
+    void initialize(bool pReloading = false);
     void finalize();
 
     void setSizes(const QIntList &pSizes);
@@ -311,7 +311,7 @@ private:
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);
-    void initializeSimulation();
+    void initializeSimulation(bool pReloading = false);
 
     void initializeTrackers(bool pInitialzeGraphPanelsWidgetSizes = false);
 
@@ -356,7 +356,7 @@ signals:
     void exportDone(DataStore::DataStoreExporter *pDataStoreExporter);
 
 public slots:
-    void clearSimulationResults();
+    void clearSimulationResults(bool pReloading = false);
 
 private slots:
     void runPauseResumeSimulation();
