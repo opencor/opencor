@@ -32,7 +32,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
                          "files": [
-                           { "extension": ".dmg" }, { "extension": ".zip" }
+                           { "extension": ".pkg" }, { "extension": ".zip" }
                          ]
                        }
                      ],

@@ -400,7 +400,8 @@ function versions(downloads) {
                         var fileType;
 
                         if (   (fileExtension === ".exe")
-                            || (fileExtension === ".dmg")) {
+                            || (fileExtension === ".dmg")
+                            || (fileExtension === ".pkg")) {
                             fileType = "Installer";
                         } else if (fileExtension === ".zip") {
                             fileType = "ZIP file";
