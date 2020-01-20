@@ -109,7 +109,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 //==============================================================================
 
 void SimulationExperimentViewInformationParametersWidget::initialize(SimulationSupport::Simulation *pSimulation,
-                                                                     bool pReloadingView)
+                                                                     bool pReloading)
 {
     // Keep track of the simulation
 
@@ -136,7 +136,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
     //       we need to 'retranslate' them otherwise they will read "1", "2",
     //       "3", etc.
 
-    if (pReloadingView) {
+    if (pReloading) {
         PropertyEditorWidget::retranslateUi();
     }
 
@@ -147,7 +147,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     // Reset our import information, if we are reloading ourselves
 
-    if (pReloadingView) {
+    if (pReloading) {
         mImportComponent = nullptr;
     }
 

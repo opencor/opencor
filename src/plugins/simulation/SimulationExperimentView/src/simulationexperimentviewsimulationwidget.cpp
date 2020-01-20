@@ -193,7 +193,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mResetAllModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetAllModelParameters);
     connect(mClearSimulationResultsAction, &QAction::triggered,
-            this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
+            this, &SimulationExperimentViewSimulationWidget::clearSimulationResults);
     connect(mDevelopmentModeAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::developmentMode);
     connect(mAddGraphPanelAction, &QAction::triggered,
@@ -877,7 +877,7 @@ static const char *OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
+void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 {
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
@@ -914,7 +914,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         // Clean up our output, if needed
 
-        if (pReloadingView) {
+        if (pReloading) {
             mOutputMessage = QString();
         }
 
@@ -1001,7 +1001,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // Note: to clear our simualtion data will also update our
             //       simulation mode, so we are fine...
 
-            if (pReloadingView) {
+            if (pReloading) {
                 clearSimulationResults();
             } else {
                 updateSimulationMode();
@@ -1104,7 +1104,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // Now, we can safely update our parameters widget since our model
             // parameters have been computed
 
-            mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloadingView);
+            mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloading);
         }
 
         // Resume the tracking of certain things

@@ -139,7 +139,7 @@ public:
 
     void retranslateUi() override;
 
-    void initialize(bool pReloadingView = false);
+    void initialize(bool pReloading = false);
     void finalize();
 
     void setSizes(const QIntList &pSizes);
