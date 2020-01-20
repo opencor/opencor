@@ -311,7 +311,7 @@ private:
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);
-    void initializeSimulation();
+    void initializeSimulation(bool pReloading = false);
 
     void initializeTrackers(bool pInitialzeGraphPanelsWidgetSizes = false);
 
@@ -356,7 +356,7 @@ signals:
     void exportDone(DataStore::DataStoreExporter *pDataStoreExporter);
 
 public slots:
-    void clearSimulationResults();
+    void clearSimulationResults(bool pReloading = false);
 
 private slots:
     void runPauseResumeSimulation();

@@ -1002,7 +1002,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
             //       simulation mode, so we are fine...
 
             if (pReloading) {
-                clearSimulationResults();
+                clearSimulationResults(pReloading);
             } else {
                 updateSimulationMode();
             }
@@ -1099,7 +1099,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 
             // Initialise our simulation
 
-            initializeSimulation();
+            initializeSimulation(pReloading);
 
             // Now, we can safely update our parameters widget since our model
             // parameters have been computed
@@ -1126,7 +1126,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
             initializeGui(mValidSimulationEnvironment);
 
             if (mValidSimulationEnvironment) {
-                initializeSimulation();
+                initializeSimulation(pReloading);
             }
         }
     mContentsWidget->setUpdatesEnabled(true);
@@ -1460,7 +1460,7 @@ void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pReloading)
 {
     setUpdatesEnabled(false);
         // Clear our simulation results
@@ -1469,7 +1469,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
         //       were to have several graph panels since they would try to
         //       realign themselves)...
 
-        mSimulation->results()->reset();
+        mSimulation->results()->reset(pReloading);
     setUpdatesEnabled(true);
 }
 
@@ -2718,13 +2718,13 @@ void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulati
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initializeSimulation()
+void SimulationExperimentViewSimulationWidget::initializeSimulation(bool pReloading)
 {
     // Reset both the simulation's data and results (well, initialise in the
     // case of its data)
 
     mSimulation->data()->reset();
-    mSimulation->results()->reset();
+    mSimulation->results()->reset(pReloading);
 
     // Retrieve our simulation and solvers properties since they may have an
     // effect on our parameter values (as well as result in some solver
