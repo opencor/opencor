@@ -3981,6 +3981,8 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
     mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
 
     // Check whether any of our graph panel / graphs properties has changed
+    // Note: we check that allPropertyValues is not empty since it may be when
+    //       reloading...
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
@@ -3990,17 +3992,25 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
     for (auto graphPanel : graphPanelsWidget->graphPanels()) {
         Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
 
-        mGraphPanelPropertiesModified.insert(propertyEditor,
-                                             mGraphPanelProperties.contains(propertyEditor)?
-                                                 allPropertyValues(propertyEditor) != mGraphPanelProperties.value(propertyEditor):
-                                                 true);
+        if (mGraphPanelProperties.contains(propertyEditor)) {
+            QVariantList allPropertyValues = this->allPropertyValues(propertyEditor);
+
+            if (!allPropertyValues.isEmpty()) {
+                mGraphPanelPropertiesModified.insert(propertyEditor,
+                                                     allPropertyValues != mGraphPanelProperties.value(propertyEditor));
+            }
+        }
 
         propertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
 
-        mGraphsPropertiesModified.insert(propertyEditor,
-                                         mGraphsProperties.contains(propertyEditor)?
-                                             allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor):
-                                             true);
+        if (mGraphsProperties.contains(propertyEditor)) {
+            QVariantList allPropertyValues = this->allPropertyValues(propertyEditor);
+
+            if (!allPropertyValues.isEmpty()) {
+                mGraphsPropertiesModified.insert(propertyEditor,
+                                                 allPropertyValues != mGraphsProperties.value(propertyEditor));
+            }
+        }
     }
 
     // Update our file's modified status
