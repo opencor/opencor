@@ -132,11 +132,13 @@ QFont CellmlTextViewLexer::font(int pStyle) const
 
 void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 {
+#ifdef QT_DEBUG
     // Make sure that we have an editor
 
     if (editor() == nullptr) {
-        return;
+        qFatal("FATAL ERROR | %s:%d: styling can only be performed with an editor.", __FILE__, __LINE__);
     }
+#endif
 
     // Retrieve the text to style
 
