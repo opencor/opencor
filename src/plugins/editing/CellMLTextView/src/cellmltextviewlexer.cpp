@@ -830,12 +830,16 @@ void CellmlTextViewLexer::styleTextNumber(int pBytesStart, const QString &pText,
                                mFullText[nextCharPos]:
                                QChar()).unicode();
 
-        if ((       (prevChar  <  48) || ((prevChar  >  57) && (prevChar <  65))
+        if (   (    (prevChar  <  48)
+                || ((prevChar  >  57) && (prevChar <  65))
                 || ((prevChar  >  90) &&  (prevChar  <  95))
-                ||  (prevChar ==  96) || ((prevChar  > 122) && (prevChar < 128)))
-            && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar <  65))
+                ||  (prevChar ==  96)
+                || ((prevChar  > 122) && (prevChar < 128)))
+            && (    (nextChar  <  46)
+                || ((nextChar  >  46) && (nextChar <  65))
                 || ((nextChar  >  90) &&  (nextChar  <  95))
-                ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
+                ||  (nextChar ==  96)
+                || ((nextChar  > 122) && (nextChar < 128)))) {
             applyStyle(pBytesStart+textBytesPosition(pText, capturedStart),
                        pBytesStart+textBytesPosition(pText, capturedStart+capturedLength),
                        pStyle);
