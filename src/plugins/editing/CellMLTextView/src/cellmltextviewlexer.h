@@ -77,6 +77,7 @@ private:
 
     QString mEolString;
 
+    void applyStyle(int pBytesStart, int pBytesEnd, Style pStyle);
     void styleText(int pBytesStart, int pBytesEnd, const QString &pText,
                    bool pParameterBlock);
     void styleTextCurrent(int pBytesStart, int pBytesEnd, const QString &pText,
@@ -90,9 +91,9 @@ private:
     void styleTextString(int pPosition, int pBytesStart, int pBytesEnd,
                          const QString &pText, bool pParameterBlock);
     void styleTextRegEx(int pBytesStart, const QString &pText,
-                        const QRegularExpression &pRegEx, int pRegExStyle);
+                        const QRegularExpression &pRegEx, Style pStyle);
     void styleTextNumberRegEx(int pBytesStart, const QString &pText,
-                              int pRegExStyle);
+                              Style pStyle);
 
     bool validString(int pFrom, int pTo, int pStyle) const;
     int findString(const QString &pString, int pFrom, int pStyle,
