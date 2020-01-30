@@ -130,6 +130,10 @@ QFont CellmlTextViewLexer::font(int pStyle) const
 
 //==============================================================================
 
+static const int StyleChunk = 2048;
+
+//==============================================================================
+
 void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 {
 #ifdef QT_DEBUG
@@ -140,42 +144,67 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
     }
 #endif
 
-    // Retrieve the text to style
-
-    auto data = new char[pBytesEnd-pBytesStart+1] {};
-
-    editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE,
-                            pBytesStart, pBytesEnd, data);
-
-    QString text = QString(data);
-
-    delete[] data;
-
-    // Use a default style for our text
-    // Note: this is so that validString() can work properly...
-
-    startStyling(pBytesStart);
-    setStyling(pBytesEnd-pBytesStart, int(Style::Default));
-
-    // Effectively style our text
+    // Keep track of some information
 
     mFullText = editor()->text();
     mFullTextUtf8 = mFullText.toUtf8();
 
     mEolString = qobject_cast<QScintillaWidget::QScintillaWidget *>(editor())->eolString();
 
-    styleText(pBytesStart, pBytesEnd, text, false);
+    // Style the text in small chunks (to reduce memory usage, which can quickly
+    // become ridiculous the first time we are styling a big CellML file)
+
+    int bytesStart = pBytesStart;
+    int bytesEnd;
+
+    forever {
+        // Style a chunk of text
+
+        bytesEnd = qMin(bytesStart+StyleChunk, pBytesEnd);
+
+        // Retrieve the chunk of text to style
+
+        auto data = new char[bytesEnd-bytesStart+1] {};
+
+        editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE,
+                                bytesStart, bytesEnd, data);
+
+        QString text = QString(data);
+
+        delete[] data;
+
+        // Use a default style for our chunk text
+        // Note: this is so that validString() can work properly...
+
+        startStyling(bytesStart);
+        setStyling(bytesEnd-bytesStart, int(Style::Default));
+
+        // Effectively style our chunk of text
+
+        styleText(bytesStart, bytesEnd, text, false);
 
 #ifdef QT_DEBUG
-    // Make sure that the end position of the last bit of text that we styled is
-    // pBytesEnd
-    // Note: we need to ensure that it is the case, so that validString() can
-    //       take advantage of the style of a given character in the editor...
+        // Make sure that the end position of the last bit of chunk of text that
+        // we styled is bytesEnd
+        // Note: we need to ensure that it is the case, so that validString()
+        //       can take advantage of the style of a given character in the
+        //       editor...
 
-    if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != pBytesEnd) {
-        qFatal("FATAL ERROR | %s:%d: the styling of the text must be incremental.", __FILE__, __LINE__);
-    }
+        if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != bytesEnd) {
+            qFatal("FATAL ERROR | %s:%d: the styling of the text must be incremental.", __FILE__, __LINE__);
+        }
 #endif
+
+        // Was it our last chunk of text?
+
+        if (bytesEnd == pBytesEnd) {
+            break;
+        }
+
+        // Get ready for the next chunk of text
+
+        bytesStart = bytesEnd;
+    }
 
     // Let people know that we are done with our styling
 
