@@ -130,7 +130,7 @@ QFont CellmlTextViewLexer::font(int pStyle) const
 
 //==============================================================================
 
-static const int StyleChunk = 2048;
+static const int StyleChunk = 32768;
 
 //==============================================================================
 
