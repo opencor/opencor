@@ -783,15 +783,15 @@ void CellmlTextViewLexer::styleTextRegEx(int pBytesStart,
     // Style the given text using the given regular expression
 
     QRegularExpressionMatchIterator regExMatchIter = pRegEx.globalMatch(pText);
-    QRegularExpressionMatch regExMatch;
 
     while (regExMatchIter.hasNext()) {
-        regExMatch = regExMatchIter.next();
-
         // We have a match, so style it
 
-        applyStyle(pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()),
-                   pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()+regExMatch.capturedLength()),
+        QRegularExpressionMatch regExMatch = regExMatchIter.next();
+        int capturedStart = regExMatch.capturedStart();
+
+        applyStyle(pBytesStart+textBytesPosition(pText, capturedStart),
+                   pBytesStart+textBytesPosition(pText, capturedStart+regExMatch.capturedLength()),
                    pStyle);
     }
 }
@@ -809,19 +809,19 @@ void CellmlTextViewLexer::styleTextNumber(int pBytesStart, const QString &pText,
     //       want to be able to catch "123e")...
 
     QRegularExpressionMatchIterator regExMatchIter = NumberRegEx.globalMatch(pText);
-    QRegularExpressionMatch regExMatch;
 
     while (regExMatchIter.hasNext()) {
-        regExMatch = regExMatchIter.next();
-
         // We have a match, so style it, but only if:
         //  - The character in front of the match is not in [0-9a-zA-Z_] and is
         //    part of the ASCII table
         //  - The character following the match is not in [a-zA-Z_.] and is part
         //    of the ASCII table
 
-        int prevCharPos = fullTextPosition(pBytesStart)+regExMatch.capturedStart()-1;
-        int nextCharPos = prevCharPos+regExMatch.capturedLength()+1;
+        QRegularExpressionMatch regExMatch = regExMatchIter.next();
+        int capturedStart = regExMatch.capturedStart();
+        int capturedLength = regExMatch.capturedLength();
+        int prevCharPos = fullTextPosition(pBytesStart)+capturedStart-1;
+        int nextCharPos = prevCharPos+capturedLength+1;
 
         ushort prevChar = ((prevCharPos >= 0)?
                                mFullText[prevCharPos]:
@@ -836,8 +836,8 @@ void CellmlTextViewLexer::styleTextNumber(int pBytesStart, const QString &pText,
             && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar <  65))
                 || ((nextChar  >  90) &&  (nextChar  <  95))
                 ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
-            applyStyle(pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()),
-                       pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()+regExMatch.capturedLength()),
+            applyStyle(pBytesStart+textBytesPosition(pText, capturedStart),
+                       pBytesStart+textBytesPosition(pText, capturedStart+capturedLength),
                        pStyle);
         }
     }
