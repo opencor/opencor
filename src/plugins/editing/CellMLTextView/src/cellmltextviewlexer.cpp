@@ -259,8 +259,8 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
     // at the beginning of the given text
 
     int start = fullTextPosition(pBytesStart);
-    int multilineCommentStartPosition = findString(StartMultilineCommentString, start, int(Style::MultilineComment), false);
-    int parameterBlockStartPosition = findString(StartParameterBlockString, start, int(Style::ParameterBlock), false);
+    int multilineCommentStartPosition = findString(StartMultilineCommentString, start, Style::MultilineComment, false);
+    int parameterBlockStartPosition = findString(StartParameterBlockString, start, Style::ParameterBlock, false);
 
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?
                                         INT_MAX:
@@ -271,7 +271,7 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
 
     int multilineCommentEndPosition = (multilineCommentStartPosition == INT_MAX)?
                                           INT_MAX:
-                                          findString(EndMultilineCommentString, multilineCommentStartPosition, int(Style::MultilineComment));
+                                          findString(EndMultilineCommentString, multilineCommentStartPosition, Style::MultilineComment);
 
     multilineCommentEndPosition = (multilineCommentEndPosition == -1)?
                                       INT_MAX:
@@ -289,7 +289,7 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
     } else {
         int parameterBlockEndPosition = (parameterBlockStartPosition == INT_MAX)?
                                             INT_MAX:
-                                            findString(EndParameterBlockString, parameterBlockStartPosition, int(Style::ParameterBlock));
+                                            findString(EndParameterBlockString, parameterBlockStartPosition, Style::ParameterBlock);
 
         parameterBlockEndPosition = (parameterBlockEndPosition == -1)?
                                         INT_MAX:
@@ -402,8 +402,8 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
         //          styleTextPreviousMultilineComment())...
 
         int start = fullTextPosition(pBytesStart);
-        int multilineCommentParameterBlockStartPosition = findString(StartParameterBlockString, start+multilineCommentStartPosition, int(Style::ParameterBlock), false);
-        int multilineCommentParameterBlockEndPosition = findString(EndParameterBlockString, multilineCommentParameterBlockStartPosition, int(Style::ParameterBlock));
+        int multilineCommentParameterBlockStartPosition = findString(StartParameterBlockString, start+multilineCommentStartPosition, Style::ParameterBlock, false);
+        int multilineCommentParameterBlockEndPosition = findString(EndParameterBlockString, multilineCommentParameterBlockStartPosition, Style::ParameterBlock);
 
         multilineCommentParameterBlockStartPosition = (multilineCommentParameterBlockStartPosition == -1)?
                                                           INT_MAX:
@@ -587,7 +587,7 @@ void CellmlTextViewLexer::styleTextPreviousMultilineComment(int pPosition,
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int multilineCommentEndPosition = findString(EndMultilineCommentString, pPosition, int(Style::MultilineComment));
+    int multilineCommentEndPosition = findString(EndMultilineCommentString, pPosition, Style::MultilineComment);
 
     if (multilineCommentEndPosition == -1) {
         multilineCommentEndPosition = mFullText.length();
@@ -643,7 +643,7 @@ void CellmlTextViewLexer::styleTextPreviousParameterBlock(int pPosition,
     // A parameter block started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int parameterBlockEndPosition = findString(EndParameterBlockString, pPosition, int(Style::ParameterBlock));
+    int parameterBlockEndPosition = findString(EndParameterBlockString, pPosition, Style::ParameterBlock);
 
     if (parameterBlockEndPosition == -1) {
         parameterBlockEndPosition = mFullText.length();
@@ -847,18 +847,16 @@ void CellmlTextViewLexer::styleTextNumberRegEx(int pBytesStart,
 
 //==============================================================================
 
-bool CellmlTextViewLexer::validString(int pFrom, int pTo, int pStyle) const
+bool CellmlTextViewLexer::validString(int pFrom, int pTo, Style pStyle) const
 {
     // Check whether the string, which range is given, is valid, i.e. is either
     // of the default or given style
 
-    qint64 style;
-
     for (int i = pFrom; i < pTo; ++i) {
-        style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
-                                        fullTextBytesPosition(i));
+        Style style = Style(editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
+                                                    fullTextBytesPosition(i)));
 
-        if ((style != int(Style::Default)) && (style != pStyle)) {
+        if ((style != Style::Default) && (style != pStyle)) {
             return false;
         }
     }
@@ -869,7 +867,7 @@ bool CellmlTextViewLexer::validString(int pFrom, int pTo, int pStyle) const
 //==============================================================================
 
 int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
-                                    int pStyle, bool pForward)
+                                    Style pStyle, bool pForward)
 {
     // Find forward/backward the given string starting from the given position
 
