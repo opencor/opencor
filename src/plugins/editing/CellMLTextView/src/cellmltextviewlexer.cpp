@@ -555,10 +555,9 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
 
             // Check whether the given text contains some numbers
 
-            styleTextNumberRegEx(pBytesStart, pText,
-                                 pParameterBlock?
-                                     Style::ParameterNumber:
-                                     Style::Number);
+            styleTextNumber(pBytesStart, pText, pParameterBlock?
+                                                    Style::ParameterNumber:
+                                                    Style::Number);
 
             // Let QScintilla know that we are done with the styling of the
             // given text
@@ -799,9 +798,8 @@ void CellmlTextViewLexer::styleTextRegEx(int pBytesStart,
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleTextNumberRegEx(int pBytesStart,
-                                               const QString &pText,
-                                               Style pStyle)
+void CellmlTextViewLexer::styleTextNumber(int pBytesStart, const QString &pText,
+                                          Style pStyle)
 {
     // Style the given text using the number regular expression
 

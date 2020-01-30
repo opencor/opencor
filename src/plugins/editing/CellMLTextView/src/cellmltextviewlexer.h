@@ -92,8 +92,7 @@ private:
                          const QString &pText, bool pParameterBlock);
     void styleTextRegEx(int pBytesStart, const QString &pText,
                         const QRegularExpression &pRegEx, Style pStyle);
-    void styleTextNumberRegEx(int pBytesStart, const QString &pText,
-                              Style pStyle);
+    void styleTextNumber(int pBytesStart, const QString &pText, Style pStyle);
 
     bool validString(int pFrom, int pTo, Style pStyle) const;
     int findString(const QString &pString, int pFrom, Style pStyle,
