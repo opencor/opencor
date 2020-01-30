@@ -173,7 +173,7 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 
         delete[] data;
 
-        // Use a default style for our chunk text
+        // Use a default style for our chunk of text
         // Note: this is so that validString() can work properly...
 
         startStyling(bytesStart);
