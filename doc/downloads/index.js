@@ -37,9 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> can now reload a file using <code>Ctrl</code>+<code>R</code> (see issue <a href=\"https://github.com/opencor/opencor/issues/2286\">#2286</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> can now customise the font size of the different bits of text in a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2271\">#2271</a>). Fixed a small GUI glitch on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/2277\">#2277</a>). Fixed an issue with reloading a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> potentially crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/2290\">#2290</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 9.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2269\">#2269</a>). Upgraded the <a href=\"https://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 5.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2272\">#2272</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.28.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2280\">#2280</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 19.3.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2281\">#2281</a>)." }
+                       { "change": "<strong>CellML Text view:</strong> greatly reduced the time and memory required to do syntax highlighting (see issue <a href=\"https://github.com/opencor/opencor/issues/2284\">#2284</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

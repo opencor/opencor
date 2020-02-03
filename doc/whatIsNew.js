@@ -26,6 +26,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "fixed", "description": "Reading a <a href=\"https://cellml.org/\">CellML</a> file that has no <a href=\"https://w3.org/XML/\">XML</a> processing instruction." }
                              ]
                            }

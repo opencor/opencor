@@ -69,40 +69,33 @@ public:
     QColor color(int pStyle) const override;
     QFont font(int pStyle) const override;
 
-    void styleText(int pBytesStart, int pBytesEnd) override;
+    void styleText(int pStart, int pEnd) override;
 
 private:
-    QString mFullText;
-    QByteArray mFullTextUtf8;
+    QByteArray mFullText;
+    QByteArray mEolString;
 
-    QString mEolString;
-
-    void styleText(int pBytesStart, int pBytesEnd, const QString &pText,
+    void applyStyle(int pStart, int pEnd, Style pStyle);
+    void styleText(int pStart, int pEnd, const QByteArray &pText,
                    bool pParameterBlock);
-    void styleTextCurrent(int pBytesStart, int pBytesEnd, const QString &pText,
+    void styleTextCurrent(int pStart, int pEnd, const QByteArray &pText,
                           bool pParameterBlock);
-    void styleTextPreviousMultilineComment(int pPosition, int pBytesStart,
-                                           int pBytesEnd, const QString &pText,
+    void styleTextPreviousMultilineComment(int pPosition, int pStart, int pEnd,
+                                           const QByteArray &pText,
                                            bool pParameterBlock);
-    void styleTextPreviousParameterBlock(int pPosition, int pBytesStart,
-                                         int pBytesEnd, const QString &pText,
+    void styleTextPreviousParameterBlock(int pPosition, int pStart, int pEnd,
+                                         const QByteArray &pText,
                                          bool pParameterBlock);
-    void styleTextString(int pPosition, int pBytesStart, int pBytesEnd,
-                         const QString &pText, bool pParameterBlock);
-    void styleTextRegEx(int pBytesStart, const QString &pText,
-                        const QRegularExpression &pRegEx, int pRegExStyle);
-    void styleTextNumberRegEx(int pBytesStart, const QString &pText,
-                              int pRegExStyle);
+    void styleTextString(int pPosition, int pStart, int pEnd,
+                         const QByteArray &pText, bool pParameterBlock);
+    void styleTextRegEx(int pStart, const QByteArray &pText,
+                        const QRegularExpression &pRegEx, Style pStyle);
+    void styleTextNumber(int pStart, const QByteArray &pText,
+                         Style pStyle);
 
-    bool validString(int pFrom, int pTo, int pStyle) const;
-    int findString(const QString &pString, int pFrom, int pStyle,
+    bool validString(int pFrom, int pTo, Style pStyle) const;
+    int findString(const QByteArray &pString, int pFrom, Style pStyle,
                    bool pForward = true);
-
-    int fullTextPosition(int pBytesPosition) const;
-    int fullTextLength(int pBytesStart, int pBytesEnd) const;
-
-    int fullTextBytesPosition(int pPosition) const;
-    int textBytesPosition(const QString &pText, int pPosition) const;
 
 signals:
     void done();
