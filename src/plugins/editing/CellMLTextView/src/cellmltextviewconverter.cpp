@@ -1482,7 +1482,7 @@ QString CellMLTextViewConverter::processPieceNode(const QDomNode &pDomNode,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString statement;
 
@@ -1530,7 +1530,7 @@ QString CellMLTextViewConverter::processOtherwiseNode(const QDomNode &pDomNode,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         childNode = childNodes.item(i);
@@ -1567,7 +1567,7 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     MathmlNode operatorNodeType = MathmlNode::Unknown;
 
@@ -1611,7 +1611,7 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
             }
         }
     } else {
-        QDomNode leftOperandNode = QDomNode();
+        QDomNode leftOperandNode;
         MathmlNode leftOperandNodeType = MathmlNode::Unknown;
         QString leftOperand;
 
@@ -1812,7 +1812,7 @@ QString CellMLTextViewConverter::processFunctionNode(const QString &pFunction,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString argument;
 
@@ -1858,7 +1858,7 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString a;
 
@@ -1920,7 +1920,7 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
     int currentChildNodesCount = childNodesCount(pDomNode);
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString b;
 
@@ -2003,7 +2003,7 @@ QString CellMLTextViewConverter::processLogNode(const QDomNode &pDomNode,
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
     int currentChildNodesCount = childNodesCount(pDomNode);
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString argumentOrBase;
 
@@ -2053,7 +2053,7 @@ QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
@@ -2100,7 +2100,7 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString x;
 
@@ -2159,7 +2159,7 @@ QString CellMLTextViewConverter::processChildNode(const QDomNode &pDomNode,
 
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         childNode = childNodes.item(i);
@@ -2188,7 +2188,7 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
     QString res;
     QDomNodeList childNodes = pDomNode.childNodes();
     int currentChildNodesCount = childNodesCount(pDomNode);
-    QDomNode childNode = QDomNode();
+    QDomNode childNode;
     int childElementNodeNumber = 0;
     QString a;
 
