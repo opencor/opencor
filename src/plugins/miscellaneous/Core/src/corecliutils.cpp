@@ -287,7 +287,7 @@ QString formatTime(qint64 pTime)
     //       but in some cases this will give 0 for pTime=3600000 while it
     //       should clearly give 1, hence the approach used below...
 
-    QString res = QString();
+    QString res;
     qint64 time = pTime;
     qint64 ms = time%1000; time = (time-ms)/1000;
     qint64 s  = time%60;   time = (time-s)/60;
@@ -342,7 +342,7 @@ QString fileSha1(const QString &pFileName)
 {
     // Return the SHA-1 value of the given file
 
-    QString res = QString();
+    QString res;
     QFile file(pFileName);
 
     if (file.open(QFile::ReadOnly)) {

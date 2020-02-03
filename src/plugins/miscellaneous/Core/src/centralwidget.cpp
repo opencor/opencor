@@ -490,7 +490,7 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
     // Note: we don't rely on mFileTabs->currentIndex() since it may refer to a
     //       new file, which we will have been skipped above...
 
-    QString crtFileNameOrUrl = QString();
+    QString crtFileNameOrUrl;
 
     if (!fileNames.isEmpty()) {
         QString fileName = mFileNames[mFileTabs->currentIndex()];

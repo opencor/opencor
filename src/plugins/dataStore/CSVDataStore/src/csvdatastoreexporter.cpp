@@ -55,7 +55,7 @@ void CsvDataStoreExporterWorker::run()
     //       first write our header and then our data, one row at a time...
 
     QFile file(Core::temporaryFileName());
-    QString errorMessage = QString();
+    QString errorMessage;
 
     if (file.open(QIODevice::WriteOnly)) {
         // Determine whether we need to export the VOI and, if so, remove it
@@ -122,7 +122,7 @@ void CsvDataStoreExporterWorker::run()
         static const QString RunNb  = " | Run #%1";
         static const QString CrLf   = "\r\n";
 
-        QString header = QString();
+        QString header;
 
         if (voi != nullptr) {
             header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
@@ -155,7 +155,7 @@ void CsvDataStoreExporterWorker::run()
             emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
 
             for (int i = 0, iMax = voiValues.count(); i < iMax; ++i) {
-                QString rowData = QString();
+                QString rowData;
                 double voiValue = voiValues[i];
 
                 if (voi != nullptr) {

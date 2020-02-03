@@ -614,8 +614,8 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
         uint line = 0;
         uint column = 0;
-        QString importedFileName = QString();
-        QString importedFileInfo = QString();
+        QString importedFileName;
+        QString importedFileInfo;
 
         if (cellmlRepresentationValidityError != nullptr) {
             // We are dealing with a CellML representation issue, so determine

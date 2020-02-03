@@ -201,7 +201,7 @@ int main(int pArgC, char *pArgV[])
 
     // Initialise the GUI version of OpenCOR
 
-    QString appDate = QString();
+    QString appDate;
 
     OpenCOR::initApplication(&appDate);
 

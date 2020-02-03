@@ -49,7 +49,7 @@ void CsvDataStoreImporterWorker::run()
     // Note: we rely on our CSV file to be well-formed...
 
     QFile file(mImportData->fileName());
-    QString errorMessage = QString();
+    QString errorMessage;
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         QTextStream in(&file);

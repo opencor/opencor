@@ -291,7 +291,7 @@ void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
     if (!cellmlFile->exportTo(fileName, pVersion)) {
-        QString errorMessage = QString();
+        QString errorMessage;
 
         if (!cellmlFile->issues().isEmpty()) {
             errorMessage = " ("+cellmlFile->issues().first().message()+")";
@@ -339,7 +339,7 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
 
     // Check whether we are dealing with a local or a remote file
 
-    QString output = QString();
+    QString output;
     bool isLocalFile;
     QString fileNameOrUrl;
 
@@ -541,7 +541,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
     if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
-        QString errorMessage = QString();
+        QString errorMessage;
 
         if (!cellmlFile->issues().isEmpty()) {
             errorMessage = " ("+cellmlFile->issues().first().message()+")";

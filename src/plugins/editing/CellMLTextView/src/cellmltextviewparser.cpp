@@ -970,7 +970,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
     // Check whether there are some comments
 
     int prevLineCommentLine = 0;
-    QString singleLineComments = QString();
+    QString singleLineComments;
 
     forever {
         if (mScanner.token() == CellmlTextViewScanner::Token::SingleLineComment) {
@@ -1029,7 +1029,7 @@ bool CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 {
     // Check whether a cmeta:id is given by checking whether the token is "{"
 
-    QString cmetaId = QString();
+    QString cmetaId;
 
     if (!isTokenType(pDomElement,
                      CellmlTextViewScanner::Token::OpeningCurlyBracket)) {

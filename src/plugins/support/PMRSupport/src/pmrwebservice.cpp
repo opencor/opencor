@@ -193,11 +193,11 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         static const QString Git         = "git";
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-        QString storage = QString();
-        QString workspaceDescription = QString();
-        QString workspaceOwner = QString();
-        QString workspaceName = QString();
-        QString workspaceId = QString();
+        QString storage;
+        QString workspaceDescription;
+        QString workspaceOwner;
+        QString workspaceName;
+        QString workspaceId;
 
         for (const auto &data : itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = data.toMap();
@@ -361,10 +361,10 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
         static const QString Git         = "git";
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-        QString storage = QString();
-        QString workspaceDescription = QString();
-        QString workspaceOwner = QString();
-        QString workspaceName = QString();
+        QString storage;
+        QString workspaceDescription;
+        QString workspaceOwner;
+        QString workspaceName;
 
         for (const auto &data : itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = data.toMap();
@@ -388,7 +388,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (storage == Git) {
-                QString dirName = QString();
+                QString dirName;
 
                 if (exposure != nullptr) {
                     // Check that we aren't already managing a clone of the
@@ -714,7 +714,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         static const QString Bookmark = "bookmark";
 
         QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-        QString workspaceUrl = QString();
+        QString workspaceUrl;
         QStringList exposureFileUrls = QStringList();
 
         for (const auto &links : collectionMap["links"].toList()) {

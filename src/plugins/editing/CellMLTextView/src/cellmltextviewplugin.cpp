@@ -466,7 +466,7 @@ bool CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // its contents
 
     QByteArray fileContents;
-    QString errorMessage = QString();
+    QString errorMessage;
 
     if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
         if (errorMessage.isEmpty()) {

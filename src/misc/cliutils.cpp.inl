@@ -60,7 +60,7 @@ void setRawLocale(const QString &pRawLocale)
 
 QString shortVersion()
 {
-    QString res = QString();
+    QString res;
     QString appVersion = qApp->applicationVersion();
 
     if (!appVersion.contains('-')) {
@@ -659,7 +659,7 @@ QString nonDiacriticString(const QString &pString)
     static QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
     static QStringList nonDiacriticLetters = QStringList() << "S" << "OE" << "Z" << "s" << "oe" << "z" << "Y" << "Y" << "u" << "A" << "A" << "A" << "A" << "A" << "A" << "AE" << "C" << "E" << "E" << "E" << "E" << "I" << "I" << "I" << "I" << "D" << "N" << "O" << "O" << "O" << "O" << "O" << "O" << "U" << "U" << "U" << "U" << "Y" << "s" << "a" << "a" << "a" << "a" << "a" << "a" << "ae" << "c" << "e" << "e" << "e" << "e" << "i" << "i" << "i" << "i" << "o" << "n" << "o" << "o" << "o" << "o" << "o" << "o" << "u" << "u" << "u" << "u" << "y" << "y";
 
-    QString res = QString();
+    QString res;
 
     for (auto letter : pString) {
         int index = diacriticLetters.indexOf(letter);
@@ -680,7 +680,7 @@ QString plainString(const QString &pString)
     //       stripping out can proceed without any problem...
 
     QXmlStreamReader string("<html>"+pString+"</html>");
-    QString res = QString();
+    QString res;
 
     while (!string.atEnd()) {
         if (string.readNext() == QXmlStreamReader::Characters) {

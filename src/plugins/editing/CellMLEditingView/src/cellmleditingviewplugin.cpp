@@ -345,7 +345,7 @@ void CellMLEditingViewPlugin::cellmlValidation()
     // Validate the current CellML file
 
     if (mCellmlEditingViewInterface != nullptr) {
-        QString extra = QString();
+        QString extra;
 
         if (mCellmlEditingViewInterface->validCellml(mFileName, extra)) {
             // There are no CellML issues, so the CellML file is valid

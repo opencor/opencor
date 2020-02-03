@@ -63,7 +63,7 @@ QString Simulation::furtherInitialize() const
         bool mustHaveNlaSolver = false;
 #endif
         bool hasNlaSolver = false;
-        QString nlaSolverName = QString();
+        QString nlaSolverName;
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);

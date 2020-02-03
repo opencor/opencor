@@ -123,7 +123,7 @@ void initPluginsPath(int pArgC, char *pArgV[]) // NOLINT(hicpp-avoid-c-arrays, m
 
     appDir = canonicalDirName(appFileInfo.canonicalPath());
 
-    QString pluginsDir = QString();
+    QString pluginsDir;
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     pluginsDir = appDir+"/../plugins";

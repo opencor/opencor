@@ -85,7 +85,7 @@ public:
     void retranslateUi() override;
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
-                   const QString &pRdfTripleInformation = QString(),
+                   const QString &pRdfTripleInformation = {},
                    InformationType pInformationType = InformationType::None,
                    Information pLookUpRdfTripleInformation = Information::First);
 
@@ -134,7 +134,7 @@ private:
 
     void updateOutputHeaders();
 
-    void genericLookUp(const QString &pRdfTripleInformation = QString(),
+    void genericLookUp(const QString &pRdfTripleInformation = {},
                        InformationType pInformationType = InformationType::None);
 
 signals:

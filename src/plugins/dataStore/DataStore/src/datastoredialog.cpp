@@ -118,7 +118,7 @@ DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
-    QString dataHierarchy = QString();
+    QString dataHierarchy;
     QStandardItem *hierarchyItem = nullptr;
 
     for (auto variable : pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {

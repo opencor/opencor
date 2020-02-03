@@ -338,7 +338,7 @@ void SEDMLEditingViewPlugin::sedmlValidation()
     // Validate the current SED-ML file
 
     if (mSedmlEditingViewInterface != nullptr) {
-        QString extra = QString();
+        QString extra;
 
         if (mSedmlEditingViewInterface->validSedml(mFileName, extra)) {
             // There are no SED-ML issues, so the SED-ML file is valid

@@ -195,7 +195,7 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 {
     // Return a formatted version of our unit
 
-    QString perVoiUnitDegree = QString();
+    QString perVoiUnitDegree;
 
     if (mDegree != 0) {
         perVoiUnitDegree += "/"+pVoiUnit;
@@ -350,7 +350,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // variable name
 
         ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = mCodeInformation->iterateTargets();
-        QString voiName = QString();
+        QString voiName;
         QStringList voiComponentHierarchy = QStringList();
 
         for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
@@ -484,7 +484,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     // Generate the model code
 
-    QString modelCode = QString();
+    QString modelCode;
     QString functionsString = cleanCode(mCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
@@ -518,8 +518,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
     QStringList initConstsList = cleanCode(mCodeInformation->initConstsString()).split('\n');
-    QString initConsts = QString();
-    QString compCompConsts = QString();
+    QString initConsts;
+    QString compCompConsts;
 
     for (const auto &initConst : initConstsList) {
         // Add the statement either to our list of 'proper' constants or
@@ -936,7 +936,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
 
     static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
 
-    QString res = QString();
+    QString res;
 
     for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
         if (!CommentRegEx.match(code.trimmed()).hasMatch()) {

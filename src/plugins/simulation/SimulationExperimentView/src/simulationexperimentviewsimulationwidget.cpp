@@ -1257,7 +1257,7 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         // object with their 'new' values, unless they are imported, in which
         // case we let the user know that their 'new' values cannot be saved
 
-        QString importedParameters = QString();
+        QString importedParameters;
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mSimulation->cellmlFile()->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
         Core::Properties propertyKeys = parameters.keys();
@@ -1672,7 +1672,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     if ((runtime != nullptr) && runtime->needNlaSolver()) {
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
         QStringList nlaSolverPropertyKeys = nlaSolverProperties.keys();
-        QString nlaSolverAnnotation = QString();
+        QString nlaSolverAnnotation;
 
         for (const auto &nlaSolverProperty : nlaSolverPropertyKeys) {
             nlaSolverAnnotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty,
@@ -2294,7 +2294,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
 
-        QString errorMessage = QString();
+        QString errorMessage;
         QString sedmlFileName = Core::temporaryFileName();
         SEDMLSupport::SedmlFile sedmlFile(sedmlFileName, true);
 

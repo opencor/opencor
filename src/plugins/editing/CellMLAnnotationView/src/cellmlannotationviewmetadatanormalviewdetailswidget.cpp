@@ -583,7 +583,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
+    QString linkToolTip;
 
     if (!link.isEmpty()) {
         if (textContent.isEmpty()) {

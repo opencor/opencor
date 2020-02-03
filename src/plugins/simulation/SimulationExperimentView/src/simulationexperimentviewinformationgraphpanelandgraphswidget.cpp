@@ -1157,7 +1157,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Now, add our model parameters to it
 
-    QString componentHierarchy = QString();
+    QString componentHierarchy;
     QMenu *componentMenu = nullptr;
 
     for (auto parameter : pRuntime->parameters()) {

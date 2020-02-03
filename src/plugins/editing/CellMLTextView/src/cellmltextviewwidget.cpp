@@ -1078,7 +1078,7 @@ QString CellmlTextViewWidget::beginningOfPiecewiseStatement(int &pPosition) cons
     int localFromPosition;
     int localToPosition;
 
-    QString currentStatement = QString();
+    QString currentStatement;
     QString localCurrentStatement;
 
     CellmlTextViewParser parser;
@@ -1111,7 +1111,7 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
     int localFromPosition;
     int localToPosition;
 
-    QString currentStatement = QString();
+    QString currentStatement;
     QString localCurrentStatement;
 
     CellmlTextViewParser parser;
@@ -1151,7 +1151,7 @@ void CellmlTextViewWidget::updateViewer()
     // Make sure that our current position is not within a comment
 
     int position = mEditingWidget->editorWidget()->currentPosition();
-    QString currentStatement = QString();
+    QString currentStatement;
 
     if (!isComment(position)) {
         // Retrieve the (partial) statement around our current position

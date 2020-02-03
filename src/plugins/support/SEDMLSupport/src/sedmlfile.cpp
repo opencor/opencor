@@ -413,7 +413,7 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
     // Check whether the given list property is valid
 
     if (!pValuesList.contains(pPropertyNodeValue)) {
-        QString values = QString();
+        QString values;
         int i = -1;
         int lastValueIndex = pValuesList.count()-1;
 

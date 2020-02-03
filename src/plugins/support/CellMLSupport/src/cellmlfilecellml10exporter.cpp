@@ -287,7 +287,7 @@ void CellmlFileCellml10Exporter::ensureComponentNameUniqueness(std::wstring &pCo
     //       unused name...
 
     QString componentName = QString::fromStdWString(pComponentName);
-    QString suffix = QString();
+    QString suffix;
     unsigned n = 0;
 
     while (mComponentNames.contains(componentName+suffix)) {

@@ -75,7 +75,7 @@ void Solver::emitError(const QString &pErrorMessage)
     // Let people know that an error occured, but first reformat the error a
     // bit, if needed
 
-    QString errorMessage = QString();
+    QString errorMessage;
 
     if (pErrorMessage.startsWith("Newton")) {
         errorMessage = pErrorMessage;

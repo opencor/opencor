@@ -560,7 +560,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings &pSettings)
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
-        QString clonedWorkspaceUrl = QString();
+        QString clonedWorkspaceUrl;
         git_repository *gitRepository = nullptr;
 
         if (git_repository_open(&gitRepository,

@@ -591,7 +591,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some actions to our File|New menu and keep track of them
 
-        static QString pluginForFileNewMenu = QString();
+        static QString pluginForFileNewMenu = {};
 
         for (const auto &guiMenuAction : guiMenuActions) {
             if (guiMenuAction.type() == Gui::MenuAction::Type::FileNew) {

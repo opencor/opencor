@@ -144,7 +144,7 @@ private:
     void unindent();
 
     void outputString(Output pOutputType = Output::EmptyLine,
-                      const QString &pString = QString());
+                      const QString &pString = {});
 
     bool rdfNode(const QDomNode &pDomNode) const;
     bool cellmlNode(const QDomNode &pDomNode, const QString &pName) const;
@@ -211,7 +211,7 @@ private:
     bool processMapVariablesNode(const QDomNode &pDomNode);
     bool processUnknownNode(const QDomNode &pDomNode, bool pError);
     void processUnsupportedNode(const QDomNode &pDomNode, bool pError,
-                                const QString &pExtra = QString());
+                                const QString &pExtra = {});
 };
 
 //==============================================================================

@@ -550,7 +550,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
         // Add the items
 
-        QString ontologicalTerms = QString();
+        QString ontologicalTerms;
 
         for (const auto &item : pItems) {
             // Keep track of some information
@@ -857,7 +857,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
+    QString linkToolTip;
 
     if (!link.isEmpty()) {
         if (textContent.isEmpty()) {
@@ -951,7 +951,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     // Retrieve the list of terms, should there be a network reply
 
-    QString errorMessage = QString();
+    QString errorMessage;
     bool hasInternetConnection = true;
 
     if (pNetworkReply != nullptr) {

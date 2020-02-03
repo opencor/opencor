@@ -267,7 +267,7 @@ void CheckForUpdatesDialog::updateGui()
                 // OpenCOR, so first look for a snapshot and go for an official
                 // version, if no snapshot is available
 
-                QString version = QString();
+                QString version;
 
                 for (const auto &newerVersion : mEngine->newerVersions()) {
                     if (newerVersion.contains('-')) {
@@ -296,7 +296,7 @@ void CheckForUpdatesDialog::updateGui()
             // The user is only after an official version of OpenCOR, so look
             // for the first one available
 
-            QString version = QString();
+            QString version;
 
             for (const auto &newerVersion : mEngine->newerVersions()) {
                 if (!newerVersion.contains('-')) {
