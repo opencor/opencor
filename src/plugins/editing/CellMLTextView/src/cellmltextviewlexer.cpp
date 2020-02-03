@@ -156,29 +156,23 @@ void CellmlTextViewLexer::styleText(int pStart, int pEnd)
     int end;
 
     forever {
-        // Style a chunk of text
+        // Use a default style for our chunk of text
+        // Note: this is so that validString() can work properly...
 
         end = qMin(start+StyleChunk, pEnd);
 
-        // Retrieve the chunk of text to style
+        applyStyle(start, end, Style::Default);
+
+        // Retrieve the chunk of text to style and style it
 
         auto data = new char[end-start+1] {};
 
         editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE,
                                 start, end, data);
 
-        QByteArray text = data;
+        styleText(start, end, data, false);
 
         delete[] data;
-
-        // Use a default style for our chunk of text
-        // Note: this is so that validString() can work properly...
-
-        applyStyle(start, end, Style::Default);
-
-        // Effectively style our chunk of text
-
-        styleText(start, end, text, false);
 
 #ifdef QT_DEBUG
         // Make sure that the end position of the last bit of chunk of text that
