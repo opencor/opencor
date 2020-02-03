@@ -405,7 +405,7 @@ QLabel * QScintillaWidget::editingModeWidget() const
 
 //==============================================================================
 
-QString QScintillaWidget::eolString() const
+QByteArray QScintillaWidget::eolString() const
 {
     // Return the end of line we use
 

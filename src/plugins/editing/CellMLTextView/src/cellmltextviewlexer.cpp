@@ -134,7 +134,7 @@ static const int StyleChunk = 32768;
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
+void CellmlTextViewLexer::styleText(int pStart, int pEnd)
 {
 #ifdef QT_DEBUG
     // Make sure that we have an editor
@@ -146,63 +146,61 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 
     // Keep track of some information
 
-    mFullText = editor()->text();
-    mFullTextUtf8 = mFullText.toUtf8();
-
+    mFullText = editor()->text().toUtf8();
     mEolString = qobject_cast<QScintillaWidget::QScintillaWidget *>(editor())->eolString();
 
     // Style the text in small chunks (to reduce memory usage, which can quickly
     // become ridiculous the first time we are styling a big CellML file)
 
-    int bytesStart = pBytesStart;
-    int bytesEnd;
+    int start = pStart;
+    int end;
 
     forever {
         // Style a chunk of text
 
-        bytesEnd = qMin(bytesStart+StyleChunk, pBytesEnd);
+        end = qMin(start+StyleChunk, pEnd);
 
         // Retrieve the chunk of text to style
 
-        auto data = new char[bytesEnd-bytesStart+1] {};
+        auto data = new char[end-start+1] {};
 
         editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE,
-                                bytesStart, bytesEnd, data);
+                                start, end, data);
 
-        QString text = QString(data);
+        QByteArray text = data;
 
         delete[] data;
 
         // Use a default style for our chunk of text
         // Note: this is so that validString() can work properly...
 
-        applyStyle(bytesStart, bytesEnd, Style::Default);
+        applyStyle(start, end, Style::Default);
 
         // Effectively style our chunk of text
 
-        styleText(bytesStart, bytesEnd, text, false);
+        styleText(start, end, text, false);
 
 #ifdef QT_DEBUG
         // Make sure that the end position of the last bit of chunk of text that
-        // we styled is bytesEnd
+        // we styled is end
         // Note: we need to ensure that it is the case, so that validString()
         //       can take advantage of the style of a given character in the
         //       editor...
 
-        if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != bytesEnd) {
+        if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != end) {
             qFatal("FATAL ERROR | %s:%d: the styling of the text must be incremental.", __FILE__, __LINE__);
         }
 #endif
 
         // Was it our last chunk of text?
 
-        if (bytesEnd == pBytesEnd) {
+        if (end == pEnd) {
             break;
         }
 
         // Get ready for the next chunk of text
 
-        bytesStart = bytesEnd;
+        start = end;
     }
 
     // Let people know that we are done with our styling
@@ -235,32 +233,31 @@ static const int StringLength   = 1;
 
 //==============================================================================
 
-void CellmlTextViewLexer::applyStyle(int pBytesStart, int pBytesEnd,
-                                     Style pStyle)
+void CellmlTextViewLexer::applyStyle(int pStart, int pEnd, Style pStyle)
 {
     // Apply the given style to the given chunk of text
 
-    startStyling(pBytesStart);
-    setStyling(pBytesEnd-pBytesStart, int(pStyle));
+    startStyling(pStart);
+    setStyling(pEnd-pStart, int(pStyle));
 }
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
-                                    const QString &pText, bool pParameterBlock)
+void CellmlTextViewLexer::styleText(int pStart, int pEnd,
+                                    const QByteArray &pText,
+                                    bool pParameterBlock)
 {
     // Make sure that we are given some text to style
 
-    if (pBytesStart == pBytesEnd) {
+    if (pStart == pEnd) {
         return;
     }
 
     // Check whether a /* XXX */ comment or a parameter block started before or
     // at the beginning of the given text
 
-    int start = fullTextPosition(pBytesStart);
-    int multilineCommentStartPosition = findString(StartMultilineCommentString, start, Style::MultilineComment, false);
-    int parameterBlockStartPosition = findString(StartParameterBlockString, start, Style::ParameterBlock, false);
+    int multilineCommentStartPosition = findString(StartMultilineCommentString, pStart, Style::MultilineComment, false);
+    int parameterBlockStartPosition = findString(StartParameterBlockString, pStart, Style::ParameterBlock, false);
 
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?
                                         INT_MAX:
@@ -280,11 +277,11 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
     if (   (multilineCommentStartPosition != INT_MAX)
         && (   (parameterBlockStartPosition == INT_MAX)
             || (   (multilineCommentStartPosition > parameterBlockStartPosition)
-                && (multilineCommentEndPosition > start)))) {
+                && (multilineCommentEndPosition > pStart)))) {
         // There is a previous /* XXX */ comment to style
 
         styleTextPreviousMultilineComment(multilineCommentStartPosition,
-                                          pBytesStart, pBytesEnd,
+                                          pStart, pEnd,
                                           pText, pParameterBlock);
     } else {
         int parameterBlockEndPosition = (parameterBlockStartPosition == INT_MAX)?
@@ -298,30 +295,30 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
         if (   (parameterBlockStartPosition != INT_MAX)
             && (   (multilineCommentStartPosition == INT_MAX)
                 || (   (parameterBlockStartPosition > multilineCommentStartPosition)
-                    && (parameterBlockEndPosition > start)))) {
+                    && (parameterBlockEndPosition > pStart)))) {
             // There is a previous parameter block to style
 
             styleTextPreviousParameterBlock(parameterBlockStartPosition,
-                                            pBytesStart, pBytesEnd,
+                                            pStart, pEnd,
                                             pText, pParameterBlock);
         } else {
             // Style the current text
 
-            styleTextCurrent(pBytesStart, pBytesEnd, pText,
-                             (parameterBlockStartPosition < start) && (parameterBlockEndPosition > start));
+            styleTextCurrent(pStart, pEnd, pText,
+                             (parameterBlockStartPosition < pStart) && (parameterBlockEndPosition > pStart));
         }
     }
 }
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
-                                           const QString &pText,
+void CellmlTextViewLexer::styleTextCurrent(int pStart, int pEnd,
+                                           const QByteArray &pText,
                                            bool pParameterBlock)
 {
     // Make sure that we are given some text to style
 
-    if (pBytesStart == pBytesEnd) {
+    if (pStart == pEnd) {
         return;
     }
 
@@ -347,16 +344,14 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
         && (stringPosition < multilineCommentStartPosition)) {
         // There is a string to style
 
-        styleTextString(stringPosition, pBytesStart, pBytesEnd, pText, pParameterBlock);
+        styleTextString(stringPosition, pStart, pEnd, pText, pParameterBlock);
     } else if (   (singleLineCommentPosition != INT_MAX)
                && (singleLineCommentPosition < stringPosition)
                && (singleLineCommentPosition < multilineCommentStartPosition)) {
         // There is a // comment to style, so first style everything that is
         // before it
 
-        int singleLineCommentBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+singleLineCommentPosition);
-
-        styleTextCurrent(pBytesStart, singleLineCommentBytesPosition,
+        styleTextCurrent(pStart, pStart+singleLineCommentPosition,
                          pText.left(singleLineCommentPosition),
                          pParameterBlock);
 
@@ -364,21 +359,14 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
         // line, if any
 
         int eolPosition = pText.indexOf(mEolString, singleLineCommentPosition+SingleLineCommentLength);
-        int eolBytesPosition = (eolPosition == -1)?
-                                   -1:
-                                   textBytesPosition(pText, eolPosition);
-        int end = (eolBytesPosition == -1)?
-                      pBytesEnd:
-                      pBytesStart+eolBytesPosition+mEolString.length();
+        int end = (eolPosition == -1)?pEnd:pStart+eolPosition+mEolString.length();
 
-        applyStyle(singleLineCommentBytesPosition, end, Style::SingleLineComment);
+        applyStyle(pStart+singleLineCommentPosition, end, Style::SingleLineComment);
 
         // Now, style everything that is after the // comment, if anything
 
-        if (eolBytesPosition != -1) {
-            styleText(end, pBytesEnd,
-                      pText.right(fullTextLength(end, pBytesEnd)),
-                      pParameterBlock);
+        if (eolPosition != -1) {
+            styleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
         }
     } else if (   (multilineCommentStartPosition != INT_MAX)
                && (multilineCommentStartPosition < stringPosition)
@@ -386,9 +374,7 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
         // There is a /* XXX */ comment to style, so first style everything that
         // is before it
 
-        int multilineCommentStartBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+multilineCommentStartPosition);
-
-        styleTextCurrent(pBytesStart, multilineCommentStartBytesPosition,
+        styleTextCurrent(pStart, pStart+multilineCommentStartPosition,
                          pText.left(multilineCommentStartPosition),
                          pParameterBlock);
 
@@ -401,8 +387,7 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
         //          we need to finish styling it (which is effectively done in
         //          styleTextPreviousMultilineComment())...
 
-        int start = fullTextPosition(pBytesStart);
-        int multilineCommentParameterBlockStartPosition = findString(StartParameterBlockString, start+multilineCommentStartPosition, Style::ParameterBlock, false);
+        int multilineCommentParameterBlockStartPosition = findString(StartParameterBlockString, pStart+multilineCommentStartPosition, Style::ParameterBlock, false);
         int multilineCommentParameterBlockEndPosition = findString(EndParameterBlockString, multilineCommentParameterBlockStartPosition, Style::ParameterBlock);
 
         multilineCommentParameterBlockStartPosition = (multilineCommentParameterBlockStartPosition == -1)?
@@ -412,10 +397,10 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
                                                         INT_MAX:
                                                         multilineCommentParameterBlockEndPosition;
 
-        int absoluteMultilineCommentStartPosition = start+multilineCommentStartPosition;
+        int absoluteMultilineCommentStartPosition = pStart+multilineCommentStartPosition;
 
-        styleText(multilineCommentStartBytesPosition, pBytesEnd,
-                  pText.right(fullTextLength(multilineCommentStartBytesPosition, pBytesEnd)),
+        styleText(pStart+multilineCommentStartPosition, pEnd,
+                  pText.right(pEnd-pStart-multilineCommentStartPosition),
                      (multilineCommentParameterBlockStartPosition < absoluteMultilineCommentStartPosition)
                   && (absoluteMultilineCommentStartPosition < multilineCommentParameterBlockEndPosition));
     } else {
@@ -432,9 +417,7 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
             // There is a parameter block, so first style everything that is
             // before it
 
-            int parameterBlockStartBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+parameterBlockStartPosition);
-
-            styleTextCurrent(pBytesStart, parameterBlockStartBytesPosition,
+            styleTextCurrent(pStart, pStart+parameterBlockStartPosition,
                              pText.left(parameterBlockStartPosition),
                              pParameterBlock);
 
@@ -443,14 +426,14 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
             //       that we will find that a parameter block starts at the
             //       beginning of the 'new' given text...
 
-            styleText(parameterBlockStartBytesPosition, pBytesEnd,
-                      pText.right(fullTextLength(parameterBlockStartBytesPosition, pBytesEnd)),
+            styleText(pStart+parameterBlockStartPosition, pEnd,
+                      pText.right(pEnd-pStart-parameterBlockStartPosition),
                       pParameterBlock);
         } else {
             // Style the given text as a parameter block, if needed
 
             if (pParameterBlock) {
-                applyStyle(pBytesStart, pBytesEnd, Style::ParameterBlock);
+                applyStyle(pStart, pEnd, Style::ParameterBlock);
             }
 
             // Check whether the given text contains some keywords from various
@@ -541,23 +524,23 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
                 ")\\b");
 
             if (pParameterBlock) {
-                styleTextRegEx(pBytesStart, pText, ParameterKeywordsRegEx, Style::ParameterKeyword);
-                styleTextRegEx(pBytesStart, pText, ParameterCellmlKeywordsRegEx, Style::ParameterCellmlKeyword);
+                styleTextRegEx(pStart, pText, ParameterKeywordsRegEx, Style::ParameterKeyword);
+                styleTextRegEx(pStart, pText, ParameterCellmlKeywordsRegEx, Style::ParameterCellmlKeyword);
             } else {
-                styleTextRegEx(pBytesStart, pText, KeywordsRegEx, Style::Keyword);
-                styleTextRegEx(pBytesStart, pText, CellmlKeywordsRegEx, Style::CellmlKeyword);
+                styleTextRegEx(pStart, pText, KeywordsRegEx, Style::Keyword);
+                styleTextRegEx(pStart, pText, CellmlKeywordsRegEx, Style::CellmlKeyword);
             }
 
-            styleTextRegEx(pBytesStart, pText, SiUnitKeywordsRegEx,
+            styleTextRegEx(pStart, pText, SiUnitKeywordsRegEx,
                            pParameterBlock?
                                Style::ParameterCellmlKeyword:
                                Style::CellmlKeyword);
 
             // Check whether the given text contains some numbers
 
-            styleTextNumber(pBytesStart, pText, pParameterBlock?
-                                                    Style::ParameterNumber:
-                                                    Style::Number);
+            styleTextNumber(pStart, pText, pParameterBlock?
+                                               Style::ParameterNumber:
+                                               Style::Number);
 
             // Let QScintilla know that we are done with the styling of the
             // given text
@@ -566,11 +549,10 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
             //       position of the next bit of text that needs to be styled
             //       (see QsciLexerCustom::handleStyleNeeded()). Now, depending
             //       on whether keywords and/or numbers have been styled, the
-            //       end position may or not be pBytesEnd. So, here, we make
-            //       sure that it is, so that QScintilla can work as it
-            //       should...
+            //       end position may or not be pEnd. So, here, we make sure
+            //       that it is, so that QScintilla can work as it should...
 
-            startStyling(pBytesEnd);
+            startStyling(pEnd);
         }
     }
 }
@@ -578,9 +560,9 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
 //==============================================================================
 
 void CellmlTextViewLexer::styleTextPreviousMultilineComment(int pPosition,
-                                                            int pBytesStart,
-                                                            int pBytesEnd,
-                                                            const QString &pText,
+                                                            int pStart,
+                                                            int pEnd,
+                                                            const QByteArray &pText,
                                                             bool pParameterBlock)
 {
     // A /* XXX */ comment started before or at the beginning of the given text,
@@ -595,48 +577,43 @@ void CellmlTextViewLexer::styleTextPreviousMultilineComment(int pPosition,
     // Check whether the beginning of the given text is within the /* XXX */
     // comment
 
-    int start = fullTextPosition(pBytesStart);
-
-    if ((pPosition <= start) && (start <= multilineCommentEndPosition)) {
+    if ((pPosition <= pStart) && (pStart <= multilineCommentEndPosition)) {
         // The beginning of the given text is within a /* XXX */ comment, so
         // style it
 
-        int realBytesEnd = fullTextBytesPosition(multilineCommentEndPosition)+EndMultilineCommentLength;
-        int bytesEnd = qMin(pBytesEnd, realBytesEnd);
+        int realEnd = multilineCommentEndPosition+EndMultilineCommentLength;
+        int end = qMin(pEnd, realEnd);
 
-        applyStyle(pBytesStart, bytesEnd, Style::MultilineComment);
+        applyStyle(pStart, end, Style::MultilineComment);
 
         // Now, style everything that is behind the /* XXX */ comment, if
         // anything
 
-        if (bytesEnd != pBytesEnd) {
+        if (end != pEnd) {
             if (pParameterBlock) {
                 // Our /* XXX */ comment is within a parameter block, so finish
                 // styling our parameter block
 
-                styleTextPreviousParameterBlock(fullTextPosition(bytesEnd), bytesEnd, pBytesEnd,
-                                                pText.right(fullTextLength(bytesEnd, pBytesEnd)),
+                styleTextPreviousParameterBlock(end, end, pEnd,
+                                                pText.right(pEnd-end),
                                                 false);
             } else {
-                styleText(bytesEnd, pBytesEnd,
-                          pText.right(fullTextLength(bytesEnd, pBytesEnd)),
-                          pParameterBlock);
+                styleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
             }
         }
     } else {
         // The beginning of the given text is not within a /* XXX */ comment, so
         // style it
 
-        styleTextCurrent(pBytesStart, pBytesEnd, pText, pParameterBlock);
+        styleTextCurrent(pStart, pEnd, pText, pParameterBlock);
     }
 }
 
 //==============================================================================
 
 void CellmlTextViewLexer::styleTextPreviousParameterBlock(int pPosition,
-                                                          int pBytesStart,
-                                                          int pBytesEnd,
-                                                          const QString &pText,
+                                                          int pStart, int pEnd,
+                                                          const QByteArray &pText,
                                                           bool pParameterBlock)
 {
     // A parameter block started before or at the beginning of the given text,
@@ -650,67 +627,60 @@ void CellmlTextViewLexer::styleTextPreviousParameterBlock(int pPosition,
 
     // Check whether the beginning of the given text is within a parameter block
 
-    int start = fullTextPosition(pBytesStart);
-
-    if ((pPosition <= start) && (start <= parameterBlockEndPosition)) {
+    if ((pPosition <= pStart) && (pStart <= parameterBlockEndPosition)) {
         // The beginning of the given text is within a parameter block, so style
         // it as such
 
-        int realBytesEnd = fullTextBytesPosition(parameterBlockEndPosition)+EndParameterBlockLength;
-        int bytesEnd = qMin(pBytesEnd, realBytesEnd);
-        bool hasStart =    (pPosition == start)
+        int realEnd = parameterBlockEndPosition+EndParameterBlockLength;
+        int end = qMin(pEnd, realEnd);
+        bool hasStart =    (pPosition == pStart)
                         && (mFullText.mid(pPosition, StartParameterBlockLength) == StartParameterBlockString);
-        bool hasEnd = bytesEnd == realBytesEnd;
+        bool hasEnd = end == realEnd;
 
         // If needed, style the start of the parameter block
 
         if (hasStart) {
-            applyStyle(pBytesStart, pBytesStart+StartParameterBlockLength, Style::ParameterBlock);
+            applyStyle(pStart, pStart+StartParameterBlockLength, Style::ParameterBlock);
         }
 
         // Now style the contents of the parameter block itself
 
-        int newBytesStart = pBytesStart+(hasStart?StartParameterBlockLength:0);
-        int newBytesEnd = bytesEnd-(hasEnd?EndParameterBlockLength:0);
+        int newStart = pStart+(hasStart?StartParameterBlockLength:0);
+        int newEnd = end-(hasEnd?EndParameterBlockLength:0);
 
-        styleTextCurrent(newBytesStart, newBytesEnd,
-                         pText.mid(fullTextLength(pBytesStart, newBytesStart),
-                                   fullTextLength(newBytesStart, newBytesEnd)),
-                         true);
+        styleTextCurrent(newStart, newEnd, pText.mid(newStart-pStart, newEnd-newStart), true);
 
         // If needed, style the end of the parameter block, as well as what is
         // behind it
 
         if (hasEnd) {
-            applyStyle(bytesEnd-EndParameterBlockLength, bytesEnd, Style::ParameterBlock);
+            applyStyle(end-EndParameterBlockLength, end, Style::ParameterBlock);
 
-            styleText(bytesEnd, pBytesEnd,
-                      pText.right(fullTextLength(bytesEnd, pBytesEnd)),
-                      pParameterBlock);
+            styleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
         }
     } else {
         // The beginning of the given text is not within a parameter block, so
         // style it
 
-        styleTextCurrent(pBytesStart, pBytesEnd, pText, pParameterBlock);
+        styleTextCurrent(pStart, pEnd, pText, pParameterBlock);
     }
 }
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleTextString(int pPosition, int pBytesStart,
-                                          int pBytesEnd, const QString &pText,
+void CellmlTextViewLexer::styleTextString(int pPosition, int pStart, int pEnd,
+                                          const QByteArray &pText,
                                           bool pParameterBlock)
 {
     // There is a string to style, so first style everything that is before it
 
-    int bytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+pPosition);
+    int position = pStart+pPosition;
 
-    styleTextCurrent(pBytesStart, bytesPosition, pText.left(pPosition), pParameterBlock);
+    styleTextCurrent(pStart, position, pText.left(pPosition), pParameterBlock);
 
     // Now, check where the string ends, if anywhere
 
-    int nextBytesStart = -1;
+    int nextStart = -1;
     int stringEndPosition = pText.indexOf(StringString, pPosition+StringLength);
 
     if (stringEndPosition != -1) {
@@ -719,18 +689,17 @@ void CellmlTextViewLexer::styleTextString(int pPosition, int pBytesStart,
 
         int stringStartLineNumber, stringStartColumnNumber;
         int stringEndLineNumber, stringEndColumnNumber;
-        int stringEndBytesPosition = textBytesPosition(pText, stringEndPosition);
 
-        editor()->lineIndexFromPosition(bytesPosition,
+        editor()->lineIndexFromPosition(position,
                                         &stringStartLineNumber, &stringStartColumnNumber);
-        editor()->lineIndexFromPosition(pBytesStart+stringEndBytesPosition,
+        editor()->lineIndexFromPosition(pStart+stringEndPosition,
                                         &stringEndLineNumber, &stringEndColumnNumber);
 
         if (stringStartLineNumber == stringEndLineNumber) {
             // The string starts and ends on the same line, so get ready to
             // style everything that is after the string
 
-            nextBytesStart = pBytesStart+stringEndBytesPosition+StringLength;
+            nextStart = pStart+stringEndPosition+StringLength;
         } else {
             // The string starts and ends on a different line, so consider that
             // we couldn't find the end of the string
@@ -745,38 +714,32 @@ void CellmlTextViewLexer::styleTextString(int pPosition, int pBytesStart,
         // end of the line, if anything, on which the string started
 
         int eolPosition = pText.indexOf(mEolString, pPosition+StringLength);
-        int eolBytesPosition = (eolPosition == -1)?
-                                   -1:
-                                   textBytesPosition(pText, eolPosition);
 
-        if (eolBytesPosition != -1) {
-            nextBytesStart = pBytesStart+eolBytesPosition+mEolString.length();
+        if (eolPosition != -1) {
+            nextStart = pStart+eolPosition+mEolString.length();
         }
     }
 
     // Style the string itself
 
-    applyStyle(bytesPosition,
-               (nextBytesStart == -1)?
-                   pBytesEnd:
-                   nextBytesStart,
+    applyStyle(position,
+               (nextStart == -1)?
+                   pEnd:
+                   nextStart,
                pParameterBlock?
                    Style::ParameterString:
                    Style::String);
 
     // Style whatever is after the string
 
-    if (nextBytesStart != -1) {
-        styleText(nextBytesStart, pBytesEnd,
-                  pText.right(fullTextLength(nextBytesStart, pBytesEnd)),
-                  pParameterBlock);
+    if (nextStart != -1) {
+        styleText(nextStart, pEnd, pText.right(pEnd-nextStart), pParameterBlock);
     }
 }
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleTextRegEx(int pBytesStart,
-                                         const QString &pText,
+void CellmlTextViewLexer::styleTextRegEx(int pStart, const QByteArray &pText,
                                          const QRegularExpression &pRegEx,
                                          Style pStyle)
 {
@@ -790,15 +753,13 @@ void CellmlTextViewLexer::styleTextRegEx(int pBytesStart,
         QRegularExpressionMatch regExMatch = regExMatchIter.next();
         int capturedStart = regExMatch.capturedStart();
 
-        applyStyle(pBytesStart+textBytesPosition(pText, capturedStart),
-                   pBytesStart+textBytesPosition(pText, capturedStart+regExMatch.capturedLength()),
-                   pStyle);
+        applyStyle(pStart+capturedStart, pStart+capturedStart+regExMatch.capturedLength(), pStyle);
     }
 }
 
 //==============================================================================
 
-void CellmlTextViewLexer::styleTextNumber(int pBytesStart, const QString &pText,
+void CellmlTextViewLexer::styleTextNumber(int pStart, const QByteArray &pText,
                                           Style pStyle)
 {
     // Style the given text using the number regular expression
@@ -820,29 +781,27 @@ void CellmlTextViewLexer::styleTextNumber(int pBytesStart, const QString &pText,
         QRegularExpressionMatch regExMatch = regExMatchIter.next();
         int capturedStart = regExMatch.capturedStart();
         int capturedLength = regExMatch.capturedLength();
-        int prevCharPos = fullTextPosition(pBytesStart)+capturedStart-1;
+        int prevCharPos = pStart+capturedStart-1;
         int nextCharPos = prevCharPos+capturedLength+1;
 
-        ushort prevChar = ((prevCharPos >= 0)?
-                               mFullText[prevCharPos]:
-                               QChar()).unicode();
-        ushort nextChar = ((nextCharPos < mFullText.length())?
-                               mFullText[nextCharPos]:
-                               QChar()).unicode();
+        char prevChar = (prevCharPos >= 0)?
+                            mFullText[prevCharPos]:
+                            0;
+        char nextChar = (nextCharPos < mFullText.length())?
+                            mFullText[nextCharPos]:
+                            0;
 
         if (   (    (prevChar  <  48)
                 || ((prevChar  >  57) && (prevChar <  65))
                 || ((prevChar  >  90) &&  (prevChar  <  95))
                 ||  (prevChar ==  96)
-                || ((prevChar  > 122) && (prevChar < 128)))
+                ||  (prevChar  > 122))
             && (    (nextChar  <  46)
                 || ((nextChar  >  46) && (nextChar <  65))
                 || ((nextChar  >  90) &&  (nextChar  <  95))
                 ||  (nextChar ==  96)
-                || ((nextChar  > 122) && (nextChar < 128)))) {
-            applyStyle(pBytesStart+textBytesPosition(pText, capturedStart),
-                       pBytesStart+textBytesPosition(pText, capturedStart+capturedLength),
-                       pStyle);
+                ||  (nextChar  > 122))) {
+            applyStyle(pStart+capturedStart, pStart+capturedStart+capturedLength, pStyle);
         }
     }
 }
@@ -855,8 +814,7 @@ bool CellmlTextViewLexer::validString(int pFrom, int pTo, Style pStyle) const
     // of the default or given style
 
     for (int i = pFrom; i < pTo; ++i) {
-        Style style = Style(editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
-                                                    fullTextBytesPosition(i)));
+        Style style = Style(editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT, i));
 
         if ((style != Style::Default) && (style != pStyle)) {
             return false;
@@ -868,7 +826,7 @@ bool CellmlTextViewLexer::validString(int pFrom, int pTo, Style pStyle) const
 
 //==============================================================================
 
-int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
+int CellmlTextViewLexer::findString(const QByteArray &pString, int pFrom,
                                     Style pStyle, bool pForward)
 {
     // Find forward/backward the given string starting from the given position
@@ -883,45 +841,6 @@ int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
     } while ((res != -1) && !validString(res, res+stringLength, pStyle));
 
     return res;
-}
-
-//==============================================================================
-
-int CellmlTextViewLexer::fullTextPosition(int pBytesPosition) const
-{
-    // Return the corresponding position within mFullText of the given
-    // byte-based position within mFullTextUtf8
-
-    return QString(mFullTextUtf8.left(pBytesPosition)).length();
-}
-
-//==============================================================================
-
-int CellmlTextViewLexer::fullTextLength(int pBytesStart, int pBytesEnd) const
-{
-    // Return the corresponding length within mFullText of the given byte-based
-    // length of a substring within mFullTextUtf8
-
-    return fullTextPosition(pBytesEnd)-fullTextPosition(pBytesStart);
-}
-
-//==============================================================================
-
-int CellmlTextViewLexer::fullTextBytesPosition(int pPosition) const
-{
-    // Return the byte-based value of the given position within mFullText
-
-    return mFullText.left(pPosition).toUtf8().length();
-}
-
-//==============================================================================
-
-int CellmlTextViewLexer::textBytesPosition(const QString &pText,
-                                           int pPosition) const
-{
-    // Return the byte-based value of the given position within the given text
-
-    return pText.left(pPosition).toUtf8().length();
 }
 
 //==============================================================================
