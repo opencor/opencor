@@ -309,12 +309,12 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // Go through the variables defined or referenced in our main CellML
         // file and do a mapping between the source of that variable and that
         // variable itself
-        // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. not
-        //       CellML 1.1 files that don't import any components), we only
-        //       want to list the parameters that are either defined or
-        //       referenced in our main CellML file. Not only does it make
-        //       sense, but also only the parameters listed in a main CellML
-        //       file can be referenced in SED-ML...
+        // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. CellML
+        //       1.1 files that import some components), we only want to list
+        //       the parameters that are either defined or referenced in our
+        //       main CellML file. Not only does it make sense, but also only
+        //       the parameters listed in a main CellML file can be referenced
+        //       in a SED-ML file...
 
         QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
         QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
@@ -532,21 +532,21 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         }
     }
 
-    modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                            initConsts);
-    modelCode += methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                            compCompConsts);
-    modelCode += methodCode("computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                            mCodeInformation->variablesString());
-    modelCode += methodCode("computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                            mCodeInformation->ratesString());
+    modelCode +=  methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
+                             initConsts)
+                 +methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                             compCompConsts)
+                 +methodCode("computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
+                             mCodeInformation->variablesString())
+                 +methodCode("computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                             mCodeInformation->ratesString());
 
     // Check whether the model code contains a definite integral, otherwise
     // compute it and check that everything went fine
 
     if (modelCode.contains("defint(func")) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
-                                   tr("definite integrals are not yet supported"));
+                                   tr("definite integrals are not supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    mCompilerEngine->error());

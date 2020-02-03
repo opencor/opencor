@@ -101,8 +101,8 @@
         <translation>un modèle ne peut avoir qu&apos;une variable d&apos;intégration</translation>
     </message>
     <message>
-        <source>definite integrals are not yet supported</source>
-        <translation>les intégrales définies ne sont pas encore supportées</translation>
+        <source>definite integrals are not supported</source>
+        <translation>les intégrales définies ne sont pas supportées</translation>
     </message>
     <message>
         <source>an unexpected problem occurred while trying to retrieve the model functions</source>
