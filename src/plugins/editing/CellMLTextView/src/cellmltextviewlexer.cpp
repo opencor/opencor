@@ -588,9 +588,7 @@ void CellmlTextViewLexer::styleTextPreviousMultilineComment(int pPosition,
                 // Our /* XXX */ comment is within a parameter block, so finish
                 // styling our parameter block
 
-                styleTextPreviousParameterBlock(end, end, pEnd,
-                                                pText.right(pEnd-end),
-                                                false);
+                styleTextPreviousParameterBlock(end, end, pEnd, pText.right(pEnd-end), false);
             } else {
                 styleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
             }
