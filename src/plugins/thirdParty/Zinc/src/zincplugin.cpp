@@ -38,7 +38,7 @@ PLUGININFO_FUNC ZincPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder la librairie <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

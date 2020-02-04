@@ -279,8 +279,8 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
     // Return our status bar widgets
 
     if (mEditingWidget != nullptr) {
-        return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
-                                  << mEditingWidget->editorWidget()->editingModeWidget();
+        return { mEditingWidget->editorWidget()->cursorPositionWidget(),
+                 mEditingWidget->editorWidget()->editingModeWidget() };
     }
 
     return {};
@@ -407,7 +407,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
         // Look for the child node within which our position is located, if any
 
         QDomElement domElement = domDocument.documentElement();
-        QDomElement foundChildElement = QDomElement();
+        QDomElement foundChildElement;
 
         for (QDomElement childElement = domElement.firstChildElement();
              !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
@@ -579,7 +579,7 @@ void RawCellmlViewWidget::updateViewer()
     if (!foundMathmlBlock || !hasContentMathmlEquation) {
         mContentMathmlEquation = QString();
 
-        mEditingWidget->mathmlViewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents({});
     }
 }
 

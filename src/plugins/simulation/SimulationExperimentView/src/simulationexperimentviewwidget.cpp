@@ -82,17 +82,17 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
     static const int AvailableGeometryHeight = AvailableGeometry.height();
     static const int AvailableGeometryWidth = AvailableGeometry.width();
     static const double PanelsRelativeWidth = 0.25*AvailableGeometryWidth;
-    static const QVariantList DefaultContentsWidgetSizes = QVariantList() << PanelsRelativeWidth
-                                                                          << 0.75*AvailableGeometryWidth;
-    static const QVariantList DefaultSimulationWidgetSizes = QVariantList() << 0.91*AvailableGeometryHeight
-                                                                            << 0.09*AvailableGeometryHeight;
+    static const QVariantList DefaultContentsWidgetSizes = { PanelsRelativeWidth,
+                                                             0.75*AvailableGeometryWidth };
+    static const QVariantList DefaultSimulationWidgetSizes = { 0.91*AvailableGeometryHeight,
+                                                               0.09*AvailableGeometryHeight };
 
     mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, DefaultContentsWidgetSizes).toList());
     mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, DefaultSimulationWidgetSizes).toList());
 
     // Retrieve the collapsed states of our collapsible widget
 
-    static const QVariantList DefaultCollapsed = QVariantList() << false << false << false;
+    static const QVariantList DefaultCollapsed = { false, false, false };
 
     mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings.value(SettingsCollapsed, DefaultCollapsed).toList());
 
@@ -108,11 +108,11 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
     //       start OpenCOR, we have docked windows on both sides of our central
     //       widget)...
 
-    static const QVariantList DefaultTwoColumnWidths = QVariantList() << 0.27*PanelsRelativeWidth
-                                                                      << 0.27*PanelsRelativeWidth;
-    static const QVariantList DefaultThreeColumnWidths = QVariantList() << 0.18*PanelsRelativeWidth
-                                                                        << 0.18*PanelsRelativeWidth
-                                                                        << 0.18*PanelsRelativeWidth;
+    static const QVariantList DefaultTwoColumnWidths = { 0.27*PanelsRelativeWidth,
+                                                         0.27*PanelsRelativeWidth };
+    static const QVariantList DefaultThreeColumnWidths = { 0.18*PanelsRelativeWidth,
+                                                           0.18*PanelsRelativeWidth,
+                                                           0.18*PanelsRelativeWidth };
 
     mSimulationColumnWidths = qVariantListToIntList(pSettings.value(SettingsSimulationColumnWidths, DefaultThreeColumnWidths).toList());
     mSolversColumnWidths = qVariantListToIntList(pSettings.value(SettingsSolversColumnWidths, DefaultThreeColumnWidths).toList());
@@ -278,7 +278,7 @@ QIcon SimulationExperimentViewWidget::fileTabIcon(const QString &pFileName) cons
         return simulationWidget->fileTabIcon();
     }
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     return NoIcon;
 }

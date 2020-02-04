@@ -38,7 +38,7 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les solveurs <a href="https://computation.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computation.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computation.llnl.gov/projects/sundials/idas">IDAS</a> et <a href="https://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> de <a href="https://computation.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

@@ -45,7 +45,7 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
 //==============================================================================
 
 PmrWorkspaceFileNode::PmrWorkspaceFileNode(PmrWorkspaceFileNode *pParent) :
-    PmrWorkspaceFileNode(QString(), QString(), CharPair(), pParent)
+    PmrWorkspaceFileNode({}, {}, {}, pParent)
 {
 }
 

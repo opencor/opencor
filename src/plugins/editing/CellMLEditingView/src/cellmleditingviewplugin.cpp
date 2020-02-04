@@ -50,7 +50,7 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension qui fournit les fonctionalités de base d'une vue d'édition <a href="https://cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, false, false,
-                          QStringList() << "CellMLSupport" << "EditingView" << "MathMLViewerWidget",
+                          { "CellMLSupport", "EditingView", "MathMLViewerWidget" },
                           descriptions);
 }
 
@@ -345,7 +345,7 @@ void CellMLEditingViewPlugin::cellmlValidation()
     // Validate the current CellML file
 
     if (mCellmlEditingViewInterface != nullptr) {
-        QString extra = QString();
+        QString extra;
 
         if (mCellmlEditingViewInterface->validCellml(mFileName, extra)) {
             // There are no CellML issues, so the CellML file is valid

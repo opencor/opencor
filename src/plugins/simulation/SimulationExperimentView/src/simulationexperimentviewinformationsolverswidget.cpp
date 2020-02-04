@@ -181,11 +181,11 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
     // Retrieve the name of the solvers which type is the one in which we are
     // interested
 
-    QMap<QString, SolverInterface *> solversInterfaces = QMap<QString, SolverInterface *>();
+    QMap<QString, SolverInterface *> solversInterfaces;
     Core::Property *solversProperty = nullptr;
     Core::Property *solversListProperty = nullptr;
-    QStringList solversNames = QStringList();
-    QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
+    QStringList solversNames;
+    QMap<QString, Core::Properties> solversProperties;
 
     for (auto solverInterface : Core::solverInterfaces()) {
         if (solverInterface->solverType() == pSolverType) {
@@ -209,7 +209,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
             // Add the solver's properties
 
             Core::Property *property = nullptr;
-            Core::Properties properties = Core::Properties();
+            Core::Properties properties;
 
             for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Add the solver's property and set its default value
@@ -428,7 +428,7 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
     // Retrieve our solver properties values
 
     Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
-    QMap<QString, QString> solverPropertiesValues = QMap<QString, QString>();
+    QMap<QString, QString> solverPropertiesValues;
 
     for (auto solverProperty : solverProperties) {
         solverPropertiesValues.insert(solverProperty->id(),solverProperty->value());

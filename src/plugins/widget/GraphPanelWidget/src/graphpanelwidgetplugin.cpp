@@ -38,7 +38,7 @@ PLUGININFO_FUNC GraphPanelWidgetPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour afficher des graphes."));
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
-                          QStringList() << "Core" << "Qwt",
+                          { "Core", "Qwt" },
                           descriptions);
 }
 

@@ -19,7 +19,7 @@ QString cliOpenRemoteFile(const QString &pUrl)
         // so open the file as a local file and leave
 
 #ifdef GUI_SUPPORT
-        return openFile(fileNameOrUrl, File::Type::Local, QString(), pShowWarning);
+        return openFile(fileNameOrUrl, File::Type::Local, {}, pShowWarning);
 #else
         return cliOpenFile(fileNameOrUrl);
 #endif

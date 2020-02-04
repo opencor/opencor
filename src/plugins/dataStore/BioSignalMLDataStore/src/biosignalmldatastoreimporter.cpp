@@ -47,7 +47,7 @@ void BiosignalmlDataStoreImporterWorker::run()
 {
     // Import our BioSignalML file in our data store
 
-    QString errorMessage = QString();
+    QString errorMessage;
 
     try {
         // Retrieve our clock and determine our number of data points

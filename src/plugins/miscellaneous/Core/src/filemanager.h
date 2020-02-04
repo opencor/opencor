@@ -94,7 +94,7 @@ public:
 
     Status manage(const QString &pFileName,
                   File::Type pType = File::Type::Local,
-                  const QString &pUrl = QString());
+                  const QString &pUrl = {});
     Status unmanage(const QString &pFileName);
 
     File * file(const QString &pFileName) const;
@@ -136,8 +136,8 @@ public:
 
     void reload(const QString &pFileName);
 
-    Status create(const QString &pUrl = QString(),
-                  const QByteArray &pContents = QByteArray());
+    Status create(const QString &pUrl = {},
+                  const QByteArray &pContents = {});
     Status create(const QString &pUrl, const QString &pContents);
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
@@ -162,7 +162,7 @@ private:
     void startStopTimer();
 
     bool newFile(QString &pFileName,
-                 const QByteArray &pContents = QByteArray());
+                 const QByteArray &pContents = {});
 
     void emitFilePermissionsChanged(const QString &pFileName);
 

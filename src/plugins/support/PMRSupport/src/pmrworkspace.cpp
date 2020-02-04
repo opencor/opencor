@@ -116,7 +116,7 @@ PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
 
 PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
                            const QString &pUrl, PmrWebService *pParent) :
-    PmrWorkspace(pOwned, pName, pUrl, QString(), QString(), pParent)
+    PmrWorkspace(pOwned, pName, pUrl, {}, {}, pParent)
 {
 }
 
@@ -284,7 +284,7 @@ void PmrWorkspace::close()
 
     mPath = QString();
 
-    mRootFileNode->setPath(QString());
+    mRootFileNode->setPath({});
 
     git_repository_free(mGitRepository);
 
@@ -661,7 +661,7 @@ void PmrWorkspace::refreshStatus()
         // Delete any 'old' file node that is not being used anymore
 
         PmrWorkspaceFileNodes newFileNodes = mRepositoryStatusMap.values();
-        PmrWorkspaceFileNodes oldFileNodesToDelete = PmrWorkspaceFileNodes();
+        PmrWorkspaceFileNodes oldFileNodesToDelete;
 
         for (auto oldFileNode : oldFileNodes) {
             if (!newFileNodes.contains(oldFileNode)) {
@@ -988,7 +988,7 @@ StagedFiles PmrWorkspace::stagedFiles()
 {
     // Retrieve and return all current staged files
 
-    StagedFiles res = StagedFiles();
+    StagedFiles res;
     git_index *index;
 
     if (git_repository_index(&index, mGitRepository) == GIT_OK) {

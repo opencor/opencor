@@ -113,9 +113,9 @@ void CellmlEditingViewWidget::loadSettings(QSettings &pSettings)
     // Retrieve and set our sizes
 
     static const int AvailableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
-    static const QVariantList DefaultEditingWidgetSizes = QVariantList() << 0.15*AvailableGeometryHeight
-                                                                         << 0.76*AvailableGeometryHeight
-                                                                         << 0.09*AvailableGeometryHeight;
+    static const QVariantList DefaultEditingWidgetSizes = { 0.15*AvailableGeometryHeight,
+                                                            0.76*AvailableGeometryHeight,
+                                                            0.09*AvailableGeometryHeight };
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlEditingViewWidgetSizes, DefaultEditingWidgetSizes).toList());
 

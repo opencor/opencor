@@ -39,7 +39,7 @@ void HodgkinHuxley1952Tests::tests()
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hodgkinhuxley1952tests.py"), output));
+    QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/hodgkinhuxley1952tests.py") }, output));
     QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/hodgkinhuxley1952tests.out").arg(OpenCOR::targetPlatformDir()))));
 }
 

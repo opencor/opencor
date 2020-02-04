@@ -3027,8 +3027,8 @@ QRectF GraphPanelPlotWidget::realDataRect()
     // Return an optimised version of dataRect()/dataLogRect() or a default
     // rectangle, if no dataRect()/dataLogRect() exists
 
-    QRectF dRect = QRectF();
-    QRectF dLogRect = QRectF();
+    QRectF dRect;
+    QRectF dLogRect;
 
     if (dataRect(dRect) && dataLogRect(dLogRect)) {
         // Optimise our axes' values
@@ -4034,8 +4034,8 @@ void GraphPanelPlotWidget::exportTo()
     static const QString ImageXpixmap         = "image/x-xpixmap";
 
     QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
-    QStringList filters = QStringList() << pdfFilter
-                                        << tr("SVG File - Scalable Vector Graphics (*.svg)");
+    QStringList filters = { pdfFilter,
+                            tr("SVG File - Scalable Vector Graphics (*.svg)") };
 
     for (const auto &supportedMimeType : QImageWriter::supportedMimeTypes()) {
         if (supportedMimeType == ImageBmp) {

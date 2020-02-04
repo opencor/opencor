@@ -358,7 +358,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     QLayout *widgetLayout = mGui->stackedWidget->currentWidget()->layout();
 
     if (widgetLayout != nullptr) {
-        widgetLayout->setContentsMargins(QMargins());
+        widgetLayout->setContentsMargins({});
     }
 
     // Make sure that we are big enough to show our contents

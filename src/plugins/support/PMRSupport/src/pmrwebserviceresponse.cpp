@@ -58,7 +58,7 @@ void PmrWebServiceResponse::processResponse()
 {
     // Retrieve the contents of the response and uncompress it if needed
 
-    QByteArray jsonResponse = QByteArray();
+    QByteArray jsonResponse;
 
     if (mNetworkReply->rawHeader("Content-Encoding") != "gzip") {
         // The response is not compressed, so just retrieve its raw contents
@@ -101,9 +101,9 @@ void PmrWebServiceResponse::processResponse()
 
     // Check for network errors
 
-    static const QStringList ResponseMimeTypes = QStringList() << "application/json"
-                                                               << RequestMimeType
-                                                               << CollectionMimeType;
+    static const QStringList ResponseMimeTypes = { "application/json",
+                                                   RequestMimeType,
+                                                   CollectionMimeType };
 
     int httpStatusCode = mNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -120,7 +120,7 @@ void PmrWebServiceResponse::processResponse()
     } else {
         // Parse our response
 
-        QJsonParseError jsonParseError = QJsonParseError();
+        QJsonParseError jsonParseError;
         QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonResponse, &jsonParseError);
 
         // Check for parse errors

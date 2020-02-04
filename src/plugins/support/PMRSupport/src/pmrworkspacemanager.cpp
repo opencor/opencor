@@ -80,7 +80,7 @@ PmrWorkspaces PmrWorkspaceManager::workspaces() const
 {
     // Return our workspaces
 
-    PmrWorkspaces res = PmrWorkspaces();
+    PmrWorkspaces res;
 
     for (auto workspace : mUrlWorkspaces) {
         res << workspace;

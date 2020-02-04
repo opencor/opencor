@@ -126,8 +126,8 @@ static PyObject * initializeSimulation(const QString &pFileName)
         // Note: this is useful in case our simulation is solely based on a
         //       CellML file...
 
-        QString odeSolverName = QString();
-        QString nlaSolverName = QString();
+        QString odeSolverName;
+        QString nlaSolverName;
 
         for (auto solverInterface : Core::solverInterfaces()) {
             QString solverName = solverInterface->solverName();

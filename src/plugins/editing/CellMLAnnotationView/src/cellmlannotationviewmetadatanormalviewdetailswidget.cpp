@@ -239,7 +239,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             addRdfTriple(rdfTriple, false);
         }
     } else {
-        mOutputOntologicalTerms->webView()->setHtml(QString());
+        mOutputOntologicalTerms->webView()->setHtml({});
     }
 
     // Do additional GUI updates
@@ -323,7 +323,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     if (pNeedAdditionalGuiUpdates) {
         mLookUpRdfTripleInformation = Information::Last;
 
-        additionalGuiUpdates(QString(), InformationType::None, mLookUpRdfTripleInformation);
+        additionalGuiUpdates({}, InformationType::None, mLookUpRdfTripleInformation);
     }
 }
 
@@ -583,7 +583,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
+    QString linkToolTip;
 
     if (!link.isEmpty()) {
         if (textContent.isEmpty()) {

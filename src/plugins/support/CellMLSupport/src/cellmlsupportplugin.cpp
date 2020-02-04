@@ -49,7 +49,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "CellMLAPI" << "Compiler" << "StandardSupport",
+                          { "CellMLAPI", "Compiler", "StandardSupport" },
                           descriptions);
 }
 
@@ -108,7 +108,7 @@ QStringList CellMLSupportPlugin::fileTypeDefaultViews() const
 {
     // Return the default views to use for the type of file we support
 
-    return QStringList() << "CellMLTextView" << "RawCellMLView" << "RawTextView";
+    return { "CellMLTextView", "RawCellMLView", "RawTextView" };
 }
 
 //==============================================================================
@@ -253,7 +253,7 @@ void CellMLSupportPlugin::newCellmlFile()
 #ifdef QT_DEBUG
     Core::FileManager::Status createStatus =
 #endif
-    fileManagerInstance->create(QString(),
+    fileManagerInstance->create({},
                                 QString( "<?xml version='1.0' encoding='UTF-8'?>\n"
                                         R"(<model name="my_model" xmlns="http://www.cellml.org/cellml/%1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">)""\n"
                                          "    <!-- Your code goes here-->\n"

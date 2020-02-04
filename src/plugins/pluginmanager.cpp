@@ -54,7 +54,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     // Retrieve the list of plugins available for loading
 
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
-    QStringList fileNames = QStringList();
+    QStringList fileNames;
 
     for (const auto &fileInfo : fileInfoList) {
         fileNames << fileInfo.canonicalFilePath();
@@ -62,12 +62,12 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     // Retrieve and initialise some information about the plugins
 
-    QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
-    QMap<QString, QString> pluginsError = QMap<QString, QString>();
+    QMap<QString, PluginInfo *> pluginsInfo;
+    QMap<QString, QString> pluginsError;
 
     for (const auto &fileName : fileNames) {
         QString pluginName = Plugin::name(fileName);
-        QString pluginError = QString();
+        QString pluginError;
         PluginInfo *pluginInfo = (Plugin::pluginInfoVersion(fileName) == pluginInfoVersion())?
                                      Plugin::info(fileName, &pluginError):
                                      nullptr;
@@ -88,7 +88,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     // Determine in which order the plugins files should be analysed (i.e. take
     // into account the result of a plugin's loadBefore() function)
 
-    QStringList sortedFileNames = QStringList();
+    QStringList sortedFileNames;
 
     for (const auto &fileName : fileNames) {
         PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
@@ -111,8 +111,8 @@ PluginManager::PluginManager(bool pGuiMode) :
     // Determine which plugins, if any, are needed by others and which, if any,
     // are selectable
 
-    QStringList neededPlugins = QStringList();
-    QStringList wantedPlugins = QStringList();
+    QStringList neededPlugins;
+    QStringList wantedPlugins;
 
     for (const auto &fileName : sortedFileNames) {
         QString pluginName = Plugin::name(fileName);
@@ -141,7 +141,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     // their file name
 
     QStringList plugins = neededPlugins+wantedPlugins;
-    QStringList pluginFileNames = QStringList();
+    QStringList pluginFileNames;
 
     plugins.removeDuplicates();
     // Note: if anything, there should only be duplicates in neededPlugins, and

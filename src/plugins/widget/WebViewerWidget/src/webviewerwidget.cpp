@@ -77,7 +77,7 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
         //       localURLSchemes()...
 
         if (pType == NavigationTypeLinkClicked) {
-            static QStringList localSchemes = QStringList();
+            static QStringList localSchemes;
 
             if (localSchemes.isEmpty()) {
                 localSchemes << "file";
@@ -182,7 +182,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     layout->addWidget(mWebView);

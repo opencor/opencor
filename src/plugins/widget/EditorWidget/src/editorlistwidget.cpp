@@ -324,7 +324,7 @@ void EditorListWidget::copyToClipboard()
 {
     // Copy our list to the clipboard
 
-    QStringList list = QStringList();
+    QStringList list;
 
     for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
         auto item = static_cast<EditorListItem *>(mModel->item(i));

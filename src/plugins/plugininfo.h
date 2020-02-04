@@ -86,7 +86,7 @@ public:
     explicit PluginInfo(Category pCategory, bool pSelectable,
                         bool pCliSupport, const QStringList &pDependencies,
                         const Descriptions &pDescriptions,
-                        const QStringList &pLoadBefore = QStringList());
+                        const QStringList &pLoadBefore = {});
 
     Category category() const;
 

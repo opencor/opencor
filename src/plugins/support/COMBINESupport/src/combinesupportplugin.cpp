@@ -41,7 +41,7 @@ PLUGININFO_FUNC COMBINESupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://co.mbine.org/">COMBINE</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "Core" << "SEDMLSupport" << "ZIPSupport",
+                          { "Core", "SEDMLSupport", "ZIPSupport" },
                           descriptions);
 }
 
@@ -100,7 +100,7 @@ QStringList COMBINESupportPlugin::fileTypeDefaultViews() const
 {
     // Return the default views to use for the type of file we support
 
-    return QStringList() << "SimulationExperimentView";
+    return { "SimulationExperimentView" };
 }
 
 //==============================================================================

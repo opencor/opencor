@@ -491,7 +491,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     auto simulationOutputWidget = new QWidget(this);
     auto simulationOutputLayout= new QVBoxLayout(simulationOutputWidget);
 
-    simulationOutputLayout->setContentsMargins(QMargins());
+    simulationOutputLayout->setContentsMargins({});
     simulationOutputLayout->setSpacing(0);
 
     simulationOutputWidget->setLayout(simulationOutputLayout);
@@ -1211,7 +1211,7 @@ QIcon SimulationExperimentViewSimulationWidget::doFileTabIcon(bool pForEmitting)
 
     // Return a file tab icon that shows the given file's simulation progress
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     QIcon res = NoIcon;
 
@@ -1257,7 +1257,7 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         // object with their 'new' values, unless they are imported, in which
         // case we let the user know that their 'new' values cannot be saved
 
-        QString importedParameters = QString();
+        QString importedParameters;
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mSimulation->cellmlFile()->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
         Core::Properties propertyKeys = parameters.keys();
@@ -1672,7 +1672,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     if ((runtime != nullptr) && runtime->needNlaSolver()) {
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
         QStringList nlaSolverPropertyKeys = nlaSolverProperties.keys();
-        QString nlaSolverAnnotation = QString();
+        QString nlaSolverAnnotation;
 
         for (const auto &nlaSolverProperty : nlaSolverPropertyKeys) {
             nlaSolverAnnotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty,
@@ -1863,8 +1863,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     QIntList graphPanelsWidgetSizes = graphPanelsWidget->sizes();
-    QList<Core::Properties> graphsPropertiesList = QList<Core::Properties>();
-    QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
+    QList<Core::Properties> graphsPropertiesList;
+    QMap<Core::Properties, GraphsData> graphsData;
     int graphPlotCounter = 0;
 
     for (auto graphPanel : graphPanelsWidget->graphPanels()) {
@@ -2206,7 +2206,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
 {
     // Export the simulation to a SED-ML file
 
-    sedmlExportSedmlFile(QString());
+    sedmlExportSedmlFile({});
 }
 
 //==============================================================================
@@ -2255,7 +2255,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                                      fileManagerInstance->url(localCellmlFileName):
                                      localCellmlFileName;
         QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
-        QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
+        QMap<QString, QString> remoteImportedFileNames;
 
         for (const auto &importedFileName : cellmlFile->importedFileNames()) {
             // Check for the common path
@@ -2294,7 +2294,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
 
-        QString errorMessage = QString();
+        QString errorMessage;
         QString sedmlFileName = Core::temporaryFileName();
         SEDMLSupport::SedmlFile sedmlFile(sedmlFileName, true);
 
@@ -2386,7 +2386,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 {
     // Export the simulation to a COMBINE archive
 
-    sedmlExportCombineArchive(QString());
+    sedmlExportCombineArchive({});
 }
 
 //==============================================================================
@@ -2677,7 +2677,7 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
 {
     // Return our default graph properties
 
-    return defaultGraphProperties(QString(), pColor);
+    return defaultGraphProperties({}, pColor);
 }
 
 //==============================================================================
@@ -2795,7 +2795,7 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
         MemoryAllocation
     };
 
-    QList<quint64> runSizes = QList<quint64>();
+    QList<quint64> runSizes;
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i) {
         runSizes << mSimulation->runSize(i);
@@ -3075,7 +3075,7 @@ void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 {
     // Let people know that our file tab icon should be reset
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
                                         mSimulation->fileName(),
@@ -3422,7 +3422,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     double minY = GraphPanelWidget::DefaultMinAxis;
     double maxY = GraphPanelWidget::DefaultMaxAxis;
 
-    QRectF dataRect = QRectF();
+    QRectF dataRect;
 
     if (pPlot->dataRect(dataRect)) {
         minX = dataRect.left();
@@ -3436,7 +3436,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     double minLogY = GraphPanelWidget::DefaultMinLogAxis;
     double maxLogY = GraphPanelWidget::DefaultMaxAxis;
 
-    QRectF dataLogRect = QRectF();
+    QRectF dataLogRect;
 
     if (pPlot->dataLogRect(dataLogRect)) {
         minLogX = dataLogRect.left();
@@ -4024,7 +4024,7 @@ QVariantList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::P
 {
     // Return all the property values of the given property editor
 
-    QVariantList res = QVariantList();
+    QVariantList res;
 
     for (auto property : pPropertyEditor->allProperties()) {
         res << property->isChecked() << property->variantValue();

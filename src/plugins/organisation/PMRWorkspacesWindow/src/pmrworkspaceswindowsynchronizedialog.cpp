@@ -404,7 +404,7 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 {
     // List all the files that have changed
 
-    PmrWorkspacesWindowSynchronizeDialogItems res = PmrWorkspacesWindowSynchronizeDialogItems();
+    PmrWorkspacesWindowSynchronizeDialogItems res;
 
     for (auto fileNode : pFileNode->children()) {
         if (fileNode->hasChildren()) {
@@ -492,7 +492,7 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 {
     // Return our file names
 
-    QStringList res = QStringList();
+    QStringList res;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
@@ -517,7 +517,7 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
     // Keep track of our existing items
 
-    PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
+    PmrWorkspacesWindowSynchronizeDialogItems oldItems;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         oldItems << static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
@@ -659,10 +659,7 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
     program.replace(ExeExtensionRegEx, ".com");
 #endif
 
-    return Core::exec(program,
-                      QStringList() << "-c"
-                                    << "CellMLTextView::import"
-                                    << pFileName,
+    return Core::exec(program, { "-c", "CellMLTextView::import", pFileName },
                       pCellmlText) == 0;
 }
 
@@ -704,7 +701,7 @@ PmrWorkspacesWindowSynchronizeDialog::DifferenceData PmrWorkspacesWindowSynchron
                                                                                                           const QChar &pTag,
                                                                                                           const QString &pDifference)
 {
-    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res = PmrWorkspacesWindowSynchronizeDialog::DifferenceData();
+    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res;
 
     res.operation = pOperation;
     res.removeLineNumber = pRemoveLineNumber;
@@ -732,8 +729,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
     //       contain the Bell character, so it should be safe to use that
     //       character as our separator...
 
-    QString oldString = QString();
-    QString newString = QString();
+    QString oldString;
+    QString newString;
 
     for (const auto &differenceData : pDifferencesData) {
         if (differenceData.tag == '+') {
@@ -750,8 +747,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
 
     diffMatchPatch.diff_cleanupEfficiency(diffs);
 
-    QString oldDiffString = QString();
-    QString newDiffString = QString();
+    QString oldDiffString;
+    QString newDiffString;
 
     for (const auto &diff : diffs) {
         QString text = cleanHtmlEscaped(QString::fromStdWString(diff.text));
@@ -788,7 +785,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
     // Generate the HTML code for any differences data that we may have been
     // given
 
-    QString html = QString();
+    QString html;
     QStringList oldDiffStrings = oldDiffString.split(Separator);
     QStringList newDiffStrings = newDiffString.split(Separator);
     int addLineNumber = -1;
@@ -831,7 +828,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
     xpparam_t parameters;
     xdemitconf_t context;
-    QString differences = QString();
+    QString differences;
     xdemitcb_t callback;
 
     parameters.flags = 0;
@@ -854,7 +851,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     static const QRegularExpression AfterLineNumberRegEx = QRegularExpression(",.*");
     static const QRegularExpression AfterNumberOfLinesRegEx = QRegularExpression(" .*");
 
-    QString html = QString();
+    QString html;
     QStringList differencesList = differences.split('\n');
     int differenceNumber = 0;
     int differenceMaxNumber = differencesList.count()-1;
@@ -872,11 +869,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
             removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
-            html += QString(Row).arg("header",
-                                     "...",
-                                     "...",
-                                     QString(),
-                                     difference);
+            html += QString(Row).arg("header", "...", "...", {}, difference);
         } else {
             QString diff = difference;
             QChar tag = diff[0];
@@ -887,14 +880,12 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                 ++addLineNumber;
 
                 differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last add":"add",
-                                                  QString(), QString::number(addLineNumber),
-                                                  '+', diff);
+                                                  {}, QString::number(addLineNumber), '+', diff);
             } else if (tag == '-') {
                 ++removeLineNumber;
 
                 differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last remove":"remove",
-                                                  QString::number(removeLineNumber), QString(),
-                                                  '-', diff);
+                                                  QString::number(removeLineNumber), {}, '-', diff);
             } else if (addLineNumber != addMaxLineNumber) {
                 // Output any differences data that we may have
 
@@ -910,8 +901,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                                              "default")
                                     .arg(removeLineNumber)
                                     .arg(addLineNumber)
-                                    .arg(QString(),
-                                         cleanHtmlEscaped(diff));
+                                    .arg({}, cleanHtmlEscaped(diff));
             }
         }
     }
@@ -946,7 +936,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     //       string, so if we both the old and new contents is empty it means
     //       that we are dealing with a binary file...
 
-    QString res = QString();
+    QString res;
     bool oldFileEmpty = oldFileContents.isEmpty();
     bool newFileEmpty = newFileContents.isEmpty();
 
@@ -970,8 +960,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
             // Text version of the file, this for both its head and working
             // versions, and if successful then diff them
 
-            QString oldCellmlTextContents = QString();
-            QString newCellmlTextContents = QString();
+            QString oldCellmlTextContents;
+            QString newCellmlTextContents;
 
             if (   (oldFileEmpty || cellmlText(oldFileName, oldCellmlTextContents))
                 && (newFileEmpty || cellmlText(pFileName, newCellmlTextContents))) {

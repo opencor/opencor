@@ -38,7 +38,7 @@ PLUGININFO_FUNC libBioSignalMLPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder BioSignalML."));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

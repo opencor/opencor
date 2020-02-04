@@ -879,7 +879,7 @@ Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::g
     // Retrieve and return all the graph properties associated with the given
     // graph panel and file name, if any
 
-    Core::Properties res = Core::Properties();
+    Core::Properties res;
 
     for (auto property : mGraphsPropertyEditors.value(pGraphPanel)->properties()) {
         // The property should be returned if its first sub-property (i.e. to
@@ -1157,7 +1157,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Now, add our model parameters to it
 
-    QString componentHierarchy = QString();
+    QString componentHierarchy;
     QMenu *componentMenu = nullptr;
 
     for (auto parameter : pRuntime->parameters()) {
@@ -1627,7 +1627,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     // Use the given section property or retrieve the ones for our current
     // graphs property editor
 
-    Core::Properties graphProperties = Core::Properties();
+    Core::Properties graphProperties;
 
     if (pSectionProperty != nullptr) {
         graphProperties << pSectionProperty;
@@ -1642,7 +1642,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     // Determine the model list values, but only if needed, i.e. if we have some
     // graph properties
 
-    QStringList modelListValues = QStringList();
+    QStringList modelListValues;
 
     if (!graphProperties.isEmpty()) {
         for (const auto &fileName : mViewWidget->fileNames()) {
@@ -1654,7 +1654,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
 
         modelListValues.sort(Qt::CaseInsensitive);
 
-        modelListValues.prepend(QString());
+        modelListValues.prepend({});
         modelListValues.prepend(tr("Current"));
     }
 

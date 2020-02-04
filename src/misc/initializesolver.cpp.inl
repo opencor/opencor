@@ -12,7 +12,7 @@ QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameter
 
     SolverInterface *solverInterface = nullptr;
 #ifdef GUI_SUPPORT
-    Core::Properties solverProperties = Core::Properties();
+    Core::Properties solverProperties;
 #endif
 
     for (auto coreSolverInterface : Core::solverInterfaces()) {

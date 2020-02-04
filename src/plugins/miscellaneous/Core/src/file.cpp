@@ -124,7 +124,7 @@ File::Status File::check()
     // check whether they are different from the one(s) we currently have
 
     QString newSha1 = sha1();
-    QStringList newDependenciesSha1 = QStringList();
+    QStringList newDependenciesSha1;
 
     for (const auto &dependency : mDependencies) {
         newDependenciesSha1 << sha1(dependency);

@@ -48,7 +48,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://cellml.org/">CellML</a> à l'aide du format CellML Text.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, true,
-                          QStringList() << "CellMLEditingView",
+                          { "CellMLEditingView" },
                           descriptions);
 }
 
@@ -370,7 +370,7 @@ QStringList CellMLTextViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType;
+    return { CellMLSupport::CellmlMimeType };
 }
 
 //==============================================================================
@@ -442,7 +442,7 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     return NoIcon;
 }
@@ -466,7 +466,7 @@ bool CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // its contents
 
     QByteArray fileContents;
-    QString errorMessage = QString();
+    QString errorMessage;
 
     if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
         if (errorMessage.isEmpty()) {

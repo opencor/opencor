@@ -141,7 +141,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
         setSizes(mInternalSizes);
     } else {
         QIntList oldSizes = sizes();
-        QIntList newSizes = QIntList();
+        QIntList newSizes;
         int oldTotalHeight = height()-(mGraphPanels.count()-2)*handleWidth();
         int newTotalHeight = oldTotalHeight-handleWidth();
         double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;

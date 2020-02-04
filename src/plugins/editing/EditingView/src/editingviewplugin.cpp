@@ -50,7 +50,7 @@ PLUGININFO_FUNC EditingViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition."));
 
     return new PluginInfo(PluginInfo::Category::Editing, false, false,
-                          QStringList() << "EditorWidget",
+                          { "EditorWidget" },
                           descriptions);
 }
 

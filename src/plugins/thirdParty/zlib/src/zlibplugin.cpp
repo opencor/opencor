@@ -38,7 +38,7 @@ PLUGININFO_FUNC zlibPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://zlib.net/">zlib</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

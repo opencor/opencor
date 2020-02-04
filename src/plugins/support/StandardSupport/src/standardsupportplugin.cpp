@@ -42,7 +42,7 @@ PLUGININFO_FUNC StandardSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter différents standards."));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "Core",
+                          { "Core" },
                           descriptions);
 }
 

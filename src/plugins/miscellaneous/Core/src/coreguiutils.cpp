@@ -366,7 +366,7 @@ QString getSaveFileName(const QString &pCaption, const QStringList &pFilters,
 {
     // Retrieve and return a save file name
 
-    return getSaveFileName(pCaption, QString(), pFilters, pSelectedFilter);
+    return getSaveFileName(pCaption, {}, pFilters, pSelectedFilter);
 }
 
 //==============================================================================
@@ -765,7 +765,7 @@ QIcon tintedIcon(const QIcon &pIcon, const QColor &pColor)
     // Create and return a tinted icon using (all the sizes of) the given icon
     // and colour
 
-    QIcon res = QIcon();
+    QIcon res;
 
     for (const auto &size : pIcon.availableSizes()) {
         QGraphicsScene scene(0, 0, size.width(), size.height());

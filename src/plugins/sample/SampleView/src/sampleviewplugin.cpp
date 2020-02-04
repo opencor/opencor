@@ -45,7 +45,7 @@ PLUGININFO_FUNC SampleViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une vue de test."));
 
     return new PluginInfo(PluginInfo::Category::Sample, true, false,
-                          QStringList() << "Core",
+                          { "Core" },
                           descriptions);
 }
 

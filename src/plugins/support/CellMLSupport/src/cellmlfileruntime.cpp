@@ -195,7 +195,7 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 {
     // Return a formatted version of our unit
 
-    QString perVoiUnitDegree = QString();
+    QString perVoiUnitDegree;
 
     if (mDegree != 0) {
         perVoiUnitDegree += "/"+pVoiUnit;
@@ -214,7 +214,7 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 {
     // Return the mapping between a parameter type and its corresponding icon
 
-    static QMap<int, QIcon> Icons = QMap<int, QIcon>();
+    static QMap<int, QIcon> Icons;
 
     static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
     static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
@@ -309,15 +309,15 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // Go through the variables defined or referenced in our main CellML
         // file and do a mapping between the source of that variable and that
         // variable itself
-        // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. not
-        //       CellML 1.1 files that don't import any components), we only
-        //       want to list the parameters that are either defined or
-        //       referenced in our main CellML file. Not only does it make
-        //       sense, but also only the parameters listed in a main CellML
-        //       file can be referenced in SED-ML...
+        // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. CellML
+        //       1.1 files that import some components), we only want to list
+        //       the parameters that are either defined or referenced in our
+        //       main CellML file. Not only does it make sense, but also only
+        //       the parameters listed in a main CellML file can be referenced
+        //       in a SED-ML file...
 
-        QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
-        QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
+        QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
+        QList<iface::cellml_api::CellMLVariable *> realMainVariables;
         ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
         ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
@@ -350,8 +350,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // variable name
 
         ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = mCodeInformation->iterateTargets();
-        QString voiName = QString();
-        QStringList voiComponentHierarchy = QStringList();
+        QString voiName;
+        QStringList voiComponentHierarchy;
 
         for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
              computationTarget != nullptr; computationTarget = computationTargetIter->nextComputationTarget()) {
@@ -484,7 +484,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     // Generate the model code
 
-    QString modelCode = QString();
+    QString modelCode;
     QString functionsString = cleanCode(mCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
@@ -517,36 +517,35 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
-    QStringList initConstsList = cleanCode(mCodeInformation->initConstsString()).split('\n');
-    QString initConsts = QString();
-    QString compCompConsts = QString();
+    QString initConsts;
+    QString compCompConsts;
 
-    for (const auto &initConst : initConstsList) {
+    for (const auto &initConst : cleanCode(mCodeInformation->initConstsString()).split('\n')) {
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
         if (InitializationStatementRegEx.match(initConst).hasMatch()) {
-            initConsts += (initConsts.isEmpty()?QString():"\n")+initConst;
+            initConsts += QString("%1").arg(initConsts.isEmpty()?"":"\n")+initConst;
         } else {
-            compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
+            compCompConsts += QString("%1").arg(compCompConsts.isEmpty()?"":"\n")+initConst;
         }
     }
 
-    modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                            initConsts);
-    modelCode += methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                            compCompConsts);
-    modelCode += methodCode("computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                            mCodeInformation->variablesString());
-    modelCode += methodCode("computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                            mCodeInformation->ratesString());
+    modelCode +=  methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
+                             initConsts)
+                 +methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                             compCompConsts)
+                 +methodCode("computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
+                             mCodeInformation->variablesString())
+                 +methodCode("computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                             mCodeInformation->ratesString());
 
     // Check whether the model code contains a definite integral, otherwise
     // compute it and check that everything went fine
 
     if (modelCode.contains("defint(func")) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
-                                   tr("definite integrals are not yet supported"));
+                                   tr("definite integrals are not supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    mCompilerEngine->error());
@@ -607,7 +606,7 @@ void CellmlFileRuntime::importData(const QString &pName,
                                    const QStringList &pComponentHierarchy,
                                    int pIndex, double *pData)
 {
-    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
+    mParameters << new CellmlFileRuntimeParameter(pName, 0, {},
                                                   pComponentHierarchy,
                                                   CellmlFileRuntimeParameter::Type::Data,
                                                   pIndex, pData);
@@ -709,7 +708,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(const double *pDat
 {
     // Return the data parameter(s)
 
-    CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
+    CellmlFileRuntimeParameters res;
 
     for (auto parameter : mParameters) {
         if (   (parameter->type() == CellmlFileRuntimeParameter::Type::Data)
@@ -936,11 +935,11 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
 
     static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
 
-    QString res = QString();
+    QString res;
 
     for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
         if (!CommentRegEx.match(code.trimmed()).hasMatch()) {
-            res += (res.isEmpty()?QString():"\n")+code;
+            res += QString("%1").arg(res.isEmpty()?"":"\n")+code;
         }
     }
 

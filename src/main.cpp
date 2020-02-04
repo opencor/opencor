@@ -84,11 +84,7 @@ int main(int pArgC, char *pArgV[])
     // and that some macOS specific menu items are not shown
 
 #ifdef Q_OS_MAC
-    QProcess::execute("defaults",
-                      QStringList() << "write"
-                                    << "ws.opencor"
-                                    << "ApplePersistenceIgnoreState"
-                                    << "NO");
+    QProcess::execute("defaults", { "write", "ws.opencor", "ApplePersistenceIgnoreState", "NO" });
 
     OpenCOR::removeMacosSpecificMenuItems();
 #endif
@@ -201,7 +197,7 @@ int main(int pArgC, char *pArgV[])
 
     // Initialise the GUI version of OpenCOR
 
-    QString appDate = QString();
+    QString appDate;
 
     OpenCOR::initApplication(&appDate);
 

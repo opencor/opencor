@@ -49,7 +49,7 @@ public:
     virtual bool load() = 0;
     bool reload();
 
-    virtual bool save(const QString &pFileName = QString());
+    virtual bool save(const QString &pFileName = {});
 
     QString fileName() const;
     void setFileName(const QString &pFileName);

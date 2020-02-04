@@ -37,7 +37,7 @@ namespace Core {
 //==============================================================================
 
 ProgressBarWidget::ProgressBarWidget(QWidget *pParent) :
-    Widget(QSize(), pParent)
+    Widget({}, pParent)
 {
 }
 

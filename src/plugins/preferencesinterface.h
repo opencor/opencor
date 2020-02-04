@@ -79,7 +79,7 @@ public:
 #undef INTERFACE_DEFINITION
 
     static QVariant preference(const QString &pName, const QString &pKey,
-                               const QVariant &pDefaultValue = QVariant());
+                               const QVariant &pDefaultValue = {});
 };
 
 //==============================================================================

@@ -39,7 +39,7 @@ PLUGININFO_FUNC SecondOrderRungeKuttaSolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension qui implémente la <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">méthode Runge-Kutta</a> du deuxième ordre pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 
@@ -134,7 +134,7 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
     stepDescriptions.insert("en", QString::fromUtf8("Step"));
     stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
+    return { Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, {}, StepDefaultValue, true) };
 }
 
 //==============================================================================

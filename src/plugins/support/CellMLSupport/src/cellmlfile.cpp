@@ -102,7 +102,7 @@ void CellmlFile::reset()
     mRdfTriples.clear();
     mIssues.clear();
 
-    Core::FileManager::instance()->setDependencies(mFileName, QStringList());
+    Core::FileManager::instance()->setDependencies(mFileName, {});
 
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
@@ -173,7 +173,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
     if (   ((pModel != mModel) || mFullInstantiationNeeded)
         && (cellmlVersion != Version::Unknown)
         && (cellmlVersion != Version::Cellml_1_0)) {
-        QStringList dependencies = QStringList();
+        QStringList dependencies;
 
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
@@ -188,8 +188,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
             // Retrieve the list of imports, together with their XML base values
 
             ObjRef<iface::cellml_api::URI> baseUri = pModel->xmlBase();
-            QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
-            QStringList importXmlBaseList = QStringList();
+            QList<iface::cellml_api::CellMLImport *> importList;
+            QStringList importXmlBaseList;
 
             retrieveImports(QString::fromStdWString(baseUri->asText()),
                             pModel, importList, importXmlBaseList);
@@ -450,7 +450,7 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-    if (!load(QString(), &mModel, mIssues)) {
+    if (!load({}, &mModel, mIssues)) {
         return false;
     }
 
@@ -544,7 +544,7 @@ bool CellmlFile::save(const QString &pFileName)
         }
     }
 
-    QStringList usedCmetaIds = QStringList();
+    QStringList usedCmetaIds;
 
     for (auto rdfTriple : mRdfTriples) {
         usedCmetaIds << rdfTriple->metadataId();
@@ -614,8 +614,8 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
         uint line = 0;
         uint column = 0;
-        QString importedFileName = QString();
-        QString importedFileInfo = QString();
+        QString importedFileName;
+        QString importedFileInfo;
 
         if (cellmlRepresentationValidityError != nullptr) {
             // We are dealing with a CellML representation issue, so determine
@@ -751,7 +751,7 @@ bool CellmlFile::isValid()
 {
     // Return whether we are valid
 
-    return isValid(QString(), &mModel, mIssues);
+    return isValid({}, &mModel, mIssues);
 }
 
 //==============================================================================

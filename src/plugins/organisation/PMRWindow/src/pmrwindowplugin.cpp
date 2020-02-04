@@ -47,9 +47,9 @@ PLUGININFO_FUNC PMRWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://models.physiomeproject.org/">PMR</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Organisation, true, false,
-                          QStringList() << "PMRSupport",
+                          { "PMRSupport" },
                           descriptions,
-                          QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
+                          { "FileBrowserWindow", "FileOrganiserWindow" });
 }
 
 //==============================================================================

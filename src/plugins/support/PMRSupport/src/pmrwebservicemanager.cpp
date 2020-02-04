@@ -134,7 +134,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         connect(mWebViewerDialog, &Core::Dialog::rejected,
                 this, &PmrWebServiceManager::authenticationCancelled);
     } else {
-        mWebViewerDialog->load(QString());
+        mWebViewerDialog->load({});
         // Note: this is in case we used our Web brower before, in which case it
         //       will contain something, which we don't want to see when
         //       reopening it...
@@ -224,11 +224,11 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
         auto requestor = new O1Requestor(this, mPmrAuthentication, this);
 
         if (!pUsePost && pJsonDocument.isEmpty()) {
-            networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
+            networkReply = requestor->get(networkRequest, {});
         } else {
             networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, RequestMimeType);
 
-            networkReply = requestor->post(networkRequest, QList<O0RequestParameter>(),
+            networkReply = requestor->post(networkRequest, {},
                                            pJsonDocument.isNull()?
                                                QByteArray():
                                                pJsonDocument.toJson(QJsonDocument::Compact));

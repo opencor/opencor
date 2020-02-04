@@ -72,7 +72,7 @@ void ConversionTests::successfulConversionTests()
     static const QString ModelEndTag = "</model>";
     static const QString Comment = QString("<!-- In between comment #%1...-->");
 
-    QStringList cellmlCorWithCommentsCellmlContents = QStringList() << cellmlCorCellmlContents[0];
+    QStringList cellmlCorWithCommentsCellmlContents = { cellmlCorCellmlContents[0] };
     QString currentLine;
     int commentNumber = 0;
     int i = 0;

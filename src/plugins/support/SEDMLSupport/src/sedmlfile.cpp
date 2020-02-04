@@ -77,7 +77,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
 //==============================================================================
 
 SedmlFile::SedmlFile(const QString &pFileName, bool pNew) :
-    SedmlFile(pFileName, QString(), pNew)
+    SedmlFile(pFileName, {}, pNew)
 {
 }
 
@@ -345,7 +345,7 @@ bool SedmlFile::isValid()
 {
     // Return whether we are valid
 
-    return isValid(QString(), mIssues);
+    return isValid({}, mIssues);
 }
 
 //==============================================================================
@@ -413,7 +413,7 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
     // Check whether the given list property is valid
 
     if (!pValuesList.contains(pPropertyNodeValue)) {
-        QString values = QString();
+        QString values;
         int i = -1;
         int lastValueIndex = pValuesList.count()-1;
 
@@ -728,14 +728,14 @@ bool SedmlFile::isSupported()
     libsedml::SedRepeatedTask *repeatedTask = nullptr;
 
     bool repeatedTaskOk = false;
-    std::string repeatedTaskFirstSubTaskId = std::string();
-    std::string repeatedTaskSecondSubTaskId = std::string();
+    std::string repeatedTaskFirstSubTaskId;
+    std::string repeatedTaskSecondSubTaskId;
 
     bool firstSubTaskOk = false;
-    std::string firstSubTaskId = std::string();
+    std::string firstSubTaskId;
 
     bool secondSubTaskOk = false;
-    std::string secondSubTaskId = std::string();
+    std::string secondSubTaskId;
 
     for (uint i = 0; i < totalNbOfTasks; ++i) {
         auto task = static_cast<libsedml::SedTask *>(mSedmlDocument->getTask(i));

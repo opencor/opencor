@@ -474,7 +474,7 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, nullptr, nullptr);
 #elif defined(Q_OS_LINUX)
-    if (exec("which", QStringList() << "xdg-mime") == 0) {
+    if (exec("which", { "xdg-mime" }) == 0) {
         QString iconPath = canonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
                                                                                          qApp->organizationName(),
                                                                                          qApp->applicationName()));
@@ -492,7 +492,7 @@ void MainWindow::registerOpencorUrlScheme()
                                                                      canonicalFileName(qApp->applicationFilePath()),
                                                                      iconPath));
 
-        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
+        exec("xdg-mime", { "default", "opencor.desktop", "x-scheme-handler/opencor" });
     }
 #else
 #pragma clang diagnostic push
@@ -591,7 +591,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some actions to our File|New menu and keep track of them
 
-        static QString pluginForFileNewMenu = QString();
+        static QString pluginForFileNewMenu = {};
 
         for (const auto &guiMenuAction : guiMenuActions) {
             if (guiMenuAction.type() == Gui::MenuAction::Type::FileNew) {
@@ -742,7 +742,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the state of the docked windows
 
-    mDockedWindowsState = settings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
+    mDockedWindowsState = settings.value(SettingsDockedWindowsState, {}).toByteArray();
 
     // Remove the File menu when on macOS, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on macOS
@@ -1031,7 +1031,7 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
     static QString Opencor = "opencor";
 
-    QStringList arguments = QStringList();
+    QStringList arguments;
 
     for (const auto &argument : pArguments) {
         QUrl url = argument;

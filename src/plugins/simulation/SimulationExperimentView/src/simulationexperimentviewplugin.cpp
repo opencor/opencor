@@ -55,7 +55,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Category::Simulation, true, false,
-                          QStringList() << "GraphPanelWidget" << "PythonQtSupport" << "SimulationSupport",
+                          { "GraphPanelWidget", "PythonQtSupport", "SimulationSupport" },
                           descriptions);
 }
 
@@ -202,8 +202,8 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
 {
     // Retrieve the different CellML capable editing and simulation views
 
-    Plugins cellmlEditingViewPlugins = Plugins();
-    Plugins cellmlSimulationViewPlugins = Plugins();
+    Plugins cellmlEditingViewPlugins;
+    Plugins cellmlSimulationViewPlugins;
 
     for (auto plugin : pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
@@ -314,9 +314,8 @@ QStringList SimulationExperimentViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType
-                         << SEDMLSupport::SedmlMimeType
-                         << COMBINESupport::CombineMimeType;
+    return { CellMLSupport::CellmlMimeType, SEDMLSupport::SedmlMimeType,
+             COMBINESupport::CombineMimeType };
 }
 
 //==============================================================================

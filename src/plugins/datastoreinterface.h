@@ -286,7 +286,7 @@ class DataStore : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStore(const QString &pUri = QString());
+    explicit DataStore(const QString &pUri = {});
     ~DataStore() override;
 
     bool addRun(quint64 pCapacity);

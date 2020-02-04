@@ -138,7 +138,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Typ
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              int pNumber) :
-    CellmlAnnotationViewCellmlElementItem(false, pType, QString(), pElement, pNumber)
+    CellmlAnnotationViewCellmlElementItem(false, pType, {}, pElement, pNumber)
 {
     // Set the text for some types
 
@@ -930,7 +930,7 @@ void CellmlAnnotationViewCellmlListWidget::removeCurrentMetadata()
     // Re-update the metadata details view now that the current node doesn't
     // have any metadata associated with it
 
-    updateMetadataDetails(mTreeViewWidget->currentIndex(), QModelIndex());
+    updateMetadataDetails(mTreeViewWidget->currentIndex(), {});
 }
 
 //==============================================================================
@@ -944,7 +944,7 @@ void CellmlAnnotationViewCellmlListWidget::removeAllMetadata()
     // Re-update the metadata details view now that the CellML file doesn't have
     // any metadata associated with it
 
-    updateMetadataDetails(mTreeViewWidget->currentIndex(), QModelIndex());
+    updateMetadataDetails(mTreeViewWidget->currentIndex(), {});
 }
 
 //==============================================================================

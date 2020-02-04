@@ -79,9 +79,9 @@ public:
     iface::rdf_api::DataSource * rdfDataSource();
 
     bool load() override;
-    bool save(const QString &pFileName = QString()) override;
+    bool save(const QString &pFileName = {}) override;
 
-    bool update(const QString &pFileName = QString());
+    bool update(const QString &pFileName = {});
 
     bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues);
     bool isValid();

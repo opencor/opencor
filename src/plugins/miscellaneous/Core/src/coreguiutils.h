@@ -120,28 +120,28 @@ Plugin CORE_EXPORT * currentViewPlugin();
 QString CORE_EXPORT currentFileName();
 
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
-                                    const QStringList &pFilters = QStringList(),
+                                    const QStringList &pFilters = {},
                                     QString *pSelectedFilter = nullptr);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
-                                         const QStringList &pFilters = QStringList(),
+                                         const QStringList &pFilters = {},
                                          QString *pSelectedFilter = nullptr);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
-                                    const QStringList &pFilters = QStringList(),
+                                    const QStringList &pFilters = {},
                                     QString *pSelectedFilter = nullptr);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
-                                    const QStringList &pFilters = QStringList(),
+                                    const QStringList &pFilters = {},
                                     QString *pSelectedFilter = nullptr);
 
 QString CORE_EXPORT getDirectory(const QString &pCaption,
-                                 const QString &pDirName = QString(),
+                                 const QString &pDirName = {},
                                  bool pEmptyDir = false);
 QString CORE_EXPORT getEmptyDirectory(const QString &pCaption,
-                                      const QString &pDirName = QString());
+                                      const QString &pDirName = {});
 
 QString CORE_EXPORT guiOpenFile(const QString &pFileName,
                                 File::Type pType = File::Type::Local,
-                                const QString &pUrl = QString(),
+                                const QString &pUrl = {},
                                 bool pShowWarning = true);
 QString CORE_EXPORT guiOpenRemoteFile(const QString &pUrl,
                                       bool pShowWarning = true);

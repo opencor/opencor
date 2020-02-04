@@ -75,7 +75,7 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
 
     // Specify the scope of token requests
 
-    QList<O0RequestParameter> requestParameters = QList<O0RequestParameter>();
+    QList<O0RequestParameter> requestParameters;
 
     requestParameters << O0RequestParameter("scope",
                                             QString("%1/oauth_scope/collection,"

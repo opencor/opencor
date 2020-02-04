@@ -55,7 +55,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder divers outils en rapport avec <a href="https://cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Tools, true, true,
-                          QStringList() << "CellMLSupport",
+                          { "CellMLSupport" },
                           descriptions);
 }
 
@@ -291,7 +291,7 @@ void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
     if (!cellmlFile->exportTo(fileName, pVersion)) {
-        QString errorMessage = QString();
+        QString errorMessage;
 
         if (!cellmlFile->issues().isEmpty()) {
             errorMessage = " ("+cellmlFile->issues().first().message()+")";
@@ -339,7 +339,7 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
 
     // Check whether we are dealing with a local or a remote file
 
-    QString output = QString();
+    QString output;
     bool isLocalFile;
     QString fileNameOrUrl;
 
@@ -420,8 +420,8 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
                             // Everything seems to be fine, so attempt the
                             // export itself
 
-                            if (   (isFileName && !cellmlFile->exportTo(QString(), formatOrFileName))
-                                || (isCellml10Format && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
+                            if (   (isFileName && !cellmlFile->exportTo({}, formatOrFileName))
+                                || (isCellml10Format && !cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
                                 output = "The file could not be exported";
 
                                 if (!cellmlFile->issues().isEmpty()) {
@@ -519,7 +519,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     QString xmlFilter = tr("User-Defined Format File")+" (*.xml)";
     QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"),
-                                                              QStringList() << xmlFilter,
+                                                              { xmlFilter },
                                                               &xmlFilter);
 
     if (userDefinedFormatFileName.isEmpty()) {
@@ -541,7 +541,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
     if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
-        QString errorMessage = QString();
+        QString errorMessage;
 
         if (!cellmlFile->issues().isEmpty()) {
             errorMessage = " ("+cellmlFile->issues().first().message()+")";

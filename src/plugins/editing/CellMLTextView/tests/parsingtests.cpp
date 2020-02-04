@@ -47,7 +47,7 @@ void ParsingTests::basicTests()
 
     // Various tests on a minimal model definition
 
-    QVERIFY(!parser.execute(QString(),
+    QVERIFY(!parser.execute({},
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parser.messages().first().message(), QString("'def' is expected, but the end of the file was found instead."));

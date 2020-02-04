@@ -125,9 +125,9 @@ public:
     libsedml::SedDocument * sedmlDocument();
 
     bool load() override;
-    bool save(const QString &pFileName = QString()) override;
+    bool save(const QString &pFileName = {}) override;
 
-    bool update(const QString &pFileName = QString());
+    bool update(const QString &pFileName = {});
 
     void forceNew();
 
