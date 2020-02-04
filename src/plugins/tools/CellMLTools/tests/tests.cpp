@@ -76,7 +76,7 @@ void Tests::exportToUserDefinedFormatTests()
     QString matlabFormatFileName = OpenCOR::fileName("formats/MATLAB.xml");
 
 #ifdef Q_OS_WIN
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, matlabFormatFileName, mOutput }));
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, matlabFormatFileName }, mOutput));
     QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_windows.out")));
 #else
     QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, matlabFormatFileName }, mOutput ));
