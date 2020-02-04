@@ -526,9 +526,9 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // 'computed' constants
 
         if (InitializationStatementRegEx.match(initConst).hasMatch()) {
-            initConsts += (initConsts.isEmpty()?QString():"\n")+initConst;
+            initConsts += QString("%1").arg(initConsts.isEmpty()?"":"\n")+initConst;
         } else {
-            compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
+            compCompConsts += QString("%1").arg(compCompConsts.isEmpty()?"":"\n")+initConst;
         }
     }
 
@@ -940,7 +940,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
 
     for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
         if (!CommentRegEx.match(code.trimmed()).hasMatch()) {
-            res += (res.isEmpty()?QString():"\n")+code;
+            res += QString("%1").arg(res.isEmpty()?"":"\n")+code;
         }
     }
 
