@@ -517,11 +517,10 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
-    QStringList initConstsList = cleanCode(mCodeInformation->initConstsString()).split('\n');
     QString initConsts;
     QString compCompConsts;
 
-    for (const auto &initConst : initConstsList) {
+    for (const auto &initConst : cleanCode(mCodeInformation->initConstsString()).split('\n')) {
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
