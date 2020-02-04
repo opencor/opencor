@@ -56,7 +56,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);

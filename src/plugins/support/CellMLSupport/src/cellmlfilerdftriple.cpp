@@ -64,7 +64,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          iface::rdf_api::Triple *pRdfTriple) :
     CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Type::Unknown,
                         ModelQualifier::ModelUnknown, BioQualifier::BioUnknown,
-                        QString(), QString())
+                        {}, {})
 {
     // Retrieve the RDF triple's subject, predicate and object information
 

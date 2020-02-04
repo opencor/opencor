@@ -38,7 +38,7 @@ PLUGININFO_FUNC LLVMClangPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://llvm.org/">LLVM</a> et <a href="https://clang.llvm.org/">Clang</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

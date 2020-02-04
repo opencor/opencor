@@ -869,11 +869,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
             removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
-            html += QString(Row).arg("header",
-                                     "...",
-                                     "...",
-                                     QString(),
-                                     difference);
+            html += QString(Row).arg("header", "...", "...", {}, difference);
         } else {
             QString diff = difference;
             QChar tag = diff[0];
@@ -884,14 +880,12 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                 ++addLineNumber;
 
                 differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last add":"add",
-                                                  QString(), QString::number(addLineNumber),
-                                                  '+', diff);
+                                                  {}, QString::number(addLineNumber), '+', diff);
             } else if (tag == '-') {
                 ++removeLineNumber;
 
                 differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last remove":"remove",
-                                                  QString::number(removeLineNumber), QString(),
-                                                  '-', diff);
+                                                  QString::number(removeLineNumber), {}, '-', diff);
             } else if (addLineNumber != addMaxLineNumber) {
                 // Output any differences data that we may have
 
@@ -907,8 +901,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                                              "default")
                                     .arg(removeLineNumber)
                                     .arg(addLineNumber)
-                                    .arg(QString(),
-                                         cleanHtmlEscaped(diff));
+                                    .arg({}, cleanHtmlEscaped(diff));
             }
         }
     }

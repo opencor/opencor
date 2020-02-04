@@ -177,10 +177,10 @@ Solver::Properties KINSOLSolverPlugin::solverProperties() const
                                            BiCgStabLinearSolver,
                                            TfqmrLinearSolver };
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false);
+    return { Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, {}, MaximumNumberOfIterationsDefaultValue, false),
+             Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false),
+             Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, {}, UpperHalfBandwidthDefaultValue, false),
+             Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, {}, LowerHalfBandwidthDefaultValue, false) };
 }
 
 //==============================================================================

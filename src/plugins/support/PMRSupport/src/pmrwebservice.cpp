@@ -63,7 +63,7 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
 //==============================================================================
 
 PmrWebService::PmrWebService(QObject *pParent) :
-    PmrWebService(QString(), pParent)
+    PmrWebService({}, pParent)
 {
 }
 
@@ -745,7 +745,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
                 // Retrieve some information about the workspace and then clone
                 // it
 
-                requestWorkspaceInformation(workspaceUrl, QString(), exposure);
+                requestWorkspaceInformation(workspaceUrl, {}, exposure);
             } else if (   exposureFileUrls.isEmpty()
                        && (action == Action::RequestExposureFiles)) {
                 emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));

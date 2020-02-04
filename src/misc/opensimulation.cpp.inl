@@ -31,8 +31,7 @@ static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
     QString error = isLocalFile?
 #ifdef GUI_SUPPORT
                         Core::guiOpenFile(fileNameOrUrl,
-                                          Core::File::Type::Local,
-                                          QString(), false):
+                                          Core::File::Type::Local, {}, false):
                         Core::guiOpenRemoteFile(fileNameOrUrl, false);
 #else
                         Core::cliOpenFile(fileNameOrUrl):

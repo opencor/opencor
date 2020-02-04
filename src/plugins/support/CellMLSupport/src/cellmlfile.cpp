@@ -102,7 +102,7 @@ void CellmlFile::reset()
     mRdfTriples.clear();
     mIssues.clear();
 
-    Core::FileManager::instance()->setDependencies(mFileName, QStringList());
+    Core::FileManager::instance()->setDependencies(mFileName, {});
 
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
@@ -450,7 +450,7 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-    if (!load(QString(), &mModel, mIssues)) {
+    if (!load({}, &mModel, mIssues)) {
         return false;
     }
 
@@ -751,7 +751,7 @@ bool CellmlFile::isValid()
 {
     // Return whether we are valid
 
-    return isValid(QString(), &mModel, mIssues);
+    return isValid({}, &mModel, mIssues);
 }
 
 //==============================================================================

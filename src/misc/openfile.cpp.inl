@@ -79,7 +79,7 @@ QString cliOpenFile(const QString &pFileName, File::Type pType,
     int fileTabIndex = mFileTabs->currentIndex()+1;
 
     mFileNames.insert(fileTabIndex, fileName);
-    mFileTabs->insertTab(fileTabIndex, QString());
+    mFileTabs->insertTab(fileTabIndex, {});
 
     updateFileTab(fileTabIndex);
 

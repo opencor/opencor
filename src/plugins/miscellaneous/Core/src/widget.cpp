@@ -82,7 +82,7 @@ QLayout * Widget::createLayout(Layout pLayoutType)
         break;
     }
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
 
     if ((pLayoutType == Layout::Vertical) || (pLayoutType == Layout::Horizontal)) {
         layout->setSpacing(0);

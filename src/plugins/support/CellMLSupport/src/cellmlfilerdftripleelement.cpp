@@ -97,7 +97,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
 
                 mId = ids.value(id);
 
-                if (mId == QString()) {
+                if (mId.isEmpty()) {
                     // There is no id value for the current id, so generate one
                     // and keep track of it
 

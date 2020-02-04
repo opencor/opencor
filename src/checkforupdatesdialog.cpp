@@ -232,7 +232,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
 //==============================================================================
 
 CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
-    CheckForUpdatesDialog(QString(), pEngine, nullptr)
+    CheckForUpdatesDialog({}, pEngine, nullptr)
 {
 }
 

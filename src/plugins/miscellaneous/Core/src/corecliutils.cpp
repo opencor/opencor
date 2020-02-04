@@ -821,7 +821,7 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
 {
     // Return the name of a 'new' file
 
-    return newFileName(pFileName, pExtra, pBefore, QString());
+    return newFileName(pFileName, pExtra, pBefore, {});
 }
 
 //==============================================================================
@@ -830,7 +830,7 @@ QString newFileName(const QString &pFileName, const QString &pFileExtension)
 {
     // Return the name of a 'new' file
 
-    return newFileName(pFileName, QString(), true, pFileExtension);
+    return newFileName(pFileName, {}, true, pFileExtension);
 }
 
 //==============================================================================
@@ -1037,7 +1037,7 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces
 
-    return filters(pFileTypeInterfaces, false, QString());
+    return filters(pFileTypeInterfaces, false, {});
 }
 
 //==============================================================================

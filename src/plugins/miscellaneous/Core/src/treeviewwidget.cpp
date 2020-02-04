@@ -137,7 +137,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
                 // Either the current item has no children or it is collapsed,
                 // so select its parent, if it has one
 
-                if (crtIndex.parent() != QModelIndex()) {
+                if (crtIndex.parent().isValid()) {
                     setCurrentIndex(crtIndex.parent());
 
                     pEvent->accept();

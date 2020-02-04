@@ -67,7 +67,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -77,7 +77,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
     auto subWidget = new QWidget(this);
     auto subLayout = new QHBoxLayout(subWidget);
 
-    subLayout->setContentsMargins(QMargins());
+    subLayout->setContentsMargins({});
     subLayout->setSpacing(0);
 
     subWidget->setLayout(subLayout);
@@ -292,13 +292,13 @@ void CollapsibleHeaderWidget::showMenu()
 //==============================================================================
 
 CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    Widget(QSize(), pParent)
+    Widget({}, pParent)
 {
     // Create a vertical layout that will contain our headers and widgets
 
     mLayout = new QVBoxLayout(this);
 
-    mLayout->setContentsMargins(QMargins());
+    mLayout->setContentsMargins({});
     mLayout->setSpacing(0);
 
     setLayout(mLayout);

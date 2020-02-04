@@ -491,7 +491,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     auto simulationOutputWidget = new QWidget(this);
     auto simulationOutputLayout= new QVBoxLayout(simulationOutputWidget);
 
-    simulationOutputLayout->setContentsMargins(QMargins());
+    simulationOutputLayout->setContentsMargins({});
     simulationOutputLayout->setSpacing(0);
 
     simulationOutputWidget->setLayout(simulationOutputLayout);
@@ -2206,7 +2206,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
 {
     // Export the simulation to a SED-ML file
 
-    sedmlExportSedmlFile(QString());
+    sedmlExportSedmlFile({});
 }
 
 //==============================================================================
@@ -2386,7 +2386,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 {
     // Export the simulation to a COMBINE archive
 
-    sedmlExportCombineArchive(QString());
+    sedmlExportCombineArchive({});
 }
 
 //==============================================================================
@@ -2677,7 +2677,7 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
 {
     // Return our default graph properties
 
-    return defaultGraphProperties(QString(), pColor);
+    return defaultGraphProperties({}, pColor);
 }
 
 //==============================================================================

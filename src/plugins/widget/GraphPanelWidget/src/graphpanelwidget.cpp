@@ -84,7 +84,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     auto layout = new QHBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);

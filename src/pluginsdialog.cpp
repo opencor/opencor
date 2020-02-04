@@ -658,7 +658,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
         }
     }
 
-    mGui->treeView->setCurrentIndex(QModelIndex());
+    mGui->treeView->setCurrentIndex({});
 }
 
 //==============================================================================

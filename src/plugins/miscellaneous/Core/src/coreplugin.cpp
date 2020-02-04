@@ -58,7 +58,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

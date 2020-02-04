@@ -116,7 +116,7 @@ PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
 
 PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
                            const QString &pUrl, PmrWebService *pParent) :
-    PmrWorkspace(pOwned, pName, pUrl, QString(), QString(), pParent)
+    PmrWorkspace(pOwned, pName, pUrl, {}, {}, pParent)
 {
 }
 
@@ -284,7 +284,7 @@ void PmrWorkspace::close()
 
     mPath = QString();
 
-    mRootFileNode->setPath(QString());
+    mRootFileNode->setPath({});
 
     git_repository_free(mGitRepository);
 

@@ -579,7 +579,7 @@ void RawCellmlViewWidget::updateViewer()
     if (!foundMathmlBlock || !hasContentMathmlEquation) {
         mContentMathmlEquation = QString();
 
-        mEditingWidget->mathmlViewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents({});
     }
 }
 

@@ -38,7 +38,7 @@ PLUGININFO_FUNC SamplePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une fonction d'addition."));
 
     return new PluginInfo(PluginInfo::Category::Sample, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

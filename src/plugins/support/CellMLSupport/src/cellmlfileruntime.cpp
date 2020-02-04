@@ -607,7 +607,7 @@ void CellmlFileRuntime::importData(const QString &pName,
                                    const QStringList &pComponentHierarchy,
                                    int pIndex, double *pData)
 {
-    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
+    mParameters << new CellmlFileRuntimeParameter(pName, 0, {},
                                                   pComponentHierarchy,
                                                   CellmlFileRuntimeParameter::Type::Data,
                                                   pIndex, pData);

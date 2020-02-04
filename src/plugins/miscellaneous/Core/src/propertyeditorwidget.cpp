@@ -1568,7 +1568,7 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property and return its information
 
-    return addSectionProperty(QString(), pParent);
+    return addSectionProperty({}, pParent);
 }
 
 //==============================================================================
@@ -1591,7 +1591,7 @@ Property * PropertyEditorWidget::addStringProperty(Property *pParent)
 {
     // Add a string property and return its information
 
-    return addStringProperty(QString(), pParent);
+    return addStringProperty({}, pParent);
 }
 
 //==============================================================================
@@ -1760,7 +1760,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 {
     // Add a list property and return its information
 
-    return addListProperty(pValues, QString(), pParent);
+    return addListProperty(pValues, {}, pParent);
 }
 
 //==============================================================================
@@ -1769,7 +1769,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addListProperty(QStringList(), QString(), pParent);
+    return addListProperty({}, {}, pParent);
 }
 
 //==============================================================================
@@ -1815,7 +1815,7 @@ Property * PropertyEditorWidget::addColorProperty(Property *pParent)
 {
     // Add a colour property and return its information
 
-    return addColorProperty(QColor(), pParent);
+    return addColorProperty({}, pParent);
 }
 
 //==============================================================================

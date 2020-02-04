@@ -137,7 +137,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     auto layout = new QHBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -198,7 +198,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     auto centralWidget = new QWidget(this);
     auto centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
 
-    centralWidgetVBoxLayout->setContentsMargins(QMargins());
+    centralWidgetVBoxLayout->setContentsMargins({});
     centralWidgetVBoxLayout->setSpacing(0);
 
     centralWidget->setLayout(centralWidgetVBoxLayout);
@@ -409,7 +409,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
             fileMode = mModeTabIndexModes.value(i);
 
             CentralWidgetMode *mode = mModes.value(fileMode);
-            QString viewPluginName = pSettings.value(QString(SettingsFileModeView).arg(QString(),
+            QString viewPluginName = pSettings.value(QString(SettingsFileModeView).arg({},
                                                                                        ViewInterface::modeAsString(fileMode))).toString();
             Plugins viewPlugins = mode->viewPlugins();
 
@@ -514,7 +514,7 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
         ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
         CentralWidgetMode *mode = mModes.value(fileMode);
 
-        pSettings.setValue(QString(SettingsFileModeView).arg(QString(),
+        pSettings.setValue(QString(SettingsFileModeView).arg({},
                                                              ViewInterface::modeAsString(fileMode)),
                            mode->viewPlugins()[mode->viewTabs()->currentIndex()]->name());
     }
@@ -1381,7 +1381,7 @@ void CentralWidget::addView(Plugin *pPlugin)
     if (!mModes.value(viewMode)->isEnabled()) {
         // There is no tab for the mode, so add one and enable it
 
-        int tabIndex = mModeTabs->addTab(QString());
+        int tabIndex = mModeTabs->addTab({});
 
         mModes.value(viewMode)->setEnabled(true);
 
@@ -1396,7 +1396,7 @@ void CentralWidget::addView(Plugin *pPlugin)
     CentralWidgetMode *mode = mModes.value(viewMode);
 
     mode->addViewPlugin(pPlugin);
-    mode->viewTabs()->addTab(QString());
+    mode->viewTabs()->addTab({});
 }
 
 //==============================================================================
@@ -1989,13 +1989,13 @@ void CentralWidget::updateModifiedSettings()
     // tabs
 
     mModeTabs->setEnabled(true);
-    mModeTabs->setToolTip(QString());
+    mModeTabs->setToolTip({});
 
     for (auto mode : mModes) {
         TabBarWidget *viewTabs = mode->viewTabs();
 
         viewTabs->setEnabled(true);
-        viewTabs->setToolTip(QString());
+        viewTabs->setToolTip({});
     }
 
     // Enable/disable the Mode tabs and the current mode's View tabs, in case

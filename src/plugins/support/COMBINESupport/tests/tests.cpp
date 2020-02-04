@@ -120,7 +120,7 @@ void Tests::basicTests()
 
     QString tempFileName = OpenCOR::Core::temporaryFileName();
 
-    basicTests(QString());
+    basicTests({});
     basicTests(tempFileName);
 
     // Check that we can load our other COMBINE archive and save it in yet

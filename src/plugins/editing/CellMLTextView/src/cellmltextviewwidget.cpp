@@ -1220,7 +1220,7 @@ void CellmlTextViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->mathmlViewer()->setContents(QString());
+        mEditingWidget->mathmlViewer()->setContents({});
     } else {
         // There is a statement, so try to parse it
 

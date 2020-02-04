@@ -366,7 +366,7 @@ QString getSaveFileName(const QString &pCaption, const QStringList &pFilters,
 {
     // Retrieve and return a save file name
 
-    return getSaveFileName(pCaption, QString(), pFilters, pSelectedFilter);
+    return getSaveFileName(pCaption, {}, pFilters, pSelectedFilter);
 }
 
 //==============================================================================

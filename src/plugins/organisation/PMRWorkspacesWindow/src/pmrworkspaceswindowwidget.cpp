@@ -131,7 +131,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  const QIcon &pIcon) :
     PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
                             pWorkspace, pFileNode, pIcon, pFileNode->name(),
-                            QIcon(), QIcon())
+                            {}, {})
 {
 }
 
@@ -281,7 +281,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
 
     setLayout(layout);
 
@@ -834,7 +834,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 {
     // Initialise ourselves using the given workspaces
 
-    initialize(pWorkspaces, Message::None, QString(), true);
+    initialize(pWorkspaces, Message::None, {}, true);
 }
 
 //==============================================================================
@@ -843,7 +843,7 @@ void PmrWorkspacesWindowWidget::initialize()
 {
     // Initialise ourselves
 
-    initialize(PMRSupport::PmrWorkspaces(), Message::None, QString(), false);
+    initialize(PMRSupport::PmrWorkspaces(), Message::None, {}, false);
 }
 
 //==============================================================================

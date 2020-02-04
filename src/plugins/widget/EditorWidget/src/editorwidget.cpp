@@ -48,7 +48,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);

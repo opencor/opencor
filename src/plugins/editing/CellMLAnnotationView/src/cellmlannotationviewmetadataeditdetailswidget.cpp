@@ -174,7 +174,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     auto qualifierWidget = new QWidget(formWidget);
     auto qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
 
-    qualifierWidgetLayout->setContentsMargins(QMargins());
+    qualifierWidgetLayout->setContentsMargins({});
 
     qualifierWidget->setLayout(qualifierWidgetLayout);
 
@@ -215,7 +215,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     auto termWidget = new QWidget(formWidget);
     auto termWidgetLayout = new QHBoxLayout(termWidget);
 
-    termWidgetLayout->setContentsMargins(QMargins());
+    termWidgetLayout->setContentsMargins({});
 
     termWidget->setLayout(termWidgetLayout);
 
@@ -405,8 +405,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     if (   (pResetItemsGui && !mAnnotationWidget->isBusyWidgetVisible())
         || termIsDirect) {
-        updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                       !termIsDirect && !pFilePermissionsChanged);
+        updateItemsGui({}, !termIsDirect && !pFilePermissionsChanged);
     }
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -460,7 +459,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pL
         mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
                                        tr("Enter a term above..."));
     } else if (pLookUpTerm) {
-        mOutputMessage->setIconMessage(QString(), QString());
+        mOutputMessage->setIconMessage({}, {});
 
         if (pShowBusyWidget != nullptr) {
             *pShowBusyWidget = true;
@@ -534,7 +533,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     mItemsMapping.clear();
     mEnabledItems.clear();
 
-    mOutputOntologicalTerms->webView()->setHtml(QString());
+    mOutputOntologicalTerms->webView()->setHtml({});
 
     // Populate our Web view, but only if there is at least one item
 
@@ -1061,8 +1060,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     // Update our items' GUI
 
-    updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                   !isDirectTerm(mTermValue->text()));
+    updateItemsGui({}, !isDirectTerm(mTermValue->text()));
 
     // Ask our parent to update its GUI with the added RDF triple
 

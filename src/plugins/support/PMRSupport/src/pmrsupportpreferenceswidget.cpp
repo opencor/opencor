@@ -105,8 +105,8 @@ void PmrSupportPreferencesWidget::resetPreferences()
     // Reset our preferences
 
     mGui->pmrUrlValue->setCurrentText(SettingsPreferencesPmrUrlDefault);
-    mGui->nameValue->setText(QString());
-    mGui->emailValue->setText(QString());
+    mGui->nameValue->setText({});
+    mGui->emailValue->setText({});
 }
 
 //==============================================================================
@@ -133,7 +133,7 @@ void PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged(const QString &p
     } else if (pCurrentText == TeachingInstance) {
         mGui->noteValue->setText(tr(R"(the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the <a href="https://lists.cellml.org/sympa/info/cellml-discussion">cellml-discussion mailing list</a>.)"));
     } else {
-        mGui->noteValue->setText(QString());
+        mGui->noteValue->setText({});
     }
 
     mGui->noteLabel->setVisible(!mGui->noteValue->text().isEmpty());

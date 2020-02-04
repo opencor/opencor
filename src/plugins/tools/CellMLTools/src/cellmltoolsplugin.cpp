@@ -420,8 +420,8 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
                             // Everything seems to be fine, so attempt the
                             // export itself
 
-                            if (   (isFileName && !cellmlFile->exportTo(QString(), formatOrFileName))
-                                || (isCellml10Format && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
+                            if (   (isFileName && !cellmlFile->exportTo({}, formatOrFileName))
+                                || (isCellml10Format && !cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
                                 output = "The file could not be exported";
 
                                 if (!cellmlFile->issues().isEmpty()) {

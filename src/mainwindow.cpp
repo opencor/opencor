@@ -742,7 +742,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the state of the docked windows
 
-    mDockedWindowsState = settings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
+    mDockedWindowsState = settings.value(SettingsDockedWindowsState, {}).toByteArray();
 
     // Remove the File menu when on macOS, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on macOS

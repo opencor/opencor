@@ -134,7 +134,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         connect(mWebViewerDialog, &Core::Dialog::rejected,
                 this, &PmrWebServiceManager::authenticationCancelled);
     } else {
-        mWebViewerDialog->load(QString());
+        mWebViewerDialog->load({});
         // Note: this is in case we used our Web brower before, in which case it
         //       will contain something, which we don't want to see when
         //       reopening it...

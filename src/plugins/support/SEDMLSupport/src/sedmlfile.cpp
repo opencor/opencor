@@ -77,7 +77,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
 //==============================================================================
 
 SedmlFile::SedmlFile(const QString &pFileName, bool pNew) :
-    SedmlFile(pFileName, QString(), pNew)
+    SedmlFile(pFileName, {}, pNew)
 {
 }
 
@@ -345,7 +345,7 @@ bool SedmlFile::isValid()
 {
     // Return whether we are valid
 
-    return isValid(QString(), mIssues);
+    return isValid({}, mIssues);
 }
 
 //==============================================================================

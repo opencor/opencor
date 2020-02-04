@@ -125,7 +125,7 @@ void Tests::runtimeTests()
     // least, several VOIs
 
     runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium_transient.cellml"),
-                "1.1", QStringList(), false);
+                "1.1", {}, false);
 
     // Clean up after ourselves
 

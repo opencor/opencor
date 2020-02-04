@@ -1892,7 +1892,7 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
 
                 static const QRegularExpression UnitRegEx = QRegularExpression("{[^}]*}$");
 
-                double n = QString(b).replace(UnitRegEx, QString()).toDouble();
+                double n = QString(b).replace(UnitRegEx, {}).toDouble();
 
                 if (n == 2.0) {
                     res = "sqr("+a+")";
@@ -1977,7 +1977,7 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
 
                 static const QRegularExpression UnitRegEx = QRegularExpression("{[^}]*}$");
 
-                double n = QString(b).replace(UnitRegEx, QString()).toDouble();
+                double n = QString(b).replace(UnitRegEx, {}).toDouble();
 
                 if (n == 2.0) {
                     res = "sqrt("+a+")";
