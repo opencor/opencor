@@ -77,7 +77,7 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
         //       localURLSchemes()...
 
         if (pType == NavigationTypeLinkClicked) {
-            static QStringList localSchemes = QStringList();
+            static QStringList localSchemes;
 
             if (localSchemes.isEmpty()) {
                 localSchemes << "file";

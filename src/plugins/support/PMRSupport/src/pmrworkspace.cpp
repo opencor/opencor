@@ -661,7 +661,7 @@ void PmrWorkspace::refreshStatus()
         // Delete any 'old' file node that is not being used anymore
 
         PmrWorkspaceFileNodes newFileNodes = mRepositoryStatusMap.values();
-        PmrWorkspaceFileNodes oldFileNodesToDelete = PmrWorkspaceFileNodes();
+        PmrWorkspaceFileNodes oldFileNodesToDelete;
 
         for (auto oldFileNode : oldFileNodes) {
             if (!newFileNodes.contains(oldFileNode)) {
@@ -988,7 +988,7 @@ StagedFiles PmrWorkspace::stagedFiles()
 {
     // Retrieve and return all current staged files
 
-    StagedFiles res = StagedFiles();
+    StagedFiles res;
     git_index *index;
 
     if (git_repository_index(&index, mGitRepository) == GIT_OK) {

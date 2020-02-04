@@ -203,7 +203,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             // defines new interfaces and, if so, keep track of
                             // them
 
-                            static PluginInterfaces pluginsWithInterfaces = PluginInterfaces();
+                            static PluginInterfaces pluginsWithInterfaces;
 
                             if (   (pluginInterface != nullptr)
                                 && pluginInterface->definesPluginInterfaces()) {
@@ -552,7 +552,7 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
 {
     // Return the given plugin's full dependencies
 
-    QStringList res = QStringList();
+    QStringList res;
 
     // Recursively look for the plugin's full dependencies
 

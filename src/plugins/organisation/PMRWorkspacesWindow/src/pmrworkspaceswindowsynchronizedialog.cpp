@@ -404,7 +404,7 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 {
     // List all the files that have changed
 
-    PmrWorkspacesWindowSynchronizeDialogItems res = PmrWorkspacesWindowSynchronizeDialogItems();
+    PmrWorkspacesWindowSynchronizeDialogItems res;
 
     for (auto fileNode : pFileNode->children()) {
         if (fileNode->hasChildren()) {
@@ -492,7 +492,7 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 {
     // Return our file names
 
-    QStringList res = QStringList();
+    QStringList res;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
@@ -517,7 +517,7 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
     // Keep track of our existing items
 
-    PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
+    PmrWorkspacesWindowSynchronizeDialogItems oldItems;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         oldItems << static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
@@ -659,10 +659,7 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
     program.replace(ExeExtensionRegEx, ".com");
 #endif
 
-    return Core::exec(program,
-                      QStringList() << "-c"
-                                    << "CellMLTextView::import"
-                                    << pFileName,
+    return Core::exec(program, { "-c", "CellMLTextView::import", pFileName },
                       pCellmlText) == 0;
 }
 
@@ -704,7 +701,7 @@ PmrWorkspacesWindowSynchronizeDialog::DifferenceData PmrWorkspacesWindowSynchron
                                                                                                           const QChar &pTag,
                                                                                                           const QString &pDifference)
 {
-    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res = PmrWorkspacesWindowSynchronizeDialog::DifferenceData();
+    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res;
 
     res.operation = pOperation;
     res.removeLineNumber = pRemoveLineNumber;

@@ -150,8 +150,8 @@ void Tests::basicTests()
     QVERIFY(otherZipReader.extractAll(otherDir));
     QVERIFY(yetAnotherZipReader.extractAll(yetAnotherDir));
 
-    QDirIterator dirIterator(otherDir, QStringList() << "*",
-                             QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator dirIterator(otherDir, { "*" }, QDir::Files,
+                             QDirIterator::Subdirectories);
 
     while (dirIterator.hasNext()) {
         QString fileName = dirIterator.next();

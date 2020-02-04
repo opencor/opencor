@@ -728,14 +728,14 @@ bool SedmlFile::isSupported()
     libsedml::SedRepeatedTask *repeatedTask = nullptr;
 
     bool repeatedTaskOk = false;
-    std::string repeatedTaskFirstSubTaskId = std::string();
-    std::string repeatedTaskSecondSubTaskId = std::string();
+    std::string repeatedTaskFirstSubTaskId;
+    std::string repeatedTaskSecondSubTaskId;
 
     bool firstSubTaskOk = false;
-    std::string firstSubTaskId = std::string();
+    std::string firstSubTaskId;
 
     bool secondSubTaskOk = false;
-    std::string secondSubTaskId = std::string();
+    std::string secondSubTaskId;
 
     for (uint i = 0; i < totalNbOfTasks; ++i) {
         auto task = static_cast<libsedml::SedTask *>(mSedmlDocument->getTask(i));

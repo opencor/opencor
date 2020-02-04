@@ -555,10 +555,10 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Retrieve the different file type, solver and data store interfaces that
     // are available to us
 
-    FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
-    FileTypeInterfaces dataStoreFileTypeInterfaces = FileTypeInterfaces();
-    SolverInterfaces solverInterfaces = SolverInterfaces();
-    DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
+    FileTypeInterfaces fileTypeInterfaces;
+    FileTypeInterfaces dataStoreFileTypeInterfaces;
+    SolverInterfaces solverInterfaces;
+    DataStoreInterfaces dataStoreInterfaces;
 
     for (auto plugin : pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());

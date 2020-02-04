@@ -41,7 +41,7 @@ PLUGININFO_FUNC ZIPSupportPluginInfo()
     //       the ZIP file format link (since it ends with a closing bracket)...
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "Core" << "zlib",
+                          { "Core", "zlib" },
                           descriptions);
 }
 

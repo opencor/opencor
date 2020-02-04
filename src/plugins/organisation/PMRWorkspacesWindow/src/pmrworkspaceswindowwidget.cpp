@@ -626,7 +626,7 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     // Note: if there is a folder among the selected items, then ignore
     //       everything...
 
-    QStringList fileNames = QStringList();
+    QStringList fileNames;
     QModelIndexList items = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
@@ -933,7 +933,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::retrieveItems(PmrWorkspacesW
 {
     // Return the child items of the given item
 
-    PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
+    PmrWorkspacesWindowItems res;
 
     for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
         auto item = static_cast<PmrWorkspacesWindowItem *>(pItem->child(i));
@@ -1025,7 +1025,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     // Populate the given folder item with its children, which are referenced in
     // the given file node
 
-    PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
+    PmrWorkspacesWindowItems res;
 
     pIsStaged = false;
     pIsUnstaged = false;
@@ -1230,7 +1230,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
         // Keep track of existing items
 
-        PmrWorkspacesWindowItems oldItems = PmrWorkspacesWindowItems() << retrieveItems(item);
+        PmrWorkspacesWindowItems oldItems = { retrieveItems(item) };
 
         // Populate the given workspace
 
@@ -1239,7 +1239,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
         // Delete old unused items
 
-        PmrWorkspacesWindowItems oldItemsToDelete = PmrWorkspacesWindowItems();
+        PmrWorkspacesWindowItems oldItemsToDelete;
 
         for (auto oldItem : oldItems) {
             if (!newItems.contains(oldItem)) {
@@ -1267,7 +1267,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspaceUrls() const
     // Return the list of (unique) workspace URLs based on the selected items in
     // our tree view widget
 
-    QStringList res = QStringList();
+    QStringList res;
     QModelIndexList items = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
@@ -1286,7 +1286,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspacePaths() const
     // Return the list of (unique) workspace paths based on the selected items
     // in our tree view widget
 
-    QStringList res = QStringList();
+    QStringList res;
     QModelIndexList items = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
@@ -1310,7 +1310,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
 
     QModelIndexList items = selectionModel()->selectedIndexes();
     bool oneItem = (items.count() == 1);
-    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaces();
+    PMRSupport::PmrWorkspaces workspaces;
     int nbOfWorkspacePaths = selectedWorkspacePaths().count();
     bool oneWorkspaceUrl = selectedWorkspaceUrls().count() == 1;
     bool oneWorkspacePath = nbOfWorkspacePaths == 1;

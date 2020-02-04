@@ -96,7 +96,7 @@ QBoolList qVariantListToBoolList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of booleans
 
-    QBoolList res = QBoolList();
+    QBoolList res;
 
     for (const auto &variant : pVariantList) {
         res << variant.toBool();
@@ -111,7 +111,7 @@ QVariantList qBoolListToVariantList(const QBoolList &pBoolList)
 {
     // Convert the given list of booleans to a list of variants
 
-    QVariantList res = QVariantList();
+    QVariantList res;
 
     for (auto nb : pBoolList) {
         res << nb;
@@ -126,7 +126,7 @@ QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of integers
 
-    QIntList res = QIntList();
+    QIntList res;
 
     for (const auto &variant : pVariantList) {
         res << variant.toInt();
@@ -141,7 +141,7 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 {
     // Convert the given list of integers to a list of variants
 
-    QVariantList res = QVariantList();
+    QVariantList res;
 
     for (auto nb : pIntList) {
         res << nb;
@@ -605,7 +605,7 @@ void cleanContentMathml(QDomElement *pDomElement)
     //       transformation would either do nothing or, worst, crash OpenCOR...
 
     QDomNamedNodeMap attributes = pDomElement->attributes();
-    QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
+    QList<QDomNode> nonMathmlAttributes;
 
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
         QDomNode attribute = attributes.item(i);
@@ -891,7 +891,7 @@ void cleanDomElement(QDomElement *pDomElement,
     static int attributeNumber = 0;
 
     if (pDomElement->hasAttributes()) {
-        QStringList serialisedAttributes = QStringList();
+        QStringList serialisedAttributes;
         QDomNamedNodeMap domElementAttributes = pDomElement->attributes();
 
         while (!domElementAttributes.isEmpty()) {
@@ -975,14 +975,14 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
     //       to QDomDocument::save(), but only after having removed all the
     //       elements' attributes, which we serialise manually afterwards...
 
-    QByteArray res = QByteArray();
+    QByteArray res;
 
     // Make a deep copy of the given DOM document and remove all the elements'
     // attributes (but keep track of them, so that we can later on serialise
     // them manually)
 
     QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
-    QMap<QString, QByteArray> elementsAttributes = QMap<QString, QByteArray>();
+    QMap<QString, QByteArray> elementsAttributes;
 
     for (QDomElement childElement = domDocument.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
@@ -1019,7 +1019,7 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types, if any
 
-    QStringList res = QStringList();
+    QStringList res;
 
     for (auto fileTypeInterface : pFileTypeInterfaces) {
         if (!pCheckMimeTypes || (pMimeType == fileTypeInterface->mimeType())) {
@@ -1057,7 +1057,7 @@ QStringList droppedFileNames(QDropEvent *pEvent)
 {
     // Retrieve the name of the various files that have been dropped
 
-    QStringList res = QStringList();
+    QStringList res;
     QList<QUrl> urls = pEvent->mimeData()->urls();
 
     for (int i = 0, iMax = urls.count(); i < iMax; ++i) {

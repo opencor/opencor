@@ -45,7 +45,7 @@ PLUGININFO_FUNC HelpWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour fournir de l'aide."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
-                          QStringList() << "Core" << "WebViewerWidget",
+                          { "Core", "WebViewerWidget" },
                           descriptions);
 }
 

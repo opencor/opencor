@@ -137,7 +137,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
 
     QString pluginsDir = QCoreApplication::libraryPaths().first()+"/"+qAppName();
     QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
-    QStringList availablePluginNames = QStringList();
+    QStringList availablePluginNames;
 
     for (const auto &fileInfo : fileInfoList) {
         availablePluginNames << Plugin::name(fileInfo.canonicalFilePath());
@@ -345,7 +345,7 @@ void CliApplication::plugins() const
 
     // First, we retrieve all the CLI plugins information
 
-    QStringList pluginsInfo = QStringList();
+    QStringList pluginsInfo;
 
     for (auto plugin : mLoadedCliPlugins) {
         // Retrieve the CLI plugin and its default description
@@ -403,7 +403,7 @@ void CliApplication::status() const
 
     // First, we retrieve all the plugins information
 
-    QStringList pluginsInfo = QStringList();
+    QStringList pluginsInfo;
 
     for (auto plugin : mPluginManager->plugins()) {
         // Retrieve the plugin and its status
@@ -521,7 +521,7 @@ bool CliApplication::run(int &pRes)
     Option option = NoOption;
 
     QStringList appArguments = qApp->arguments();
-    QStringList arguments = QStringList();
+    QStringList arguments;
 
     appArguments.removeFirst();
     // Note: we remove the first argument since it corresponds to the full path

@@ -114,7 +114,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     // Create and add a plot widget to our layout
 
-    GraphPanelPlotWidgets neighbors = GraphPanelPlotWidgets();
+    GraphPanelPlotWidgets neighbors;
 
     for (auto neighbor : pNeighbors) {
         neighbors << neighbor->plot();
@@ -239,7 +239,7 @@ void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
 {
     // Remove the given graphs from our plot
 
-    GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
+    GraphPanelPlotGraphs graphs;
 
     for (auto graph : pGraphs) {
         if (mPlot->removeGraph(graph)) {

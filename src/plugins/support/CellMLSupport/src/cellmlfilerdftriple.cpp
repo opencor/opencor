@@ -402,24 +402,24 @@ QStringList CellmlFileRdfTriple::qualifiersAsStringList()
 {
     // Return (in alphabetical order) all the qualifiers which we support
 
-    return QStringList() << bioQualifierAsString(BioQualifier::BioEncodes)
-                         << bioQualifierAsString(BioQualifier::BioHasPart)
-                         << bioQualifierAsString(BioQualifier::BioHasProperty)
-                         << bioQualifierAsString(BioQualifier::BioHasVersion)
-                         << bioQualifierAsString(BioQualifier::BioIs)
-                         << bioQualifierAsString(BioQualifier::BioIsDescribedBy)
-                         << bioQualifierAsString(BioQualifier::BioIsEncodedBy)
-                         << bioQualifierAsString(BioQualifier::BioIsHomologTo)
-                         << bioQualifierAsString(BioQualifier::BioIsPartOf)
-                         << bioQualifierAsString(BioQualifier::BioIsPropertyOf)
-                         << bioQualifierAsString(BioQualifier::BioIsVersionOf)
-                         << bioQualifierAsString(BioQualifier::BioOccursIn)
-                         << bioQualifierAsString(BioQualifier::BioHasTaxon)
-                         << modelQualifierAsString(ModelQualifier::ModelIs)
-                         << modelQualifierAsString(ModelQualifier::ModelIsDerivedFrom)
-                         << modelQualifierAsString(ModelQualifier::ModelIsDescribedBy)
-                         << modelQualifierAsString(ModelQualifier::ModelIsInstanceOf)
-                         << modelQualifierAsString(ModelQualifier::ModelHasInstance);
+    return { bioQualifierAsString(BioQualifier::BioEncodes),
+             bioQualifierAsString(BioQualifier::BioHasPart),
+             bioQualifierAsString(BioQualifier::BioHasProperty),
+             bioQualifierAsString(BioQualifier::BioHasVersion),
+             bioQualifierAsString(BioQualifier::BioIs),
+             bioQualifierAsString(BioQualifier::BioIsDescribedBy),
+             bioQualifierAsString(BioQualifier::BioIsEncodedBy),
+             bioQualifierAsString(BioQualifier::BioIsHomologTo),
+             bioQualifierAsString(BioQualifier::BioIsPartOf),
+             bioQualifierAsString(BioQualifier::BioIsPropertyOf),
+             bioQualifierAsString(BioQualifier::BioIsVersionOf),
+             bioQualifierAsString(BioQualifier::BioOccursIn),
+             bioQualifierAsString(BioQualifier::BioHasTaxon),
+             modelQualifierAsString(ModelQualifier::ModelIs),
+             modelQualifierAsString(ModelQualifier::ModelIsDerivedFrom),
+             modelQualifierAsString(ModelQualifier::ModelIsDescribedBy),
+             modelQualifierAsString(ModelQualifier::ModelIsInstanceOf),
+             modelQualifierAsString(ModelQualifier::ModelHasInstance) };
 }
 
 //==============================================================================
@@ -687,7 +687,7 @@ QStringList CellmlFileRdfTriples::asStringList() const
 {
     // Return the RDF triples as a list of sorted strings
 
-    QStringList res = QStringList();
+    QStringList res;
 
     for (auto rdfTriple : *this) {
         res << QString("%1|%2|%3").arg(rdfTriple->subject()->asString(),

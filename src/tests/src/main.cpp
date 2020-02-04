@@ -99,7 +99,7 @@ int main(int pArgC, char *pArgV[])
 
     // Run the different tests
 
-    QStringList failedTests = QStringList();
+    QStringList failedTests;
     int res = 0;
 
     auto testBegin = testsGroups.constBegin();

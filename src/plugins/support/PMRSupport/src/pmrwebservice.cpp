@@ -107,7 +107,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
     static const QString Bookmark = "bookmark";
 
-    PmrExposures exposures = PmrExposures();
+    PmrExposures exposures;
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
     for (const auto &links : collectionMap["links"].toList()) {
@@ -297,7 +297,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 
     static const QString Bookmark = "bookmark";
 
-    PmrWorkspaces workspaces = PmrWorkspaces();
+    PmrWorkspaces workspaces;
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
     for (const auto &links : collectionMap["links"].toList()) {
@@ -715,7 +715,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
 
         QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
         QString workspaceUrl;
-        QStringList exposureFileUrls = QStringList();
+        QStringList exposureFileUrls;
 
         for (const auto &links : collectionMap["links"].toList()) {
             QVariantMap linksMap = links.toMap();

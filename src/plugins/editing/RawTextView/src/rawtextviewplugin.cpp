@@ -48,7 +48,7 @@ PLUGININFO_FUNC RawTextViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte."));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
-                          QStringList() << "EditingView",
+                          { "EditingView" },
                           descriptions);
 }
 
@@ -363,7 +363,7 @@ QIcon RawTextViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     return NoIcon;
 }

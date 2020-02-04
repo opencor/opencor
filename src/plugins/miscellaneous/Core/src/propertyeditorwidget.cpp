@@ -626,7 +626,7 @@ QList<QStandardItem *> Property::items() const
 {
     // Return our items as a list
 
-    QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
+    QList<QStandardItem *> res = { mName, mValue };
 
     if (mUnit != nullptr) {
         res << mUnit;
@@ -1388,8 +1388,7 @@ void PropertyEditorWidget::retranslateUi()
 {
     // Retranslate our header labels
 
-    QStringList horizontalHeaderLabels = QStringList() << tr("Property")
-                                                       << tr("Value");
+    QStringList horizontalHeaderLabels = { tr("Property"), tr("Value") };
 
     if (mShowUnits) {
         horizontalHeaderLabels << tr("Unit");
@@ -2298,7 +2297,7 @@ void PropertyEditorWidget::goToNeighbouringProperty(int pShift)
 {
     // Determine the index of the current index's neighbour
 
-    QModelIndex neighbouringIndex = QModelIndex();
+    QModelIndex neighbouringIndex;
 
     if (pShift == 1) {
         neighbouringIndex = indexBelow(currentIndex());

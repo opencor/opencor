@@ -187,7 +187,7 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     // Note: if there is an exposure among the selected items, then ignore
     //       everything...
 
-    QStringList exposureFileUrls = QStringList();
+    QStringList exposureFileUrls;
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {

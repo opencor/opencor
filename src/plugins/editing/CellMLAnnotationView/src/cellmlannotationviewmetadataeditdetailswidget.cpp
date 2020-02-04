@@ -974,7 +974,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Parse the JSON data
 
-            QJsonParseError jsonParseError = QJsonParseError();
+            QJsonParseError jsonParseError;
             QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
             if (jsonParseError.error == QJsonParseError::NoError) {

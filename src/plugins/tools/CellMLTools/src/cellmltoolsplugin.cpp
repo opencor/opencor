@@ -55,7 +55,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder divers outils en rapport avec <a href="https://cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Tools, true, true,
-                          QStringList() << "CellMLSupport",
+                          { "CellMLSupport" },
                           descriptions);
 }
 
@@ -519,7 +519,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     QString xmlFilter = tr("User-Defined Format File")+" (*.xml)";
     QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"),
-                                                              QStringList() << xmlFilter,
+                                                              { xmlFilter },
                                                               &xmlFilter);
 
     if (userDefinedFormatFileName.isEmpty()) {

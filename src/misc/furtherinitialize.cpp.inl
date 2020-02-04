@@ -72,7 +72,7 @@ QString Simulation::furtherInitialize() const
                 && (QString::fromStdString(nlaSolverNode.getName()) == SEDMLSupport::NlaSolver)) {
 #ifdef GUI_SUPPORT
                 SimulationExperimentViewInformationSolversWidgetData *nlaSolverData = solversWidget->nlaSolverData();
-                Core::Properties nlaSolverProperties = Core::Properties();
+                Core::Properties nlaSolverProperties;
 
 #else
                 mustHaveNlaSolver = true;
@@ -171,7 +171,7 @@ QString Simulation::furtherInitialize() const
 
     // Customise our graph panel and graphs
 
-    QIntList graphPanelsWidgetSizes = QIntList();
+    QIntList graphPanelsWidgetSizes;
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel

@@ -39,7 +39,7 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computation.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
-                          QStringList() << "SUNDIALS",
+                          { "SUNDIALS" },
                           descriptions);
 }
 
@@ -262,21 +262,20 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    QStringList IntegrationMethodListValues = QStringList() << AdamsMoultonMethod
-                                                            << BdfMethod;
+    QStringList IntegrationMethodListValues = { AdamsMoultonMethod, BdfMethod };
 
-    QStringList IterationTypeListValues = QStringList() << FunctionalIteration
-                                                        << NewtonIteration;
+    QStringList IterationTypeListValues = { FunctionalIteration,
+                                            NewtonIteration };
 
-    QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
-                                                       << BandedLinearSolver
-                                                       << DiagonalLinearSolver
-                                                       << GmresLinearSolver
-                                                       << BiCgStabLinearSolver
-                                                       << TfqmrLinearSolver;
+    QStringList LinearSolverListValues = { DenseLinearSolver,
+                                           BandedLinearSolver,
+                                           DiagonalLinearSolver,
+                                           GmresLinearSolver,
+                                           BiCgStabLinearSolver,
+                                           TfqmrLinearSolver };
 
-    QStringList PreconditionerListValues = QStringList() << NoPreconditioner
-                                                         << BandedPreconditioner;
+    QStringList PreconditionerListValues = { NoPreconditioner,
+                                             BandedPreconditioner };
 
     return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGe0, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
                                 << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
@@ -298,7 +297,7 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
     // Return the visibility of our properties based on the given properties
     // values
 
-    QMap<QString, bool> res = QMap<QString, bool>();
+    QMap<QString, bool> res;
 
     if (pSolverPropertiesValues.value(IterationTypeId) == NewtonIteration) {
         // Newton iteration

@@ -76,15 +76,15 @@ void CsvDataStoreExporterWorker::run()
         //          is much faster than preventing ourselves from adding
         //          duplicates in the first place...
 
-        QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
+        QList<DataStore::DataStoreVariables> variablesRuns;
 
         for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
             variablesRuns << DataStore::DataStoreVariables();
         }
 
         int nbOfRuns = dataStore->runsCount();
-        QList<quint64> runsIndex = QList<quint64>();
-        QDoubleList voiValues = QDoubleList();
+        QList<quint64> runsIndex;
+        QDoubleList voiValues;
 
         for (int i = 0; i < nbOfRuns; ++i) {
             // Original index for the current run
@@ -163,7 +163,7 @@ void CsvDataStoreExporterWorker::run()
                 }
 
                 bool firstRowData = true;
-                QBoolList updateRunsIndex = QBoolList();
+                QBoolList updateRunsIndex;
 
                 for (int j = 0; j < nbOfRuns; ++j) {
                     updateRunsIndex << false;

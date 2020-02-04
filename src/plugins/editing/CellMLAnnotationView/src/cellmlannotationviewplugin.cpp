@@ -48,7 +48,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour annoter des fichiers <a href="https://cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
-                          QStringList() << "CellMLSupport" << "WebViewerWidget",
+                          { "CellMLSupport", "WebViewerWidget" },
                           descriptions);
 }
 
@@ -257,7 +257,7 @@ QStringList CellMLAnnotationViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType;
+    return { CellMLSupport::CellmlMimeType };
 }
 
 //==============================================================================
@@ -329,7 +329,7 @@ QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     return NoIcon;
 }

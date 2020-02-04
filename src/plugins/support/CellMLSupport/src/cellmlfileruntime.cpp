@@ -214,7 +214,7 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 {
     // Return the mapping between a parameter type and its corresponding icon
 
-    static QMap<int, QIcon> Icons = QMap<int, QIcon>();
+    static QMap<int, QIcon> Icons;
 
     static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
     static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
@@ -316,8 +316,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         //       the parameters listed in a main CellML file can be referenced
         //       in a SED-ML file...
 
-        QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
-        QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
+        QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
+        QList<iface::cellml_api::CellMLVariable *> realMainVariables;
         ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
         ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
@@ -351,7 +351,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
         ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = mCodeInformation->iterateTargets();
         QString voiName;
-        QStringList voiComponentHierarchy = QStringList();
+        QStringList voiComponentHierarchy;
 
         for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
              computationTarget != nullptr; computationTarget = computationTargetIter->nextComputationTarget()) {
@@ -709,7 +709,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(const double *pDat
 {
     // Return the data parameter(s)
 
-    CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
+    CellmlFileRuntimeParameters res;
 
     for (auto parameter : mParameters) {
         if (   (parameter->type() == CellmlFileRuntimeParameter::Type::Data)

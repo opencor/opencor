@@ -49,7 +49,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://cellml.org/">CellML</a> à l'aide d'un éditeur <a href="https://w3.org/XML">XML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
-                          QStringList() << "CellMLEditingView",
+                          { "CellMLEditingView" },
                           descriptions);
 }
 
@@ -319,7 +319,7 @@ QStringList RawCellMLViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << CellMLSupport::CellmlMimeType;
+    return { CellMLSupport::CellmlMimeType };
 }
 
 //==============================================================================
@@ -390,7 +390,7 @@ QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     return NoIcon;
 }

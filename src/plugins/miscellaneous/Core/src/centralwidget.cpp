@@ -354,7 +354,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
         }
 
-        QMap<int, int> modeViewTabIndexes = QMap<int, int>();
+        QMap<int, int> modeViewTabIndexes;
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
@@ -444,8 +444,8 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
     // Keep track of the files that are opened, skipping new files
 
     FileManager *fileManagerInstance = FileManager::instance();
-    QStringList fileNames = QStringList();
-    QStringList fileNamesOrUrls = QStringList();
+    QStringList fileNames;
+    QStringList fileNamesOrUrls;
 
     for (const auto &fileName : mFileNames) {
         if (!fileManagerInstance->isNew(fileName)) {
@@ -624,14 +624,14 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
 
-    static const QIcon NoIcon       = QIcon();
+    static const QIcon NoIcon;
     static const QIcon InternetIcon = QIcon(":/oxygen/categories/applications-internet.png");
-    static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
+    static const QIcon LockedIcon = QIcon(":/oxygen/status/object-locked.png");
 
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
     bool fileIsRemote = fileManagerInstance->isRemote(fileName);
-    QIcon tabIcon = QIcon();
+    QIcon tabIcon;
 
     if (!pIconOnly) {
         bool fileIsNew = fileManagerInstance->isNew(fileName);
@@ -1639,7 +1639,7 @@ void CentralWidget::updateGui()
             // We are opening a file, so determine the default views that we
             // should try and if there are none, then try the Raw Text view
 
-            QStringList defaultViews = QStringList();
+            QStringList defaultViews;
 
             for (auto plugin : mLoadedFileTypePlugins) {
                 FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
@@ -2181,7 +2181,7 @@ void CentralWidget::updateStatusBarWidgets(const QList<QWidget *> &pWidgets)
 {
     // Remove (hide) our existing status bar widgets
 
-    static QList<QWidget *> statusBarWidgets = QList<QWidget *>();
+    static QList<QWidget *> statusBarWidgets;
 
     for (auto statusBarWidget : statusBarWidgets) {
         mainWindow()->statusBar()->removeWidget(statusBarWidget);

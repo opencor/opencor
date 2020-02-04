@@ -55,7 +55,7 @@ PLUGININFO_FUNC PythonSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://python.org/">Python</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "Python" << "PythonPackages",
+                          { "Python", "PythonPackages" },
                           descriptions);
 }
 

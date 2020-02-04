@@ -39,10 +39,8 @@ QStringList lineStyles()
 {
     // Return our list of line styles
 
-    static const QStringList LineStyles = QStringList() << "none" << "solid"
-                                                        << "dash" << "dot"
-                                                        << "dashdot"
-                                                        << "dashdotdot";
+    static const QStringList LineStyles = { "none", "solid", "dash", "dot",
+                                            "dashdot", "dashdotdot" };
 
     return LineStyles;
 }
@@ -53,12 +51,9 @@ QStringList formattedLineStyles()
 {
     // Return our list of formatted line styles
 
-    return QStringList() << QObject::tr("None")
-                         << QObject::tr("Solid")
-                         << QObject::tr("Dash")
-                         << QObject::tr("Dot")
-                         << QObject::tr("DashDot")
-                         << QObject::tr("DashDotDot");
+    return { QObject::tr("None"), QObject::tr("Solid"), QObject::tr("Dash"),
+             QObject::tr("Dot"), QObject::tr("DashDot"),
+             QObject::tr("DashDotDot") };
 }
 
 //==============================================================================
@@ -145,17 +140,12 @@ QStringList symbolStyles()
 {
     // Return our list of symbol styles
 
-    static const QStringList SymbolStyles = QStringList() << "none" << "circle"
-                                                          << "square"
-                                                          << "diamond"
-                                                          << "triangle"
-                                                          << "downTriangle"
-                                                          << "leftTriangle"
-                                                          << "rightTriangle"
-                                                          << "cross" << "xCross"
-                                                          << "horizontalLine"
-                                                          << "verticalLine"
-                                                          << "star";
+    static const QStringList SymbolStyles = { "none", "circle", "square",
+                                              "diamond", "triangle",
+                                              "downTriangle", "leftTriangle",
+                                              "rightTriangle", "cross",
+                                              "xCross", "horizontalLine",
+                                              "verticalLine", "star" };
 
     return SymbolStyles;
 }
@@ -166,19 +156,12 @@ QStringList formattedSymbolStyles()
 {
     // Return our list of formatted symbol styles
 
-    return QStringList() << QObject::tr("None")
-                         << QObject::tr("Circle")
-                         << QObject::tr("Square")
-                         << QObject::tr("Diamond")
-                         << QObject::tr("Triangle")
-                         << QObject::tr("Down Triangle")
-                         << QObject::tr("Left Triangle")
-                         << QObject::tr("Right Triangle")
-                         << QObject::tr("Cross")
-                         << QObject::tr("X Cross")
-                         << QObject::tr("Horizontal Line")
-                         << QObject::tr("Vertical Line")
-                         << QObject::tr("Star");
+    return { QObject::tr("None"), QObject::tr("Circle"), QObject::tr("Square"),
+             QObject::tr("Diamond"), QObject::tr("Triangle"),
+             QObject::tr("Down Triangle"), QObject::tr("Left Triangle"),
+             QObject::tr("Right Triangle"), QObject::tr("Cross"),
+             QObject::tr("X Cross"), QObject::tr("Horizontal Line"),
+             QObject::tr("Vertical Line"), QObject::tr("Star") };
 }
 
 //==============================================================================

@@ -115,7 +115,7 @@ QStringList FileOrganiserWindowModel::mimeTypes() const
 {
     // Return the MIME types supported by our model
 
-    return QStringList() << Core::FileSystemMimeType << FileOrganiserWindowMimeType;
+    return { Core::FileSystemMimeType, FileOrganiserWindowMimeType };
 }
 
 //==============================================================================
@@ -252,7 +252,7 @@ QModelIndexList FileOrganiserWindowModel::decodeData(QByteArray &pData) const
 QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) const
 {
     auto res = new QMimeData();
-    QList<QUrl> urls = QList<QUrl>();
+    QList<QUrl> urls;
 
     // Retrieve the URL of the different file (not folder) items
     // Note: this list of URLs is useful with regards to the FileSystemMimeType
@@ -735,7 +735,7 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     // Note: if there is a folder among the selected items, then ignore all of
     //       them...
 
-    QStringList fileNames = QStringList();
+    QStringList fileNames;
     QModelIndexList crtSelectedIndexes = selectedIndexes();
 
     for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {

@@ -48,7 +48,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://sed-ml.org/">SED-ML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "CellMLSupport" << "libSEDML" << "Qwt",
+                          { "CellMLSupport", "libSEDML", "Qwt" },
                           descriptions);
 }
 
@@ -107,7 +107,7 @@ QStringList SEDMLSupportPlugin::fileTypeDefaultViews() const
 {
     // Return the default views to use for the type of file we support
 
-    return QStringList() << "SimulationExperimentView" << "RawSEDMLView" << "RawTextView";
+    return { "SimulationExperimentView", "RawSEDMLView", "RawTextView" };
 }
 
 //==============================================================================

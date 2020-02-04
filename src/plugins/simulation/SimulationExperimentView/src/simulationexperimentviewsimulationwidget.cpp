@@ -1211,7 +1211,7 @@ QIcon SimulationExperimentViewSimulationWidget::doFileTabIcon(bool pForEmitting)
 
     // Return a file tab icon that shows the given file's simulation progress
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     QIcon res = NoIcon;
 
@@ -1863,8 +1863,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     QIntList graphPanelsWidgetSizes = graphPanelsWidget->sizes();
-    QList<Core::Properties> graphsPropertiesList = QList<Core::Properties>();
-    QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
+    QList<Core::Properties> graphsPropertiesList;
+    QMap<Core::Properties, GraphsData> graphsData;
     int graphPlotCounter = 0;
 
     for (auto graphPanel : graphPanelsWidget->graphPanels()) {
@@ -2255,7 +2255,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                                      fileManagerInstance->url(localCellmlFileName):
                                      localCellmlFileName;
         QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
-        QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
+        QMap<QString, QString> remoteImportedFileNames;
 
         for (const auto &importedFileName : cellmlFile->importedFileNames()) {
             // Check for the common path
@@ -2795,7 +2795,7 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
         MemoryAllocation
     };
 
-    QList<quint64> runSizes = QList<quint64>();
+    QList<quint64> runSizes;
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i) {
         runSizes << mSimulation->runSize(i);
@@ -3075,7 +3075,7 @@ void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 {
     // Let people know that our file tab icon should be reset
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
                                         mSimulation->fileName(),
@@ -3422,7 +3422,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     double minY = GraphPanelWidget::DefaultMinAxis;
     double maxY = GraphPanelWidget::DefaultMaxAxis;
 
-    QRectF dataRect = QRectF();
+    QRectF dataRect;
 
     if (pPlot->dataRect(dataRect)) {
         minX = dataRect.left();
@@ -3436,7 +3436,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     double minLogY = GraphPanelWidget::DefaultMinLogAxis;
     double maxLogY = GraphPanelWidget::DefaultMaxAxis;
 
-    QRectF dataLogRect = QRectF();
+    QRectF dataLogRect;
 
     if (pPlot->dataLogRect(dataLogRect)) {
         minLogX = dataLogRect.left();
@@ -4024,7 +4024,7 @@ QVariantList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::P
 {
     // Return all the property values of the given property editor
 
-    QVariantList res = QVariantList();
+    QVariantList res;
 
     for (auto property : pPropertyEditor->allProperties()) {
         res << property->isChecked() << property->variantValue();

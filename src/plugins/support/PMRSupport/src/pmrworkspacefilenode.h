@@ -70,7 +70,7 @@ public:
     bool hasChildren() const;
     PmrWorkspaceFileNodes children() const;
     PmrWorkspaceFileNode * addChild(const QString &pName,
-                                    const CharPair &pStatus = CharPair());
+                                    const CharPair &pStatus = {});
     bool removeChild(PmrWorkspaceFileNode *pChild);
 
 private:

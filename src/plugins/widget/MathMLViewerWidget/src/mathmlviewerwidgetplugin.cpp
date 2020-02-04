@@ -38,7 +38,7 @@ PLUGININFO_FUNC MathMLViewerWidgetPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour visualiser des documents <a href="https://w3.org/Math">MathML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
-                          QStringList() << "Core" << "Qwt",
+                          { "Core", "Qwt" },
                           descriptions);
 }
 

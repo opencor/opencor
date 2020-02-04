@@ -39,7 +39,7 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">systèmes algébriques non-linéaires</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
-                          QStringList() << "SUNDIALS",
+                          { "SUNDIALS" },
                           descriptions);
 }
 
@@ -171,11 +171,11 @@ Solver::Properties KINSOLSolverPlugin::solverProperties() const
     LowerHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Lower half-bandwidth"));
     LowerHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande inférieure"));
 
-    QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
-                                                       << BandedLinearSolver
-                                                       << GmresLinearSolver
-                                                       << BiCgStabLinearSolver
-                                                       << TfqmrLinearSolver;
+    QStringList LinearSolverListValues = { DenseLinearSolver,
+                                           BandedLinearSolver,
+                                           GmresLinearSolver,
+                                           BiCgStabLinearSolver,
+                                           TfqmrLinearSolver };
 
     return Solver::Properties() << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
                                 << Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
@@ -190,7 +190,7 @@ QMap<QString, bool> KINSOLSolverPlugin::solverPropertiesVisibility(const QMap<QS
     // Return the visibility of our properties based on the given properties
     // values
 
-    QMap<QString, bool> res = QMap<QString, bool>();
+    QMap<QString, bool> res;
 
     QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
 

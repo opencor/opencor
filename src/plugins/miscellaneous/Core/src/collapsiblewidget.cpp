@@ -88,7 +88,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
 
     // Create and customise our button and title
 
-    static const QIcon NoIcon   = QIcon();
+    static const QIcon NoIcon;
     static const QIcon DownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
     static const QString IconStyleSheet = "QToolButton {"
@@ -229,7 +229,7 @@ void CollapsibleHeaderWidget::setMenu(QMenu *pMenu)
     // Set our menu
 
     if (pMenu != mMenuMenu) {
-        static const QIcon NoIcon   = QIcon();
+        static const QIcon NoIcon;
         static const QIcon MenuIcon = QIcon(":/menu.png");
 
         mMenu->setIcon((pMenu != nullptr)?MenuIcon:NoIcon);

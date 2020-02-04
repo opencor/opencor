@@ -59,9 +59,8 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     connect(mGui->noteValue, &QLabel::linkActivated,
             this, &PmrSupportPreferencesWidget::noteValueLinkActivated);
 
-    mGui->pmrUrlValue->addItems(QStringList() << SettingsPreferencesPmrUrlDefault
-                                              << StagingInstance
-                                              << TeachingInstance);
+    mGui->pmrUrlValue->addItems({ SettingsPreferencesPmrUrlDefault,
+                                  StagingInstance, TeachingInstance });
 
 #ifdef Q_OS_MAC
     mGui->nameValue->setAttribute(Qt::WA_MacShowFocusRect, false);

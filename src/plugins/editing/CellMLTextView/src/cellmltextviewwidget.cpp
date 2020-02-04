@@ -875,8 +875,8 @@ QList<QWidget *> CellmlTextViewWidget::statusBarWidgets() const
     // Return our status bar widgets
 
     if (mEditingWidget != nullptr) {
-        return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
-                                  << mEditingWidget->editorWidget()->editingModeWidget();
+        return { mEditingWidget->editorWidget()->cursorPositionWidget(),
+                 mEditingWidget->editorWidget()->editingModeWidget() };
     }
 
     return {};
