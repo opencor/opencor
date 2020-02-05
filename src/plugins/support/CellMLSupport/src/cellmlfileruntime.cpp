@@ -317,6 +317,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         //       in a SED-ML file...
 
         QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
+        QList<iface::cellml_api::CellMLVariable *> realMainVariables;
         ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = model->localComponents()->iterateComponents();
 
         for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
@@ -325,7 +326,20 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
             for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
                  variable != nullptr; variable = variablesIter->nextVariable()) {
-                mainVariables.insert(variable->sourceVariable(), variable);
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+
+                mainVariables.insert(sourceVariable, variable);
+
+                // In CellML 1.0 models / some CellML 1.1 models, the source
+                // variable is / may be defined in the main CellML file and may
+                // be used (and therefore referenced) in different places in
+                // that same main CellML file, in which case we need to keep
+                // track of the real main variable, which is the one which
+                // source variable is the same
+
+                if (variable == sourceVariable) {
+                    realMainVariables << variable;
+                }
             }
         }
 
@@ -343,7 +357,9 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             // our main CellML file, if it has imports
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-            iface::cellml_api::CellMLVariable *mainVariable = mainVariables.value(variable);
+            iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
+                                                                  variable.getPointer():
+                                                                  mainVariables.value(variable);
             iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?
                                                                   mainVariable:
                                                                   variable.getPointer();
