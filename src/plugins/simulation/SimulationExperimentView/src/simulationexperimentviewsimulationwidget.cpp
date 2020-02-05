@@ -1268,11 +1268,9 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
             if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
                 || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)) {
                 ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
-                ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
-                ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
-                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+                ObjRef<iface::cellml_api::CellMLVariable> variable = component->variables()->getVariable(property->name().toStdWString());
 
-                if (variable == sourceVariable) {
+                if (variable == variable->sourceVariable()) {
                     variable->initialValue(property->value().toStdWString());
                 } else {
                     importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());

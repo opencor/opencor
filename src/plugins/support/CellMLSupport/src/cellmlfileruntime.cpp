@@ -318,13 +318,11 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
         QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
         QList<iface::cellml_api::CellMLVariable *> realMainVariables;
-        ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
-        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
+        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = model->localComponents()->iterateComponents();
 
         for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
              component != nullptr; component = localComponentsIter->nextComponent()) {
-            ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
-            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
+            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = component->variables()->iterateVariables();
 
             for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
                  variable != nullptr; variable = variablesIter->nextVariable()) {
@@ -362,7 +360,6 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
                                                                   variable.getPointer():
                                                                   mainVariables.value(variable);
-            iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?mainVariable:variable.getPointer();
 
             if (   (mainVariable == nullptr)
                 && (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
@@ -442,6 +439,9 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
             if (   (parameterType != CellmlFileRuntimeParameter::Type::Floating)
                 && (parameterType != CellmlFileRuntimeParameter::Type::LocallyBound)) {
+                iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?
+                                                                      mainVariable:
+                                                                      variable.getPointer();
                 auto parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
                                                                 int(computationTarget->degree()),
                                                                 QString::fromStdWString(realVariable->unitsName()),
@@ -834,15 +834,11 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel)
 {
-    // Get a code generator bootstrap and create a code generator
-
-    ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
-    ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
-
-    // Generate some code for the model
+    // Get a code generator bootstrap, create a code generator and generate some
+    // code for the model
 
     try {
-        mCodeInformation = codeGenerator->generateCode(pModel);
+        mCodeInformation = CreateCodeGeneratorBootstrap()->createCodeGenerator()->generateCode(pModel);
 
         // Check that the code generation went fine
 
@@ -908,8 +904,7 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     // here through recursion)
 
     ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
-    ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
-    ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
+    ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(pElement->parentElement());
 
     if ((component == nullptr) && (parentComponent == nullptr)) {
         // The element isn't a component and neither is its parent, so it
@@ -921,9 +916,11 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     // Recursively retrieve the component hierarchy of the given element's
     // encapsulation parent, if any
 
-    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = (component != nullptr)?component->encapsulationParent():parentComponent->encapsulationParent();
-
-    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString((component != nullptr)?component->name():parentComponent->name());
+    return componentHierarchy((component != nullptr)?
+                                  component->encapsulationParent():
+                                  parentComponent->encapsulationParent()) << QString::fromStdWString((component != nullptr)?
+                                                                                                         component->name():
+                                                                                                         parentComponent->name());
 }
 
 //==============================================================================
