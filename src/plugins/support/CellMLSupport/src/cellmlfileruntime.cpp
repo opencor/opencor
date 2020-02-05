@@ -388,7 +388,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                 //       really want it to be seen as a rate hence we check for
                 //       the degree of the computed target...
 
-                if (QString::fromStdWString(variable->initialValue()).isEmpty()) {
+                if (variable->initialValue().empty()) {
                     // The computed target doesn't have an initial value, so it
                     // must be a 'computed' constant
 
