@@ -360,9 +360,6 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
                                                                   variable.getPointer():
                                                                   mainVariables.value(variable);
-            iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?
-                                                                  mainVariable:
-                                                                  variable.getPointer();
 
             if (   (mainVariable == nullptr)
                 && (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
@@ -442,6 +439,9 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
             if (   (parameterType != CellmlFileRuntimeParameter::Type::Floating)
                 && (parameterType != CellmlFileRuntimeParameter::Type::LocallyBound)) {
+                iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?
+                                                                      mainVariable:
+                                                                      variable.getPointer();
                 auto parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
                                                                 int(computationTarget->degree()),
                                                                 QString::fromStdWString(realVariable->unitsName()),
