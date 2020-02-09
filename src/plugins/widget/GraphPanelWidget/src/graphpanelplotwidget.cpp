@@ -4062,13 +4062,13 @@ void GraphPanelPlotWidget::exportTo()
     QString fileName = Core::getSaveFileName(tr("Export To"), filters, &pdfFilter);
 
     if (!fileName.isEmpty()) {
-        static double InToMm = 25.4;
         static int Dpi = 85;
+        static double InToMmPerDpi = 25.4/Dpi;
 
         if (QFileInfo(fileName).completeSuffix().isEmpty()) {
-            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
+            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width()*InToMmPerDpi, height()*InToMmPerDpi), Dpi);
         } else {
-            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
+            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width()*InToMmPerDpi, height()*InToMmPerDpi), Dpi);
         }
     }
 
