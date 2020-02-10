@@ -1365,7 +1365,7 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     QList<QRect> itemRects = legendLayout->layoutItems(layoutRect, legendLayout->columnsForWidth(layoutRect.width()));
 
     if ((legendLayout->expandingDirections() & Qt::Horizontal) != 0) {
-        for (auto itemRect : itemRects) {
+        for (auto &itemRect : itemRects) {
             itemRect.adjust(layoutRect.left(), 0, layoutRect.left(), 0);
         }
     }
