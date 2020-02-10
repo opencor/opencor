@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Graph Panel widget:</strong> fixed a small problem that resulted in the legend being misplaced when exporting a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2297\">#2297</a>)." },
                        { "change": "<strong>CellML Text view:</strong> greatly reduced the time and memory required to do syntax highlighting (see issue <a href=\"https://github.com/opencor/opencor/issues/2284\">#2284</a>)." }
                      ]
                    },
