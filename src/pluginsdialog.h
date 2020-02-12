@@ -31,8 +31,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 class QSettings;
-class QStandardItem;
-class QStandardItemModel;
 
 //==============================================================================
 
@@ -58,6 +56,8 @@ public:
 //==============================================================================
 
 class Plugin;
+class PluginItem;
+class PluginItemModel;
 class PluginManager;
 
 //==============================================================================
@@ -75,21 +75,21 @@ private:
 
     PluginManager *mPluginManager;
 
-    QStandardItemModel *mModel;
+    PluginItemModel *mModel;
 
-    QList<QStandardItem *> mSelectablePluginItems;
-    QList<QStandardItem *> mUnselectablePluginItems;
+    QList<PluginItem *> mSelectablePluginItems;
+    QList<PluginItem *> mUnselectablePluginItems;
 
     QMap<QString, bool> mInitialLoadingStates;
 
-    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
-    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
+    QMap<PluginInfo::Category, PluginItem *> mCategoryItems;
+    QMap<PluginItem *, PluginInfo::Category> mItemCategories;
 
-    QStandardItem * pluginCategoryItem(PluginInfo::Category pCategory);
+    PluginItem * pluginCategoryItem(PluginInfo::Category pCategory);
 
     QString statusDescription(Plugin *pPlugin) const;
 
-    void updatePluginsSelectedState(QStandardItem *pItem, bool pInitializing);
+    void updatePluginsSelectedState(PluginItem *pItem, bool pInitializing);
 
 private slots:
     void treeViewCollapsed(const QModelIndex &pIndex);
@@ -100,7 +100,7 @@ private slots:
 
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex);
-    void updatePluginsSelectedState(QStandardItem *pItem);
+    void updatePluginsSelectedState(PluginItem *pItem);
 
     void openLink(const QString &pLink) const;
 

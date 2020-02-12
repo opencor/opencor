@@ -646,6 +646,7 @@ set(SOURCES
     src/generalpreferenceswidget.cpp
     src/main.cpp
     src/mainwindow.cpp
+    src/pluginitemmodel.cpp
     src/pluginsdialog.cpp
     src/preferencesdialog.cpp
     src/splashscreenwindow.cpp
