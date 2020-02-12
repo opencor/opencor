@@ -436,7 +436,9 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
     // and un/select them accordingly
 
     if ((pItem != nullptr) && (pItem->parent() == nullptr)) {
-        Qt::CheckState newCheckState = (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked;
+        Qt::CheckState newCheckState = (pItem->checkState() == Qt::Unchecked)?
+                                           Qt::Unchecked:
+                                           Qt::Checked;
 
         for (int i = 0, iMax = pItem->childCount(); i < iMax; ++i) {
             PluginItem *pluginItem = pItem->child(i);
