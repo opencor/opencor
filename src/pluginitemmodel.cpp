@@ -339,7 +339,7 @@ PluginItem * PluginItemModel::itemFromIndex(const QModelIndex &pIndex) const
     // Return the item at the given index
 
     if (pIndex.isValid()) {
-        return static_cast<PluginItem *>(pIndex.internalPointer());
+        return static_cast<PluginItem *>(pIndex.model()->index(pIndex.row(), 0, pIndex.parent()).internalPointer());
     }
 
     return nullptr;
