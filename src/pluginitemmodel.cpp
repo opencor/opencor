@@ -121,6 +121,24 @@ QModelIndex PluginItem::modelIndex() const
 
 //==============================================================================
 
+bool PluginItem::hasCheckBox() const
+{
+    // Return whether we have a check box
+
+    return mHasCheckBox;
+}
+
+//==============================================================================
+
+void PluginItem::setHasCheckBox(bool pHasCheckBox)
+{
+    // Specify whether we have a check box
+
+    mHasCheckBox = pHasCheckBox;
+}
+
+//==============================================================================
+
 bool PluginItem::isCheckable() const
 {
     // Return whether we are checkable
@@ -153,6 +171,15 @@ void PluginItem::setCheckState(Qt::CheckState pCheckState)
     // Set our check state
 
     mCheckState = pCheckState;
+}
+
+//==============================================================================
+
+QIcon PluginItem::icon() const
+{
+    // Return our icon
+
+    return mIcon;
 }
 
 //==============================================================================
@@ -275,8 +302,22 @@ QVariant PluginItemModel::data(const QModelIndex &pIndex, int pRole) const
 {
     // Return the data for the given index
 
-    if (pIndex.isValid() && (pRole == Qt::DisplayRole)) {
-        return static_cast<PluginItem *>(pIndex.internalPointer())->name();
+    if (pIndex.isValid()) {
+        if (pRole == Qt::DisplayRole) {
+            return static_cast<PluginItem *>(pIndex.internalPointer())->name();
+        }
+
+        if (pRole == Qt::CheckStateRole) {
+            PluginItem *item = static_cast<PluginItem *>(pIndex.internalPointer());
+
+            if (item->hasCheckBox()) {
+                return static_cast<PluginItem *>(pIndex.internalPointer())->checkState();
+            }
+        }
+
+        if (pRole == Qt::DecorationRole) {
+            return static_cast<PluginItem *>(pIndex.internalPointer())->icon();
+        }
     }
 
     return {};

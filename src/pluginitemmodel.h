@@ -57,12 +57,16 @@ public:
 
     QModelIndex modelIndex() const;
 
+    bool hasCheckBox() const;
+    void setHasCheckBox(bool pHasCheckBox);
+
     bool isCheckable() const;
     void setCheckable(bool pCheckable);
 
     Qt::CheckState checkState() const;
     void setCheckState(Qt::CheckState pCheckState);
 
+    QIcon icon() const;
     QString name() const;
 
     void insert(int pIndex, PluginItem *pItem);
@@ -74,7 +78,8 @@ private:
     PluginItem *mParent = nullptr;
     QVector<PluginItem *> mChildren;
 
-    bool mCheckable = true;
+    bool mHasCheckBox = false;
+    bool mCheckable = false;
     Qt::CheckState mCheckState;
 
     QIcon mIcon;

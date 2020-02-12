@@ -154,11 +154,13 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                                          plugin->name());
 
         // Only selectable plugins and plugins that are of the right type are
-        // checkable
+        // checkable though all plugins should have a check box
+        // Note: the latter is only so that everything gets nicely aligned...
 
         PluginInfo *pluginInfo = plugin->info();
 
         if (pluginInfo != nullptr) {
+            pluginItem->setHasCheckBox(true);
             pluginItem->setCheckable(pluginInfo->isSelectable());
 
             if (pluginItem->isCheckable()) {
