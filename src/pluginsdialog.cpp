@@ -197,6 +197,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     for (auto categoryItem : mCategoryItems) {
         for (int i = 0, iMax = categoryItem->childCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
+                categoryItem->setHasCheckBox(true);
                 categoryItem->setCheckable(true);
 
                 break;
