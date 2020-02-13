@@ -121,6 +121,24 @@ QModelIndex PluginItem::modelIndex() const
 
 //==============================================================================
 
+bool PluginItem::isHidden() const
+{
+    // Return whether we are hidden
+
+    return mHidden;
+}
+
+//==============================================================================
+
+void PluginItem::setHidden(bool pHidden)
+{
+    // Specify whether we are hidden
+
+    mHidden = pHidden;
+}
+
+//==============================================================================
+
 bool PluginItem::hasCheckBox() const
 {
     // Return whether we have a check box

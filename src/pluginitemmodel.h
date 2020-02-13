@@ -57,6 +57,9 @@ public:
 
     QModelIndex modelIndex() const;
 
+    bool isHidden() const;
+    void setHidden(bool pHidden);
+
     bool hasCheckBox() const;
     void setHasCheckBox(bool pHasCheckBox);
 
@@ -78,6 +81,7 @@ private:
     PluginItem *mParent = nullptr;
     QVector<PluginItem *> mChildren;
 
+    bool mHidden = false;
     bool mHasCheckBox = false;
     bool mCheckable = false;
     Qt::CheckState mCheckState;

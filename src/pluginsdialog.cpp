@@ -612,8 +612,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
     // Show/hide our unselectable plugins
 
     for (auto unselectablePluginItem : mUnselectablePluginItems) {
-        mGui->treeView->setRowHidden(unselectablePluginItem->index(),
-                                     unselectablePluginItem->parent()->modelIndex(), pChecked);
+        unselectablePluginItem->setHidden(pChecked);
     }
 
     // Show/hide our categories, based on whether they contain visible plugins
@@ -624,10 +623,9 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
             // are visible
 
             bool hideCategory = true;
-            QModelIndex categoryItemModelIndex = categoryItem->modelIndex();
 
             for (int i = 0, iMax = categoryItem->childCount(); i < iMax; ++i) {
-                if (!mGui->treeView->isRowHidden(i, categoryItemModelIndex)) {
+                if (!categoryItem->child(i)->isHidden()) {
                     hideCategory = false;
 
                     break;
@@ -643,7 +641,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
     // Select the first visible category
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->childCount(); i < iMax; ++i) {
-        if (!mGui->treeView->isRowHidden(i, mModel->invisibleRootItem()->modelIndex())) {
+        if (!mModel->invisibleRootItem()->child(i)->isHidden()) {
             mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->modelIndex());
 
             return;
