@@ -624,10 +624,10 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
             // are visible
 
             bool hideCategory = true;
+            QModelIndex categoryItemModelIndex = categoryItem->modelIndex();
 
             for (int i = 0, iMax = categoryItem->childCount(); i < iMax; ++i) {
-                if (!mGui->treeView->isRowHidden(categoryItem->child(i)->index(),
-                                                 categoryItem->modelIndex())) {
+                if (!mGui->treeView->isRowHidden(i, categoryItemModelIndex)) {
                     hideCategory = false;
 
                     break;
