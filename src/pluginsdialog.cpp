@@ -25,7 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "guiutils.h"
 #include "mainwindow.h"
 #include "plugin.h"
-#include "pluginitemmodel.h"
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
 
@@ -40,6 +39,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QModelIndex>
 #include <QPushButton>
 #include <QSettings>
+#include <QStandardItemModel>
 #include <QUrl>
 
 //==============================================================================
@@ -62,13 +62,13 @@ void PluginItemDelegate::paint(QPainter *pPainter,
     // Paint the item as normal, if it is selectable, as disabled, if it isn't
     // selectable, or bold, if it is a category
 
-    const PluginItemModel *pluginItemModel = qobject_cast<const PluginItemModel *>(pIndex.model());
-    PluginItem *pluginItem = pluginItemModel->itemFromIndex(pIndex);
+    QStandardItem *pluginItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+
     QStyleOptionViewItem option(pOption);
 
     initStyleOption(&option, pIndex);
 
-    if (pluginItem->parent() != pluginItemModel->invisibleRootItem()) {
+    if (pluginItem->parent() != nullptr) {
         if (!pluginItem->isCheckable()) {
             option.state &= ~QStyle::State_Enabled;
         }
@@ -134,7 +134,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     // plugins that are shown as 'disabled' (to reflect the fact that users
     // cannot decide whether they should be loaded)
 
-    mModel = new PluginItemModel(this);
+    mModel = new QStandardItemModel(this);
 
 #ifdef Q_OS_MAC
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -150,17 +150,15 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     for (auto plugin : mPluginManager->sortedPlugins()) {
         // Create the item corresponding to the current plugin
 
-        auto pluginItem = new PluginItem((plugin->status() == Plugin::Status::Loaded)?LoadedIcon:NotLoadedIcon,
-                                         plugin->name());
+        auto pluginItem = new QStandardItem((plugin->status() == Plugin::Status::Loaded)?LoadedIcon:NotLoadedIcon,
+                                            plugin->name());
 
         // Only selectable plugins and plugins that are of the right type are
-        // checkable though all plugins should have a check box
-        // Note: the latter is only so that everything gets nicely aligned...
+        // checkable
 
         PluginInfo *pluginInfo = plugin->info();
 
         if (pluginInfo != nullptr) {
-            pluginItem->setHasCheckBox(true);
             pluginItem->setCheckable(pluginInfo->isSelectable());
 
             if (pluginItem->isCheckable()) {
@@ -183,21 +181,20 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
             // Add the plugin to its corresponding category
 
-            pluginCategoryItem(pluginInfo->category())->append(pluginItem);
+            pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
         } else {
             // We are either dealing with a library that is not a plugin or with
             // a plugin that is too old, so add it to the Invalid category
 
-            pluginCategoryItem(PluginInfo::Category::Invalid)->append(pluginItem);
+            pluginCategoryItem(PluginInfo::Category::Invalid)->appendRow(pluginItem);
         }
     }
 
     // Make a category checkable if it contains selectable plugins
 
     for (auto categoryItem : mCategoryItems) {
-        for (int i = 0, iMax = categoryItem->childCount(); i < iMax; ++i) {
+        for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
-                categoryItem->setHasCheckBox(true);
                 categoryItem->setCheckable(true);
 
                 break;
@@ -326,9 +323,9 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
     // Update the information view with the category's or plugin's information
 
-    PluginItem *item = pNewIndex.isValid()?mModel->itemFromIndex(pNewIndex):nullptr;
-    QString itemName = (item != nullptr)?item->name():QString();
-    Plugin *plugin = ((item != nullptr) && (item->parent() != nullptr))?mPluginManager->plugin(itemName):nullptr;
+    QStandardItem *item = pNewIndex.isValid()?mModel->itemFromIndex(pNewIndex):nullptr;
+    QString itemText = (item != nullptr)?item->text():QString();
+    Plugin *plugin = ((item != nullptr) && (item->parent() != nullptr))?mPluginManager->plugin(itemText):nullptr;
 
     if (plugin != nullptr) {
         // We are supposedly dealing with a plugin, so retrieve its information,
@@ -403,7 +400,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
         // The category's name
 
         mGui->fieldOneLabel->setText(tr("Category:"));
-        mGui->fieldOneValue->setText(itemName);
+        mGui->fieldOneValue->setText(itemText);
 
         // The category's description
 
@@ -432,9 +429,15 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
-void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
+void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
                                                bool pInitializing)
 {
+    // Disable the connection that handles a change in a plugin's loading state
+    // (otherwise what we are doing here is going to be completely uneffective)
+
+    disconnect(mModel, &QStandardItemModel::itemChanged,
+               this, QOverload<QStandardItem *>::of(&PluginsDialog::updatePluginsSelectedState));
+
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
 
@@ -443,8 +446,8 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
                                            Qt::Unchecked:
                                            Qt::Checked;
 
-        for (int i = 0, iMax = pItem->childCount(); i < iMax; ++i) {
-            PluginItem *pluginItem = pItem->child(i);
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+            QStandardItem *pluginItem = pItem->child(i);
 
             if (mSelectablePluginItems.contains(pluginItem)) {
                 pluginItem->setCheckState(newCheckState);
@@ -464,7 +467,7 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
 
         for (auto selectablePluginItem : mSelectablePluginItems) {
             if (   (selectablePluginItem->checkState() == Qt::Checked)
-                && (mPluginManager->plugin(selectablePluginItem->name())->info()->fullDependencies().contains(unselectablePluginItem->name()))) {
+                && (mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies().contains(unselectablePluginItem->text()))) {
                 unselectablePluginItem->setCheckState(Qt::Checked);
 
                 break;
@@ -476,7 +479,7 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
     // selectable plugin
 
     for (auto categoryItem : mCategoryItems) {
-        int nbOfPlugins = categoryItem->childCount();
+        int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins != 0) {
             int nbOfSelectablePlugins = 0;
@@ -484,7 +487,7 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
             int nbOfSelectedSelectablePlugins = 0;
 
             for (int i = 0; i < nbOfPlugins; ++i) {
-                PluginItem *pluginItem = categoryItem->child(i);
+                QStandardItem *pluginItem = categoryItem->child(i);
 
                 if (pluginItem->isCheckable()) {
                     ++nbOfSelectablePlugins;
@@ -514,7 +517,7 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
         // loading state of the plugins
 
         for (auto plugin : mSelectablePluginItems+mUnselectablePluginItems) {
-            mInitialLoadingStates.insert(plugin->name(),
+            mInitialLoadingStates.insert(plugin->text(),
                                          plugin->checkState() == Qt::Checked);
         }
     }
@@ -522,7 +525,7 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
     bool buttonsEnabled = false;
 
     for (auto plugin : mSelectablePluginItems+mUnselectablePluginItems) {
-        if (mInitialLoadingStates.value(plugin->name()) != (plugin->checkState() == Qt::Checked)) {
+        if (mInitialLoadingStates.value(plugin->text()) != (plugin->checkState() == Qt::Checked)) {
             buttonsEnabled = true;
 
             break;
@@ -531,11 +534,17 @@ void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem,
 
     mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(buttonsEnabled);
     mGui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(buttonsEnabled);
+
+    // Re-enable the connection that handles a change in a plugin's loading
+    // state
+
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, QOverload<QStandardItem *>::of(&PluginsDialog::updatePluginsSelectedState));
 }
 
 //==============================================================================
 
-void PluginsDialog::updatePluginsSelectedState(PluginItem *pItem)
+void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem)
 {
     // Update our plugins selected state
 
@@ -558,7 +567,7 @@ void PluginsDialog::buttonBoxAccepted()
     // Keep track of the loading state of the various selectable plugins
 
     for (auto selectablePluginItem : mSelectablePluginItems) {
-        Plugin::setLoad(selectablePluginItem->name(),
+        Plugin::setLoad(selectablePluginItem->text(),
                         selectablePluginItem->checkState() == Qt::Checked);
     }
 
@@ -586,7 +595,7 @@ void PluginsDialog::apply()
 
 //==============================================================================
 
-PluginItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory)
+QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
 #include "plugincategoryitem.cpp.inl"
 }
@@ -613,7 +622,8 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
     // Show/hide our unselectable plugins
 
     for (auto unselectablePluginItem : mUnselectablePluginItems) {
-        unselectablePluginItem->setHidden(pChecked);
+        mGui->treeView->setRowHidden(unselectablePluginItem->row(),
+                                     unselectablePluginItem->parent()->index(), pChecked);
     }
 
     // Show/hide our categories, based on whether they contain visible plugins
@@ -625,25 +635,26 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
 
             bool hideCategory = true;
 
-            for (int i = 0, iMax = categoryItem->childCount(); i < iMax; ++i) {
-                if (!categoryItem->child(i)->isHidden()) {
+            for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
+                if (!mGui->treeView->isRowHidden(categoryItem->child(i)->row(),
+                                                 categoryItem->index())) {
                     hideCategory = false;
 
                     break;
                 }
             }
 
-            mGui->treeView->setRowHidden(categoryItem->index(),
-                                         mModel->invisibleRootItem()->modelIndex(),
+            mGui->treeView->setRowHidden(categoryItem->row(),
+                                         mModel->invisibleRootItem()->index(),
                                          hideCategory);
         }
     }
 
     // Select the first visible category
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->childCount(); i < iMax; ++i) {
-        if (!mModel->invisibleRootItem()->child(i)->isHidden()) {
-            mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->modelIndex());
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        if (!mGui->treeView->isRowHidden(i, mModel->invisibleRootItem()->index())) {
+            mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(i)->index());
 
             return;
         }

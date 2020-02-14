@@ -32,6 +32,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 class QLabel;
 class QSettings;
+class QStandardItem;
+class QStandardItemModel;
 
 //==============================================================================
 
@@ -45,8 +47,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class PluginItem;
-class PluginItemModel;
 class PluginManager;
 class PreferencesInterface;
 
@@ -104,11 +104,11 @@ private:
 
     PluginManager *mPluginManager;
 
-    PluginItemModel *mModel;
+    QStandardItemModel *mModel;
 
-    QMap<PluginInfo::Category, PluginItem *> mCategoryItems;
-    QMap<PluginItem *, PluginInfo::Category> mItemCategories;
-    QMap<PluginItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
+    QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
+    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
+    QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
     QMap<Preferences::PreferencesWidget *, QString> mPreferencesWidgetPluginNames;
 
     PreferencesPluginCategoryWidget *mPluginCategoryWidget;
@@ -118,7 +118,7 @@ private:
 
     QStringList mPluginNames;
 
-    PluginItem * pluginCategoryItem(PluginInfo::Category pCategory);
+    QStandardItem * pluginCategoryItem(PluginInfo::Category pCategory);
 
 private slots:
     void treeViewCollapsed(const QModelIndex &pIndex);

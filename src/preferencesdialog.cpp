@@ -24,7 +24,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cliutils.h"
 #include "generalpreferenceswidget.h"
 #include "guiutils.h"
-#include "pluginitemmodel.h"
 #include "pluginmanager.h"
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
@@ -39,6 +38,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QLabel>
 #include <QMainWindow>
 #include <QPushButton>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -119,7 +119,7 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
     // Paint the item as normal, if it is selectable, or bold, if it is a
     // category
 
-    PluginItem *pluginItem = qobject_cast<const PluginItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+    QStandardItem *pluginItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
     QStyleOptionViewItem option(pOption);
 
@@ -176,7 +176,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Set up the tree view widget
 
-    mModel = new PluginItemModel(this);
+    mModel = new QStandardItemModel(this);
 
 #ifdef Q_OS_MAC
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -186,10 +186,10 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Populate the data model with our General section
 
-    auto generalPluginItem = new PluginItem(tr("General"));
+    auto generalPluginItem = new QStandardItem(tr("General"));
     auto selectedPluginItem = generalPluginItem;
 
-    mModel->invisibleRootItem()->append(generalPluginItem);
+    mModel->invisibleRootItem()->appendRow(generalPluginItem);
 
     auto generalPreferencesWidget = new GeneralPreferencesWidget(mainWindow());
 
@@ -208,9 +208,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
             // Create the item corresponding to the current plugin and add it to
             // its corresponding category
 
-            auto pluginItem = new PluginItem(plugin->name());
+            auto pluginItem = new QStandardItem(plugin->name());
 
-            pluginCategoryItem(plugin->info()->category())->append(pluginItem);
+            pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
 
             if (plugin->name() == pPluginName) {
                 selectedPluginItem = pluginItem;
@@ -258,7 +258,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Select our selected item (!!)
 
-    mGui->treeView->setCurrentIndex(selectedPluginItem->modelIndex());
+    mGui->treeView->setCurrentIndex(selectedPluginItem->index());
 
     mGui->stackedWidget->currentWidget()->setFocus();
 }
@@ -283,7 +283,7 @@ QStringList PreferencesDialog::pluginNames() const
 
 //==============================================================================
 
-PluginItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCategory)
+QStandardItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
 #include "plugincategoryitem.cpp.inl"
 }
@@ -331,7 +331,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
     // Check whether we are dealing with a plugin category
 
-    PluginItem *item = mModel->itemFromIndex(pNewIndex);
+    QStandardItem *item = mModel->itemFromIndex(pNewIndex);
     bool isPluginCategory = std::find(mCategoryItems.begin(), mCategoryItems.end(), item) != mCategoryItems.end();
 
     mResetButton->setEnabled(!isPluginCategory);
@@ -340,7 +340,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
         // We are dealing with a plugin category, so retrieve and set its name
         // and description
 
-        mPluginCategoryWidget->setCategory(item->name());
+        mPluginCategoryWidget->setCategory(item->text());
         mPluginCategoryWidget->setDescription(tr("%1.").arg(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))));
 
         mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
