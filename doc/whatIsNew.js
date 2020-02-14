@@ -61,7 +61,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML support",
                              "entries": [
-                               { "type": "improved", "description": "Loading of <a href=\"https://cellml.org/\">CellML</a> files." }
+                               { "type": "improved", "description": "Loading of <a href=\"https://cellml.org/\">CellML</a> files." },
+                               { "type": "improved", "description": "Generation of the runtime." }
                              ]
                            },
                            { "type": "subCategory", "name": "COMBINE support",
