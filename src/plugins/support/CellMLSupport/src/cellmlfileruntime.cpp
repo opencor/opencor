@@ -309,36 +309,37 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // Go through the variables defined or referenced in our main CellML
         // file and do a mapping between the source of that variable and that
         // variable itself
-        // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. CellML
-        //       1.1 files that import some components), we only want to list
+        // Note: indeed, when a CellML file has imports, we only want to list
         //       the parameters that are either defined or referenced in our
         //       main CellML file. Not only does it make sense, but also only
         //       the parameters listed in a main CellML file can be referenced
         //       in a SED-ML file...
 
+        bool hasImports = model->imports()->length() != 0;
         QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
         QList<iface::cellml_api::CellMLVariable *> realMainVariables;
         ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = model->localComponents()->iterateComponents();
 
-        for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
-             component != nullptr; component = localComponentsIter->nextComponent()) {
-            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = component->variables()->iterateVariables();
+        if (hasImports) {
+            for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
+                 component != nullptr; component = localComponentsIter->nextComponent()) {
+                ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = component->variables()->iterateVariables();
 
-            for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
-                 variable != nullptr; variable = variablesIter->nextVariable()) {
-                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
+                for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
+                     variable != nullptr; variable = variablesIter->nextVariable()) {
+                    ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-                mainVariables.insert(sourceVariable, variable);
+                    mainVariables.insert(sourceVariable, variable);
 
-                // In CellML 1.0 models / some CellML 1.1 models, the source
-                // variable is / may be defined in the main CellML file and may
-                // be used (and therefore referenced) in different places in
-                // that same main CellML file, in which case we need to keep
-                // track of the real main variable, which is the one which
-                // source variable is the same
+                    // The source variable may be defined in the main CellML
+                    // file and may be used (and therefore referenced) in
+                    // different places in that same main CellML file, in which
+                    // case we need to keep track of the real main variable,
+                    // which is the one which source variable is the same
 
-                if (variable == sourceVariable) {
-                    realMainVariables << variable;
+                    if (variable == sourceVariable) {
+                        realMainVariables << variable;
+                    }
                 }
             }
         }
@@ -357,7 +358,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             // our main CellML file, if it has imports
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-            iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
+            iface::cellml_api::CellMLVariable *mainVariable = (!hasImports || realMainVariables.contains(variable))?
                                                                   variable.getPointer():
                                                                   mainVariables.value(variable);
 
@@ -387,7 +388,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                 //       really want it to be seen as a rate hence we check for
                 //       the degree of the computed target...
 
-                if (QString::fromStdWString(variable->initialValue()).isEmpty()) {
+                if (variable->initialValue().empty()) {
                     // The computed target doesn't have an initial value, so it
                     // must be a 'computed' constant
 

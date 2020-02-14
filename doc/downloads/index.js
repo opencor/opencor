@@ -38,6 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>Graph Panel widget:</strong> fixed a small problem that resulted in the legend being misplaced when exporting a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2297\">#2297</a>)." },
+                       { "change": "<strong>CellML support:</strong> improved the generation of runtime (see issue <a href=\"https://github.com/opencor/opencor/issues/2285\">#2285</a>)." },
                        { "change": "<strong>CellML Text view:</strong> greatly reduced the time and memory required to do syntax highlighting (see issue <a href=\"https://github.com/opencor/opencor/issues/2284\">#2284</a>)." },
                        { "change": "<strong>Simulation support:</strong> fixed a small problem with not being able to reset a simulation that generates NANs (see issue <a href=\"https://github.com/opencor/opencor/issues/2299\">#2299</a>)." },
                      ]
