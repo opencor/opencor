@@ -1,4 +1,29 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 14, "month": 2, "year": 2020, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Graph Panel widget:</strong> fixed a small problem that resulted in the legend being misplaced when exporting a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2297\">#2297</a>)." },
+                       { "change": "<strong>CellML support:</strong> improved the generation of runtime (see issue <a href=\"https://github.com/opencor/opencor/issues/2285\">#2285</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> greatly reduced the time and memory required to do syntax highlighting (see issue <a href=\"https://github.com/opencor/opencor/issues/2284\">#2284</a>)." },
+                       { "change": "<strong>Simulation support:</strong> fixed a small problem with not being able to reset a simulation that generates NANs (see issue <a href=\"https://github.com/opencor/opencor/issues/2299\">#2299</a>)." },
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 1, "year": 2020, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 10",
