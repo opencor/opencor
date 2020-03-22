@@ -3,11 +3,11 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 20.0.0)
+set(PACKAGE_VERSION 20.0.2)
 
 # Git tag for our library
 
-set(GIT_TAG v20.0.0)
+set(GIT_TAG v20.0.2)
 
 # Specify where our local package will be installed
 
