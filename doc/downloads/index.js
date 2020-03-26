@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 20.0.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2311\">#2311</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.99.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2305\">#2305</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 20.0.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2311\">#2311</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
