@@ -86,7 +86,7 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
                               SHA1_VALUES 6d9b97f836f534aecd0d9753c7ec0366af274555)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cc4ee1630488520106cb38c9dc983a0ceab38d98
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 18478aa84d66ddd37e5313b80b19e142d364c7cd
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 89db39775f75b86d5af6c7f1f12183fd7df8b8a9)
