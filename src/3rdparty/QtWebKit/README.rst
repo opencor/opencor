@@ -3,7 +3,7 @@ In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we need to:
 - **Windows:** install:
 
   - `Perl >= 5.20 <https://activestate.com/activeperl>`__;
-  - `Python 2.7 <https://python.org/>`__;
+  - `Python 3 <https://python.org/>`__;
   - `Ruby >= 1.9 <https://rubyinstaller.org/>`__;
   - `Bison and Flex <https://sourceforge.net/projects/winflexbison/>`__;
   - `gperf <http://gnuwin32.sourceforge.net/packages/gperf.htm>`__; and
