@@ -57,16 +57,16 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 370d8e530ffeb63a1132604a899224db1c641f55
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 4c8ea379ce60b3ffcd2cb6253c400599ed062ee6
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7240983b01eaeed35a59859823da2e9d7f25ed2f
-                                              fd6f05c7f8f09fdf3d1c3906fc6b283893d45a5b)
+                                  SHA1_VALUES ae40f450b7a1b642e563bdbe56f4edf40cc579df
+                                              4c7dc258d98ccb93165637ba0909f4daa5df5681)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 89c373b9455f41e69837b465bbd4d150c29fef9c
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 89c26141a87ee9394628d2106227823d827d38be
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 024108357308e7c713cf854fc8ac76f3c61983fd
-                                              1f1390e567dd4678a4f5795af1f7e2cb59e702c0)
+                                  SHA1_VALUES 4d6b68f8528a03dd699d183d3bf1f8f6dc86dae0
+                                              2f2e889db311903003b0db62f097001b92f018ca)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
