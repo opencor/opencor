@@ -232,8 +232,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
-                                              commandArguments.data(),
-                                              commandArguments.data()+commandArguments.size(),
+                                              commandArguments,
                                               diagnosticsEngine);
 
     // Map our dummy file to a memory buffer
