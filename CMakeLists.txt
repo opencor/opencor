@@ -85,6 +85,10 @@ else()
     endif()
 endif()
 
+# Use the C++14 standard
+
+set(CMAKE_CXX_STANDARD 14)
+
 # Determine the effective build directory
 
 set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
@@ -478,12 +482,9 @@ if(APPLE)
 endif()
 
 # Some general build settings
-# Note #1: we force the overriding of CMAKE_CXX_FLAGS_RELEASE and
-#          CMAKE_CXX_FLAGS_DEBUG, so that we can really use the compilation
-#          flags we want, as opposed to CMake forcing us to use the ones it
-#          wants...
-# Note #2: MSVC enables C++11 support by default, so we just need to enable it
-#          on Linux and macOS...
+# Note: we force the overriding of CMAKE_CXX_FLAGS_RELEASE and
+#       CMAKE_CXX_FLAGS_DEBUG, so that we can really use the compilation flags
+#       we want, as opposed to CMake forcing us to use the ones it wants...
 
 set(CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
@@ -496,7 +497,7 @@ if(WIN32)
 
     set(LINK_FLAGS_PROPERTIES "/STACK:10000000")
 else()
-    set(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++11")
+    set(CMAKE_CXX_FLAGS "-Wall -W -Werror")
 
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
