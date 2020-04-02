@@ -112,7 +112,7 @@ signals:
     void resourceDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                   const QString &pResource);
     void idDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
-                            const QString &pResource, const QString &pId);
+                            const QString &pId);
 
 public slots:
     void updateGui(iface::cellml_api::CellMLElement *pElement);
@@ -122,7 +122,7 @@ private slots:
 
     void lookUpQualifier(const QString &pQualifier);
     void lookUpResource(const QString &pResource);
-    void lookUpId(const QString &pResource, const QString &pId);
+    void lookUpId(const QString &pId);
     void lookUpNothing();
 
     void removeAllMetadata();
