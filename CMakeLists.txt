@@ -592,6 +592,13 @@ elseif(NOT WIN32)
     set(CMAKE_SKIP_RPATH TRUE)
 
     set(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
+
+    if(NOT RELEASE_MODE)
+        set(LINK_RPATH_FLAG "${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/lib'")
+        # Note: this makes it possible to run a debug version of OpenCOR from
+        #       within Qt Creator...
+    endif()
+
     set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
 endif()
 
