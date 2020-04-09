@@ -48,6 +48,31 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 9.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2269\">#2269</a>). Upgraded the <a href=\"https://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 5.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2272\">#2272</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.28.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2280\">#2280</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 19.3.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2281\">#2281</a>)." }
                      ]
                    },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 12, "year": 2019, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> don't ask to confirm the overwriting of a file when on macOS 10.15 (see issue <a href=\"https://github.com/opencor/opencor/issues/2261\">#2261</a>). Fixed a couple of issues with our splash screen (see issue <a href=\"https://github.com/opencor/opencor/issues/2265\">#2265</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> prevent it from flickering when it is shown as disabled (see issue <a href=\"https://github.com/opencor/opencor/issues/2263\">#2263</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> can now reopen a remote <a href=\"https://cellml.org/\">CellML</a> file from a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file (see issue <a href=\"https://github.com/opencor/opencor/issues/2191\">#2191</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/qtwebkit/qtwebkit/wiki\">QtWebKit</a> to v5.212.0-alpha3 (see issue <a href=\"https://github.com/opencor/opencor/issues/2252\">#2252</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 12, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
