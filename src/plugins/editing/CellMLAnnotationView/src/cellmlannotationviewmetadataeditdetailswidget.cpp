@@ -561,7 +561,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
                 mUrls.insert(item.resource(), resourceUrl(item.resource()));
             }
 
-            mUrls.insert(itemInformation, idUrl(item.resource(), item.id()));
+            mUrls.insert(itemInformation, idUrl(item.id()));
 
             mItemInformationSha1s << itemInformationSha1;
 
@@ -723,7 +723,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
         break;
     case InformationType::Id:
-        emit idLookUpRequested(resource, id);
+        emit idLookUpRequested(id);
 
         break;
     }

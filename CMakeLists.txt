@@ -1036,8 +1036,7 @@ if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
            RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
 endif()
 
-# Fetch parts of our documentation and build it, if we are neither building
-# Python nor QtWebKit
+# Fetch parts of our documentation and build it, if we are not building Python
 # Note: we need Python because we rely on Sphinx to build our documentation...
 
 if(USE_PREBUILT_PYTHON_PACKAGE)

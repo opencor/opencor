@@ -113,7 +113,6 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
         return true;
     }
 
-
     QDesktopServices::openUrl(url);
 
     return false;

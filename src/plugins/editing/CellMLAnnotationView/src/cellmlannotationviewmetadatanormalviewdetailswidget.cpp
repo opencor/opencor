@@ -306,7 +306,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
         mUrls.insert(pRdfTriple->resource(), resourceUrl(pRdfTriple->resource()));
     }
 
-    mUrls.insert(rdfTripleInformation, idUrl(pRdfTriple->resource(), pRdfTriple->id()));
+    mUrls.insert(rdfTripleInformation, idUrl(pRdfTriple->id()));
 
     mRdfTripleInformationSha1s << rdfTripleInformationSha1;
 
@@ -431,7 +431,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
         break;
     case InformationType::Id:
-        emit idLookUpRequested(resource, id);
+        emit idLookUpRequested(id);
 
         break;
     }

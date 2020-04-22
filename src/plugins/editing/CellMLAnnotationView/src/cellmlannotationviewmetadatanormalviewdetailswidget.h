@@ -140,7 +140,7 @@ private:
 signals:
     void qualifierLookUpRequested(const QString &pQualifier);
     void resourceLookUpRequested(const QString &pResource);
-    void idLookUpRequested(const QString &pResource, const QString &pId);
+    void idLookUpRequested(const QString &pId);
     void noLookUpRequested();
 
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
