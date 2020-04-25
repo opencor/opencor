@@ -996,16 +996,14 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 
             mRunPauseResumeSimulationAction->setEnabled(voi != nullptr);
 
-            // Update our simulation mode or clear our simulation results
-            // (should there be some) in case we are reloading ourselves
-            // Note: to clear our simualtion data will also update our
-            //       simulation mode, so we are fine...
+            // Clear our simulation results, in case we are reloading ourselves,
+            // and update our simulation mode
 
             if (pReloading) {
-                clearSimulationResults(pReloading);
-            } else {
-                updateSimulationMode();
+                clearSimulationResults();
             }
+
+            updateSimulationMode();
 
             // Initialise our contents widget and make sure that we have the
             // required type(s) of solvers
@@ -1099,7 +1097,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 
             // Initialise our simulation
 
-            initializeSimulation(pReloading);
+            initializeSimulation();
 
             // Now, we can safely update our parameters widget since our model
             // parameters have been computed
@@ -1126,7 +1124,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
             initializeGui(mValidSimulationEnvironment);
 
             if (mValidSimulationEnvironment) {
-                initializeSimulation(pReloading);
+                initializeSimulation();
             }
         }
     mContentsWidget->setUpdatesEnabled(true);
@@ -1458,7 +1456,7 @@ void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pReloading)
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 {
     setUpdatesEnabled(false);
         // Clear our simulation results
@@ -1467,7 +1465,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pRelo
         //       were to have several graph panels since they would try to
         //       realign themselves)...
 
-        mSimulation->results()->reset(pReloading);
+        mSimulation->results()->reset();
     setUpdatesEnabled(true);
 }
 
@@ -2716,13 +2714,13 @@ void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulati
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initializeSimulation(bool pReloading)
+void SimulationExperimentViewSimulationWidget::initializeSimulation()
 {
     // Reset both the simulation's data and results (well, initialise in the
     // case of its data)
 
     mSimulation->data()->reset();
-    mSimulation->results()->reset(pReloading);
+    mSimulation->results()->reset();
 
     // Retrieve our simulation and solvers properties since they may have an
     // effect on our parameter values (as well as result in some solver

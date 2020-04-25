@@ -985,25 +985,21 @@ void SimulationResults::reload()
 
     mDataDataStores.clear();
 
-    reset(true);
+    reset();
 }
 
 //==============================================================================
 
-void SimulationResults::reset(bool pReloading)
+void SimulationResults::reset()
 {
     // Reset our data store by deleting it and then recreating it
 
     deleteDataStore();
     createDataStore();
 
-    // Let people know that we have been reset, but only if we are not reloading
-    // since otherwise our GUI may crash due our checking for results (see
-    // https://github.com/opencor/opencor/issues/2290)
+    // Let people know that we have been reset
 
-    if (!pReloading) {
-        emit resultsReset();
-    }
+    emit resultsReset();
 }
 
 //==============================================================================
@@ -1527,7 +1523,7 @@ void Simulation::save()
     // will disable its reset buttons), but only if we have / still have a
     // runtime
 
-    if (mRuntime != nullptr) {
+    if ((mRuntime != nullptr) && (mFileType == FileType::CellmlFile)) {
         mData->updateInitialValues();
     }
 }
