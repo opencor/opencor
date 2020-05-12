@@ -73,10 +73,10 @@ public:
     enum class Type {
         Unknown,
         Voi,
+        State,
+        Rate,
         Constant,
         ComputedConstant,
-        Rate,
-        State,
         Algebraic,
         Floating,
         LocallyBound,
