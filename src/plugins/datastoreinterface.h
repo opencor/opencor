@@ -136,7 +136,6 @@ public:
     bool addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 
-    int type() const;
     void setType(int pType);
 
     void setUri(const QString &pUri);
@@ -154,6 +153,8 @@ public slots:
     bool isVisible() const;
 
     int runsCount() const;
+
+    int type() const;
 
     QString uri() const;
     QString name() const;
