@@ -65,31 +65,31 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 83be0066937098f8da6123c7f18fade9b957b0cb
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3289b243874b50e814f144fdd3557027a970c851
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 997164fe937b185fd46a21ef85da2cee29e67d06
+                                  SHA1_VALUES 5bcd488901c23ca7be89ff6bfb7ee2eccee8927c
                                               e293290b23506370386dbcb97fbe091bd798dcda)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d2c1e4567ae15480b83283f08f63a7ce00c84d19
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d3bd3cb515a8902f69323f8371ec816095308b4b
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES d0ab7e154973c61b2f924ba1a0311b92af1f5053
+                                  SHA1_VALUES c6bd3de9a60954413f7139ebb26e9bcaa370700e
                                               63265399b64faf3e5a4da412f7023570b3d207fc)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 9d460a3097cb1c8230f9c3df19e6fcc78eb8b0c1
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2122a45d2901788ea68401369e08533d745aaec6
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6d9b97f836f534aecd0d9753c7ec0366af274555)
+                              SHA1_VALUES 57170bbed86dded8f44550ea0fabc9aa69c70d73)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 33143ba020dec1d2a495a11d8b897af2b8b762f4
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fac45b9682960e8e901d9df5bfc81c3995ac2c35
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7f7aa0d387a053729d61801ca8aa87049f523079)
+                              SHA1_VALUES c8623552989b96ca9e72e8516205c71e2b051ad3)
     endif()
 else()
     # Ignore some warnings
