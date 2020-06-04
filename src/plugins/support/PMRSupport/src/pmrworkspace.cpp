@@ -48,6 +48,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "git2/remote.h"
     #include "git2/repository.h"
     #include "git2/signature.h"
+    #include "git2/status.h"
 #include "libgit2end.h"
 
 //==============================================================================
@@ -241,7 +242,7 @@ void PmrWorkspace::clone(const QString &pPath)
 
     setGitAuthorization(&authorizationStrArray);
 
-    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
+    git_clone_options_init(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
 
     cloneOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
     cloneOptions.fetch_opts.callbacks.payload = this;
@@ -616,7 +617,7 @@ void PmrWorkspace::refreshStatus()
     if (isOpen()) {
         git_status_options statusOptions;
 
-        git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
+        git_status_options_init(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
 
         statusOptions.flags =  GIT_STATUS_OPT_INCLUDE_UNTRACKED
                               |GIT_STATUS_OPT_INCLUDE_UNMODIFIED
@@ -994,7 +995,7 @@ StagedFiles PmrWorkspace::stagedFiles()
     if (git_repository_index(&index, mGitRepository) == GIT_OK) {
         git_status_options statusOptions;
 
-        git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
+        git_status_options_init(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
 
         statusOptions.flags =  GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX
                               |GIT_STATUS_OPT_SORT_CASE_INSENSITIVELY;
@@ -1131,7 +1132,7 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 
             git_checkout_options checkoutOptions;
 
-            git_checkout_init_options(&checkoutOptions, GIT_CHECKOUT_OPTIONS_VERSION);
+            git_checkout_options_init(&checkoutOptions, GIT_CHECKOUT_OPTIONS_VERSION);
 
             checkoutOptions.checkout_strategy =  GIT_CHECKOUT_SAFE
                                                 |GIT_CHECKOUT_RECREATE_MISSING
@@ -1212,7 +1213,7 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 
                 git_merge_options mergeOptions;
 
-                git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
+                git_merge_options_init(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
 
                 res = git_merge(gitRepository,
                                 const_cast<const git_annotated_commit **>(&remoteCommitHead),
@@ -1261,7 +1262,7 @@ bool PmrWorkspace::fetch()
     git_strarray authorizationStrArray = { nullptr, 0 };
     git_remote_callbacks remoteCallbacks;
 
-    git_fetch_init_options(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
+    git_fetch_options_init(&fetchOptions, GIT_FETCH_OPTIONS_VERSION);
 
     setGitAuthorization(&authorizationStrArray);
 
@@ -1364,7 +1365,7 @@ void PmrWorkspace::push()
     git_strarray authorizationStrArray = { nullptr, 0 };
     git_remote_callbacks remoteCallbacks;
 
-    git_push_init_options(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
+    git_push_options_init(&pushOptions, GIT_PUSH_OPTIONS_VERSION);
 
     setGitAuthorization(&authorizationStrArray);
 
