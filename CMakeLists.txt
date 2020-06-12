@@ -429,6 +429,32 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     find_package(Qt5${REQUIRED_QT_MODULE} REQUIRED)
 endforeach()
 
+# Common Qt libraries
+
+set(QT_LIBRARIES
+    Core
+    Gui
+    Help
+    Multimedia
+    MultimediaWidgets
+    Network
+    OpenGL
+    Positioning
+    PrintSupport
+    Qml
+    Quick
+    Sensors
+    Sql
+    Svg
+    ${TEST}
+    WebChannel
+    ${WEBKIT}
+    ${WEBKITWIDGETS}
+    Widgets
+    Xml
+    XmlPatterns
+)
+
 # On macOS, keep track of the Qt libraries against which we need to link and
 # make sure that we always use their release version
 # Note: indeed, from Qt 5.12.5, to build a debug version of a Qt-based
@@ -441,36 +467,11 @@ if(APPLE)
         set(TEST Test)
     endif()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        set(WEBKIT WebKit)
-        set(WEBKITWIDGETS WebKitWidgets)
-    endif()
-
     set(MACOS_QT_LIBRARIES
+        ${QT_LIBRARIES}
         Concurrent
-        Core
         DBus
-        Gui
-        Help
         MacExtras
-        Multimedia
-        MultimediaWidgets
-        Network
-        OpenGL
-        Positioning
-        PrintSupport
-        Qml
-        Quick
-        Sensors
-        Sql
-        Svg
-        ${TEST}
-        WebChannel
-        ${WEBKIT}
-        ${WEBKITWIDGETS}
-        Widgets
-        Xml
-        XmlPatterns
     )
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
@@ -531,7 +532,7 @@ if(RELEASE_MODE)
     if(NOT WIN32 AND NOT APPLE)
         set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
         # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
-        #          of OpenCOR or one its shared libraries...
+        #          of OpenCOR or one of its shared libraries...
         # Note #2: the above linking option has become obsolete on macOS...
     endif()
 
@@ -635,7 +636,7 @@ endif()
 
 set(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 
-file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
+file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}\n")
 
 track_files(${VERSION_DATE_FILENAME})
 
@@ -1164,7 +1165,7 @@ if(APPLE)
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        macos_deploy_qt_library(Qt${QT_LIBRARY})
+        macos_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR
@@ -1327,7 +1328,7 @@ if(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
+    foreach(QT_LIBRARY ${QT_LIBRARIES})
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
@@ -1512,7 +1513,7 @@ else()
     #       unnecessarily cumbersome to use, it's better to deploy one Qt
     #       library at a time...
 
-    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
+    foreach(QT_LIBRARY ${QT_LIBRARIES} DBus XcbQpa)
         if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
            OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
             set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})

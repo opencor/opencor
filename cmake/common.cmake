@@ -1,3 +1,7 @@
+set(LANGUAGES fr)
+
+#===============================================================================
+
 macro(configure_clang_and_clang_tidy TARGET_NAME)
     # Configure Clang and Clang-Tidy for the given target
 
@@ -87,7 +91,6 @@ macro(update_language_files TARGET_NAME)
     #       "errors" for our .cpp.inl files even though everything is fine with
     #       them...
 
-    set(LANGUAGES fr)
     set(INPUT_FILES)
 
     foreach(INPUT_FILE ${ARGN})
@@ -678,14 +681,7 @@ macro(windows_deploy_qt_plugins PLUGIN_CATEGORY)
 
         set(PLUGIN_ORIG_DIRNAME ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
         set(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
-        set(PLUGIN_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-        set(PLUGIN_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}d${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-        if(RELEASE_MODE)
-            set(PLUGIN_FILENAME ${PLUGIN_RELEASE_FILENAME})
-        else()
-            set(PLUGIN_FILENAME ${PLUGIN_DEBUG_FILENAME})
-        endif()
+        set(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
@@ -802,10 +798,11 @@ endmacro()
 macro(macos_deploy_qt_library LIBRARY_NAME)
     # Deploy the Qt library
 
-    set(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
+    set(QT_LIBRARY_NAME Qt${LIBRARY_NAME})
+    set(QT_FRAMEWORK_DIR ${QT_LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    if(   "${LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
-       OR "${LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
+    if(   "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
+       OR "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
         set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
     else()
         set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
@@ -813,7 +810,7 @@ macro(macos_deploy_qt_library LIBRARY_NAME)
 
     macos_deploy_qt_file(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                          ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
-                         ${LIBRARY_NAME})
+                         ${QT_LIBRARY_NAME})
 endmacro()
 
 #===============================================================================
