@@ -747,7 +747,7 @@ macro(linux_deploy_qt_library LIBRARY_NAME)
         set(ORIG_DIRNAME ${QT_LIBRARY_DIR})
     endif()
 
-    linux_deploy_binary_file(DIRECT ${ORIG_DIRNAME} lib ${LIBRARY_NAME})
+    linux_deploy_binary_file(DIRECT ${ORIG_DIRNAME} lib ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
 endmacro()
 
 #===============================================================================
