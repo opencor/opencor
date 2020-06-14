@@ -103,14 +103,14 @@ macro(update_language_files TARGET_NAME)
         set(QM_FILE ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
 
         if(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
-            execute_process(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
-                                                             -ts ${TS_FILE}
-                                                             -I ${CMAKE_SOURCE_DIR}/src/misc
+            execute_process(COMMAND ${QT_BINARIES_DIR}/lupdate -no-obsolete ${INPUT_FILES}
+                                                               -ts ${TS_FILE}
+                                                               -I ${CMAKE_SOURCE_DIR}/src/misc
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                             OUTPUT_QUIET
                             ERROR_QUIET)
-            execute_process(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                              -qm ${QM_FILE}
+            execute_process(COMMAND ${QT_BINARIES_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
+                                                                -qm ${QM_FILE}
                             OUTPUT_QUIET)
 
             track_files(${QM_FILE})
@@ -624,53 +624,41 @@ endmacro()
 
 #===============================================================================
 
-macro(windows_deploy_qt_library LIBRARY_NAME)
-    # Copy the Qt library to both the build and build/bin folders, so we can
+macro(windows_deploy_binary_file DIRNAME FILENAME)
+    # Copy the binary file to both the build and build/bin folders, so we can
     # test things both from within Qt Creator and without first having to deploy
     # OpenCOR
 
-    if(   "${LIBRARY_NAME}" STREQUAL "Qt5WebKit"
-       OR "${LIBRARY_NAME}" STREQUAL "Qt5WebKitWidgets"
-       OR "${LIBRARY_NAME}" STREQUAL "icudt${ICU_VERSION}"
-       OR "${LIBRARY_NAME}" STREQUAL "icuin${ICU_VERSION}"
-       OR "${LIBRARY_NAME}" STREQUAL "icuuc${ICU_VERSION}")
-        set(REAL_QT_BINARY_DIR ${QTWEBKIT_BINARIES_DIR})
-    else()
-        set(REAL_QT_BINARY_DIR ${QT_BINARY_DIR})
-    endif()
+    copy_file_to_build_dir(DIRECT ${DIRNAME} . ${FILENAME})
+    copy_file_to_build_dir(DIRECT ${DIRNAME} bin ${FILENAME})
 
-    set(LIBRARY_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    # Deploy the binary file
 
-    if("${LIBRARY_NAME}" STREQUAL "icudt${ICU_VERSION}")
-        set(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}icudtd${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    elseif("${LIBRARY_NAME}" STREQUAL "icuin${ICU_VERSION}")
-        set(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}icuind${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    elseif("${LIBRARY_NAME}" STREQUAL "icuuc${ICU_VERSION}")
-        set(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}icuucd${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    else()
-        set(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}d${CMAKE_SHARED_LIBRARY_SUFFIX})
-    endif()
+    install(FILES ${DIRNAME}/${FILENAME}
+            DESTINATION bin)
+endmacro()
 
-    if(NOT EXISTS ${REAL_QT_BINARY_DIR}/${LIBRARY_DEBUG_FILENAME})
-        # No debug version of the Qt library exists, so use its release version
-        # instead
+#===============================================================================
 
-        set(LIBRARY_DEBUG_FILENAME ${LIBRARY_RELEASE_FILENAME})
-    endif()
-
-    if(RELEASE_MODE)
-        set(LIBRARY_FILENAME ${LIBRARY_RELEASE_FILENAME})
-    else()
-        set(LIBRARY_FILENAME ${LIBRARY_DEBUG_FILENAME})
-    endif()
-
-    copy_file_to_build_dir(DIRECT ${REAL_QT_BINARY_DIR} . ${LIBRARY_FILENAME})
-    copy_file_to_build_dir(DIRECT ${REAL_QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
-
+macro(windows_deploy_qt_library LIBRARY_NAME)
     # Deploy the Qt library
 
-    install(FILES ${REAL_QT_BINARY_DIR}/${LIBRARY_FILENAME}
-            DESTINATION bin)
+    if(   "${LIBRARY_NAME}" STREQUAL "WebKit"
+       OR "${LIBRARY_NAME}" STREQUAL "WebKitWidgets")
+        set(BINARIES_DIR ${QTWEBKIT_BINARIES_DIR})
+    else()
+        set(BINARIES_DIR ${QT_BINARIES_DIR})
+    endif()
+
+    windows_deploy_binary_file(${BINARIES_DIR} Qt5${LIBRARY_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+endmacro()
+
+#===============================================================================
+
+macro(windows_deploy_icu_library LIBRARY_NAME)
+    # Deploy the ICU library
+
+    windows_deploy_binary_file(${QTWEBKIT_BINARIES_DIR} icu${LIBRARY_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
 endmacro()
 
 #===============================================================================
@@ -681,7 +669,7 @@ macro(windows_deploy_qt_plugins PLUGIN_CATEGORY)
 
         set(PLUGIN_ORIG_DIRNAME ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
         set(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
-        set(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        set(PLUGIN_FILENAME ${PLUGIN_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
@@ -744,7 +732,7 @@ macro(linux_deploy_qt_library LIBRARY_NAME)
        OR "${LIBRARY_NAME}" STREQUAL "${WEBKITWIDGETS}")
         set(ORIG_DIRNAME ${QTWEBKIT_LIBRARIES_DIR})
     else()
-        set(ORIG_DIRNAME ${QT_LIBRARY_DIR})
+        set(ORIG_DIRNAME ${QT_LIBRARIES_DIR})
     endif()
 
     linux_deploy_binary_file(DIRECT ${ORIG_DIRNAME} lib ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
@@ -819,12 +807,12 @@ macro(macos_deploy_qt_library LIBRARY_NAME)
 
     if(   "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
        OR "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
-        set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
+        set(REAL_QT_LIBRARIES_DIR ${QTWEBKIT_LIBRARIES_DIR})
     else()
-        set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
+        set(REAL_QT_LIBRARIES_DIR ${QT_LIBRARIES_DIR})
     endif()
 
-    macos_deploy_qt_file(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+    macos_deploy_qt_file(${REAL_QT_LIBRARIES_DIR}/${QT_FRAMEWORK_DIR}
                          ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                          ${QT_LIBRARY_NAME})
 endmacro()

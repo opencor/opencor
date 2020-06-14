@@ -253,8 +253,8 @@ if(   NOT ${QT_VERSION_MAJOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MAJOR}
 endif()
 
 set(QT_DIR ${_qt5Core_install_prefix})
-set(QT_BINARY_DIR ${QT_DIR}/bin)
-set(QT_LIBRARY_DIR ${QT_DIR}/lib)
+set(QT_BINARIES_DIR ${QT_DIR}/bin)
+set(QT_LIBRARIES_DIR ${QT_DIR}/lib)
 set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
 get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
@@ -600,7 +600,7 @@ elseif(NOT WIN32)
         #       within Qt Creator...
     endif()
 
-    set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
+    set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARIES_DIR} ${LINK_RPATH_FLAG}")
 endif()
 
 # Show what we are about to build
@@ -1268,8 +1268,8 @@ else()
         set(ORIG_MESA_FILENAME opengl32sw.dll)
         set(DEST_MESA_FILENAME opengl32.dll)
 
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARIES_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARIES_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     endif()
 endif()
 
@@ -1322,19 +1322,19 @@ if(WIN32)
 
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
-    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+    install(FILES ${QT_BINARIES_DIR}/${ORIG_MESA_FILENAME}
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${QT_LIBRARIES})
-        windows_deploy_qt_library(Qt5${QT_LIBRARY})
+        windows_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        foreach(QT_LIBRARY icudt icuin icuuc)
-            windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
+        foreach(ICU_LIBRARY dt in uc)
+            windows_deploy_icu_library(${ICU_LIBRARY})
         endforeach()
     endif()
 
