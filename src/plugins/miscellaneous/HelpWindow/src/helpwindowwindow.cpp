@@ -37,8 +37,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QHelpEngine>
 #include <QMenu>
 #include <QPoint>
-#include <QPrintDialog>
-#include <QPrinter>
 #include <QPrinterInfo>
 #include <QSettings>
 #include <QWebView>
@@ -271,15 +269,9 @@ void HelpWindowWindow::actionZoomOutTriggered()
 
 void HelpWindowWindow::actionPrintTriggered()
 {
-    // Retrieve the printer with which the user wants to print the help page
-    // and print it, should s/he still want to go ahead with the printing
+    // Print the page contents
 
-    QPrinter printer;
-    QPrintDialog printDialog(&printer);
-
-    if (printDialog.exec() == QDialog::Accepted) {
-        mHelpWindowWidget->webView()->print(&printer);
-    }
+    mHelpWindowWidget->print();
 }
 
 //==============================================================================

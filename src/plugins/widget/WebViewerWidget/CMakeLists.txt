@@ -12,5 +12,6 @@ add_plugin(WebViewerWidget
     PLUGINS
         Core
     QT_MODULES
+        PrintSupport
         WebKitWidgets
 )

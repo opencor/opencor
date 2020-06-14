@@ -35,7 +35,6 @@ add_plugin(HelpWindow
         WebViewerWidget
     QT_MODULES
         Help
-        PrintSupport
     DEPENDS_ON
         GenerateQtHelpFiles
 )

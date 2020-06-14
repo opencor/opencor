@@ -34,6 +34,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QHelpEvent>
 #include <QLayout>
 #include <QNetworkRequest>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPrinterInfo>
 #include <QSettings>
 #include <QTimer>
 #include <QToolTip>
@@ -426,6 +429,21 @@ void WebViewerWidget::setZoomingEnabled(bool pZoomingEnabled)
     // Set whether zooming in/out is enabled
 
     mZoomingEnabled = pZoomingEnabled;
+}
+
+//==============================================================================
+
+void WebViewerWidget::print()
+{
+    // Retrieve the printer with which the user wants to print the page and
+    // print it, should s/he still want to go ahead with it
+
+    QPrinter printer;
+    QPrintDialog printDialog(&printer);
+
+    if (printDialog.exec() == QDialog::Accepted) {
+        mWebView->print(&printer);
+    }
 }
 
 //==============================================================================

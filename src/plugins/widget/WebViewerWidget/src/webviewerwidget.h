@@ -149,6 +149,8 @@ public slots:
     void zoomIn();
     void zoomOut();
 
+    void print();
+
 private slots:
     void urlChanged(const QUrl &pUrl);
 
