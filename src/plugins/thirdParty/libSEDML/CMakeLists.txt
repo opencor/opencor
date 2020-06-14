@@ -178,6 +178,8 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libsedmlplugin.cpp
+    PLUGINS
+        libNuML
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

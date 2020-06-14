@@ -714,7 +714,7 @@ void MainWindow::loadSettings()
     // Retrieve the geometry and state of the main window
     // Note: we must do this after our various plugins have loaded their
     //       settings. Indeed, as part of this process, the Core plugin loads
-    //       previously laoded files, which in the case of remote files involves
+    //       previously loaded files, which in the case of remote files involves
     //       relying on SynchronousFileDownloader, which in turn relies on using
     //       a QEventLoop object to wait for the file to be downloaded and, on
     //       macOS, this prevents the geometry from being properly applied...
@@ -723,8 +723,6 @@ void MainWindow::loadSettings()
         || !restoreState(settings.value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
         // so go with some default settings
-
-        // Default size and position of the main window
 
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
         int horizSpace = availableGeometry.width()/13;
