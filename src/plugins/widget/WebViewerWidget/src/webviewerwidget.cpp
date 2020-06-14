@@ -335,14 +335,14 @@ Core::ProgressBarWidget * WebViewerWidget::progressBarWidget() const
 
 //==============================================================================
 
-QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
-                                                     QString &pTextContent)
+void WebViewerWidget::retrieveLinkInformation(QString &pLink,
+                                              QString &pTextContent)
 {
     // Retrieve the link and text content values for the link, if any, below our
     // mouse pointer
     // Note: normally, one would want to handle the linkHovered() signal, but it
     //       may provide the wrong information. Indeed, say that you are over a
-    //       link and then scroll down/up using your mouse wheel, and end up
+    //       link and then you scroll up/down using your mouse wheel, and end up
     //       over another link and click it. Now, because your mouse didn't
     //       move, no linkHovered() message will have been emitted (and
     //       handled), which means that if we need that information to process
@@ -351,21 +351,19 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
     static const QString A = "A";
 
     QWebHitTestResult hitTestResult = mWebView->page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
-    QWebElement res = hitTestResult.element();
+    QWebElement element = hitTestResult.element();
 
-    while (!res.isNull() && (res.tagName() != A)) {
-        res = res.parent();
+    while (!element.isNull() && (element.tagName() != A)) {
+        element = element.parent();
     }
 
-    if (res.isNull()) {
+    if (element.isNull()) {
         pLink = QString();
         pTextContent = QString();
     } else {
-        pLink = res.attribute("href");
+        pLink = element.attribute("href");
         pTextContent = hitTestResult.linkText();
     }
-
-    return res;
 }
 
 //==============================================================================
