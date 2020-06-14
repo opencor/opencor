@@ -93,6 +93,66 @@ PMRSupport::PmrWorkspaceFileNode * PmrWorkspacesWindowSynchronizeDialogItem::fil
 
 //==============================================================================
 
+PmrWorkspacesWindowSynchronizeDialogDifferenceData::PmrWorkspacesWindowSynchronizeDialogDifferenceData(const QString &pOperation,
+                                                                                                       const QChar &pTag,
+                                                                                                       const QString &pAddLineNumber,
+                                                                                                       const QString &pRemoveLineNumber,
+                                                                                                       const QString &pDifference) :
+    mOperation(pOperation),
+    mTag(pTag),
+    mAddLineNumber(pAddLineNumber),
+    mRemoveLineNumber(pRemoveLineNumber),
+    mDifference(pDifference)
+{
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialogDifferenceData::operation() const
+{
+    // Return our opereation
+
+    return mOperation;
+}
+
+//==============================================================================
+
+QChar PmrWorkspacesWindowSynchronizeDialogDifferenceData::tag() const
+{
+    // Return our tag
+
+    return mTag;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialogDifferenceData::addLineNumber() const
+{
+    // Return the line number that was added
+
+    return mAddLineNumber;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialogDifferenceData::removeLineNumber() const
+{
+    // Return the line number that was removed
+
+    return mRemoveLineNumber;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialogDifferenceData::difference() const
+{
+    // Return our difference
+
+    return mDifference;
+}
+
+//==============================================================================
+
 static const char *SettingsCellmlTextFormatSupport = "CellmlTextFormatSupport";
 static const char *SettingsHorizontalSplitterSizes = "HorizontalSplitterSizes";
 static const char *SettingsVerticalSplitterSizes   = "VerticalSplitterSizes";
@@ -695,26 +755,7 @@ static const char *Row = R"(    <tr class="%1">)""\n"
 
 //==============================================================================
 
-PmrWorkspacesWindowSynchronizeDialog::DifferenceData PmrWorkspacesWindowSynchronizeDialog::differenceData(const QString &pOperation,
-                                                                                                          const QString &pRemoveLineNumber,
-                                                                                                          const QString &pAddLineNumber,
-                                                                                                          const QChar &pTag,
-                                                                                                          const QString &pDifference)
-{
-    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res;
-
-    res.operation = pOperation;
-    res.removeLineNumber = pRemoveLineNumber;
-    res.addLineNumber = pAddLineNumber;
-    res.tag = pTag;
-    res.difference = pDifference;
-
-    return res;
-}
-
-//==============================================================================
-
-QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDifferencesData)
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(PmrWorkspacesWindowSynchronizeDialogDifferencesData &pDifferencesData)
 {
     // Make sure that we have some differences data
 
@@ -733,10 +774,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
     QString newString;
 
     for (const auto &differenceData : pDifferencesData) {
-        if (differenceData.tag == '+') {
-            newString += differenceData.difference+Separator;
+        if (differenceData.tag() == '+') {
+            newString += differenceData.difference()+Separator;
         } else {
-            oldString += differenceData.difference+Separator;
+            oldString += differenceData.difference()+Separator;
         }
     }
 
@@ -792,11 +833,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
     int removeLineNumber = -1;
 
     for (const auto &differenceData : pDifferencesData) {
-        html += QString(Row).arg(differenceData.operation,
-                                 differenceData.removeLineNumber,
-                                 differenceData.addLineNumber,
-                                 differenceData.tag,
-                                 (differenceData.tag == '+')?
+        html += QString(Row).arg(differenceData.operation(),
+                                 differenceData.removeLineNumber(),
+                                 differenceData.addLineNumber(),
+                                 differenceData.tag(),
+                                 (differenceData.tag() == '+')?
                                      newDiffStrings[++addLineNumber]:
                                      oldDiffStrings[++removeLineNumber]);
     }
@@ -858,7 +899,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     int addLineNumber = 0;
     int addMaxLineNumber = 0;
     int removeLineNumber = 0;
-    DifferencesData differencesData = DifferencesData();
+    PmrWorkspacesWindowSynchronizeDialogDifferencesData differencesData;
 
     for (const auto &difference : differencesList) {
         ++differenceNumber;
@@ -879,13 +920,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
             if (tag == '+') {
                 ++addLineNumber;
 
-                differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last add":"add",
-                                                  {}, QString::number(addLineNumber), '+', diff);
+                differencesData << PmrWorkspacesWindowSynchronizeDialogDifferenceData((differenceNumber == differenceMaxNumber)?"last add":"add",
+                                                                                      '+', QString::number(addLineNumber), {}, diff);
             } else if (tag == '-') {
                 ++removeLineNumber;
 
-                differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last remove":"remove",
-                                                  QString::number(removeLineNumber), {}, '-', diff);
+                differencesData << PmrWorkspacesWindowSynchronizeDialogDifferenceData((differenceNumber == differenceMaxNumber)?"last remove":"remove",
+                                                                                      '-', {}, QString::number(removeLineNumber), diff);
             } else if (addLineNumber != addMaxLineNumber) {
                 // Output any differences data that we may have
 
