@@ -67,6 +67,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <memory>
+
+//==============================================================================
+
 #include "qwtbegin.h"
     #include "qwt_wheel.h"
 #include "qwtend.h"
