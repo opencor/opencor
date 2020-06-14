@@ -658,7 +658,7 @@ endmacro()
 macro(windows_deploy_icu_library LIBRARY_NAME)
     # Deploy the ICU library
 
-    windows_deploy_binary_file(${QTWEBKIT_BINARIES_DIR} icu${LIBRARY_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    windows_deploy_binary_file(${QTWEBKIT_BINARIES_DIR} icu${LIBRARY_NAME}${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 endmacro()
 
 #===============================================================================
