@@ -712,26 +712,42 @@ endmacro()
 
 #===============================================================================
 
-macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
-    # Copy the Qt library to the build/lib folder, so we can test things without
-    # first having to deploy OpenCOR
+macro(linux_deploy_binary_file PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
+    # Copy the binary file to the build/lib folder, so we can test things
+    # without first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    copy_file_to_build_dir(${PROJECT_TARGET} ${DIRNAME} lib ${FILENAME})
+    copy_file_to_build_dir(${PROJECT_TARGET} ${ORIG_DIRNAME} ${DEST_DIRNAME} ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to an RPATH value
 
-    runpath2rpath(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
+    runpath2rpath(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
 
-    # Strip the Qt library of all its local symbols
+    # Strip the binary file of all its local symbols
 
-    strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
+    strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
 
+    # Deploy the binary file
+
+    install(FILES ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME}
+            DESTINATION ${DEST_DIRNAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+endmacro()
+
+#===============================================================================
+
+macro(linux_deploy_qt_library LIBRARY_NAME)
     # Deploy the Qt library
 
-    install(FILES ${PROJECT_BUILD_DIR}/lib/${FILENAME}
-            DESTINATION lib)
+    if(   "${LIBRARY_NAME}" STREQUAL "${WEBKIT}"
+       OR "${LIBRARY_NAME}" STREQUAL "${WEBKITWIDGETS}")
+        set(ORIG_DIRNAME ${QTWEBKIT_LIBRARIES_DIR})
+    else()
+        set(ORIG_DIRNAME ${QT_LIBRARY_DIR})
+    endif()
+
+    linux_deploy_binary_file(DIRECT ${ORIG_DIRNAME} lib ${LIBRARY_NAME})
 endmacro()
 
 #===============================================================================

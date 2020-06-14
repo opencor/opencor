@@ -1507,21 +1507,9 @@ else()
     endforeach()
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and macOS, we don't have a macro for deploying
-    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
-    #       file is appended to its suffix, so unless making the macro
-    #       unnecessarily cumbersome to use, it's better to deploy one Qt
-    #       library at a time...
 
     foreach(QT_LIBRARY ${QT_LIBRARIES} DBus XcbQpa)
-        if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
-           OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
-            set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
-        else()
-            set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
-        endif()
-
-        linux_deploy_qt_library(DIRECT ${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        linux_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR
