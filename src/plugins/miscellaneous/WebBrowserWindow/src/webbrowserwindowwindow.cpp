@@ -229,32 +229,32 @@ static const char *SettingsUrl = "Url";
 
 void WebBrowserWindowWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve our current URL (and load it)
-
-    mUrlValue->setText(pSettings.value(SettingsUrl).toString());
-
-    returnPressed();
-
     // Retrieve the settings of our Web browser window widget
 
     pSettings.beginGroup(mWebBrowserWindowWidget->objectName());
         mWebBrowserWindowWidget->loadSettings(pSettings);
     pSettings.endGroup();
+
+    // Retrieve our current URL (and load it)
+
+    mUrlValue->setText(pSettings.value(SettingsUrl).toString());
+
+    returnPressed();
 }
 
 //==============================================================================
 
 void WebBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 {
-    // Keep track of our current URL
-
-    pSettings.setValue(SettingsUrl, mUrlValue->text());
-
     // Keep track of the settings of our Web browser window widget
 
     pSettings.beginGroup(mWebBrowserWindowWidget->objectName());
         mWebBrowserWindowWidget->saveSettings(pSettings);
     pSettings.endGroup();
+
+    // Keep track of our current URL
+
+    pSettings.setValue(SettingsUrl, mUrlValue->text());
 }
 
 //==============================================================================
