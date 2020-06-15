@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
@@ -38,11 +39,16 @@ PLUGININFO_FUNC WebViewerWidgetPluginInfo();
 
 //==============================================================================
 
-class WebViewerWidgetPlugin : public QObject
+class WebViewerWidgetPlugin : public QObject, public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.WebViewerWidgetPlugin" FILE "webviewerwidgetplugin.json")
+
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
+public:
+#include "plugininterface.inl"
 };
 
 //==============================================================================

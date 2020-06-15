@@ -400,17 +400,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
         qApp->setProperty("OpenCOR::aboutToQuit()", true);
 
-        // Delete any Web inspector window (which may have been created through
-        // our use of QtWebKit)
-
-        static const QString QWebInspectorClassWindow = "QWebInspectorClassWindow";
-
-        for (auto window : QGuiApplication::topLevelWindows()) {
-            if (window->objectName() == QWebInspectorClassWindow) {
-                window->close();
-            }
-        }
-
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
         //       some settings (e.g. docked windows) won't be properly saved...

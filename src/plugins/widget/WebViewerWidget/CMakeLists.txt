@@ -4,8 +4,8 @@ project(WebViewerWidgetPlugin)
 
 add_plugin(WebViewerWidget
     SOURCES
-        ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
 
         src/webviewerwidget.cpp
         src/webviewerwidgetplugin.cpp
