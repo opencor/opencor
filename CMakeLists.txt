@@ -253,8 +253,8 @@ if(   NOT ${QT_VERSION_MAJOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MAJOR}
 endif()
 
 set(QT_DIR ${_qt5Core_install_prefix})
-set(QT_BINARY_DIR ${QT_DIR}/bin)
-set(QT_LIBRARY_DIR ${QT_DIR}/lib)
+set(QT_BINARIES_DIR ${QT_DIR}/bin)
+set(QT_LIBRARIES_DIR ${QT_DIR}/lib)
 set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
 get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
@@ -429,6 +429,32 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     find_package(Qt5${REQUIRED_QT_MODULE} REQUIRED)
 endforeach()
 
+# Common Qt libraries
+
+set(QT_LIBRARIES
+    Core
+    Gui
+    Help
+    Multimedia
+    MultimediaWidgets
+    Network
+    OpenGL
+    Positioning
+    PrintSupport
+    Qml
+    Quick
+    Sensors
+    Sql
+    Svg
+    ${TEST}
+    WebChannel
+    ${WEBKIT}
+    ${WEBKITWIDGETS}
+    Widgets
+    Xml
+    XmlPatterns
+)
+
 # On macOS, keep track of the Qt libraries against which we need to link and
 # make sure that we always use their release version
 # Note: indeed, from Qt 5.12.5, to build a debug version of a Qt-based
@@ -441,36 +467,11 @@ if(APPLE)
         set(TEST Test)
     endif()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        set(WEBKIT WebKit)
-        set(WEBKITWIDGETS WebKitWidgets)
-    endif()
-
     set(MACOS_QT_LIBRARIES
+        ${QT_LIBRARIES}
         Concurrent
-        Core
         DBus
-        Gui
-        Help
         MacExtras
-        Multimedia
-        MultimediaWidgets
-        Network
-        OpenGL
-        Positioning
-        PrintSupport
-        Qml
-        Quick
-        Sensors
-        Sql
-        Svg
-        ${TEST}
-        WebChannel
-        ${WEBKIT}
-        ${WEBKITWIDGETS}
-        Widgets
-        Xml
-        XmlPatterns
     )
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
@@ -531,7 +532,7 @@ if(RELEASE_MODE)
     if(NOT WIN32 AND NOT APPLE)
         set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
         # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
-        #          of OpenCOR or one its shared libraries...
+        #          of OpenCOR or one of its shared libraries...
         # Note #2: the above linking option has become obsolete on macOS...
     endif()
 
@@ -599,7 +600,7 @@ elseif(NOT WIN32)
         #       within Qt Creator...
     endif()
 
-    set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
+    set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARIES_DIR} ${LINK_RPATH_FLAG}")
 endif()
 
 # Show what we are about to build
@@ -635,7 +636,7 @@ endif()
 
 set(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 
-file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
+file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}\n")
 
 track_files(${VERSION_DATE_FILENAME})
 
@@ -1164,7 +1165,7 @@ if(APPLE)
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        macos_deploy_qt_library(Qt${QT_LIBRARY})
+        macos_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR
@@ -1267,8 +1268,8 @@ else()
         set(ORIG_MESA_FILENAME opengl32sw.dll)
         set(DEST_MESA_FILENAME opengl32.dll)
 
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARIES_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARIES_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     endif()
 endif()
 
@@ -1321,19 +1322,19 @@ if(WIN32)
 
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
-    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+    install(FILES ${QT_BINARIES_DIR}/${ORIG_MESA_FILENAME}
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
     # Qt libraries required by OpenCOR
 
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
-        windows_deploy_qt_library(Qt5${QT_LIBRARY})
+    foreach(QT_LIBRARY ${QT_LIBRARIES})
+        windows_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        foreach(QT_LIBRARY icudt icuin icuuc)
-            windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
+        foreach(ICU_LIBRARY dt in uc)
+            windows_deploy_icu_library(${ICU_LIBRARY})
         endforeach()
     endif()
 
@@ -1506,21 +1507,9 @@ else()
     endforeach()
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and macOS, we don't have a macro for deploying
-    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
-    #       file is appended to its suffix, so unless making the macro
-    #       unnecessarily cumbersome to use, it's better to deploy one Qt
-    #       library at a time...
 
-    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
-        if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
-           OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
-            set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
-        else()
-            set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
-        endif()
-
-        linux_deploy_qt_library(DIRECT ${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    foreach(QT_LIBRARY ${QT_LIBRARIES} DBus XcbQpa)
+        linux_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR

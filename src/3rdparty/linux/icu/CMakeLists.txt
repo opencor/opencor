@@ -101,5 +101,5 @@ else()
 endif()
 
 foreach(ICU_LIBRARY ${ICUDATA_SHARED_LIBRARY} ${ICUI18N_SHARED_LIBRARY} ${ICUUC_SHARED_LIBRARY})
-    linux_deploy_qt_library(${DEPLOY_TARGET} ${LOCAL_ICU_LIB_DIR} ${ICU_LIBRARY})
+    linux_deploy_binary_file(${DEPLOY_TARGET} ${LOCAL_ICU_LIB_DIR} lib ${ICU_LIBRARY})
 endforeach()

@@ -796,8 +796,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
             urlsIterator.next();
 
             if (!urlsIterator.value().second) {
-                QString url = urlsIterator.key();
-                PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
+                PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(urlsIterator.key());
 
                 if (workspace != nullptr) {
                     // The workspace is known, so ask our workspace manager to

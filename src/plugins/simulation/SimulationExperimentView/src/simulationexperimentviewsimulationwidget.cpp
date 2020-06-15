@@ -67,6 +67,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <memory>
+
+//==============================================================================
+
 #include "qwtbegin.h"
     #include "qwt_wheel.h"
 #include "qwtend.h"
@@ -2821,7 +2825,11 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
     // people know about the problem
 
     if (problem == None) {
-        // Everything is fine, so do the actual import
+        // Everything is fine, so do the actual import, waiting for the import
+        // to be done before carrying on
+        // Note: this is needed since we may have to import several files and we
+        //       don't want the GUI to be all messed up (e.g. with the progress
+        //       with an import "overlapping" with that of another)...
 
         Core::showCentralProgressBusyWidget();
 
@@ -2838,17 +2846,16 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
         connect(this, &SimulationExperimentViewSimulationWidget::importDone,
                 this, &SimulationExperimentViewSimulationWidget::resetDataStoreImporterConnections);
 
-        dataStoreImporter->importData(dataStoreImportData);
-
-        // Wait for the import to be done before carrying on
-        // Note: this is needed since we may have to import several files and we
-        //       don't want the GUI to be all messed up (e.g. with the progress
-        //       with an import "overlapping" with that of another)...
-
         QEventLoop waitLoop;
+        auto connection = std::make_shared<QMetaObject::Connection>();
 
-        connect(this, &SimulationExperimentViewSimulationWidget::importDone,
-                &waitLoop, &QEventLoop::quit);
+        *connection = connect(this, &SimulationExperimentViewSimulationWidget::importDone, [&]() {
+            waitLoop.quit();
+
+            disconnect(*connection);
+        });
+
+        dataStoreImporter->importData(dataStoreImportData);
 
         waitLoop.exec();
 

@@ -400,17 +400,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
         qApp->setProperty("OpenCOR::aboutToQuit()", true);
 
-        // Delete any Web inspector window (which may have been created through
-        // our use of QtWebKit)
-
-        static const QString QWebInspectorClassWindow = "QWebInspectorClassWindow";
-
-        for (auto window : QGuiApplication::topLevelWindows()) {
-            if (window->objectName() == QWebInspectorClassWindow) {
-                window->close();
-            }
-        }
-
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
         //       some settings (e.g. docked windows) won't be properly saved...
@@ -714,7 +703,7 @@ void MainWindow::loadSettings()
     // Retrieve the geometry and state of the main window
     // Note: we must do this after our various plugins have loaded their
     //       settings. Indeed, as part of this process, the Core plugin loads
-    //       previously laoded files, which in the case of remote files involves
+    //       previously loaded files, which in the case of remote files involves
     //       relying on SynchronousFileDownloader, which in turn relies on using
     //       a QEventLoop object to wait for the file to be downloaded and, on
     //       macOS, this prevents the geometry from being properly applied...
@@ -723,8 +712,6 @@ void MainWindow::loadSettings()
         || !restoreState(settings.value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
         // so go with some default settings
-
-        // Default size and position of the main window
 
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
         int horizSpace = availableGeometry.width()/13;

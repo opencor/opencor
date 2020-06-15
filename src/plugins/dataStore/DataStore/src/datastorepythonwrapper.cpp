@@ -89,8 +89,8 @@ static PyObject * DataStoreValuesDict_subscript(PyObject *pValuesDict,
 //==============================================================================
 
 using DataStoreValuesDictObject = struct {
-                                             PyDictObject mDict;
-                                             SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
+                                             PyDictObject dict;
+                                             SimulationSupport::SimulationDataUpdatedFunction *simulationDataUpdatedFunction;
                                          };
 
 //==============================================================================
@@ -119,7 +119,7 @@ static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
             // Let our SimulationData object know that simulation data values
             // have been updated
 
-            auto simulationDataUpdatedFunction = reinterpret_cast<DataStoreValuesDictObject *>(pValuesDict)->mSimulationDataUpdatedFunction;
+            auto simulationDataUpdatedFunction = reinterpret_cast<DataStoreValuesDictObject *>(pValuesDict)->simulationDataUpdatedFunction;
 
             if (simulationDataUpdatedFunction != nullptr) {
                 (*simulationDataUpdatedFunction)();
@@ -365,7 +365,7 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pD
 
     res->ob_type = &DataStoreValuesDict_Type;
 
-    reinterpret_cast<DataStoreValuesDictObject *>(res)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
+    reinterpret_cast<DataStoreValuesDictObject *>(res)->simulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
     if (pDataStoreValues != nullptr) {
         for (int i = 0, iMax = pDataStoreValues->size(); i < iMax; ++i) {

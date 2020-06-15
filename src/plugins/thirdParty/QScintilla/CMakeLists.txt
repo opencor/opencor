@@ -138,7 +138,7 @@ else()
 
         if(APPLE)
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
-                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARIES_DIR} ${SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyLibrary)
         else()

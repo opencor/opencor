@@ -88,6 +88,35 @@ using PmrWorkspacesWindowSynchronizeDialogItems = QList<PmrWorkspacesWindowSynch
 
 //==============================================================================
 
+class PmrWorkspacesWindowSynchronizeDialogDifferenceData
+{
+public:
+    explicit PmrWorkspacesWindowSynchronizeDialogDifferenceData(const QString &pOperation,
+                                                                const QChar &pTag,
+                                                                const QString &pAddLineNumber,
+                                                                const QString &pRemoveLineNumber,
+                                                                const QString &pDifference);
+
+    QString operation() const;
+    QChar tag() const;
+    QString addLineNumber() const;
+    QString removeLineNumber() const;
+    QString difference() const;
+
+private:
+    QString mOperation;
+    QChar mTag;
+    QString mAddLineNumber;
+    QString mRemoveLineNumber;
+    QString mDifference;
+};
+
+//==============================================================================
+
+using PmrWorkspacesWindowSynchronizeDialogDifferencesData = QList<PmrWorkspacesWindowSynchronizeDialogDifferenceData>;
+
+//==============================================================================
+
 class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 {
     Q_OBJECT
@@ -106,16 +135,6 @@ protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
-    using DifferenceData = struct {
-        QString operation;
-        QString removeLineNumber;
-        QString addLineNumber;
-        QChar tag;
-        QString difference;
-    };
-
-    using DifferencesData = QList<DifferenceData>;
-
     PMRSupport::PmrWorkspace *mWorkspace;
 
     QString mDiffTemplate;
@@ -153,13 +172,7 @@ private:
 
     bool cellmlText(const QString &pFileName, QString &pCellmlText);
 
-    DifferenceData differenceData(const QString &pOperation,
-                                  const QString &pRemoveLineNumber,
-                                  const QString &pAddLineNumber,
-                                  const QChar &pTag,
-                                  const QString &pDifference);
-
-    QString diffHtml(DifferencesData &pDifferencesData);
+    QString diffHtml(PmrWorkspacesWindowSynchronizeDialogDifferencesData &pDifferencesData);
     QString diffHtml(const QString &pOld, const QString &pNew);
     QString diffHtml(const QString &pFileName);
 

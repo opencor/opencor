@@ -154,7 +154,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     Core::writeResourceToFile(mQchFileName, ":HelpWindow_qchFile");
     Core::writeResourceToFile(mQhcFileName, ":HelpWindow_qhcFile");
 
-    // Set up the help engine
+    // Set up our help engine
 
     mHelpEngine = new QHelpEngine(mQhcFileName);
 

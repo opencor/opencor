@@ -145,24 +145,24 @@ static const char *WorkspaceProperty  = "Workspace";
 
 PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
 {
-    // Retrieve and return the workspace for the given URL
+    // Retrieve and return the workspace for the given URL and only return when
+    // the PMR response has been processed
 
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
     if (pmrResponse != nullptr) {
+        QEventLoop waitLoop;
+
+        connect(pmrResponse, &PmrWebServiceResponse::finished, [&]() {
+            waitLoop.quit();
+        });
+
         PmrWorkspace *workspace = nullptr;
 
         pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue(reinterpret_cast<void *>(&workspace)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::workspaceResponse);
-
-        // Don't return until the PMR response has been processed
-
-        QEventLoop waitLoop;
-
-        connect(pmrResponse, &PmrWebServiceResponse::finished,
-                &waitLoop, &QEventLoop::quit);
 
         waitLoop.exec();
 
@@ -535,23 +535,23 @@ QString PmrWebService::siteName() const
 
 void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
-    // Request credentials for the given workspace
+    // Request credentials for the given workspace and only return when the PMR
+    // response has been processed
 
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url()+"/request_temporary_password",
                                                                         true, true);
 
     if (pmrResponse != nullptr) {
+        QEventLoop waitLoop;
+
+        connect(pmrResponse, &PmrWebServiceResponse::finished, [&]() {
+            waitLoop.quit();
+        });
+
         pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue(reinterpret_cast<void *>(pWorkspace)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::workspaceCredentialsResponse);
-
-        // Don't return until the PMR response has been processed
-
-        QEventLoop waitLoop;
-
-        connect(pmrResponse, &PmrWebServiceResponse::finished,
-                &waitLoop, &QEventLoop::quit);
 
         waitLoop.exec();
     }
