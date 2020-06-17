@@ -107,10 +107,10 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c62e23d1f58207f18aa9e7dd3e5b2d3a26a205b1
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 59b479c7910e0f733529a961416917b0bc7349ab
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 14c406fdfda673939cd1a3f40712b04e549841b7
+                              SHA1_VALUES 682ca57d38d0cf0788994c5e89c2d9d48066d2fb
                                           6bdbe1b4dc471cf480a7a8060a4faeaac93c288b)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
