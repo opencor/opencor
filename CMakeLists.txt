@@ -1170,8 +1170,6 @@ if(APPLE)
 
     # Qt plugins required by OpenCOR
 
-    macos_deploy_qt_plugins(imageformats qjpeg)
-    macos_deploy_qt_plugins(mediaservice qavfmediaplayer)
     macos_deploy_qt_plugins(platforms qcocoa)
     macos_deploy_qt_plugins(printsupport cocoaprintersupport)
     macos_deploy_qt_plugins(sqldrivers qsqlite)
@@ -1340,7 +1338,6 @@ if(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    windows_deploy_qt_plugins(imageformats qjpeg)
     windows_deploy_qt_plugins(platforms qwindows)
     windows_deploy_qt_plugins(printsupport windowsprintersupport)
     windows_deploy_qt_plugins(sqldrivers qsqlite)
@@ -1514,7 +1511,6 @@ else()
 
     # Qt plugins required by OpenCOR
 
-    linux_deploy_qt_plugins(imageformats qjpeg)
     linux_deploy_qt_plugins(platforms qxcb)
     linux_deploy_qt_plugins(printsupport cupsprintersupport)
     linux_deploy_qt_plugins(sqldrivers qsqlite)
