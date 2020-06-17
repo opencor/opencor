@@ -130,10 +130,10 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           10bc9af862014f39d56c415fba2d13b99298a06a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 36fcd52369ecde51724313a0eb524e561d25fa1c
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ef3c5dd98918eaff4867353bc73cd0f3466a05a8
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6b1589d17e38775d13840e7f80b35778a27b89ec
+                              SHA1_VALUES 6345fb582aaceac43ac9a3ad5aa941da41b188cf
                                           16dff00c115249136795a0162f639043a9e8e353)
     endif()
 else()
