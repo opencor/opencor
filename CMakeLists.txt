@@ -592,7 +592,7 @@ if(APPLE)
 elseif(NOT WIN32)
     set(CMAKE_SKIP_RPATH TRUE)
 
-    set(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
+    set(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../../lib' -Wl,-rpath,'$ORIGIN/../lib'")
 
     if(NOT RELEASE_MODE)
         set(LINK_RPATH_FLAG "${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/lib'")
@@ -1500,6 +1500,19 @@ else()
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
         get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+        install(FILES ${REAL_FULL_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_LIBRARY})
+    endforeach()
+
+    # Library needed on Ubuntu 20.04 and later (while we build OpenCOR on Ubuntu
+    # 18.04 LTS?)
+
+    foreach(LIBRARY ffi.so.6)
+        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+
+        get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
 
         install(FILES ${REAL_FULL_LIBRARY}
                 DESTINATION lib

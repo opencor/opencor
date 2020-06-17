@@ -130,11 +130,11 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           10bc9af862014f39d56c415fba2d13b99298a06a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2a86672ba37d55a425d610272a8feb9a42e4b0df
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 36fcd52369ecde51724313a0eb524e561d25fa1c
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3b53c0a9c1bfed19ff5b774df1e3dc664d7eeb0b
-                                          05f8e8e332798e7a11b0d46de23f279f0e532126)
+                              SHA1_VALUES 6b1589d17e38775d13840e7f80b35778a27b89ec
+                                          16dff00c115249136795a0162f639043a9e8e353)
     endif()
 else()
     # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
