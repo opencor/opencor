@@ -13,14 +13,14 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tags for our libraries
 
-set(GIT_TAG v5.212.0-alpha4-opencor)
+set(GIT_TAG v5.212.0-alpha3-opencor)
 set(GIT_TAG_LIBJPEG 1.5.90)
 set(GIT_TAG_LIBPNG v1.6.34)
 set(GIT_TAG_ZLIB v1.2.11)
 
 # Release tag
 
-set(RELEASE_TAG v5.212.0-alpha4-opencor)
+set(RELEASE_TAG v5.212.0-alpha3-opencor)
 
 # Specify where our local package will be installed
 
@@ -98,43 +98,43 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 85a16500c778380f6a1a7168f8df60130b7cefd7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 4f2b929bc80a3d23ecb2e1e558cd358542242444
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 8a075f1f13de63fd9686d7778720c86efc7ef993
-                                              061145d8cb310f95cf59e16c38e069dc867f61d6
+                                  SHA1_VALUES 49094bb6f4060ee51ef3add6e46fbe4b138dc252
+                                              a61f75c32f9ec0802d79b437bca0a062e0e2bc07
                                               874175a6db51afe0902882f0b00f7855ab498c79
                                               47cb72ba7c899ca218be75dd89a0c0f900b968b8
                                               a386658900a742f31f1f08d55c0915d577af2d7e
-                                              d589f42e6b4934459c88c61317d267d63982be05
+                                              a7bde32bfba64fb037927b6e0355516cb4508ccc
                                               172fba699a361cc93597c4968cacd2cf44985095)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c9a75283ba7e073a505ed270ac6cf350381c12ec
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1ccbb8d582ee72789dcbc4e39c6988380baf1022
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 890790088c9d896da150dc260ca5bab770f5741d
-                                              475861625c5b0d587f28588e5ef9d7bc6a074653
+                                  SHA1_VALUES 8ddccd77d7dda04197233e8e3ec98e1ae0e884f8
+                                              2c07c561b44dbb7db1c046dcc849db3558ec1f22
                                               43497bf1a89173badccc0b945b43473cf5d5f12a
                                               2ef114df767c6fe4184ef458545ff8d71f4f4917
                                               5eeaf7c066cca05413a35bba5efc71526c46f478
-                                              342bc082f97553d663e08a48cf88e5feac8938ae
+                                              c4b431401965c2fb2f139ffd462fe0a52213a615
                                               7ddf6870922fc2eb7db94d3f037a5c9ba8dd450d)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bd1b04a70daf7561a29fa7b5ef61152a1aa69acf
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e4c32b340516792d4d16807b1cac28bd5181abbe
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2cfd594e76f05b3db2dd3274cb0dac222bb39cf6
-                                          10bc9af862014f39d56c415fba2d13b99298a06a)
+                              SHA1_VALUES 818ce4e16892876260559494c6ae56f16935fd38
+                                          06e5a1a883d52481d636a7fa790c745738bf20aa)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ef3c5dd98918eaff4867353bc73cd0f3466a05a8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2a8472a8894842cf515cac601705e4e8a4e80970
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6345fb582aaceac43ac9a3ad5aa941da41b188cf
-                                          16dff00c115249136795a0162f639043a9e8e353)
+                              SHA1_VALUES 360c9d2b13f651e3544fe994618178421fc04b8e
+                                          b7ec82ddcbb42f13783ef1c0ce3c67e97a1f980f)
     endif()
 else()
     # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
