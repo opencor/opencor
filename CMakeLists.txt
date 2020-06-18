@@ -563,12 +563,12 @@ add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 add_definitions(-DUNICODE)
 
-# On macOS, make sure that we support version 10.12 and later, unless a specific
+# On macOS, make sure that we support version 10.14 and later, unless a specific
 # deployment target has been specified
 
 if(APPLE)
     if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
     endif()
 
     set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
