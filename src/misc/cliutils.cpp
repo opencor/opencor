@@ -177,7 +177,7 @@ void initApplication(QString *pAppDate)
     qApp->setApplicationVersion(versionDataList.first());
 
     if (pAppDate != nullptr) {
-        *pAppDate = versionDataList.last();
+        *pAppDate = versionDataList[1];
     }
 }
 
