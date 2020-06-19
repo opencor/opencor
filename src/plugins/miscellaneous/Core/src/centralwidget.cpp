@@ -137,7 +137,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     auto layout = new QHBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -198,7 +198,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     auto centralWidget = new QWidget(this);
     auto centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
 
-    centralWidgetVBoxLayout->setContentsMargins(QMargins());
+    centralWidgetVBoxLayout->setContentsMargins({});
     centralWidgetVBoxLayout->setSpacing(0);
 
     centralWidget->setLayout(centralWidgetVBoxLayout);
@@ -354,7 +354,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
         }
 
-        QMap<int, int> modeViewTabIndexes = QMap<int, int>();
+        QMap<int, int> modeViewTabIndexes;
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
@@ -409,7 +409,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
             fileMode = mModeTabIndexModes.value(i);
 
             CentralWidgetMode *mode = mModes.value(fileMode);
-            QString viewPluginName = pSettings.value(QString(SettingsFileModeView).arg(QString(),
+            QString viewPluginName = pSettings.value(QString(SettingsFileModeView).arg({},
                                                                                        ViewInterface::modeAsString(fileMode))).toString();
             Plugins viewPlugins = mode->viewPlugins();
 
@@ -444,8 +444,8 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
     // Keep track of the files that are opened, skipping new files
 
     FileManager *fileManagerInstance = FileManager::instance();
-    QStringList fileNames = QStringList();
-    QStringList fileNamesOrUrls = QStringList();
+    QStringList fileNames;
+    QStringList fileNamesOrUrls;
 
     for (const auto &fileName : mFileNames) {
         if (!fileManagerInstance->isNew(fileName)) {
@@ -490,7 +490,7 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
     // Note: we don't rely on mFileTabs->currentIndex() since it may refer to a
     //       new file, which we will have been skipped above...
 
-    QString crtFileNameOrUrl = QString();
+    QString crtFileNameOrUrl;
 
     if (!fileNames.isEmpty()) {
         QString fileName = mFileNames[mFileTabs->currentIndex()];
@@ -514,7 +514,7 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
         ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
         CentralWidgetMode *mode = mModes.value(fileMode);
 
-        pSettings.setValue(QString(SettingsFileModeView).arg(QString(),
+        pSettings.setValue(QString(SettingsFileModeView).arg({},
                                                              ViewInterface::modeAsString(fileMode)),
                            mode->viewPlugins()[mode->viewTabs()->currentIndex()]->name());
     }
@@ -624,14 +624,14 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
 
-    static const QIcon NoIcon       = QIcon();
+    static const QIcon NoIcon;
     static const QIcon InternetIcon = QIcon(":/oxygen/categories/applications-internet.png");
-    static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
+    static const QIcon LockedIcon = QIcon(":/oxygen/status/object-locked.png");
 
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
     bool fileIsRemote = fileManagerInstance->isRemote(fileName);
-    QIcon tabIcon = QIcon();
+    QIcon tabIcon;
 
     if (!pIconOnly) {
         bool fileIsNew = fileManagerInstance->isNew(fileName);
@@ -1381,7 +1381,7 @@ void CentralWidget::addView(Plugin *pPlugin)
     if (!mModes.value(viewMode)->isEnabled()) {
         // There is no tab for the mode, so add one and enable it
 
-        int tabIndex = mModeTabs->addTab(QString());
+        int tabIndex = mModeTabs->addTab({});
 
         mModes.value(viewMode)->setEnabled(true);
 
@@ -1396,7 +1396,7 @@ void CentralWidget::addView(Plugin *pPlugin)
     CentralWidgetMode *mode = mModes.value(viewMode);
 
     mode->addViewPlugin(pPlugin);
-    mode->viewTabs()->addTab(QString());
+    mode->viewTabs()->addTab({});
 }
 
 //==============================================================================
@@ -1639,7 +1639,7 @@ void CentralWidget::updateGui()
             // We are opening a file, so determine the default views that we
             // should try and if there are none, then try the Raw Text view
 
-            QStringList defaultViews = QStringList();
+            QStringList defaultViews;
 
             for (auto plugin : mLoadedFileTypePlugins) {
                 FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
@@ -1989,13 +1989,13 @@ void CentralWidget::updateModifiedSettings()
     // tabs
 
     mModeTabs->setEnabled(true);
-    mModeTabs->setToolTip(QString());
+    mModeTabs->setToolTip({});
 
     for (auto mode : mModes) {
         TabBarWidget *viewTabs = mode->viewTabs();
 
         viewTabs->setEnabled(true);
-        viewTabs->setToolTip(QString());
+        viewTabs->setToolTip({});
     }
 
     // Enable/disable the Mode tabs and the current mode's View tabs, in case
@@ -2181,7 +2181,7 @@ void CentralWidget::updateStatusBarWidgets(const QList<QWidget *> &pWidgets)
 {
     // Remove (hide) our existing status bar widgets
 
-    static QList<QWidget *> statusBarWidgets = QList<QWidget *>();
+    static QList<QWidget *> statusBarWidgets;
 
     for (auto statusBarWidget : statusBarWidgets) {
         mainWindow()->statusBar()->removeWidget(statusBarWidget);

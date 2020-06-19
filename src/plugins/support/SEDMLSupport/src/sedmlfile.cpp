@@ -77,7 +77,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
 //==============================================================================
 
 SedmlFile::SedmlFile(const QString &pFileName, bool pNew) :
-    SedmlFile(pFileName, QString(), pNew)
+    SedmlFile(pFileName, {}, pNew)
 {
 }
 
@@ -345,7 +345,7 @@ bool SedmlFile::isValid()
 {
     // Return whether we are valid
 
-    return isValid(QString(), mIssues);
+    return isValid({}, mIssues);
 }
 
 //==============================================================================
@@ -413,7 +413,7 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
     // Check whether the given list property is valid
 
     if (!pValuesList.contains(pPropertyNodeValue)) {
-        QString values = QString();
+        QString values;
         int i = -1;
         int lastValueIndex = pValuesList.count()-1;
 
@@ -728,14 +728,14 @@ bool SedmlFile::isSupported()
     libsedml::SedRepeatedTask *repeatedTask = nullptr;
 
     bool repeatedTaskOk = false;
-    std::string repeatedTaskFirstSubTaskId = std::string();
-    std::string repeatedTaskSecondSubTaskId = std::string();
+    std::string repeatedTaskFirstSubTaskId;
+    std::string repeatedTaskSecondSubTaskId;
 
     bool firstSubTaskOk = false;
-    std::string firstSubTaskId = std::string();
+    std::string firstSubTaskId;
 
     bool secondSubTaskOk = false;
-    std::string secondSubTaskId = std::string();
+    std::string secondSubTaskId;
 
     for (uint i = 0; i < totalNbOfTasks; ++i) {
         auto task = static_cast<libsedml::SedTask *>(mSedmlDocument->getTask(i));
@@ -1007,15 +1007,44 @@ bool SedmlFile::isSupported()
 
                         // Legend
 
-                        } else if (   (plot2dPropertyNodeName == Legend)
-                                   && (plot2dPropertyNodeValue != TrueValue)
-                                   && (plot2dPropertyNodeValue != FalseValue)) {
+                        } else if (    (plot2dPropertyNodeName == Legend)
+                                   && !plot2dPropertyNodeValue.isEmpty()
+                                   &&  (plot2dPropertyNodeValue != TrueValue)
+                                   &&  (plot2dPropertyNodeValue != FalseValue)) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
                                                       tr("the '%1' property must have a value of 'true' or 'false'").arg(Legend));
 
                             return false;
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == Legend)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                libsbml::XMLNode &legendPropertyNode = plot2dPropertyNode.getChild(l);
+                                QString legendPropertyNodeName = QString::fromStdString(legendPropertyNode.getName());
+                                QString legendPropertyNodeValue = QString::fromStdString(legendPropertyNode.getChild(0).getCharacters());
+
+                                if (    (legendPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(legendPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(legendPropertyNode.getLine()),
+                                                              int(legendPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(legendPropertyNodeName));
+
+                                    return false;
+                                }
+
+                                if (   (legendPropertyNodeName == Visible)
+                                    && (legendPropertyNodeValue != TrueValue)
+                                    && (legendPropertyNodeValue != FalseValue)) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(legendPropertyNode.getLine()),
+                                                              int(legendPropertyNode.getColumn()),
+                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(LogarithmicScale));
+
+                                    return false;
+                                }
+                            }
 
                         // Point coordinates
 
@@ -1050,6 +1079,16 @@ bool SedmlFile::isSupported()
                                     && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, FontColor)) {
                                     return false;
                                 }
+
+                                if (    (pointCoordinatesPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(pointCoordinatesPropertyNode.getLine()),
+                                                              int(pointCoordinatesPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(pointCoordinatesPropertyNodeName));
+
+                                    return false;
+                                }
                             }
 
                         // Surrounding area
@@ -1077,13 +1116,23 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == XAxis)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                // Note: we don't need to check for the title since
-                                //       it is a string and that it can therefore
-                                //       have any value...
+                                // Note: we don't need to check for the title
+                                //       since it is a string and that it can
+                                //       therefore have any value...
 
                                 libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                                 QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
+
+                                if (    (xAxisPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(xAxisPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(xAxisPropertyNode.getLine()),
+                                                              int(xAxisPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(xAxisPropertyNodeName));
+
+                                    return false;
+                                }
 
                                 if (   (xAxisPropertyNodeName == LogarithmicScale)
                                     && (xAxisPropertyNodeValue != TrueValue)
@@ -1102,13 +1151,23 @@ bool SedmlFile::isSupported()
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
                                    && (QString::fromStdString(plot2dPropertyNode.getName()) == YAxis)) {
                             for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
-                                // Note: we don't need to check for the title since
-                                //       it is a string and that it can therefore
-                                //       have any value...
+                                // Note: we don't need to check for the title
+                                //       since it is a string and that it can
+                                //       therefore have any value...
 
                                 libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                                 QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+
+                                if (    (yAxisPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(yAxisPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(yAxisPropertyNode.getLine()),
+                                                              int(yAxisPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(yAxisPropertyNodeName));
+
+                                    return false;
+                                }
 
                                 if (   (yAxisPropertyNodeName == LogarithmicScale)
                                     && (yAxisPropertyNodeValue != TrueValue)
@@ -1153,6 +1212,16 @@ bool SedmlFile::isSupported()
 
                                 if (    (zoomRegionPropertyNodeName == FontColor)
                                     && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FontColor)) {
+                                    return false;
+                                }
+
+                                if (    (zoomRegionPropertyNodeName == FontSize)
+                                    && !IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(zoomRegionPropertyNode.getLine()),
+                                                              int(zoomRegionPropertyNode.getColumn()),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(zoomRegionPropertyNodeName));
+
                                     return false;
                                 }
 

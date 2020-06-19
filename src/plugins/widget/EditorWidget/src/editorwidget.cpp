@@ -48,7 +48,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -599,7 +599,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible, bool pSelectWord)
     //       reactivate our find/replace widget...
 
     if (pVisible) {
-        QString selText = QString();
+        QString selText;
 
         if (hasSelectedText()) {
             selText = selectedText();

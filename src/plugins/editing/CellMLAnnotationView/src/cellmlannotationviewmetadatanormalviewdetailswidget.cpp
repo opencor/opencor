@@ -239,7 +239,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             addRdfTriple(rdfTriple, false);
         }
     } else {
-        mOutputOntologicalTerms->webView()->setHtml(QString());
+        mOutputOntologicalTerms->webView()->setHtml({});
     }
 
     // Do additional GUI updates
@@ -306,7 +306,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
         mUrls.insert(pRdfTriple->resource(), resourceUrl(pRdfTriple->resource()));
     }
 
-    mUrls.insert(rdfTripleInformation, idUrl(pRdfTriple->resource(), pRdfTriple->id()));
+    mUrls.insert(rdfTripleInformation, idUrl(pRdfTriple->id()));
 
     mRdfTripleInformationSha1s << rdfTripleInformationSha1;
 
@@ -323,7 +323,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     if (pNeedAdditionalGuiUpdates) {
         mLookUpRdfTripleInformation = Information::Last;
 
-        additionalGuiUpdates(QString(), InformationType::None, mLookUpRdfTripleInformation);
+        additionalGuiUpdates({}, InformationType::None, mLookUpRdfTripleInformation);
     }
 }
 
@@ -431,7 +431,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
         break;
     case InformationType::Id:
-        emit idLookUpRequested(resource, id);
+        emit idLookUpRequested(id);
 
         break;
     }
@@ -583,7 +583,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
+    QString linkToolTip;
 
     if (!link.isEmpty()) {
         if (textContent.isEmpty()) {

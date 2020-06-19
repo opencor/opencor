@@ -34,16 +34,16 @@ QString resourceUrl(const QString &pResource)
 {
     // Return the URL for the given resource
 
-    return "https://identifiers.org/"+pResource+"/?redirect=true";
+    return "https://registry.identifiers.org/registry/"+pResource;
 }
 
 //==============================================================================
 
-QString idUrl(const QString &pResource, const QString &pId)
+QString idUrl(const QString &pId)
 {
     // Return the URL for the given resource
 
-    return "https://identifiers.org/"+pResource+"/"+pId+"/?profile=most_reliable&redirect=true";
+    return "https://identifiers.org/"+pId;
 }
 
 //==============================================================================

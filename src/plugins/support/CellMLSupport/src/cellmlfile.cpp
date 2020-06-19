@@ -102,7 +102,7 @@ void CellmlFile::reset()
     mRdfTriples.clear();
     mIssues.clear();
 
-    Core::FileManager::instance()->setDependencies(mFileName, QStringList());
+    Core::FileManager::instance()->setDependencies(mFileName, {});
 
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
@@ -146,8 +146,7 @@ void CellmlFile::retrieveImports(const QString &pXmlBase,
 {
     // Retrieve all the imports of the given model
 
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = pModel->imports()->iterateImports();
 
     for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
          import != nullptr; import = importsIter->nextImport()) {
@@ -173,7 +172,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
     if (   ((pModel != mModel) || mFullInstantiationNeeded)
         && (cellmlVersion != Version::Unknown)
         && (cellmlVersion != Version::Cellml_1_0)) {
-        QStringList dependencies = QStringList();
+        QStringList dependencies;
 
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
@@ -188,8 +187,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
             // Retrieve the list of imports, together with their XML base values
 
             ObjRef<iface::cellml_api::URI> baseUri = pModel->xmlBase();
-            QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
-            QStringList importXmlBaseList = QStringList();
+            QList<iface::cellml_api::CellMLImport *> importList;
+            QStringList importXmlBaseList;
 
             retrieveImports(QString::fromStdWString(baseUri->asText()),
                             pModel, importList, importXmlBaseList);
@@ -211,8 +210,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     //       retrieve the contents of the import ourselves and
                     //       instantiate it from text instead...
 
-                    ObjRef<iface::cellml_api::URI> xlinkHref = import->xlinkHref();
-                    QString xlinkHrefString = QString::fromStdWString(xlinkHref->asText());
+                    QString xlinkHrefString = QString::fromStdWString(import->xlinkHref()->asText());
                     QString url = QUrl(importXmlBase).resolved(xlinkHrefString).toString();
                     bool isLocalFile;
                     QString fileNameOrUrl;
@@ -334,8 +332,7 @@ bool CellmlFile::load(const QString &pFileContents,
 
     // Get a bootstrap object and its model loader
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = CreateCellMLBootstrap()->modelLoader();
 
     // Try to create the model
 
@@ -394,8 +391,7 @@ void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElem
 
     // Do the same for all the child elements of the given CellML element
 
-    ObjRef<iface::cellml_api::CellMLElementSet> childElements = pElement->childElements();
-    ObjRef<iface::cellml_api::CellMLElementIterator> childElementsIter = childElements->iterate();
+    ObjRef<iface::cellml_api::CellMLElementIterator> childElementsIter = pElement->childElements()->iterate();
 
     try {
         for (ObjRef<iface::cellml_api::CellMLElement> childElement = childElementsIter->next();
@@ -450,7 +446,7 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-    if (!load(QString(), &mModel, mIssues)) {
+    if (!load({}, &mModel, mIssues)) {
         return false;
     }
 
@@ -464,8 +460,7 @@ bool CellmlFile::load()
 
         if (mRdfApiRepresentation != nullptr) {
             mRdfDataSource = mRdfApiRepresentation->source();
-            ObjRef<iface::rdf_api::TripleSet> rdfTriples = mRdfDataSource->getAllTriples();
-            ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
+            ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = mRdfDataSource->getAllTriples()->enumerateTriples();
 
             for (ObjRef<iface::rdf_api::Triple> rdfTriple = rdfTriplesEnumerator->getNextTriple();
                  rdfTriple != nullptr; rdfTriple = rdfTriplesEnumerator->getNextTriple()) {
@@ -544,7 +539,7 @@ bool CellmlFile::save(const QString &pFileName)
         }
     }
 
-    QStringList usedCmetaIds = QStringList();
+    QStringList usedCmetaIds;
 
     for (auto rdfTriple : mRdfTriples) {
         usedCmetaIds << rdfTriple->metadataId();
@@ -614,16 +609,14 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
         uint line = 0;
         uint column = 0;
-        QString importedFileName = QString();
-        QString importedFileInfo = QString();
+        QString importedFileName;
+        QString importedFileInfo;
 
         if (cellmlRepresentationValidityError != nullptr) {
             // We are dealing with a CellML representation issue, so determine
             // its line and column
 
-            ObjRef<iface::dom::Node> errorNode = cellmlRepresentationValidityError->errorNode();
-
-            line = vacssService->getPositionInXML(errorNode,
+            line = vacssService->getPositionInXML(cellmlRepresentationValidityError->errorNode(),
                                                   cellmlRepresentationValidityError->errorNodalOffset(),
                                                   &column);
         } else {
@@ -639,9 +632,7 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
                 ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
                 ObjRef<iface::cellml_api::CellMLDOMElement> cellmlDomElement = QueryInterface(cellmlElement);
 
-                ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
-
-                line = vacssService->getPositionInXML(domElement, 0, &column);
+                line = vacssService->getPositionInXML(cellmlDomElement->domElement(), 0, &column);
 
                 // Also determine its imported file, if any
 
@@ -661,9 +652,7 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
                         ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
 
                         if (importCellmlElement != nullptr) {
-                            ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
-
-                            importedFileInfo = QString::fromStdWString(xlinkHref->asText());
+                            importedFileInfo = QString::fromStdWString(importCellmlElement->xlinkHref()->asText());
                             importedFileName = Core::canonicalFileName(QFileInfo(mFileName).path()+"/"+importedFileInfo);
                         }
                     }
@@ -751,7 +740,7 @@ bool CellmlFile::isValid()
 {
     // Return whether we are valid
 
-    return isValid(QString(), &mModel, mIssues);
+    return isValid({}, &mModel, mIssues);
 }
 
 //==============================================================================
@@ -1014,9 +1003,7 @@ QString CellmlFile::xmlBase()
     // Return our base URI
 
     if (load()) {
-        ObjRef<iface::cellml_api::URI> baseUri = mModel->xmlBase();
-
-        return QString::fromStdWString(baseUri->asText());
+        return QString::fromStdWString(mModel->xmlBase()->asText());
     }
 
     return {};
@@ -1188,12 +1175,10 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
     ObjRef<iface::cellml_api::Model> model;
 
     try {
-        model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+        model = CreateCellMLBootstrap()->modelLoader()->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
     } catch (...) {
         return Version::Unknown;
     }
@@ -1207,12 +1192,10 @@ CellmlFile::Version CellmlFile::fileContentsVersion(const QString &pFileContents
 {
     // Return the version of the given CellML file contents
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
     ObjRef<iface::cellml_api::Model> model;
 
     try {
-        model = modelLoader->createFromText(pFileContents.toStdWString());
+        model = CreateCellMLBootstrap()->modelLoader()->createFromText(pFileContents.toStdWString());
     } catch (...) {
         return Version::Unknown;
     }

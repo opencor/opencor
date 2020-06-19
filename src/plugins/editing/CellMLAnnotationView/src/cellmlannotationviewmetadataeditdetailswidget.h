@@ -72,9 +72,9 @@ class CellmlAnnotationViewWidget;
 class CellmlAnnotationViewMetadataEditDetailsItem
 {
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsItem(const QString &pName = QString(),
-                                                         const QString &pResource = QString(),
-                                                         const QString &pId = QString());
+    explicit CellmlAnnotationViewMetadataEditDetailsItem(const QString &pName = {},
+                                                         const QString &pResource = {},
+                                                         const QString &pId = {});
 
     static bool compare(const CellmlAnnotationViewMetadataEditDetailsItem &pItem1,
                         const CellmlAnnotationViewMetadataEditDetailsItem &pItem2);
@@ -176,11 +176,10 @@ private:
     void updateOutputHeaders();
 
     void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
-                        bool pLookUpTerm,
-                        const QString &pErrorMessage = QString(),
+                        bool pLookUpTerm, const QString &pErrorMessage = {},
                         bool pHasInternetConnection = true);
 
-    void genericLookUp(const QString &pItemInformation = QString(),
+    void genericLookUp(const QString &pItemInformation = {},
                        InformationType pInformationType = InformationType::None);
 
     bool isDirectTerm(const QString &pTerm) const;
@@ -188,7 +187,7 @@ private:
 signals:
     void qualifierLookUpRequested(const QString &pQualifier);
     void resourceLookUpRequested(const QString &pResource);
-    void idLookUpRequested(const QString &pResource, const QString &pId);
+    void idLookUpRequested(const QString &pId);
     void noLookUpRequested();
 
 public slots:

@@ -49,7 +49,7 @@ PLUGININFO_FUNC RawSEDMLViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://sed-ml.org/">SED-ML</a> à l'aide d'un éditeur <a href="https://w3.org/XML">XML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
-                          QStringList() << "SEDMLEditingView",
+                          { "SEDMLEditingView" },
                           descriptions);
 }
 
@@ -321,7 +321,7 @@ QStringList RawSEDMLViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    return QStringList() << SEDMLSupport::SedmlMimeType;
+    return { SEDMLSupport::SedmlMimeType };
 }
 
 //==============================================================================
@@ -387,7 +387,7 @@ QIcon RawSEDMLViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    static const QIcon NoIcon = QIcon();
+    static const QIcon NoIcon;
 
     return NoIcon;
 }

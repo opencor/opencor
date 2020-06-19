@@ -442,7 +442,9 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // and un/select them accordingly
 
     if ((pItem != nullptr) && (pItem->parent() == nullptr)) {
-        Qt::CheckState newCheckState = (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked;
+        Qt::CheckState newCheckState = (pItem->checkState() == Qt::Unchecked)?
+                                           Qt::Unchecked:
+                                           Qt::Checked;
 
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             QStandardItem *pluginItem = pItem->child(i);
@@ -658,7 +660,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
         }
     }
 
-    mGui->treeView->setCurrentIndex(QModelIndex());
+    mGui->treeView->setCurrentIndex({});
 }
 
 //==============================================================================

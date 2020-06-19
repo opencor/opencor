@@ -85,7 +85,7 @@ public:
     void retranslateUi() override;
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
-                   const QString &pRdfTripleInformation = QString(),
+                   const QString &pRdfTripleInformation = {},
                    InformationType pInformationType = InformationType::None,
                    Information pLookUpRdfTripleInformation = Information::First);
 
@@ -134,13 +134,13 @@ private:
 
     void updateOutputHeaders();
 
-    void genericLookUp(const QString &pRdfTripleInformation = QString(),
+    void genericLookUp(const QString &pRdfTripleInformation = {},
                        InformationType pInformationType = InformationType::None);
 
 signals:
     void qualifierLookUpRequested(const QString &pQualifier);
     void resourceLookUpRequested(const QString &pResource);
-    void idLookUpRequested(const QString &pResource, const QString &pId);
+    void idLookUpRequested(const QString &pId);
     void noLookUpRequested();
 
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);

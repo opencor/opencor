@@ -964,6 +964,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
                         mOwner->pointCoordinatesFontColor(),
+                        mOwner->pointCoordinatesFontSize(),
                         (mOwner->pointCoordinatesStyle() == Qt::NoPen)?
                             0:
                             mOwner->pointCoordinatesWidth(),
@@ -994,6 +995,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         drawCoordinates(&painter, zoomRegionRect.topLeft(),
                         mOwner->zoomRegionColor(),
                         mOwner->zoomRegionFontColor(),
+                        mOwner->zoomRegionFontSize(),
                         (mOwner->zoomRegionStyle() == Qt::NoPen)?
                             0:
                             mOwner->zoomRegionWidth(),
@@ -1001,6 +1003,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         drawCoordinates(&painter, zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()),
                         mOwner->zoomRegionColor(),
                         mOwner->zoomRegionFontColor(),
+                        mOwner->zoomRegionFontSize(),
                         (mOwner->zoomRegionStyle() == Qt::NoPen)?
                             0:
                             mOwner->zoomRegionWidth(),
@@ -1072,12 +1075,12 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
+                                                  const int &pFontSize,
                                                   int pLineWidth,
                                                   Position pPosition,
                                                   bool pCanMovePosition)
 {
-    // Retrieve the size of coordinates as they will appear on the screen,
-    // which means using the same font as the one used for the axes
+    // Retrieve the size of coordinates as they will appear on the screen
     // Note #1: normally, pPoint would be a QPointF, but we want the coordinates
     //          to be drawn relative to something (see paintEvent()) and the
     //          only way to guarantee that everything will be painted as
@@ -1092,7 +1095,11 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     //          coordinatesRect will be empty if there is no style for showing
     //          the coordinates of a point or zooming in a region...
 
-    pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
+    QFont newFont = mOwner->font();
+
+    newFont.setPointSize(pFontSize);
+
+    pPainter->setFont(newFont);
 
     QPointF point = mOwner->canvasPoint(pPoint);
     QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
@@ -1272,6 +1279,15 @@ void GraphPanelPlotLegendWidget::setChecked(GraphPanelPlotGraph *pGraph,
 
 //==============================================================================
 
+int GraphPanelPlotLegendWidget::fontSize() const
+{
+    // Return our font size
+
+    return mFontSize;
+}
+
+//==============================================================================
+
 void GraphPanelPlotLegendWidget::setFontSize(int pFontSize)
 {
     // Set our font size
@@ -1349,7 +1365,7 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     QList<QRect> itemRects = legendLayout->layoutItems(layoutRect, legendLayout->columnsForWidth(layoutRect.width()));
 
     if ((legendLayout->expandingDirections() & Qt::Horizontal) != 0) {
-        for (auto itemRect : itemRects) {
+        for (auto &itemRect : itemRects) {
             itemRect.adjust(layoutRect.left(), 0, layoutRect.left(), 0);
         }
     }
@@ -1559,7 +1575,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAutoFillBackground(true);
     setBackgroundColor(Qt::white);
-    setFontSize(10, true);
+    setFontSize(10);
     setForegroundColor(Qt::black);
 
     QColor pointCoordinatesColor = Qt::darkCyan;
@@ -1602,6 +1618,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setAxisAutoScale(QwtPlot::xBottom, false);
     setAxisAutoScale(QwtPlot::yLeft, false);
 
+    setFontSizeAxisX(10);
+    setFontSizeAxisY(10);
+
     // Attach a grid to ourselves
 
     mGrid = new QwtPlotGrid();
@@ -1618,6 +1637,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // corresponding graphs has been toggled
 
     insertLegend(mLegend);
+
+    setLegendFontSize(10);
 
     connect(mLegend, &GraphPanelPlotLegendWidget::graphToggled,
             this, &GraphPanelPlotWidget::graphToggled);
@@ -1698,7 +1719,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // We want our legend to be active by default
 
-    setLegendActive(true);
+    setLegendVisible(true);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -2075,47 +2096,20 @@ int GraphPanelPlotWidget::fontSize() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
+void GraphPanelPlotWidget::setFontSize(int pFontSize)
 {
     // Set our font size
 
-    if (pForceSetting || (pFontSize != fontSize())) {
+    if (pFontSize != fontSize()) {
         QFont newFont = font();
 
         newFont.setPointSize(pFontSize);
 
         setFont(newFont);
 
-        // Legend
-
-        mLegend->setFontSize(pFontSize);
-
         // Title
 
         setTitle(title().text());
-
-        // X axis
-
-        newFont = axisFont(QwtPlot::xBottom);
-
-        newFont.setPointSize(pFontSize);
-
-        setAxisFont(QwtPlot::xBottom, newFont);
-        setTitleAxisX(titleAxisX());
-
-        // Y axis
-
-        newFont = axisFont(QwtPlot::yLeft);
-
-        newFont.setPointSize(pFontSize);
-
-        setAxisFont(QwtPlot::yLeft, newFont);
-        setTitleAxisY(titleAxisY());
-
-        // Our new font size may have some effects on the alignment with our
-        // neighbours, so update ourselves
-
-        updateGui(false, true);
     }
 }
 
@@ -2225,25 +2219,24 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::isLegendActive() const
+int GraphPanelPlotWidget::legendFontSize() const
 {
-    // Return whether we have an active legend
+    // Return our legend font size
 
-    return mLegend->isActive();
+    return mLegend->fontSize();
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
+void GraphPanelPlotWidget::setLegendFontSize(int pLegendFontSize)
 {
-    // Show/hide our legend
+    // Set our legend font size
 
-    if (pLegendActive != isLegendActive()) {
-        mLegend->setActive(pLegendActive);
-        mLegendAction->setChecked(pLegendActive);
+    if (pLegendFontSize != legendFontSize()) {
+        mLegend->setFontSize(pLegendFontSize);
 
-        // To show/hide our legend may have some effects on the alignment with
-        // our neighbours, so update ourselves
+        // To change the font size of our legen may have some effects on the
+        // alignment with our neighbours, so update ourselves
 
         updateGui(false, true);
     }
@@ -2251,11 +2244,28 @@ void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendWidth(int pLegendWidth)
+bool GraphPanelPlotWidget::isLegendVisible() const
 {
-    // Set our legend's width
+    // Return whether our legend is visible
 
-    mLegend->setMinimumWidth(pLegendWidth);
+    return mLegend->isActive();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setLegendVisible(bool pLegendVisible)
+{
+    // Show/hide our legend
+
+    if (pLegendVisible != isLegendVisible()) {
+        mLegend->setActive(pLegendVisible);
+        mLegendAction->setChecked(pLegendVisible);
+
+        // To show/hide our legend may have some effects on the alignment with
+        // our neighbours, so update ourselves
+
+        updateGui(false, true);
+    }
 }
 
 //==============================================================================
@@ -2335,6 +2345,26 @@ void GraphPanelPlotWidget::setPointCoordinatesFontColor(const QColor &pPointCoor
 
     if (pPointCoordinatesFontColor != mPointCoordinatesFontColor) {
         mPointCoordinatesFontColor = pPointCoordinatesFontColor;
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::pointCoordinatesFontSize() const
+{
+    // Return our point coordinates font size
+
+    return mPointCoordinatesFontSize;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesFontSize(int pPointCoordinatesFontSize)
+{
+    // Set our point coordinates font size
+
+    if (pPointCoordinatesFontSize != mPointCoordinatesFontSize) {
+        mPointCoordinatesFontSize = pPointCoordinatesFontSize;
     }
 }
 
@@ -2428,12 +2458,42 @@ void GraphPanelPlotWidget::setTitle(const QString &pTitle)
         QwtText title = QwtText(pTitle);
         QFont newFont = title.font();
 
-        newFont.setPointSize(2*fontSize());
+        newFont.setPointSize(fontSize());
 
         title.setColor(mSurroundingAreaForegroundColor);
         title.setFont(newFont);
 
         QwtPlot::setTitle(title);
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::fontSizeAxisX() const
+{
+    // Return our X axis font size
+
+    return axisFont(QwtPlot::xBottom).pointSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setFontSizeAxisX(int pFontSizeAxisX)
+{
+    // Set our X axis font size
+
+    if (pFontSizeAxisX != fontSizeAxisX()) {
+        QFont fontAxisX = axisFont(QwtPlot::xBottom);
+
+        fontAxisX.setPointSize(pFontSizeAxisX);
+
+        setAxisFont(QwtPlot::xBottom, fontAxisX);
+        setTitleAxisX(titleAxisX());
+
+        // To change the font size of our X axis may have some effects on the
+        // alignment with our neighbours, so update ourselves
+
+        updateGui(false, true);
     }
 }
 
@@ -2483,6 +2543,36 @@ void GraphPanelPlotWidget::setTitleAxisX(const QString &pTitleAxisX)
     // Set the title for our X axis
 
     setTitleAxis(QwtPlot::xBottom, pTitleAxisX);
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::fontSizeAxisY() const
+{
+    // Return our Y axis font size
+
+    return axisFont(QwtPlot::yLeft).pointSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setFontSizeAxisY(int pFontSizeAxisY)
+{
+    // Set our Y axis font size
+
+    if (pFontSizeAxisY != fontSizeAxisY()) {
+        QFont fontAxisY = axisFont(QwtPlot::yLeft);
+
+        fontAxisY.setPointSize(pFontSizeAxisY);
+
+        setAxisFont(QwtPlot::yLeft, fontAxisY);
+        setTitleAxisY(titleAxisY());
+
+        // To change the font size of our Y axis may have some effects on the
+        // alignment with our neighbours, so update ourselves
+
+        updateGui(false, true);
+    }
 }
 
 //==============================================================================
@@ -2619,6 +2709,26 @@ void GraphPanelPlotWidget::setZoomRegionFontColor(const QColor &pZoomRegionFontC
 
     if (pZoomRegionFontColor != mZoomRegionFontColor) {
         mZoomRegionFontColor = pZoomRegionFontColor;
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::zoomRegionFontSize() const
+{
+    // Return our zoom region font size
+
+    return mZoomRegionFontSize;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFontSize(int pZoomRegionFontSize)
+{
+    // Set our zoom region font size
+
+    if (pZoomRegionFontSize != mZoomRegionFontSize) {
+        mZoomRegionFontSize = pZoomRegionFontSize;
     }
 }
 
@@ -2917,8 +3027,8 @@ QRectF GraphPanelPlotWidget::realDataRect()
     // Return an optimised version of dataRect()/dataLogRect() or a default
     // rectangle, if no dataRect()/dataLogRect() exists
 
-    QRectF dRect = QRectF();
-    QRectF dLogRect = QRectF();
+    QRectF dRect;
+    QRectF dLogRect;
 
     if (dataRect(dRect) && dataLogRect(dLogRect)) {
         // Optimise our axes' values
@@ -3228,7 +3338,9 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
     QwtText newAxisTitle = QwtText(pTitleAxis);
     QFont newAxisTitleFont = newAxisTitle.font();
 
-    newAxisTitleFont.setPointSizeF(1.25*fontSize());
+    newAxisTitleFont.setPointSizeF(1.25*((pAxisId == QwtPlot::xBottom)?
+                                            fontSizeAxisX():
+                                            fontSizeAxisY()));
 
     newAxisTitle.setColor(mSurroundingAreaForegroundColor);
     newAxisTitle.setFont(newAxisTitleFont);
@@ -3641,7 +3753,7 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     // To remove a graph may affect our GUI (and that of our neighbours), so
     // update it
 
-    updateGui(false, isLegendActive());
+    updateGui(false, isLegendVisible());
 
     return true;
 }
@@ -3922,8 +4034,8 @@ void GraphPanelPlotWidget::exportTo()
     static const QString ImageXpixmap         = "image/x-xpixmap";
 
     QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
-    QStringList filters = QStringList() << pdfFilter
-                                        << tr("SVG File - Scalable Vector Graphics (*.svg)");
+    QStringList filters = { pdfFilter,
+                            tr("SVG File - Scalable Vector Graphics (*.svg)") };
 
     for (const auto &supportedMimeType : QImageWriter::supportedMimeTypes()) {
         if (supportedMimeType == ImageBmp) {
@@ -3950,13 +4062,13 @@ void GraphPanelPlotWidget::exportTo()
     QString fileName = Core::getSaveFileName(tr("Export To"), filters, &pdfFilter);
 
     if (!fileName.isEmpty()) {
-        static double InToMm = 25.4;
         static int Dpi = 85;
+        static double InToMmPerDpi = 25.4/Dpi;
 
         if (QFileInfo(fileName).completeSuffix().isEmpty()) {
-            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
+            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width()*InToMmPerDpi, height()*InToMmPerDpi), Dpi);
         } else {
-            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
+            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width()*InToMmPerDpi, height()*InToMmPerDpi), Dpi);
         }
     }
 

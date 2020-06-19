@@ -34,6 +34,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QHelpEvent>
 #include <QLayout>
 #include <QNetworkRequest>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPrinterInfo>
 #include <QSettings>
 #include <QTimer>
 #include <QToolTip>
@@ -77,7 +80,7 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
         //       localURLSchemes()...
 
         if (pType == NavigationTypeLinkClicked) {
-            static QStringList localSchemes = QStringList();
+            static QStringList localSchemes;
 
             if (localSchemes.isEmpty()) {
                 localSchemes << "file";
@@ -112,7 +115,6 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
 
         return true;
     }
-
 
     QDesktopServices::openUrl(url);
 
@@ -182,7 +184,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     layout->addWidget(mWebView);
@@ -333,14 +335,14 @@ Core::ProgressBarWidget * WebViewerWidget::progressBarWidget() const
 
 //==============================================================================
 
-QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
-                                                     QString &pTextContent)
+void WebViewerWidget::retrieveLinkInformation(QString &pLink,
+                                              QString &pTextContent)
 {
     // Retrieve the link and text content values for the link, if any, below our
     // mouse pointer
     // Note: normally, one would want to handle the linkHovered() signal, but it
     //       may provide the wrong information. Indeed, say that you are over a
-    //       link and then scroll down/up using your mouse wheel, and end up
+    //       link and then you scroll up/down using your mouse wheel, and end up
     //       over another link and click it. Now, because your mouse didn't
     //       move, no linkHovered() message will have been emitted (and
     //       handled), which means that if we need that information to process
@@ -349,21 +351,19 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
     static const QString A = "A";
 
     QWebHitTestResult hitTestResult = mWebView->page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
-    QWebElement res = hitTestResult.element();
+    QWebElement element = hitTestResult.element();
 
-    while (!res.isNull() && (res.tagName() != A)) {
-        res = res.parent();
+    while (!element.isNull() && (element.tagName() != A)) {
+        element = element.parent();
     }
 
-    if (res.isNull()) {
+    if (element.isNull()) {
         pLink = QString();
         pTextContent = QString();
     } else {
-        pLink = res.attribute("href");
+        pLink = element.attribute("href");
         pTextContent = hitTestResult.linkText();
     }
-
-    return res;
 }
 
 //==============================================================================
@@ -427,6 +427,21 @@ void WebViewerWidget::setZoomingEnabled(bool pZoomingEnabled)
     // Set whether zooming in/out is enabled
 
     mZoomingEnabled = pZoomingEnabled;
+}
+
+//==============================================================================
+
+void WebViewerWidget::print()
+{
+    // Retrieve the printer with which the user wants to print the page and
+    // print it, should s/he still want to go ahead with it
+
+    QPrinter printer;
+    QPrintDialog printDialog(&printer);
+
+    if (printDialog.exec() == QDialog::Accepted) {
+        mWebView->print(&printer);
+    }
 }
 
 //==============================================================================

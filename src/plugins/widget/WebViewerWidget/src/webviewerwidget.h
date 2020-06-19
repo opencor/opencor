@@ -88,7 +88,7 @@ public:
     QWebView * webView() const;
     Core::ProgressBarWidget * progressBarWidget() const;
 
-    QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
+    void retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
     void setToolTip(const QString &pToolTip);
 
@@ -148,6 +148,8 @@ public slots:
 
     void zoomIn();
     void zoomOut();
+
+    void print();
 
 private slots:
     void urlChanged(const QUrl &pUrl);

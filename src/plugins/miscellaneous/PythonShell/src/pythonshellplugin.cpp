@@ -40,7 +40,7 @@ PLUGININFO_FUNC PythonShellPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("le plugin shell <a href=\"https://python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, true,
-                          QStringList() << "Core" << "PythonQtSupport" << "SimulationSupport",
+                          { "Core", "PythonQtSupport", "SimulationSupport" },
                           descriptions);
 }
 

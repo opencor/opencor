@@ -47,7 +47,7 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://mevislab.github.io/pythonqt/">PythonQt</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "PythonQt" << "PythonSupport",
+                          { "PythonQt", "PythonSupport" },
                           descriptions);
 }
 

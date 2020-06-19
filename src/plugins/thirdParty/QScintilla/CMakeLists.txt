@@ -3,7 +3,7 @@ project(QScintillaPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.11.3)
+set(PACKAGE_VERSION 2.11.4)
 
 # Version of our library
 
@@ -12,7 +12,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v2.11.3)
+set(GIT_TAG v2.11.4)
 
 # Specify where our local package will be installed
 
@@ -63,27 +63,27 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 368dee0385dbd34051ae7b688bbbfa72e87d8ada
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f558f5c3be2638ccb84740026e7d3a195a357d09
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ff165beca34305184304a77a6a20dc0d6e636847
-                                              0a3f89557bc51f04ffe6662420406499bf4639a9)
+                                  SHA1_VALUES 9cbc3d3f105117299e27ea800337094d07711226
+                                              edcc3043d85e8917d067f431f7483b749670a295)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 86caea90e5fca31995f44b2e8292ab366e3f0e1f
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 9b23c5d1afaf587c43a70f1d0bf2d96b31bc42bf
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b85386cf48863877731d57e87d9711cb909b742f
-                                              03fe9901841c2af58d2425a15a442e88ee0749d6)
+                                  SHA1_VALUES dd087c6725e36c111b0305db63aa0677e061fa6f
+                                              984288b48ba45ead8677fc7210e325960850f9be)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 810f93a0148a098c0e145d148099249e968a6ca4
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 519be662ac44dedec54514bfb9be90b1f9cb7cc9
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 0dbd14d1b7fddc5dea8d97291f1afc6f234aee84)
+                              SHA1_VALUES 18ce6c262c9cd84121a0fe073a3b425a42ed068d)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3ee97cd4c54aaca006e01741823b085926d78a7c
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c63a78f65490ea0f9f23ba332150daca5a2265cc
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e34e19b13098674529c3f3a3e4c6cad4936b2b95)
+                              SHA1_VALUES 9edd31c794752915e3269a1daccef53301630c88)
     endif()
 else()
     # Set platform specific configuration options
@@ -138,7 +138,7 @@ else()
 
         if(APPLE)
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
-                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARIES_DIR} ${SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyLibrary)
         else()

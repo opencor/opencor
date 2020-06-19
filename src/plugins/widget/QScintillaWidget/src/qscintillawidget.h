@@ -96,7 +96,7 @@ public:
     QLabel * cursorPositionWidget() const;
     QLabel * editingModeWidget() const;
 
-    QString eolString() const;
+    QByteArray eolString() const;
 
     QColor backgroundColor(int pStyle);
     void setBackgroundColor(int pStyle, const QColor &pBackgroundColor);

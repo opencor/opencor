@@ -38,7 +38,7 @@ PLUGININFO_FUNC PythonPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à <a href=\"https://python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

@@ -99,7 +99,7 @@ int main(int pArgC, char *pArgV[])
 
     // Run the different tests
 
-    QStringList failedTests = QStringList();
+    QStringList failedTests;
     int res = 0;
 
     auto testBegin = testsGroups.constBegin();
@@ -119,9 +119,9 @@ int main(int pArgC, char *pArgV[])
             // Execute the test itself
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, QStringList());
+            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, {});
 #else
-            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, QStringList());
+            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, {});
 #endif
 
             if (testRes != 0) {

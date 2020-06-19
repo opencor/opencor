@@ -67,6 +67,8 @@ namespace SEDMLSupport {
 //==============================================================================
 
 static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
+static const auto Version          = QStringLiteral("version");
+static const auto VersionValue     = 2;
 static const auto VariableDegree   = QStringLiteral("variableDegree");
 static const auto SolverProperties = QStringLiteral("solverProperties");
 static const auto SolverProperty   = QStringLiteral("solverProperty");
@@ -97,6 +99,7 @@ static const auto Selected         = QStringLiteral("selected");
 static const auto Size             = QStringLiteral("size");
 static const auto Style            = QStringLiteral("style");
 static const auto Title            = QStringLiteral("title");
+static const auto Visible          = QStringLiteral("visible");
 static const auto Width            = QStringLiteral("width");
 
 //==============================================================================
@@ -122,9 +125,9 @@ public:
     libsedml::SedDocument * sedmlDocument();
 
     bool load() override;
-    bool save(const QString &pFileName = QString()) override;
+    bool save(const QString &pFileName = {}) override;
 
-    bool update(const QString &pFileName = QString());
+    bool update(const QString &pFileName = {});
 
     void forceNew();
 

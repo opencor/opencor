@@ -137,7 +137,12 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     // Legend
 
+    Core::Properties legendProperties = graphPanelProperties[4]->properties();
+
     graphPanelProperties[4]->setName(tr("Legend"));
+
+    legendProperties[0]->setName(tr("Font size"));
+    legendProperties[1]->setName(tr("Visible"));
 
     // Point coordinates
 
@@ -149,6 +154,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     pointCoordinatesProperties[1]->setName(tr("Width"));
     pointCoordinatesProperties[2]->setName(tr("Colour"));
     pointCoordinatesProperties[3]->setName(tr("Font colour"));
+    pointCoordinatesProperties[4]->setName(tr("Font size"));
 
     // Surrounding area
 
@@ -169,8 +175,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     graphPanelProperties[8]->setName(tr("X axis"));
 
-    xAxisProperties[0]->setName(tr("Logarithmic scale"));
-    xAxisProperties[1]->setName(tr("Title"));
+    xAxisProperties[0]->setName(tr("Font size"));
+    xAxisProperties[1]->setName(tr("Logarithmic scale"));
+    xAxisProperties[2]->setName(tr("Title"));
 
     // Y axis
 
@@ -178,8 +185,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     graphPanelProperties[9]->setName(tr("Y axis"));
 
-    yAxisProperties[0]->setName(tr("Logarithmic scale"));
-    yAxisProperties[1]->setName(tr("Title"));
+    yAxisProperties[0]->setName(tr("Font size"));
+    yAxisProperties[1]->setName(tr("Logarithmic scale"));
+    yAxisProperties[2]->setName(tr("Title"));
 
     // Zoom region
 
@@ -191,8 +199,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     zoomRegionProperties[1]->setName(tr("Width"));
     zoomRegionProperties[2]->setName(tr("Colour"));
     zoomRegionProperties[3]->setName(tr("Font colour"));
-    zoomRegionProperties[4]->setName(tr("Filled"));
-    zoomRegionProperties[5]->setName(tr("Fill colour"));
+    zoomRegionProperties[4]->setName(tr("Font size"));
+    zoomRegionProperties[5]->setName(tr("Filled"));
+    zoomRegionProperties[6]->setName(tr("Fill colour"));
 }
 
 //==============================================================================
@@ -352,7 +361,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
             graphPanelPlot->setBackgroundColor(pGraphPanelWidgetProperties.backgroundColor());
             graphPanelPlot->setForegroundColor(pGraphPanelWidgetProperties.foregroundColor());
-            graphPanelPlot->setLegendActive(pGraphPanelWidgetProperties.legend());
+            graphPanelPlot->setLegendVisible(pGraphPanelWidgetProperties.legend());
         }
 
         // Populate our graph panel property editor
@@ -870,7 +879,7 @@ Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::g
     // Retrieve and return all the graph properties associated with the given
     // graph panel and file name, if any
 
-    Core::Properties res = Core::Properties();
+    Core::Properties res;
 
     for (auto property : mGraphsPropertyEditors.value(pGraphPanel)->properties()) {
         // The property should be returned if its first sub-property (i.e. to
@@ -1073,7 +1082,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Legend
 
-    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendActive());
+    Core::Property *legendProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->legendFontSize(), legendProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendVisible(), legendProperty);
 
     // Point coordinates
 
@@ -1085,6 +1097,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesFontColor(), pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesFontSize(), pointCoordinatesProperty);
 
     // Surrounding area
 
@@ -1101,15 +1114,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     Core::Property *xAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
-    mGraphPanelPropertyEditor->addBooleanProperty(xAxisProperty);
-    mGraphPanelPropertyEditor->addStringProperty(xAxisProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSizeAxisX(), xAxisProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisX(), xAxisProperty);
+    mGraphPanelPropertyEditor->addStringProperty(graphPanelPlot->titleAxisX(), xAxisProperty);
 
     // Y axis
 
     Core::Property *yAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
-    mGraphPanelPropertyEditor->addBooleanProperty(yAxisProperty);
-    mGraphPanelPropertyEditor->addStringProperty(yAxisProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSizeAxisY(), yAxisProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisY(), yAxisProperty);
+    mGraphPanelPropertyEditor->addStringProperty(graphPanelPlot->titleAxisY(), yAxisProperty);
 
     // Zoom region
 
@@ -1121,6 +1136,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionWidth(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionColor(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionFontColor(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionFontSize(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->zoomRegionFilled(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionFillColor(), zoomRegionProperty);
 
@@ -1141,7 +1157,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Now, add our model parameters to it
 
-    QString componentHierarchy = QString();
+    QString componentHierarchy;
     QMenu *componentMenu = nullptr;
 
     for (auto parameter : pRuntime->parameters()) {
@@ -1422,7 +1438,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     //       title being also changed...
 
     if ((newTitle != oldTitle) || graphSymbolUpdated) {
-        graph->plot()->updateGui(false, graph->plot()->isLegendActive());
+        graph->plot()->updateGui(false, graph->plot()->isLegendVisible());
     }
 
     if (   (oldParameterX != graph->parameterX())
@@ -1466,6 +1482,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
     Core::Properties properties = propertyEditor->properties();
     Core::Properties gridLinesProperties = properties[3]->properties();
+    Core::Properties legendProperties = properties[4]->properties();
     Core::Properties pointCoordinatesProperties = properties[5]->properties();
     Core::Properties surroundingAreaProperties = properties[6]->properties();
     Core::Properties xAxisProperties = properties[8]->properties();
@@ -1492,8 +1509,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Legend
 
-    } else if (pProperty == properties[4]) {
-        graphPanelPlot->setLegendActive(pProperty->booleanValue());
+    } else if (pProperty == legendProperties[0]) {
+        graphPanelPlot->setLegendFontSize(pProperty->integerValue());
+    } else if (pProperty == legendProperties[1]) {
+        graphPanelPlot->setLegendVisible(pProperty->booleanValue());
 
     // Point coordinates
 
@@ -1505,6 +1524,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
         graphPanelPlot->setPointCoordinatesColor(pProperty->colorValue());
     } else if (pProperty == pointCoordinatesProperties[3]) {
         graphPanelPlot->setPointCoordinatesFontColor(pProperty->colorValue());
+    } else if (pProperty == pointCoordinatesProperties[4]) {
+        graphPanelPlot->setPointCoordinatesFontSize(pProperty->integerValue());
 
     // Surrounding area
 
@@ -1521,15 +1542,19 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     // X axis
 
     } else if (pProperty == xAxisProperties[0]) {
-        graphPanelPlot->setLogAxisX(pProperty->booleanValue());
+        graphPanelPlot->setFontSizeAxisX(pProperty->integerValue());
     } else if (pProperty == xAxisProperties[1]) {
+        graphPanelPlot->setLogAxisX(pProperty->booleanValue());
+    } else if (pProperty == xAxisProperties[2]) {
         graphPanelPlot->setTitleAxisX(pProperty->value());
 
     // Y axis
 
     } else if (pProperty == yAxisProperties[0]) {
-        graphPanelPlot->setLogAxisY(pProperty->booleanValue());
+        graphPanelPlot->setFontSizeAxisY(pProperty->integerValue());
     } else if (pProperty == yAxisProperties[1]) {
+        graphPanelPlot->setLogAxisY(pProperty->booleanValue());
+    } else if (pProperty == yAxisProperties[2]) {
         graphPanelPlot->setTitleAxisY(pProperty->value());
 
     // Zoom region
@@ -1543,8 +1568,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     } else if (pProperty == zoomRegionProperties[3]) {
         graphPanelPlot->setZoomRegionFontColor(pProperty->colorValue());
     } else if (pProperty == zoomRegionProperties[4]) {
-        graphPanelPlot->setZoomRegionFilled(pProperty->booleanValue());
+        graphPanelPlot->setZoomRegionFontSize(pProperty->integerValue());
     } else if (pProperty == zoomRegionProperties[5]) {
+        graphPanelPlot->setZoomRegionFilled(pProperty->booleanValue());
+    } else if (pProperty == zoomRegionProperties[6]) {
         graphPanelPlot->setZoomRegionFillColor(pProperty->colorValue());
     }
 }
@@ -1600,7 +1627,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     // Use the given section property or retrieve the ones for our current
     // graphs property editor
 
-    Core::Properties graphProperties = Core::Properties();
+    Core::Properties graphProperties;
 
     if (pSectionProperty != nullptr) {
         graphProperties << pSectionProperty;
@@ -1615,7 +1642,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     // Determine the model list values, but only if needed, i.e. if we have some
     // graph properties
 
-    QStringList modelListValues = QStringList();
+    QStringList modelListValues;
 
     if (!graphProperties.isEmpty()) {
         for (const auto &fileName : mViewWidget->fileNames()) {
@@ -1627,7 +1654,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
 
         modelListValues.sort(Qt::CaseInsensitive);
 
-        modelListValues.prepend(QString());
+        modelListValues.prepend({});
         modelListValues.prepend(tr("Current"));
     }
 

@@ -908,13 +908,13 @@ DataStoreVariables DataStore::voiAndVariables()
     // Return our VOI, if any, and all our variables, after making sure that
     // they are sorted
 
-    DataStoreVariables res = DataStoreVariables();
+    DataStoreVariables variables;
 
-    res << mVoi << mVariables;
+    variables << mVoi << mVariables;
 
-    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
+    std::sort(variables.begin(), variables.end(), DataStoreVariable::compare);
 
-    return res;
+    return variables;
 }
 
 //==============================================================================
@@ -923,7 +923,7 @@ DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 {
     // Add some variables to our data store
 
-    DataStoreVariables variables = DataStoreVariables();
+    DataStoreVariables variables;
 
     for (int i = 0; i < pCount; ++i, ++pValues) {
         variables << new DataStoreVariable(pValues);

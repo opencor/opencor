@@ -38,7 +38,7 @@ PLUGININFO_FUNC libSBMLPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

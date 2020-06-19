@@ -50,7 +50,7 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension qui fournit les fonctionalités de base d'une vue d'édition <a href="https://sed-ml.org/">SED-ML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, false, false,
-                          QStringList() << "EditingView" << "SEDMLSupport",
+                          { "EditingView", "SEDMLSupport" },
                           descriptions);
 }
 
@@ -258,11 +258,11 @@ void SEDMLEditingViewPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mEditReformatAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_R),
+    mEditReformatAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_R),
                                           Core::mainWindow());
     mEditReformatSeparator = Core::newSeparator(Core::mainWindow());
 
-    mToolsSedmlValidationAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_T),
+    mToolsSedmlValidationAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_V),
                                                   Core::mainWindow());
     mToolsSedmlValidationSeparator = Core::newSeparator(Core::mainWindow());
 
@@ -338,7 +338,7 @@ void SEDMLEditingViewPlugin::sedmlValidation()
     // Validate the current SED-ML file
 
     if (mSedmlEditingViewInterface != nullptr) {
-        QString extra = QString();
+        QString extra;
 
         if (mSedmlEditingViewInterface->validSedml(mFileName, extra)) {
             // There are no SED-ML issues, so the SED-ML file is valid

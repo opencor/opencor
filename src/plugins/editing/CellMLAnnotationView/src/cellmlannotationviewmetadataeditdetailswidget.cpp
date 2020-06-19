@@ -174,7 +174,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     auto qualifierWidget = new QWidget(formWidget);
     auto qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
 
-    qualifierWidgetLayout->setContentsMargins(QMargins());
+    qualifierWidgetLayout->setContentsMargins({});
 
     qualifierWidget->setLayout(qualifierWidgetLayout);
 
@@ -215,7 +215,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     auto termWidget = new QWidget(formWidget);
     auto termWidgetLayout = new QHBoxLayout(termWidget);
 
-    termWidgetLayout->setContentsMargins(QMargins());
+    termWidgetLayout->setContentsMargins({});
 
     termWidget->setLayout(termWidgetLayout);
 
@@ -405,8 +405,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     if (   (pResetItemsGui && !mAnnotationWidget->isBusyWidgetVisible())
         || termIsDirect) {
-        updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                       !termIsDirect && !pFilePermissionsChanged);
+        updateItemsGui({}, !termIsDirect && !pFilePermissionsChanged);
     }
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -460,7 +459,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pL
         mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
                                        tr("Enter a term above..."));
     } else if (pLookUpTerm) {
-        mOutputMessage->setIconMessage(QString(), QString());
+        mOutputMessage->setIconMessage({}, {});
 
         if (pShowBusyWidget != nullptr) {
             *pShowBusyWidget = true;
@@ -534,7 +533,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     mItemsMapping.clear();
     mEnabledItems.clear();
 
-    mOutputOntologicalTerms->webView()->setHtml(QString());
+    mOutputOntologicalTerms->webView()->setHtml({});
 
     // Populate our Web view, but only if there is at least one item
 
@@ -550,7 +549,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
         // Add the items
 
-        QString ontologicalTerms = QString();
+        QString ontologicalTerms;
 
         for (const auto &item : pItems) {
             // Keep track of some information
@@ -562,7 +561,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
                 mUrls.insert(item.resource(), resourceUrl(item.resource()));
             }
 
-            mUrls.insert(itemInformation, idUrl(item.resource(), item.id()));
+            mUrls.insert(itemInformation, idUrl(item.id()));
 
             mItemInformationSha1s << itemInformationSha1;
 
@@ -724,7 +723,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
         break;
     case InformationType::Id:
-        emit idLookUpRequested(resource, id);
+        emit idLookUpRequested(id);
 
         break;
     }
@@ -857,7 +856,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
+    QString linkToolTip;
 
     if (!link.isEmpty()) {
         if (textContent.isEmpty()) {
@@ -951,7 +950,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     // Retrieve the list of terms, should there be a network reply
 
-    QString errorMessage = QString();
+    QString errorMessage;
     bool hasInternetConnection = true;
 
     if (pNetworkReply != nullptr) {
@@ -974,7 +973,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Parse the JSON data
 
-            QJsonParseError jsonParseError = QJsonParseError();
+            QJsonParseError jsonParseError;
             QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
             if (jsonParseError.error == QJsonParseError::NoError) {
@@ -1061,8 +1060,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     // Update our items' GUI
 
-    updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
-                   !isDirectTerm(mTermValue->text()));
+    updateItemsGui({}, !isDirectTerm(mTermValue->text()));
 
     // Ask our parent to update its GUI with the added RDF triple
 

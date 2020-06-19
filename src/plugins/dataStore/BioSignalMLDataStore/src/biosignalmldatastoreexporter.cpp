@@ -68,7 +68,7 @@ void BiosignalmlDataStoreExporterWorker::run()
     // Export our data store to a BioSignalML file
 
     bsml::HDF5::Recording *recording = nullptr;
-    QString errorMessage = QString();
+    QString errorMessage;
 
     try {
         // Create and populate a recording

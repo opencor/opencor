@@ -56,7 +56,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     auto layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(QMargins());
+    layout->setContentsMargins({});
     layout->setSpacing(0);
 
     setLayout(layout);
@@ -319,15 +319,14 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pR
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResource,
-                                                         const QString &pId)
+void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pId)
 {
     // Let people know that we want our Web viewer to be updated with some
     // details about the given id
 
     mWebViewer->progressBarWidget()->setEnabled(true);
 
-    emit idDetailsRequested(mWebViewer, pResource, pId);
+    emit idDetailsRequested(mWebViewer, pId);
 }
 
 //==============================================================================

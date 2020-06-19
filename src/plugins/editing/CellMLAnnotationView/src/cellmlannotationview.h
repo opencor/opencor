@@ -35,7 +35,7 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 QString resourceUrl(const QString &pResource);
-QString idUrl(const QString &pResource, const QString &pId);
+QString idUrl(const QString &pId);
 
 //==============================================================================
 

@@ -63,7 +63,7 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
 //==============================================================================
 
 PmrWebService::PmrWebService(QObject *pParent) :
-    PmrWebService(QString(), pParent)
+    PmrWebService({}, pParent)
 {
 }
 
@@ -107,7 +107,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
     static const QString Bookmark = "bookmark";
 
-    PmrExposures exposures = PmrExposures();
+    PmrExposures exposures;
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
     for (const auto &links : collectionMap["links"].toList()) {
@@ -145,24 +145,24 @@ static const char *WorkspaceProperty  = "Workspace";
 
 PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
 {
-    // Retrieve and return the workspace for the given URL
+    // Retrieve and return the workspace for the given URL and only return when
+    // the PMR response has been processed
 
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
     if (pmrResponse != nullptr) {
+        QEventLoop waitLoop;
+
+        connect(pmrResponse, &PmrWebServiceResponse::finished, [&]() {
+            waitLoop.quit();
+        });
+
         PmrWorkspace *workspace = nullptr;
 
         pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue(reinterpret_cast<void *>(&workspace)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::workspaceResponse);
-
-        // Don't return until the PMR response has been processed
-
-        QEventLoop waitLoop;
-
-        connect(pmrResponse, &PmrWebServiceResponse::finished,
-                &waitLoop, &QEventLoop::quit);
 
         waitLoop.exec();
 
@@ -193,11 +193,11 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         static const QString Git         = "git";
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-        QString storage = QString();
-        QString workspaceDescription = QString();
-        QString workspaceOwner = QString();
-        QString workspaceName = QString();
-        QString workspaceId = QString();
+        QString storage;
+        QString workspaceDescription;
+        QString workspaceOwner;
+        QString workspaceName;
+        QString workspaceId;
 
         for (const auto &data : itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = data.toMap();
@@ -297,7 +297,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 
     static const QString Bookmark = "bookmark";
 
-    PmrWorkspaces workspaces = PmrWorkspaces();
+    PmrWorkspaces workspaces;
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
     for (const auto &links : collectionMap["links"].toList()) {
@@ -361,10 +361,10 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
         static const QString Git         = "git";
 
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
-        QString storage = QString();
-        QString workspaceDescription = QString();
-        QString workspaceOwner = QString();
-        QString workspaceName = QString();
+        QString storage;
+        QString workspaceDescription;
+        QString workspaceOwner;
+        QString workspaceName;
 
         for (const auto &data : itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = data.toMap();
@@ -388,7 +388,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (storage == Git) {
-                QString dirName = QString();
+                QString dirName;
 
                 if (exposure != nullptr) {
                     // Check that we aren't already managing a clone of the
@@ -535,23 +535,23 @@ QString PmrWebService::siteName() const
 
 void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
 {
-    // Request credentials for the given workspace
+    // Request credentials for the given workspace and only return when the PMR
+    // response has been processed
 
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url()+"/request_temporary_password",
                                                                         true, true);
 
     if (pmrResponse != nullptr) {
+        QEventLoop waitLoop;
+
+        connect(pmrResponse, &PmrWebServiceResponse::finished, [&]() {
+            waitLoop.quit();
+        });
+
         pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue(reinterpret_cast<void *>(pWorkspace)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::workspaceCredentialsResponse);
-
-        // Don't return until the PMR response has been processed
-
-        QEventLoop waitLoop;
-
-        connect(pmrResponse, &PmrWebServiceResponse::finished,
-                &waitLoop, &QEventLoop::quit);
 
         waitLoop.exec();
     }
@@ -714,8 +714,8 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         static const QString Bookmark = "bookmark";
 
         QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
-        QString workspaceUrl = QString();
-        QStringList exposureFileUrls = QStringList();
+        QString workspaceUrl;
+        QStringList exposureFileUrls;
 
         for (const auto &links : collectionMap["links"].toList()) {
             QVariantMap linksMap = links.toMap();
@@ -745,7 +745,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
                 // Retrieve some information about the workspace and then clone
                 // it
 
-                requestWorkspaceInformation(workspaceUrl, QString(), exposure);
+                requestWorkspaceInformation(workspaceUrl, {}, exposure);
             } else if (   exposureFileUrls.isEmpty()
                        && (action == Action::RequestExposureFiles)) {
                 emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));

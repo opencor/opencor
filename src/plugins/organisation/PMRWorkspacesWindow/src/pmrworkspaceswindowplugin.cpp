@@ -51,9 +51,9 @@ PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les espaces de travail <a href="https://models.physiomeproject.org/">PMR</a> d'un utilisateur.)"));
 
     return new PluginInfo(PluginInfo::Category::Organisation, true, false,
-                          QStringList() << "CellMLSupport" << "LibXDiff" << "PMRSupport",
+                          { "CellMLSupport", "LibXDiff", "PMRSupport" },
                           descriptions,
-                          QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
+                          { "FileBrowserWindow", "FileOrganiserWindow" });
 }
 
 //==============================================================================

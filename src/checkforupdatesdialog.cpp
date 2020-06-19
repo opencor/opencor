@@ -65,7 +65,7 @@ void CheckForUpdatesEngine::check()
     mNewerVersions.clear();
 
     if (readFile("https://opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
-        QJsonParseError jsonParseError = QJsonParseError();
+        QJsonParseError jsonParseError;
         QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
@@ -232,7 +232,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
 //==============================================================================
 
 CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
-    CheckForUpdatesDialog(QString(), pEngine, nullptr)
+    CheckForUpdatesDialog({}, pEngine, nullptr)
 {
 }
 
@@ -267,7 +267,7 @@ void CheckForUpdatesDialog::updateGui()
                 // OpenCOR, so first look for a snapshot and go for an official
                 // version, if no snapshot is available
 
-                QString version = QString();
+                QString version;
 
                 for (const auto &newerVersion : mEngine->newerVersions()) {
                     if (newerVersion.contains('-')) {
@@ -296,7 +296,7 @@ void CheckForUpdatesDialog::updateGui()
             // The user is only after an official version of OpenCOR, so look
             // for the first one available
 
-            QString version = QString();
+            QString version;
 
             for (const auto &newerVersion : mEngine->newerVersions()) {
                 if (!newerVersion.contains('-')) {

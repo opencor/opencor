@@ -288,13 +288,12 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebVi
 //==============================================================================
 
 void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
-                                                                     const QString &pResource,
                                                                      const QString &pId)
 {
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebViewer->webView()->load(idUrl(pResource, pId));
+    pWebViewer->webView()->load(idUrl(pId));
 }
 
 //==============================================================================

@@ -46,7 +46,7 @@ CellmlFileIssue::CellmlFileIssue(Type pType, int pLine, int pColumn,
 //==============================================================================
 
 CellmlFileIssue::CellmlFileIssue(Type pType, const QString &pMessage) :
-    CellmlFileIssue(pType, 0, 0, pMessage, QString(), QString())
+    CellmlFileIssue(pType, 0, 0, pMessage, {}, {})
 {
 }
 

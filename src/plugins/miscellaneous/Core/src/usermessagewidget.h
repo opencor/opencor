@@ -60,9 +60,8 @@ public:
 
     void setIcon(const QString &pIcon);
     void setIconMessage(const QString &pIcon, const QString &pMessage,
-                        const QString &pExtraMessage = QString());
-    void setMessage(const QString &pMessage,
-                    const QString &pExtraMessage = QString());
+                        const QString &pExtraMessage = {});
+    void setMessage(const QString &pMessage, const QString &pExtraMessage = {});
     void resetMessage();
 
 private:

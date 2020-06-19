@@ -671,14 +671,22 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
 
     if (runtime != nullptr) {
         for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
-            if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i])) {
+            double currentValue = mStatesArray->data(i);
+
+            if (   !qFuzzyCompare(mInitialStates[i], currentValue)
+                ||  (qIsInf(mInitialStates[i]) != qIsInf(currentValue))
+                ||  (qIsNaN(mInitialStates[i]) != qIsNaN(currentValue))) {
                 return true;
             }
         }
 
         if (pCheckConstants) {
             for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
-                if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i])) {
+                double currentValue = mConstantsArray->data(i);
+
+                if (   !qFuzzyCompare(mInitialConstants[i], currentValue)
+                    ||  (qIsInf(mInitialConstants[i]) != qIsInf(currentValue))
+                    ||  (qIsNaN(mInitialConstants[i]) != qIsNaN(currentValue))) {
                     return true;
                 }
             }
@@ -1515,7 +1523,7 @@ void Simulation::save()
     // will disable its reset buttons), but only if we have / still have a
     // runtime
 
-    if (mRuntime != nullptr) {
+    if ((mRuntime != nullptr) && (mFileType == FileType::CellmlFile)) {
         mData->updateInitialValues();
     }
 }

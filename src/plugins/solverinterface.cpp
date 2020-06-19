@@ -30,7 +30,7 @@ void doNonLinearSolve(char *pRuntime,
                       double *pParameters, int pSize, void *pUserData)
 {
     // Retrieve the NLA solver which we should use and solve our NLA system
-    // Note: we shouldn't always have an NLA solver, but better be safe than
+    // Note: we should always have an NLA solver, but better be safe than
     //       sorry...
 
     OpenCOR::Solver::NlaSolver *nlaSolver = OpenCOR::Solver::nlaSolver(pRuntime);
@@ -75,7 +75,7 @@ void Solver::emitError(const QString &pErrorMessage)
     // Let people know that an error occured, but first reformat the error a
     // bit, if needed
 
-    QString errorMessage = QString();
+    QString errorMessage;
 
     if (pErrorMessage.startsWith("Newton")) {
         errorMessage = pErrorMessage;

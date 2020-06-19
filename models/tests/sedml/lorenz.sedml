@@ -88,33 +88,39 @@
     <listOfOutputs>
         <plot2D id="plot1">
             <annotation>
-                <properties xmlns="http://www.opencor.ws/">
-                    <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
+                <properties version="2" xmlns="http://www.opencor.ws/">
+                    <backgroundColor>#110072bd</backgroundColor>
+                    <fontSize>20</fontSize>
+                    <foregroundColor>#0072bd</foregroundColor>
                     <height>1</height>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>true</legend>
+                    <legend>
+                        <fontSize>10</fontSize>
+                        <visible>true</visible>
+                    </legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
-                        <backgroundColor>#ececec</backgroundColor>
-                        <foregroundColor>#000000</foregroundColor>
+                        <backgroundColor>#170072bd</backgroundColor>
+                        <foregroundColor>#0072bd</foregroundColor>
                     </surroundingArea>
                     <title/>
                     <xAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -123,6 +129,7 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
@@ -153,33 +160,39 @@
         </plot2D>
         <plot2D id="plot2">
             <annotation>
-                <properties xmlns="http://www.opencor.ws/">
-                    <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
+                <properties version="2" xmlns="http://www.opencor.ws/">
+                    <backgroundColor>#11edb120</backgroundColor>
+                    <fontSize>20</fontSize>
+                    <foregroundColor>#edb120</foregroundColor>
                     <height>1</height>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>true</legend>
+                    <legend>
+                        <fontSize>10</fontSize>
+                        <visible>true</visible>
+                    </legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
-                        <backgroundColor>#ececec</backgroundColor>
-                        <foregroundColor>#000000</foregroundColor>
+                        <backgroundColor>#17edb120</backgroundColor>
+                        <foregroundColor>#edb120</foregroundColor>
                     </surroundingArea>
                     <title/>
                     <xAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -188,6 +201,7 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
@@ -202,7 +216,7 @@
                             <line>
                                 <style>solid</style>
                                 <width>2</width>
-                                <color>#d95319</color>
+                                <color>#edb120</color>
                             </line>
                             <symbol>
                                 <style>none</style>
@@ -218,33 +232,39 @@
         </plot2D>
         <plot2D id="plot3">
             <annotation>
-                <properties xmlns="http://www.opencor.ws/">
-                    <backgroundColor>#ffffff</backgroundColor>
-                    <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
+                <properties version="2" xmlns="http://www.opencor.ws/">
+                    <backgroundColor>#11d95319</backgroundColor>
+                    <fontSize>20</fontSize>
+                    <foregroundColor>#d95319</foregroundColor>
                     <height>1</height>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
-                    <legend>true</legend>
+                    <legend>
+                        <fontSize>10</fontSize>
+                        <visible>true</visible>
+                    </legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                     </pointCoordinates>
                     <surroundingArea>
-                        <backgroundColor>#ececec</backgroundColor>
-                        <foregroundColor>#000000</foregroundColor>
+                        <backgroundColor>#17d95319</backgroundColor>
+                        <foregroundColor>#d95319</foregroundColor>
                     </surroundingArea>
                     <title/>
                     <xAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </xAxis>
                     <yAxis>
+                        <fontSize>10</fontSize>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
                     </yAxis>
@@ -253,6 +273,7 @@
                         <width>1</width>
                         <color>#b0800000</color>
                         <fontColor>#ffffff</fontColor>
+                        <fontSize>10</fontSize>
                         <filled>true</filled>
                         <fillColor>#30ffff00</fillColor>
                     </zoomRegion>
@@ -267,7 +288,7 @@
                             <line>
                                 <style>solid</style>
                                 <width>2</width>
-                                <color>#edb120</color>
+                                <color>#d95319</color>
                             </line>
                             <symbol>
                                 <style>none</style>

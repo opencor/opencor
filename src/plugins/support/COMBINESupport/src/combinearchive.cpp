@@ -262,7 +262,7 @@ bool CombineArchive::save(const QString &pFileName)
 
     // Generate the contents of our manifest
 
-    QByteArray fileList = QByteArray();
+    QByteArray fileList;
     QString fileFormat;
 
     for (const auto &file : mFiles) {
@@ -511,7 +511,7 @@ CombineArchiveFiles CombineArchive::masterFiles()
 
     // Return a list of our master files
 
-    CombineArchiveFiles res = CombineArchiveFiles();
+    CombineArchiveFiles res;
 
     for (const auto &file : mFiles) {
         if (file.isMaster()) {

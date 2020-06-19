@@ -243,8 +243,7 @@ QList<QWidget *> RawTextViewWidget::statusBarWidgets() const
     // Return our status bar widgets
 
     if (mEditor != nullptr) {
-        return QList<QWidget *>() << mEditor->cursorPositionWidget()
-                                  << mEditor->editingModeWidget();
+        return { mEditor->cursorPositionWidget(), mEditor->editingModeWidget() };
     }
 
     return {};

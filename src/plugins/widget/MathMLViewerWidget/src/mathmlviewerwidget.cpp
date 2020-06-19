@@ -256,7 +256,7 @@ void MathmlViewerWidget::setContents(const QString &pContents)
         if (domDocument.setContent(pContents)) {
             mError = !mMathmlDocument.setContent(domDocument.toString(-1));
         } else if (pContents.isEmpty()) {
-            mError = !mMathmlDocument.setContent(QString());
+            mError = !mMathmlDocument.setContent({});
         } else {
             mError = true;
         }
@@ -735,7 +735,7 @@ void MathmlViewerWidget::copyToClipboard()
     int contentsHeight = qCeil(mathmlDocumentSize.height());
     QPixmap pixmap(contentsWidth, contentsHeight);
 
-    render(&pixmap, QPoint(), QRegion(0, 0, contentsWidth, contentsHeight));
+    render(&pixmap, {}, QRegion(0, 0, contentsWidth, contentsHeight));
 
     QApplication::clipboard()->setPixmap(pixmap);
 }

@@ -228,7 +228,7 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
     if (pPmrUrl != mPmrUrl) {
         if (mPmrWindowWidget->hasExposures()) {
-            mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), QString());
+            mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), {}, {});
         }
 
         busy(false, true);
@@ -349,7 +349,7 @@ void PmrWindowWindow::showError(const QString &pMessage)
     if (mPmrWindowWidget->hasExposures()) {
         Core::criticalMessageBox(windowTitle(), pMessage);
     } else {
-        mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
+        mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), {}, pMessage);
     }
 }
 
@@ -368,7 +368,7 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), QString());
+    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), {});
 }
 
 //==============================================================================

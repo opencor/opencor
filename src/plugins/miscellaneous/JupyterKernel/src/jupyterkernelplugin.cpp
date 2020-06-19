@@ -43,7 +43,7 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(le plugin du noyau <a href="https://jupyter.org/">Jupyter</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, true,
-                          QStringList() << "Core" << "SimulationSupport",
+                          { "Core", "SimulationSupport" },
                           descriptions);
 }
 

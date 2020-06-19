@@ -59,7 +59,7 @@ public:
 
     PmrWebServiceResponse * request(const QString &pUrl, bool pSecureRequest,
                                     bool pUsePost = false,
-                                    const QJsonDocument &pJsonDocument = QJsonDocument());
+                                    const QJsonDocument &pJsonDocument = {});
 
     void update(const QString &pPmrUrl);
 

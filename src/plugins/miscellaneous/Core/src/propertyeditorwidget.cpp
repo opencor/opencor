@@ -626,7 +626,7 @@ QList<QStandardItem *> Property::items() const
 {
     // Return our items as a list
 
-    QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
+    QList<QStandardItem *> res = { mName, mValue };
 
     if (mUnit != nullptr) {
         res << mUnit;
@@ -1388,8 +1388,7 @@ void PropertyEditorWidget::retranslateUi()
 {
     // Retranslate our header labels
 
-    QStringList horizontalHeaderLabels = QStringList() << tr("Property")
-                                                       << tr("Value");
+    QStringList horizontalHeaderLabels = { tr("Property"), tr("Value") };
 
     if (mShowUnits) {
         horizontalHeaderLabels << tr("Unit");
@@ -1569,7 +1568,7 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property and return its information
 
-    return addSectionProperty(QString(), pParent);
+    return addSectionProperty({}, pParent);
 }
 
 //==============================================================================
@@ -1592,7 +1591,7 @@ Property * PropertyEditorWidget::addStringProperty(Property *pParent)
 {
     // Add a string property and return its information
 
-    return addStringProperty(QString(), pParent);
+    return addStringProperty({}, pParent);
 }
 
 //==============================================================================
@@ -1761,7 +1760,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 {
     // Add a list property and return its information
 
-    return addListProperty(pValues, QString(), pParent);
+    return addListProperty(pValues, {}, pParent);
 }
 
 //==============================================================================
@@ -1770,7 +1769,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addListProperty(QStringList(), QString(), pParent);
+    return addListProperty({}, {}, pParent);
 }
 
 //==============================================================================
@@ -1816,7 +1815,7 @@ Property * PropertyEditorWidget::addColorProperty(Property *pParent)
 {
     // Add a colour property and return its information
 
-    return addColorProperty(QColor(), pParent);
+    return addColorProperty({}, pParent);
 }
 
 //==============================================================================
@@ -2298,7 +2297,7 @@ void PropertyEditorWidget::goToNeighbouringProperty(int pShift)
 {
     // Determine the index of the current index's neighbour
 
-    QModelIndex neighbouringIndex = QModelIndex();
+    QModelIndex neighbouringIndex;
 
     if (pShift == 1) {
         neighbouringIndex = indexBelow(currentIndex());

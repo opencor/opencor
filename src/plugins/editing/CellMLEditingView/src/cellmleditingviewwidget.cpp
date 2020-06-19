@@ -111,21 +111,13 @@ static const char *SettingsCellmlEditingViewWidgetSizes = "CellmlEditingViewWidg
 void CellmlEditingViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve and set our sizes
-    // Note #1: the MathML viewer and editor list widgets' default height is 19%
-    //          and 13%, respectively, of the desktop's height while that of the
-    //          editor widget is as big as it can be...
-    // Note #2: because the editor widget's default height is much bigger than
-    //          that of our widget, the MathML viewer and editor list widgets'
-    //          default height will effectively be less than 19% and 13%,
-    //          respectively, of the desktop's height, but that doesn't matter
-    //          at all...
 
-    int availableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
-    QVariantList defaultCellmlEditingViewWidgetSizes = QVariantList() << 0.19*availableGeometryHeight
-                                                                      << availableGeometryHeight
-                                                                      << 0.13*availableGeometryHeight;
+    static const int AvailableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
+    static const QVariantList DefaultEditingWidgetSizes = { 0.15*AvailableGeometryHeight,
+                                                            0.76*AvailableGeometryHeight,
+                                                            0.09*AvailableGeometryHeight };
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlEditingViewWidgetSizes, defaultCellmlEditingViewWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlEditingViewWidgetSizes, DefaultEditingWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 

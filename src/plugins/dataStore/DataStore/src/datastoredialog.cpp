@@ -118,7 +118,7 @@ DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
-    QString dataHierarchy = QString();
+    QString dataHierarchy;
     QStandardItem *hierarchyItem = nullptr;
 
     for (auto variable : pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
@@ -236,7 +236,7 @@ DataStoreVariables DataStoreDialog::selectedData(QStandardItem *pItem) const
 {
     // Return the selected data for the given item
 
-    DataStoreVariables res = DataStoreVariables();
+    DataStoreVariables res;
 
     if (pItem->hasChildren()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
@@ -255,7 +255,7 @@ DataStoreVariables DataStoreDialog::selectedData() const
 {
     // Return our selected data
 
-    DataStoreVariables res = DataStoreVariables();
+    DataStoreVariables res;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         res << selectedData(mModel->invisibleRootItem()->child(i));

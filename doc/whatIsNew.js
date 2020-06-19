@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 20, "month": 12, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 19, "month": 6, "year": 2020,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -26,6 +26,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "fixed", "description": "Reading a <a href=\"https://cellml.org/\">CellML</a> file that has no <a href=\"https://w3.org/XML/\">XML</a> processing instruction." }
                              ]
                            }
@@ -60,7 +61,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML support",
                              "entries": [
-                               { "type": "improved", "description": "Loading of <a href=\"https://cellml.org/\">CellML</a> files." }
+                               { "type": "improved", "description": "Loading of <a href=\"https://cellml.org/\">CellML</a> files." },
+                               { "type": "improved", "description": "Generation of the runtime." }
                              ]
                            },
                            { "type": "subCategory", "name": "COMBINE support",

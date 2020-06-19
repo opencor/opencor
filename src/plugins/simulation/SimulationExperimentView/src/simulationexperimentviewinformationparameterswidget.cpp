@@ -109,7 +109,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 //==============================================================================
 
 void SimulationExperimentViewInformationParametersWidget::initialize(SimulationSupport::Simulation *pSimulation,
-                                                                     bool pReloadingView)
+                                                                     bool pReloading)
 {
     // Keep track of the simulation
 
@@ -136,7 +136,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
     //       we need to 'retranslate' them otherwise they will read "1", "2",
     //       "3", etc.
 
-    if (pReloadingView) {
+    if (pReloading) {
         PropertyEditorWidget::retranslateUi();
     }
 
@@ -147,7 +147,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     // Reset our import information, if we are reloading ourselves
 
-    if (pReloadingView) {
+    if (pReloading) {
         mImportComponent = nullptr;
     }
 
@@ -326,7 +326,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 {
     // Populate our property editor with the parameters
 
-    QString componentHierarchy = QString();
+    QString componentHierarchy;
     Core::Property *sectionProperty = nullptr;
 
     for (auto parameter : pRuntime->parameters()) {
@@ -465,7 +465,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     // Populate our context menu with the parameters
 
-    QString componentHierarchy = QString();
+    QString componentHierarchy;
     QMenu *componentMenu = nullptr;
 
     for (auto parameter : pRuntime->parameters()) {
@@ -551,7 +551,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter != nullptr) {
-            QString extraInfo = QString();
+            QString extraInfo;
             CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
 
             if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {

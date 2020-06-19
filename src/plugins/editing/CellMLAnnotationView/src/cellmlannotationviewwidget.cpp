@@ -52,8 +52,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
 //==============================================================================
 
-static const char *SettingsCellmlAnnotationViewEditingWidgetSizes         = "EditingWidgetSizes";
-static const char *SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = "MetadataDetailsWidgetSizes";
+static const char *SettingsCellmlAnnotationViewEditingWidgetSizes         = "CellmlAnnotationViewEditingWidgetSizes";
+static const char *SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = "CellmlAnnotationViewMetadataDetailsWidgetSizes";
 
 //==============================================================================
 
@@ -65,15 +65,17 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings &pSettings)
     //       some information between the different instances, so we have to do
     //       it here instead...
 
-    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.25*availableGeometry.width()
-                                                            << 0.75*availableGeometry.width();
-    QVariantList defaultMetadataDetailsWidgetSizes = QVariantList() << 0.25*availableGeometry.height()
-                                                                    << 0.25*availableGeometry.height()
-                                                                    << 0.50*availableGeometry.height();
+    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
+    static const int AvailableGeometryWidth = AvailableGeometry.width();
+    static const int AvailableGeometryHeight = AvailableGeometry.height();
+    static const QVariantList DefaultEditingWidgetSizes = { 0.25*AvailableGeometryWidth,
+                                                            0.75*AvailableGeometryWidth };
+    static const QVariantList DefaultMetadataDetailsWidgetSizes = { 0.25*AvailableGeometryHeight,
+                                                                    0.25*AvailableGeometryHeight,
+                                                                    0.50*AvailableGeometryHeight };
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewEditingWidgetSizes, DefaultEditingWidgetSizes).toList());
+    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, DefaultMetadataDetailsWidgetSizes).toList());
 }
 
 //==============================================================================

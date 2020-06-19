@@ -312,7 +312,7 @@ public:
 
     QColor colorValue() const;
     void setColorValue(const QColor &pColorValue);
-    void setColorValue(const QPoint &pPoint = QPoint());
+    void setColorValue(const QPoint &pPoint = {});
 
     QString unit() const;
     void setUnit(const QString &pUnit, bool pUpdateToolTip = true);

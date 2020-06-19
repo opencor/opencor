@@ -102,7 +102,6 @@ private slots:
     void updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                             const QString &pResource);
     void updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
-                                      const QString &pResource,
                                       const QString &pId);
 };
 

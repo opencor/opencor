@@ -8,8 +8,8 @@ add_dependencies(GenerateQtHelpFiles ${DOCUMENTATION_BUILD_TARGET})
 
 add_custom_command(TARGET GenerateQtHelpFiles
                    COMMAND ${SILENTRUN}
-                           ${QT_BINARY_DIR}/qhelpgenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
-                                                        -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
+                           ${QT_BINARIES_DIR}/qhelpgenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
+                                                          -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
 track_files(
     ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qch
@@ -35,7 +35,6 @@ add_plugin(HelpWindow
         WebViewerWidget
     QT_MODULES
         Help
-        PrintSupport
     DEPENDS_ON
         GenerateQtHelpFiles
 )

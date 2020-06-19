@@ -60,7 +60,7 @@ void setRawLocale(const QString &pRawLocale)
 
 QString shortVersion()
 {
-    QString res = QString();
+    QString res;
     QString appVersion = qApp->applicationVersion();
 
     if (!appVersion.contains('-')) {
@@ -202,7 +202,7 @@ QStringList canonicalFileNames(const QStringList &pFileNames)
     // names themselves, if the canonical version of the given file names is
     // empty (i.e. the files don't exist (anymore?))
 
-    QStringList res = QStringList();
+    QStringList res;
 
     for (const auto &fileName : pFileNames) {
         res << canonicalFileName(fileName);
@@ -236,11 +236,12 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
 
         // Download the contents of the remote file
 
-        QNetworkReply *networkReply = networkAccessManager.get(QNetworkRequest(pUrl));
         QEventLoop waitLoop;
+        QNetworkReply *networkReply = networkAccessManager.get(QNetworkRequest(pUrl));
 
-        connect(networkReply, &QNetworkReply::finished,
-                &waitLoop, &QEventLoop::quit);
+        connect(networkReply, &QNetworkReply::finished, [&]() {
+            waitLoop.quit();
+        });
 
         waitLoop.exec();
 
@@ -657,9 +658,20 @@ QString nonDiacriticString(const QString &pString)
     //       http://stackoverflow.com/questions/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
 
     static QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
-    static QStringList nonDiacriticLetters = QStringList() << "S" << "OE" << "Z" << "s" << "oe" << "z" << "Y" << "Y" << "u" << "A" << "A" << "A" << "A" << "A" << "A" << "AE" << "C" << "E" << "E" << "E" << "E" << "I" << "I" << "I" << "I" << "D" << "N" << "O" << "O" << "O" << "O" << "O" << "O" << "U" << "U" << "U" << "U" << "Y" << "s" << "a" << "a" << "a" << "a" << "a" << "a" << "ae" << "c" << "e" << "e" << "e" << "e" << "i" << "i" << "i" << "i" << "o" << "n" << "o" << "o" << "o" << "o" << "o" << "o" << "u" << "u" << "u" << "u" << "y" << "y";
+    static QStringList nonDiacriticLetters = { "S", "OE", "Z", "s", "oe", "z",
+                                               "Y", "Y", "u", "A", "A", "A",
+                                               "A", "A", "A", "AE", "C", "E",
+                                               "E", "E", "E", "I", "I", "I",
+                                               "I", "D", "N", "O", "O", "O",
+                                               "O", "O", "O", "U", "U", "U",
+                                               "U", "Y", "s", "a", "a", "a",
+                                               "a", "a", "a", "ae", "c", "e",
+                                               "e", "e", "e", "i", "i", "i",
+                                               "i", "o", "n", "o", "o", "o",
+                                               "o", "o", "o", "u", "u", "u",
+                                               "u", "y", "y" };
 
-    QString res = QString();
+    QString res;
 
     for (auto letter : pString) {
         int index = diacriticLetters.indexOf(letter);
@@ -680,7 +692,7 @@ QString plainString(const QString &pString)
     //       stripping out can proceed without any problem...
 
     QXmlStreamReader string("<html>"+pString+"</html>");
-    QString res = QString();
+    QString res;
 
     while (!string.atEnd()) {
         if (string.readNext() == QXmlStreamReader::Characters) {

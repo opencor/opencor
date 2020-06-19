@@ -400,17 +400,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
         qApp->setProperty("OpenCOR::aboutToQuit()", true);
 
-        // Delete any Web inspector window (which may have been created through
-        // our use of QtWebKit)
-
-        static const QString QWebInspectorClassWindow = "QWebInspectorClassWindow";
-
-        for (auto window : QGuiApplication::topLevelWindows()) {
-            if (window->objectName() == QWebInspectorClassWindow) {
-                window->close();
-            }
-        }
-
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
         //       some settings (e.g. docked windows) won't be properly saved...
@@ -474,7 +463,7 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, nullptr, nullptr);
 #elif defined(Q_OS_LINUX)
-    if (exec("which", QStringList() << "xdg-mime") == 0) {
+    if (exec("which", { "xdg-mime" }) == 0) {
         QString iconPath = canonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
                                                                                          qApp->organizationName(),
                                                                                          qApp->applicationName()));
@@ -492,7 +481,7 @@ void MainWindow::registerOpencorUrlScheme()
                                                                      canonicalFileName(qApp->applicationFilePath()),
                                                                      iconPath));
 
-        exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
+        exec("xdg-mime", { "default", "opencor.desktop", "x-scheme-handler/opencor" });
     }
 #else
 #pragma clang diagnostic push
@@ -591,7 +580,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some actions to our File|New menu and keep track of them
 
-        static QString pluginForFileNewMenu = QString();
+        static QString pluginForFileNewMenu = {};
 
         for (const auto &guiMenuAction : guiMenuActions) {
             if (guiMenuAction.type() == Gui::MenuAction::Type::FileNew) {
@@ -714,7 +703,7 @@ void MainWindow::loadSettings()
     // Retrieve the geometry and state of the main window
     // Note: we must do this after our various plugins have loaded their
     //       settings. Indeed, as part of this process, the Core plugin loads
-    //       previously laoded files, which in the case of remote files involves
+    //       previously loaded files, which in the case of remote files involves
     //       relying on SynchronousFileDownloader, which in turn relies on using
     //       a QEventLoop object to wait for the file to be downloaded and, on
     //       macOS, this prevents the geometry from being properly applied...
@@ -723,8 +712,6 @@ void MainWindow::loadSettings()
         || !restoreState(settings.value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
         // so go with some default settings
-
-        // Default size and position of the main window
 
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
         int horizSpace = availableGeometry.width()/13;
@@ -742,7 +729,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the state of the docked windows
 
-    mDockedWindowsState = settings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
+    mDockedWindowsState = settings.value(SettingsDockedWindowsState, {}).toByteArray();
 
     // Remove the File menu when on macOS, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on macOS
@@ -1031,7 +1018,7 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
     static QString Opencor = "opencor";
 
-    QStringList arguments = QStringList();
+    QStringList arguments;
 
     for (const auto &argument : pArguments) {
         QUrl url = argument;

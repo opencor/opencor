@@ -3,21 +3,21 @@ project(libgit2Plugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 0.28.3)
+set(PACKAGE_VERSION 1.0.1)
 
 # Version of our library
 
-set(MAJOR_LIBRARY_VERSION 0)
-set(MINOR_LIBRARY_VERSION 28)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
+set(MAJOR_LIBRARY_VERSION 1)
+set(MINOR_LIBRARY_VERSION 0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
 
 # Git tag for our library
 
-set(GIT_TAG v0.28.3-opencor)
+set(GIT_TAG v1.0.1-opencor)
 
 # Release tag
 
-set(RELEASE_TAG v0.28.3-opencor)
+set(RELEASE_TAG v1.0.1-opencor)
 
 # Specify where our local package will be installed
 
@@ -33,7 +33,7 @@ elseif(APPLE)
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2.${MINOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 else()
-    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${MINOR_LIBRARY_VERSION})
+    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
 
@@ -65,31 +65,31 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e918b5119fff5fe6d508353b209b90d21b05fc5d
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 99b3da1c7048b86e6ad88dc282194fcc1ba6c17b
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6f7dcf8979ca64d63b605772b351db7eb0e1d12d
-                                              4297cef930e12d8974aa10162b1346823d460393)
+                                  SHA1_VALUES dfa55ba8cd9494228060c72fd1ce9bbdb7ea197f
+                                              27f5cce4eadae122e4d372eeeb796add8ab93d77)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 498d3e837c8c73135aae637b4ad8ac69960a1a4b
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b17bee0ba74e4cfc8195b7608fb3fbc168786cc8
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b858e7d732839bd4300c56b066558e957537a6c0
-                                              6209c16ff48030646fac3a597a8e0e71214e56d0)
+                                  SHA1_VALUES 6e42330135975b4643487de98d46d7c19022b7bf
+                                              f37f2382b856740d1cb42b262de7f77a67d694e2)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fcccc3d6681ec6250c1b9fb2238882ebcabf4a1b
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3b7eded9638921deb79cf7799f071d5ca0013679
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 617bc89f3cefb1245c75f00bd046d4a6ff5851fc)
+                              SHA1_VALUES 2dfe843431d36ceddccbdce314aaed6a64c041ed)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 089fcb65c0a48525f962f01377b5defc4eaa6332
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c1289908db4167e867a9e26b90522e544cdf5aa0
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6543b5d0217a47c80c7ac620907c2c22f14e5a85)
+                              SHA1_VALUES 3a40da4bb45430e3fd34cbb95573c105974e1f59)
     endif()
 else()
     # Ignore some warnings

@@ -25,7 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
+#ifdef Q_OS_LINUX
     #include "Python.h"
     // Note: this needs to be included before <QObject> to prevent name
     //       clashes...
@@ -72,7 +72,7 @@ int main(int pArgC, char *pArgV[])
     // Note: this is because the lookup scope changes for DSOs that are loaded
     //       using dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
-#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
+#ifdef Q_OS_LINUX
     Py_NoUserSiteDirectory = 1;
 #endif
 
@@ -84,11 +84,7 @@ int main(int pArgC, char *pArgV[])
     // and that some macOS specific menu items are not shown
 
 #ifdef Q_OS_MAC
-    QProcess::execute("defaults",
-                      QStringList() << "write"
-                                    << "ws.opencor"
-                                    << "ApplePersistenceIgnoreState"
-                                    << "NO");
+    QProcess::execute("defaults", { "write", "ws.opencor", "ApplePersistenceIgnoreState", "NO" });
 
     OpenCOR::removeMacosSpecificMenuItems();
 #endif
@@ -201,7 +197,7 @@ int main(int pArgC, char *pArgV[])
 
     // Initialise the GUI version of OpenCOR
 
-    QString appDate = QString();
+    QString appDate;
 
     OpenCOR::initApplication(&appDate);
 

@@ -37,8 +37,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QClipboard>
 #include <QLineEdit>
 #include <QMenu>
-#include <QPrintDialog>
-#include <QPrinter>
 #include <QPrinterInfo>
 #include <QSettings>
 #include <QTimer>
@@ -231,32 +229,32 @@ static const char *SettingsUrl = "Url";
 
 void WebBrowserWindowWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve our current URL (and load it)
-
-    mUrlValue->setText(pSettings.value(SettingsUrl).toString());
-
-    returnPressed();
-
     // Retrieve the settings of our Web browser window widget
 
     pSettings.beginGroup(mWebBrowserWindowWidget->objectName());
         mWebBrowserWindowWidget->loadSettings(pSettings);
     pSettings.endGroup();
+
+    // Retrieve our current URL (and load it)
+
+    mUrlValue->setText(pSettings.value(SettingsUrl).toString());
+
+    returnPressed();
 }
 
 //==============================================================================
 
 void WebBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 {
-    // Keep track of our current URL
-
-    pSettings.setValue(SettingsUrl, mUrlValue->text());
-
     // Keep track of the settings of our Web browser window widget
 
     pSettings.beginGroup(mWebBrowserWindowWidget->objectName());
         mWebBrowserWindowWidget->saveSettings(pSettings);
     pSettings.endGroup();
+
+    // Keep track of our current URL
+
+    pSettings.setValue(SettingsUrl, mUrlValue->text());
 }
 
 //==============================================================================
@@ -351,15 +349,9 @@ void WebBrowserWindowWindow::actionZoomOutTriggered()
 
 void WebBrowserWindowWindow::actionPrintTriggered()
 {
-    // Retrieve the printer with which the user wants to print the page and
-    // print it, should s/he still want to go ahead with the printing
+    // Print the page contents
 
-    QPrinter printer;
-    QPrintDialog printDialog(&printer);
-
-    if (printDialog.exec() == QDialog::Accepted) {
-        mWebBrowserWindowWidget->webView()->print(&printer);
-    }
+    mWebBrowserWindowWidget->print();
 }
 
 //==============================================================================

@@ -146,7 +146,7 @@ def create_ipython_widget():
         return;
     }
 
-    mPythonConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
+    mPythonConsoleWidget = static_cast<QWidget *>(widgetWrapper->_objPointerCopy);
 
     mPythonConsoleWidget->setStyleSheet("QWidget {"
                                         "    border: none;"

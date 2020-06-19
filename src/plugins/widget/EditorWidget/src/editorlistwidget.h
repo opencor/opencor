@@ -84,14 +84,14 @@ public:
     void retranslateUi() override;
 
     void addItem(EditorListItem::Type pType, int pLine, int pColumn,
-                 const QString &pMessage, const QString &pFileName = QString(),
-                 const QString &pFileInfo = QString());
+                 const QString &pMessage, const QString &pFileName = {},
+                 const QString &pFileInfo = {});
     void addItem(EditorListItem::Type pType, int pLine,
-                 const QString &pMessage, const QString &pFileName = QString(),
-                 const QString &pFileInfo = QString());
+                 const QString &pMessage, const QString &pFileName = {},
+                 const QString &pFileInfo = {});
     void addItem(EditorListItem::Type pType, const QString &pMessage,
-                 const QString &pFileName = QString(),
-                 const QString &pFileInfo = QString());
+                 const QString &pFileName = {},
+                 const QString &pFileInfo = {});
 
     int count() const;
 

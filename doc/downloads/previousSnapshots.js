@@ -1,4 +1,77 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 14, "month": 2, "year": 2020, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Graph Panel widget:</strong> fixed a small problem that resulted in the legend being misplaced when exporting a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2297\">#2297</a>)." },
+                       { "change": "<strong>CellML support:</strong> improved the generation of runtime (see issue <a href=\"https://github.com/opencor/opencor/issues/2285\">#2285</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> greatly reduced the time and memory required to do syntax highlighting (see issue <a href=\"https://github.com/opencor/opencor/issues/2284\">#2284</a>)." },
+                       { "change": "<strong>Simulation support:</strong> fixed a small problem with not being able to reset a simulation that generates NANs (see issue <a href=\"https://github.com/opencor/opencor/issues/2299\">#2299</a>)." },
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 1, "year": 2020, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> can now reload a file using <code>Ctrl</code>+<code>R</code> (see issue <a href=\"https://github.com/opencor/opencor/issues/2286\">#2286</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> can now customise the font size of the different bits of text in a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/2271\">#2271</a>). Fixed a small GUI glitch on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/2277\">#2277</a>). Fixed an issue with reloading a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> potentially crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/2290\">#2290</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 9.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2269\">#2269</a>). Upgraded the <a href=\"https://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 5.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2272\">#2272</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.28.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2280\">#2280</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 19.3.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2281\">#2281</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 12, "year": 2019, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> don't ask to confirm the overwriting of a file when on macOS 10.15 (see issue <a href=\"https://github.com/opencor/opencor/issues/2261\">#2261</a>). Fixed a couple of issues with our splash screen (see issue <a href=\"https://github.com/opencor/opencor/issues/2265\">#2265</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> prevent it from flickering when it is shown as disabled (see issue <a href=\"https://github.com/opencor/opencor/issues/2263\">#2263</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> can now reopen a remote <a href=\"https://cellml.org/\">CellML</a> file from a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file (see issue <a href=\"https://github.com/opencor/opencor/issues/2191\">#2191</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 12, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

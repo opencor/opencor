@@ -85,18 +85,12 @@ static const char *SettingsSedmlEditingViewWidgetSizes = "SedmlEditingViewWidget
 void SedmlEditingViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve and set our sizes
-    // Note #1: the editor list widget's default height is 13% of the desktop's
-    //          height while that of the editor widget is as big as it can be...
-    // Note #2: because the editor widget's default height is much bigger than
-    //          that of our widget, the editor list widget's default height will
-    //          effectively be less than 13% of the desktop's height, but that
-    //          doesn't matter at all...
 
-    int availableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
-    QVariantList defaultSedmlEditingViewWidgetSizes = QVariantList() << availableGeometryHeight
-                                                                     << 0.13*availableGeometryHeight;
+    static const int AvailableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
+    static const QVariantList DefaultEditingWidgetSizes = { 0.91*AvailableGeometryHeight,
+                                                            0.09*AvailableGeometryHeight };
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSedmlEditingViewWidgetSizes, defaultSedmlEditingViewWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSedmlEditingViewWidgetSizes, DefaultEditingWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 

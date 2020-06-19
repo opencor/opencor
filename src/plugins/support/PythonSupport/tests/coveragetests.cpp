@@ -40,7 +40,7 @@ void CoverageTests::tests()
 
     QStringList output;
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "PythonShell" << OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.py"), output));
+    QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.py") }, output));
     QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/coveragetests.out").arg(OpenCOR::targetPlatformDir()))));
 }
 

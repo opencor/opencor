@@ -44,10 +44,10 @@ PLUGININFO_FUNC ZincWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour tester la librairie <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Test, true, false,
-                          QStringList() << "ZincWidget",
+                          { "ZincWidget" },
 #if !defined(QT_DEBUG) || !defined(Q_OS_WIN)
                           descriptions,
-                          QStringList() << "PythonConsoleWindow");
+                          { "PythonConsoleWindow" });
 #else
                           descriptions);
 #endif

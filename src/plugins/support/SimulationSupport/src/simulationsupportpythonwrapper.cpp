@@ -40,6 +40,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <array>
+#include <memory>
 
 //==============================================================================
 
@@ -126,8 +127,8 @@ static PyObject * initializeSimulation(const QString &pFileName)
         // Note: this is useful in case our simulation is solely based on a
         //       CellML file...
 
-        QString odeSolverName = QString();
-        QString nlaSolverName = QString();
+        QString odeSolverName;
+        QString nlaSolverName;
 
         for (auto solverInterface : Core::solverInterfaces()) {
             QString solverName = solverInterface->solverName();
@@ -287,10 +288,13 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         //       thread...
 
         QEventLoop waitLoop;
+        auto connection = std::make_shared<QMetaObject::Connection>();
 
-        connect(pSimulation, &Simulation::done,
-                &waitLoop, &QEventLoop::quit,
-                Qt::QueuedConnection);
+        *connection = connect(pSimulation, &Simulation::done, [&]() {
+            waitLoop.quit();
+
+            disconnect(*connection);
+        });
 
         pSimulation->run();
 

@@ -64,17 +64,13 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          iface::rdf_api::Triple *pRdfTriple) :
     CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Type::Unknown,
                         ModelQualifier::ModelUnknown, BioQualifier::BioUnknown,
-                        QString(), QString())
+                        {}, {})
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
-    ObjRef<iface::rdf_api::Resource> subject = pRdfTriple->subject();
-    ObjRef<iface::rdf_api::Resource> predicate = pRdfTriple->predicate();
-    ObjRef<iface::rdf_api::Node> object = pRdfTriple->object();
-
-    mSubject = new CellmlFileRdfTripleElement(subject);
-    mPredicate = new CellmlFileRdfTripleElement(predicate);
-    mObject = new CellmlFileRdfTripleElement(object);
+    mSubject = new CellmlFileRdfTripleElement(pRdfTriple->subject());
+    mPredicate = new CellmlFileRdfTripleElement(pRdfTriple->predicate());
+    mObject = new CellmlFileRdfTripleElement(pRdfTriple->object());
 
     // Determine the type of the RDF triple
 
@@ -402,24 +398,24 @@ QStringList CellmlFileRdfTriple::qualifiersAsStringList()
 {
     // Return (in alphabetical order) all the qualifiers which we support
 
-    return QStringList() << bioQualifierAsString(BioQualifier::BioEncodes)
-                         << bioQualifierAsString(BioQualifier::BioHasPart)
-                         << bioQualifierAsString(BioQualifier::BioHasProperty)
-                         << bioQualifierAsString(BioQualifier::BioHasVersion)
-                         << bioQualifierAsString(BioQualifier::BioIs)
-                         << bioQualifierAsString(BioQualifier::BioIsDescribedBy)
-                         << bioQualifierAsString(BioQualifier::BioIsEncodedBy)
-                         << bioQualifierAsString(BioQualifier::BioIsHomologTo)
-                         << bioQualifierAsString(BioQualifier::BioIsPartOf)
-                         << bioQualifierAsString(BioQualifier::BioIsPropertyOf)
-                         << bioQualifierAsString(BioQualifier::BioIsVersionOf)
-                         << bioQualifierAsString(BioQualifier::BioOccursIn)
-                         << bioQualifierAsString(BioQualifier::BioHasTaxon)
-                         << modelQualifierAsString(ModelQualifier::ModelIs)
-                         << modelQualifierAsString(ModelQualifier::ModelIsDerivedFrom)
-                         << modelQualifierAsString(ModelQualifier::ModelIsDescribedBy)
-                         << modelQualifierAsString(ModelQualifier::ModelIsInstanceOf)
-                         << modelQualifierAsString(ModelQualifier::ModelHasInstance);
+    return { bioQualifierAsString(BioQualifier::BioEncodes),
+             bioQualifierAsString(BioQualifier::BioHasPart),
+             bioQualifierAsString(BioQualifier::BioHasProperty),
+             bioQualifierAsString(BioQualifier::BioHasVersion),
+             bioQualifierAsString(BioQualifier::BioIs),
+             bioQualifierAsString(BioQualifier::BioIsDescribedBy),
+             bioQualifierAsString(BioQualifier::BioIsEncodedBy),
+             bioQualifierAsString(BioQualifier::BioIsHomologTo),
+             bioQualifierAsString(BioQualifier::BioIsPartOf),
+             bioQualifierAsString(BioQualifier::BioIsPropertyOf),
+             bioQualifierAsString(BioQualifier::BioIsVersionOf),
+             bioQualifierAsString(BioQualifier::BioOccursIn),
+             bioQualifierAsString(BioQualifier::BioHasTaxon),
+             modelQualifierAsString(ModelQualifier::ModelIs),
+             modelQualifierAsString(ModelQualifier::ModelIsDerivedFrom),
+             modelQualifierAsString(ModelQualifier::ModelIsDescribedBy),
+             modelQualifierAsString(ModelQualifier::ModelIsInstanceOf),
+             modelQualifierAsString(ModelQualifier::ModelHasInstance) };
 }
 
 //==============================================================================
@@ -593,7 +589,6 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
     // Create a CellML API version of the RDF triple
 
     ObjRef<iface::rdf_api::DataSource> dataSource = mCellmlFile->rdfDataSource();
-
     ObjRef<iface::rdf_api::Resource> subject = already_AddRefd<iface::rdf_api::Resource>(dataSource->getURIReference(pRdfTriple->subject()->asString().toStdWString()));
     ObjRef<iface::rdf_api::Resource> predicate = already_AddRefd<iface::rdf_api::Resource>(dataSource->getURIReference(pRdfTriple->predicate()->asString().toStdWString()));
     ObjRef<iface::rdf_api::Node> object = already_AddRefd<iface::rdf_api::Node>(dataSource->getURIReference(pRdfTriple->object()->asString().toStdWString()));
@@ -601,14 +596,8 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
     subject->createTripleOutOf(predicate, object);
 
     // Keep track of the CellML API version of the RDF triple in pRdfTriple
-    // Note: in debug mode, we also check that we actually managed to retrieve
-    //       the CellML API version of our RDF triple...
 
-    ObjRef<iface::rdf_api::Triple> rdfTriple = subject->getTripleOutOfByPredicateAndObject(predicate, object);
-
-    Q_ASSERT(rdfTriple);
-
-    pRdfTriple->setRdfTriple(rdfTriple);
+    pRdfTriple->setRdfTriple(subject->getTripleOutOfByPredicateAndObject(predicate, object));
 
     // An RDF triple has been added, so update the CellML file's modified status
 
@@ -687,7 +676,7 @@ QStringList CellmlFileRdfTriples::asStringList() const
 {
     // Return the RDF triples as a list of sorted strings
 
-    QStringList res = QStringList();
+    QStringList res;
 
     for (auto rdfTriple : *this) {
         res << QString("%1|%2|%3").arg(rdfTriple->subject()->asString(),

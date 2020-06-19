@@ -97,7 +97,7 @@ QByteArray rawFileContents(const QString &pFileName)
     // Read and return the contents of the given file
 
     QFile file(pFileName);
-    QByteArray contents = QByteArray();
+    QByteArray contents;
 
     if (file.open(QIODevice::ReadOnly)) {
         contents = file.readAll();
@@ -115,7 +115,7 @@ QStringList fileContents(const QString &pFileName)
     // Read and return the contents of the given file
 
     QFile file(pFileName);
-    QString contents = QString();
+    QString contents;
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         // Note: QIODevice::Text ensures that end-of-line terminators are
@@ -169,11 +169,11 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
 
     process.setProcessChannelMode(QProcess::MergedChannels);
 
-    QStringList defaultArguments = QStringList();
+    QStringList defaultArguments;
 
     process.start(program, defaultArguments << pArguments);
 
-    QString output = QString();
+    QString output;
 
     while (process.waitForReadyRead()) {
         output += process.readAll();

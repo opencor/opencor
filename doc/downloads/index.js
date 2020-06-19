@@ -18,9 +18,9 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 20, "month": 12, "year": 2019, "type": 2, "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 6, "year": 2020, "type": 2, "license": 2,
                      "platforms": [
-                       { "name": "Windows", "supported": "Windows 7 and later",
+                       { "name": "Windows", "supported": "Windows 10",
                          "files": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
@@ -32,12 +32,15 @@ var jsonData = { "versions": [
                        },
                        { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
                          "files": [
-                           { "extension": ".dmg" }, { "extension": ".zip" }
+                           { "extension": ".pkg" }, { "extension": ".zip" }
                          ]
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 9.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2269\">#2269</a>)." }
+                       { "change": "<strong>Python support:</strong> make it possible to retrieve the type of a <code>DataStoreVariable</code> object (see issue <a href=\"https://github.com/opencor/opencor/issues/2336\">#2336</a>)." },
+                       { "change": "<strong>CellML Annotation view:</strong> use the new <a href=\"https://identifiers.org/\">identifiers.org</a> platform (see issue <a href=\"https://github.com/opencor/opencor/issues/2190\">#2190</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> fixed a couple of GUI glitches (see issue <a href=\"https://github.com/opencor/opencor/issues/2332\">#2332</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.11.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2307\">#2307</a>). Upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 10.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2314\">#2314</a>). Upgraded the <a href=\"https://openssl.org/\">OpenSSL</a> library to version 1.1.1g (see issue <a href=\"https://github.com/opencor/opencor/issues/2326\">#2326</a>). Upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.5.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2338\">#2338</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 20.0.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/2342\">#2342</a>). Upgraded the <a href=\"https://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 5.3.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2344\">#2344</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 1.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2348\">#2348</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

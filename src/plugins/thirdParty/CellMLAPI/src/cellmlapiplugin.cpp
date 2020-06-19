@@ -38,7 +38,7 @@ PLUGININFO_FUNC CellMLAPIPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder l'<a href="https://github.com/cellmlapi/cellml-api/">API CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 

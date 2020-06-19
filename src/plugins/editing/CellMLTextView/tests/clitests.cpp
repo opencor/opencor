@@ -40,21 +40,21 @@ void CliTests::helpTests()
 
     QStringList help = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/help.out"));
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView", mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView" }, mOutput));
     QCOMPARE(mOutput, help);
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::help", mOutput));
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTextView::help" }, mOutput));
     QCOMPARE(mOutput, help);
 
     // Try a known command, but with the wrong number of arguments
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << "argument" << "argument", mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::export", "argument", "argument" }, mOutput));
     QCOMPARE(mOutput, help);
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << "argument" << "argument", mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::import", "argument", "argument" }, mOutput));
     QCOMPARE(mOutput, help);
 
     // Try an unknown command, resulting in the help being shown
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::unknown", mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::unknown" }, mOutput));
     QCOMPARE(mOutput, help);
 }
 
@@ -64,22 +64,22 @@ void CliTests::importTests()
 {
     // Try to import a non-existing file
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << "non_existing_file", mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::import", "non_existing_file" }, mOutput));
     QCOMPARE(mOutput, QStringList() << "The file could not be found." << QString());
 
     // Try to import a non-CellML 1.0/1.1 file
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/sine_approximation_model.cellml"), mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::import", OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/sine_approximation_model.cellml") }, mOutput));
     QCOMPARE(mOutput, QStringList() << "Only CellML 1.0/1.1 files can be imported." << QString());
 
     // Try to import an invalid CellML file
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/invalid_model.cellml"), mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::import", OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/invalid_model.cellml") }, mOutput));
     QCOMPARE(mOutput, QStringList() << "The file could not be imported:" << " [13:26] A 'diff' element must have two siblings." << QString());
 
     // Import the Noble 1962 model to the CellML Text format
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("models/noble_model_1962.cellml"), mOutput));
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTextView::import", OpenCOR::fileName("models/noble_model_1962.cellml") }, mOutput));
     QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")));
 }
 
@@ -89,12 +89,12 @@ void CliTests::exportTests()
 {
     // Try to export a non-existing file
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << "non_existing_file", mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::export", "non_existing_file" }, mOutput));
     QCOMPARE(mOutput, QStringList() << "The file could not be found." << QString());
 
     // Try to export a non-CellML Text file
 
-    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("models/noble_model_1962.cellml"), mOutput));
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTextView::export", OpenCOR::fileName("models/noble_model_1962.cellml") }, mOutput));
     QCOMPARE(mOutput, QStringList() << "The file could not be exported:" << " [1:1] 'def' is expected, but '<' was found instead." << QString());
 
     // Export the CellML Text version of the Noble 1962 model to CellML
@@ -103,7 +103,7 @@ void CliTests::exportTests()
 
     expectedOutput.replace("cellml/1.0#", "cellml/1.1#");
 
-    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out"), mOutput));
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTextView::export", OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out") }, mOutput));
     QCOMPARE(mOutput, expectedOutput.split('\n'));
 }
 

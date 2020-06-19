@@ -39,7 +39,7 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computation.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
-                          QStringList() << "SUNDIALS",
+                          { "SUNDIALS" },
                           descriptions);
 }
 
@@ -262,33 +262,32 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    QStringList IntegrationMethodListValues = QStringList() << AdamsMoultonMethod
-                                                            << BdfMethod;
+    QStringList IntegrationMethodListValues = { AdamsMoultonMethod, BdfMethod };
 
-    QStringList IterationTypeListValues = QStringList() << FunctionalIteration
-                                                        << NewtonIteration;
+    QStringList IterationTypeListValues = { FunctionalIteration,
+                                            NewtonIteration };
 
-    QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
-                                                       << BandedLinearSolver
-                                                       << DiagonalLinearSolver
-                                                       << GmresLinearSolver
-                                                       << BiCgStabLinearSolver
-                                                       << TfqmrLinearSolver;
+    QStringList LinearSolverListValues = { DenseLinearSolver,
+                                           BandedLinearSolver,
+                                           DiagonalLinearSolver,
+                                           GmresLinearSolver,
+                                           BiCgStabLinearSolver,
+                                           TfqmrLinearSolver };
 
-    QStringList PreconditionerListValues = QStringList() << NoPreconditioner
-                                                         << BandedPreconditioner;
+    QStringList PreconditionerListValues = { NoPreconditioner,
+                                             BandedPreconditioner };
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGe0, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
-                                << Solver::Property(Solver::Property::Type::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
+    return { Solver::Property(Solver::Property::Type::DoubleGe0, MaximumStepId, MaximumStepDescriptions, {}, MaximumStepDefaultValue, true),
+             Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, {}, MaximumNumberOfStepsDefaultValue, false),
+             Solver::Property(Solver::Property::Type::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false),
+             Solver::Property(Solver::Property::Type::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false),
+             Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false),
+             Solver::Property(Solver::Property::Type::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false),
+             Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, {}, UpperHalfBandwidthDefaultValue, false),
+             Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, {}, LowerHalfBandwidthDefaultValue, false),
+             Solver::Property(Solver::Property::Type::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, {}, RelativeToleranceDefaultValue, false),
+             Solver::Property(Solver::Property::Type::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, {}, AbsoluteToleranceDefaultValue, false),
+             Solver::Property(Solver::Property::Type::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, {}, InterpolateSolutionDefaultValue, false) };
 }
 
 //==============================================================================
@@ -298,7 +297,7 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
     // Return the visibility of our properties based on the given properties
     // values
 
-    QMap<QString, bool> res = QMap<QString, bool>();
+    QMap<QString, bool> res;
 
     if (pSolverPropertiesValues.value(IterationTypeId) == NewtonIteration) {
         // Newton iteration

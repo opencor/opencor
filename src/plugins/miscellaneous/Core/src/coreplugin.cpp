@@ -58,7 +58,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, false,
-                          QStringList(),
+                          {},
                           descriptions);
 }
 
@@ -396,7 +396,8 @@ void CorePlugin::initializePlugin()
                                       QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_O),
                                       mainWindow());
 
-    mFileReloadAction = newAction(mainWindow());
+    mFileReloadAction = newAction(QKeySequence(Qt::ControlModifier|Qt::Key_R),
+                                  mainWindow());
 
     mFileDuplicateAction = newAction(QKeySequence(Qt::ControlModifier|Qt::Key_D),
                                      mainWindow());
@@ -554,10 +555,10 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Retrieve the different file type, solver and data store interfaces that
     // are available to us
 
-    FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
-    FileTypeInterfaces dataStoreFileTypeInterfaces = FileTypeInterfaces();
-    SolverInterfaces solverInterfaces = SolverInterfaces();
-    DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
+    FileTypeInterfaces fileTypeInterfaces;
+    FileTypeInterfaces dataStoreFileTypeInterfaces;
+    SolverInterfaces solverInterfaces;
+    DataStoreInterfaces dataStoreInterfaces;
 
     for (auto plugin : pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());

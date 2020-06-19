@@ -39,7 +39,7 @@ PLUGININFO_FUNC DataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'un magasin de données."));
 
     return new PluginInfo(PluginInfo::Category::DataStore, false, false,
-                          QStringList() << "Core" << "PythonQtSupport",
+                          { "Core", "PythonQtSupport" },
                           descriptions);
 }
 

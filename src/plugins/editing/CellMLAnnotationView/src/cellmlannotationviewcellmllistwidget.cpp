@@ -138,7 +138,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Typ
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              int pNumber) :
-    CellmlAnnotationViewCellmlElementItem(false, pType, QString(), pElement, pNumber)
+    CellmlAnnotationViewCellmlElementItem(false, pType, {}, pElement, pNumber)
 {
     // Set the text for some types
 
@@ -147,9 +147,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Typ
     };
 
     if (pType == Type::Import) {
-        ObjRef<iface::cellml_api::URI> xlinkHref = dynamic_cast<iface::cellml_api::CellMLImport *>(pElement)->xlinkHref();
-
-        setText(QString::fromStdWString(xlinkHref->asText()));
+        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::CellMLImport *>(pElement)->xlinkHref()->asText()));
     } else if (pType == Type::UnitElement) {
         setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::Unit *>(pElement)->units()));
     } else if (pType == Type::Group) {
@@ -573,9 +571,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's units
 
-    ObjRef<iface::cellml_api::UnitsSet> unitsSet = cellmlModel->localUnits();
-
-    populateUnitsModel(modelItem, unitsSet);
+    populateUnitsModel(modelItem, cellmlModel->localUnits());
 
     // Retrieve the model's components
 
@@ -602,9 +598,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // Retrieve the model's component's units
 
-            ObjRef<iface::cellml_api::UnitsSet> componentUnitsSet = component->units();
-
-            populateUnitsModel(componentItem, componentUnitsSet);
+            populateUnitsModel(componentItem, component->units());
 
             // Retrieve the model's component's variables
 
@@ -742,8 +736,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // Variable mappings
 
-            ObjRef<iface::cellml_api::MapVariablesSet> connectionVariableMappings = connection->variableMappings();
-            ObjRef<iface::cellml_api::MapVariablesIterator> connectionVariableMappingsIter = connectionVariableMappings->iterateMapVariables();
+            ObjRef<iface::cellml_api::MapVariablesIterator> connectionVariableMappingsIter = connection->variableMappings()->iterateMapVariables();
 
             for (ObjRef<iface::cellml_api::MapVariables> connectionVariableMapping = connectionVariableMappingsIter->nextMapVariables();
                  connectionVariableMapping != nullptr; connectionVariableMapping = connectionVariableMappingsIter->nextMapVariables()) {
@@ -782,8 +775,7 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationVi
 
             // Retrieve the units' unit references
 
-            ObjRef<iface::cellml_api::UnitSet> unitSet = units->unitCollection();
-            ObjRef<iface::cellml_api::UnitIterator> unitIter = unitSet->iterateUnits();
+            ObjRef<iface::cellml_api::UnitIterator> unitIter = units->unitCollection()->iterateUnits();
 
             for (ObjRef<iface::cellml_api::Unit> unit = unitIter->nextUnit();
                  unit != nullptr; unit = unitIter->nextUnit()) {
@@ -806,8 +798,7 @@ void CellmlAnnotationViewCellmlListWidget::populateGroupComponentReferenceModel(
 
     // Retrieve the component reference's children
 
-    ObjRef<iface::cellml_api::ComponentRefSet> groupComponentReferences = pGroupComponentReference->componentRefs();
-    ObjRef<iface::cellml_api::ComponentRefIterator> groupComponentReferencesIter = groupComponentReferences->iterateComponentRefs();
+    ObjRef<iface::cellml_api::ComponentRefIterator> groupComponentReferencesIter = pGroupComponentReference->componentRefs()->iterateComponentRefs();
 
     for (ObjRef<iface::cellml_api::ComponentRef> groupComponentReference = groupComponentReferencesIter->nextComponentRef();
          groupComponentReference != nullptr; groupComponentReference = groupComponentReferencesIter->nextComponentRef()) {
@@ -930,7 +921,7 @@ void CellmlAnnotationViewCellmlListWidget::removeCurrentMetadata()
     // Re-update the metadata details view now that the current node doesn't
     // have any metadata associated with it
 
-    updateMetadataDetails(mTreeViewWidget->currentIndex(), QModelIndex());
+    updateMetadataDetails(mTreeViewWidget->currentIndex(), {});
 }
 
 //==============================================================================
@@ -944,7 +935,7 @@ void CellmlAnnotationViewCellmlListWidget::removeAllMetadata()
     // Re-update the metadata details view now that the CellML file doesn't have
     // any metadata associated with it
 
-    updateMetadataDetails(mTreeViewWidget->currentIndex(), QModelIndex());
+    updateMetadataDetails(mTreeViewWidget->currentIndex(), {});
 }
 
 //==============================================================================

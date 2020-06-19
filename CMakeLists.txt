@@ -86,6 +86,10 @@ else()
     endif()
 endif()
 
+# Use the C++14 standard
+
+set(CMAKE_CXX_STANDARD 14)
+
 # Determine the effective build directory
 
 set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
@@ -250,8 +254,8 @@ if(   NOT ${QT_VERSION_MAJOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MAJOR}
 endif()
 
 set(QT_DIR ${_qt5Core_install_prefix})
-set(QT_BINARY_DIR ${QT_DIR}/bin)
-set(QT_LIBRARY_DIR ${QT_DIR}/lib)
+set(QT_BINARIES_DIR ${QT_DIR}/bin)
+set(QT_LIBRARIES_DIR ${QT_DIR}/lib)
 set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
 get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
@@ -426,6 +430,32 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     find_package(Qt5${REQUIRED_QT_MODULE} REQUIRED)
 endforeach()
 
+# Common Qt libraries
+
+set(QT_LIBRARIES
+    Core
+    Gui
+    Help
+    Multimedia
+    MultimediaWidgets
+    Network
+    OpenGL
+    Positioning
+    PrintSupport
+    Qml
+    Quick
+    Sensors
+    Sql
+    Svg
+    ${TEST}
+    WebChannel
+    ${WEBKIT}
+    ${WEBKITWIDGETS}
+    Widgets
+    Xml
+    XmlPatterns
+)
+
 # On macOS, keep track of the Qt libraries against which we need to link and
 # make sure that we always use their release version
 # Note: indeed, from Qt 5.12.5, to build a debug version of a Qt-based
@@ -438,36 +468,11 @@ if(APPLE)
         set(TEST Test)
     endif()
 
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        set(WEBKIT WebKit)
-        set(WEBKITWIDGETS WebKitWidgets)
-    endif()
-
     set(MACOS_QT_LIBRARIES
+        ${QT_LIBRARIES}
         Concurrent
-        Core
         DBus
-        Gui
-        Help
         MacExtras
-        Multimedia
-        MultimediaWidgets
-        Network
-        OpenGL
-        Positioning
-        PrintSupport
-        Qml
-        Quick
-        Sensors
-        Sql
-        Svg
-        ${TEST}
-        WebChannel
-        ${WEBKIT}
-        ${WEBKITWIDGETS}
-        Widgets
-        Xml
-        XmlPatterns
     )
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
@@ -479,12 +484,9 @@ if(APPLE)
 endif()
 
 # Some general build settings
-# Note #1: we force the overriding of CMAKE_CXX_FLAGS_RELEASE and
-#          CMAKE_CXX_FLAGS_DEBUG, so that we can really use the compilation
-#          flags we want, as opposed to CMake forcing us to use the ones it
-#          wants...
-# Note #2: MSVC enables C++11 support by default, so we just need to enable it
-#          on Linux and macOS...
+# Note: we force the overriding of CMAKE_CXX_FLAGS_RELEASE and
+#       CMAKE_CXX_FLAGS_DEBUG, so that we can really use the compilation flags
+#       we want, as opposed to CMake forcing us to use the ones it wants...
 
 set(CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
@@ -497,7 +499,7 @@ if(WIN32)
 
     set(LINK_FLAGS_PROPERTIES "/STACK:10000000")
 else()
-    set(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++11")
+    set(CMAKE_CXX_FLAGS "-Wall -W -Werror")
 
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
@@ -531,7 +533,7 @@ if(RELEASE_MODE)
     if(NOT WIN32 AND NOT APPLE)
         set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
         # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
-        #          of OpenCOR or one its shared libraries...
+        #          of OpenCOR or one of its shared libraries...
         # Note #2: the above linking option has become obsolete on macOS...
     endif()
 
@@ -562,12 +564,12 @@ add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 add_definitions(-DUNICODE)
 
-# On macOS, make sure that we support version 10.12 and later, unless a specific
+# On macOS, make sure that we support version 10.14 and later, unless a specific
 # deployment target has been specified
 
 if(APPLE)
     if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
     endif()
 
     set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
@@ -592,7 +594,14 @@ elseif(NOT WIN32)
     set(CMAKE_SKIP_RPATH TRUE)
 
     set(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
-    set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
+
+    if(NOT RELEASE_MODE)
+        set(LINK_RPATH_FLAG "${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/lib'")
+        # Note: this makes it possible to run a debug version of OpenCOR from
+        #       within Qt Creator...
+    endif()
+
+    set(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARIES_DIR} ${LINK_RPATH_FLAG}")
 endif()
 
 # Show what we are about to build
@@ -628,7 +637,7 @@ endif()
 
 set(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 
-file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
+file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}\n")
 
 track_files(${VERSION_DATE_FILENAME})
 
@@ -1016,20 +1025,12 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     endforeach()
 endif()
 
-# Keep track of whether we are building OpenCOR with Python support and, if so,
-# let OpenCOR know about it
+# Determine our relative Python script directory
 
-if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
-    set(PYTHON_SUPPORT TRUE)
+string(REPLACE "${PROJECT_BUILD_DIR}/" ""
+       RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
 
-    add_definitions(-DPYTHON_SUPPORT)
-
-    string(REPLACE "${PROJECT_BUILD_DIR}/" ""
-           RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
-endif()
-
-# Fetch parts of our documentation and build it, if we are neither building
-# Python nor QtWebKit
+# Fetch parts of our documentation and build it, if we are not building Python
 # Note: we need Python because we rely on Sphinx to build our documentation...
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
@@ -1090,7 +1091,7 @@ endif()
 # Note: this is because the lookup scope changes for DSOs that are loaded using
 #       dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
-if(NOT WIN32 AND NOT APPLE AND PYTHON_SUPPORT)
+if(NOT WIN32 AND NOT APPLE)
     include_directories(${PYTHON_INCLUDE_DIR})
 
     target_link_libraries(${CMAKE_PROJECT_NAME}
@@ -1157,7 +1158,7 @@ if(APPLE)
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        macos_deploy_qt_library(Qt${QT_LIBRARY})
+        macos_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR
@@ -1260,15 +1261,14 @@ else()
         set(ORIG_MESA_FILENAME opengl32sw.dll)
         set(DEST_MESA_FILENAME opengl32.dll)
 
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARIES_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARIES_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     endif()
 endif()
 
 # Package OpenCOR
 
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
-set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${DISTRIB_DIR}/readMe.txt")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
@@ -1315,19 +1315,19 @@ if(WIN32)
 
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
-    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+    install(FILES ${QT_BINARIES_DIR}/${ORIG_MESA_FILENAME}
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
     # Qt libraries required by OpenCOR
 
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
-        windows_deploy_qt_library(Qt5${QT_LIBRARY})
+    foreach(QT_LIBRARY ${QT_LIBRARIES})
+        windows_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        foreach(QT_LIBRARY icudt icuin icuuc)
-            windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
+        foreach(ICU_LIBRARY dt in uc)
+            windows_deploy_icu_library(${ICU_LIBRARY})
         endforeach()
     endif()
 
@@ -1364,38 +1364,36 @@ if(WIN32)
     #       skip them in that case (see
     #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
 
-    if(PYTHON_SUPPORT)
-        if(RELEASE_MODE)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
+    if(RELEASE_MODE)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
 
-            install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
-                          ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
-                    DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
+        install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
+                      ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
+                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
 
-            set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
+        set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
 
-            configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
 
-            install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                          ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
-                          ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
-                          ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
-                          ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
-                    DESTINATION .)
-        endif()
-
-        set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
-
-        configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
-
-        install(FILES ${PYTHON_SHELL_FILENAME}
+        install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                      ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
+                      ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
+                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
+                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
                 DESTINATION .)
     endif()
+
+    set(PYTHON_SHELL_FILENAME "${PROJECT_BUILD_DIR}/pythonshell.bat")
+
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.bat.in ${PYTHON_SHELL_FILENAME})
+
+    install(FILES ${PYTHON_SHELL_FILENAME}
+            DESTINATION .)
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
@@ -1448,28 +1446,26 @@ elseif(APPLE)
 
     # Shell scripts to setup and run Python and Jupyter
 
-    if(PYTHON_SUPPORT)
-        set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
+    set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
 
-        configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
-        set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
-        set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
-        set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
-        set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
+    set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
+    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
-        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
-        configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
-        configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
-        install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                      ${JUPYTER_LAB_FILENAME}
-                      ${JUPYTER_NOTEBOOK_FILENAME}
-                      ${PYTHON_SHELL_FILENAME}
-                DESTINATION .
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-    endif()
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                  ${JUPYTER_LAB_FILENAME}
+                  ${JUPYTER_NOTEBOOK_FILENAME}
+                  ${PYTHON_SHELL_FILENAME}
+            DESTINATION .
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()
     # Select TGZ as the packager on Linux
 
@@ -1499,22 +1495,25 @@ else()
                 RENAME ${FULL_LIBRARY})
     endforeach()
 
+    # Library needed on Ubuntu 20.04 and later (while we build OpenCOR on Ubuntu
+    # 18.04 LTS)
+    # Note: the library is needed by Python, hence the user will need to
+    #       symbolically link this library to /usr/lib...
+
+    foreach(LIBRARY ffi.so.6)
+        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+
+        get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+        install(FILES ${REAL_FULL_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_LIBRARY})
+    endforeach()
+
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and macOS, we don't have a macro for deploying
-    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
-    #       file is appended to its suffix, so unless making the macro
-    #       unnecessarily cumbersome to use, it's better to deploy one Qt
-    #       library at a time...
 
-    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
-        if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
-           OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
-            set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
-        else()
-            set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
-        endif()
-
-        linux_deploy_qt_library(DIRECT ${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    foreach(QT_LIBRARY ${QT_LIBRARIES} DBus XcbQpa)
+        linux_deploy_qt_library(${QT_LIBRARY})
     endforeach()
 
     # Qt plugins required by OpenCOR
@@ -1544,28 +1543,26 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    if(PYTHON_SUPPORT)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
 
-        install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
-                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
+            DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-        set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
-        set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
+    set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
+    set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
-        configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
-        configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
+    configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
+    copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+    configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
-        install(FILES ${JUPYTER_CONSOLE_FILENAME}
-                      ${PLATFORM_DISTRIB_DIR}/jupyterlab
-                      ${PLATFORM_DISTRIB_DIR}/jupyternotebook
-                      ${PYTHON_SHELL_FILENAME}
-                DESTINATION .
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-    endif()
+    install(FILES ${JUPYTER_CONSOLE_FILENAME}
+                  ${PLATFORM_DISTRIB_DIR}/jupyterlab
+                  ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                  ${PYTHON_SHELL_FILENAME}
+            DESTINATION .
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
 
 # Specify the package file name, depending on whether we are generating a
