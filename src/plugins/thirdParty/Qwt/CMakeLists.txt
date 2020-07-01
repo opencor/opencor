@@ -3,16 +3,16 @@ project(QwtPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Qwt)
-set(PACKAGE_VERSION 6.1.4)
+set(PACKAGE_VERSION 6.1.5)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 6)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.4)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.5)
 
 # Git tag for our library
 
-set(GIT_TAG v6.1.4)
+set(GIT_TAG v6.1.5)
 
 # Specify where our local package will be installed
 
@@ -72,33 +72,33 @@ if(USE_PREBUILT_QWT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d1d2fbec22fc34e1c0f7612676e006d9577dcad7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c63a227194df2f497a9009ca1301ebbdf895d2d9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 5ef799b130da578317eaac11bcca0b6e784e856f
-                                              535fe36ced19b874fb3a2955e18f161ba8d92325
-                                              6d660396d4cec8f0be73272ce8ca4c834d0c7290
-                                              f86d1415aff8941bd82fc130ee0c633f3a76a853)
+                                  SHA1_VALUES ba0533c37188c727574118e60c1ede9138797e0a
+                                              2779556eb2fad7826cf42b095ce49859278fc943
+                                              9d1eff44ae61c9a35841ee64d8db78f4fe795667
+                                              ab7fc33185dd02cc9e6f39daf87b49b23b72fbaa)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8eb1b10dc5cde285b12882ed7b35f2537783514e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b0b521df5367611b7b2fe7b0062201b0de413258
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9474b4e7b65741b3b618e5409460db6d04789892
-                                              ed05b52cb3e4a60b22544d254c92d3ea8393cb41
-                                              133e4d38b569b0e53b8de01a80a81ac9fff3c97a
-                                              6b57f528da6778958cca548ff092f6ab41dbad27)
+                                  SHA1_VALUES 6ce76189b563c823b3311c77bfa0079cc4d7e793
+                                              29841ba77a22bb1028349ab7105ef7f107e74532
+                                              d70e61c76e8e62e545b69d9abe7945aaf09e9dff
+                                              d3c451f84b79b2479dc8165475e739c5653835e6)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 06ea2b255732bba881ef91711710f5ac1ff5aee8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cc015b05e2a142d65bedd22f7aa326a0e97cd789
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f7f1c1644ad921895a722d9f44bbda1d5da7f79e
-                                          95fb741efee4869580381ba2937ecd0844dbb690)
+                              SHA1_VALUES e13d6c174a84dc5ff5282d521ac4ed79cf2d792f
+                                          c5f75ce6480ea2de0f09d833820ef5c3596f248e)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 73e893669bb0e2cf334fcedc77dd1da70ad10f18
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d17311bd120d440aa27ac1729818c8d0ac29b020
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 80ab718f8ad589a520d17c697205574cfa5c7dc1
-                                          b1194973180ae987f03b3d6fc639af736f4104a4)
+                              SHA1_VALUES 9eae7ef4d1151641c2eeaba969ef47f9a060920a
+                                          878ce7cbc09d6f429f26b7bb8941e4913734d998)
     endif()
 else()
     # Set platform specific configuration options

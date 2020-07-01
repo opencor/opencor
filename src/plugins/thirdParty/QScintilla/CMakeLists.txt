@@ -3,7 +3,7 @@ project(QScintillaPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.11.4)
+set(PACKAGE_VERSION 2.11.5)
 
 # Version of our library
 
@@ -12,7 +12,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v2.11.4)
+set(GIT_TAG v2.11.5)
 
 # Specify where our local package will be installed
 
@@ -63,27 +63,27 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f558f5c3be2638ccb84740026e7d3a195a357d09
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} eab9b3bd666ab1391304f8bcf5ef2bc4e685a5f3
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9cbc3d3f105117299e27ea800337094d07711226
+                                  SHA1_VALUES cb9f5dc1fe5f42313d81b01418b354790fa2fa2e
                                               edcc3043d85e8917d067f431f7483b749670a295)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 9b23c5d1afaf587c43a70f1d0bf2d96b31bc42bf
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a367c8b70352cba159d330af23a2a187bf022e03
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES dd087c6725e36c111b0305db63aa0677e061fa6f
+                                  SHA1_VALUES 7af80bb556be1b42d8440c1288250ae6758163b1
                                               984288b48ba45ead8677fc7210e325960850f9be)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 519be662ac44dedec54514bfb9be90b1f9cb7cc9
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cf81f9c6b0fb336aafffef33547a8b9b4f5ecb38
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 18ce6c262c9cd84121a0fe073a3b425a42ed068d)
+                              SHA1_VALUES 9f227d1e7fd08af246076e982abcb31b195ba052)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c63a78f65490ea0f9f23ba332150daca5a2265cc
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 087fc3b2a85e1c165ab4bf5359b9f59f868b0b28
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9edd31c794752915e3269a1daccef53301630c88)
+                              SHA1_VALUES df9b7f703fa80f9374bbd2cff257732dcc24ad52)
     endif()
 else()
     # Set platform specific configuration options
