@@ -25,7 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#ifdef Q_OS_LINUX
+#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     #include "Python.h"
     // Note: this needs to be included before <QObject> to prevent name
     //       clashes...
@@ -72,7 +72,7 @@ int main(int pArgC, char *pArgV[])
     // Note: this is because the lookup scope changes for DSOs that are loaded
     //       using dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
-#ifdef Q_OS_LINUX
+#if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
     Py_NoUserSiteDirectory = 1;
 #endif
 
