@@ -36,7 +36,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #ifdef GUI_SUPPORT
     #include "preferencesinterface.h"
 #endif
-#include "pythoninterface.h"
+#ifdef PYTHON_SUPPORT
+    #include "pythoninterface.h"
+#endif
 #include "solverinterface.h"
 #ifdef GUI_SUPPORT
     #include "viewinterface.h"
@@ -154,8 +156,10 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         || (   (qobject_cast<PreferencesInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
 #endif
+#ifdef PYTHON_SUPPORT
                         || (   (qobject_cast<PythonInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "pythonInterfaceVersion") != pythonInterfaceVersion()))
+#endif
                         || (   (qobject_cast<SolverInterface *>(mInstance) != nullptr)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
 #ifdef GUI_SUPPORT
