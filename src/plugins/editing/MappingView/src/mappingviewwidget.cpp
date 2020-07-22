@@ -119,7 +119,7 @@ void MappingViewWidget::update(const QString &pFileName)
     // Retrieve the requested CellML file
 
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-
+    //TODO can be null
     populateCellmlModel();
 }
 

@@ -24,6 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "coreguiutils.h"
 #include "mappingviewplugin.h"
 #include "mappingviewwidget.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -293,6 +294,17 @@ QString MappingViewPlugin::viewDefaultFileExtension() const
 QWidget * MappingViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our Mapping view widget using the given file
+
+    // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
+    // file
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
+
+    if (   Core::FileManager::instance()->isNew(pFileName)
+        || (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1))) {
+        return nullptr;
+    }
 
     mFileName = pFileName;
 
