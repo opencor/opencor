@@ -12,6 +12,7 @@ add_plugin(MappingView
 
         src/mappingviewplugin.cpp
         src/mappingviewwidget.cpp
+        src/meshreader.cpp
     UIS
         src/mappingviewwidget.ui
     PLUGINS

@@ -18,20 +18,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view widget
+// Mesh file reader
 //==============================================================================
 
 #pragma once
 
-//==============================================================================
-
-#include "viewwidget.h"
-#include "cellmlfile.h"
-
-//==============================================================================
-
-#include <QStringListModel> //TODO remove when over
-#include <QTableView>
+#include <QFile>
 
 //==============================================================================
 
@@ -46,38 +38,19 @@ namespace MappingView {
 
 //==============================================================================
 
-class MappingViewWidget : public Core::ViewWidget
+
+class meshReader : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit MappingViewWidget(QWidget *pParent);
-    ~MappingViewWidget() override;
 
-    void retranslateUi() override;
+    meshReader(QString);
 
-    QWidget * widget(const QString &pFileName) override;
-
-    void update(const QString &pFileName);
+    QStringList getNodesNames();
 
 private:
-    Ui::MappingViewWidget *mGui;
+    QString pFileName;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
-
-    QStringListModel
-        *mListViewModelVariables,//TODO temporary
-        *mListViewModelOutput;//TODO temporary
-
-    //QSqlRelationalTableModel *mTableModel;
-
-    QStringList *mListOutput;
-
-    QString mFileName;
-    QString mOutputFileName;
-    void populateCellmlModel();
-
-    void updateOutput();
 };
 
 //==============================================================================
@@ -88,3 +61,4 @@ private:
 //==============================================================================
 // End of file
 //==============================================================================
+

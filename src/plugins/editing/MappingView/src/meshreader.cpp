@@ -18,26 +18,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view widget
+// Mesh file reader
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "viewwidget.h"
-#include "cellmlfile.h"
+#include "meshreader.h"
 
 //==============================================================================
 
-#include <QStringListModel> //TODO remove when over
-#include <QTableView>
-
-//==============================================================================
-
-namespace Ui {
-    class MappingViewWidget;
-} // namespace Ui
+#include <QTextStream>
 
 //==============================================================================
 
@@ -46,39 +34,34 @@ namespace MappingView {
 
 //==============================================================================
 
-class MappingViewWidget : public Core::ViewWidget
+meshReader::meshReader(QString name):
+    pFileName(name)
 {
-    Q_OBJECT
+}
 
-public:
-    explicit MappingViewWidget(QWidget *pParent);
-    ~MappingViewWidget() override;
+//==============================================================================
 
-    void retranslateUi() override;
+QStringList meshReader::getNodesNames()
+{
+    QStringList list = QStringList();
 
-    QWidget * widget(const QString &pFileName) override;
+    QFile file(pFileName);
 
-    void update(const QString &pFileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return list;
+    }
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            QStringList words = line.split(' ');
+            words.removeAll("");
+            if (words.first()==QString("Node:")) {
+                list << words[1];
+            }
+        }
 
-private:
-    Ui::MappingViewWidget *mGui;
-
-    CellMLSupport::CellmlFile *mCellmlFile;
-
-    QStringListModel
-        *mListViewModelVariables,//TODO temporary
-        *mListViewModelOutput;//TODO temporary
-
-    //QSqlRelationalTableModel *mTableModel;
-
-    QStringList *mListOutput;
-
-    QString mFileName;
-    QString mOutputFileName;
-    void populateCellmlModel();
-
-    void updateOutput();
-};
+    return list; //TODO sort before ?
+}
 
 //==============================================================================
 

@@ -24,7 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "filemanager.h"
 #include "mappingviewwidget.h"
-
+#include "meshreader.h"
 #include "cellmlfilemanager.h"
 
 //==============================================================================
@@ -45,9 +45,12 @@ namespace MappingView {
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::MappingViewWidget)
+    mGui(new Ui::MappingViewWidget),
+    mListOutput(nullptr)
 {
     // Delete the layout that comes with ViewWidget
+
+    mOutputFileName = "../MeshFiles/MainTime_0.part0.exnode";
 
     delete layout();
 
@@ -112,14 +115,24 @@ void MappingViewWidget::update(const QString &pFileName)
     mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
     mGui->sizeValue->setText(Core::sizeAsString(quint64(QFile(pFileName).size())));
 
-    mListViewModel= new QStringListModel(this); //TODO defining only when charging the plugin ?
+    mListViewModelVariables = new QStringListModel(); //TODO defining only when charging the plugin ?
+    mListViewModelOutput = new QStringListModel();
 
-    mGui->variablesList->setModel(mListViewModel); //TODO set only when charging the plugin ?
+    mGui->variablesList->setModel(mListViewModelVariables); //TODO set only when charging the plugin ?
+    mGui->outputList->setModel(mListViewModelOutput);
+    //TODO
+    //mGui->tableView->setModel()
+
+
+    //Retrieve The output variables
+
+    updateOutput();
+    mListViewModelOutput->setStringList(*mListOutput);
 
     // Retrieve the requested CellML file
 
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    //TODO can be null
+
     populateCellmlModel();
 }
 
@@ -166,9 +179,19 @@ void MappingViewWidget::populateCellmlModel()
         }
     }
 
-    mListViewModel->setStringList(list);
+    mListViewModelVariables->setStringList(list);
 }
 
+void MappingViewWidget::updateOutput()
+{
+    if (mListOutput != nullptr) {
+        delete mListOutput;
+    }
+
+    meshReader reader(mOutputFileName);
+
+    mListOutput = new QStringList(reader.getNodesNames());
+}
 
 //==============================================================================
 

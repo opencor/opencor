@@ -41,9 +41,5 @@
         <source>No</source>
         <translation>Non</translation>
     </message>
-    <message>
-        <source>VICTOOOOIIIIIRE</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>
