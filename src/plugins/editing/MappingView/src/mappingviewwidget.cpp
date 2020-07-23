@@ -50,7 +50,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 {
     // Delete the layout that comes with ViewWidget
 
-    mOutputFileName = "../MeshFiles/MainTime_0.part0.exnode";
+    mOutputFileName = "../opencor/meshes/circulation.exnode";
 
     delete layout();
 
