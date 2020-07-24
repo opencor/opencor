@@ -27,13 +27,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "viewwidget.h"
 #include "cellmlfile.h"
-#include "mappingvieweditingwidget.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
 #include <QStringListModel> //TODO remove when over
 #include <QTableView>
-#include <QMap>
 
 //==============================================================================
 
@@ -48,33 +47,38 @@ namespace MappingView {
 
 //==============================================================================
 
-class MappingViewWidget : public Core::ViewWidget
+class MappingViewEditingWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 
 public:
-    explicit MappingViewWidget(QWidget *pParent);
-    ~MappingViewWidget() override;
+    explicit MappingViewEditingWidget(const QString &pFileName,
+                                               QWidget *pParent);
 
     void retranslateUi() override;
 
-    QWidget * widget(const QString &pFileName) override; 
+    CellMLSupport::CellmlFile * cellmlFile() const;
 
-    void initialize(const QString &pFileName);
-    void finalize(const QString &pFileName);
+    QStringListModel *listViewModelVariables();
 
-    void filePermissionsChanged(const QString &pFileName);
-    void fileSaved(const QString &pFileName);
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+    QStringListModel *listViewModelOutput();
 
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
-
+    void filePermissionsChanged();
 private:
-    Ui::MappingViewWidget *mGui;
 
-    MappingViewEditingWidget* mEditingWidget = nullptr;
-    QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
+    CellMLSupport::CellmlFile *mCellmlFile;
+
+    QStringListModel
+        *mListViewModelVariables,//TODO temporary
+        *mListViewModelOutput;//TODO temporary
+
+    //QSqlRelationalTableModel *mTableModel;
+
+    QString mFileName;
+    QString mOutputFileName;
+
+    void populateCellmlModel();
+    void populateOutput();
 };
 
 //==============================================================================

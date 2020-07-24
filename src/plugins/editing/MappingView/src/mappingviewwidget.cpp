@@ -45,12 +45,9 @@ namespace MappingView {
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::MappingViewWidget),
-    mListOutput(nullptr)
+    mGui(new Ui::MappingViewWidget)
 {
     // Delete the layout that comes with ViewWidget
-
-    mOutputFileName = "../opencor/meshes/circulation.exnode";
 
     delete layout();
 
@@ -80,7 +77,9 @@ void MappingViewWidget::retranslateUi()
     // Update ourself too since some widgets will have been reset following the
     // retranslation (e.g. mGui->fileNameValue)
 
-    update(mFileName);
+    for(auto editingWidget : mEditingWidgets) {
+        editingWidget->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -96,6 +95,128 @@ QWidget * MappingViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
+void MappingViewWidget::initialize(const QString &pFileName)
+{
+    // Retrieve the editing widget associated with the given file, if any
+
+    mEditingWidget = mEditingWidgets.value(pFileName);
+
+    if (mEditingWidget == nullptr) {
+        // No editing widget exists for the given file, so create one
+
+        mEditingWidget = new MappingViewEditingWidget(pFileName, this);
+
+        mEditingWidgets.insert(pFileName, mEditingWidget);
+    }
+
+    //TODO to throw away
+        mGui->fileNameValue->setText(pFileName);
+
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+        mGui->lockedValue->setText(fileManagerInstance->isLocked(pFileName)?tr("Yes"):tr("No"));
+
+        QString sha1Value = fileManagerInstance->sha1(pFileName);
+
+        mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
+        mGui->sizeValue->setText(Core::sizeAsString(quint64(QFile(pFileName).size())));
+
+    mGui->variablesList->setModel(mEditingWidget->listViewModelVariables()); //TODO set only when charging the plugin ?
+    mGui->outputList->setModel(mEditingWidget->listViewModelOutput());
+}
+
+//==============================================================================
+
+void MappingViewWidget::finalize(const QString &pFileName)
+{
+    // Remove the editing widget, should there be one for the given file
+
+    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+
+    if (editingWidget != nullptr) {
+        // There is an editing widget for the given file name, so delete it and
+        // remove it from our list
+
+        delete editingWidget;
+
+        mEditingWidgets.remove(pFileName);
+
+        // Reset our memory of the current editor, if needed
+
+        if (editingWidget == mEditingWidget) {
+            mEditingWidget = nullptr;
+        }
+    }
+}
+
+//==============================================================================
+
+void MappingViewWidget::filePermissionsChanged(const QString &pFileName)
+{
+    // The given file has been un/locked, so enable/disable parts of our GUI,
+    // should the given file be managed
+
+    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+
+    if (editingWidget != nullptr) {
+        editingWidget->filePermissionsChanged();
+    }
+}
+
+//==============================================================================
+
+void MappingViewWidget::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
+
+    QWidget *crtWidget = widget(pFileName);
+
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
+        fileReloaded(pFileName);
+    }
+}
+
+//==============================================================================
+
+void MappingViewWidget::fileReloaded(const QString &pFileName)
+{
+    // The given file has been reloaded, so reload it, should it be managed
+
+    if (mEditingWidgets.contains(pFileName)) {
+        finalize(pFileName);
+        initialize(pFileName);
+    }
+}
+
+//==============================================================================
+
+void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
+{
+    // The given file has been renamed, so update our editing widgets mapping
+
+    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+
+    if (editingWidget != nullptr) {
+        mEditingWidgets.insert(pNewFileName, editingWidget);
+        mEditingWidgets.remove(pOldFileName);
+    }
+}
+
+//==============================================================================
+
+
+bool MappingViewWidget::saveFile(const QString &pOldFileName, const QString &pNewFileName)
+{
+    // Save (update) the CellML file to the given file
+
+    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+
+    return (editingWidget != nullptr)?editingWidget->cellmlFile()->update(pNewFileName):false;
+}
+
+//==============================================================================
+/*
 void MappingViewWidget::update(const QString &pFileName)
 {
     // Keep track of the given file name
@@ -115,8 +236,6 @@ void MappingViewWidget::update(const QString &pFileName)
     mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
     mGui->sizeValue->setText(Core::sizeAsString(quint64(QFile(pFileName).size())));
 
-    mListViewModelVariables = new QStringListModel(); //TODO defining only when charging the plugin ?
-    mListViewModelOutput = new QStringListModel();
 
     mGui->variablesList->setModel(mListViewModelVariables); //TODO set only when charging the plugin ?
     mGui->outputList->setModel(mListViewModelOutput);
@@ -135,63 +254,7 @@ void MappingViewWidget::update(const QString &pFileName)
 
     populateCellmlModel();
 }
-
-void MappingViewWidget::populateCellmlModel()
-{
-    QStringList list;
-
-    // Make sure that we have a model before actually populating ourselves
-
-    iface::cellml_api::Model *cellmlModel = mCellmlFile->model();
-
-    if (cellmlModel == nullptr) {
-        return;
-    }
-
-    // Retrieve the model's components
-
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlModel->localComponents();
-
-    if (components->length() != 0) {
-
-        // Retrieve the model's components themselves
-
-        ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIter = components->iterateComponents();
-
-        for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIter->nextComponent();
-             component != nullptr; component = componentsIter->nextComponent()) {
-
-            // Retrieve the model's component's variables
-
-            ObjRef<iface::cellml_api::CellMLVariableSet> componentVariables = component->variables();
-
-            if (componentVariables->length() != 0) {
-                // Retrieve the model's component's variables themselves
-
-                ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
-
-                for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
-                     componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
-
-                    list.append(QString::fromStdWString(componentVariable->name()));
-                }
-            }
-        }
-    }
-
-    mListViewModelVariables->setStringList(list);
-}
-
-void MappingViewWidget::updateOutput()
-{
-    if (mListOutput != nullptr) {
-        delete mListOutput;
-    }
-
-    meshReader reader(mOutputFileName);
-
-    mListOutput = new QStringList(reader.getNodesNames());
-}
+*/
 
 //==============================================================================
 

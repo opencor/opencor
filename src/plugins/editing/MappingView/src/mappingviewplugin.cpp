@@ -95,7 +95,7 @@ void MappingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // widget, if needed
 
     if (pFileName == mFileName) {
-        mViewWidget->update(pFileName);
+        mViewWidget->filePermissionsChanged(pFileName);
     }
 }
 
@@ -124,7 +124,7 @@ void MappingViewPlugin::fileReloaded(const QString &pFileName)
     // The given file has been reloaded, so update our view widget, if needed
 
     if (pFileName == mFileName) {
-        mViewWidget->update(pFileName);
+        mViewWidget->fileReloaded(pFileName);
     }
 }
 
@@ -140,7 +140,7 @@ void MappingViewPlugin::fileRenamed(const QString &pOldFileName,
     if (pOldFileName == mFileName) {
         mFileName = pNewFileName;
 
-        mViewWidget->update(pNewFileName);
+        mViewWidget->fileRenamed(pOldFileName,pNewFileName);
     }
 }
 
@@ -308,7 +308,7 @@ QWidget * MappingViewPlugin::viewWidget(const QString &pFileName)
 
     mFileName = pFileName;
 
-    mViewWidget->update(pFileName);
+    mViewWidget->initialize(pFileName);
 
     return mViewWidget;
 }

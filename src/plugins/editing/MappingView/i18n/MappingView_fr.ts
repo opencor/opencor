@@ -25,6 +25,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::MappingView::MappingViewEditingWidget</name>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Oui</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">Non</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::MappingView::MappingViewPlugin</name>
     <message>
         <source>Mapping</source>

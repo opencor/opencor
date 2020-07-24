@@ -10,6 +10,7 @@ add_plugin(MappingView
         ../../plugininterface.cpp
         ../../viewinterface.cpp
 
+        src/mappingvieweditingwidget.cpp
         src/mappingviewplugin.cpp
         src/mappingviewwidget.cpp
         src/meshreader.cpp
