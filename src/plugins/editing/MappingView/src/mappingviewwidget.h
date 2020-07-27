@@ -97,10 +97,19 @@ private:
     MappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
 
-    //char *mZincSceneViewerDescription;
-/*
+    QString mExNodeFileName;
+    QString mExElemFileName;
+
+
+    OpenCMISS::Zinc::Fieldmodule mFieldModule;
+
+    char *mZincSceneViewerDescription;
+
+    void createAndSetZincContext();
+
+    /*
 private slots:
-    //void createAndSetZincContext();
+    void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
 */

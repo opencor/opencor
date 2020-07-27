@@ -38,6 +38,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QFile>
 #include <QtGui>
 
+#include<QDebug> //TODO no keep this one of course
+
 //==============================================================================
 
 //==============================================================================
@@ -50,8 +52,8 @@ namespace MappingView {
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     Core::SplitterWidget(pParent),
     mAxesFontPointSize(0),
-    mZincContext(nullptr)//,
-//    mZincSceneViewerDescription(nullptr)
+    mZincContext(nullptr),
+    mZincSceneViewerDescription(nullptr)
 {
     // Set our orientation
 
@@ -68,11 +70,25 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     addWidget(mListWidgetVariables);
 
+    // Create a local copy of our .exnode and .exelem files
+
+    QString applicationBaseFileName = QDir::tempPath()+"/mesh";
+
+    mExNodeFileName = applicationBaseFileName+".exnode";
+    mExElemFileName = applicationBaseFileName+".exelem";
+
+    Core::writeResourceToFile(mExNodeFileName, QDir::currentPath()+"/../opencor/meshes/circulation.exnode");
+    Core::writeResourceToFile(mExElemFileName, QDir::currentPath()+"/../opencor/meshes/circulation.exelem");
+    //but nothing appear in /tmp/ !
+
+    mListWidgetVariables->addItem(QDir::currentPath()+"/../opencor/meshes/circulation.exnode");
+    mListWidgetVariables->addItem(mExElemFileName);
+
     // Create and add a Zinc widget
 
     mZincWidget = new ZincWidget::ZincWidget(this);
 
-    /*0
+    /*
     connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
             this, SLOT(createAndSetZincContext()));
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
@@ -84,8 +100,47 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     addWidget(mZincWidget);
 
     // Create and set our Zinc context
-    //TODO
-    //createAndSetZincContext();
+
+    createAndSetZincContext();
+
+
+
+    OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
+
+    defaultRegion.readFile(qPrintable(mExNodeFileName));
+    defaultRegion.readFile(qPrintable(mExElemFileName));
+
+    mFieldModule = defaultRegion.getFieldmodule();
+
+    OpenCMISS::Zinc::Scene scene = defaultRegion.getScene();
+
+    scene.beginChange();
+        OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
+
+        // Draw the axes at the origin
+
+        OpenCMISS::Zinc::GraphicsPoints axes = scene.createGraphicsPoints();
+
+        axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
+
+        OpenCMISS::Zinc::Graphicspointattributes pointAttributes = axes.getGraphicspointattributes();
+
+        OpenCMISS::Zinc::Material material = materialModule.createMaterial();
+
+        std::array<double, 3> rgbValues = { 0.0, 0.0, 0.0 };
+
+        material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues.data());
+        material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues.data());
+
+        axes.setMaterial(material);
+    scene.endChange();
+
+    // adding view all command
+
+    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
+
+    sceneViewer.viewAll();
+
 
 }
 
@@ -200,7 +255,7 @@ void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &
 }
 
 //==============================================================================
-/*
+
 void MappingViewWidget::createAndSetZincContext()
 {
     // Keep track of our current scene viewer's description
@@ -215,7 +270,7 @@ void MappingViewWidget::createAndSetZincContext()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
-} */
+}
 
 //==============================================================================
 /*
