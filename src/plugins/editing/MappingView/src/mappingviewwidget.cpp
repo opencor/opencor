@@ -103,7 +103,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     createAndSetZincContext();
 
-
+    //===== Do stuff to fold later
 
     OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
 
@@ -127,12 +127,13 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
         OpenCMISS::Zinc::Material material = materialModule.createMaterial();
 
-        std::array<double, 3> rgbValues = { 0.0, 0.0, 0.0 };
+        std::array<double, 3> rgbValues = { 0.0, 200.0, 0.0 };
 
         material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues.data());
         material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues.data());
 
         axes.setMaterial(material);
+
     scene.endChange();
 
     // adding view all command
@@ -148,7 +149,12 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
 MappingViewWidget::~MappingViewWidget()
 {
+
     delete mZincContext;
+
+    QFile::remove(mExNodeFileName);
+    QFile::remove(mExElemFileName);
+
 }
 
 //==============================================================================
