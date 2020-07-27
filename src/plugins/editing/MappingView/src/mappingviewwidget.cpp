@@ -21,11 +21,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Mapping view widget
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "corecliutils.h"
 #include "filemanager.h"
 #include "mappingviewwidget.h"
 #include "meshreader.h"
 #include "cellmlfilemanager.h"
+#include "zincwidget.h"
 
 //==============================================================================
 
@@ -38,22 +40,52 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace MappingView {
 
 //==============================================================================
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
-    ViewWidget(pParent),
-    mGui(new Ui::MappingViewWidget)
+    Core::SplitterWidget(pParent),
+    mAxesFontPointSize(0),
+    mZincContext(nullptr)//,
+//    mZincSceneViewerDescription(nullptr)
 {
-    // Delete the layout that comes with ViewWidget
+    // Set our orientation
 
-    delete layout();
+    setOrientation(Qt::Horizontal);
 
-    // Set up the GUI
+    // Keep track of our movement
+    /*
+    connect(this, &Core::SplitterWidget::splitterMoved,
+            this, &MappingViewEditingWidget::splitterMoved);
+    */
 
-    mGui->setupUi(this);
+    mListWidgetVariables = new QListWidget();
+    mListWidgetOutput = new QListWidget();
+
+    addWidget(mListWidgetVariables);
+
+    // Create and add a Zinc widget
+
+    mZincWidget = new ZincWidget::ZincWidget(this);
+
+    /*0
+    connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
+            this, SLOT(createAndSetZincContext()));
+    connect(mZincWidget, SIGNAL(graphicsInitialized()),
+            this, SLOT(graphicsInitialized()));
+    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
+            this, SLOT(devicePixelRatioChanged(const int &)));
+    */
+
+    addWidget(mZincWidget);
+
+    // Create and set our Zinc context
+    //TODO
+    //createAndSetZincContext();
 
 }
 
@@ -61,36 +93,19 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
 MappingViewWidget::~MappingViewWidget()
 {
-    // Delete the GUI
-
-    delete mGui;
+    delete mZincContext;
 }
 
 //==============================================================================
 
 void MappingViewWidget::retranslateUi()
 {
-    // Retranslate our GUI
-
-    mGui->retranslateUi(this);
-
     // Update ourself too since some widgets will have been reset following the
     // retranslation (e.g. mGui->fileNameValue)
 
     for(auto editingWidget : mEditingWidgets) {
         editingWidget->retranslateUi();
     }
-}
-
-//==============================================================================
-
-QWidget * MappingViewWidget::widget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName)
-
-    // Return the requested (self) widget
-
-    return this;
 }
 
 //==============================================================================
@@ -109,20 +124,8 @@ void MappingViewWidget::initialize(const QString &pFileName)
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }
 
-    //TODO to throw away
-        mGui->fileNameValue->setText(pFileName);
-
-        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-        mGui->lockedValue->setText(fileManagerInstance->isLocked(pFileName)?tr("Yes"):tr("No"));
-
-        QString sha1Value = fileManagerInstance->sha1(pFileName);
-
-        mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
-        mGui->sizeValue->setText(Core::sizeAsString(quint64(QFile(pFileName).size())));
-
-    mGui->variablesList->setModel(mEditingWidget->listViewModelVariables()); //TODO set only when charging the plugin ?
-    mGui->outputList->setModel(mEditingWidget->listViewModelOutput());
+    //mListWidgetVariables->setModel(mEditingWidget->listViewModelVariables()); //TODO set only when charging the plugin ?
+    //mGui->outputList->setModel(mEditingWidget->listViewModelOutput());
 }
 
 //==============================================================================
@@ -167,14 +170,7 @@ void MappingViewWidget::filePermissionsChanged(const QString &pFileName)
 
 void MappingViewWidget::fileSaved(const QString &pFileName)
 {
-    // The given file has been saved, so consider it reloaded, but only if it
-    // has a corresponding widget that is invisible
-
-    QWidget *crtWidget = widget(pFileName);
-
-    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
-        fileReloaded(pFileName);
-    }
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
@@ -204,59 +200,40 @@ void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &
 }
 
 //==============================================================================
-
-
-bool MappingViewWidget::saveFile(const QString &pOldFileName, const QString &pNewFileName)
+/*
+void MappingViewWidget::createAndSetZincContext()
 {
-    // Save (update) the CellML file to the given file
+    // Keep track of our current scene viewer's description
 
-    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
 
-    return (editingWidget != nullptr)?editingWidget->cellmlFile()->update(pNewFileName):false;
-}
+    // Create and set our Zinc context
+
+    mZincContext = new OpenCMISS::Zinc::Context("TestZinc");
+
+    mZincContext->getMaterialmodule().defineStandardMaterials();
+    mZincContext->getGlyphmodule().defineStandardGlyphs();
+
+    mZincWidget->setContext(mZincContext);
+} */
 
 //==============================================================================
 /*
-void MappingViewWidget::update(const QString &pFileName)
+void MappingViewWidget::devicePixelRatioChanged(const int &pDevicePixelRatio)
 {
-    // Keep track of the given file name
+    //TODO to confirm
+    // Update our scene using the given devide pixel ratio
 
-    mFileName = pFileName;
+    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
 
-    // Initialise our GUI with some information about the given file
-
-    mGui->fileNameValue->setText(pFileName);
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-    mGui->lockedValue->setText(fileManagerInstance->isLocked(pFileName)?tr("Yes"):tr("No"));
-
-    QString sha1Value = fileManagerInstance->sha1(pFileName);
-
-    mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
-    mGui->sizeValue->setText(Core::sizeAsString(quint64(QFile(pFileName).size())));
-
-
-    mGui->variablesList->setModel(mListViewModelVariables); //TODO set only when charging the plugin ?
-    mGui->outputList->setModel(mListViewModelOutput);
-    //TODO
-    //mGui->tableView->setModel()
-
-
-    //Retrieve The output variables
-
-    updateOutput();
-    mListViewModelOutput->setStringList(*mListOutput);
-
-    // Retrieve the requested CellML file
-
-    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-
-    populateCellmlModel();
+    scene.beginChange();
+        scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
+    scene.endChange();
 }
 */
-
 //==============================================================================
+
+
 
 } // namespace MappingView
 } // namespace OpenCOR

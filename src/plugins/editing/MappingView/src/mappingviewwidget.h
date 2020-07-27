@@ -34,6 +34,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QStringListModel> //TODO remove when over
 #include <QTableView>
 #include <QMap>
+#include <QListWidget>
+
+//=============================================================================
+
+#include "zincbegin.h"
+    #include "opencmiss/zinc/fieldfiniteelement.hpp"
+    #include "opencmiss/zinc/timekeeper.hpp"
+#include "zincend.h"
 
 //==============================================================================
 
@@ -44,11 +52,20 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace ZincWidget {
+    class ZincWidget;
+}   // namespace ZincWidget
+
+//==============================================================================
+
 namespace MappingView {
 
 //==============================================================================
 
-class MappingViewWidget : public Core::ViewWidget
+class MappingViewWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 
@@ -57,8 +74,6 @@ public:
     ~MappingViewWidget() override;
 
     void retranslateUi() override;
-
-    QWidget * widget(const QString &pFileName) override; 
 
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
@@ -70,11 +85,25 @@ public:
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
+    int mAxesFontPointSize;
+
 private:
-    Ui::MappingViewWidget *mGui;
+    ZincWidget::ZincWidget *mZincWidget;
+    OpenCMISS::Zinc::Context *mZincContext;
+
+    QListWidget *mListWidgetVariables;
+    QListWidget *mListWidgetOutput;
 
     MappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
+
+    //char *mZincSceneViewerDescription;
+/*
+private slots:
+    //void createAndSetZincContext();
+    void graphicsInitialized();
+    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+*/
 };
 
 //==============================================================================

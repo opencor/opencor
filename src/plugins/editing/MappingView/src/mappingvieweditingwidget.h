@@ -66,13 +66,11 @@ public:
     void filePermissionsChanged();
 private:
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellmlFile *mCellmlFile = nullptr;
 
     QStringListModel
-        *mListViewModelVariables,//TODO temporary
-        *mListViewModelOutput;//TODO temporary
-
-    //QSqlRelationalTableModel *mTableModel;
+        *mListViewModelVariables = nullptr,//TODO temporary
+        *mListViewModelOutput = nullptr;//TODO temporary
 
     QString mFileName;
     QString mOutputFileName;
