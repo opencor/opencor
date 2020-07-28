@@ -105,14 +105,14 @@ private:
 
     char *mZincSceneViewerDescription;
 
-    void createAndSetZincContext();
 
-    /*
+
+
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
-*/
+
 };
 
 //==============================================================================

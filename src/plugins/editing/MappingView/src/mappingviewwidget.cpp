@@ -42,6 +42,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include "zincbegin.h" //TODO takeaway the useless
+    #include "opencmiss/zinc/fieldconstant.hpp"
+    #include "opencmiss/zinc/fieldmodule.hpp"
+    #include "opencmiss/zinc/fieldvectoroperators.hpp"
+    #include "opencmiss/zinc/status.h"
+#include "zincend.h"
+
 //==============================================================================
 
 namespace OpenCOR {
@@ -79,8 +86,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     Core::writeResourceToFile(mExNodeFileName, QDir::currentPath()+"/../opencor/meshes/circulation.exnode");
     Core::writeResourceToFile(mExElemFileName, QDir::currentPath()+"/../opencor/meshes/circulation.exelem");
-    //but nothing appear in /tmp/ !
-
+    //but nothing appear in /tmp/ !!!
     mListWidgetVariables->addItem(QDir::currentPath()+"/../opencor/meshes/circulation.exnode");
     mListWidgetVariables->addItem(mExElemFileName);
 
@@ -88,31 +94,36 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     mZincWidget = new ZincWidget::ZincWidget(this);
 
-    /*
     connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
             this, SLOT(createAndSetZincContext()));
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
             this, SLOT(graphicsInitialized()));
     connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
             this, SLOT(devicePixelRatioChanged(const int &)));
-    */
 
     addWidget(mZincWidget);
 
-    // Create and set our Zinc context
+    // Create and set our Zinc context²x
 
     createAndSetZincContext();
 
     //===== Do stuff to fold later
 
-    OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
+    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
 
-    defaultRegion.readFile(qPrintable(mExNodeFileName));
-    defaultRegion.readFile(qPrintable(mExElemFileName));
+    region.readFile(qPrintable("../opencor/meshes/circulation.exnode"));
+    region.readFile(qPrintable("../opencor/meshes/circulation.exelem"));
 
-    mFieldModule = defaultRegion.getFieldmodule();
+    mFieldModule = region.getFieldmodule();
 
-    OpenCMISS::Zinc::Scene scene = defaultRegion.getScene();
+    mFieldModule.beginChange();
+        OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
+        OpenCMISS::Zinc::FieldMagnitude magnitude = mFieldModule.createFieldMagnitude(coordinates);
+
+        magnitude.setManaged(true);
+    mFieldModule.endChange();
+
+    OpenCMISS::Zinc::Scene scene = region.getScene();
 
     scene.beginChange();
         OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
@@ -125,14 +136,63 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
         OpenCMISS::Zinc::Graphicspointattributes pointAttributes = axes.getGraphicspointattributes();
 
+        std::array<double, 3> pointAttributesData = { 1.0, 1.0, 1.0 };
+
+        pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
+        pointAttributes.setBaseSize(3, pointAttributesData.data());
+
         OpenCMISS::Zinc::Material material = materialModule.createMaterial();
 
-        std::array<double, 3> rgbValues = { 0.0, 200.0, 0.0 };
+        std::array<double, 3> rgbValues = { 0.0, 0.0, 0.0 };
 
         material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues.data());
         material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues.data());
 
         axes.setMaterial(material);
+
+        //Black lines
+
+        OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
+
+        lines.setCoordinateField(coordinates);
+        lines.setMaterial(materialModule.findMaterialByName("black"));
+
+        // Green spheres limiting our scene
+
+        OpenCMISS::Zinc::GraphicsPoints nodePoints = scene.createGraphicsPoints();
+
+        nodePoints.setCoordinateField(coordinates);
+        nodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        nodePoints.setMaterial(materialModule.findMaterialByName("green"));
+
+        // Size of our green spheres
+
+        double doubleValue = 0.1;
+
+        OpenCMISS::Zinc::Graphicspointattributes pointAttr = nodePoints.getGraphicspointattributes();
+
+        pointAttr.setBaseSize(1, &doubleValue);
+        pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
+
+        // Tesselation for our scene
+
+        OpenCMISS::Zinc::Tessellation fineTessellation = mZincContext->getTessellationmodule().createTessellation();
+        int intValue = 8;
+
+        fineTessellation.setManaged(true);
+        fineTessellation.setMinimumDivisions(1, &intValue);
+
+        // Isosurfaces for our scene
+
+        OpenCMISS::Zinc::GraphicsContours isosurfaces = scene.createGraphicsContours();
+
+        doubleValue = 1.0;
+
+        isosurfaces.setCoordinateField(coordinates);
+        isosurfaces.setIsoscalarField(magnitude);
+        isosurfaces.setListIsovalues(1, &doubleValue);
+        isosurfaces.setMaterial(materialModule.findMaterialByName("blue"));
+        isosurfaces.setTessellation(fineTessellation);
 
     scene.endChange();
 
@@ -141,6 +201,8 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
 
     sceneViewer.viewAll();
+
+
 
 
 }
@@ -279,7 +341,39 @@ void MappingViewWidget::createAndSetZincContext()
 }
 
 //==============================================================================
-/*
+
+void MappingViewWidget::graphicsInitialized()
+{
+    // Set our 'new' scene viewer's description
+
+    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
+
+    sceneViewer.readDescription(mZincSceneViewerDescription);
+
+    // Our Zinc widget has had its graphics initialised, so now we can set its
+    // background colour
+
+    std::array<double, 4> backgroundColor = { 0.85, 0.85, 0.85, 1.0 };
+
+    sceneViewer.setBackgroundColourRGBA(backgroundColor.data());
+
+    // Our initial look at and eye positions, and up vector
+
+    sceneViewer.setViewingVolume(-1.922499, 1.922499, -1.922499, 1.922499, 0.632076, 22.557219);
+
+    //TODO adapt to the model
+    std::array<const double, 3> lookAtPosition = { -63.005, -64.247, 189.21 };
+    std::array<const double, 3> eyePosition = { -50, -64, 180 };
+    std::array<const double, 3> upVector = { -1.000000, 0.000000, 0.000000 };
+
+    sceneViewer.setLookatPosition(lookAtPosition.data());
+    sceneViewer.setEyePosition(eyePosition.data());
+    sceneViewer.setUpVector(upVector.data());
+
+}
+
+//==============================================================================
+
 void MappingViewWidget::devicePixelRatioChanged(const int &pDevicePixelRatio)
 {
     //TODO to confirm
@@ -291,7 +385,7 @@ void MappingViewWidget::devicePixelRatioChanged(const int &pDevicePixelRatio)
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
     scene.endChange();
 }
-*/
+
 //==============================================================================
 
 
