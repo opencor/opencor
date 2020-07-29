@@ -107,8 +107,6 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     createAndSetZincContext();
 
-    initGraphics();
-
 }
 
 //==============================================================================
@@ -277,6 +275,56 @@ void MappingViewWidget::graphicsInitialized()
     OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
 
     sceneViewer.setScene(defaultRegion.getScene());
+
+
+    //===== Do stuff to fold later
+
+    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+
+    region.readFile(qPrintable("../opencor/meshes/circulation.exnode"));
+    region.readFile(qPrintable("../opencor/meshes/circulation.exelem"));
+
+    mFieldModule = region.getFieldmodule();
+
+    mFieldModule.beginChange();
+        OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
+    mFieldModule.endChange();
+
+    OpenCMISS::Zinc::Scene scene = region.getScene();
+
+    scene.beginChange();
+        OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
+
+        //Black lines
+
+        OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
+
+        lines.setCoordinateField(coordinates);
+        lines.setMaterial(materialModule.findMaterialByName("red"));
+
+        // Green spheres limiting our scene
+
+        OpenCMISS::Zinc::GraphicsPoints nodePoints = scene.createGraphicsPoints();
+
+        nodePoints.setCoordinateField(coordinates);
+        nodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        nodePoints.setMaterial(materialModule.findMaterialByName("green"));
+
+        // Size of our green spheres
+
+        mNodeSize = 20.;
+
+        OpenCMISS::Zinc::Graphicspointattributes pointAttr = nodePoints.getGraphicspointattributes();
+
+        pointAttr.setBaseSize(1, &mNodeSize);
+        pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
+
+    scene.endChange();
+
+    // adding view all command
+
+    sceneViewer.viewAll();
+
 
 }
 
