@@ -88,6 +88,8 @@ public:
     int mAxesFontPointSize;
 
 private:
+    double mNodeSize;
+
     ZincWidget::ZincWidget *mZincWidget;
     OpenCMISS::Zinc::Context *mZincContext;
 

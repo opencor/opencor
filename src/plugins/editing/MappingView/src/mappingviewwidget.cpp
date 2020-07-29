@@ -103,108 +103,11 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     addWidget(mZincWidget);
 
-    // Create and set our Zinc context²x
+    // Create and set our Zinc context
 
     createAndSetZincContext();
 
-    //===== Do stuff to fold later
-
-    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
-
-    region.readFile(qPrintable("../opencor/meshes/circulation.exnode"));
-    region.readFile(qPrintable("../opencor/meshes/circulation.exelem"));
-
-    mFieldModule = region.getFieldmodule();
-
-    mFieldModule.beginChange();
-        OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
-
-        OpenCMISS::Zinc::FieldMagnitude magnitude = mFieldModule.createFieldMagnitude(coordinates);
-
-        magnitude.setManaged(true);
-    mFieldModule.endChange();
-
-    OpenCMISS::Zinc::Scene scene = region.getScene();
-
-    scene.beginChange();
-        OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
-
-        // Draw the axes at the origin
-
-        OpenCMISS::Zinc::GraphicsPoints axes = scene.createGraphicsPoints();
-
-        axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
-
-        OpenCMISS::Zinc::Graphicspointattributes pointAttributes = axes.getGraphicspointattributes();
-
-        std::array<double, 3> pointAttributesData = { 1.0, 1.0, 1.0 };
-
-        pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
-        pointAttributes.setBaseSize(3, pointAttributesData.data());
-
-        OpenCMISS::Zinc::Material material = materialModule.createMaterial();
-
-        std::array<double, 3> rgbValues = { 0.0, 0.0, 0.0 };
-
-        material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues.data());
-        material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues.data());
-
-        axes.setMaterial(material);
-
-        //Black lines
-
-        OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
-
-        lines.setCoordinateField(coordinates);
-        lines.setMaterial(materialModule.findMaterialByName("red"));
-
-        // Green spheres limiting our scene
-
-        OpenCMISS::Zinc::GraphicsPoints nodePoints = scene.createGraphicsPoints();
-
-        nodePoints.setCoordinateField(coordinates);
-        nodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        nodePoints.setMaterial(materialModule.findMaterialByName("green"));
-
-        // Size of our green spheres
-
-        double doubleValue = 0.1;
-
-        OpenCMISS::Zinc::Graphicspointattributes pointAttr = nodePoints.getGraphicspointattributes();
-
-        pointAttr.setBaseSize(1, &doubleValue);
-        pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
-
-        // Tesselation for our scene
-
-        OpenCMISS::Zinc::Tessellation fineTessellation = mZincContext->getTessellationmodule().createTessellation();
-        int intValue = 8;
-
-        fineTessellation.setManaged(true);
-        fineTessellation.setMinimumDivisions(1, &intValue);
-
-        // Isosurfaces for our scene
-
-        OpenCMISS::Zinc::GraphicsContours isosurfaces = scene.createGraphicsContours();
-
-        doubleValue = 1.0;
-
-        isosurfaces.setCoordinateField(coordinates);
-        isosurfaces.setIsoscalarField(magnitude);
-        isosurfaces.setListIsovalues(1, &doubleValue);
-        isosurfaces.setMaterial(materialModule.findMaterialByName("blue"));
-        isosurfaces.setTessellation(fineTessellation);
-
-    scene.endChange();
-
-    // adding view all command
-
-    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
-
-    sceneViewer.viewAll();
-
-
-
+    initGraphics();
 
 }
 
