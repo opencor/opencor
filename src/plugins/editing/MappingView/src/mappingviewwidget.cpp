@@ -118,6 +118,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     mFieldModule.beginChange();
         OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
+
         OpenCMISS::Zinc::FieldMagnitude magnitude = mFieldModule.createFieldMagnitude(coordinates);
 
         magnitude.setManaged(true);
@@ -155,7 +156,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
         OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
 
         lines.setCoordinateField(coordinates);
-        lines.setMaterial(materialModule.findMaterialByName("black"));
+        lines.setMaterial(materialModule.findMaterialByName("red"));
 
         // Green spheres limiting our scene
 
@@ -348,7 +349,7 @@ void MappingViewWidget::graphicsInitialized()
 
     OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
 
-    sceneViewer.readDescription(mZincSceneViewerDescription);
+    //sceneViewer.readDescription(mZincSceneViewerDescription);
 
     // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
@@ -358,7 +359,7 @@ void MappingViewWidget::graphicsInitialized()
     sceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 
     // Our initial look at and eye positions, and up vector
-
+/* TODO free when it works
     sceneViewer.setViewingVolume(-1.922499, 1.922499, -1.922499, 1.922499, 0.632076, 22.557219);
 
     //TODO adapt to the model
@@ -369,6 +370,10 @@ void MappingViewWidget::graphicsInitialized()
     sceneViewer.setLookatPosition(lookAtPosition.data());
     sceneViewer.setEyePosition(eyePosition.data());
     sceneViewer.setUpVector(upVector.data());
+*/
+    OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
+
+    sceneViewer.setScene(defaultRegion.getScene());
 
 }
 
