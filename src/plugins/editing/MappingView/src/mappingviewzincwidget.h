@@ -48,6 +48,8 @@ class MappingViewZincWidget : public ZincWidget::ZincWidget
 public:
     explicit MappingViewZincWidget(QWidget *pParent);
 
+    ~MappingViewZincWidget();
+
 protected:
     void initializeGL() override;
 

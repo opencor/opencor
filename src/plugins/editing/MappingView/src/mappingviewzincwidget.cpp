@@ -54,7 +54,7 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
 
     // Create and set our Zinc context
 
-    mZincContext = new OpenCMISS::Zinc::Context();
+    mZincContext = new OpenCMISS::Zinc::Context("MappingViewZincContext");
 
     mZincContext->getMaterialmodule().defineStandardMaterials();
     mZincContext->getGlyphmodule().defineStandardGlyphs();
@@ -64,10 +64,16 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
 
 //==============================================================================
 
+MappingViewZincWidget::~MappingViewZincWidget()
+{
+    delete mZincContext;
+}
+
+//==============================================================================
+
 void MappingViewZincWidget::initializeGL()
 {
     ZincWidget::initializeGL();
-
 
     //mSceneViewer.readDescription(mZincSceneViewerDescription);
 
@@ -91,11 +97,9 @@ void MappingViewZincWidget::initializeGL()
     mSceneViewer.setEyePosition(eyePosition.data());
     mSceneViewer.setUpVector(upVector.data());
 */
-    OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
-
-    mSceneViewer.setScene(defaultRegion.getScene());
-
     OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+
+    mSceneViewer.setScene(region.getScene());
 
     //TODO copy
     region.readFile(qPrintable("../opencor/meshes/circulation.exnode"));

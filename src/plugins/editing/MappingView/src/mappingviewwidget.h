@@ -95,8 +95,6 @@ private:
     QString mExElemFileName;
 
 private slots:
-    void createAndSetZincContext();
-    void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
 
 };

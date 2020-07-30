@@ -93,16 +93,10 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     mMappingViewZincWidget = new MappingViewZincWidget(this);
 
     //TODO change syntax
-    connect(mMappingViewZincWidget, SIGNAL(contextAboutToBeDestroyed()),
-            this, SLOT(createAndSetZincContext()));
     connect(mMappingViewZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
             this, SLOT(devicePixelRatioChanged(const int &)));
 
     addWidget(mMappingViewZincWidget);
-
-    // Create and set our Zinc context
-    //TODO move into zincwidget
-    createAndSetZincContext();
 }
 
 //==============================================================================
