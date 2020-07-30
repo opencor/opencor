@@ -28,6 +28,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "viewwidget.h"
 #include "cellmlfile.h"
 #include "mappingvieweditingwidget.h"
+#include "mappingviewzincwidget.h"
 
 //==============================================================================
 
@@ -35,13 +36,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QTableView>
 #include <QMap>
 #include <QListWidget>
-
-//=============================================================================
-
-#include "zincbegin.h"
-    #include "opencmiss/zinc/fieldfiniteelement.hpp"
-    #include "opencmiss/zinc/timekeeper.hpp"
-#include "zincend.h"
 
 //==============================================================================
 
@@ -88,10 +82,8 @@ public:
     int mAxesFontPointSize;
 
 private:
-    double mNodeSize;
 
-    ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext;
+    MappingViewZincWidget *mMappingViewZincWidget;
 
     QListWidget *mListWidgetVariables;
     QListWidget *mListWidgetOutput;
@@ -101,14 +93,6 @@ private:
 
     QString mExNodeFileName;
     QString mExElemFileName;
-
-
-    OpenCMISS::Zinc::Fieldmodule mFieldModule;
-
-    char *mZincSceneViewerDescription;
-
-
-
 
 private slots:
     void createAndSetZincContext();

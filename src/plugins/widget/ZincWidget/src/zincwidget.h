@@ -122,13 +122,14 @@ protected:
 
     QSize sizeHint() const override;
 
+    OpenCMISS::Zinc::Sceneviewer mSceneViewer;
+
 private:
     bool mGraphicsInitialized = false;
 
     int mDevicePixelRatio = -1;
 
     OpenCMISS::Zinc::Context *mContext = nullptr;
-    OpenCMISS::Zinc::Sceneviewer mSceneViewer;
     OpenCMISS::Zinc::Sceneviewernotifier mSceneViewerNotifier;
 
     ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;

@@ -15,6 +15,7 @@ add_plugin(MappingView
         src/mappingvieweditingwidget.cpp
         src/mappingviewplugin.cpp
         src/mappingviewwidget.cpp
+        src/mappingviewzincwidget.cpp
         src/meshreader.cpp
     PLUGINS
         Core
