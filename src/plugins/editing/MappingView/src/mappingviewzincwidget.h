@@ -32,6 +32,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "zincbegin.h"
     #include "opencmiss/zinc/fieldfiniteelement.hpp"
     #include "opencmiss/zinc/timekeeper.hpp"
+    #include "opencmiss/zinc/scenepicker.hpp"
 #include "zincend.h"
 
 //==============================================================================
@@ -66,10 +67,15 @@ private:
 
     char *mZincSceneViewerDescription;
 
+    //size of the square drawn around the mouse for selections
+    //TODO improve this, should depend on the number of pixel at screen
+    int size_selection = 2;
+
     OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Context *mZincContext;
     OpenCMISS::Zinc::Scene *mScene;
     OpenCMISS::Zinc::Region *mRegion;
+    OpenCMISS::Zinc::Scenepicker *mScenePicker;
 
     void click(QMouseEvent *pEvent);
 

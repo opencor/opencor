@@ -34,6 +34,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "zincbegin.h"
     #include "opencmiss/zinc/context.hpp"
     #include "opencmiss/zinc/result.hpp"
+    #include "opencmiss/zinc/scenefilter.hpp"
+    #include "opencmiss/zinc/field.hpp"
+    #include "opencmiss/zinc/graphics.hpp"
 #include "zincend.h"
 
 //==============================================================================
@@ -61,16 +64,19 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
 
     setContext(mZincContext);
 
-    // Create and initialize scenePicker
-/*
-    pScenePicker = mScene->createScenepicker();
+    //Create and initialize region and scene
 
-    sfm = mScene->getScenefiltermodule();
+    mRegion = new OpenCMISS::Zinc::Region(mZincContext->getDefaultRegion());
+    mScene = new OpenCMISS::Zinc::Scene(mRegion->getScene());
 
-    nodeFilter = sfm.createScenefilterFieldDomainType(Field::DOMAIN_TYPE_NODES);
+    // Create and initialize scenePicker with a filter (improvable)
 
-    pScenePicker.setScenefilter(nodeFilter);
-*/
+    mScenePicker = new OpenCMISS::Zinc::Scenepicker(mScene->createScenepicker());
+
+    OpenCMISS::Zinc::Scenefiltermodule sceneFilterModule = mScene->getScenefiltermodule();
+    OpenCMISS::Zinc::Scenefilter nodeFilter = sceneFilterModule.createScenefilterFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+
+    mScenePicker->setScenefilter(nodeFilter);
 
 }
 
@@ -97,8 +103,6 @@ void MappingViewZincWidget::initializeGL()
 
     mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 
-    mRegion = new OpenCMISS::Zinc::Region(mZincContext->getDefaultRegion());
-
     mSceneViewer.setScene(mRegion->getScene());
 
     //TODO copy
@@ -110,8 +114,6 @@ void MappingViewZincWidget::initializeGL()
     mFieldModule.beginChange();
         OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
     mFieldModule.endChange();
-
-    mScene = new OpenCMISS::Zinc::Scene(mRegion->getScene());
 
     mScene->beginChange();
         OpenCMISS::Zinc::Materialmodule materialModule = mScene->getMaterialmodule();
@@ -183,9 +185,16 @@ void MappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-void click(QMouseEvent *pEvent)
+void MappingViewZincWidget::click(QMouseEvent *pEvent)
 {
-    Q_UNUSED(pEvent);
+    mScenePicker->setSceneviewerRectangle(mSceneViewer, OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                          pEvent->x() - size_selection,
+                                          pEvent->y() - size_selection,
+                                          pEvent->x() + size_selection,
+                                          pEvent->y() + size_selection);
+    OpenCMISS::Zinc::Node node = mScenePicker->getNearestNode();
+    int id = node.getIdentifier();
+qDebug(">> %i\n",id);
 }
 
 //==============================================================================
