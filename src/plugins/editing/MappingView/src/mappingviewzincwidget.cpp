@@ -60,6 +60,18 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     setContext(mZincContext);
+
+    // Create and initialize scenePicker
+/*
+    pScenePicker = mScene->createScenepicker();
+
+    sfm = mScene->getScenefiltermodule();
+
+    nodeFilter = sfm.createScenefilterFieldDomainType(Field::DOMAIN_TYPE_NODES);
+
+    pScenePicker.setScenefilter(nodeFilter);
+*/
+
 }
 
 //==============================================================================
@@ -67,6 +79,8 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
 MappingViewZincWidget::~MappingViewZincWidget()
 {
     delete mZincContext;
+    delete mScene;
+    delete mRegion;
 }
 
 //==============================================================================
@@ -77,55 +91,41 @@ void MappingViewZincWidget::initializeGL()
 
     //mSceneViewer.readDescription(mZincSceneViewerDescription);
 
-    // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
 
     std::array<double, 4> backgroundColor = { 0.85, 0.85, 0.85, 1.0 };
 
     mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 
-    // Our initial look at and eye positions, and up vector
-/* TODO free when it works
-    mSceneViewer.setViewingVolume(-1.922499, 1.922499, -1.922499, 1.922499, 0.632076, 22.557219);
+    mRegion = new OpenCMISS::Zinc::Region(mZincContext->getDefaultRegion());
 
-    //TODO adapt to the model
-    std::array<const double, 3> lookAtPosition = { -63.005, -64.247, 189.21 };
-    std::array<const double, 3> eyePosition = { -50, -64, 180 };
-    std::array<const double, 3> upVector = { -1.000000, 0.000000, 0.000000 };
-
-    mSceneViewer.setLookatPosition(lookAtPosition.data());
-    mSceneViewer.setEyePosition(eyePosition.data());
-    mSceneViewer.setUpVector(upVector.data());
-*/
-    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
-
-    mSceneViewer.setScene(region.getScene());
+    mSceneViewer.setScene(mRegion->getScene());
 
     //TODO copy
-    region.readFile(qPrintable("../opencor/meshes/circulation.exnode"));
-    region.readFile(qPrintable("../opencor/meshes/circulation.exelem"));
+    mRegion->readFile(qPrintable("../opencor/meshes/circulation.exnode"));
+    mRegion->readFile(qPrintable("../opencor/meshes/circulation.exelem"));
 
-    mFieldModule = region.getFieldmodule();
+    mFieldModule = mRegion->getFieldmodule();
 
     mFieldModule.beginChange();
         OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
     mFieldModule.endChange();
 
-    OpenCMISS::Zinc::Scene scene = region.getScene();
+    mScene = new OpenCMISS::Zinc::Scene(mRegion->getScene());
 
-    scene.beginChange();
-        OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
+    mScene->beginChange();
+        OpenCMISS::Zinc::Materialmodule materialModule = mScene->getMaterialmodule();
 
         //Black lines
 
-        OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
+        OpenCMISS::Zinc::GraphicsLines lines = mScene->createGraphicsLines();
 
         lines.setCoordinateField(coordinates);
         lines.setMaterial(materialModule.findMaterialByName("red"));
 
         // Green spheres limiting our scene
 
-        OpenCMISS::Zinc::GraphicsPoints nodePoints = scene.createGraphicsPoints();
+        OpenCMISS::Zinc::GraphicsPoints nodePoints = mScene->createGraphicsPoints();
 
         nodePoints.setCoordinateField(coordinates);
         nodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
@@ -140,7 +140,7 @@ void MappingViewZincWidget::initializeGL()
         pointAttr.setBaseSize(1, &mNodeSize);
         pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
 
-    scene.endChange();
+    mScene->endChange();
 
     // adding view all command
 
@@ -170,7 +170,7 @@ void MappingViewZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     ZincWidget::mouseReleaseEvent(pEvent);
 
     if (mouse_fix_click) {
-        //TODO
+        click(pEvent);
     }
 }
 
@@ -181,6 +181,12 @@ void MappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
     ZincWidget::wheelEvent(pEvent);
 }
 
+//==============================================================================
+
+void click(QMouseEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+}
 
 //==============================================================================
 

@@ -68,6 +68,13 @@ private:
 
     OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Context *mZincContext;
+    OpenCMISS::Zinc::Scene *mScene;
+    OpenCMISS::Zinc::Region *mRegion;
+
+    void click(QMouseEvent *pEvent);
+
+signals:
+    void nodeSelection(/*TODO */);
 
 };
 
