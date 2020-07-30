@@ -154,7 +154,6 @@ void MappingViewZincWidget::initializeGL()
 void MappingViewZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mouseMoveEvent(pEvent);
-    mouse_fix_click = false;
 }
 
 //==============================================================================
@@ -162,7 +161,7 @@ void MappingViewZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
 void MappingViewZincWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mousePressEvent(pEvent);
-    mouse_fix_click = true;
+    mouse_pos_click = pEvent->pos();
 }
 
 //==============================================================================
@@ -171,7 +170,7 @@ void MappingViewZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mouseReleaseEvent(pEvent);
 
-    if (mouse_fix_click) {
+    if (mouse_pos_click==pEvent->pos()) {
         click(pEvent);
     }
 }
@@ -193,8 +192,41 @@ void MappingViewZincWidget::click(QMouseEvent *pEvent)
                                           pEvent->x() + size_selection,
                                           pEvent->y() + size_selection);
     OpenCMISS::Zinc::Node node = mScenePicker->getNearestNode();
+
     int id = node.getIdentifier();
-qDebug(">> %i\n",id);
+    emit nodeSelection(id);
+
+    // select the node to highlight graphics
+
+    mFieldModule.beginChange();
+
+        OpenCMISS::Zinc::FieldGroup selectionGroup = mScene->getSelectionField().castGroup();
+
+        if (node.isValid()){
+            if (!selectionGroup.isValid()) {
+                selectionGroup = mFieldModule.createFieldGroup();
+                selectionGroup.setName("Selection");
+                mScene->setSelectionField(selectionGroup);
+            }
+
+            OpenCMISS::Zinc::Nodeset nodes = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = selectionGroup.getFieldNodeGroup(nodes);
+
+            if (!nodeGroupField.isValid()) {
+                nodeGroupField = selectionGroup.createFieldNodeGroup(nodes);
+            }
+
+            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
+            nodesetGroup.removeAllNodes();
+            nodesetGroup.addNode(node);  // where node was found from ScenePicker
+
+        } else {
+
+            if (selectionGroup.isValid()) {
+                mScene->setSelectionField(OpenCMISS::Zinc::Field());
+            }
+        }
+    mFieldModule.endChange();
 }
 
 //==============================================================================

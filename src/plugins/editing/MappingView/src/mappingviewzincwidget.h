@@ -60,8 +60,7 @@ protected:
     void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
-    //TODO ugly
-    bool mouse_fix_click;
+    QPoint mouse_pos_click;
 
     double mNodeSize;
 
@@ -80,7 +79,7 @@ private:
     void click(QMouseEvent *pEvent);
 
 signals:
-    void nodeSelection(/*TODO */);
+    void nodeSelection(int id);
 
 };
 
