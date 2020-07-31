@@ -21,7 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Mesh file reader
 //==============================================================================
 
-#include "meshreader.h"
+#include "mappingviewmeshreader.h"
 
 //==============================================================================
 
@@ -34,14 +34,14 @@ namespace MappingView {
 
 //==============================================================================
 
-meshReader::meshReader(QString name):
+MappingViewMeshReader::MappingViewMeshReader(QString name):
     pFileName(name)
 {
 }
 
 //==============================================================================
 
-QStringList meshReader::getNodesNames()
+QStringList MappingViewMeshReader::getNodesNames()
 {
     QStringList list = QStringList();
 
@@ -50,17 +50,21 @@ QStringList meshReader::getNodesNames()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return list;
     }
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            QStringList words = line.split(' ');
-            words.removeAll("");
-            if (words.first()==QString("Node:")) {
-                list << words[1];
-            }
-        }
+    QTextStream in(&file);
+    QString line;
+    QStringList words;
 
-    return list; //TODO sort before ?
+    while (!in.atEnd()) {
+        line = in.readLine();
+        words = line.split(' ');
+        words.removeAll("");
+        if (words.first()==QString("Node:")) {
+             list << words[1];
+        }
+    }
+
+    list.sort(Qt::CaseSensitive);
+    return list;
 }
 
 //==============================================================================

@@ -10,13 +10,11 @@ add_plugin(MappingView
         ../../plugininterface.cpp
         ../../viewinterface.cpp
 
-        ../../windowinterface.cpp
-
         src/mappingvieweditingwidget.cpp
+        src/mappingviewmeshreader.cpp
         src/mappingviewplugin.cpp
         src/mappingviewwidget.cpp
         src/mappingviewzincwidget.cpp
-        src/meshreader.cpp
     PLUGINS
         Core
         CellMLSupport

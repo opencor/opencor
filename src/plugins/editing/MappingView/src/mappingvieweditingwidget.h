@@ -52,7 +52,9 @@ class MappingViewEditingWidget : public Core::SplitterWidget
     Q_OBJECT
 
 public:
-    explicit MappingViewEditingWidget(const QString &pFileName,
+
+    explicit MappingViewEditingWidget(const QString &pCellmlFileName,
+                                      const QString &pMeshFileName,
                                                QWidget *pParent);
 
     void retranslateUi() override;
@@ -64,19 +66,17 @@ public:
     QStringListModel *listViewModelOutput();
 
     void filePermissionsChanged();
+
 private:
 
-    CellMLSupport::CellmlFile *mCellmlFile = nullptr;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     QStringListModel
         *mListViewModelVariables = nullptr,//TODO temporary
         *mListViewModelOutput = nullptr;//TODO temporary
 
-    QString mFileName;
-    QString mOutputFileName;
-
     void populateCellmlModel();
-    void populateOutput();
+    void populateOutput(const QString &pMeshFileName);
 };
 
 //==============================================================================

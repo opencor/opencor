@@ -25,9 +25,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QFile>
+
+//==============================================================================
+
 #include "zincwidget.h"
 
-//=============================================================================
+//==============================================================================
 
 #include "zincbegin.h"
     #include "opencmiss/zinc/fieldfiniteelement.hpp"
@@ -47,9 +51,9 @@ class MappingViewZincWidget : public ZincWidget::ZincWidget
     Q_OBJECT
 
 public:
-    explicit MappingViewZincWidget(QWidget *pParent);
+    explicit MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName);
 
-    ~MappingViewZincWidget();
+    ~MappingViewZincWidget() override;
 
 protected:
     void initializeGL() override;
@@ -60,6 +64,10 @@ protected:
     void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
+
+    QString mMainFileName;
+    QString mAuxFileName;
+
     QPoint mouse_pos_click;
 
     double mNodeSize;

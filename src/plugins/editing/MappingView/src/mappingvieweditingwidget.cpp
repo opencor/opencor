@@ -24,7 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "filemanager.h"
 #include "mappingvieweditingwidget.h"
-#include "meshreader.h"
+#include "mappingviewmeshreader.h"
 #include "cellmlfilemanager.h"
 
 //==============================================================================
@@ -44,19 +44,17 @@ namespace MappingView {
 //==============================================================================
 
 MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
+                                                   const QString &pMeshFileName,
                                                    QWidget *pParent) :
     Core::SplitterWidget(pParent)
 {
-    // Delete the layout that comes with ViewWidget
-
-    mOutputFileName = "../opencor/meshes/circulation.exnode";
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mListViewModelVariables = new QStringListModel(); //TODO defining only when charging the plugin ?
+    mListViewModelVariables = new QStringListModel();
     mListViewModelOutput = new QStringListModel();
 
     populateCellmlModel();
-    populateOutput();
+    populateOutput(pMeshFileName);
 }
 
 //==============================================================================
@@ -143,9 +141,9 @@ void MappingViewEditingWidget::populateCellmlModel()
     mListViewModelVariables->setStringList(list);
 }
 
-void MappingViewEditingWidget::populateOutput()
+void MappingViewEditingWidget::populateOutput(const QString &pMeshFileName)
 {   
-    meshReader reader(mOutputFileName);
+    MappingViewMeshReader reader(pMeshFileName);
 
     mListViewModelOutput->setStringList(reader.getNodesNames());
 }

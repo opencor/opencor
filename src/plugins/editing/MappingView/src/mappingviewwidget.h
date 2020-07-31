@@ -82,7 +82,6 @@ public:
     int mAxesFontPointSize;
 
 private:
-
     MappingViewZincWidget *mMappingViewZincWidget;
 
     QListWidget *mListWidgetVariables;
@@ -91,8 +90,7 @@ private:
     MappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
 
-    QString mExNodeFileName;
-    QString mExElemFileName;
+    QString mMeshFileName;
 
 private slots:
     void devicePixelRatioChanged(const int &pDevicePixelRatio);

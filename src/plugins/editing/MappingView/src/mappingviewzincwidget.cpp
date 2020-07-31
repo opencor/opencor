@@ -22,12 +22,20 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "mappingviewzincwidget.h"
+#include "corecliutils.h"
+#include "filemanager.h"
+#include "cellmlfilemanager.h"
 
 //==============================================================================
 
 #include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QTimer>
+#include <QDir>
+
+//==============================================================================
+
+#include <array>
 
 //==============================================================================
 
@@ -46,14 +54,26 @@ namespace MappingView {
 
 //==============================================================================
 
-MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
-    ZincWidget::ZincWidget(pParent)
+MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName) :
+    ZincWidget::ZincWidget(pParent),
+    mMainFileName(pMainFileName),
+    mAuxFileName(pMainFileName)
 {
-
-    //TODO usefull ?
     // Keep track of our current scene viewer's description
-
+    //TODO usefull ?
     mZincSceneViewerDescription = sceneViewer().writeDescription();
+
+    //seek and read .exelem file
+
+    mAuxFileName.remove(".exnode");
+    mAuxFileName.append(".exelem");
+
+    QFileInfo check_file;
+    check_file.setFile(mAuxFileName);
+
+    if (!check_file.exists()) {
+        mAuxFileName = "";
+    }
 
     // Create and set our Zinc context
 
@@ -74,7 +94,8 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent) :
     mScenePicker = new OpenCMISS::Zinc::Scenepicker(mScene->createScenepicker());
 
     OpenCMISS::Zinc::Scenefiltermodule sceneFilterModule = mScene->getScenefiltermodule();
-    OpenCMISS::Zinc::Scenefilter nodeFilter = sceneFilterModule.createScenefilterFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+    OpenCMISS::Zinc::Scenefilter nodeFilter =
+            sceneFilterModule.createScenefilterFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
 
     mScenePicker->setScenefilter(nodeFilter);
 
@@ -105,9 +126,12 @@ void MappingViewZincWidget::initializeGL()
 
     mSceneViewer.setScene(mRegion->getScene());
 
-    //TODO copy
-    mRegion->readFile(qPrintable("../opencor/meshes/circulation.exnode"));
-    mRegion->readFile(qPrintable("../opencor/meshes/circulation.exelem"));
+    //read files
+    mRegion->readFile(qPrintable(mMainFileName));
+
+    if (mAuxFileName!="") {
+        mRegion->readFile(qPrintable(mAuxFileName));
+    }
 
     mFieldModule = mRegion->getFieldmodule();
 
@@ -218,7 +242,7 @@ void MappingViewZincWidget::click(QMouseEvent *pEvent)
 
             OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
             nodesetGroup.removeAllNodes();
-            nodesetGroup.addNode(node);  // where node was found from ScenePicker
+            nodesetGroup.addNode(node);
 
         } else {
 

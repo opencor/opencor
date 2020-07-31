@@ -22,11 +22,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "corecliutils.h"
-#include "filemanager.h"
 #include "mappingviewwidget.h"
-#include "meshreader.h"
-#include "cellmlfilemanager.h"
 #include "zincwidget.h"
 
 //==============================================================================
@@ -35,10 +31,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QFile>
 #include <QtGui>
-
-#include<QDebug> //TODO no keep this one of course
+#include <QMenu>
 
 //==============================================================================
 
@@ -60,9 +54,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     Core::SplitterWidget(pParent),
     mAxesFontPointSize(0)
 {
-    // Set our orientation
 
-    setOrientation(Qt::Horizontal);
 
     // Keep track of our movement
     /*
@@ -70,29 +62,26 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
             this, &MappingViewEditingWidget::splitterMoved);
     */
 
+    // Set our orientation
+
+    setOrientation(Qt::Vertical);
+
+
+
+
     mListWidgetVariables = new QListWidget();
     mListWidgetOutput = new QListWidget();
 
-    addWidget(mListWidgetVariables);
+    //addWidget(mListWidgetVariables);
 
-    // Create a local copy of our .exnode and .exelem files
-
-    QString applicationBaseFileName = QDir::tempPath()+"/mesh";
-
-    mExNodeFileName = applicationBaseFileName+".exnode";
-    mExElemFileName = applicationBaseFileName+".exelem";
-
-    Core::writeResourceToFile(mExNodeFileName, QDir::currentPath()+"/../opencor/meshes/circulation.exnode");
-    Core::writeResourceToFile(mExElemFileName, QDir::currentPath()+"/../opencor/meshes/circulation.exelem");
-    //but nothing appear in /tmp/ !!!
-    mListWidgetVariables->addItem(QDir::currentPath()+"/../opencor/meshes/circulation.exnode");
-    mListWidgetVariables->addItem(mExElemFileName);
+    //TODO
+    mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/circulation.exnode";
 
     // Create and add a Zinc widget
 
-    mMappingViewZincWidget = new MappingViewZincWidget(this);
+    mMappingViewZincWidget = new MappingViewZincWidget(this, mMeshFileName);
 
-    //TODO change syntax
+    //TODO move to mappingviewzincwidget and you know how it works
     connect(mMappingViewZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
             this, SLOT(devicePixelRatioChanged(const int &)));
 
@@ -103,8 +92,6 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
 MappingViewWidget::~MappingViewWidget()
 {
-    QFile::remove(mExNodeFileName);
-    QFile::remove(mExElemFileName);
 }
 
 //==============================================================================
@@ -130,7 +117,7 @@ void MappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new MappingViewEditingWidget(pFileName, this);
+        mEditingWidget = new MappingViewEditingWidget(pFileName, "../opencor/meshes/circulation.exnode",this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }

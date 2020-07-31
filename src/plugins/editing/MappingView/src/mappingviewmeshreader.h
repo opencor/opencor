@@ -39,12 +39,12 @@ namespace MappingView {
 //==============================================================================
 
 
-class meshReader : public QObject
+class MappingViewMeshReader : public QObject
 {
     Q_OBJECT
 public:
 
-    meshReader(QString);
+    MappingViewMeshReader(QString);
 
     QStringList getNodesNames();
 
