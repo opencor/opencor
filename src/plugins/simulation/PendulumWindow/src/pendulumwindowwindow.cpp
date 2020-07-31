@@ -82,12 +82,12 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     mZincWidget = new ZincWidget::ZincWidget(this);
 
-    connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
-            this, SLOT(createAndSetZincContext()));
-    connect(mZincWidget, SIGNAL(graphicsInitialized()),
-            this, SLOT(graphicsInitialized()));
-    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
-            this, SLOT(devicePixelRatioChanged(const int &)));
+    connect(mZincWidget, &ZincWidget::ZincWidget::contextAboutToBeDestroyed,
+            this, &PendulumWindowWindow::createAndSetZincContext);
+    connect(mZincWidget, &ZincWidget::ZincWidget::graphicsInitialized,
+            this, &PendulumWindowWindow::graphicsInitialized);
+    connect(mZincWidget, &ZincWidget::ZincWidget::devicePixelRatioChanged,
+            this, &PendulumWindowWindow::devicePixelRatioChanged);
 
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
                                                      true, true, true, true));
@@ -110,8 +110,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mTimeCheckBox->setEnabled(false);
     mTimeCheckBox->setText(tr("Auto"));
 
-    connect(mTimeCheckBox, SIGNAL(toggled(bool)),
-            this, SLOT(autoMode()));
+    connect(mTimeCheckBox, &QCheckBox::toggled,
+            this, &PendulumWindowWindow::autoMode);
 
     timeWidget->layout()->addWidget(mTimeCheckBox);
 
@@ -124,8 +124,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mTimeSlider->setEnabled(false);
     mTimeSlider->setOrientation(Qt::Horizontal);
 
-    connect(mTimeSlider, SIGNAL(valueChanged(int)),
-            this, SLOT(updateScene(const int &)));
+    connect(mTimeSlider, &QSlider::valueChanged,
+            this, &PendulumWindowWindow::timeSliderValueChanged);
 
     mGui->layout->addWidget(mTimeSlider);
 
@@ -135,8 +135,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     // Customise our timer
 
-    connect(&mTimer, SIGNAL(timeout()),
-            this, SLOT(updateScene()));
+    connect(&mTimer, &QTimer::timeout,
+            this, &PendulumWindowWindow::timerTimeOut);
 }
 
 //==============================================================================
@@ -556,7 +556,7 @@ void PendulumWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
 
 //==============================================================================
 
-void PendulumWindowWindow::updateScene(const int &pTime)
+void PendulumWindowWindow::timeSliderValueChanged(const int &pTime)
 {
     // Update our scene
 
@@ -599,7 +599,7 @@ void PendulumWindowWindow::updateScene(const int &pTime)
 
 //==============================================================================
 
-void PendulumWindowWindow::updateScene()
+void PendulumWindowWindow::timerTimeOut()
 {
     // Update our scene
 

@@ -127,8 +127,8 @@ private slots:
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
 
-    void updateScene(const int &pTime);
-    void updateScene();
+    void timeSliderValueChanged(const int &pTime);
+    void timerTimeOut();
 
     void autoMode();
 };
