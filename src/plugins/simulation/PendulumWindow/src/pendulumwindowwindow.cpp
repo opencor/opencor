@@ -66,7 +66,6 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mGui(new Ui::PendulumWindowWindow),
     mZincContext(nullptr),
     mZincSceneViewerDescription(nullptr),
-    mAxesFontPointSize(0),
     mInitialiseZincScene(true),
     mCurrentDataSize(0),
     mTimeValues(nullptr),
@@ -86,8 +85,6 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
             this, &PendulumWindowWindow::createAndSetZincContext);
     connect(mZincWidget, &ZincWidget::ZincWidget::graphicsInitialized,
             this, &PendulumWindowWindow::graphicsInitialized);
-    connect(mZincWidget, &ZincWidget::ZincWidget::devicePixelRatioChanged,
-            this, &PendulumWindowWindow::devicePixelRatioChanged);
 
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
                                                      true, true, true, true));
@@ -537,19 +534,6 @@ void PendulumWindowWindow::graphicsInitialized()
     sceneViewer.setLookatPosition(lookAtPosition.data());
     sceneViewer.setEyePosition(eyePosition.data());
     sceneViewer.setUpVector(upVector.data());
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
-{
-    // Update our scene using the given devide pixel ratio
-
-    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
-
-    scene.beginChange();
-        scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
-    scene.endChange();
 }
 
 //==============================================================================

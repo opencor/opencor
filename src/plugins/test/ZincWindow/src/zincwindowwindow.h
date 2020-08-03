@@ -75,8 +75,6 @@ private:
 
     char *mZincSceneViewerDescription = nullptr;
 
-    int mAxesFontPointSize = 0;
-
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
