@@ -44,7 +44,7 @@ class MappingViewMeshReader : public QObject
     Q_OBJECT
 public:
 
-    MappingViewMeshReader(QString);
+    MappingViewMeshReader(QString pFileName);
 
     QStringList getNodesNames();
 

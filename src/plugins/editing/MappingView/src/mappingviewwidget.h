@@ -49,6 +49,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class ToolBarWidget;
+} // namespace Core
+
+//==============================================================================
+
 namespace ZincWidget {
     class ZincWidget;
 }   // namespace ZincWidget
@@ -82,6 +88,10 @@ public:
     int mAxesFontPointSize;
 
 private:
+    Ui::MappingViewWidget *mGui;
+
+    Core::ToolBarWidget *mToolBarWidget;
+
     MappingViewZincWidget *mMappingViewZincWidget;
 
     QListWidget *mListWidgetVariables;
@@ -94,6 +104,8 @@ private:
 
 private slots:
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void nodeSelection(int pId);
+
 
 };
 

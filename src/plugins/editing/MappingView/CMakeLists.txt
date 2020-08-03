@@ -15,6 +15,8 @@ add_plugin(MappingView
         src/mappingviewplugin.cpp
         src/mappingviewwidget.cpp
         src/mappingviewzincwidget.cpp
+    UIS
+        src/mappingviewwidget.ui
     PLUGINS
         Core
         CellMLSupport

@@ -46,12 +46,15 @@ namespace MappingView {
 MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
                                                    const QString &pMeshFileName,
                                                    QWidget *pParent) :
-    Core::SplitterWidget(pParent)
+    Core::SplitterWidget(pParent),
+    mMapMatch()
 {
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
     mListViewModelVariables = new QStringListModel();
     mListViewModelOutput = new QStringListModel();
+
+    mTreeViewModel = new QStandardItemModel(this);
 
     populateCellmlModel();
     populateOutput(pMeshFileName);
@@ -87,10 +90,32 @@ QStringListModel* MappingViewEditingWidget::listViewModelOutput()
     return mListViewModelOutput;
 }
 
+QStandardItemModel *MappingViewEditingWidget::getTreeViewModel()
+{
+    return mTreeViewModel;
+}
+
 //==============================================================================
 
 void MappingViewEditingWidget::filePermissionsChanged()
 {
+}
+
+//==============================================================================
+
+QString MappingViewEditingWidget::getVariableOfNode(int pNodeId)
+{
+    if (mMapMatch.contains(pNodeId)) {
+        return mMapMatch[pNodeId];
+    }
+    return "";
+}
+
+//==============================================================================
+
+void MappingViewEditingWidget::AddVariableToNode(QString pVariable, int pNodeId)
+{
+    mMapMatch.insert(pNodeId,pVariable);
 }
 
 //==============================================================================
@@ -125,6 +150,10 @@ void MappingViewEditingWidget::populateCellmlModel()
             ObjRef<iface::cellml_api::CellMLVariableSet> componentVariables = component->variables();
 
             if (componentVariables->length() != 0) {
+
+                QStandardItem *componentItem = new QStandardItem(QString::fromStdWString(component->name()));
+                mTreeViewModel->invisibleRootItem()->appendRow(componentItem);
+
                 // Retrieve the model's component's variables themselves
 
                 ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
@@ -132,6 +161,9 @@ void MappingViewEditingWidget::populateCellmlModel()
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
                      componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
 
+                    QStandardItem *variableItem = new QStandardItem(QString::fromStdWString(componentVariable->name()));
+
+                    componentItem->appendRow(variableItem);
                     list.append(QString::fromStdWString(componentVariable->name()));
                 }
             }

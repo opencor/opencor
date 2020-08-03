@@ -24,6 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "borderedwidget.h"
 #include "mappingviewwidget.h"
 #include "zincwidget.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -52,26 +53,20 @@ namespace MappingView {
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     Core::SplitterWidget(pParent),
-    mAxesFontPointSize(0)
+    mAxesFontPointSize(0),
+    mGui(new Ui::MappingViewWidget)
 {
 
+    // Set up the GUI
+
+    mGui->setupUi(this);
 
     // Keep track of our movement
     /*
     connect(this, &Core::SplitterWidget::splitterMoved,
             this, &MappingViewEditingWidget::splitterMoved);
     */
-
-    // Set our orientation
-
-    setOrientation(Qt::Vertical);
-
-
-
-
-    mListWidgetVariables = new QListWidget();
-    mListWidgetOutput = new QListWidget();
-
+    
     //addWidget(mListWidgetVariables);
 
     //TODO
@@ -82,10 +77,18 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     mMappingViewZincWidget = new MappingViewZincWidget(this, mMeshFileName);
 
     //TODO move to mappingviewzincwidget and you know how it works
-    connect(mMappingViewZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
-            this, SLOT(devicePixelRatioChanged(const int &)));
+    connect(mMappingViewZincWidget, &MappingViewZincWidget::devicePixelRatioChanged,
+            this, &MappingViewWidget::devicePixelRatioChanged);
 
-    addWidget(mMappingViewZincWidget);
+    connect(mMappingViewZincWidget, &MappingViewZincWidget::nodeSelection,
+            this, &MappingViewWidget::nodeSelection);
+
+    mGui->layout->addWidget(mMappingViewZincWidget);
+
+    //mToolBarWidget = new Core::ToolBarWidget();
+
+
+
 }
 
 //==============================================================================
@@ -124,6 +127,7 @@ void MappingViewWidget::initialize(const QString &pFileName)
 
     //mListWidgetVariables->setModel(mEditingWidget->listViewModelVariables()); //TODO set only when charging the plugin ?
     //mGui->outputList->setModel(mEditingWidget->listViewModelOutput());
+    mGui->variableTree->setModel(mEditingWidget->getTreeViewModel());
 }
 
 //==============================================================================
@@ -211,6 +215,19 @@ void MappingViewWidget::devicePixelRatioChanged(const int &pDevicePixelRatio)
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
     scene.endChange();
     */
+}
+
+//==============================================================================
+
+void MappingViewWidget::nodeSelection(int pId) {
+
+    if (pId==-1) {
+        mGui->nodeValue->setText("");
+        mGui->variableValue->setText("");
+    } else {
+        mGui->nodeValue->setNum(pId);
+        mGui->variableValue->setText(mEditingWidget->getVariableOfNode(pId));
+    }
 }
 
 //==============================================================================

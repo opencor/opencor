@@ -33,6 +33,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QStringListModel> //TODO remove when over
 #include <QTableView>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -65,11 +66,22 @@ public:
 
     QStringListModel *listViewModelOutput();
 
+    QStandardItemModel *getTreeViewModel();
+
     void filePermissionsChanged();
+
+    QString getVariableOfNode(int pNodeId);
+
+    void AddVariableToNode(QString pVariable, int pNodeId);
 
 private:
 
     CellMLSupport::CellmlFile *mCellmlFile;
+
+    //TODO : * or not ?
+    QMap<int, QString> mMapMatch;
+
+    QStandardItemModel *mTreeViewModel;
 
     QStringListModel
         *mListViewModelVariables = nullptr,//TODO temporary

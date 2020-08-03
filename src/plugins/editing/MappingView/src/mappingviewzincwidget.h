@@ -87,7 +87,7 @@ private:
     void click(QMouseEvent *pEvent);
 
 signals:
-    void nodeSelection(int id);
+    void nodeSelection(int pId);
 
 };
 

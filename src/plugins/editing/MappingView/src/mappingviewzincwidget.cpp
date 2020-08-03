@@ -96,9 +96,12 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pM
     OpenCMISS::Zinc::Scenefiltermodule sceneFilterModule = mScene->getScenefiltermodule();
     OpenCMISS::Zinc::Scenefilter nodeFilter =
             sceneFilterModule.createScenefilterFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-
     mScenePicker->setScenefilter(nodeFilter);
 
+    // Allow for things to be dropped on us
+
+    //TODO remove this ?
+    //setAcceptDrops(true);
 }
 
 //==============================================================================

@@ -34,8 +34,8 @@ namespace MappingView {
 
 //==============================================================================
 
-MappingViewMeshReader::MappingViewMeshReader(QString name):
-    pFileName(name)
+MappingViewMeshReader::MappingViewMeshReader(QString pName):
+    pFileName(pName)
 {
 }
 
