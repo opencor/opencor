@@ -285,7 +285,7 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor, const int &pFontSize,
+                         const QColor &pForegroundColor, int pFontSize,
                          int pLineWidth, Position pPosition,
                          bool pCanMovePosition = true);
 };

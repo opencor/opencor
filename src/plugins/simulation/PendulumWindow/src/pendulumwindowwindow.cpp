@@ -184,11 +184,9 @@ void PendulumWindowWindow::createAndSetZincContext()
 //==============================================================================
 
 void PendulumWindowWindow::initData(const quint64 &pDataSize,
-                                    const double &pMinimumTime,
-                                    const double &pMaximumTime,
-                                    const double &pTimeInterval,
-                                    double *pR0Values, double *pQ1Values,
-                                    double *pThetaValues)
+                                    double pMinimumTime, double pMaximumTime,
+                                    double pTimeInterval, double *pR0Values,
+                                    double *pQ1Values, double *pThetaValues)
 {
     // Initialise our data
     // Note: mTimeValues must be fully populated for Zinc to work as expected.
@@ -485,7 +483,7 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
 //==============================================================================
 
-void PendulumWindowWindow::addData(const int &pCurrentDataSize)
+void PendulumWindowWindow::addData(int pCurrentDataSize)
 {
     // Assign the time-varying parameters for mR0, mQ1 and mTheta
 
@@ -543,7 +541,7 @@ void PendulumWindowWindow::graphicsInitialized()
 
 //==============================================================================
 
-void PendulumWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
+void PendulumWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
     // Update our scene using the given devide pixel ratio
 
@@ -556,7 +554,7 @@ void PendulumWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
 
 //==============================================================================
 
-void PendulumWindowWindow::timeSliderValueChanged(const int &pTime)
+void PendulumWindowWindow::timeSliderValueChanged(int pTime)
 {
     // Update our scene
 

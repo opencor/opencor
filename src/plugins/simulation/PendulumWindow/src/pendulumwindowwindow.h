@@ -85,10 +85,10 @@ public:
 
     void retranslateUi() override;
 
-    void initData(const quint64 &pDataSize, const double &pMinimumTime,
-                  const double &pMaximumTime, const double &pTimeInterval,
-                  double *pR0Values, double *pQ1Values, double *pThetaValues);
-    void addData(const int &pCurrentDataSize);
+    void initData(const quint64 &pDataSize, double pMinimumTime,
+                  double pMaximumTime, double pTimeInterval, double *pR0Values,
+                  double *pQ1Values, double *pThetaValues);
+    void addData(int pCurrentDataSize);
 
 private:
     Ui::PendulumWindowWindow *mGui;
@@ -125,9 +125,9 @@ private:
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 
-    void timeSliderValueChanged(const int &pTime);
+    void timeSliderValueChanged(int pTime);
     void timerTimeOut();
 
     void autoMode();
