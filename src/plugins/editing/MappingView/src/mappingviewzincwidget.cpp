@@ -57,7 +57,8 @@ namespace MappingView {
 MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName) :
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
-    mAuxFileName(pMainFileName)
+    mAuxFileName(pMainFileName),
+    mNodeSize(nodeSizeOrigin)
 {
     // Keep track of our current scene viewer's description
     //TODO usefull ?
@@ -162,8 +163,6 @@ void MappingViewZincWidget::initializeGL()
 
         // Size of our green spheres
 
-        mNodeSize = 20.;
-
         OpenCMISS::Zinc::Graphicspointattributes pointAttr = nodePoints.getGraphicspointattributes();
 
         pointAttr.setBaseSize(1, &mNodeSize);
@@ -188,7 +187,7 @@ void MappingViewZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
 void MappingViewZincWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mousePressEvent(pEvent);
-    mouse_pos_click = pEvent->pos();
+    mMousePosClick = pEvent->pos();
 }
 
 //==============================================================================
@@ -197,7 +196,7 @@ void MappingViewZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mouseReleaseEvent(pEvent);
 
-    if (mouse_pos_click==pEvent->pos()) {
+    if (mMousePosClick==pEvent->pos()) {
         click(pEvent);
     }
 }
@@ -214,10 +213,10 @@ void MappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
 void MappingViewZincWidget::click(QMouseEvent *pEvent)
 {
     mScenePicker->setSceneviewerRectangle(mSceneViewer, OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                          pEvent->x() - size_selection,
-                                          pEvent->y() - size_selection,
-                                          pEvent->x() + size_selection,
-                                          pEvent->y() + size_selection);
+                                          pEvent->x() - mSizeSelection,
+                                          pEvent->y() - mSizeSelection,
+                                          pEvent->x() + mSizeSelection,
+                                          pEvent->y() + mSizeSelection);
     OpenCMISS::Zinc::Node node = mScenePicker->getNearestNode();
 
     int id = node.getIdentifier();
@@ -257,6 +256,12 @@ void MappingViewZincWidget::click(QMouseEvent *pEvent)
 }
 
 //==============================================================================
+
+void MappingViewZincWidget::setNodeSizes(int pSize) {
+     mNodeSize = pSize;
+    //TODO
+    initializeGL();
+}
 
 } // namespace ZincWidget
 } // namespace OpenCOR

@@ -55,6 +55,8 @@ public:
 
     ~MappingViewZincWidget() override;
 
+    static constexpr double nodeSizeOrigin = 20.;
+
 protected:
     void initializeGL() override;
 
@@ -68,7 +70,7 @@ private:
     QString mMainFileName;
     QString mAuxFileName;
 
-    QPoint mouse_pos_click;
+    QPoint mMousePosClick;
 
     double mNodeSize;
 
@@ -76,7 +78,7 @@ private:
 
     //size of the square drawn around the mouse for selections
     //TODO improve this, should depend on the number of pixel at screen
-    int size_selection = 2;
+    int mSizeSelection = 2;
 
     OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Context *mZincContext;
@@ -85,6 +87,9 @@ private:
     OpenCMISS::Zinc::Scenepicker *mScenePicker;
 
     void click(QMouseEvent *pEvent);
+
+public slots:
+    void setNodeSizes(int pSize);
 
 signals:
     void nodeSelection(int pId);

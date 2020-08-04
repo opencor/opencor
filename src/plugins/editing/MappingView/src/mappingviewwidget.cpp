@@ -28,12 +28,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "ui_mappingviewwidget.h"
-
-//==============================================================================
-
-#include <QtGui>
 #include <QMenu>
+#include <QApplication>
+#include <QScreen>
 
 //==============================================================================
 
@@ -52,14 +49,52 @@ namespace MappingView {
 //==============================================================================
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
-    Core::SplitterWidget(pParent),
-    mAxesFontPointSize(0),
-    mGui(new Ui::MappingViewWidget)
+    Core::SplitterWidget(pParent)
 {
 
-    // Set up the GUI
+    // Set our orientation
 
-    mGui->setupUi(this);
+    setOrientation(Qt::Vertical);
+
+    //create and add toolbar
+
+    mToolBarWidget = new Core::ToolBarWidget();
+
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+
+        mDelayWidget = new QwtWheel(mToolBarWidget);
+
+        mDelayWidget->setBorderWidth(0);
+        mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                   mDelayWidget->height()/2);
+        mDelayWidget->setFocusPolicy(Qt::NoFocus);
+        mDelayWidget->setRange(0.0, 100.0);
+        mDelayWidget->setWheelBorderWidth(0);
+
+        mDelayWidget->setValue(MappingViewZincWidget::nodeSizeOrigin);
+
+    mToolBarWidget->addWidget(mDelayWidget);
+
+    addWidget(mToolBarWidget);
+
+    //create and add informative labels
+
+    QLabel *nodeLabel = new QLabel("Node:",this);
+    addWidget(nodeLabel);
+
+    mNodeValue = new QLabel(this);
+    addWidget(mNodeValue);
+
+    QLabel *variableLabel = new QLabel("Variable:",this);
+    addWidget(variableLabel);
+
+    mVariableValue = new QLabel(this);
+    addWidget(mVariableValue);
+
+    //create and add the variable tree:
+
+    mVariableTree = new QTreeView(this);
+    addWidget(mVariableTree);
 
     // Keep track of our movement
     /*
@@ -72,22 +107,18 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     //TODO
     mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/circulation.exnode";
 
-    // Create and add a Zinc widget
+    // add a Zinc widget
 
     mMappingViewZincWidget = new MappingViewZincWidget(this, mMeshFileName);
 
-    //TODO move to mappingviewzincwidget and you know how it works
-    connect(mMappingViewZincWidget, &MappingViewZincWidget::devicePixelRatioChanged,
-            this, &MappingViewWidget::devicePixelRatioChanged);
-
     connect(mMappingViewZincWidget, &MappingViewZincWidget::nodeSelection,
             this, &MappingViewWidget::nodeSelection);
+    connect(mDelayWidget, &QwtWheel::valueChanged,
+            mMappingViewZincWidget, &MappingViewZincWidget::setNodeSizes );
 
-    mGui->layout->addWidget(mMappingViewZincWidget);
+    addWidget(mMappingViewZincWidget);
 
     //mToolBarWidget = new Core::ToolBarWidget();
-
-
 
 }
 
@@ -120,14 +151,14 @@ void MappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new MappingViewEditingWidget(pFileName, "../opencor/meshes/circulation.exnode",this);
+        mEditingWidget = new MappingViewEditingWidget(pFileName, mMeshFileName,this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }
 
     //mListWidgetVariables->setModel(mEditingWidget->listViewModelVariables()); //TODO set only when charging the plugin ?
     //mGui->outputList->setModel(mEditingWidget->listViewModelOutput());
-    mGui->variableTree->setModel(mEditingWidget->getTreeViewModel());
+    mVariableTree->setModel(mEditingWidget->getTreeViewModel());
 }
 
 //==============================================================================
@@ -203,30 +234,14 @@ void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &
 
 //==============================================================================
 
-void MappingViewWidget::devicePixelRatioChanged(const int &pDevicePixelRatio)
-{
-    Q_UNUSED(pDevicePixelRatio);
-    //TODO to confirm
-    // Update our scene using the given devide pixel ratio
-    /*
-    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
-
-    scene.beginChange();
-        scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
-    scene.endChange();
-    */
-}
-
-//==============================================================================
-
 void MappingViewWidget::nodeSelection(int pId) {
 
     if (pId==-1) {
-        mGui->nodeValue->setText("");
-        mGui->variableValue->setText("");
+        mNodeValue->setText("");
+        mVariableValue->setText("");
     } else {
-        mGui->nodeValue->setNum(pId);
-        mGui->variableValue->setText(mEditingWidget->getVariableOfNode(pId));
+        mNodeValue->setNum(pId);
+        mVariableValue->setText(mEditingWidget->getVariableOfNode(pId));
     }
 }
 

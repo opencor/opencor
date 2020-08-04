@@ -36,12 +36,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QTableView>
 #include <QMap>
 #include <QListWidget>
+#include <QLabel>
+#include <QTreeView>
 
 //==============================================================================
 
-namespace Ui {
-    class MappingViewWidget;
-} // namespace Ui
+#include "qwtbegin.h"
+    #include "qwt_wheel.h"
+#include "qwtend.h"
 
 //==============================================================================
 
@@ -85,14 +87,16 @@ public:
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
-    int mAxesFontPointSize;
-
 private:
-    Ui::MappingViewWidget *mGui;
+
+    QwtWheel *mDelayWidget;
 
     Core::ToolBarWidget *mToolBarWidget;
 
     MappingViewZincWidget *mMappingViewZincWidget;
+    QLabel *mNodeValue;
+    QLabel *mVariableValue;
+    QTreeView *mVariableTree;
 
     QListWidget *mListWidgetVariables;
     QListWidget *mListWidgetOutput;
@@ -103,9 +107,7 @@ private:
     QString mMeshFileName;
 
 private slots:
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
     void nodeSelection(int pId);
-
 
 };
 
