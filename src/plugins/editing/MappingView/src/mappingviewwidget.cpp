@@ -31,6 +31,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMenu>
 #include <QApplication>
 #include <QScreen>
+#include <QLayout>
 
 //==============================================================================
 
@@ -49,12 +50,13 @@ namespace MappingView {
 //==============================================================================
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
-    Core::SplitterWidget(pParent)
+    Core::Widget(pParent)
 {
 
-    // Set our orientation
+    //TODO
+    mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/circulation.exnode";
 
-    setOrientation(Qt::Vertical);
+    QLayout *layout = createLayout();
 
     //create and add toolbar
 
@@ -75,26 +77,19 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     mToolBarWidget->addWidget(mDelayWidget);
 
-    addWidget(mToolBarWidget);
+    layout->addWidget(mToolBarWidget);
 
-    //create and add informative labels
+    //create horizontal splitterwidget
 
-    QLabel *nodeLabel = new QLabel("Node:",this);
-    addWidget(nodeLabel);
+    mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
 
-    mNodeValue = new QLabel(this);
-    addWidget(mNodeValue);
-
-    QLabel *variableLabel = new QLabel("Variable:",this);
-    addWidget(variableLabel);
-
-    mVariableValue = new QLabel(this);
-    addWidget(mVariableValue);
+    connect(mHorizontalSplitterWidget, &Core::SplitterWidget::splitterMoved,
+            this, &MappingViewWidget::emitHorizontalSplitterMoved);
 
     //create and add the variable tree:
 
     mVariableTree = new QTreeView(this);
-    addWidget(mVariableTree);
+    mHorizontalSplitterWidget->addWidget(mVariableTree);
 
     // Keep track of our movement
     /*
@@ -103,9 +98,6 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     */
     
     //addWidget(mListWidgetVariables);
-
-    //TODO
-    mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/circulation.exnode";
 
     // add a Zinc widget
 
@@ -116,9 +108,38 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     connect(mDelayWidget, &QwtWheel::valueChanged,
             mMappingViewZincWidget, &MappingViewZincWidget::setNodeSizes );
 
-    addWidget(mMappingViewZincWidget);
+    mHorizontalSplitterWidget->addWidget(mMappingViewZincWidget);
 
-    //mToolBarWidget = new Core::ToolBarWidget();
+    //create vertical splitterwidget
+
+    mVerticalSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
+
+    connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
+            this, &MappingViewWidget::emitVerticalSplitterMoved);
+
+    //create and add informative labels
+
+    Core::Widget *labelWidget = new Core::Widget(this);
+    QGridLayout *labelLayout = new QGridLayout(labelWidget);
+
+    QLabel *nodeLabel = new QLabel("Node:",this);
+    labelLayout->addWidget(nodeLabel,0,0);
+
+    mNodeValue = new QLabel(this);
+    labelLayout->addWidget(mNodeValue,0,1);
+
+    QLabel *variableLabel = new QLabel("Variable:",this);
+    labelLayout->addWidget(variableLabel,1,0);
+
+    mVariableValue = new QLabel(this);
+    labelLayout->addWidget(mVariableValue,1,1);
+
+    //fill and vertical Splitter
+
+    mVerticalSplitterWidget->addWidget(mHorizontalSplitterWidget);
+    mVerticalSplitterWidget->addWidget(labelWidget);
+
+    layout->addWidget(mVerticalSplitterWidget);
 
 }
 
@@ -243,6 +264,24 @@ void MappingViewWidget::nodeSelection(int pId) {
         mNodeValue->setNum(pId);
         mVariableValue->setText(mEditingWidget->getVariableOfNode(pId));
     }
+}
+
+//==============================================================================
+
+void MappingViewWidget::emitHorizontalSplitterMoved()
+{
+    // Let people know that our splitter has been moved
+
+    emit horizontalSplitterMoved(mHorizontalSplitterWidget->sizes());
+}
+
+//==============================================================================
+
+void MappingViewWidget::emitVerticalSplitterMoved()
+{
+    // Let people know that our splitter has been moved
+
+    emit verticalSplitterMoved(mVerticalSplitterWidget->sizes());
 }
 
 //==============================================================================

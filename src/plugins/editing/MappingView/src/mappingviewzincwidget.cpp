@@ -260,7 +260,7 @@ void MappingViewZincWidget::click(QMouseEvent *pEvent)
 void MappingViewZincWidget::setNodeSizes(int pSize) {
      mNodeSize = pSize;
     //TODO
-    initializeGL();
+    // draw or modifiate
 }
 
 } // namespace ZincWidget

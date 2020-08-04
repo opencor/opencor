@@ -29,6 +29,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfile.h"
 #include "mappingvieweditingwidget.h"
 #include "mappingviewzincwidget.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -38,6 +39,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QListWidget>
 #include <QLabel>
 #include <QTreeView>
+#include <QList>
 
 //==============================================================================
 
@@ -67,7 +69,7 @@ namespace MappingView {
 
 //==============================================================================
 
-class MappingViewWidget : public Core::SplitterWidget
+class MappingViewWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -93,22 +95,31 @@ private:
 
     Core::ToolBarWidget *mToolBarWidget;
 
+    Core::SplitterWidget *mVerticalSplitterWidget;
+    Core::SplitterWidget *mHorizontalSplitterWidget;
     MappingViewZincWidget *mMappingViewZincWidget;
+
     QLabel *mNodeValue;
     QLabel *mVariableValue;
     QTreeView *mVariableTree;
 
-    QListWidget *mListWidgetVariables;
-    QListWidget *mListWidgetOutput;
+    //TODO to move away
+        QListWidget *mListWidgetVariables;
+        QListWidget *mListWidgetOutput;
 
     MappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
 
     QString mMeshFileName;
 
-private slots:
-    void nodeSelection(int pId);
+signals:
+    void horizontalSplitterMoved(const QIntList &pSizes);
+    void verticalSplitterMoved(const QIntList &pSizes);
 
+private slots:
+    void emitHorizontalSplitterMoved();
+    void emitVerticalSplitterMoved();
+    void nodeSelection(int pId);
 };
 
 //==============================================================================
