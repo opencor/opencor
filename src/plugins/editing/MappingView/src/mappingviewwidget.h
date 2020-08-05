@@ -25,36 +25,18 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "viewwidget.h"
 #include "cellmlfile.h"
-#include "mappingvieweditingwidget.h"
-#include "mappingviewzincwidget.h"
 #include "corecliutils.h"
+#include "mappingvieweditingwidget.h"
+#include "viewwidget.h"
 
 //==============================================================================
 
-#include <QTableView>
 #include <QMap>
-#include <QListWidget>
-#include <QLabel>
-#include <QTreeView>
-#include <QList>
-
-//==============================================================================
-
-#include "qwtbegin.h"
-    #include "qwt_wheel.h"
-#include "qwtend.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class ToolBarWidget;
-} // namespace Core
 
 //==============================================================================
 
@@ -68,7 +50,7 @@ namespace MappingView {
 
 //==============================================================================
 
-class MappingViewWidget : public Core::Widget
+class MappingViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
@@ -80,6 +62,10 @@ public:
 
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
+
+    MappingViewEditingWidget * editingWidget(const QString &pFileName) const;
+
+    QWidget * widget(const QString &pFileName) override;
 
     void filePermissionsChanged(const QString &pFileName);
     void fileSaved(const QString &pFileName);
@@ -96,18 +82,6 @@ protected:
 
 private:
 
-    QwtWheel *mDelayWidget;
-
-    Core::ToolBarWidget *mToolBarWidget;
-
-    Core::SplitterWidget *mVerticalSplitterWidget;
-    Core::SplitterWidget *mHorizontalSplitterWidget;
-    MappingViewZincWidget *mZincWidget;
-
-    QLabel *mNodeValue;
-    QLabel *mVariableValue;
-    QTreeView *mVariableTree;
-
     MappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
 
@@ -115,16 +89,6 @@ private:
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
-    bool import(const QString &pFileName, bool pShowWarning = true);
-
-signals:
-    void horizontalSplitterMoved(const QIntList &pSizes);
-    void verticalSplitterMoved(const QIntList &pSizes);
-
-private slots:
-    void emitHorizontalSplitterMoved();
-    void emitVerticalSplitterMoved();
-    void nodeSelection(int pId);
 };
 
 //==============================================================================

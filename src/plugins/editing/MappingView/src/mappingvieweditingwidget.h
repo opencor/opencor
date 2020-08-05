@@ -25,15 +25,23 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "viewwidget.h"
 #include "cellmlfile.h"
+#include "corecliutils.h"
+#include "mappingviewzincwidget.h"
 #include "splitterwidget.h"
+#include "viewwidget.h"
 
 //==============================================================================
 
-#include <QStringListModel> //TODO remove when over
-#include <QTableView>
+#include "qwtbegin.h"
+    #include "qwt_wheel.h"
+#include "qwtend.h"
+
+//==============================================================================
+
+#include <QLabel>
 #include <QStandardItemModel>
+#include <QTreeView>
 
 //==============================================================================
 
@@ -44,11 +52,20 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ToolBarWidget;
+} // namespace Core
+
+//==============================================================================
+
 namespace MappingView {
 
 //==============================================================================
 
-class MappingViewEditingWidget : public Core::SplitterWidget
+class MappingViewEditingWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -60,35 +77,41 @@ public:
 
     void retranslateUi() override;
 
-    CellMLSupport::CellmlFile * cellmlFile() const;
-
-    QStringListModel *listViewModelVariables();
-
-    QStringListModel *listViewModelOutput();
-
-    QStandardItemModel *getTreeViewModel();
-
     void filePermissionsChanged();
 
-    QString getVariableOfNode(int pNodeId);
-
-    void AddVariableToNode(QString pVariable, int pNodeId);
+    bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
 
 private:
 
+    QwtWheel *mDelayWidget;
+
+    Core::ToolBarWidget *mToolBarWidget;
+
+    Core::SplitterWidget *mVerticalSplitterWidget;
+    Core::SplitterWidget *mHorizontalSplitterWidget;
+    MappingViewZincWidget *mZincWidget;
+
+    QLabel *mNodeValue;
+    QLabel *mVariableValue;
+    QTreeView *mVariableTree;
+
+    QString mMeshFileName;
+
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    //TODO : * or not ?
     QMap<int, QString> mMapMatch;
 
-    QStandardItemModel *mTreeViewModel;
-
-    QStringListModel
-        *mListViewModelVariables = nullptr,//TODO temporary
-        *mListViewModelOutput = nullptr;//TODO temporary
-
-    void populateCellmlModel();
+    void populateTree();
     void populateOutput(const QString &pMeshFileName);
+
+signals:
+    void horizontalSplitterMoved(const QIntList &pSizes);
+    void verticalSplitterMoved(const QIntList &pSizes);
+
+private slots:
+    void emitHorizontalSplitterMoved();
+    void emitVerticalSplitterMoved();
+    void nodeSelection(int pId);
 };
 
 //==============================================================================

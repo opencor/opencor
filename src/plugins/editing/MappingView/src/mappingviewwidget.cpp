@@ -24,26 +24,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "borderedwidget.h"
 #include "interfaces.h"
 #include "mappingviewwidget.h"
-#include "toolbarwidget.h"
-#include "zincwidget.h"
 
 //==============================================================================
 
 #include <QApplication>
 #include <QDesktopServices>
 #include <QDragEnterEvent>
-#include <QLayout>
 #include <QMenu>
 #include <QScreen>
-
-//==============================================================================
-
-#include "zincbegin.h" //TODO takeaway the useless
-    #include "opencmiss/zinc/fieldconstant.hpp"
-    #include "opencmiss/zinc/fieldmodule.hpp"
-    #include "opencmiss/zinc/fieldvectoroperators.hpp"
-    #include "opencmiss/zinc/status.h"
-#include "zincend.h"
 
 //==============================================================================
 
@@ -53,97 +41,11 @@ namespace MappingView {
 //==============================================================================
 
 MappingViewWidget::MappingViewWidget(QWidget *pParent) :
-    Core::Widget(pParent)
+    Core::ViewWidget(pParent)
 {
 
     //TODO
     mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/circulation.exnode";
-
-    QLayout *layout = createLayout();
-
-    //create and add toolbar
-
-    mToolBarWidget = new Core::ToolBarWidget();
-
-        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
-
-        mDelayWidget = new QwtWheel(mToolBarWidget);
-
-        mDelayWidget->setBorderWidth(0);
-        mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
-                                   mDelayWidget->height()/2);
-        mDelayWidget->setFocusPolicy(Qt::NoFocus);
-        mDelayWidget->setRange(0.0, 100.0);
-        mDelayWidget->setWheelBorderWidth(0);
-
-        mDelayWidget->setValue(MappingViewZincWidget::nodeSizeOrigin);
-
-    mToolBarWidget->addWidget(mDelayWidget);
-
-    layout->addWidget(mToolBarWidget);
-
-    //create horizontal splitterwidget
-
-    mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
-
-    connect(mHorizontalSplitterWidget, &Core::SplitterWidget::splitterMoved,
-            this, &MappingViewWidget::emitHorizontalSplitterMoved);
-
-    //create and add the variable tree:
-
-    mVariableTree = new QTreeView(this);
-    mVariableTree->setDragEnabled(true);
-    mHorizontalSplitterWidget->addWidget(mVariableTree);
-
-    // Keep track of our movement
-    /*
-    connect(this, &Core::SplitterWidget::splitterMoved,
-            this, &MappingViewEditingWidget::splitterMoved);
-    */
-    
-    //addWidget(mListWidgetVariables);
-
-    // add a Zinc widget
-
-    mZincWidget = new MappingViewZincWidget(this, mMeshFileName);
-
-    connect(mZincWidget, &MappingViewZincWidget::nodeSelection,
-            this, &MappingViewWidget::nodeSelection);
-    connect(mDelayWidget, &QwtWheel::valueChanged,
-            mZincWidget, &MappingViewZincWidget::setNodeSizes );
-
-    mHorizontalSplitterWidget->addWidget(mZincWidget);
-
-    //create vertical splitterwidget
-
-    mVerticalSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
-
-    connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
-            this, &MappingViewWidget::emitVerticalSplitterMoved);
-
-    //create and add informative labels
-
-    Core::Widget *labelWidget = new Core::Widget(this);
-    QGridLayout *labelLayout = new QGridLayout(labelWidget);
-
-    QLabel *nodeLabel = new QLabel("Node:",this);
-    labelLayout->addWidget(nodeLabel,0,0);
-
-    mNodeValue = new QLabel(this);
-    labelLayout->addWidget(mNodeValue,0,1);
-
-    QLabel *variableLabel = new QLabel("Variable:",this);
-    labelLayout->addWidget(variableLabel,1,0);
-
-    mVariableValue = new QLabel(this);
-    labelLayout->addWidget(mVariableValue,1,1);
-
-    //fill and vertical Splitter
-
-    mVerticalSplitterWidget->addWidget(mHorizontalSplitterWidget);
-    mVerticalSplitterWidget->addWidget(labelWidget);
-
-    layout->addWidget(mVerticalSplitterWidget);
 
     // Allow for things to be dropped on us
 
@@ -184,9 +86,12 @@ void MappingViewWidget::initialize(const QString &pFileName)
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }
 
-    //mListWidgetVariables->setModel(mEditingWidget->listViewModelVariables()); //TODO set only when charging the plugin ?
-    //mGui->outputList->setModel(mEditingWidget->listViewModelOutput());
-    mVariableTree->setModel(mEditingWidget->getTreeViewModel());
+    // Set our focus proxy to our 'new' simulation widget and make sure that the
+    // latter immediately gets the focus
+
+    setFocusProxy(mEditingWidget);
+
+    mEditingWidget->setFocus();
 }
 
 //==============================================================================
@@ -211,6 +116,24 @@ void MappingViewWidget::finalize(const QString &pFileName)
             mEditingWidget = nullptr;
         }
     }
+}
+
+//==============================================================================
+
+MappingViewEditingWidget* MappingViewWidget::editingWidget(const QString &pFileName) const
+{
+    // Return the requested simulation widget
+
+    return mEditingWidgets.value(pFileName);
+}
+
+//==============================================================================
+
+QWidget * MappingViewWidget::widget(const QString &pFileName)
+{
+    // Return the requested (simulation) widget
+
+    return editingWidget(pFileName);
 }
 
 //==============================================================================
@@ -310,10 +233,11 @@ void MappingViewWidget::dropEvent(QDropEvent *pEvent)
 
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         if (mFileTypeInterfaces.contains(fileName)) {
-            import(fileName); //?
+            //import(fileName); //?
             //TODO
         } else if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-                import(fileName);
+            mEditingWidget->setMeshFile(fileName);
+            mMeshFileName = fileName;
         } else {
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
@@ -322,49 +246,6 @@ void MappingViewWidget::dropEvent(QDropEvent *pEvent)
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
-}
-
-//==============================================================================
-
-bool MappingViewWidget::import(const QString &pFileName, bool pShowWarning)
-{
-Q_UNUSED(pShowWarning)
-
-    //todo
-    mZincWidget->changeSource(pFileName);
-
-    return true;
-}
-
-//==============================================================================
-
-void MappingViewWidget::nodeSelection(int pId) {
-
-    if (pId==-1) {
-        mNodeValue->setText("");
-        mVariableValue->setText("");
-    } else {
-        mNodeValue->setNum(pId);
-        mVariableValue->setText(mEditingWidget->getVariableOfNode(pId));
-    }
-}
-
-//==============================================================================
-
-void MappingViewWidget::emitHorizontalSplitterMoved()
-{
-    // Let people know that our splitter has been moved
-
-    emit horizontalSplitterMoved(mHorizontalSplitterWidget->sizes());
-}
-
-//==============================================================================
-
-void MappingViewWidget::emitVerticalSplitterMoved()
-{
-    // Let people know that our splitter has been moved
-
-    emit verticalSplitterMoved(mVerticalSplitterWidget->sizes());
 }
 
 //==============================================================================
