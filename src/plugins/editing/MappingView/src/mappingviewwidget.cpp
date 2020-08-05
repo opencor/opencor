@@ -22,16 +22,19 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "interfaces.h"
 #include "mappingviewwidget.h"
-#include "zincwidget.h"
 #include "toolbarwidget.h"
+#include "zincwidget.h"
 
 //==============================================================================
 
-#include <QMenu>
 #include <QApplication>
-#include <QScreen>
+#include <QDesktopServices>
+#include <QDragEnterEvent>
 #include <QLayout>
+#include <QMenu>
+#include <QScreen>
 
 //==============================================================================
 
@@ -89,6 +92,7 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
     //create and add the variable tree:
 
     mVariableTree = new QTreeView(this);
+    mVariableTree->setDragEnabled(true);
     mHorizontalSplitterWidget->addWidget(mVariableTree);
 
     // Keep track of our movement
@@ -101,14 +105,14 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     // add a Zinc widget
 
-    mMappingViewZincWidget = new MappingViewZincWidget(this, mMeshFileName);
+    mZincWidget = new MappingViewZincWidget(this, mMeshFileName);
 
-    connect(mMappingViewZincWidget, &MappingViewZincWidget::nodeSelection,
+    connect(mZincWidget, &MappingViewZincWidget::nodeSelection,
             this, &MappingViewWidget::nodeSelection);
     connect(mDelayWidget, &QwtWheel::valueChanged,
-            mMappingViewZincWidget, &MappingViewZincWidget::setNodeSizes );
+            mZincWidget, &MappingViewZincWidget::setNodeSizes );
 
-    mHorizontalSplitterWidget->addWidget(mMappingViewZincWidget);
+    mHorizontalSplitterWidget->addWidget(mZincWidget);
 
     //create vertical splitterwidget
 
@@ -141,6 +145,9 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
     layout->addWidget(mVerticalSplitterWidget);
 
+    // Allow for things to be dropped on us
+
+    setAcceptDrops(true);
 }
 
 //==============================================================================
@@ -251,6 +258,82 @@ void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
+}
+
+//==============================================================================
+
+void MappingViewWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+{
+    // Accept the proposed action for the event, but only if it refers to one or
+    // several data store files
+
+    bool acceptEvent = false;
+
+    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
+        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                mFileTypeInterfaces.insert(fileName, fileTypeInterface);
+
+                acceptEvent = true;
+
+                break;
+            }
+        }
+
+        //TODO
+        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+            acceptEvent = true;
+        }
+    }
+
+    if (acceptEvent) {
+        pEvent->acceptProposedAction();
+    } else {
+        pEvent->ignore();
+    }
+}
+
+//==============================================================================
+
+void MappingViewWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+{
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
+//==============================================================================
+
+void MappingViewWidget::dropEvent(QDropEvent *pEvent)
+{
+    // Import/open the one or several files
+
+    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
+        if (mFileTypeInterfaces.contains(fileName)) {
+            import(fileName); //?
+            //TODO
+        } else if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+                import(fileName);
+        } else {
+            QDesktopServices::openUrl("opencor://openFile/"+fileName);
+        }
+    }
+
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
+//==============================================================================
+
+bool MappingViewWidget::import(const QString &pFileName, bool pShowWarning)
+{
+Q_UNUSED(pShowWarning)
+
+    //todo
+    mZincWidget->changeSource(pFileName);
+
+    return true;
 }
 
 //==============================================================================

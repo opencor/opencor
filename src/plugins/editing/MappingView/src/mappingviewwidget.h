@@ -33,7 +33,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QStringListModel> //TODO remove when over
 #include <QTableView>
 #include <QMap>
 #include <QListWidget>
@@ -89,6 +88,12 @@ public:
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
+protected:
+//    void changeEvent(QEvent *pEvent) override;
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
+
 private:
 
     QwtWheel *mDelayWidget;
@@ -97,20 +102,20 @@ private:
 
     Core::SplitterWidget *mVerticalSplitterWidget;
     Core::SplitterWidget *mHorizontalSplitterWidget;
-    MappingViewZincWidget *mMappingViewZincWidget;
+    MappingViewZincWidget *mZincWidget;
 
     QLabel *mNodeValue;
     QLabel *mVariableValue;
     QTreeView *mVariableTree;
 
-    //TODO to move away
-        QListWidget *mListWidgetVariables;
-        QListWidget *mListWidgetOutput;
-
     MappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
 
     QString mMeshFileName;
+
+    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
+
+    bool import(const QString &pFileName, bool pShowWarning = true);
 
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);

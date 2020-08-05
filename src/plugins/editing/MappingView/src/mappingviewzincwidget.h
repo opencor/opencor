@@ -55,7 +55,13 @@ public:
 
     ~MappingViewZincWidget() override;
 
+    void changeSource(const QString &pMainFileName);
+
     static constexpr double nodeSizeOrigin = 20.;
+
+public slots:
+    //TODO keep slot here or manage signal through parent class ?
+    void setNodeSizes(int pSize);
 
 protected:
     void initializeGL() override;
@@ -64,6 +70,11 @@ protected:
     void mousePressEvent(QMouseEvent *pEvent) override;
     void mouseReleaseEvent(QMouseEvent *pEvent) override;
     void wheelEvent(QWheelEvent *pEvent) override;
+
+//  void changeEvent(QEvent *pEvent) override;
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
 private:
 
@@ -86,10 +97,11 @@ private:
     OpenCMISS::Zinc::Region *mRegion;
     OpenCMISS::Zinc::Scenepicker *mScenePicker;
 
-    void click(QMouseEvent *pEvent);
+    void initAuxFile();
+    void setup();
+    void draw();
 
-public slots:
-    void setNodeSizes(int pSize);
+    void click(QMouseEvent *pEvent);
 
 signals:
     void nodeSelection(int pId);
