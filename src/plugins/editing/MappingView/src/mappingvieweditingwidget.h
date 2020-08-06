@@ -74,6 +74,7 @@ public:
 
     QStringList mimeTypes() const override;
     QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
+
 };
 
 

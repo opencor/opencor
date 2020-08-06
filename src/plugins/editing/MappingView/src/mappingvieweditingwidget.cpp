@@ -52,6 +52,13 @@ namespace MappingView {
 
 //==============================================================================
 
+MappingViewEditingModel::MappingViewEditingModel(QObject *pParent) :
+    QStandardItemModel(pParent)
+{
+}
+
+//==============================================================================
+
 static const char *MappingViewEdittingMimeType = "opencor/mapping-view-editting";
 
 //==============================================================================
@@ -265,7 +272,7 @@ void MappingViewEditingWidget::populateTree()
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
                      componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
 
-                    QStandardItem *variableItem = new QStandardItem(QString::fromStdWString(componentVariable->name()));
+                    QStandardItem *variableItem = new QStandardItem(QString::fromStdWString(component->name())+"/"+QString::fromStdWString(componentVariable->name()));
 
                     componentItem->appendRow(variableItem);
                 }
