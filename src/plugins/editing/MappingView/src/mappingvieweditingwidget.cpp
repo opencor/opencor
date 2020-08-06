@@ -52,6 +52,46 @@ namespace MappingView {
 
 //==============================================================================
 
+static const char *MappingViewEdittingMimeType = "opencor/mapping-view-editting";
+
+//==============================================================================
+
+QStringList MappingViewEditingModel::mimeTypes() const
+{
+    return {MappingViewEdittingMimeType};
+}
+
+//==============================================================================
+
+QMimeData * MappingViewEditingModel::mimeData(const QModelIndexList &pIndexes) const
+{
+    auto res = new QMimeData();
+    QString names;
+
+    // Retrieve the URL of the different file (not folder) items
+    // Note: this list of URLs is useful with regards to the FileSystemMimeType
+    //       MIME type on which external widgets (e.g. the central widget) rely
+    //       on to extract the name of the vavarious files the MIME data
+    //       contains
+
+    for (const auto &index : pIndexes) {
+        names.append(" "+itemFromIndex(index)->text());
+    }
+
+    res->setText(names);
+
+    // Set the data that contains information on both the folder and file items
+    // Note: this data is useful with regards to the FileOrganiserWindowMimeType
+    //       MIME type on which the file organiser widget relies for moving
+    //       folder and file items around
+
+    //res->setData(MappingViewEdittingMimeType, encodeData(pIndexes));
+
+    return res;
+}
+
+//==============================================================================
+
 MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
                                                    const QString &pMeshFileName,
                                                    QWidget *pParent) :
@@ -61,93 +101,94 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 {
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
+    //create and fill layout
 
     QLayout *layout = createLayout();
 
-    //create and add toolbar
+        //create and add toolbar
 
-    mToolBarWidget = new Core::ToolBarWidget();
+        mToolBarWidget = new Core::ToolBarWidget();
 
-        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+            QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-        mDelayWidget = new QwtWheel(mToolBarWidget);
+            mDelayWidget = new QwtWheel(mToolBarWidget);
 
-        mDelayWidget->setBorderWidth(0);
-        mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
-                                   mDelayWidget->height()/2);
-        mDelayWidget->setFocusPolicy(Qt::NoFocus);
-        mDelayWidget->setRange(0.0, 100.0);
-        mDelayWidget->setWheelBorderWidth(0);
+            mDelayWidget->setBorderWidth(0);
+            mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                       mDelayWidget->height()/2);
+            mDelayWidget->setFocusPolicy(Qt::NoFocus);
+            mDelayWidget->setRange(0.0, 100.0);
+            mDelayWidget->setWheelBorderWidth(0);
 
-        mDelayWidget->setValue(MappingViewZincWidget::nodeSizeOrigin);
+            mDelayWidget->setValue(MappingViewZincWidget::nodeSizeOrigin);
 
-    mToolBarWidget->addWidget(mDelayWidget);
+        mToolBarWidget->addWidget(mDelayWidget);
 
     layout->addWidget(mToolBarWidget);
 
-    //create horizontal splitterwidget
+        //create horizontal splitterwidget
 
-    mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
+        mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
 
-    connect(mHorizontalSplitterWidget, &Core::SplitterWidget::splitterMoved,
-            this, &MappingViewEditingWidget::emitHorizontalSplitterMoved);
+        connect(mHorizontalSplitterWidget, &Core::SplitterWidget::splitterMoved,
+                this, &MappingViewEditingWidget::emitHorizontalSplitterMoved);
 
-    //create and add the variable tree:
+        //create vertical splitterwidget
 
-    mVariableTree = new QTreeView(this);
-    mVariableTree->setDragEnabled(true);
-    mHorizontalSplitterWidget->addWidget(mVariableTree);
+        mVerticalSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
 
-    // Keep track of our movement
-    /*
-    connect(this, &Core::SplitterWidget::splitterMoved,
-            this, &MappingViewEditingWidget::splitterMoved);
-    */
+        connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
+                this, &MappingViewEditingWidget::emitVerticalSplitterMoved);
 
-    //addWidget(mListWidgetVariables);
+        //create and add the variable tree:
 
-    // add a Zinc widget
+        mVariableTree = new QTreeView(this);
+        mVariableTree->setDragEnabled(true);
 
-    mZincWidget = new MappingViewZincWidget(this, mMeshFileName);
+        mHorizontalSplitterWidget->addWidget(mVariableTree);
 
-    connect(mZincWidget, &MappingViewZincWidget::nodeSelection,
-            this, &MappingViewEditingWidget::nodeSelection);
-    connect(mDelayWidget, &QwtWheel::valueChanged,
-            mZincWidget, &MappingViewZincWidget::setNodeSizes );
+        // Keep track of our movement
+        /*
+        connect(this, &Core::SplitterWidget::splitterMoved,
+                this, &MappingViewEditingWidget::splitterMoved);
+        */
 
-    mHorizontalSplitterWidget->addWidget(mZincWidget);
+        //addWidget(mListWidgetVariables);
 
-    //create vertical splitterwidget
+        // add a Zinc widget
 
-    mVerticalSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
+        mZincWidget = new MappingViewZincWidget(this, mMeshFileName);
 
-    connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
-            this, &MappingViewEditingWidget::emitVerticalSplitterMoved);
+        connect(mZincWidget, &MappingViewZincWidget::nodeSelection,
+                this, &MappingViewEditingWidget::nodeSelection);
+        connect(mDelayWidget, &QwtWheel::valueChanged,
+                mZincWidget, &MappingViewZincWidget::setNodeSizes );
 
-    //create and add informative labels
+        mHorizontalSplitterWidget->addWidget(mZincWidget);
 
-    Core::Widget *labelWidget = new Core::Widget(this);
-    QGridLayout *labelLayout = new QGridLayout(labelWidget);
+        //create and add informative labels
 
-    QLabel *nodeLabel = new QLabel("Node:",this);
-    labelLayout->addWidget(nodeLabel,0,0);
+        Core::Widget *labelWidget = new Core::Widget(this);
+        QGridLayout *labelLayout = new QGridLayout(labelWidget);
 
-    mNodeValue = new QLabel(this);
-    labelLayout->addWidget(mNodeValue,0,1);
+        QLabel *nodeLabel = new QLabel("Node:",this);
+        labelLayout->addWidget(nodeLabel,0,0);
 
-    QLabel *variableLabel = new QLabel("Variable:",this);
-    labelLayout->addWidget(variableLabel,1,0);
+        mNodeValue = new QLabel(this);
+        labelLayout->addWidget(mNodeValue,0,1);
 
-    mVariableValue = new QLabel(this);
-    labelLayout->addWidget(mVariableValue,1,1);
+        QLabel *variableLabel = new QLabel("Variable:",this);
+        labelLayout->addWidget(variableLabel,1,0);
 
-    //fill and vertical Splitter
+        mVariableValue = new QLabel(this);
+        labelLayout->addWidget(mVariableValue,1,1);
 
-    mVerticalSplitterWidget->addWidget(mHorizontalSplitterWidget);
-    mVerticalSplitterWidget->addWidget(labelWidget);
+        //fill vertical Splitter
+
+        mVerticalSplitterWidget->addWidget(mHorizontalSplitterWidget);
+        mVerticalSplitterWidget->addWidget(labelWidget);
 
     layout->addWidget(mVerticalSplitterWidget);
-
 
     populateTree();
     populateOutput(pMeshFileName);
@@ -168,6 +209,19 @@ void MappingViewEditingWidget::filePermissionsChanged()
 
 //==============================================================================
 
+bool MappingViewEditingWidget::setMeshFile(const QString &pFileName, bool pShowWarning)
+{
+    //TODO warinings ?
+Q_UNUSED(pShowWarning)
+
+    mMeshFileName = pFileName;
+    mZincWidget->changeSource(pFileName);
+
+    return false;
+}
+
+//==============================================================================
+
 void MappingViewEditingWidget::populateTree()
 {
 
@@ -179,7 +233,7 @@ void MappingViewEditingWidget::populateTree()
         return;
     }
 
-    QStandardItemModel *treeModel = new QStandardItemModel();
+    QStandardItemModel *treeModel = new MappingViewEditingModel();
 
     // Retrieve the model's components
 
@@ -201,6 +255,7 @@ void MappingViewEditingWidget::populateTree()
             if (componentVariables->length() != 0) {
 
                 QStandardItem *componentItem = new QStandardItem(QString::fromStdWString(component->name()));
+
                 treeModel->invisibleRootItem()->appendRow(componentItem);
 
                 // Retrieve the model's component's variables themselves
@@ -220,6 +275,8 @@ void MappingViewEditingWidget::populateTree()
 
     mVariableTree->setModel(treeModel);
 }
+
+//==============================================================================
 
 void MappingViewEditingWidget::populateOutput(const QString &pMeshFileName)
 {
@@ -252,6 +309,17 @@ void MappingViewEditingWidget::emitVerticalSplitterMoved()
 }
 
 //==============================================================================
+
+void MappingViewEditingWidget::nodeSelection(int pId)
+{
+    if (pId==-1) {
+        mNodeValue->setText("");
+        mVariableValue->setText("");
+    } else {
+        mNodeValue->setNum(pId);
+        mVariableValue->setText(mMapMatch[pId]);
+    }
+}
 
 } // namespace MappingView
 } // namespace OpenCOR

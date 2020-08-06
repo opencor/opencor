@@ -65,12 +65,23 @@ namespace MappingView {
 
 //==============================================================================
 
+class MappingViewEditingModel : public QStandardItemModel
+{
+    Q_OBJECT
+
+public:
+    explicit MappingViewEditingModel(QObject *pParent = nullptr);
+
+    QStringList mimeTypes() const override;
+    QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
+};
+
+
 class MappingViewEditingWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-
     explicit MappingViewEditingWidget(const QString &pCellmlFileName,
                                       const QString &pMeshFileName,
                                                QWidget *pParent);
