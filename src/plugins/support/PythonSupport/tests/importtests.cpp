@@ -50,7 +50,7 @@ void ImportTests::tests()
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(ImportTests)
+QTEST_APPLESS_MAIN(ImportTests)
 
 //==============================================================================
 // End of file

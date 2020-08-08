@@ -46,7 +46,7 @@ void CoverageTests::tests()
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(CoverageTests)
+QTEST_APPLESS_MAIN(CoverageTests)
 
 //==============================================================================
 // End of file

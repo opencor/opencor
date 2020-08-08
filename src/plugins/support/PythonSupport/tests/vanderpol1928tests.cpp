@@ -45,7 +45,7 @@ void VanDerPol1928Tests::tests()
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(VanDerPol1928Tests)
+QTEST_APPLESS_MAIN(VanDerPol1928Tests)
 
 //==============================================================================
 // End of file
