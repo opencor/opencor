@@ -206,6 +206,7 @@ void MappingViewWidget::dragEnterEvent(QDragEnterEvent *pEvent)
         //TODO
         if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
             acceptEvent = true;
+            qDebug("drop of %s accepted",qPrintable(fileName));
         }
     }
 
@@ -232,13 +233,15 @@ void MappingViewWidget::dropEvent(QDropEvent *pEvent)
     // Import/open the one or several files
 
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
-        if (mFileTypeInterfaces.contains(fileName)) {
-            //import(fileName); //?
-            //TODO
-        } else if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+qDebug(">>> open %s !",qPrintable(fileName));
             mEditingWidget->setMeshFile(fileName);
             mMeshFileName = fileName;
+        } else if (mFileTypeInterfaces.contains(fileName)) {
+            //import(fileName); //?
+            //TODO
         } else {
+qDebug(">>> send %s to opencor to open it !",qPrintable(fileName));
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
     }

@@ -65,18 +65,20 @@ namespace MappingView {
 
 //==============================================================================
 
+
 class MappingViewEditingModel : public QStandardItemModel
 {
     Q_OBJECT
 
 public:
+    static const char *MappingViewEdittingMimeType;
+
     explicit MappingViewEditingModel(QObject *pParent = nullptr);
 
     QStringList mimeTypes() const override;
     QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
 
 };
-
 
 class MappingViewEditingWidget : public Core::Widget
 {
@@ -88,6 +90,9 @@ public:
                                                QWidget *pParent);
 
     void retranslateUi() override;
+
+    void selectNode(int pId);
+    void setNodeValue(const int pId, const QString &pVariable);
 
     void filePermissionsChanged();
 
@@ -107,6 +112,8 @@ private:
     QLabel *mVariableValue;
     QTreeView *mVariableTree;
 
+    MappingViewEditingModel *mVariableTreeModel;
+
     QString mMeshFileName;
 
     CellMLSupport::CellmlFile *mCellmlFile;
@@ -123,7 +130,6 @@ signals:
 private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
-    void nodeSelection(int pId);
 };
 
 //==============================================================================

@@ -59,7 +59,7 @@ MappingViewEditingModel::MappingViewEditingModel(QObject *pParent) :
 
 //==============================================================================
 
-static const char *MappingViewEdittingMimeType = "opencor/mapping-view-editting";
+const char *MappingViewEditingModel::MappingViewEdittingMimeType = "opencor/mapping-view-editting";
 
 //==============================================================================
 
@@ -75,24 +75,13 @@ QMimeData * MappingViewEditingModel::mimeData(const QModelIndexList &pIndexes) c
     auto res = new QMimeData();
     QString names;
 
-    // Retrieve the URL of the different file (not folder) items
-    // Note: this list of URLs is useful with regards to the FileSystemMimeType
-    //       MIME type on which external widgets (e.g. the central widget) rely
-    //       on to extract the name of the vavarious files the MIME data
-    //       contains
+    //TODO block dragging of multiple elements;
 
     for (const auto &index : pIndexes) {
-        names.append(" "+itemFromIndex(index)->text());
+        names.append(itemFromIndex(index)->text()+"|"+itemFromIndex(index)->accessibleDescription());
     }
 
-    res->setText(names);
-
-    // Set the data that contains information on both the folder and file items
-    // Note: this data is useful with regards to the FileOrganiserWindowMimeType
-    //       MIME type on which the file organiser widget relies for moving
-    //       folder and file items around
-
-    //res->setData(MappingViewEdittingMimeType, encodeData(pIndexes));
+    res->setData(MappingViewEdittingMimeType,names.toUtf8());
 
     return res;
 }
@@ -152,6 +141,9 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
         mVariableTree = new QTreeView(this);
         mVariableTree->setDragEnabled(true);
 
+        mVariableTreeModel = new MappingViewEditingModel();
+        mVariableTree->setModel(mVariableTreeModel);
+
         mHorizontalSplitterWidget->addWidget(mVariableTree);
 
         // Keep track of our movement
@@ -164,10 +156,8 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 
         // add a Zinc widget
 
-        mZincWidget = new MappingViewZincWidget(this, mMeshFileName);
+        mZincWidget = new MappingViewZincWidget(this, mMeshFileName, this);
 
-        connect(mZincWidget, &MappingViewZincWidget::nodeSelection,
-                this, &MappingViewEditingWidget::nodeSelection);
         connect(mDelayWidget, &QwtWheel::valueChanged,
                 mZincWidget, &MappingViewZincWidget::setNodeSizes );
 
@@ -210,6 +200,16 @@ void MappingViewEditingWidget::retranslateUi()
 
 //==============================================================================
 
+void MappingViewEditingWidget::setNodeValue(const int pId, const QString &pVariable)
+{
+    if (pId!=-1) {
+        mMapMatch.insert(pId,pVariable);
+        selectNode(pId);
+    }
+}
+
+//==============================================================================
+
 void MappingViewEditingWidget::filePermissionsChanged()
 {
 }
@@ -218,7 +218,7 @@ void MappingViewEditingWidget::filePermissionsChanged()
 
 bool MappingViewEditingWidget::setMeshFile(const QString &pFileName, bool pShowWarning)
 {
-    //TODO warinings ?
+    //TODO warnings ?
 Q_UNUSED(pShowWarning)
 
     mMeshFileName = pFileName;
@@ -240,7 +240,7 @@ void MappingViewEditingWidget::populateTree()
         return;
     }
 
-    QStandardItemModel *treeModel = new MappingViewEditingModel();
+    mVariableTreeModel->clear();
 
     // Retrieve the model's components
 
@@ -263,7 +263,7 @@ void MappingViewEditingWidget::populateTree()
 
                 QStandardItem *componentItem = new QStandardItem(QString::fromStdWString(component->name()));
 
-                treeModel->invisibleRootItem()->appendRow(componentItem);
+                mVariableTreeModel->invisibleRootItem()->appendRow(componentItem);
 
                 // Retrieve the model's component's variables themselves
 
@@ -272,15 +272,14 @@ void MappingViewEditingWidget::populateTree()
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
                      componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
 
-                    QStandardItem *variableItem = new QStandardItem(QString::fromStdWString(component->name())+"/"+QString::fromStdWString(componentVariable->name()));
+                    QStandardItem *variableItem = new QStandardItem(QString::fromStdWString(componentVariable->name()));
+                    variableItem->setAccessibleDescription(QString::fromStdWString(component->name()));
 
                     componentItem->appendRow(variableItem);
                 }
             }
         }
     }
-
-    mVariableTree->setModel(treeModel);
 }
 
 //==============================================================================
@@ -317,7 +316,7 @@ void MappingViewEditingWidget::emitVerticalSplitterMoved()
 
 //==============================================================================
 
-void MappingViewEditingWidget::nodeSelection(int pId)
+void MappingViewEditingWidget::selectNode(int pId)
 {
     if (pId==-1) {
         mNodeValue->setText("");

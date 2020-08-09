@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QFile>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -46,12 +47,17 @@ namespace MappingView {
 
 //==============================================================================
 
+class MappingViewEditingWidget;
+
+//==============================================================================
+
 class MappingViewZincWidget : public ZincWidget::ZincWidget
 {
     Q_OBJECT
 
 public:
-    explicit MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName);
+    explicit MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+                                   MappingViewEditingWidget *pEditingWidget);
 
     ~MappingViewZincWidget() override;
 
@@ -81,6 +87,8 @@ private:
     QString mMainFileName;
     QString mAuxFileName;
 
+    MappingViewEditingWidget *mEditingWidget;
+
     QPoint mMousePosClick;
 
     double mNodeSize;
@@ -90,6 +98,7 @@ private:
     //size of the square drawn around the mouse for selections
     //TODO improve this, should depend on the number of pixel at screen
     int mSizeSelection = 2;
+    int mIdSelectedNode = -1;
 
     OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Context *mZincContext;
@@ -101,10 +110,7 @@ private:
     void setup();
     void draw();
 
-    void click(QMouseEvent *pEvent);
-
-signals:
-    void nodeSelection(int pId);
+    void click(int pX, int pY);
 
 };
 
