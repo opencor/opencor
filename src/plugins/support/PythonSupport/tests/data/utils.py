@@ -34,8 +34,8 @@ def str_value(value):
 
     if res == '-0.0':
         return '0.0'
-    else:
-        return res
+
+    return res
 
 
 def print_values(data):
