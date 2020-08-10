@@ -15,9 +15,9 @@
        - potassium_channel/potassium_channel_n_gate/n = [ 0.0, 0.0, 0.0, ..., 0.7, 0.7, 0.7 ]
     - Rates:
        - membrane/V/prime = [ 0.4, 0.5, 0.5, ..., -0.7, -0.7, -0.7 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - sodium_channel/g_Na = [ 0.0, 0.0, 0.0, ..., 0.3, 0.3, 0.3 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.3, 0.3, 0.3, ..., 2.0, 1.9, 1.9 ]
@@ -45,9 +45,9 @@
        - potassium_channel/potassium_channel_n_gate/n = [ 0.0, 0.0, 0.0, ..., 0.7, 0.7, 0.7 ]
     - Rates:
        - membrane/V/prime = [ 0.4, 0.5, 0.5, ..., -0.7, -0.7, -0.7 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - sodium_channel/g_Na = [ 0.0, 0.0, 0.0, ..., 0.3, 0.3, 0.3 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.3, 0.3, 0.3, ..., 2.0, 1.9, 1.9 ]
@@ -75,9 +75,9 @@
        - potassium_channel/potassium_channel_n_gate/n = [ 0.0, 0.0, 0.0, ..., 0.7, 0.7, 0.7 ]
     - Rates:
        - membrane/V/prime = [ 0.4, 0.5, 0.5, ..., -0.7, -0.7, -0.7 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - sodium_channel/g_Na = [ 0.0, 0.0, 0.0, ..., 0.3, 0.3, 0.3 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.3, 0.3, 0.3, ..., 2.0, 1.9, 1.9 ]
@@ -105,9 +105,9 @@
        - potassium_channel/potassium_channel_n_gate/n = [ 0.0, 0.0, 0.0, ..., 0.7, 0.7, 0.7 ]
     - Rates:
        - membrane/V/prime = [ 0.4, 0.5, 0.5, ..., -0.7, -0.7, -0.7 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - sodium_channel/g_Na = [ 0.0, 0.0, 0.0, ..., 0.3, 0.3, 0.3 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.3, 0.3, 0.3, ..., 2.0, 1.9, 1.9 ]
@@ -135,9 +135,9 @@
        - potassium_channel/potassium_channel_n_gate/n = [ 0.0, 0.0, 0.0, ..., 0.7, 0.7, 0.7 ]
     - Rates:
        - membrane/V/prime = [ 0.4, 0.5, 0.5, ..., -0.7, -0.7, -0.7 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.2, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - sodium_channel/g_Na = [ 0.0, 0.0, 0.0, ..., 0.3, 0.3, 0.3 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.3, 0.3, 0.3, ..., 2.0, 1.9, 1.9 ]

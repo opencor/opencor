@@ -29,11 +29,13 @@ def open_simulation(file_name_or_url):
     return simulation
 
 
-def true_value(value):
-    if value == 0.0:
-        return 0.0
+def str_value(value):
+    res = format(value, '.1f')
+
+    if res == '-0.0':
+        return '0.0'
     else:
-        return value
+        return res
 
 
 def print_values(data):
@@ -42,9 +44,9 @@ def print_values(data):
     else:
         data_len = len(data)
 
-        print('[ %.1f, %.1f, %.1f, ..., %.1f, %.1f, %.1f ]'
-              % (true_value(data[0]), true_value(data[1]), true_value(data[2]),
-                 true_value(data[data_len - 3]), true_value(data[data_len - 2]), true_value(data[data_len - 1])))
+        print('[ %s, %s, %s, ..., %s, %s, %s ]'
+              % (str_value(data[0]), str_value(data[1]), str_value(data[2]),
+                 str_value(data[data_len - 3]), str_value(data[data_len - 2]), str_value(data[data_len - 1])))
 
 
 def values(data, data_type, indent=''):

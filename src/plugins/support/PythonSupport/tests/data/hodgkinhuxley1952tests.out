@@ -12,15 +12,15 @@
        - potassium_channel/E_K = [ 12.0, 12.0, 12.0, ..., 12.0, 12.0, 12.0 ]
        - leakage_current/E_L = [ -10.6, -10.6, -10.6, ..., -10.6, -10.6, -10.6 ]
     - States:
-       - membrane/V = [ 0.0, 0.3, 0.4, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V = [ 0.0, 0.3, 0.4, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/m = [ 0.1, 0.1, 0.1, ..., 0.1, 0.1, 0.1 ]
        - sodium_channel/sodium_channel_h_gate/h = [ 0.6, 0.6, 0.6, ..., 0.6, 0.6, 0.6 ]
        - potassium_channel/potassium_channel_n_gate/n = [ 0.3, 0.3, 0.3, ..., 0.3, 0.3, 0.3 ]
     - Rates:
-       - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., -0.0, -0.0, -0.0 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, -0.0, -0.0, ..., 0.0, 0.0, 0.0 ]
-       - sodium_channel/sodium_channel_h_gate/h/prime = [ -0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.0, -0.0, -0.0, ..., 0.0, 0.0, 0.0 ]
+       - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - membrane/i_Stim = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.2, 0.2, 0.2, ..., 0.2, 0.2, 0.2 ]
@@ -43,15 +43,15 @@
        - potassium_channel/E_K = [ 12.0, 12.0, 12.0, ..., 12.0, 12.0, 12.0 ]
        - leakage_current/E_L = [ -10.6, -10.6, -10.6, ..., -10.6, -10.6, -10.6 ]
     - States:
-       - membrane/V = [ 0.0, 0.3, 0.4, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V = [ 0.0, 0.3, 0.4, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/m = [ 0.1, 0.1, 0.1, ..., 0.1, 0.1, 0.1 ]
        - sodium_channel/sodium_channel_h_gate/h = [ 0.6, 0.6, 0.6, ..., 0.6, 0.6, 0.6 ]
        - potassium_channel/potassium_channel_n_gate/n = [ 0.3, 0.3, 0.3, ..., 0.3, 0.3, 0.3 ]
     - Rates:
-       - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., 0.0, 0.0, -0.0 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
-       - sodium_channel/sodium_channel_h_gate/h/prime = [ -0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - membrane/i_Stim = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.2, 0.2, 0.2, ..., 0.2, 0.2, 0.2 ]
@@ -74,15 +74,15 @@
        - potassium_channel/E_K = [ 12.0, 12.0, 12.0, ..., 12.0, 12.0, 12.0 ]
        - leakage_current/E_L = [ -10.6, -10.6, -10.6, ..., -10.6, -10.6, -10.6 ]
     - States:
-       - membrane/V = [ 0.0, 0.3, 0.4, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V = [ 0.0, 0.3, 0.4, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/m = [ 0.1, 0.1, 0.1, ..., 0.1, 0.1, 0.1 ]
        - sodium_channel/sodium_channel_h_gate/h = [ 0.6, 0.6, 0.6, ..., 0.6, 0.6, 0.6 ]
        - potassium_channel/potassium_channel_n_gate/n = [ 0.3, 0.3, 0.3, ..., 0.3, 0.3, 0.3 ]
     - Rates:
        - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., 0.0, 0.0, 0.0 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
-       - sodium_channel/sodium_channel_h_gate/h/prime = [ -0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - membrane/i_Stim = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.2, 0.2, 0.2, ..., 0.2, 0.2, 0.2 ]
@@ -105,15 +105,15 @@
        - potassium_channel/E_K = [ 12.0, 12.0, 12.0, ..., 12.0, 12.0, 12.0 ]
        - leakage_current/E_L = [ -10.6, -10.6, -10.6, ..., -10.6, -10.6, -10.6 ]
     - States:
-       - membrane/V = [ 0.0, 0.3, 0.4, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V = [ 0.0, 0.3, 0.4, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/m = [ 0.1, 0.1, 0.1, ..., 0.1, 0.1, 0.1 ]
        - sodium_channel/sodium_channel_h_gate/h = [ 0.6, 0.6, 0.6, ..., 0.6, 0.6, 0.6 ]
        - potassium_channel/potassium_channel_n_gate/n = [ 0.3, 0.3, 0.3, ..., 0.3, 0.3, 0.3 ]
     - Rates:
-       - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., -0.0, 0.0, -0.0 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
-       - sodium_channel/sodium_channel_h_gate/h/prime = [ -0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - membrane/i_Stim = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.2, 0.2, 0.2, ..., 0.2, 0.2, 0.2 ]
@@ -136,15 +136,15 @@
        - potassium_channel/E_K = [ 12.0, 12.0, 12.0, ..., 12.0, 12.0, 12.0 ]
        - leakage_current/E_L = [ -10.6, -10.6, -10.6, ..., -10.6, -10.6, -10.6 ]
     - States:
-       - membrane/V = [ 0.0, 0.3, 0.4, ..., -0.0, -0.0, -0.0 ]
+       - membrane/V = [ 0.0, 0.3, 0.4, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/m = [ 0.1, 0.1, 0.1, ..., 0.1, 0.1, 0.1 ]
        - sodium_channel/sodium_channel_h_gate/h = [ 0.6, 0.6, 0.6, ..., 0.6, 0.6, 0.6 ]
        - potassium_channel/potassium_channel_n_gate/n = [ 0.3, 0.3, 0.3, ..., 0.3, 0.3, 0.3 ]
     - Rates:
        - membrane/V/prime = [ 0.6, 0.2, 0.1, ..., 0.0, 0.0, 0.0 ]
-       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
-       - sodium_channel/sodium_channel_h_gate/h/prime = [ -0.0, 0.0, 0.0, ..., -0.0, -0.0, -0.0 ]
-       - potassium_channel/potassium_channel_n_gate/n/prime = [ -0.0, -0.0, -0.0, ..., -0.0, -0.0, -0.0 ]
+       - sodium_channel/sodium_channel_m_gate/m/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - sodium_channel/sodium_channel_h_gate/h/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
+       - potassium_channel/potassium_channel_n_gate/n/prime = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
     - Algebraic:
        - membrane/i_Stim = [ 0.0, 0.0, 0.0, ..., 0.0, 0.0, 0.0 ]
        - sodium_channel/sodium_channel_m_gate/alpha_m = [ 0.2, 0.2, 0.2, ..., 0.2, 0.2, 0.2 ]
