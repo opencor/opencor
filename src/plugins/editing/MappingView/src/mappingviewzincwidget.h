@@ -113,7 +113,7 @@ private:
     void setup();
     void draw();
 
-    void click(int pX, int pY);
+    void click(int pX, int pY, bool pCanDiscard = true);
 
 };
 
