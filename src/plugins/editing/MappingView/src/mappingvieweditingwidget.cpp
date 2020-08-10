@@ -220,8 +220,9 @@ Q_UNUSED(pShowWarning)
 
     mMeshFileName = pFileName;
     mZincWidget->changeSource(pFileName);
+    mMapMatch.clear();
 
-    return false;
+    return true;
 }
 
 //==============================================================================

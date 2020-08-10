@@ -72,9 +72,12 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pM
     //TODO usefull ?
     mZincSceneViewerDescription = sceneViewer().writeDescription();
 
+    setup();
+
     initAuxFile();
 
-    setup();
+    mRegion = new OpenCMISS::Zinc::Region(mZincContext->getDefaultRegion());
+    setupRegion();
 }
 
 //==============================================================================
@@ -92,10 +95,13 @@ void MappingViewZincWidget::changeSource(const QString &pMainFileName)
 {
     mMainFileName = pMainFileName;
     initAuxFile();
-    setup();
-    initializeGL();
 
-qDebug(">>>zincwidget charging %s",qPrintable(mMainFileName));
+    mRegion = new OpenCMISS::Zinc::Region(mZincContext->createRegion());
+    mZincContext->setDefaultRegion(*mRegion);
+
+    setupRegion();
+
+    draw();
 }
 
 //==============================================================================
@@ -103,7 +109,7 @@ qDebug(">>>zincwidget charging %s",qPrintable(mMainFileName));
 void MappingViewZincWidget::initializeGL()
 {
     ZincWidget::initializeGL();
-
+    //TODO usefull ?
     //mSceneViewer.readDescription(mZincSceneViewerDescription);
 
     // background colour
@@ -184,6 +190,30 @@ void MappingViewZincWidget::dropEvent(QDropEvent *pEvent)
     pEvent->acceptProposedAction();
 
     mEditingWidget->setNodeValue(mIdSelectedNode,"component: "+splitText[1]+", variable: "+splitText.first());
+
+    OpenCMISS::Zinc::Node node = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
+    // select the node to highlight graphics
+
+    mFieldModule.beginChange();
+
+        if (node.isValid()){
+            OpenCMISS::Zinc::Nodeset nodes = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
+
+            if (!nodeGroupField.isValid()) {
+                nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
+            }
+
+            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
+            nodesetGroup.addNode(node);
+
+        } else {
+            if (mMappedSelectionGroup.isValid()) {
+                mScene->setSelectionField(OpenCMISS::Zinc::Field());
+            }
+        }
+    mFieldModule.endChange();
+
 }
 
 //==============================================================================
@@ -198,10 +228,12 @@ void MappingViewZincWidget::setup()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     setContext(mZincContext);
+}
 
+void MappingViewZincWidget::setupRegion()
+{
     //Create and initialize region and scene
 
-    mRegion = new OpenCMISS::Zinc::Region(mZincContext->getDefaultRegion());
     mScene = new OpenCMISS::Zinc::Scene(mRegion->getScene());
 
     // Create and initialize scenePicker with a filter (improvable)
@@ -246,6 +278,10 @@ void MappingViewZincWidget::draw()
 
     mFieldModule.beginChange();
         OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
+
+        mMappedSelectionGroup = mFieldModule.createFieldGroup();
+        mMappedSelectionGroup.setName("Mapped");
+
     mFieldModule.endChange();
 
     mScene->beginChange();
@@ -256,7 +292,7 @@ void MappingViewZincWidget::draw()
         OpenCMISS::Zinc::GraphicsLines lines = mScene->createGraphicsLines();
 
         lines.setCoordinateField(coordinates);
-        lines.setMaterial(materialModule.findMaterialByName("red"));
+        lines.setMaterial(materialModule.findMaterialByName("black"));
 
         // Green spheres limiting our scene
 
@@ -264,7 +300,7 @@ void MappingViewZincWidget::draw()
 
         mNodePoints.setCoordinateField(coordinates);
         mNodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        mNodePoints.setMaterial(materialModule.findMaterialByName("green"));
+        mNodePoints.setMaterial(materialModule.findMaterialByName("grey"));
 
         // Size of our green spheres
 
@@ -272,6 +308,27 @@ void MappingViewZincWidget::draw()
 
         pointAttr.setBaseSize(1, &mNodeSize);
         pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
+
+        // create "mapped" group
+
+        OpenCMISS::Zinc::GraphicsPoints points = mScene->createGraphicsPoints();
+        points.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+
+        points.setSubgroupField(mMappedSelectionGroup);
+
+        points.setMaterial(materialModule.findMaterialByName("green"));
+        points.setSelectedMaterial(materialModule.findMaterialByName("orange"));
+
+        pointAttr = points.getGraphicspointattributes();
+
+        double sizeMappedNode = mNodeSize*1.1;
+        pointAttr.setBaseSize(1, &sizeMappedNode);
+        pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
+
+        //TEST
+        //TODO remove it
+        OpenCMISS::Zinc::Node node_test = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(112);
+
 
     mScene->endChange();
 
@@ -308,6 +365,7 @@ void MappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
                 if (!selectionGroup.isValid()) {
                     selectionGroup = mFieldModule.createFieldGroup();
                     selectionGroup.setName("Selection");
+
                     mScene->setSelectionField(selectionGroup);
                 }
 

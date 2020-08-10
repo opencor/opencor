@@ -67,7 +67,6 @@ public:
     static constexpr double nodeSixeExp = 1.1;
 
 public slots:
-    //TODO keep slot here or manage signal through parent class ?
     void setNodeSizes(int pSize);
 
 protected:
@@ -107,10 +106,12 @@ private:
     OpenCMISS::Zinc::Region *mRegion;
     OpenCMISS::Zinc::Scenepicker *mScenePicker;
 
+    OpenCMISS::Zinc::FieldGroup mMappedSelectionGroup;
     OpenCMISS::Zinc::GraphicsPoints mNodePoints;
 
     void initAuxFile();
     void setup();
+    void setupRegion();
     void draw();
 
     void click(int pX, int pY, bool pCanDiscard = true);
