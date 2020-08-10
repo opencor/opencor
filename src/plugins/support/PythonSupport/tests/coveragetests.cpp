@@ -41,7 +41,6 @@ void CoverageTests::tests()
     QStringList output;
 
     QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.py") }, output));
-qDebug("-------------------------\n%s\n--------------------\n", qPrintable(output.join("\n")));
     QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/coveragetests.out"))));
 }
 
