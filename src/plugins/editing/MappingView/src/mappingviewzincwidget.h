@@ -63,7 +63,8 @@ public:
 
     void changeSource(const QString &pMainFileName);
 
-    static constexpr double nodeSizeOrigin = 20.;
+    static constexpr double nodeSizeOrigin = 31;
+    static constexpr double nodeSixeExp = 1.1;
 
 public slots:
     //TODO keep slot here or manage signal through parent class ?
@@ -105,6 +106,8 @@ private:
     OpenCMISS::Zinc::Scene *mScene;
     OpenCMISS::Zinc::Region *mRegion;
     OpenCMISS::Zinc::Scenepicker *mScenePicker;
+
+    OpenCMISS::Zinc::GraphicsPoints mNodePoints;
 
     void initAuxFile();
     void setup();

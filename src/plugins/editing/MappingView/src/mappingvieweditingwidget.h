@@ -121,7 +121,6 @@ private:
     QMap<int, QString> mMapMatch;
 
     void populateTree();
-    void populateOutput(const QString &pMeshFileName);
 
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);

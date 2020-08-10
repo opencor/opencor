@@ -34,6 +34,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QTimer>
+#include <QtMath>
 
 //==============================================================================
 
@@ -61,7 +62,7 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pM
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
     mEditingWidget(pEditingWidget),
-    mNodeSize(nodeSizeOrigin)
+    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin))
 {
     // Allow for things to be dropped on us
 
@@ -260,15 +261,15 @@ void MappingViewZincWidget::draw()
 
         // Green spheres limiting our scene
 
-        OpenCMISS::Zinc::GraphicsPoints nodePoints = mScene->createGraphicsPoints();
+        mNodePoints = mScene->createGraphicsPoints();
 
-        nodePoints.setCoordinateField(coordinates);
-        nodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        nodePoints.setMaterial(materialModule.findMaterialByName("green"));
+        mNodePoints.setCoordinateField(coordinates);
+        mNodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        mNodePoints.setMaterial(materialModule.findMaterialByName("green"));
 
         // Size of our green spheres
 
-        OpenCMISS::Zinc::Graphicspointattributes pointAttr = nodePoints.getGraphicspointattributes();
+        OpenCMISS::Zinc::Graphicspointattributes pointAttr = mNodePoints.getGraphicspointattributes();
 
         pointAttr.setBaseSize(1, &mNodeSize);
         pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
@@ -330,14 +331,10 @@ void MappingViewZincWidget::click(int pX, int pY)
 //==============================================================================
 
 void MappingViewZincWidget::setNodeSizes(int pSize) {
-     mNodeSize = pSize;
+    mNodeSize = pow(nodeSixeExp,pSize);
     //TODO
-     mScene->beginChange();
-         // Size of our green spheres
-
-         //OpenCMISS::Zinc::Graphicspointattributes pointAttr = nodePoints.getGraphicspointattributes();
-
-         //pointAttr.setBaseSize(1, &mNodeSize);
+    mScene->beginChange();
+        mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
     mScene->endChange();
 
 }

@@ -75,8 +75,6 @@ QMimeData * MappingViewEditingModel::mimeData(const QModelIndexList &pIndexes) c
     auto res = new QMimeData();
     QString names;
 
-    //TODO block dragging of multiple elements;
-
     for (const auto &index : pIndexes) {
         names.append(itemFromIndex(index)->text()+"|"+itemFromIndex(index)->accessibleDescription());
     }
@@ -188,7 +186,6 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
     layout->addWidget(mVerticalSplitterWidget);
 
     populateTree();
-    populateOutput(pMeshFileName);
 }
 
 //==============================================================================
@@ -241,6 +238,7 @@ void MappingViewEditingWidget::populateTree()
     }
 
     mVariableTreeModel->clear();
+    mVariableTree->setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Retrieve the model's components
 
@@ -253,7 +251,7 @@ void MappingViewEditingWidget::populateTree()
         ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIter = components->iterateComponents();
 
         for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIter->nextComponent();
-             component != nullptr; component = componentsIter->nextComponent()) {
+            component != nullptr; component = componentsIter->nextComponent()) {
 
             // Retrieve the model's component's variables
 
@@ -262,6 +260,7 @@ void MappingViewEditingWidget::populateTree()
             if (componentVariables->length() != 0) {
 
                 QStandardItem *componentItem = new QStandardItem(QString::fromStdWString(component->name()));
+                componentItem->setDragEnabled(false);
 
                 mVariableTreeModel->invisibleRootItem()->appendRow(componentItem);
 
@@ -270,7 +269,7 @@ void MappingViewEditingWidget::populateTree()
                 ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
 
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
-                     componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
+                    componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
 
                     QStandardItem *variableItem = new QStandardItem(QString::fromStdWString(componentVariable->name()));
                     variableItem->setAccessibleDescription(QString::fromStdWString(component->name()));
@@ -280,20 +279,6 @@ void MappingViewEditingWidget::populateTree()
             }
         }
     }
-}
-
-//==============================================================================
-
-void MappingViewEditingWidget::populateOutput(const QString &pMeshFileName)
-{
-
-Q_UNUSED(pMeshFileName)
-    //TODO
-    /*
-    MappingViewMeshReader reader(pMeshFileName);
-
-    mListViewModelOutput->setStringList(reader.getNodesNames());
-    */
 }
 
 //==============================================================================
