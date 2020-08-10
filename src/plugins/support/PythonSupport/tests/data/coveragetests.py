@@ -13,7 +13,7 @@ def test_data_store_values(values, name, indent=''):
     for uri, value in values.items():
         print('%s    - %s:' % (indent, uri))
         print('%s       - URI: %s' % (indent, value.uri()))
-        print('%s       - Value: %f' % (indent, value.value()))
+        print('%s       - Value: %s' % (indent, utils.str_value(value.value())))
         test_value = 123.456789
         value.set_value(test_value)
         print('%s       - Test value properly set: %s' % (indent, "yes" if value.value() == test_value else "no"))
@@ -23,7 +23,7 @@ def test_simulation_data_property(get_method, set_method, description):
     orig_value = get_method()
     test_value = 123.456789
 
-    print('       - %s: %f' % (description, orig_value))
+    print('       - %s: %s' % (description, utils.str_value(orig_value)))
 
     set_method(test_value)
 
@@ -57,11 +57,11 @@ def test_simulation_data_solver(solver_name_method, set_solver_method, test_solv
 
 
 def test_data_store_variable_index(variable, index, indent):
-    print('%s    - value(%d): %f' % (indent, index, variable.value(index)))
+    print('%s    - value(%d): %s' % (indent, index, utils.str_value(variable.value(index))))
 
     for run in range(variable.runs_count() + 3):
-        print('%s    - value(%d, %d): %f'
-              % (indent, index, run - 2, variable.value(index, run - 2)))
+        print('%s    - value(%d, %d): %s'
+              % (indent, index, run - 2, utils.str_value(variable.value(index, run - 2))))
 
 
 def test_data_store_variable(variable, name, indent=''):

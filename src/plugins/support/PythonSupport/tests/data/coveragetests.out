@@ -70,39 +70,39 @@
     - Size: 3
     - main/offset:
        - URI: main/offset
-       - Value: 3.000000
+       - Value: 3.0
        - Test value properly set: yes
     - main/offset2:
        - URI: main/offset2
-       - Value: -3.000000
+       - Value: -3.0
        - Test value properly set: yes
     - main/z:
        - URI: main/z
-       - Value: 3.000000
+       - Value: 3.0
        - Test value properly set: yes
  - Test SimulationData.states():
     - Size: 1
     - main/y:
        - URI: main/y
-       - Value: 3.000000
+       - Value: 3.0
        - Test value properly set: yes
  - Test SimulationData.rates():
     - Size: 1
     - main/y/prime:
        - URI: main/y/prime
-       - Value: -0.000000
+       - Value: 0.0
        - Test value properly set: yes
  - Test SimulationData.algebraic():
     - Size: 1
     - main/x:
        - URI: main/x
-       - Value: 3.000000
+       - Value: 3.0
        - Test value properly set: yes
-       - Starting point: 0.000000
+       - Starting point: 0.0
        - Test starting point properly set: yes
-       - Ending point: 1000.000000
+       - Ending point: 1000.0
        - Test ending point properly set: yes
-       - Point interval: 1.000000
+       - Point interval: 1.0
        - Test point interval properly set: yes
        - ODE solver: CVODE
        - Test ODE solver properly set: yes
@@ -125,15 +125,15 @@
     - value(-1, -1): nan
     - value(-1, 0): nan
     - value(-1, 1): nan
-    - value(0): 0.000000
+    - value(0): 0.0
     - value(0, -2): nan
-    - value(0, -1): 0.000000
-    - value(0, 0): 0.000000
+    - value(0, -1): 0.0
+    - value(0, 0): 0.0
     - value(0, 1): nan
-    - value(1000): 1000.000000
+    - value(1000): 1000.0
     - value(1000, -2): nan
-    - value(1000, -1): 1000.000000
-    - value(1000, 0): 1000.000000
+    - value(1000, -1): 1000.0
+    - value(1000, 0): 1000.0
     - value(1000, 1): nan
     - value(1001): nan
     - value(1001, -2): nan
@@ -155,15 +155,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): 3.000000
+       - value(0): 3.0
        - value(0, -2): nan
-       - value(0, -1): 3.000000
-       - value(0, 0): 3.000000
+       - value(0, -1): 3.0
+       - value(0, 0): 3.0
        - value(0, 1): nan
-       - value(1000): 3.000000
+       - value(1000): 3.0
        - value(1000, -2): nan
-       - value(1000, -1): 3.000000
-       - value(1000, 0): 3.000000
+       - value(1000, -1): 3.0
+       - value(1000, 0): 3.0
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -183,15 +183,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): -3.000000
+       - value(0): -3.0
        - value(0, -2): nan
-       - value(0, -1): -3.000000
-       - value(0, 0): -3.000000
+       - value(0, -1): -3.0
+       - value(0, 0): -3.0
        - value(0, 1): nan
-       - value(1000): -3.000000
+       - value(1000): -3.0
        - value(1000, -2): nan
-       - value(1000, -1): -3.000000
-       - value(1000, 0): -3.000000
+       - value(1000, -1): -3.0
+       - value(1000, 0): -3.0
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -211,15 +211,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): 3.000000
+       - value(0): 3.0
        - value(0, -2): nan
-       - value(0, -1): 3.000000
-       - value(0, 0): 3.000000
+       - value(0, -1): 3.0
+       - value(0, 0): 3.0
        - value(0, 1): nan
-       - value(1000): 3.000000
+       - value(1000): 3.0
        - value(1000, -2): nan
-       - value(1000, -1): 3.000000
-       - value(1000, 0): 3.000000
+       - value(1000, -1): 3.0
+       - value(1000, 0): 3.0
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -241,15 +241,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): 3.000000
+       - value(0): 3.0
        - value(0, -2): nan
-       - value(0, -1): 3.000000
-       - value(0, 0): 3.000000
+       - value(0, -1): 3.0
+       - value(0, 0): 3.0
        - value(0, 1): nan
-       - value(1000): -548.854298
+       - value(1000): -548.9
        - value(1000, -2): nan
-       - value(1000, -1): -548.854298
-       - value(1000, 0): -548.854298
+       - value(1000, -1): -548.9
+       - value(1000, 0): -548.9
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -271,15 +271,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): -0.000000
+       - value(0): 0.0
        - value(0, -2): nan
-       - value(0, -1): -0.000000
-       - value(0, 0): -0.000000
+       - value(0, -1): 0.0
+       - value(0, 0): 0.0
        - value(0, 1): nan
-       - value(1000): -2790.118513
+       - value(1000): -2790.1
        - value(1000, -2): nan
-       - value(1000, -1): -2790.118513
-       - value(1000, 0): -2790.118513
+       - value(1000, -1): -2790.1
+       - value(1000, 0): -2790.1
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -301,15 +301,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): 3.000000
+       - value(0): 3.0
        - value(0, -2): nan
-       - value(0, -1): 3.000000
-       - value(0, 0): 3.000000
+       - value(0, -1): 3.0
+       - value(0, 0): 3.0
        - value(0, 1): nan
-       - value(1000): 1000003.000000
+       - value(1000): 1000003.0
        - value(1000, -2): nan
-       - value(1000, -1): 1000003.000000
-       - value(1000, 0): 1000003.000000
+       - value(1000, -1): 1000003.0
+       - value(1000, 0): 1000003.0
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -330,15 +330,15 @@
        - value(-1, -1): nan
        - value(-1, 0): nan
        - value(-1, 1): nan
-       - value(0): 0.000000
+       - value(0): 0.0
        - value(0, -2): nan
-       - value(0, -1): 0.000000
-       - value(0, 0): 0.000000
+       - value(0, -1): 0.0
+       - value(0, 0): 0.0
        - value(0, 1): nan
-       - value(1000): 1000.000000
+       - value(1000): 1000.0
        - value(1000, -2): nan
-       - value(1000, -1): 1000.000000
-       - value(1000, 0): 1000.000000
+       - value(1000, -1): 1000.0
+       - value(1000, 0): 1000.0
        - value(1000, 1): nan
        - value(1001): nan
        - value(1001, -2): nan
@@ -360,15 +360,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): 3.000000
+          - value(1000): 3.0
           - value(1000, -2): nan
-          - value(1000, -1): 3.000000
-          - value(1000, 0): 3.000000
+          - value(1000, -1): 3.0
+          - value(1000, 0): 3.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -388,15 +388,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): -3.000000
+          - value(0): -3.0
           - value(0, -2): nan
-          - value(0, -1): -3.000000
-          - value(0, 0): -3.000000
+          - value(0, -1): -3.0
+          - value(0, 0): -3.0
           - value(0, 1): nan
-          - value(1000): -3.000000
+          - value(1000): -3.0
           - value(1000, -2): nan
-          - value(1000, -1): -3.000000
-          - value(1000, 0): -3.000000
+          - value(1000, -1): -3.0
+          - value(1000, 0): -3.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -416,15 +416,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): 1000003.000000
+          - value(1000): 1000003.0
           - value(1000, -2): nan
-          - value(1000, -1): 1000003.000000
-          - value(1000, 0): 1000003.000000
+          - value(1000, -1): 1000003.0
+          - value(1000, 0): 1000003.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -444,15 +444,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): -548.854298
+          - value(1000): -548.9
           - value(1000, -2): nan
-          - value(1000, -1): -548.854298
-          - value(1000, 0): -548.854298
+          - value(1000, -1): -548.9
+          - value(1000, 0): -548.9
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -472,15 +472,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): -0.000000
+          - value(0): 0.0
           - value(0, -2): nan
-          - value(0, -1): -0.000000
-          - value(0, 0): -0.000000
+          - value(0, -1): 0.0
+          - value(0, 0): 0.0
           - value(0, 1): nan
-          - value(1000): -2790.118513
+          - value(1000): -2790.1
           - value(1000, -2): nan
-          - value(1000, -1): -2790.118513
-          - value(1000, 0): -2790.118513
+          - value(1000, -1): -2790.1
+          - value(1000, 0): -2790.1
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -500,15 +500,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): 3.000000
+          - value(1000): 3.0
           - value(1000, -2): nan
-          - value(1000, -1): 3.000000
-          - value(1000, 0): 3.000000
+          - value(1000, -1): 3.0
+          - value(1000, 0): 3.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -530,15 +530,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): 3.000000
+          - value(1000): 3.0
           - value(1000, -2): nan
-          - value(1000, -1): 3.000000
-          - value(1000, 0): 3.000000
+          - value(1000, -1): 3.0
+          - value(1000, 0): 3.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -558,15 +558,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): -3.000000
+          - value(0): -3.0
           - value(0, -2): nan
-          - value(0, -1): -3.000000
-          - value(0, 0): -3.000000
+          - value(0, -1): -3.0
+          - value(0, 0): -3.0
           - value(0, 1): nan
-          - value(1000): -3.000000
+          - value(1000): -3.0
           - value(1000, -2): nan
-          - value(1000, -1): -3.000000
-          - value(1000, 0): -3.000000
+          - value(1000, -1): -3.0
+          - value(1000, 0): -3.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -586,15 +586,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 0.000000
+          - value(0): 0.0
           - value(0, -2): nan
-          - value(0, -1): 0.000000
-          - value(0, 0): 0.000000
+          - value(0, -1): 0.0
+          - value(0, 0): 0.0
           - value(0, 1): nan
-          - value(1000): 1000.000000
+          - value(1000): 1000.0
           - value(1000, -2): nan
-          - value(1000, -1): 1000.000000
-          - value(1000, 0): 1000.000000
+          - value(1000, -1): 1000.0
+          - value(1000, 0): 1000.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -614,15 +614,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): 1000003.000000
+          - value(1000): 1000003.0
           - value(1000, -2): nan
-          - value(1000, -1): 1000003.000000
-          - value(1000, 0): 1000003.000000
+          - value(1000, -1): 1000003.0
+          - value(1000, 0): 1000003.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -642,15 +642,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): -548.854298
+          - value(1000): -548.9
           - value(1000, -2): nan
-          - value(1000, -1): -548.854298
-          - value(1000, 0): -548.854298
+          - value(1000, -1): -548.9
+          - value(1000, 0): -548.9
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -670,15 +670,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): -0.000000
+          - value(0): 0.0
           - value(0, -2): nan
-          - value(0, -1): -0.000000
-          - value(0, 0): -0.000000
+          - value(0, -1): 0.0
+          - value(0, 0): 0.0
           - value(0, 1): nan
-          - value(1000): -2790.118513
+          - value(1000): -2790.1
           - value(1000, -2): nan
-          - value(1000, -1): -2790.118513
-          - value(1000, 0): -2790.118513
+          - value(1000, -1): -2790.1
+          - value(1000, 0): -2790.1
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
@@ -698,15 +698,15 @@
           - value(-1, -1): nan
           - value(-1, 0): nan
           - value(-1, 1): nan
-          - value(0): 3.000000
+          - value(0): 3.0
           - value(0, -2): nan
-          - value(0, -1): 3.000000
-          - value(0, 0): 3.000000
+          - value(0, -1): 3.0
+          - value(0, 0): 3.0
           - value(0, 1): nan
-          - value(1000): 3.000000
+          - value(1000): 3.0
           - value(1000, -2): nan
-          - value(1000, -1): 3.000000
-          - value(1000, 0): 3.000000
+          - value(1000, -1): 3.0
+          - value(1000, 0): 3.0
           - value(1000, 1): nan
           - value(1001): nan
           - value(1001, -2): nan
