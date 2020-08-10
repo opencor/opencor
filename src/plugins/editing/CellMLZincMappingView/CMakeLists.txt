@@ -1,8 +1,8 @@
-project(MappingViewPlugin)
+project(CellMLZincMappingViewPlugin)
 
 # Add the plugin
 
-add_plugin(MappingView
+add_plugin(CellMLZincMappingView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
@@ -10,11 +10,10 @@ add_plugin(MappingView
         ../../plugininterface.cpp
         ../../viewinterface.cpp
 
-        src/mappingvieweditingwidget.cpp
-        src/mappingviewmeshreader.cpp
-        src/mappingviewplugin.cpp
-        src/mappingviewwidget.cpp
-        src/mappingviewzincwidget.cpp
+        src/cellmlzincmappingvieweditingwidget.cpp
+        src/cellmlzincmappingviewplugin.cpp
+        src/cellmlzincmappingviewwidget.cpp
+        src/cellmlzincmappingviewzincwidget.cpp
     PLUGINS
         Core
         CellMLSupport

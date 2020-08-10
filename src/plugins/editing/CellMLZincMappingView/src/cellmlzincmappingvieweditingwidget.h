@@ -27,7 +27,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cellmlfile.h"
 #include "corecliutils.h"
-#include "mappingviewzincwidget.h"
+#include "cellmlzincmappingviewzincwidget.h"
 #include "splitterwidget.h"
 #include "viewwidget.h"
 
@@ -61,19 +61,19 @@ namespace Core {
 
 //==============================================================================
 
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
 
-class MappingViewEditingModel : public QStandardItemModel
+class CellMLZincMappingViewEditingModel : public QStandardItemModel
 {
     Q_OBJECT
 
 public:
     static const char *MappingViewEdittingMimeType;
 
-    explicit MappingViewEditingModel(QObject *pParent = nullptr);
+    explicit CellMLZincMappingViewEditingModel(QObject *pParent = nullptr);
 
     QStringList mimeTypes() const override;
     QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
@@ -106,13 +106,13 @@ private:
 
     Core::SplitterWidget *mVerticalSplitterWidget;
     Core::SplitterWidget *mHorizontalSplitterWidget;
-    MappingViewZincWidget *mZincWidget;
+    CellMLZincMappingViewZincWidget *mZincWidget;
 
     QLabel *mNodeValue;
     QLabel *mVariableValue;
     QTreeView *mVariableTree;
 
-    MappingViewEditingModel *mVariableTreeModel;
+    CellMLZincMappingViewEditingModel *mVariableTreeModel;
 
     QString mMeshFileName;
 

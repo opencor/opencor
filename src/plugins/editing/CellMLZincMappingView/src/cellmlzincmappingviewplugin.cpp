@@ -22,8 +22,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "mappingviewplugin.h"
-#include "mappingviewwidget.h"
+#include "cellmlzincmappingviewplugin.h"
+#include "cellmlzincmappingviewwidget.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -34,11 +34,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC MappingViewPluginInfo()
+PLUGININFO_FUNC CellMLZincMappingViewPluginInfo()
 {
     Descriptions descriptions;
 
@@ -54,7 +54,7 @@ PLUGININFO_FUNC MappingViewPluginInfo()
 // File handling interface
 //==============================================================================
 
-bool MappingViewPlugin::importFile(const QString &pFileName)
+bool CellMLZincMappingViewPlugin::importFile(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 
@@ -65,7 +65,7 @@ bool MappingViewPlugin::importFile(const QString &pFileName)
 
 //==============================================================================
 
-bool MappingViewPlugin::saveFile(const QString &pOldFileName,
+bool CellMLZincMappingViewPlugin::saveFile(const QString &pOldFileName,
                                 const QString &pNewFileName,
                                 bool &pNeedFeedback)
 {
@@ -80,7 +80,7 @@ bool MappingViewPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void MappingViewPlugin::fileOpened(const QString &pFileName)
+void CellMLZincMappingViewPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 
@@ -89,7 +89,7 @@ void MappingViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewPlugin::filePermissionsChanged(const QString &pFileName)
+void CellMLZincMappingViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     // The given file has had its permissions changed, so update our view
     // widget, if needed
@@ -101,7 +101,7 @@ void MappingViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewPlugin::fileModified(const QString &pFileName)
+void CellMLZincMappingViewPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 
@@ -110,7 +110,7 @@ void MappingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewPlugin::fileSaved(const QString &pFileName)
+void CellMLZincMappingViewPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 
@@ -119,7 +119,7 @@ void MappingViewPlugin::fileSaved(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewPlugin::fileReloaded(const QString &pFileName)
+void CellMLZincMappingViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so update our view widget, if needed
 
@@ -130,7 +130,7 @@ void MappingViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewPlugin::fileRenamed(const QString &pOldFileName,
+void CellMLZincMappingViewPlugin::fileRenamed(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName)
@@ -146,7 +146,7 @@ void MappingViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void MappingViewPlugin::fileClosed(const QString &pFileName)
+void CellMLZincMappingViewPlugin::fileClosed(const QString &pFileName)
 {
     // The given file has been closed, so update our internals, if needed
 
@@ -159,7 +159,7 @@ void MappingViewPlugin::fileClosed(const QString &pFileName)
 // I18n interface
 //==============================================================================
 
-void MappingViewPlugin::retranslateUi()
+void CellMLZincMappingViewPlugin::retranslateUi()
 {
     // Retranslate our view widget, if needed
 
@@ -172,7 +172,7 @@ void MappingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool MappingViewPlugin::definesPluginInterfaces()
+bool CellMLZincMappingViewPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
 
@@ -181,7 +181,7 @@ bool MappingViewPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool MappingViewPlugin::pluginInterfacesOk(const QString &pFileName,
+bool CellMLZincMappingViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                           QObject *pInstance)
 {
     Q_UNUSED(pFileName)
@@ -194,11 +194,11 @@ bool MappingViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 //==============================================================================
 
-void MappingViewPlugin::initializePlugin()
+void CellMLZincMappingViewPlugin::initializePlugin()
 {
     // Create our Mapping view widget
 
-    mViewWidget = new MappingViewWidget(Core::mainWindow());
+    mViewWidget = new CellMLZincMappingViewWidget(Core::mainWindow());
 
     // Hide our Mapping view widget since it may not initially be shown in our
     // central widget
@@ -208,14 +208,14 @@ void MappingViewPlugin::initializePlugin()
 
 //==============================================================================
 
-void MappingViewPlugin::finalizePlugin()
+void CellMLZincMappingViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void MappingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void CellMLZincMappingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins)
 
@@ -224,7 +224,7 @@ void MappingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void MappingViewPlugin::loadSettings(QSettings &pSettings)
+void CellMLZincMappingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings)
 
@@ -233,7 +233,7 @@ void MappingViewPlugin::loadSettings(QSettings &pSettings)
 
 //==============================================================================
 
-void MappingViewPlugin::saveSettings(QSettings &pSettings) const
+void CellMLZincMappingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings)
 
@@ -242,7 +242,7 @@ void MappingViewPlugin::saveSettings(QSettings &pSettings) const
 
 //==============================================================================
 
-void MappingViewPlugin::handleUrl(const QUrl &pUrl)
+void CellMLZincMappingViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl)
 
@@ -253,7 +253,7 @@ void MappingViewPlugin::handleUrl(const QUrl &pUrl)
 // View interface
 //==============================================================================
 
-ViewInterface::Mode MappingViewPlugin::viewMode() const
+ViewInterface::Mode CellMLZincMappingViewPlugin::viewMode() const
 {
     // Return our mode
 
@@ -262,7 +262,7 @@ ViewInterface::Mode MappingViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList MappingViewPlugin::viewMimeTypes() const
+QStringList CellMLZincMappingViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support, i.e. any in our case
 
@@ -271,7 +271,7 @@ QStringList MappingViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QString MappingViewPlugin::viewMimeType(const QString &pFileName) const
+QString CellMLZincMappingViewPlugin::viewMimeType(const QString &pFileName) const
 {
     Q_UNUSED(pFileName)
 
@@ -282,7 +282,7 @@ QString MappingViewPlugin::viewMimeType(const QString &pFileName) const
 
 //==============================================================================
 
-QString MappingViewPlugin::viewDefaultFileExtension() const
+QString CellMLZincMappingViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support
 
@@ -291,7 +291,7 @@ QString MappingViewPlugin::viewDefaultFileExtension() const
 
 //==============================================================================
 
-QWidget * MappingViewPlugin::viewWidget(const QString &pFileName)
+QWidget * CellMLZincMappingViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our Mapping view widget using the given file
 
@@ -315,7 +315,7 @@ QWidget * MappingViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewPlugin::removeViewWidget(const QString &pFileName)
+void CellMLZincMappingViewPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName)
 
@@ -326,7 +326,7 @@ void MappingViewPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString MappingViewPlugin::viewName() const
+QString CellMLZincMappingViewPlugin::viewName() const
 {
     // Return our Mapping view's name
 
@@ -335,7 +335,7 @@ QString MappingViewPlugin::viewName() const
 
 //==============================================================================
 
-QIcon MappingViewPlugin::fileTabIcon(const QString &pFileName) const
+QIcon CellMLZincMappingViewPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName)
 

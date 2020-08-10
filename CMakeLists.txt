@@ -916,7 +916,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             editing/RawSEDMLView
             editing/RawTextView
             editing/SEDMLEditingView
-            editing/MappingView
+            editing/CellMLZincMappingView
 
             miscellaneous/Compiler
             miscellaneous/Core

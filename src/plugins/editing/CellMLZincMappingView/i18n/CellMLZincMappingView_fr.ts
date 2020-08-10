@@ -2,10 +2,10 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::MappingView::MappingViewPlugin</name>
+    <name>OpenCOR::CellMLZincMappingView::CellMLZincMappingViewPlugin</name>
     <message>
         <source>Mapping</source>
-        <translation>Mappeur</translation>
+        <translation type="unfinished">Mappeur</translation>
     </message>
 </context>
 </TS>

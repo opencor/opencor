@@ -18,39 +18,57 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mesh file reader
+// Mapping view plugin
 //==============================================================================
 
 #pragma once
 
-#include <QFile>
-
 //==============================================================================
 
-namespace Ui {
-    class MappingViewWidget;
-} // namespace Ui
+#include "filehandlinginterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
+PLUGININFO_FUNC CellMLZincMappingViewPluginInfo();
 
-class MappingViewMeshReader : public QObject
+//==============================================================================
+
+class CellMLZincMappingViewWidget;
+
+//==============================================================================
+
+class CellMLZincMappingViewPlugin : public QObject, public FileHandlingInterface,
+                         public I18nInterface, public PluginInterface,
+                         public ViewInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLZincMappingViewPlugin" FILE "cellmlzincmappingviewplugin.json")
+
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::ViewInterface)
+
 public:
-
-    MappingViewMeshReader(QString pFileName);
-
-    QStringList getNodesNames();
+#include "filehandlinginterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "viewinterface.inl"
 
 private:
-    QString pFileName;
+    CellMLZincMappingViewWidget *mViewWidget = nullptr;
 
+    QString mFileName;
 };
 
 //==============================================================================
@@ -61,4 +79,3 @@ private:
 //==============================================================================
 // End of file
 //==============================================================================
-

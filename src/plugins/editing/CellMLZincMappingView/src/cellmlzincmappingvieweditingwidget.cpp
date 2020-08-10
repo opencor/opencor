@@ -24,8 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "filemanager.h"
-#include "mappingvieweditingwidget.h"
-#include "mappingviewmeshreader.h"
+#include "cellmlzincmappingvieweditingwidget.h"
 #include "toolbarwidget.h"
 #include "zincwidget.h"
 
@@ -48,29 +47,29 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
-MappingViewEditingModel::MappingViewEditingModel(QObject *pParent) :
+CellMLZincMappingViewEditingModel::CellMLZincMappingViewEditingModel(QObject *pParent) :
     QStandardItemModel(pParent)
 {
 }
 
 //==============================================================================
 
-const char *MappingViewEditingModel::MappingViewEdittingMimeType = "opencor/mapping-view-editting";
+const char *CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType = "opencor/mapping-view-editting";
 
 //==============================================================================
 
-QStringList MappingViewEditingModel::mimeTypes() const
+QStringList CellMLZincMappingViewEditingModel::mimeTypes() const
 {
     return {MappingViewEdittingMimeType};
 }
 
 //==============================================================================
 
-QMimeData * MappingViewEditingModel::mimeData(const QModelIndexList &pIndexes) const
+QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &pIndexes) const
 {
     auto res = new QMimeData();
     QString names;
@@ -114,7 +113,7 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
             mDelayWidget->setRange(0.0, 100.0);
             mDelayWidget->setWheelBorderWidth(0);
 
-            mDelayWidget->setValue(MappingViewZincWidget::nodeSizeOrigin);
+            mDelayWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 
         mToolBarWidget->addWidget(mDelayWidget);
 
@@ -139,7 +138,7 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
         mVariableTree = new QTreeView(this);
         mVariableTree->setDragEnabled(true);
 
-        mVariableTreeModel = new MappingViewEditingModel();
+        mVariableTreeModel = new CellMLZincMappingViewEditingModel();
         mVariableTree->setModel(mVariableTreeModel);
 
         mHorizontalSplitterWidget->addWidget(mVariableTree);
@@ -154,10 +153,10 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 
         // add a Zinc widget
 
-        mZincWidget = new MappingViewZincWidget(this, mMeshFileName, this);
+        mZincWidget = new CellMLZincMappingViewZincWidget(this, mMeshFileName, this);
 
         connect(mDelayWidget, &QwtWheel::valueChanged,
-                mZincWidget, &MappingViewZincWidget::setNodeSizes );
+                mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes );
 
         mHorizontalSplitterWidget->addWidget(mZincWidget);
 

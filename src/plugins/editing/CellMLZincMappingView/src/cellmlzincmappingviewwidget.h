@@ -18,57 +18,77 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view plugin
+// Mapping view widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "viewinterface.h"
+#include "cellmlfile.h"
+#include "corecliutils.h"
+#include "cellmlzincmappingvieweditingwidget.h"
+#include "viewwidget.h"
+
+//==============================================================================
+
+#include <QMap>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
 
 //==============================================================================
 
-PLUGININFO_FUNC MappingViewPluginInfo();
+namespace ZincWidget {
+    class ZincWidget;
+}   // namespace ZincWidget
 
 //==============================================================================
 
-class MappingViewWidget;
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
-class MappingViewPlugin : public QObject, public FileHandlingInterface,
-                         public I18nInterface, public PluginInterface,
-                         public ViewInterface
+class CellMLZincMappingViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.MappingViewPlugin" FILE "mappingviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
 public:
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
+    explicit CellMLZincMappingViewWidget(QWidget *pParent);
+    ~CellMLZincMappingViewWidget() override;
+
+    void retranslateUi() override;
+
+    void initialize(const QString &pFileName);
+    void finalize(const QString &pFileName);
+
+    MappingViewEditingWidget * editingWidget(const QString &pFileName) const;
+
+    QWidget * widget(const QString &pFileName) override;
+
+    void filePermissionsChanged(const QString &pFileName);
+    void fileSaved(const QString &pFileName);
+    void fileReloaded(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+
+    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+
+protected:
+//    void changeEvent(QEvent *pEvent) override;
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
 private:
-    MappingViewWidget *mViewWidget = nullptr;
 
-    QString mFileName;
+    MappingViewEditingWidget* mEditingWidget = nullptr;
+    QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
+
+    QString mMeshFileName;
+
+    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
+
 };
 
 //==============================================================================

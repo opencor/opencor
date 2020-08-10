@@ -24,8 +24,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "filemanager.h"
-#include "mappingvieweditingwidget.h"
-#include "mappingviewzincwidget.h"
+#include "cellmlzincmappingvieweditingwidget.h"
+#include "cellmlzincmappingviewzincwidget.h"
 
 //==============================================================================
 
@@ -53,11 +53,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
-MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
                                              MappingViewEditingWidget *pEditingWidget) :
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
@@ -82,7 +82,7 @@ MappingViewZincWidget::MappingViewZincWidget(QWidget *pParent, const QString &pM
 
 //==============================================================================
 
-MappingViewZincWidget::~MappingViewZincWidget()
+CellMLZincMappingViewZincWidget::~CellMLZincMappingViewZincWidget()
 {
     delete mZincContext;
     delete mScene;
@@ -91,7 +91,7 @@ MappingViewZincWidget::~MappingViewZincWidget()
 
 //==============================================================================
 
-void MappingViewZincWidget::changeSource(const QString &pMainFileName)
+void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
 {
     mMainFileName = pMainFileName;
     initAuxFile();
@@ -106,7 +106,7 @@ void MappingViewZincWidget::changeSource(const QString &pMainFileName)
 
 //==============================================================================
 
-void MappingViewZincWidget::initializeGL()
+void CellMLZincMappingViewZincWidget::initializeGL()
 {
     ZincWidget::initializeGL();
     //TODO usefull ?
@@ -125,14 +125,14 @@ void MappingViewZincWidget::initializeGL()
 
 //==============================================================================
 
-void MappingViewZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
+void CellMLZincMappingViewZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mouseMoveEvent(pEvent);
 }
 
 //==============================================================================
 
-void MappingViewZincWidget::mousePressEvent(QMouseEvent *pEvent)
+void CellMLZincMappingViewZincWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mousePressEvent(pEvent);
     mMousePosClick = pEvent->pos();
@@ -140,7 +140,7 @@ void MappingViewZincWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+void CellMLZincMappingViewZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     ZincWidget::mouseReleaseEvent(pEvent);
 
@@ -151,16 +151,16 @@ void MappingViewZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
+void CellMLZincMappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
 {
     ZincWidget::wheelEvent(pEvent);
 }
 
 //==============================================================================
 
-void MappingViewZincWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+void CellMLZincMappingViewZincWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
-    if (pEvent->mimeData()->hasFormat(MappingViewEditingModel::MappingViewEdittingMimeType)) {
+    if (pEvent->mimeData()->hasFormat(CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType)) {
         pEvent->acceptProposedAction();
     } else {
         pEvent->ignore();
@@ -169,7 +169,7 @@ void MappingViewZincWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewZincWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+void CellMLZincMappingViewZincWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     click(pEvent->pos().x(),pEvent->pos().y(), false);
 
@@ -182,9 +182,9 @@ void MappingViewZincWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewZincWidget::dropEvent(QDropEvent *pEvent)
+void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 {
-    QString data = pEvent->mimeData()->data(MappingViewEditingModel::MappingViewEdittingMimeType);
+    QString data = pEvent->mimeData()->data(CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType);
     const QStringList splitText = data.split("|");
 
     pEvent->acceptProposedAction();
@@ -218,7 +218,7 @@ void MappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewZincWidget::setup()
+void CellMLZincMappingViewZincWidget::setup()
 {
     // Create and set our Zinc context
 
@@ -230,7 +230,7 @@ void MappingViewZincWidget::setup()
     setContext(mZincContext);
 }
 
-void MappingViewZincWidget::setupRegion()
+void CellMLZincMappingViewZincWidget::setupRegion()
 {
     //Create and initialize region and scene
 
@@ -248,7 +248,7 @@ void MappingViewZincWidget::setupRegion()
 
 //==============================================================================
 
-void MappingViewZincWidget::initAuxFile()
+void CellMLZincMappingViewZincWidget::initAuxFile()
 {
     mAuxFileName = mMainFileName;
     mAuxFileName.remove(".exnode");
@@ -264,7 +264,7 @@ void MappingViewZincWidget::initAuxFile()
 
 //==============================================================================
 
-void MappingViewZincWidget::draw()
+void CellMLZincMappingViewZincWidget::draw()
 {
 
     //read files
@@ -339,7 +339,7 @@ void MappingViewZincWidget::draw()
 
 //==============================================================================
 
-void MappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
+void CellMLZincMappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
 {
     mScenePicker->setSceneviewerRectangle(mSceneViewer, OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
                                           pX - mSizeSelection,
@@ -392,7 +392,7 @@ void MappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
 
 //==============================================================================
 
-void MappingViewZincWidget::setNodeSizes(int pSize) {
+void CellMLZincMappingViewZincWidget::setNodeSizes(int pSize) {
     mNodeSize = pow(nodeSixeExp,pSize);
     //TODO
     mScene->beginChange();

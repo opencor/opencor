@@ -43,7 +43,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
@@ -51,15 +51,15 @@ class MappingViewEditingWidget;
 
 //==============================================================================
 
-class MappingViewZincWidget : public ZincWidget::ZincWidget
+class CellMLZincMappingViewZincWidget : public ZincWidget::ZincWidget
 {
     Q_OBJECT
 
 public:
-    explicit MappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+    explicit CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
                                    MappingViewEditingWidget *pEditingWidget);
 
-    ~MappingViewZincWidget() override;
+    ~CellMLZincMappingViewZincWidget() override;
 
     void changeSource(const QString &pMainFileName);
 

@@ -23,7 +23,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "borderedwidget.h"
 #include "interfaces.h"
-#include "mappingviewwidget.h"
+#include "cellmlzincmappingviewwidget.h"
 
 //==============================================================================
 
@@ -36,11 +36,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace MappingView {
+namespace CellMLZincMappingView {
 
 //==============================================================================
 
-MappingViewWidget::MappingViewWidget(QWidget *pParent) :
+CellMLZincMappingViewWidget::CellMLZincMappingViewWidget(QWidget *pParent) :
     Core::ViewWidget(pParent)
 {
 
@@ -54,13 +54,13 @@ MappingViewWidget::MappingViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-MappingViewWidget::~MappingViewWidget()
+CellMLZincMappingViewWidget::~CellMLZincMappingViewWidget()
 {
 }
 
 //==============================================================================
 
-void MappingViewWidget::retranslateUi()
+void CellMLZincMappingViewWidget::retranslateUi()
 {
     // Update ourself too since some widgets will have been reset following the
     // retranslation (e.g. mGui->fileNameValue)
@@ -72,7 +72,7 @@ void MappingViewWidget::retranslateUi()
 
 //==============================================================================
 
-void MappingViewWidget::initialize(const QString &pFileName)
+void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -96,7 +96,7 @@ void MappingViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewWidget::finalize(const QString &pFileName)
+void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
@@ -120,7 +120,7 @@ void MappingViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-MappingViewEditingWidget* MappingViewWidget::editingWidget(const QString &pFileName) const
+MappingViewEditingWidget* CellMLZincMappingViewWidget::editingWidget(const QString &pFileName) const
 {
     // Return the requested simulation widget
 
@@ -129,7 +129,7 @@ MappingViewEditingWidget* MappingViewWidget::editingWidget(const QString &pFileN
 
 //==============================================================================
 
-QWidget * MappingViewWidget::widget(const QString &pFileName)
+QWidget * CellMLZincMappingViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (simulation) widget
 
@@ -138,7 +138,7 @@ QWidget * MappingViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewWidget::filePermissionsChanged(const QString &pFileName)
+void CellMLZincMappingViewWidget::filePermissionsChanged(const QString &pFileName)
 {
     // The given file has been un/locked, so enable/disable parts of our GUI,
     // should the given file be managed
@@ -152,14 +152,14 @@ void MappingViewWidget::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewWidget::fileSaved(const QString &pFileName)
+void CellMLZincMappingViewWidget::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 }
 
 //==============================================================================
 
-void MappingViewWidget::fileReloaded(const QString &pFileName)
+void CellMLZincMappingViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
 
@@ -171,7 +171,7 @@ void MappingViewWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
+void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
 {
     // The given file has been renamed, so update our editing widgets mapping
 
@@ -185,7 +185,7 @@ void MappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &
 
 //==============================================================================
 
-void MappingViewWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+void CellMLZincMappingViewWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if it refers to one or
     // several data store files
@@ -219,7 +219,7 @@ void MappingViewWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+void CellMLZincMappingViewWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     // Accept the proposed action for the event
 
@@ -228,7 +228,7 @@ void MappingViewWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 //==============================================================================
 
-void MappingViewWidget::dropEvent(QDropEvent *pEvent)
+void CellMLZincMappingViewWidget::dropEvent(QDropEvent *pEvent)
 {
     // Import/open the one or several files
 
