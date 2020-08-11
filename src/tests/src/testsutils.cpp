@@ -173,7 +173,7 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
 
     QString output;
 
-    while (process.waitForReadyRead()) {
+    while (process.waitForReadyRead(-1)) {
         output += process.readAll();
     }
 
