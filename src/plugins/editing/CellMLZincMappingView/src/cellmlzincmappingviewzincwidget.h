@@ -92,6 +92,8 @@ private:
     QPoint mMousePosClick;
 
     double mNodeSize;
+    double mMappedNodeSize;
+    //static constexpr double nodeSixeDiff = 1;
 
     char *mZincSceneViewerDescription;
 
@@ -105,6 +107,7 @@ private:
 
     OpenCMISS::Zinc::FieldGroup mMappedSelectionGroup;
     OpenCMISS::Zinc::GraphicsPoints mNodePoints;
+    OpenCMISS::Zinc::GraphicsPoints mMappedPoints;
 
     void initAuxFile();
     void setup();

@@ -62,7 +62,8 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
     mEditingWidget(pEditingWidget),
-    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin))
+    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin))//,
+    //mMappedNodeSize()
 {
     // Allow for things to be dropped on us
 
@@ -315,27 +316,20 @@ void CellMLZincMappingViewZincWidget::draw()
 
         // create "mapped" group
 
-        OpenCMISS::Zinc::GraphicsPoints points = scene.createGraphicsPoints();
-        points.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        lines.setCoordinateField(coordinates);
-        points.setSubgroupField(mMappedSelectionGroup);
+        mMappedPoints = scene.createGraphicsPoints();
+        mMappedPoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        mMappedPoints.setCoordinateField(coordinates);
+        mMappedPoints.setSubgroupField(mMappedSelectionGroup);
 
-        points.setMaterial(materialModule.findMaterialByName("green"));
-        points.setSelectedMaterial(materialModule.findMaterialByName("orange"));
+        mMappedPoints.setMaterial(materialModule.findMaterialByName("green"));
+        mMappedPoints.setSelectedMaterial(materialModule.findMaterialByName("orange"));
 
-        pointAttr = points.getGraphicspointattributes();
+        pointAttr = mMappedPoints.getGraphicspointattributes();
 
-        double sizeMappedNode = mNodeSize*1.1;
-        pointAttr.setBaseSize(1, &sizeMappedNode);
+        pointAttr.setBaseSize(1, &mNodeSize);
         pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
-        pointAttr.setLabelField(mMappedSelectionGroup);
 
-        //mNodePoints.setDataField(mMappedSelectionGroup);
-
-        //TEST
-        //TODO remove it
-        OpenCMISS::Zinc::Node node_test = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(112);
-
+        scene.moveGraphicsBefore(mMappedPoints, mNodePoints);
 
     scene.endChange();
 
@@ -414,6 +408,7 @@ void CellMLZincMappingViewZincWidget::setNodeSizes(int pSize) {
     OpenCMISS::Zinc::Scene scene = region.getScene();
 
     scene.beginChange();
+        mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
         mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
     scene.endChange();
 
