@@ -137,6 +137,7 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 
         mVariableTree = new QTreeView(this);
         mVariableTree->setDragEnabled(true);
+        mVariableTree->setEditTriggers(QTreeView::NoEditTriggers);
 
         mVariableTreeModel = new CellMLZincMappingViewEditingModel();
         mVariableTree->setModel(mVariableTreeModel);
@@ -239,6 +240,7 @@ void MappingViewEditingWidget::populateTree()
 
     mVariableTreeModel->clear();
     mVariableTree->setSelectionMode(QAbstractItemView::SingleSelection);
+
 
     // Retrieve the model's components
 
