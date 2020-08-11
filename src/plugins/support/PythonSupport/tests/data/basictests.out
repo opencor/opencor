@@ -18,7 +18,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -26,7 +26,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 50001
@@ -58,7 +58,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -66,7 +66,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -93,15 +93,15 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
-             - main/x = 1.9587986527939667
-             - main/y = 3.344294126123224
-             - main/z = 13.304593105464264
+             - main/x = 2.0
+             - main/y = 3.3
+             - main/z = 13.3
           - Rates:
-             - main/x/prime = 13.854954733292573
-             - main/y/prime = 25.441049101152547
-             - main/z/prime = -28.928160467751443
+             - main/x/prime = 13.9
+             - main/y/prime = 25.4
+             - main/z/prime = -28.9
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -139,7 +139,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -147,7 +147,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 50001
@@ -179,7 +179,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -187,7 +187,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -214,15 +214,15 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
-             - main/x = 1.9587986527939667
-             - main/y = 3.344294126123224
-             - main/z = 13.304593105464264
+             - main/x = 2.0
+             - main/y = 3.3
+             - main/z = 13.3
           - Rates:
-             - main/x/prime = 13.854954733292573
-             - main/y/prime = 25.441049101152547
-             - main/z/prime = -28.928160467751443
+             - main/x/prime = 13.9
+             - main/y/prime = 25.4
+             - main/z/prime = -28.9
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -257,7 +257,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -265,7 +265,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 50001
@@ -297,7 +297,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -305,7 +305,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -332,15 +332,15 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
-             - main/x = 1.9587986527939667
-             - main/y = 3.344294126123224
-             - main/z = 13.304593105464264
+             - main/x = 2.0
+             - main/y = 3.3
+             - main/z = 13.3
           - Rates:
-             - main/x/prime = 13.854954733292573
-             - main/y/prime = 25.441049101152547
-             - main/z/prime = -28.928160467751443
+             - main/x/prime = 13.9
+             - main/y/prime = 25.4
+             - main/z/prime = -28.9
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -375,7 +375,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -383,7 +383,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 50001
@@ -415,7 +415,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -423,7 +423,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -450,15 +450,15 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
-             - main/x = 1.9587986527939667
-             - main/y = 3.344294126123224
-             - main/z = 13.304593105464264
+             - main/x = 2.0
+             - main/y = 3.3
+             - main/z = 13.3
           - Rates:
-             - main/x/prime = 13.854954733292573
-             - main/y/prime = 25.441049101152547
-             - main/z/prime = -28.928160467751443
+             - main/x/prime = 13.9
+             - main/y/prime = 25.4
+             - main/z/prime = -28.9
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -493,7 +493,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -501,7 +501,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 50001
@@ -533,7 +533,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -541,7 +541,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -568,15 +568,15 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
-             - main/x = 1.9587986527939667
-             - main/y = 3.344294126123224
-             - main/z = 13.304593105464264
+             - main/x = 2.0
+             - main/y = 3.3
+             - main/z = 13.3
           - Rates:
-             - main/x/prime = 13.854954733292573
-             - main/y/prime = 25.441049101152547
-             - main/z/prime = -28.928160467751443
+             - main/x/prime = 13.9
+             - main/y/prime = 25.4
+             - main/z/prime = -28.9
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -611,7 +611,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -619,7 +619,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 50001
@@ -651,7 +651,7 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
              - main/x = 1.0
              - main/y = 1.0
@@ -659,7 +659,7 @@
           - Rates:
              - main/x/prime = 0.0
              - main/y/prime = 26.0
-             - main/z/prime = -1.6666699999999999
+             - main/z/prime = -1.7
           - Algebraic: empty
     - Result values:
        - Number of points: 201
@@ -686,15 +686,15 @@
           - Constants:
              - main/sigma = 10.0
              - main/rho = 28.0
-             - main/beta = 2.66667
+             - main/beta = 2.7
           - States:
-             - main/x = 1.9587986527939667
-             - main/y = 3.344294126123224
-             - main/z = 13.304593105464264
+             - main/x = 2.0
+             - main/y = 3.3
+             - main/z = 13.3
           - Rates:
-             - main/x/prime = 13.854954733292573
-             - main/y/prime = 25.441049101152547
-             - main/z/prime = -28.928160467751443
+             - main/x/prime = 13.9
+             - main/y/prime = 25.4
+             - main/z/prime = -28.9
           - Algebraic: empty
     - Result values:
        - Number of points: 201
