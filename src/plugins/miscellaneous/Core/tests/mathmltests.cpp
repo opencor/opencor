@@ -284,7 +284,7 @@ void MathmlTests::trigonometricTests()
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(MathmlTests)
+QTEST_GUILESS_MAIN(MathmlTests)
 
 //==============================================================================
 // End of file
