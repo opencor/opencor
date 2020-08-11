@@ -59,7 +59,7 @@ def values(data, data_type, indent=''):
             try:
                 print_values(item.values())
             except Exception:
-                print(item.value())
+                print(str_value(item.value()))
     else:
         print('%s    - %s: empty' % (indent, data_type))
 
