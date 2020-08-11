@@ -22,10 +22,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "corecliutils.h"
-#include "filemanager.h"
 #include "cellmlzincmappingvieweditingwidget.h"
 #include "cellmlzincmappingviewzincwidget.h"
+#include "corecliutils.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -44,7 +44,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "zincbegin.h"
     #include "opencmiss/zinc/context.hpp"
-    #include "opencmiss/zinc/result.hpp"
     #include "opencmiss/zinc/scenefilter.hpp"
     #include "opencmiss/zinc/field.hpp"
     #include "opencmiss/zinc/graphics.hpp"
@@ -58,7 +57,7 @@ namespace CellMLZincMappingView {
 //==============================================================================
 
 CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
-                                             MappingViewEditingWidget *pEditingWidget) :
+                                             CellMLZincMappingViewEditingWidget *pEditingWidget) :
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
     mEditingWidget(pEditingWidget),
@@ -190,9 +189,10 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 
     mEditingWidget->setNodeValue(mIdSelectedNode,"component: "+splitText[1]+", variable: "+splitText.first());
 
+    // select and highlight the current node
+
     auto fieldModule = mZincContext->getDefaultRegion().getFieldmodule();
     OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
-    // select the node to highlight graphics
 
     fieldModule.beginChange();
 
@@ -203,7 +203,6 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
             if (!nodeGroupField.isValid()) {
                 nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
             }
-        qDebug("added !");
             OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
             nodesetGroup.addNode(node);
 
@@ -412,6 +411,38 @@ void CellMLZincMappingViewZincWidget::setNodeSizes(int pSize) {
         mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
     scene.endChange();
 
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewZincWidget::eraseNode()
+{
+
+    mEditingWidget->eraseNodeValue(mIdSelectedNode);
+
+    // select and highlight the current node
+
+    auto fieldModule = mZincContext->getDefaultRegion().getFieldmodule();
+    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
+
+    fieldModule.beginChange();
+
+        if (node.isValid()){
+            OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
+
+            if (!nodeGroupField.isValid()) {
+                nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
+            }
+            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
+            nodesetGroup.removeNode(node);
+
+        } else {
+            if (mMappedSelectionGroup.isValid()) {
+                mZincContext->getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
+            }
+        }
+    fieldModule.endChange();
 }
 
 } // namespace ZincWidget

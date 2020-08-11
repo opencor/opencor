@@ -47,7 +47,7 @@ namespace CellMLZincMappingView {
 
 //==============================================================================
 
-class MappingViewEditingWidget;
+class CellMLZincMappingViewEditingWidget;
 
 //==============================================================================
 
@@ -57,17 +57,18 @@ class CellMLZincMappingViewZincWidget : public ZincWidget::ZincWidget
 
 public:
     explicit CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
-                                   MappingViewEditingWidget *pEditingWidget);
+                                   CellMLZincMappingViewEditingWidget *pEditingWidget);
 
     ~CellMLZincMappingViewZincWidget() override;
 
     void changeSource(const QString &pMainFileName);
 
     static constexpr double nodeSizeOrigin = 31;
-    static constexpr double nodeSixeExp = 1.1;
+    static constexpr double nodeSixeExp = 1.1;    
 
 public slots:
     void setNodeSizes(int pSize);
+    void eraseNode();
 
 protected:
     void initializeGL() override;
@@ -87,7 +88,7 @@ private:
     QString mMainFileName;
     QString mAuxFileName;
 
-    MappingViewEditingWidget *mEditingWidget;
+    CellMLZincMappingViewEditingWidget *mEditingWidget;
 
     QPoint mMousePosClick;
 

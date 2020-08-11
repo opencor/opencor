@@ -80,12 +80,12 @@ public:
 
 };
 
-class MappingViewEditingWidget : public Core::Widget
+class CellMLZincMappingViewEditingWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit MappingViewEditingWidget(const QString &pCellmlFileName,
+    explicit CellMLZincMappingViewEditingWidget(const QString &pCellmlFileName,
                                       const QString &pMeshFileName,
                                                QWidget *pParent);
 
@@ -93,12 +93,16 @@ public:
 
     void selectNode(int pId);
     void setNodeValue(const int pId, const QString &pVariable);
+    void eraseNodeValue(const int pId);
 
     void filePermissionsChanged();
 
     bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
 
 private:
+
+    QAction *mClearNode;
+    QAction *mSaveMapping;
 
     QwtWheel *mDelayWidget;
 
@@ -130,7 +134,7 @@ signals:
 private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
-    void saveMapping();
+    void saveMappingSlot();
 };
 
 //==============================================================================

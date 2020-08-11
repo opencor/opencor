@@ -63,7 +63,7 @@ public:
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
-    MappingViewEditingWidget * editingWidget(const QString &pFileName) const;
+    CellMLZincMappingViewEditingWidget * editingWidget(const QString &pFileName) const;
 
     QWidget * widget(const QString &pFileName) override;
 
@@ -81,8 +81,8 @@ protected:
 
 private:
 
-    MappingViewEditingWidget* mEditingWidget = nullptr;
-    QMap<QString, MappingViewEditingWidget*> mEditingWidgets;
+    CellMLZincMappingViewEditingWidget* mEditingWidget = nullptr;
+    QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
 
     QString mMeshFileName;
 

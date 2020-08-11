@@ -81,7 +81,7 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new MappingViewEditingWidget(pFileName, mMeshFileName,this);
+        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileName,this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }
@@ -100,7 +100,7 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
-    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so delete it and
@@ -120,7 +120,7 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-MappingViewEditingWidget* CellMLZincMappingViewWidget::editingWidget(const QString &pFileName) const
+CellMLZincMappingViewEditingWidget* CellMLZincMappingViewWidget::editingWidget(const QString &pFileName) const
 {
     // Return the requested simulation widget
 
@@ -143,7 +143,7 @@ void CellMLZincMappingViewWidget::filePermissionsChanged(const QString &pFileNam
     // The given file has been un/locked, so enable/disable parts of our GUI,
     // should the given file be managed
 
-    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget != nullptr) {
         editingWidget->filePermissionsChanged();
@@ -175,7 +175,7 @@ void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const
 {
     // The given file has been renamed, so update our editing widgets mapping
 
-    MappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+    CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
     if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);

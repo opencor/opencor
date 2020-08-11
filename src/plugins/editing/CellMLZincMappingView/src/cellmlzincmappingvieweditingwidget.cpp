@@ -23,6 +23,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 #include "cellmlzincmappingvieweditingwidget.h"
 #include "toolbarwidget.h"
@@ -85,7 +86,7 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
 
 //==============================================================================
 
-MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
+CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QString &pFileName,
                                                    const QString &pMeshFileName,
                                                    QWidget *pParent) :
     Core::Widget(pParent),
@@ -102,19 +103,27 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 
         mToolBarWidget = new Core::ToolBarWidget();
 
-            QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+        //create and add widget and actions
 
-            mDelayWidget = new QwtWheel(mToolBarWidget);
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
+        mSaveMapping = Core::newAction(QIcon(":/oxygen/actions/document-save.png"),
+                                                        mToolBarWidget);
+        //TODO trash could be hidden when nothing to show
+        mClearNode = Core::newAction(QIcon(":/oxygen/actions/edit-clear.png"),
+                                                        mToolBarWidget);
+
+        mDelayWidget = new QwtWheel(mToolBarWidget);
             mDelayWidget->setBorderWidth(0);
             mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
                                        mDelayWidget->height()/2);
             mDelayWidget->setFocusPolicy(Qt::NoFocus);
             mDelayWidget->setRange(0.0, 100.0);
             mDelayWidget->setWheelBorderWidth(0);
-
             mDelayWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 
+        mToolBarWidget->addAction(mSaveMapping);
+        mToolBarWidget->addAction(mClearNode);
         mToolBarWidget->addWidget(mDelayWidget);
 
     layout->addWidget(mToolBarWidget);
@@ -124,14 +133,14 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
         mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
 
         connect(mHorizontalSplitterWidget, &Core::SplitterWidget::splitterMoved,
-                this, &MappingViewEditingWidget::emitHorizontalSplitterMoved);
+                this, &CellMLZincMappingViewEditingWidget::emitHorizontalSplitterMoved);
 
         //create vertical splitterwidget
 
         mVerticalSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
 
         connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
-                this, &MappingViewEditingWidget::emitVerticalSplitterMoved);
+                this, &CellMLZincMappingViewEditingWidget::emitVerticalSplitterMoved);
 
         //create and add the variable tree:
 
@@ -156,10 +165,17 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 
         mZincWidget = new CellMLZincMappingViewZincWidget(this, mMeshFileName, this);
 
+        connect(mClearNode, &QAction::triggered,
+                mZincWidget, &CellMLZincMappingViewZincWidget::eraseNode);
         connect(mDelayWidget, &QwtWheel::valueChanged,
-                mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes );
+                mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes);
 
         mHorizontalSplitterWidget->addWidget(mZincWidget);
+
+        //add the other connectionss
+
+        connect(mSaveMapping, &QAction::triggered,
+                this, &CellMLZincMappingViewEditingWidget::saveMappingSlot);
 
         //create and add informative labels
 
@@ -190,14 +206,14 @@ MappingViewEditingWidget::MappingViewEditingWidget(const QString &pFileName,
 
 //==============================================================================
 
-void MappingViewEditingWidget::retranslateUi()
+void CellMLZincMappingViewEditingWidget::retranslateUi()
 {
     //TODO ?
 }
 
 //==============================================================================
 
-void MappingViewEditingWidget::setNodeValue(const int pId, const QString &pVariable)
+void CellMLZincMappingViewEditingWidget::setNodeValue(const int pId, const QString &pVariable)
 {
     if (pId!=-1) {
         mMapMatch.insert(pId,pVariable);
@@ -207,13 +223,23 @@ void MappingViewEditingWidget::setNodeValue(const int pId, const QString &pVaria
 
 //==============================================================================
 
-void MappingViewEditingWidget::filePermissionsChanged()
+void CellMLZincMappingViewEditingWidget::eraseNodeValue(const int pId)
+{
+    if (pId!=-1) {
+        mMapMatch.remove(pId);
+        selectNode(pId);
+    }
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::filePermissionsChanged()
 {
 }
 
 //==============================================================================
 
-bool MappingViewEditingWidget::setMeshFile(const QString &pFileName, bool pShowWarning)
+bool CellMLZincMappingViewEditingWidget::setMeshFile(const QString &pFileName, bool pShowWarning)
 {
     //TODO warnings ?
 Q_UNUSED(pShowWarning)
@@ -227,7 +253,7 @@ Q_UNUSED(pShowWarning)
 
 //==============================================================================
 
-void MappingViewEditingWidget::populateTree()
+void CellMLZincMappingViewEditingWidget::populateTree()
 {
 
     // Make sure that we have a model before actually populating ourselves
@@ -285,7 +311,7 @@ void MappingViewEditingWidget::populateTree()
 
 //==============================================================================
 
-void MappingViewEditingWidget::saveMapping(const QString &pFileName)
+void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -295,7 +321,7 @@ void MappingViewEditingWidget::saveMapping(const QString &pFileName)
 }
 //==============================================================================
 
-void MappingViewEditingWidget::emitHorizontalSplitterMoved()
+void CellMLZincMappingViewEditingWidget::emitHorizontalSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
@@ -304,7 +330,7 @@ void MappingViewEditingWidget::emitHorizontalSplitterMoved()
 
 //==============================================================================
 
-void MappingViewEditingWidget::emitVerticalSplitterMoved()
+void CellMLZincMappingViewEditingWidget::emitVerticalSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
@@ -313,7 +339,7 @@ void MappingViewEditingWidget::emitVerticalSplitterMoved()
 
 //==============================================================================
 
-void MappingViewEditingWidget::selectNode(int pId)
+void CellMLZincMappingViewEditingWidget::selectNode(int pId)
 {
     if (pId==-1) {
         mNodeValue->setText("");
@@ -326,7 +352,7 @@ void MappingViewEditingWidget::selectNode(int pId)
 
 //==============================================================================
 
-void MappingViewEditingWidget::saveMapping()
+void CellMLZincMappingViewEditingWidget::saveMappingSlot()
 {
     saveMapping({});
 }
