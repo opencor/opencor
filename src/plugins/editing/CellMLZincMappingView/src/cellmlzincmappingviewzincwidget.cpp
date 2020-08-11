@@ -76,7 +76,6 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
 
     initAuxFile();
 
-    mRegion = new OpenCMISS::Zinc::Region(mZincContext->getDefaultRegion());
     setupRegion();
 }
 
@@ -85,8 +84,6 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
 CellMLZincMappingViewZincWidget::~CellMLZincMappingViewZincWidget()
 {
     delete mZincContext;
-    delete mScene;
-    delete mRegion;
 }
 
 //==============================================================================
@@ -96,8 +93,8 @@ void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
     mMainFileName = pMainFileName;
     initAuxFile();
 
-    mRegion = new OpenCMISS::Zinc::Region(mZincContext->createRegion());
-    mZincContext->setDefaultRegion(*mRegion);
+    OpenCMISS::Zinc::Region region = mZincContext->createRegion();
+    mZincContext->setDefaultRegion(region);
 
     setupRegion();
 
@@ -118,7 +115,8 @@ void CellMLZincMappingViewZincWidget::initializeGL()
 
     mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 
-    mSceneViewer.setScene(mRegion->getScene());
+    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+    mSceneViewer.setScene(region.getScene());
 
     draw();
 }
@@ -191,28 +189,29 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 
     mEditingWidget->setNodeValue(mIdSelectedNode,"component: "+splitText[1]+", variable: "+splitText.first());
 
-    OpenCMISS::Zinc::Node node = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
+    auto fieldModule = mZincContext->getDefaultRegion().getFieldmodule();
+    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
     // select the node to highlight graphics
 
-    mFieldModule.beginChange();
+    fieldModule.beginChange();
 
         if (node.isValid()){
-            OpenCMISS::Zinc::Nodeset nodes = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
             OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
 
             if (!nodeGroupField.isValid()) {
                 nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
             }
-
+        qDebug("added !");
             OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
             nodesetGroup.addNode(node);
 
         } else {
             if (mMappedSelectionGroup.isValid()) {
-                mScene->setSelectionField(OpenCMISS::Zinc::Field());
+                mZincContext->getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
             }
         }
-    mFieldModule.endChange();
+    fieldModule.endChange();
 
 }
 
@@ -234,13 +233,13 @@ void CellMLZincMappingViewZincWidget::setupRegion()
 {
     //Create and initialize region and scene
 
-    mScene = new OpenCMISS::Zinc::Scene(mRegion->getScene());
+    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
 
     // Create and initialize scenePicker with a filter (improvable)
 
-    mScenePicker = new OpenCMISS::Zinc::Scenepicker(mScene->createScenepicker());
+    mScenePicker = new OpenCMISS::Zinc::Scenepicker(scene.createScenepicker());
 
-    OpenCMISS::Zinc::Scenefiltermodule sceneFilterModule = mScene->getScenefiltermodule();
+    OpenCMISS::Zinc::Scenefiltermodule sceneFilterModule = scene.getScenefiltermodule();
     OpenCMISS::Zinc::Scenefilter nodeFilter =
             sceneFilterModule.createScenefilterFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
     mScenePicker->setScenefilter(nodeFilter);
@@ -267,40 +266,45 @@ void CellMLZincMappingViewZincWidget::initAuxFile()
 void CellMLZincMappingViewZincWidget::draw()
 {
 
+    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+
     //read files
-    mRegion->readFile(qPrintable(mMainFileName));
+    region.readFile(qPrintable(mMainFileName));
 
     if (mAuxFileName!="") {
-        mRegion->readFile(qPrintable(mAuxFileName));
+        region.readFile(qPrintable(mAuxFileName));
     }
 
-    mFieldModule = mRegion->getFieldmodule();
+    OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
+    OpenCMISS::Zinc::Scene scene = region.getScene();
 
-    mFieldModule.beginChange();
-        OpenCMISS::Zinc::Field coordinates = mFieldModule.findFieldByName("Coordinates");
 
-        mMappedSelectionGroup = mFieldModule.createFieldGroup();
+    fieldModule.beginChange();
+        OpenCMISS::Zinc::Field coordinates = fieldModule.findFieldByName("Coordinates");
+
+        mMappedSelectionGroup = fieldModule.createFieldGroup();
         mMappedSelectionGroup.setName("Mapped");
 
-    mFieldModule.endChange();
+    fieldModule.endChange();
 
-    mScene->beginChange();
-        OpenCMISS::Zinc::Materialmodule materialModule = mScene->getMaterialmodule();
+    scene.beginChange();
+        OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
 
         //Black lines
 
-        OpenCMISS::Zinc::GraphicsLines lines = mScene->createGraphicsLines();
+        OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
 
         lines.setCoordinateField(coordinates);
         lines.setMaterial(materialModule.findMaterialByName("black"));
 
         // Green spheres limiting our scene
 
-        mNodePoints = mScene->createGraphicsPoints();
+        mNodePoints = scene.createGraphicsPoints();
 
         mNodePoints.setCoordinateField(coordinates);
         mNodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         mNodePoints.setMaterial(materialModule.findMaterialByName("grey"));
+
 
         // Size of our green spheres
 
@@ -311,9 +315,9 @@ void CellMLZincMappingViewZincWidget::draw()
 
         // create "mapped" group
 
-        OpenCMISS::Zinc::GraphicsPoints points = mScene->createGraphicsPoints();
+        OpenCMISS::Zinc::GraphicsPoints points = scene.createGraphicsPoints();
         points.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-
+        lines.setCoordinateField(coordinates);
         points.setSubgroupField(mMappedSelectionGroup);
 
         points.setMaterial(materialModule.findMaterialByName("green"));
@@ -324,13 +328,16 @@ void CellMLZincMappingViewZincWidget::draw()
         double sizeMappedNode = mNodeSize*1.1;
         pointAttr.setBaseSize(1, &sizeMappedNode);
         pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
+        pointAttr.setLabelField(mMappedSelectionGroup);
+
+        //mNodePoints.setDataField(mMappedSelectionGroup);
 
         //TEST
         //TODO remove it
-        OpenCMISS::Zinc::Node node_test = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(112);
+        OpenCMISS::Zinc::Node node_test = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(112);
 
 
-    mScene->endChange();
+    scene.endChange();
 
     // adding view all command
 
@@ -357,19 +364,25 @@ void CellMLZincMappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
 
         // select the node to highlight graphics
 
-        mFieldModule.beginChange();
+        OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
 
-            OpenCMISS::Zinc::FieldGroup selectionGroup = mScene->getSelectionField().castGroup();
+        OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
+        OpenCMISS::Zinc::Scene scene = region.getScene();
+
+
+        fieldModule.beginChange();
+
+            OpenCMISS::Zinc::FieldGroup selectionGroup = scene.getSelectionField().castGroup();
 
             if (node.isValid()){
                 if (!selectionGroup.isValid()) {
-                    selectionGroup = mFieldModule.createFieldGroup();
+                    selectionGroup = fieldModule.createFieldGroup();
                     selectionGroup.setName("Selection");
 
-                    mScene->setSelectionField(selectionGroup);
+                    scene.setSelectionField(selectionGroup);
                 }
 
-                OpenCMISS::Zinc::Nodeset nodes = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+                OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
                 OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = selectionGroup.getFieldNodeGroup(nodes);
 
                 if (!nodeGroupField.isValid()) {
@@ -383,10 +396,10 @@ void CellMLZincMappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
             } else {
 
                 if (selectionGroup.isValid()) {
-                    mScene->setSelectionField(OpenCMISS::Zinc::Field());
+                    scene.setSelectionField(OpenCMISS::Zinc::Field());
                 }
             }
-        mFieldModule.endChange();
+        fieldModule.endChange();
     }
 }
 
@@ -394,10 +407,15 @@ void CellMLZincMappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
 
 void CellMLZincMappingViewZincWidget::setNodeSizes(int pSize) {
     mNodeSize = pow(nodeSixeExp,pSize);
-    //TODO
-    mScene->beginChange();
+    //TODO change size of mapped nodes
+
+    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+
+    OpenCMISS::Zinc::Scene scene = region.getScene();
+
+    scene.beginChange();
         mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
-    mScene->endChange();
+    scene.endChange();
 
 }
 

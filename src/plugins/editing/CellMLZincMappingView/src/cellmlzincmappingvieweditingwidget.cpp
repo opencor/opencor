@@ -283,6 +283,16 @@ void MappingViewEditingWidget::populateTree()
 
 //==============================================================================
 
+void MappingViewEditingWidget::saveMapping(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    //TODO
+    Q_UNUSED(fileManagerInstance);
+}
+//==============================================================================
+
 void MappingViewEditingWidget::emitHorizontalSplitterMoved()
 {
     // Let people know that our splitter has been moved
@@ -310,6 +320,13 @@ void MappingViewEditingWidget::selectNode(int pId)
         mNodeValue->setNum(pId);
         mVariableValue->setText(mMapMatch[pId]);
     }
+}
+
+//==============================================================================
+
+void MappingViewEditingWidget::saveMapping()
+{
+    saveMapping({});
 }
 
 } // namespace MappingView

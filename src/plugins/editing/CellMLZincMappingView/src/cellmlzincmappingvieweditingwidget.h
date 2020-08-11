@@ -121,6 +121,7 @@ private:
     QMap<int, QString> mMapMatch;
 
     void populateTree();
+    void saveMapping(const QString &pFileName);
 
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);
@@ -129,6 +130,7 @@ signals:
 private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
+    void saveMapping();
 };
 
 //==============================================================================

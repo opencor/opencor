@@ -100,10 +100,7 @@ private:
     int mSizeSelection = 2;
     int mIdSelectedNode = -1;
 
-    OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Context *mZincContext;
-    OpenCMISS::Zinc::Scene *mScene;
-    OpenCMISS::Zinc::Region *mRegion;
     OpenCMISS::Zinc::Scenepicker *mScenePicker;
 
     OpenCMISS::Zinc::FieldGroup mMappedSelectionGroup;

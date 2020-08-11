@@ -75,7 +75,6 @@ public:
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
 protected:
-//    void changeEvent(QEvent *pEvent) override;
     void dragEnterEvent(QDragEnterEvent *pEvent) override;
     void dragMoveEvent(QDragMoveEvent *pEvent) override;
     void dropEvent(QDropEvent *pEvent) override;
