@@ -40,12 +40,12 @@ void BasicTests::tests()
     QStringList output;
 
     QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.py") }, output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/basictests.out").arg(OpenCOR::targetPlatformDir()))));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out")));
 }
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(BasicTests)
+QTEST_APPLESS_MAIN(BasicTests)
 
 //==============================================================================
 // End of file

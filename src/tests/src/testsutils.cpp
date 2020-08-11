@@ -169,13 +169,11 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
 
     process.setProcessChannelMode(QProcess::MergedChannels);
 
-    QStringList defaultArguments;
-
-    process.start(program, defaultArguments << pArguments);
+    process.start(program, QStringList() << pArguments);
 
     QString output;
 
-    while (process.waitForReadyRead()) {
+    while (process.waitForReadyRead(-1)) {
         output += process.readAll();
     }
 
