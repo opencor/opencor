@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.11.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2364\">#2364</a>). Upgraded the <a href=\"http://qwt.sourceforge.net/\">Qwt</a> library to version 6.1.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2365\">#2365</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.11.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2364\">#2364</a>). Upgraded the <a href=\"http://qwt.sourceforge.net/\">Qwt</a> library to version 6.1.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2365\">#2365</a>). Upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 10.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2371\">#2371</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

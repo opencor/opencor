@@ -43,6 +43,9 @@ int main(int pArgC, char *pArgV[])
             if (pArgV[i][j] == '\\') {
                 clcacheCommand[++k] = '\\';
                 clcacheCommand[++k] = '\\';
+            } else if (pArgV[i][j] == '"') {
+                clcacheCommand[++k] = '\\';
+                clcacheCommand[++k] = '"';
             } else {
                 clcacheCommand[++k] = pArgV[i][j];
             }
