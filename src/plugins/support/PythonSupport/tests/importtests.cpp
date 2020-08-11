@@ -42,7 +42,7 @@ void ImportTests::tests()
 
     QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/importtests.py") }, output));
 #if defined(Q_OS_WIN) && defined(QT_DEBUG)
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/importtests.out").arg(OpenCOR::targetPlatformDir()))));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/importtests.out")));
 #else
     QCOMPARE(output, QStringList() << QString());
 #endif
@@ -50,7 +50,7 @@ void ImportTests::tests()
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(ImportTests)
+QTEST_APPLESS_MAIN(ImportTests)
 
 //==============================================================================
 // End of file

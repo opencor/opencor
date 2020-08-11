@@ -40,12 +40,12 @@ void Noble1962Tests::tests()
     QStringList output;
 
     QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/noble1962tests.py") }, output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName(QString("src/plugins/support/PythonSupport/tests/data/%1/noble1962tests.out").arg(OpenCOR::targetPlatformDir()))));
+    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/noble1962tests.out")));
 }
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(Noble1962Tests)
+QTEST_APPLESS_MAIN(Noble1962Tests)
 
 //==============================================================================
 // End of file

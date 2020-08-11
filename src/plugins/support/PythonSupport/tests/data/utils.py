@@ -1,7 +1,8 @@
 import math
-import opencor as oc
 import os
 import sys
+
+import opencor as oc
 
 
 def header(title, first=True):
@@ -28,14 +29,24 @@ def open_simulation(file_name_or_url):
     return simulation
 
 
+def str_value(value):
+    res = format(value, '.1f')
+
+    if res == '-0.0':
+        return '0.0'
+
+    return res
+
+
 def print_values(data):
     if data is None:
         print('None')
     else:
         data_len = len(data)
 
-        print('[ %f, %f, %f, ..., %f, %f, %f ]'
-              % (data[0], data[1], data[2], data[data_len - 3], data[data_len - 2], data[data_len - 1]))
+        print('[ %s, %s, %s, ..., %s, %s, %s ]'
+              % (str_value(data[0]), str_value(data[1]), str_value(data[2]),
+                 str_value(data[data_len - 3]), str_value(data[data_len - 2]), str_value(data[data_len - 1])))
 
 
 def values(data, data_type, indent=''):
@@ -48,7 +59,7 @@ def values(data, data_type, indent=''):
             try:
                 print_values(item.values())
             except Exception:
-                print(item.value())
+                print(str_value(item.value()))
     else:
         print('%s    - %s: empty' % (indent, data_type))
 
