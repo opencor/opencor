@@ -911,17 +911,17 @@ QColor lockedColor(const QColor &pColor)
     int blue = pColor.blue();
 
     enum {
-        lockedRed = 255,
-        lockedGreen = 0,
-        lockedBlue = 0
+        LockedRed = 255,
+        LockedGreen = 0,
+        LockedBlue = 0
     };
 
     static const double Alpha = 0.05;
     static const double OneMinusAlpha = 1.0-Alpha;
 
-    return { int(Alpha*lockedRed+OneMinusAlpha*red),
-             int(Alpha*lockedGreen+OneMinusAlpha*green),
-             int(Alpha*lockedBlue+OneMinusAlpha*blue) };
+    return { int(Alpha*LockedRed+OneMinusAlpha*red),
+             int(Alpha*LockedGreen+OneMinusAlpha*green),
+             int(Alpha*LockedBlue+OneMinusAlpha*blue) };
 }
 
 //==============================================================================
