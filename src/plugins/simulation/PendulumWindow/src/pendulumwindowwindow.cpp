@@ -170,6 +170,14 @@ void PendulumWindowWindow::createAndSetZincContext()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
+
+    // Retrieve our axes' font point size
+
+    mAxesFontPointSize = mZincContext->getDefaultRegion().getScene().createGraphicsPoints().getGraphicspointattributes().getFont().getPointSize();
+
+    // Update our scene using our initial devide pixel ratio
+
+    devicePixelRatioChanged(mZincWidget->devicePixelRatio());
 }
 
 //==============================================================================
