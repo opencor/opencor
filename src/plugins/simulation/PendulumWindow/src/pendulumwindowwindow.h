@@ -125,6 +125,7 @@ private:
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 
     void timeSliderValueChanged(int pTime);
     void timerTimeOut();
