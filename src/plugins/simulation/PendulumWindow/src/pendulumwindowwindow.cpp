@@ -193,7 +193,7 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
     mTimeValues = new double[pDataSize];
 
     for (quint64 i = 0; i < pDataSize; ++i) {
-        mTimeValues[i] = i*pTimeInterval;
+        mTimeValues[i] = double(i)*pTimeInterval;
     }
 
     mR0Values = pR0Values;
