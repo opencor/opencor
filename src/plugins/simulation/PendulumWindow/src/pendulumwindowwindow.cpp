@@ -63,16 +63,7 @@ namespace PendulumWindow {
 
 PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::PendulumWindowWindow),
-    mZincContext(nullptr),
-    mZincSceneViewerDescription(nullptr),
-    mAxesFontPointSize(0),
-    mInitialiseZincScene(true),
-    mCurrentDataSize(0),
-    mTimeValues(nullptr),
-    mR0Values(nullptr),
-    mQ1Values(nullptr),
-    mThetaValues(nullptr)
+    mGui(new Ui::PendulumWindowWindow)
 {
     // Set up the GUI
 

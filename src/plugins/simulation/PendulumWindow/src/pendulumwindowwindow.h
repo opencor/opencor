@@ -94,7 +94,7 @@ private:
     Ui::PendulumWindowWindow *mGui;
 
     ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext;
+    OpenCMISS::Zinc::Context *mZincContext = nullptr;
 
     QTimer mTimer;
 
@@ -109,18 +109,18 @@ private:
     OpenCMISS::Zinc::FieldFiniteElement mTheta;
     OpenCMISS::Zinc::Fieldcache mFieldCache;
 
-    char *mZincSceneViewerDescription;
+    char *mZincSceneViewerDescription = nullptr;
 
-    int mAxesFontPointSize;
+    int mAxesFontPointSize = 0;
 
-    bool mInitialiseZincScene;
+    bool mInitialiseZincScene = true;
 
-    int mCurrentDataSize;
+    int mCurrentDataSize = 0;
 
-    double *mTimeValues;
-    double *mR0Values;
-    double *mQ1Values;
-    double *mThetaValues;
+    double *mTimeValues = nullptr;
+    double *mR0Values = nullptr;
+    double *mQ1Values = nullptr;
+    double *mThetaValues = nullptr;
 
 private slots:
     void createAndSetZincContext();
