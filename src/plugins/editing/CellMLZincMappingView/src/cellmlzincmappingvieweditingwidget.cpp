@@ -90,8 +90,8 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
                                                    const QString &pMeshFileName,
                                                    QWidget *pParent) :
     Core::Widget(pParent),
-    mMeshFileName(pMeshFileName),
-    mMapMatch()
+    mMapMatch(),
+    mMeshFileName(pMeshFileName)
 {
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
@@ -188,11 +188,19 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mNodeValue = new QLabel(this);
         labelLayout->addWidget(mNodeValue,0,1);
 
+        QLabel *componentLabel = new QLabel("Component:",this);
+        labelLayout->addWidget(componentLabel,1,0);
+
+        mComponentValue = new QLabel(this);
+        labelLayout->addWidget(mComponentValue,1,1);
+
         QLabel *variableLabel = new QLabel("Variable:",this);
-        labelLayout->addWidget(variableLabel,1,0);
+        labelLayout->addWidget(variableLabel,2,0);
 
         mVariableValue = new QLabel(this);
-        labelLayout->addWidget(mVariableValue,1,1);
+        labelLayout->addWidget(mVariableValue,2,1);
+
+        labelLayout->columnMinimumWidth(0);
 
         //fill vertical Splitter
 
@@ -213,10 +221,10 @@ void CellMLZincMappingViewEditingWidget::retranslateUi()
 
 //==============================================================================
 
-void CellMLZincMappingViewEditingWidget::setNodeValue(const int pId, const QString &pVariable)
+void CellMLZincMappingViewEditingWidget::setNodeValue(const int pId, const QString &pComponent, const QString &pVariable)
 {
     if (pId!=-1) {
-        mMapMatch.insert(pId,pVariable);
+        mMapMatch.insert(pId,{pComponent,pVariable});
         selectNode(pId);
     }
 }
@@ -315,10 +323,72 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
+    //find a filename
+
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    //TODO
-    Q_UNUSED(fileManagerInstance);
+    QString localCellmlFileName = mCellmlFile->fileName();
+    bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
+    QString cellmlFileName = remoteCellmlFile?
+                                 fileManagerInstance->url(localCellmlFileName):
+                                 localCellmlFileName;
+    //TODO do something more json related ?
+    QString mappingFileName = fileName(pFileName, cellmlFileName,
+                                     QStringLiteral("json"),
+                                     tr("Save CellML Mapping File"),
+                                     QStringList());
+
+    //Jsonise the map
+
+    QJsonArray jsonMapArray;
+
+    for (int node : mMapMatch.keys()) {
+        QJsonObject item;
+        item.insert("node",QJsonValue::fromVariant(node));
+        _variable var = mMapMatch[node];
+        item.insert("component",QJsonValue::fromVariant(var.component));
+        item.insert("variable",QJsonValue::fromVariant(var.variable));
+        jsonMapArray.push_back(item);
+    }
+
+    QJsonDocument doc(jsonMapArray);
+
+    //saving it
+
+    QFile jsonFile(mappingFileName);
+    jsonFile.open(QFile::WriteOnly);
+    jsonFile.write(doc.toJson());
 }
+
+
+//==============================================================================
+
+QString CellMLZincMappingViewEditingWidget::fileName(const QString &pFileName,
+                                                           const QString &pBaseFileName,
+                                                           const QString &pFileExtension,
+                                                           const QString &pCaption,
+                                                           const QStringList &pFileFilters)
+{
+    // Return the given file name, if it is not empty, or ask the user to
+    // provide one using the additional information that is given
+
+    if (!pFileName.isEmpty()) {
+        return pFileName;
+    }
+
+    QString fileName = pBaseFileName;
+    QString baseFileCompleteSuffix = QFileInfo(pBaseFileName).completeSuffix();
+
+    if (baseFileCompleteSuffix.isEmpty()) {
+        fileName += "."+pFileExtension;
+    } else {
+        fileName.replace(QRegularExpression(QRegularExpression::escape(baseFileCompleteSuffix)+"$"), pFileExtension);
+    }
+
+    QString firstFileFilter = pFileFilters.isEmpty()?QString():pFileFilters.first();
+
+    return Core::getSaveFileName(pCaption, fileName, pFileFilters, &firstFileFilter);
+}
+
 //==============================================================================
 
 void CellMLZincMappingViewEditingWidget::emitHorizontalSplitterMoved()
@@ -343,10 +413,17 @@ void CellMLZincMappingViewEditingWidget::selectNode(int pId)
 {
     if (pId==-1) {
         mNodeValue->setText("");
+        mComponentValue->setText("");
         mVariableValue->setText("");
     } else {
         mNodeValue->setNum(pId);
-        mVariableValue->setText(mMapMatch[pId]);
+        if (mMapMatch.contains(pId)) {
+            mComponentValue->setText(mMapMatch[pId].component);
+            mVariableValue->setText(mMapMatch[pId].variable);
+        } else {
+            mComponentValue->setText("");
+            mVariableValue->setText("");
+        }
     }
 }
 

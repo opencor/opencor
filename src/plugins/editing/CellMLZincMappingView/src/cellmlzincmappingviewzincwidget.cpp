@@ -187,7 +187,7 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 
     pEvent->acceptProposedAction();
 
-    mEditingWidget->setNodeValue(mIdSelectedNode,"component: "+splitText[1]+", variable: "+splitText.first());
+    mEditingWidget->setNodeValue(mIdSelectedNode,splitText[1],splitText.first());
 
     // select and highlight the current node
 
@@ -398,7 +398,7 @@ void CellMLZincMappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
 
 //==============================================================================
 
-void CellMLZincMappingViewZincWidget::setNodeSizes(int pSize) {
+void CellMLZincMappingViewZincWidget:: setNodeSizes(int pSize) {
     mNodeSize = pow(nodeSixeExp,pSize);
     //TODO change size of mapped nodes
 
@@ -408,16 +408,14 @@ void CellMLZincMappingViewZincWidget::setNodeSizes(int pSize) {
 
     scene.beginChange();
         mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
-        mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
+        mMappedPoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
     scene.endChange();
-
 }
 
 //==============================================================================
 
 void CellMLZincMappingViewZincWidget::eraseNode()
 {
-
     mEditingWidget->eraseNodeValue(mIdSelectedNode);
 
     // select and highlight the current node

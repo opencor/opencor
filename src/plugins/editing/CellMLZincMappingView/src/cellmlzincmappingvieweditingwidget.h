@@ -92,7 +92,7 @@ public:
     void retranslateUi() override;
 
     void selectNode(int pId);
-    void setNodeValue(const int pId, const QString &pVariable);
+    void setNodeValue(const int pId, const QString &pComponent, const QString &pVariable);
     void eraseNodeValue(const int pId);
 
     void filePermissionsChanged();
@@ -100,6 +100,12 @@ public:
     bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
 
 private:
+
+    struct _variable {
+        QString component;
+        QString variable;
+    };
+    QMap<int, _variable> mMapMatch;
 
     QAction *mClearNode;
     QAction *mSaveMapping;
@@ -113,6 +119,7 @@ private:
     CellMLZincMappingViewZincWidget *mZincWidget;
 
     QLabel *mNodeValue;
+    QLabel *mComponentValue;
     QLabel *mVariableValue;
     QTreeView *mVariableTree;
 
@@ -122,10 +129,11 @@ private:
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    QMap<int, QString> mMapMatch;
-
     void populateTree();
     void saveMapping(const QString &pFileName);
+    QString fileName(const QString &pFileName, const QString &pBaseFileName,
+                     const QString &pFileExtension, const QString &pCaption,
+                     const QStringList &pFileFilters);
 
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);
