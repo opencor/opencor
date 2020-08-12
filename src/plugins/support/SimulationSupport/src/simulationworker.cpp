@@ -178,11 +178,9 @@ void SimulationWorker::run()
 
             // Determine our next point and compute our model up to it
 
-            ++pointCounter;
-
             odeSolver->solve(mCurrentPoint,
                              qMin(endingPoint,
-                                  startingPoint+pointCounter*pointInterval));
+                                  startingPoint+double(++pointCounter)*pointInterval));
 
             // Make sure that no error occurred
 

@@ -966,8 +966,8 @@ class diff_match_patch {
           int overlap_length1 = diff_commonOverlap(deletion, insertion);
           int overlap_length2 = diff_commonOverlap(insertion, deletion);
           if (overlap_length1 >= overlap_length2) {
-            if (overlap_length1 >= deletion.size() / 2.0 ||
-                overlap_length1 >= insertion.size() / 2.0) {
+            if (overlap_length1 >= double(deletion.size()) / 2.0 ||
+                overlap_length1 >= double(insertion.size()) / 2.0) {
               // Overlap found.  Insert an equality and trim the surrounding edits.
               diffs.insert(cur_diff, Diff(EQUAL, insertion.substr(0, overlap_length1)));
               prev_diff->text =
@@ -977,8 +977,8 @@ class diff_match_patch {
               // no need to step past the new element.
             }
           } else {
-            if (overlap_length2 >= deletion.length() / 2.0 ||
-                overlap_length2 >= insertion.length() / 2.0) {
+            if (overlap_length2 >= double(deletion.length()) / 2.0 ||
+                overlap_length2 >= double(insertion.length()) / 2.0) {
               // Reverse overlap found.
               // Insert an equality and swap and trim the surrounding edits.
               diffs.insert(cur_diff, Diff(EQUAL, deletion.substr(0, overlap_length2)));

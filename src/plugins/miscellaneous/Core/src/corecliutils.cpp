@@ -266,7 +266,7 @@ QString sizeAsString(quint64 pSize, int pPrecision)
                                                 };
 
     auto i = ulong(qFloor(log(pSize)/log(1024.0)));
-    double size = pSize/qPow(1024.0, i);
+    double size = double(pSize)/qPow(1024.0, double(i));
     double scaling = qPow(10.0, pPrecision);
 
     size = qRound(scaling*size)/scaling;

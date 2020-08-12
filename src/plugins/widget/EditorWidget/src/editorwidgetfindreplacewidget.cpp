@@ -548,7 +548,7 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
         };
 
         MagnifierIcon.paint(&dropDownPixmapPainter,
-                            0, (IconSize-MagnifierIconHeight)/2,
+                            0, (int(IconSize)-int(MagnifierIconHeight))/2,
                             IconSize, MagnifierIconHeight);
     }
 

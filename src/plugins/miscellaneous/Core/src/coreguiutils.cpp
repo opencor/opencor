@@ -906,22 +906,15 @@ QColor lockedColor(const QColor &pColor)
 {
     // Return the resulting locked version of the given colour
 
-    int red = pColor.red();
-    int green = pColor.green();
-    int blue = pColor.blue();
-
-    enum {
-        lockedRed = 255,
-        lockedGreen = 0,
-        lockedBlue = 0
-    };
-
     static const double Alpha = 0.05;
     static const double OneMinusAlpha = 1.0-Alpha;
+    static const double LockedRed = 255.0;
+    static const double LockedGreen = 0.0;
+    static const double LockedBlue = 0.0;
 
-    return { int(Alpha*lockedRed+OneMinusAlpha*red),
-             int(Alpha*lockedGreen+OneMinusAlpha*green),
-             int(Alpha*lockedBlue+OneMinusAlpha*blue) };
+    return { int(Alpha*LockedRed+OneMinusAlpha*pColor.red()),
+             int(Alpha*LockedGreen+OneMinusAlpha*pColor.green()),
+             int(Alpha*LockedBlue+OneMinusAlpha*pColor.blue()) };
 }
 
 //==============================================================================
