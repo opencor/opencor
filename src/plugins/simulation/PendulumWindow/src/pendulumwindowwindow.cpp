@@ -63,16 +63,7 @@ namespace PendulumWindow {
 
 PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::PendulumWindowWindow),
-    mZincContext(nullptr),
-    mZincSceneViewerDescription(nullptr),
-    mAxesFontPointSize(0),
-    mInitialiseZincScene(true),
-    mCurrentDataSize(0),
-    mTimeValues(nullptr),
-    mR0Values(nullptr),
-    mQ1Values(nullptr),
-    mThetaValues(nullptr)
+    mGui(new Ui::PendulumWindowWindow)
 {
     // Set up the GUI
 
@@ -82,12 +73,12 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     mZincWidget = new ZincWidget::ZincWidget(this);
 
-    connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
-            this, SLOT(createAndSetZincContext()));
-    connect(mZincWidget, SIGNAL(graphicsInitialized()),
-            this, SLOT(graphicsInitialized()));
-    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
-            this, SLOT(devicePixelRatioChanged(const int &)));
+    connect(mZincWidget, &ZincWidget::ZincWidget::contextAboutToBeDestroyed,
+            this, &PendulumWindowWindow::createAndSetZincContext);
+    connect(mZincWidget, &ZincWidget::ZincWidget::graphicsInitialized,
+            this, &PendulumWindowWindow::graphicsInitialized);
+    connect(mZincWidget, &ZincWidget::ZincWidget::devicePixelRatioChanged,
+            this, &PendulumWindowWindow::devicePixelRatioChanged);
 
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
                                                      true, true, true, true));
@@ -110,8 +101,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mTimeCheckBox->setEnabled(false);
     mTimeCheckBox->setText(tr("Auto"));
 
-    connect(mTimeCheckBox, SIGNAL(toggled(bool)),
-            this, SLOT(autoMode()));
+    connect(mTimeCheckBox, &QCheckBox::toggled,
+            this, &PendulumWindowWindow::autoMode);
 
     timeWidget->layout()->addWidget(mTimeCheckBox);
 
@@ -124,8 +115,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mTimeSlider->setEnabled(false);
     mTimeSlider->setOrientation(Qt::Horizontal);
 
-    connect(mTimeSlider, SIGNAL(valueChanged(int)),
-            this, SLOT(updateScene(const int &)));
+    connect(mTimeSlider, &QSlider::valueChanged,
+            this, &PendulumWindowWindow::timeSliderValueChanged);
 
     mGui->layout->addWidget(mTimeSlider);
 
@@ -135,8 +126,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     // Customise our timer
 
-    connect(&mTimer, SIGNAL(timeout()),
-            this, SLOT(updateScene()));
+    connect(&mTimer, &QTimer::timeout,
+            this, &PendulumWindowWindow::timerTimeOut);
 }
 
 //==============================================================================
@@ -179,16 +170,22 @@ void PendulumWindowWindow::createAndSetZincContext()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
+
+    // Retrieve our axes' font point size
+
+    mAxesFontPointSize = mZincContext->getDefaultRegion().getScene().createGraphicsPoints().getGraphicspointattributes().getFont().getPointSize();
+
+    // Update our scene using our initial devide pixel ratio
+
+    devicePixelRatioChanged(mZincWidget->devicePixelRatio());
 }
 
 //==============================================================================
 
 void PendulumWindowWindow::initData(const quint64 &pDataSize,
-                                    const double &pMinimumTime,
-                                    const double &pMaximumTime,
-                                    const double &pTimeInterval,
-                                    double *pR0Values, double *pQ1Values,
-                                    double *pThetaValues)
+                                    double pMinimumTime, double pMaximumTime,
+                                    double pTimeInterval, double *pR0Values,
+                                    double *pQ1Values, double *pThetaValues)
 {
     // Initialise our data
     // Note: mTimeValues must be fully populated for Zinc to work as expected.
@@ -204,7 +201,7 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
     mTimeValues = new double[pDataSize];
 
     for (quint64 i = 0; i < pDataSize; ++i) {
-        mTimeValues[i] = i*pTimeInterval;
+        mTimeValues[i] = double(i)*pTimeInterval;
     }
 
     mR0Values = pR0Values;
@@ -485,7 +482,7 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
 //==============================================================================
 
-void PendulumWindowWindow::addData(const int &pCurrentDataSize)
+void PendulumWindowWindow::addData(int pCurrentDataSize)
 {
     // Assign the time-varying parameters for mR0, mQ1 and mTheta
 
@@ -543,7 +540,7 @@ void PendulumWindowWindow::graphicsInitialized()
 
 //==============================================================================
 
-void PendulumWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
+void PendulumWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
     // Update our scene using the given devide pixel ratio
 
@@ -556,7 +553,7 @@ void PendulumWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
 
 //==============================================================================
 
-void PendulumWindowWindow::updateScene(const int &pTime)
+void PendulumWindowWindow::timeSliderValueChanged(int pTime)
 {
     // Update our scene
 
@@ -599,7 +596,7 @@ void PendulumWindowWindow::updateScene(const int &pTime)
 
 //==============================================================================
 
-void PendulumWindowWindow::updateScene()
+void PendulumWindowWindow::timerTimeOut()
 {
     // Update our scene
 

@@ -1,5 +1,11 @@
-# Note: the full list of Clang-Tidy checks can be found at
-#       https://clang.llvm.org/extra/clang-tidy/checks/list.html...
+# Note #1: the full list of Clang-Tidy checks can be found at
+#          https://clang.llvm.org/extra/clang-tidy/checks/list.html...
+# Note #2: performance-no-automatic-move shouldn't be disabled, but we have to
+#          due to an issue with Qt (see
+#          https://bugreports.qt.io/browse/QTBUG-85415)...
+# Note #3: readability-redundant-access-specifiers shouldn't normally be
+#          disabled, but Clang-Tidy gets a bit confused with access specifiers
+#          like "public" vs. "public slots"...
 
 ---
 Checks: >-
@@ -45,9 +51,11 @@ Checks: >-
   -modernize-pass-by-value,
   -modernize-use-trailing-return-type,
   performance-*,
+  -performance-no-automatic-move,
   readability-*,
   -readability-isolate-declaration,
-  -readability-magic-numbers
+  -readability-magic-numbers,
+  -readability-redundant-access-specifiers
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 ...

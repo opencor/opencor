@@ -85,16 +85,16 @@ public:
 
     void retranslateUi() override;
 
-    void initData(const quint64 &pDataSize, const double &pMinimumTime,
-                  const double &pMaximumTime, const double &pTimeInterval,
-                  double *pR0Values, double *pQ1Values, double *pThetaValues);
-    void addData(const int &pCurrentDataSize);
+    void initData(const quint64 &pDataSize, double pMinimumTime,
+                  double pMaximumTime, double pTimeInterval, double *pR0Values,
+                  double *pQ1Values, double *pThetaValues);
+    void addData(int pCurrentDataSize);
 
 private:
     Ui::PendulumWindowWindow *mGui;
 
     ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext;
+    OpenCMISS::Zinc::Context *mZincContext = nullptr;
 
     QTimer mTimer;
 
@@ -109,26 +109,26 @@ private:
     OpenCMISS::Zinc::FieldFiniteElement mTheta;
     OpenCMISS::Zinc::Fieldcache mFieldCache;
 
-    char *mZincSceneViewerDescription;
+    char *mZincSceneViewerDescription = nullptr;
 
-    int mAxesFontPointSize;
+    int mAxesFontPointSize = 0;
 
-    bool mInitialiseZincScene;
+    bool mInitialiseZincScene = true;
 
-    int mCurrentDataSize;
+    int mCurrentDataSize = 0;
 
-    double *mTimeValues;
-    double *mR0Values;
-    double *mQ1Values;
-    double *mThetaValues;
+    double *mTimeValues = nullptr;
+    double *mR0Values = nullptr;
+    double *mQ1Values = nullptr;
+    double *mThetaValues = nullptr;
 
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 
-    void updateScene(const int &pTime);
-    void updateScene();
+    void timeSliderValueChanged(int pTime);
+    void timerTimeOut();
 
     void autoMode();
 };

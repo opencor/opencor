@@ -301,7 +301,7 @@ int exec(const QString &pProgram, const QStringList &pArgs, QString &pOutput)
     QProcess process;
 
     process.start(pProgram, pArgs);
-    process.waitForFinished();
+    process.waitForFinished(-1);
 
     pOutput = process.readAll().trimmed();
 
