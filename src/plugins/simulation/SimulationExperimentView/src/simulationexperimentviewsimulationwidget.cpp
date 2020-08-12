@@ -1814,7 +1814,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
     auto nbOfPoints = quint64(ceil((endingPoint-startingPoint)/pointInterval));
-    bool needOneStepTask = !qFuzzyCompare((endingPoint-startingPoint)/nbOfPoints, pointInterval);
+    bool needOneStepTask = !qFuzzyCompare((endingPoint-startingPoint)/double(nbOfPoints), pointInterval);
 
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
 
@@ -1827,7 +1827,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     sedmlUniformTimeCourse->setId(QString("simulation%1").arg(simulationNumber).toStdString());
     sedmlUniformTimeCourse->setInitialTime(startingPoint);
     sedmlUniformTimeCourse->setOutputStartTime(startingPoint);
-    sedmlUniformTimeCourse->setOutputEndTime(startingPoint+nbOfPoints*pointInterval);
+    sedmlUniformTimeCourse->setOutputEndTime(startingPoint+double(nbOfPoints)*pointInterval);
     sedmlUniformTimeCourse->setNumberOfPoints(int(nbOfPoints));
 
     addSedmlSimulation(sedmlDocument, sedmlModel, sedmlRepeatedTask,
@@ -3656,7 +3656,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 
     // Make sure that our progress bar is up to date
 
-    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mSimulation->fileName())/double(mSimulation->size()));
+    mProgressBarWidget->setValue(double(mViewWidget->simulationResultsSize(mSimulation->fileName()))/double(mSimulation->size()));
 }
 
 //==============================================================================
@@ -3814,7 +3814,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
     if (simulation == mSimulation) {
         QString simulationFileName = mSimulation->fileName();
-        double simulationProgress = double(mViewWidget->simulationResultsSize(simulationFileName))/simulation->size();
+        double simulationProgress = double(mViewWidget->simulationResultsSize(simulationFileName))/double(simulation->size());
 
         if ((pTask != Task::None) || visible) {
             mProgressBarWidget->setValue(simulationProgress);
