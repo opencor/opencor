@@ -11,9 +11,12 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
         # Note #2: besides C++98 compatibility, which we are not after, some
         #          warnings are disabled so that Qt-related files can be
         #          compiled without any problems...
+        # Note #3: no-anon-enum-enum-conversion is disabled so that we can
+        #          safely use Type.h from Clang...
 
         set(COMPILE_OPTIONS
             -Weverything
+            -Wno-anon-enum-enum-conversion
             -Wno-c++98-compat
             -Wno-c++98-compat-pedantic
             -Wno-documentation

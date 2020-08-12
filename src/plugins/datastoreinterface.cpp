@@ -593,7 +593,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     mNbOfVariables(pNbOfVariables),
     mNbOfDataPoints(pNbOfDataPoints),
     mRunSizes(pRunSizes),
-    mOneOverTotalProgress(1.0/pNbOfDataPoints)
+    mOneOverTotalProgress(1.0/double(pNbOfDataPoints))
 {
     // Initialise our hierarchy
 
@@ -767,7 +767,7 @@ double DataStoreImportData::progress()
 {
     // Increase and return our normalised progress
 
-    return (++mProgress)*mOneOverTotalProgress;
+    return double(++mProgress)*mOneOverTotalProgress;
 }
 
 //==============================================================================
