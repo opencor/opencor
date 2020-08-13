@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "opencmiss/zinc/fieldcoordinatetransformation.hpp"
     #include "opencmiss/zinc/fieldmodule.hpp"
     #include "opencmiss/zinc/fieldtime.hpp"
-    #include "opencmiss/zinc/fieldvectoroperators.hpp"
 #include "zincend.h"
 
 //==============================================================================
