@@ -77,6 +77,8 @@ private:
 
     int mAxesFontPointSize = 0;
 
+    QString mExFile;
+
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
