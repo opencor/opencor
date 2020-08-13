@@ -337,8 +337,10 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
                                      tr("Save CellML Mapping File"),
                                      QStringList());
 
-    //Jsonise the map
+    QJsonObject jsonContent;
+    jsonContent.insert("meshfile",QJsonValue::fromVariant(mMeshFileName));
 
+    //Jsonise the map
     QJsonArray jsonMapArray;
 
     for (int node : mMapMatch.keys()) {
@@ -350,7 +352,9 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
         jsonMapArray.push_back(item);
     }
 
-    QJsonDocument doc(jsonMapArray);
+    jsonContent.insert("map",jsonMapArray);
+
+    QJsonDocument doc(jsonContent);
 
     //saving it
 

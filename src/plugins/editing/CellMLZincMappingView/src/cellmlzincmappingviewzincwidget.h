@@ -117,6 +117,10 @@ private:
 
     void click(int pX, int pY, bool pCanDiscard = true);
 
+    //TODO ?
+//private slots:
+    //void devicePixelRatioChanged(int pDevicePixelRatio);
+
 };
 
 //==============================================================================

@@ -443,6 +443,21 @@ void CellMLZincMappingViewZincWidget::eraseNode()
     fieldModule.endChange();
 }
 
+//==============================================================================
+
+/*
+void CellMLZincMappingViewZincWidget::devicePixelRatioChanged(int pDevicePixelRatio)
+{
+    // Update our scene using the given devide pixel ratio
+
+    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
+
+    scene.beginChange();
+        scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
+    scene.endChange();
+}
+*/
+
 } // namespace ZincWidget
 } // namespace OpenCOR
 

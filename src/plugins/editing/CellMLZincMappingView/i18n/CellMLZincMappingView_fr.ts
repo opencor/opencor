@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::CellMLZincMappingView::CellMLZincMappingViewEditingWidget</name>
+    <message>
+        <source>Save CellML Mapping File</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLZincMappingView::CellMLZincMappingViewPlugin</name>
     <message>
         <source>Mapping</source>
