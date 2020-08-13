@@ -138,6 +138,8 @@ PendulumWindowWindow::~PendulumWindowWindow()
 
     delete mZincContext;
 
+    mZincWidget = nullptr;
+
     delete mTimeValues;
 
     // Delete the GUI
@@ -158,6 +160,13 @@ void PendulumWindowWindow::retranslateUi()
 
 void PendulumWindowWindow::createAndSetZincContext()
 {
+    // Make sure that we still have a Zinc widget (i.e. skip the case where we
+    // are coming here as a result of closing OpenCOR)
+
+    if (mZincWidget == nullptr) {
+        return;
+    }
+
     // Keep track of our current scene viewer's description
 
     mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
