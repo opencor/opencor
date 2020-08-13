@@ -230,7 +230,7 @@ void ZincWindowWindow::createAndSetZincContext()
         isosurfaces.setTessellation(fineTessellation);
     scene.endChange();
 
-    // Update our scene using our initial devide pixel ratio
+    // Update our scene using our initial device pixel ratio
 
     devicePixelRatioChanged(mZincWidget->devicePixelRatio());
 }
@@ -257,7 +257,7 @@ void ZincWindowWindow::graphicsInitialized()
 
 void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
-    // Update our scene using the given devide pixel ratio
+    // Update our scene using the given device pixel ratio
 
     OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
 
