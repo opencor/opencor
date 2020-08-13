@@ -93,15 +93,13 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
 ZincWindowWindow::~ZincWindowWindow()
 {
+    // Keep track of the fact that we are shutting down
+
+    mShuttingDown = true;
+
     // Delete the temporary copy of our .exfile file
 
     QFile::remove(mExFile);
-
-    // Delete some internal objects
-
-    delete mZincContext;
-
-    mZincWidget = nullptr;
 
     // Delete the GUI
 
@@ -121,10 +119,10 @@ void ZincWindowWindow::retranslateUi()
 
 void ZincWindowWindow::createAndSetZincContext()
 {
-    // Make sure that we still have a Zinc widget (i.e. skip the case where we
-    // are coming here as a result of closing OpenCOR)
+    // Make sure that we are not shutting down (i.e. skip the case where we are
+    // coming here as a result of closing OpenCOR)
 
-    if (mZincWidget == nullptr) {
+    if (mShuttingDown) {
         return;
     }
 
@@ -134,10 +132,10 @@ void ZincWindowWindow::createAndSetZincContext()
 
     // Create and set our Zinc context
 
-    mZincContext = new OpenCMISS::Zinc::Context("ZincWindowWindow");
+    mZincContext = OpenCMISS::Zinc::Context("ZincWindowWindow");
 
-    mZincContext->getMaterialmodule().defineStandardMaterials();
-    mZincContext->getGlyphmodule().defineStandardGlyphs();
+    mZincContext.getMaterialmodule().defineStandardMaterials();
+    mZincContext.getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
 
@@ -146,7 +144,7 @@ void ZincWindowWindow::createAndSetZincContext()
     // Load our .exfile to our default region using a temporary copy of our
     // .exfile file
 
-    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+    OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
 
     region.readFile(mExFile.toUtf8().constData());
 
@@ -168,7 +166,7 @@ void ZincWindowWindow::createAndSetZincContext()
     scene.beginChange();
         // Black lines limiting our scene
 
-        OpenCMISS::Zinc::Materialmodule materialModule = mZincContext->getMaterialmodule();
+        OpenCMISS::Zinc::Materialmodule materialModule = mZincContext.getMaterialmodule();
         OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
 
         lines.setCoordinateField(coordinates);
@@ -211,7 +209,7 @@ void ZincWindowWindow::createAndSetZincContext()
 
         // Tesselation for our scene
 
-        OpenCMISS::Zinc::Tessellation fineTessellation = mZincContext->getTessellationmodule().createTessellation();
+        OpenCMISS::Zinc::Tessellation fineTessellation = mZincContext.getTessellationmodule().createTessellation();
         int intValue = 8;
 
         fineTessellation.setManaged(true);
@@ -259,7 +257,7 @@ void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
     // Update our scene using the given device pixel ratio
 
-    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
+    OpenCMISS::Zinc::Scene scene = mZincContext.getDefaultRegion().getScene();
 
     scene.beginChange();
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
