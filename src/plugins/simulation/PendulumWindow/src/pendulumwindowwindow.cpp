@@ -133,11 +133,11 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
 PendulumWindowWindow::~PendulumWindowWindow()
 {
+    // Keep track of the fact that we are shutting down
+
+    mShuttingDown = true;
+
     // Delete some internal objects
-
-    delete mZincContext;
-
-    mZincWidget = nullptr;
 
     delete mTimeValues;
 
@@ -159,10 +159,10 @@ void PendulumWindowWindow::retranslateUi()
 
 void PendulumWindowWindow::createAndSetZincContext()
 {
-    // Make sure that we still have a Zinc widget (i.e. skip the case where we
-    // are coming here as a result of closing OpenCOR)
+    // Make sure that we are not shutting down (i.e. skip the case where we are
+    // coming here as a result of closing OpenCOR)
 
-    if (mZincWidget == nullptr) {
+    if (mShuttingDown) {
         return;
     }
 
@@ -172,16 +172,16 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     // Create and set our Zinc context
 
-    mZincContext = new OpenCMISS::Zinc::Context("PendulumWindowWindow");
+    mZincContext = OpenCMISS::Zinc::Context("PendulumWindowWindow");
 
-    mZincContext->getMaterialmodule().defineStandardMaterials();
-    mZincContext->getGlyphmodule().defineStandardGlyphs();
+    mZincContext.getMaterialmodule().defineStandardMaterials();
+    mZincContext.getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
 
     // Retrieve our axes' font point size
 
-    mAxesFontPointSize = mZincContext->getDefaultRegion().getScene().createGraphicsPoints().getGraphicspointattributes().getFont().getPointSize();
+    mAxesFontPointSize = mZincContext.getDefaultRegion().getScene().createGraphicsPoints().getGraphicspointattributes().getFont().getPointSize();
 
     // Update our scene using our initial device pixel ratio
 
@@ -223,14 +223,14 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
         // Retrieve the default time keeper
 
-        OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext->getTimekeepermodule();
+        OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext.getTimekeepermodule();
 
         mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
         // Get the field module of our default region and do a few things with
         // it
 
-        OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
+        OpenCMISS::Zinc::Region defaultRegion = mZincContext.getDefaultRegion();
 
         mFieldModule = defaultRegion.getFieldmodule();
 
@@ -552,7 +552,7 @@ void PendulumWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
     // Update our scene using the given device pixel ratio
 
-    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
+    OpenCMISS::Zinc::Scene scene = mZincContext.getDefaultRegion().getScene();
 
     scene.beginChange();
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);

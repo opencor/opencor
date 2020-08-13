@@ -93,8 +93,10 @@ public:
 private:
     Ui::PendulumWindowWindow *mGui;
 
+    bool mShuttingDown = false;
+
     ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext = nullptr;
+    OpenCMISS::Zinc::Context mZincContext;
 
     QTimer mTimer;
 
