@@ -184,7 +184,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     mAxesFontPointSize = mZincContext->getDefaultRegion().getScene().createGraphicsPoints().getGraphicspointattributes().getFont().getPointSize();
 
-    // Update our scene using our initial devide pixel ratio
+    // Update our scene using our initial device pixel ratio
 
     devicePixelRatioChanged(mZincWidget->devicePixelRatio());
 }
@@ -551,7 +551,7 @@ void PendulumWindowWindow::graphicsInitialized()
 
 void PendulumWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
-    // Update our scene using the given devide pixel ratio
+    // Update our scene using the given device pixel ratio
 
     OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
 
