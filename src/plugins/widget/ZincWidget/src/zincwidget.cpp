@@ -32,7 +32,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "zincbegin.h"
-    #include "opencmiss/zinc/context.hpp"
     #include "opencmiss/zinc/result.hpp"
 #include "zincend.h"
 
@@ -80,7 +79,7 @@ ZincWidget::~ZincWidget()
 
 //==============================================================================
 
-OpenCMISS::Zinc::Context * ZincWidget::context() const
+OpenCMISS::Zinc::Context ZincWidget::context() const
 {
     // Return our context
 
@@ -89,7 +88,7 @@ OpenCMISS::Zinc::Context * ZincWidget::context() const
 
 //==============================================================================
 
-void ZincWidget::setContext(OpenCMISS::Zinc::Context *pContext)
+void ZincWidget::setContext(const OpenCMISS::Zinc::Context &pContext)
 {
     // Set our context
 
@@ -259,16 +258,16 @@ void ZincWidget::createSceneViewer()
     // Create our scene viewer and have it have the same OpenGL properties as
     // QOpenGLWidget
 
-    mSceneViewer = mContext->getSceneviewermodule().createSceneviewer(OpenCMISS::Zinc::Sceneviewer::BUFFERING_MODE_DOUBLE,
-                                                                      OpenCMISS::Zinc::Sceneviewer::STEREO_MODE_DEFAULT);
+    mSceneViewer = mContext.getSceneviewermodule().createSceneviewer(OpenCMISS::Zinc::Sceneviewer::BUFFERING_MODE_DOUBLE,
+                                                                     OpenCMISS::Zinc::Sceneviewer::STEREO_MODE_DEFAULT);
 
     mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
     mSceneViewer.setViewportSize(width(), height());
 
     // Further customise our scene viewer
 
-    mSceneViewer.setScene(mContext->getDefaultRegion().getScene());
-    mSceneViewer.setScenefilter(mContext->getScenefiltermodule().getDefaultScenefilter());
+    mSceneViewer.setScene(mContext.getDefaultRegion().getScene());
+    mSceneViewer.setScenefilter(mContext.getScenefiltermodule().getDefaultScenefilter());
 
     // Get ourselves a scene viewer notifier and set its callback to our
     // callback class
@@ -325,7 +324,7 @@ void ZincWidget::initializeGL()
 
     mGraphicsInitialized = true;
 
-    if (mContext != nullptr) {
+    if (mContext.isValid()) {
         createSceneViewer();
     }
 

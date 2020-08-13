@@ -86,8 +86,8 @@ public:
     explicit ZincWidget(QWidget *pParent);
     ~ZincWidget() override;
 
-    OpenCMISS::Zinc::Context * context() const;
-    void setContext(OpenCMISS::Zinc::Context *pContext);
+    OpenCMISS::Zinc::Context context() const;
+    void setContext(const OpenCMISS::Zinc::Context &pContext);
 
     OpenCMISS::Zinc::Sceneviewer sceneViewer() const;
 
@@ -127,7 +127,7 @@ private:
 
     int mDevicePixelRatio = -1;
 
-    OpenCMISS::Zinc::Context *mContext = nullptr;
+    OpenCMISS::Zinc::Context mContext;
     OpenCMISS::Zinc::Sceneviewer mSceneViewer;
     OpenCMISS::Zinc::Sceneviewernotifier mSceneViewerNotifier;
 
