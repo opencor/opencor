@@ -91,6 +91,8 @@ ZincWindowWindow::~ZincWindowWindow()
 
     delete mZincContext;
 
+    mZincWidget = nullptr;
+
     // Delete the GUI
 
     delete mGui;
@@ -109,6 +111,13 @@ void ZincWindowWindow::retranslateUi()
 
 void ZincWindowWindow::createAndSetZincContext()
 {
+    // Make sure that we still have a Zinc widget (i.e. skip the case where we
+    // are coming here as a result of closing OpenCOR)
+
+    if (mZincWidget == nullptr) {
+        return;
+    }
+
     // Keep track of our current scene viewer's description
 
     mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
