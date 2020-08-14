@@ -25,8 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "corecliutils.h"
 #include "cellmlzincmappingvieweditingwidget.h"
 #include "viewwidget.h"
 
@@ -72,12 +70,9 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+    //bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
-protected:
-    void dragEnterEvent(QDragEnterEvent *pEvent) override;
-    void dragMoveEvent(QDragMoveEvent *pEvent) override;
-    void dropEvent(QDropEvent *pEvent) override;
+    void setDefaultMeshFile(const QString &pFileName);
 
 private:
 
@@ -85,9 +80,6 @@ private:
     QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
 
     QString mMeshFileName;
-
-    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
-
 };
 
 //==============================================================================

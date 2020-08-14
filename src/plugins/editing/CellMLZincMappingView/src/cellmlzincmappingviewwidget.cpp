@@ -21,8 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Mapping view widget
 //==============================================================================
 
-#include "borderedwidget.h"
-#include "interfaces.h"
 #include "cellmlzincmappingviewwidget.h"
 
 //==============================================================================
@@ -45,11 +43,8 @@ CellMLZincMappingViewWidget::CellMLZincMappingViewWidget(QWidget *pParent) :
 {
 
     //TODO
-    mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/circulation.exnode";
+    mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/trilinearCube.exfile";
 
-    // Allow for things to be dropped on us
-
-    setAcceptDrops(true);
 }
 
 //==============================================================================
@@ -81,7 +76,7 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileName,this);
+        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileName,this, this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }
@@ -185,71 +180,11 @@ void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const
 
 //==============================================================================
 
-void CellMLZincMappingViewWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+void CellMLZincMappingViewWidget::setDefaultMeshFile(const QString &pFileName)
 {
-    // Accept the proposed action for the event, but only if it refers to one or
-    // several data store files
-
-    bool acceptEvent = false;
-
-    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
-        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
-            if (fileTypeInterface->isFile(fileName)) {
-                mFileTypeInterfaces.insert(fileName, fileTypeInterface);
-
-                acceptEvent = true;
-
-                break;
-            }
-        }
-
-        //TODO
-        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-            acceptEvent = true;
-            qDebug("drop of %s accepted",qPrintable(fileName));
-        }
-    }
-
-    if (acceptEvent) {
-        pEvent->acceptProposedAction();
-    } else {
-        pEvent->ignore();
-    }
+      mMeshFileName = pFileName;
 }
 
-//==============================================================================
-
-void CellMLZincMappingViewWidget::dragMoveEvent(QDragMoveEvent *pEvent)
-{
-    // Accept the proposed action for the event
-
-    pEvent->acceptProposedAction();
-}
-
-//==============================================================================
-
-void CellMLZincMappingViewWidget::dropEvent(QDropEvent *pEvent)
-{
-    // Import/open the one or several files
-
-    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
-        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-qDebug(">>> open %s !",qPrintable(fileName));
-            mEditingWidget->setMeshFile(fileName);
-            mMeshFileName = fileName;
-        } else if (mFileTypeInterfaces.contains(fileName)) {
-            //import(fileName); //?
-            //TODO
-        } else {
-qDebug(">>> send %s to opencor to open it !",qPrintable(fileName));
-            QDesktopServices::openUrl("opencor://openFile/"+fileName);
-        }
-    }
-
-    // Accept the proposed action for the event
-
-    pEvent->acceptProposedAction();
-}
 
 //==============================================================================
 

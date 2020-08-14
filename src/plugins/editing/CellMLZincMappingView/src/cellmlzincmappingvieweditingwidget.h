@@ -62,6 +62,7 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLZincMappingView {
+    class CellMLZincMappingViewWidget;
 
 //==============================================================================
 
@@ -86,8 +87,9 @@ class CellMLZincMappingViewEditingWidget : public Core::Widget
 
 public:
     explicit CellMLZincMappingViewEditingWidget(const QString &pCellmlFileName,
-                                      const QString &pMeshFileName,
-                                               QWidget *pParent);
+                                                const QString &pMeshFileName,
+                                                QWidget *pParent,
+                                                CellMLZincMappingViewWidget *pViewWidget);
 
     void retranslateUi() override;
 
@@ -99,16 +101,24 @@ public:
 
     bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
 
-private:
+protected:
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
+private:
     struct _variable {
         QString component;
         QString variable;
     };
+
+    CellMLZincMappingViewWidget *mViewWidget;
+
     QMap<int, _variable> mMapMatch;
 
     QAction *mClearNode;
     QAction *mSaveMapping;
+    QAction *mOpenMeshFile;
 
     QwtWheel *mDelayWidget;
 
@@ -135,6 +145,8 @@ private:
                      const QString &pFileExtension, const QString &pCaption,
                      const QStringList &pFileFilters);
 
+    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
+
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);
     void verticalSplitterMoved(const QIntList &pSizes);
@@ -143,6 +155,7 @@ private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
     void saveMappingSlot();
+    void loadMeshFile();
 };
 
 //==============================================================================

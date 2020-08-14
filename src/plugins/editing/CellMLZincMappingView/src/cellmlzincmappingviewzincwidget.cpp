@@ -98,7 +98,9 @@ void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
 
     setupRegion();
 
-    draw();
+    //mSceneViewer.setScene(region.getScene());
+    //draw();
+    initializeGL();
 }
 
 //==============================================================================
@@ -228,6 +230,8 @@ void CellMLZincMappingViewZincWidget::setup()
 
     setContext(mZincContext);
 }
+
+//==============================================================================
 
 void CellMLZincMappingViewZincWidget::setupRegion()
 {

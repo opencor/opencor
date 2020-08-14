@@ -21,14 +21,15 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Mapping view widget
 //==============================================================================
 
+#include "interfaces.h"
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
+#include "cellmlzincmappingviewwidget.h"
 #include "cellmlzincmappingvieweditingwidget.h"
 #include "toolbarwidget.h"
 #include "zincwidget.h"
-
 
 //==============================================================================
 
@@ -88,8 +89,9 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
 
 CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QString &pFileName,
                                                    const QString &pMeshFileName,
-                                                   QWidget *pParent) :
+                                                   QWidget *pParent, CellMLZincMappingViewWidget *pViewWidget) :
     Core::Widget(pParent),
+    mViewWidget(pViewWidget),
     mMapMatch(),
     mMeshFileName(pMeshFileName)
 {
@@ -108,7 +110,11 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
         mSaveMapping = Core::newAction(QIcon(":/oxygen/actions/document-save.png"),
-                                                        mToolBarWidget);
+                                       mToolBarWidget);
+
+        mOpenMeshFile = Core::newAction(QIcon(":/oxygen/actions/document-open.png"),
+                                        mToolBarWidget);
+
         //TODO trash could be hidden when nothing to show
         mClearNode = Core::newAction(QIcon(":/oxygen/actions/edit-clear.png"),
                                                         mToolBarWidget);
@@ -123,6 +129,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
             mDelayWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 
         mToolBarWidget->addAction(mSaveMapping);
+        mToolBarWidget->addAction(mOpenMeshFile);
         mToolBarWidget->addAction(mClearNode);
         mToolBarWidget->addWidget(mDelayWidget);
 
@@ -176,6 +183,8 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         connect(mSaveMapping, &QAction::triggered,
                 this, &CellMLZincMappingViewEditingWidget::saveMappingSlot);
+        connect(mOpenMeshFile, &QAction::triggered,
+                this, &CellMLZincMappingViewEditingWidget::loadMeshFile);
 
         //create and add informative labels
 
@@ -210,6 +219,10 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
     layout->addWidget(mVerticalSplitterWidget);
 
     populateTree();
+
+    // Allow for things to be dropped on us
+
+    setAcceptDrops(true);
 }
 
 //==============================================================================
@@ -255,8 +268,73 @@ Q_UNUSED(pShowWarning)
     mMeshFileName = pFileName;
     mZincWidget->changeSource(pFileName);
     mMapMatch.clear();
-
+    selectNode(-1);
+    mViewWidget->setDefaultMeshFile(pFileName);
     return true;
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+{
+    // Accept the proposed action for the event, but only if it refers to one or
+    // several data store files
+
+    bool acceptEvent = false;
+
+    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
+        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                mFileTypeInterfaces.insert(fileName, fileTypeInterface);
+
+                acceptEvent = true;
+
+                break;
+            }
+        }
+
+        //TODO
+        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+            acceptEvent = true;
+        }
+    }
+
+    if (acceptEvent) {
+        pEvent->acceptProposedAction();
+    } else {
+        pEvent->ignore();
+    }
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+{
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::dropEvent(QDropEvent *pEvent)
+{
+    // Import/open the one or several files
+
+    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
+        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+            setMeshFile(fileName);
+        } else if (mFileTypeInterfaces.contains(fileName)) {
+            //import(fileName); //?
+            //TODO
+        } else {
+            QDesktopServices::openUrl("opencor://openFile/"+fileName);
+        }
+    }
+
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
 }
 
 //==============================================================================
@@ -436,6 +514,11 @@ void CellMLZincMappingViewEditingWidget::selectNode(int pId)
 void CellMLZincMappingViewEditingWidget::saveMappingSlot()
 {
     saveMapping({});
+}
+
+void CellMLZincMappingViewEditingWidget::loadMeshFile()
+{
+    setMeshFile(Core::getOpenFileName("Open mesh file"));
 }
 
 } // namespace MappingView
