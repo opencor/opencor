@@ -116,6 +116,7 @@ private:
     int mAxesFontPointSize = 0;
 
     bool mNeedZincSceneInitialization = true;
+    bool mNeedZincSceneViewerInitialization = true;
 
     int mDataSize = 0;
 
@@ -123,6 +124,10 @@ private:
     double *mR0Values = nullptr;
     double *mQ1Values = nullptr;
     double *mThetaValues = nullptr;
+
+    void initializeZincScene(int pDataSize);
+
+    void useCachedData();
 
 private slots:
     void createAndSetZincContext();
