@@ -62,9 +62,11 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
     // Create a temporary copy of our .exfile file
 
-    mExFile = Core::canonicalFileName(QDir::tempPath()+"/ZincWindow/trilinearCube.exfile");
+    static const QString ExFileName = "/ZincWindow/trilinearCube.exfile";
 
-    Core::writeResourceToFile(mExFile, ":/ZincWindow/trilinearCube.exfile");
+    mExFile = Core::canonicalFileName(QDir::tempPath()+ExFileName);
+
+    Core::writeResourceToFile(mExFile, ":"+ExFileName);
 
     // Create and add a Zinc widget
 
