@@ -85,10 +85,10 @@ public:
 
     void retranslateUi() override;
 
-    void initData(const quint64 &pDataSize, double pMinimumTime,
-                  double pMaximumTime, double pTimeInterval, double *pR0Values,
-                  double *pQ1Values, double *pThetaValues);
-    void addData(int pCurrentDataSize);
+    void initData(quint64 pDataSize, double pMinimumTime, double pMaximumTime,
+                  double pTimeInterval, double *pR0Values, double *pQ1Values,
+                  double *pThetaValues);
+    void addData(int pDataSize);
 
 private:
     Ui::PendulumWindowWindow *mGui;
@@ -115,9 +115,9 @@ private:
 
     int mAxesFontPointSize = 0;
 
-    bool mInitialiseZincScene = true;
+    bool mNeedZincSceneInitialization = true;
 
-    int mCurrentDataSize = 0;
+    int mDataSize = 0;
 
     double *mTimeValues = nullptr;
     double *mR0Values = nullptr;

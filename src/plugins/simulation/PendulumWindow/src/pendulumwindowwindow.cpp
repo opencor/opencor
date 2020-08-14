@@ -190,10 +190,10 @@ void PendulumWindowWindow::createAndSetZincContext()
 
 //==============================================================================
 
-void PendulumWindowWindow::initData(const quint64 &pDataSize,
-                                    double pMinimumTime, double pMaximumTime,
-                                    double pTimeInterval, double *pR0Values,
-                                    double *pQ1Values, double *pThetaValues)
+void PendulumWindowWindow::initData(quint64 pDataSize, double pMinimumTime,
+                                    double pMaximumTime, double pTimeInterval,
+                                    double *pR0Values, double *pQ1Values,
+                                    double *pThetaValues)
 {
     // Initialise our data
     // Note: mTimeValues must be fully populated for Zinc to work as expected.
@@ -202,7 +202,7 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
     //       SimulationExperimentViewWidget::checkSimulationResults()), hence we
     //       we create and populate mTimeValues ourselves...
 
-    mCurrentDataSize = 0;
+    mDataSize = 0;
 
     delete mTimeValues;
 
@@ -218,8 +218,8 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
     // Initialise our Zinc scene, if needed, or reset it
 
-    if (mInitialiseZincScene) {
-        mInitialiseZincScene = false;
+    if (mNeedZincSceneInitialization) {
+        mNeedZincSceneInitialization = false;
 
         // Retrieve the default time keeper
 
@@ -453,9 +453,7 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
             path.setMaterial(material);
         scene.endChange();
     } else {
-        // 'Reset' our different fields
-        //---GRY--- THIS IS ONLY SETTING THINGS TO ZERO, BUT IS THERE A 'PROPER'
-        //          WAY TO RESET A FIELD?...
+        // Reset our different fields
 
         static const double zero = 0.0;
 
@@ -490,12 +488,12 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
 //==============================================================================
 
-void PendulumWindowWindow::addData(int pCurrentDataSize)
+void PendulumWindowWindow::addData(int pDataSize)
 {
     // Assign the time-varying parameters for mR0, mQ1 and mTheta
 
     mFieldModule.beginChange();
-        for (int i = mCurrentDataSize; i < pCurrentDataSize; ++i) {
+        for (int i = mDataSize; i < pDataSize; ++i) {
             mFieldCache.setTime(mTimeValues[i]);
 
             mR0.assignReal(mFieldCache, 1, mR0Values+i);
@@ -504,7 +502,7 @@ void PendulumWindowWindow::addData(int pCurrentDataSize)
         }
     mFieldModule.endChange();
 
-    mCurrentDataSize = pCurrentDataSize;
+    mDataSize = pDataSize;
 
     // Enable our time-related widgets
 
@@ -512,8 +510,8 @@ void PendulumWindowWindow::addData(int pCurrentDataSize)
     mTimeCheckBox->setEnabled(true);
     mTimeSlider->setEnabled(true);
 
-    mTimeCheckBox->setChecked(pCurrentDataSize-1 == mTimeSlider->maximum());
-    mTimeSlider->setValue(pCurrentDataSize-1);
+    mTimeCheckBox->setChecked(pDataSize-1 == mTimeSlider->maximum());
+    mTimeSlider->setValue(pDataSize-1);
 }
 
 //==============================================================================
