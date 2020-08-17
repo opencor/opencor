@@ -103,8 +103,8 @@ private:
     int mSizeSelection = 2;
     int mIdSelectedNode = -1;
 
-    OpenCMISS::Zinc::Context *mZincContext;
-    OpenCMISS::Zinc::Scenepicker *mScenePicker;
+    OpenCMISS::Zinc::Context mZincContext;
+    OpenCMISS::Zinc::Scenepicker mScenePicker;
 
     OpenCMISS::Zinc::FieldGroup mMappedSelectionGroup;
     OpenCMISS::Zinc::GraphicsPoints mNodePoints;

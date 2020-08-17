@@ -122,8 +122,6 @@ protected:
 
     QSize sizeHint() const override;
 
-    OpenCMISS::Zinc::Sceneviewer mSceneViewer;
-
 private:
     bool mGraphicsInitialized = false;
 
