@@ -60,6 +60,14 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    // Create a temporary copy of our .exfile file
+
+    static const QString ExFileName = "/ZincWindow/trilinearCube.exfile";
+
+    mExFile = Core::canonicalFileName(QDir::tempPath()+ExFileName);
+
+    Core::writeResourceToFile(mExFile, ":"+ExFileName);
+
     // Create and add a Zinc widget
 
     mZincWidget = new ZincWidget::ZincWidget(this);
@@ -87,9 +95,13 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
 ZincWindowWindow::~ZincWindowWindow()
 {
-    // Delete some internal objects
+    // Keep track of the fact that we are shutting down
 
-    delete mZincContext;
+    mShuttingDown = true;
+
+    // Delete the temporary copy of our .exfile file
+
+    QFile::remove(mExFile);
 
     // Delete the GUI
 
@@ -109,33 +121,31 @@ void ZincWindowWindow::retranslateUi()
 
 void ZincWindowWindow::createAndSetZincContext()
 {
+    // Make sure that we are not shutting down (i.e. skip the case where we are
+    // coming here as a result of closing OpenCOR)
+
+    if (mShuttingDown) {
+        return;
+    }
+
     // Keep track of our current scene viewer's description
 
     mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
 
     // Create and set our Zinc context
 
-    mZincContext = new OpenCMISS::Zinc::Context("ZincWindowWindow");
+    mZincContext = OpenCMISS::Zinc::Context("ZincWindowWindow");
 
-    mZincContext->getMaterialmodule().defineStandardMaterials();
-    mZincContext->getGlyphmodule().defineStandardGlyphs();
+    mZincContext.getMaterialmodule().defineStandardMaterials();
+    mZincContext.getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
 
     // Add a tri-linear cube to our Zinc context
 
-    // Load our .exfile to our default region using a temporary copy of our
-    // .exfile file
+    OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
 
-    QString exFile = Core::canonicalFileName(QDir::tempPath()+"/ZincWindow/trilinearCube.exfile");
-
-    Core::writeResourceToFile(exFile, ":/ZincWindow/trilinearCube.exfile");
-
-    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
-
-    region.readFile(exFile.toUtf8().constData());
-
-    QFile::remove(exFile);
+    region.readFile(mExFile.toUtf8().constData());
 
     // Create a field magnitude for our default region
 
@@ -155,7 +165,7 @@ void ZincWindowWindow::createAndSetZincContext()
     scene.beginChange();
         // Black lines limiting our scene
 
-        OpenCMISS::Zinc::Materialmodule materialModule = mZincContext->getMaterialmodule();
+        OpenCMISS::Zinc::Materialmodule materialModule = mZincContext.getMaterialmodule();
         OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
 
         lines.setCoordinateField(coordinates);
@@ -198,7 +208,7 @@ void ZincWindowWindow::createAndSetZincContext()
 
         // Tesselation for our scene
 
-        OpenCMISS::Zinc::Tessellation fineTessellation = mZincContext->getTessellationmodule().createTessellation();
+        OpenCMISS::Zinc::Tessellation fineTessellation = mZincContext.getTessellationmodule().createTessellation();
         int intValue = 8;
 
         fineTessellation.setManaged(true);
@@ -217,7 +227,7 @@ void ZincWindowWindow::createAndSetZincContext()
         isosurfaces.setTessellation(fineTessellation);
     scene.endChange();
 
-    // Update our scene using our initial devide pixel ratio
+    // Update our scene using our initial device pixel ratio
 
     devicePixelRatioChanged(mZincWidget->devicePixelRatio());
 }
@@ -244,9 +254,9 @@ void ZincWindowWindow::graphicsInitialized()
 
 void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
-    // Update our scene using the given devide pixel ratio
+    // Update our scene using the given device pixel ratio
 
-    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
+    OpenCMISS::Zinc::Scene scene = mZincContext.getDefaultRegion().getScene();
 
     scene.beginChange();
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);

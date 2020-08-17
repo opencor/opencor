@@ -29,6 +29,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include "zincbegin.h"
+    #include "opencmiss/zinc/context.hpp"
+#include "zincend.h"
+
+//==============================================================================
+
 namespace Ui {
     class ZincWindowWindow;
 } // namespace Ui
@@ -70,12 +76,16 @@ public:
 private:
     Ui::ZincWindowWindow *mGui;
 
+    bool mShuttingDown = false;
+
     ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext = nullptr;
+    OpenCMISS::Zinc::Context mZincContext;
 
     char *mZincSceneViewerDescription = nullptr;
 
     int mAxesFontPointSize = 0;
+
+    QString mExFile;
 
 private slots:
     void createAndSetZincContext();

@@ -85,16 +85,18 @@ public:
 
     void retranslateUi() override;
 
-    void initData(const quint64 &pDataSize, double pMinimumTime,
-                  double pMaximumTime, double pTimeInterval, double *pR0Values,
-                  double *pQ1Values, double *pThetaValues);
-    void addData(int pCurrentDataSize);
+    void initData(quint64 pDataSize, double pMinimumTime, double pMaximumTime,
+                  double pTimeInterval, double *pR0Values, double *pQ1Values,
+                  double *pThetaValues);
+    void addData(int pDataSize);
 
 private:
     Ui::PendulumWindowWindow *mGui;
 
+    bool mShuttingDown = false;
+
     ZincWidget::ZincWidget *mZincWidget;
-    OpenCMISS::Zinc::Context *mZincContext = nullptr;
+    OpenCMISS::Zinc::Context mZincContext;
 
     QTimer mTimer;
 
@@ -113,14 +115,19 @@ private:
 
     int mAxesFontPointSize = 0;
 
-    bool mInitialiseZincScene = true;
+    bool mNeedZincSceneInitialization = true;
+    bool mNeedZincSceneViewerInitialization = true;
 
-    int mCurrentDataSize = 0;
+    int mDataSize = 0;
 
     double *mTimeValues = nullptr;
     double *mR0Values = nullptr;
     double *mQ1Values = nullptr;
     double *mThetaValues = nullptr;
+
+    void initializeZincScene(int pDataSize);
+
+    void useCachedData();
 
 private slots:
     void createAndSetZincContext();
