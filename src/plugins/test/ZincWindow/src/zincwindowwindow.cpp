@@ -143,9 +143,6 @@ void ZincWindowWindow::createAndSetZincContext()
 
     // Add a tri-linear cube to our Zinc context
 
-    // Load our .exfile to our default region using a temporary copy of our
-    // .exfile file
-
     OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
 
     region.readFile(mExFile.toUtf8().constData());
