@@ -41,6 +41,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "zincbegin.h"
+    #include "opencmiss/zinc/fieldfiniteelement.hpp"
     #include "opencmiss/zinc/fieldmodule.hpp"
     #include "opencmiss/zinc/fieldvectoroperators.hpp"
 #include "zincend.h"
@@ -152,7 +153,23 @@ void ZincWindowWindow::createAndSetZincContext()
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
 
     fieldModule.beginChange();
-        OpenCMISS::Zinc::Field coordinates = fieldModule.findFieldByName("coordinates");
+        OpenCMISS::Zinc::Fielditerator fielditer = fieldModule.createFielditerator();
+        OpenCMISS::Zinc::Field field = fielditer.next();
+        OpenCMISS::Zinc::Field coordinates;
+
+        while (field.isValid()) {
+            if (    field.isTypeCoordinate()
+                && (field.getValueType() == OpenCMISS::Zinc::Field::VALUE_TYPE_REAL)
+                && (field.getNumberOfComponents() <= 3)
+                &&  field.castFiniteElement().isValid()) {
+                coordinates = field.castFiniteElement();
+
+                break;
+            }
+
+            field = fielditer.next();
+        }
+
         OpenCMISS::Zinc::FieldMagnitude magnitude = fieldModule.createFieldMagnitude(coordinates);
 
         magnitude.setManaged(true);
