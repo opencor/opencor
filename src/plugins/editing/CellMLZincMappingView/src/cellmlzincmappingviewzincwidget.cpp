@@ -283,25 +283,18 @@ void CellMLZincMappingViewZincWidget::draw()
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
     OpenCMISS::Zinc::Scene scene = region.getScene();
 
-    QString nameCooredinates = "Coordinates";
-
-    QFile file(mMainFileName);
-
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            if (line.startsWith(" 1) ")) {
-                line = line.split(",").first();
-                line.remove(0,4);
-                nameCooredinates= line;
+    fieldModule.beginChange();
+        OpenCMISS::Zinc::Fielditerator fielditer = fieldModule.createFielditerator();
+        OpenCMISS::Zinc::Field field = fielditer.next();
+        OpenCMISS::Zinc::Field coordinates;
+        while (field.isValid()) {
+            if (field.isTypeCoordinate() && (field.getValueType() == OpenCMISS::Zinc::Field::VALUE_TYPE_REAL)
+                    && (field.getNumberOfComponents() <= 3) && field.castFiniteElement().isValid()) {
+                coordinates = field.castFiniteElement();
                 break;
             }
+            field = fielditer.next();
         }
-    }
-
-    fieldModule.beginChange();
-        OpenCMISS::Zinc::Field coordinates = fieldModule.findFieldByName(qPrintable(nameCooredinates));
 
         mMappedSelectionGroup = fieldModule.createFieldGroup();
         mMappedSelectionGroup.setName("Mapped");
