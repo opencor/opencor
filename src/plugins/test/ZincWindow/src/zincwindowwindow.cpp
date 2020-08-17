@@ -153,8 +153,8 @@ void ZincWindowWindow::createAndSetZincContext()
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
 
     fieldModule.beginChange();
-        OpenCMISS::Zinc::Fielditerator fielditer = fieldModule.createFielditerator();
-        OpenCMISS::Zinc::Field field = fielditer.next();
+        OpenCMISS::Zinc::Fielditerator fieldIterator = fieldModule.createFielditerator();
+        OpenCMISS::Zinc::Field field = fieldIterator.next();
         OpenCMISS::Zinc::Field coordinates;
 
         while (field.isValid()) {
@@ -167,7 +167,7 @@ void ZincWindowWindow::createAndSetZincContext()
                 break;
             }
 
-            field = fielditer.next();
+            field = fieldIterator.next();
         }
 
         OpenCMISS::Zinc::FieldMagnitude magnitude = fieldModule.createFieldMagnitude(coordinates);
