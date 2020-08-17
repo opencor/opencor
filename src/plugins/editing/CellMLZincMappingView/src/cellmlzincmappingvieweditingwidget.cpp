@@ -124,7 +124,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
             mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
                                        mDelayWidget->height()/2);
             mDelayWidget->setFocusPolicy(Qt::NoFocus);
-            mDelayWidget->setRange(0.0, 100.0);
+            mDelayWidget->setRange(-30.0, 100.0);
             mDelayWidget->setWheelBorderWidth(0);
             mDelayWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 

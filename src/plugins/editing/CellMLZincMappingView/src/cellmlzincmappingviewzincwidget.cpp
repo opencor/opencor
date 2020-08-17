@@ -33,6 +33,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QOpenGLContext>
+#include <QTextStream>
 #include <QTimer>
 #include <QtMath>
 
@@ -61,8 +62,7 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
     mEditingWidget(pEditingWidget),
-    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin))//,
-    //mMappedNodeSize()
+    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin))
 {
     // Allow for things to be dropped on us
 
@@ -77,6 +77,8 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
     initAuxFile();
 
     setupRegion();
+
+    draw();
 }
 
 //==============================================================================
@@ -101,6 +103,7 @@ void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
     //mSceneViewer.setScene(region.getScene());
     //draw();
     initializeGL();
+    draw();
 }
 
 //==============================================================================
@@ -109,7 +112,7 @@ void CellMLZincMappingViewZincWidget::initializeGL()
 {
     ZincWidget::initializeGL();
     //TODO usefull ?
-    //mSceneViewer.readDescription(mZincSceneViewerDescription);
+    mSceneViewer.readDescription(mZincSceneViewerDescription);
 
     // background colour
 
@@ -117,10 +120,8 @@ void CellMLZincMappingViewZincWidget::initializeGL()
 
     mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 
-    OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
-    mSceneViewer.setScene(region.getScene());
-
-    draw();
+    //OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
+    //mSceneViewer.setScene(region.getScene());
 }
 
 //==============================================================================
@@ -273,18 +274,34 @@ void CellMLZincMappingViewZincWidget::draw()
     OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
 
     //read files
-    region.readFile(qPrintable(mMainFileName));
+    region.readFile(mMainFileName.toUtf8().constData());
 
     if (mAuxFileName!="") {
-        region.readFile(qPrintable(mAuxFileName));
+        region.readFile(mAuxFileName.toUtf8().constData());
     }
 
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
     OpenCMISS::Zinc::Scene scene = region.getScene();
 
+    QString nameCooredinates = "Coordinates";
+
+    QFile file(mMainFileName);
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if (line.startsWith(" 1) ")) {
+                line = line.split(",").first();
+                line.remove(0,4);
+                nameCooredinates= line;
+                break;
+            }
+        }
+    }
 
     fieldModule.beginChange();
-        OpenCMISS::Zinc::Field coordinates = fieldModule.findFieldByName("Coordinates");
+        OpenCMISS::Zinc::Field coordinates = fieldModule.findFieldByName(qPrintable(nameCooredinates));
 
         mMappedSelectionGroup = fieldModule.createFieldGroup();
         mMappedSelectionGroup.setName("Mapped");
