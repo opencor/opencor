@@ -120,6 +120,9 @@ private:
     QAction *mSaveMapping;
     QAction *mOpenMeshFile;
 
+    QFrame *mTopSeparator;
+    QFrame *mBottomSeparator;
+
     QwtWheel *mDelayWidget;
 
     Core::ToolBarWidget *mToolBarWidget;

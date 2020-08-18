@@ -133,11 +133,14 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mToolBarWidget->addAction(mClearNode);
         mToolBarWidget->addWidget(mDelayWidget);
 
+    mTopSeparator = Core::newLineWidget(this);
+
     layout->addWidget(mToolBarWidget);
+    layout->addWidget(mTopSeparator);
 
-        //create horizontal splitterwidget
+    //create horizontal splitterwidget
 
-        mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
+    mHorizontalSplitterWidget = new Core::SplitterWidget(Qt::Horizontal, this);
 
         connect(mHorizontalSplitterWidget, &Core::SplitterWidget::splitterMoved,
                 this, &CellMLZincMappingViewEditingWidget::emitHorizontalSplitterMoved);
@@ -213,7 +216,10 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         //fill vertical Splitter
 
+        mBottomSeparator = Core::newLineWidget(this);
+
         mVerticalSplitterWidget->addWidget(mHorizontalSplitterWidget);
+        mVerticalSplitterWidget->addWidget(mBottomSeparator);
         mVerticalSplitterWidget->addWidget(labelWidget);
 
     layout->addWidget(mVerticalSplitterWidget);
