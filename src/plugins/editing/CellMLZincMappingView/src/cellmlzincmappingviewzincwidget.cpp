@@ -62,8 +62,10 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
     ZincWidget::ZincWidget(pParent),
     mMainFileName(pMainFileName),
     mEditingWidget(pEditingWidget),
-    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin))
+    mNodeSize(pow(nodeSixeExp,nodeSizeOrigin)),
+    mLookAtPositionOriginal()
 {
+
     // Allow for things to be dropped on us
 
     setAcceptDrops(true);
@@ -122,6 +124,8 @@ void CellMLZincMappingViewZincWidget::initializeGL()
 
     //OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
     //mSceneViewer.setScene(region.getScene());
+
+    sceneViewer().getLookatPosition(mLookAtPositionOriginal);
 }
 
 //==============================================================================
@@ -283,6 +287,8 @@ void CellMLZincMappingViewZincWidget::draw()
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
     OpenCMISS::Zinc::Scene scene = region.getScene();
 
+    mCoordinatesName ="";
+
     fieldModule.beginChange();
         OpenCMISS::Zinc::Fielditerator fielditer = fieldModule.createFielditerator();
         OpenCMISS::Zinc::Field field = fielditer.next();
@@ -291,6 +297,7 @@ void CellMLZincMappingViewZincWidget::draw()
             if (field.isTypeCoordinate() && (field.getValueType() == OpenCMISS::Zinc::Field::VALUE_TYPE_REAL)
                     && (field.getNumberOfComponents() <= 3) && field.castFiniteElement().isValid()) {
                 coordinates = field.castFiniteElement();
+                mCoordinatesName=field.getName();
                 break;
             }
             field = fielditer.next();
@@ -349,6 +356,8 @@ void CellMLZincMappingViewZincWidget::draw()
     // adding view all command
 
     sceneViewer().viewAll();
+    sceneViewer().getLookatPosition(mLookAtPositionOriginal);
+
 }
 
 //==============================================================================
@@ -376,6 +385,19 @@ void CellMLZincMappingViewZincWidget::click(int pX, int pY, bool pCanDiscard)
         OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
         OpenCMISS::Zinc::Scene scene = region.getScene();
 
+        if (pCanDiscard) {
+            if (buff==-1) {
+                sceneViewer().setLookatPosition(mLookAtPositionOriginal);
+            } else {
+                double focusPoint[] = {0,0,0};
+                OpenCMISS::Zinc::Field field = fieldModule.findFieldByName(qPrintable(mCoordinatesName));
+                OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+                fieldCache.setNode(node);
+
+                field.evaluateReal(fieldCache,3,focusPoint);
+                sceneViewer().setLookatPosition(focusPoint);
+            }
+        }
 
         fieldModule.beginChange();
 

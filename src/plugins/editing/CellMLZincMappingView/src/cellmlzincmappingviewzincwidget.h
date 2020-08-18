@@ -87,6 +87,7 @@ private:
 
     QString mMainFileName;
     QString mAuxFileName;
+    QString mCoordinatesName;
 
     CellMLZincMappingViewEditingWidget *mEditingWidget;
 
@@ -97,6 +98,7 @@ private:
     //static constexpr double nodeSixeDiff = 1;
 
     char *mZincSceneViewerDescription;
+    double mLookAtPositionOriginal[3];
 
     //size of the square drawn around the mouse for selections
     //TODO improve this, should depend on the number of pixel at screen
