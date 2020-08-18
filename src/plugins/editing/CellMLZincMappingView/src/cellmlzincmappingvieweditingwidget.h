@@ -101,6 +101,8 @@ public:
 
     bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
 
+    void setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical);
+
 protected:
     void dragEnterEvent(QDragEnterEvent *pEvent) override;
     void dragMoveEvent(QDragMoveEvent *pEvent) override;

@@ -45,6 +45,19 @@ CellMLZincMappingViewWidget::CellMLZincMappingViewWidget(QWidget *pParent) :
     //TODO
     mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/trilinearCube.exfile";
 
+    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
+    static const int AvailableGeometryHeight = AvailableGeometry.height();
+    static const int AvailableGeometryWidth = AvailableGeometry.width();
+
+    static const QVariantList DefaultEditingWidgetHorizontalSizes = { 0.20*AvailableGeometryWidth,
+                                                               0.80*AvailableGeometryWidth };
+    static const QVariantList DefaultEditingWidgetVerticalSizes = { 0.87*AvailableGeometryHeight,
+                                                               0.1*AvailableGeometryHeight,
+                                                               0.12*AvailableGeometryHeight};
+
+    mEditingWidgetHorizontalSizes = qVariantListToIntList(DefaultEditingWidgetHorizontalSizes);
+    mEditingWidgetVerticalSizes = qVariantListToIntList(DefaultEditingWidgetVerticalSizes);
+
 }
 
 //==============================================================================
@@ -79,6 +92,8 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
         mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileName,this, this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
+
+        mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,mEditingWidgetVerticalSizes);
     }
 
     // Set our focus proxy to our 'new' simulation widget and make sure that the

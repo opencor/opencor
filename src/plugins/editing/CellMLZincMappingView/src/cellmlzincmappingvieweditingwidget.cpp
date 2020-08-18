@@ -281,6 +281,14 @@ Q_UNUSED(pShowWarning)
 
 //==============================================================================
 
+void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical)
+{
+    mHorizontalSplitterWidget->setSizes(pSizesHorizontal);
+    mVerticalSplitterWidget->setSizes(pSizesVertical);
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if it refers to one or

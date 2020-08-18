@@ -63,7 +63,7 @@ public:
 
     void changeSource(const QString &pMainFileName);
 
-    static constexpr double nodeSizeOrigin = 31;
+    static constexpr double nodeSizeOrigin = -6;
     static constexpr double nodeSixeExp = 1.1;    
 
 public slots:

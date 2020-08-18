@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include "corecliutils.h"
 #include "cellmlzincmappingvieweditingwidget.h"
 #include "viewwidget.h"
 
@@ -75,6 +76,9 @@ public:
     void setDefaultMeshFile(const QString &pFileName);
 
 private:
+
+    QIntList mEditingWidgetHorizontalSizes;
+    QIntList mEditingWidgetVerticalSizes;
 
     CellMLZincMappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
