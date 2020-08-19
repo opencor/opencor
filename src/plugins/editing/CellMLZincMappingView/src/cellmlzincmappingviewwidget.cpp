@@ -94,10 +94,10 @@ void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
 
 void CellMLZincMappingViewWidget::saveSettings(QSettings &pSettings) const
 {
-    pSettings.value(SettingsEditingHoriontalSizes, qIntListToVariantList(mEditingWidgetHorizontalSizes));
-    pSettings.value(SettingsEditingVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
+    pSettings.setValue(SettingsEditingHoriontalSizes, qIntListToVariantList(mEditingWidgetHorizontalSizes));
+    pSettings.setValue(SettingsEditingVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
 
-    pSettings.value(SettingsMeshFile,mMeshFileName);
+    pSettings.setValue(SettingsMeshFile,mMeshFileName);
 }
 
 //==============================================================================
