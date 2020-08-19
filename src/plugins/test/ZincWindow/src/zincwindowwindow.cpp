@@ -367,7 +367,6 @@ void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 
 void ZincWindowWindow::showHideGraphics(GraphicsType pGraphicsType)
 {
-Q_UNUSED(pGraphicsType)
     // Show/hide graphics on the scene of our default region
 
     OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
