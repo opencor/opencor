@@ -59,6 +59,9 @@ public:
 
     void retranslateUi() override;
 
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
+
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
@@ -76,7 +79,6 @@ public:
     void setDefaultMeshFile(const QString &pFileName);
 
 private:
-
     QIntList mEditingWidgetHorizontalSizes;
     QIntList mEditingWidgetVerticalSizes;
 
@@ -84,6 +86,10 @@ private:
     QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
 
     QString mMeshFileName;
+
+private slots:
+    void EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes);
+    void EditingWidgetVerticalSplitterMoved(const QIntList &pSizes);
 };
 
 //==============================================================================

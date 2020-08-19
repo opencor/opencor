@@ -103,6 +103,10 @@ public:
 
     void setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical);
 
+signals:
+    void horizontalSplitterMoved(const QIntList &pSizes);
+    void verticalSplitterMoved(const QIntList &pSizes);
+
 protected:
     void dragEnterEvent(QDragEnterEvent *pEvent) override;
     void dragMoveEvent(QDragMoveEvent *pEvent) override;
@@ -151,10 +155,6 @@ private:
                      const QStringList &pFileFilters);
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
-
-signals:
-    void horizontalSplitterMoved(const QIntList &pSizes);
-    void verticalSplitterMoved(const QIntList &pSizes);
 
 private slots:
     void emitHorizontalSplitterMoved();

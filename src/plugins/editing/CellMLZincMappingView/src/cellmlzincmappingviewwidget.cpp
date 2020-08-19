@@ -41,23 +41,6 @@ namespace CellMLZincMappingView {
 CellMLZincMappingViewWidget::CellMLZincMappingViewWidget(QWidget *pParent) :
     Core::ViewWidget(pParent)
 {
-
-    //TODO
-    mMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/trilinearCube.exfile";
-
-    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
-    static const int AvailableGeometryHeight = AvailableGeometry.height();
-    static const int AvailableGeometryWidth = AvailableGeometry.width();
-
-    static const QVariantList DefaultEditingWidgetHorizontalSizes = { 0.20*AvailableGeometryWidth,
-                                                               0.80*AvailableGeometryWidth };
-    static const QVariantList DefaultEditingWidgetVerticalSizes = { 0.87*AvailableGeometryHeight,
-                                                               0.1*AvailableGeometryHeight,
-                                                               0.12*AvailableGeometryHeight};
-
-    mEditingWidgetHorizontalSizes = qVariantListToIntList(DefaultEditingWidgetHorizontalSizes);
-    mEditingWidgetVerticalSizes = qVariantListToIntList(DefaultEditingWidgetVerticalSizes);
-
 }
 
 //==============================================================================
@@ -80,6 +63,45 @@ void CellMLZincMappingViewWidget::retranslateUi()
 
 //==============================================================================
 
+static const char *SettingsEditingHoriontalSizes  = "EditingHoriontalSizes";
+static const char *SettingsEditingVerticalSizes   = "EditingVerticalSizes";
+static const char *SettingsMeshFile               = "MeshFile";
+
+
+//==============================================================================
+
+void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
+{
+    static const QString DefaultMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/trilinearCube.exfile";
+
+    static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
+    static const int AvailableGeometryHeight = AvailableGeometry.height();
+    static const int AvailableGeometryWidth = AvailableGeometry.width();
+
+    static const QVariantList DefaultEditingWidgetHorizontalSizes = { 0.20*AvailableGeometryWidth,
+                                                               0.80*AvailableGeometryWidth };
+    static const QVariantList DefaultEditingWidgetVerticalSizes = { 0.87*AvailableGeometryHeight,
+                                                               0.1*AvailableGeometryHeight,
+                                                               0.12*AvailableGeometryHeight};
+
+    mEditingWidgetHorizontalSizes = qVariantListToIntList(pSettings.value(SettingsEditingHoriontalSizes, DefaultEditingWidgetHorizontalSizes).toList());
+    mEditingWidgetVerticalSizes = qVariantListToIntList(pSettings.value(SettingsEditingVerticalSizes, DefaultEditingWidgetVerticalSizes).toList());
+
+    mMeshFileName = pSettings.value(SettingsMeshFile,DefaultMeshFileName).toString();
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewWidget::saveSettings(QSettings &pSettings) const
+{
+    pSettings.value(SettingsEditingHoriontalSizes, qIntListToVariantList(mEditingWidgetHorizontalSizes));
+    pSettings.value(SettingsEditingVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
+
+    pSettings.value(SettingsMeshFile,mMeshFileName);
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editing widget associated with the given file, if any
@@ -93,8 +115,16 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
 
-        mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,mEditingWidgetVerticalSizes);
+        //TODO mEditingWidget-> initialize ?
+
+        connect(mEditingWidget,&CellMLZincMappingViewEditingWidget::horizontalSplitterMoved,
+                this, &CellMLZincMappingViewWidget::EditingWidgetHorizontalSplitterMoved);
+
+        connect(mEditingWidget,&CellMLZincMappingViewEditingWidget::verticalSplitterMoved,
+                this, &CellMLZincMappingViewWidget::EditingWidgetVerticalSplitterMoved);
     }
+
+    mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,mEditingWidgetVerticalSizes);
 
     // Set our focus proxy to our 'new' simulation widget and make sure that the
     // latter immediately gets the focus
@@ -112,7 +142,7 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget != nullptr) {
+    if (editingWidget!=nullptr) {
         // There is an editing widget for the given file name, so delete it and
         // remove it from our list
 
@@ -122,7 +152,7 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 
         // Reset our memory of the current editor, if needed
 
-        if (editingWidget == mEditingWidget) {
+        if (editingWidget==mEditingWidget) {
             mEditingWidget = nullptr;
         }
     }
@@ -155,7 +185,7 @@ void CellMLZincMappingViewWidget::filePermissionsChanged(const QString &pFileNam
 
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget != nullptr) {
+    if (editingWidget!=nullptr) {
         editingWidget->filePermissionsChanged();
     }
 }
@@ -176,6 +206,7 @@ void CellMLZincMappingViewWidget::fileReloaded(const QString &pFileName)
     if (mEditingWidgets.contains(pFileName)) {
         finalize(pFileName);
         initialize(pFileName);
+        mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,mEditingWidgetVerticalSizes);
     }
 }
 
@@ -187,7 +218,7 @@ void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const
 
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget != nullptr) {
+    if (editingWidget!=nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
@@ -200,6 +231,16 @@ void CellMLZincMappingViewWidget::setDefaultMeshFile(const QString &pFileName)
       mMeshFileName = pFileName;
 }
 
+
+void CellMLZincMappingViewWidget::EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes)
+{
+    mEditingWidgetHorizontalSizes = pSizes;
+}
+
+void CellMLZincMappingViewWidget::EditingWidgetVerticalSplitterMoved(const QIntList &pSizes)
+{
+    mEditingWidgetVerticalSizes = pSizes;
+}
 
 //==============================================================================
 

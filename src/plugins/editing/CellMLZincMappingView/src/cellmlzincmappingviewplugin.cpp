@@ -226,18 +226,22 @@ void CellMLZincMappingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugi
 
 void CellMLZincMappingViewPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings)
+    // Retrieve our Simulation Experiment view settings
 
-    // We don't handle this interface...
+    pSettings.beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void CellMLZincMappingViewPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings)
+    // Keep track of our Simulation Experiment view settings
 
-    // We don't handle this interface...
+    pSettings.beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }
 
 //==============================================================================
