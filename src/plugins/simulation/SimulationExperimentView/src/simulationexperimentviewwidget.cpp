@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "collapsiblewidget.h"
 #include "filemanager.h"
-#include "pendulumwindowwindow.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
@@ -531,34 +530,10 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         return;
     }
 
-    // Some basic checks to see whether we are dealing with our pendulum model
-    // (be it its CellML or SED-ML version)
-
-    static const QString MainQ1    = "main.q1";
-    static const QString MainTheta = "main.theta";
-    static const QString MainR0    = "main.r0";
-
-
-    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
-    CellMLSupport::CellmlFileRuntimeParameter *q1Parameter = nullptr;
-    CellMLSupport::CellmlFileRuntimeParameter *thetaParameter = nullptr;
-    CellMLSupport::CellmlFileRuntimeParameter *r0Parameter = nullptr;
-
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, simulation->runtime()->parameters()) {
-        QString parameterFullyFormattedName = parameter->fullyFormattedName();
-
-        if (parameterFullyFormattedName == MainQ1) {
-            q1Parameter = parameter;
-        } else if (parameterFullyFormattedName == MainTheta) {
-            thetaParameter = parameter;
-        } else if (parameterFullyFormattedName == MainR0) {
-            r0Parameter = parameter;
-        }
-    }
-
     // Make sure that our previous run, if any, is complete, if we are coming
     // here as a result of having added a new run
 
+    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     int simulationRunsCount = simulation->runsCount();
 
     if (   (pTask == SimulationExperimentViewSimulationWidget::Task::AddRun)
@@ -591,23 +566,6 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                                                              simulationResultsSize,
                                                              simulationRunsCount-1,
                                                              pTask);
-        }
-
-        if (   (q1Parameter != nullptr) && (thetaParameter != nullptr) && (r0Parameter != nullptr)
-            && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
-            && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
-            && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)) {
-            if (pTask != SimulationExperimentViewSimulationWidget::Task::None) {
-                mPlugin->pendulumWindowWindow()->initData(simulation->size(),
-                                                          simulation->data()->startingPoint(),
-                                                          simulation->data()->endingPoint(),
-                                                          simulation->data()->pointInterval(),
-                                                          simulation->results()->constants(r0Parameter->index()),
-                                                          simulation->results()->states(q1Parameter->index()),
-                                                          simulation->results()->states(thetaParameter->index()));
-            } else {
-                mPlugin->pendulumWindowWindow()->addData(int(simulationResultsSize));
-            }
         }
     }
 

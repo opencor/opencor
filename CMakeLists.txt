@@ -931,7 +931,6 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             organisation/PMRWindow
             organisation/PMRWorkspacesWindow
 
-            simulation/PendulumWindow
             simulation/SimulationExperimentView
 
             solver/CVODESolver
@@ -1616,8 +1615,6 @@ endforeach()
 set(MODEL_FILES
     hodgkin_huxley_squid_axon_model_1952.cellml
     noble_model_1962.cellml
-    pendulum.cellml
-    pendulum.sedml
     van_der_pol_model_1928.cellml
 )
 

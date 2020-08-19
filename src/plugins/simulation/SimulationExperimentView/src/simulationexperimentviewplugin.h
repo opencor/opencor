@@ -36,15 +36,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace PendulumWindow {
-    class PendulumWindowWindow;
-}   // namespace PendulumWindow
-
-//==============================================================================
-
 namespace SimulationExperimentView {
 
 //==============================================================================
@@ -87,12 +78,9 @@ public:
     static SimulationExperimentViewPlugin * instance();
 
     SimulationExperimentViewWidget * viewWidget() const;
-    PendulumWindow::PendulumWindowWindow * pendulumWindowWindow() const;
 
 private:
     SimulationExperimentViewWidget *mViewWidget = nullptr;
-
-    PendulumWindow::PendulumWindowWindow *mPendulumWindowWindow = nullptr;
 };
 
 //==============================================================================

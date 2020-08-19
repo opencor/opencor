@@ -33,7 +33,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QCoreApplication>
 #include <QDir>
-#include <QRegularExpression>
 
 //==============================================================================
 
@@ -163,31 +162,6 @@ PluginManager::PluginManager(bool pGuiMode) :
         pluginFileNames << fileNames;
 
         pluginFileNames.removeDuplicates();
-    }
-
-    // Make sure that our Pendulum window is loaded after our Help and Web
-    // Browser windows
-    // Note: indeed, because it is needed by our Simulation Experiment view, it
-    //       eventually happens that it gets loaded before those two other
-    //       windows. Yet, we want it to load after so that it ends up in the
-    //       bottom right of OpenCOR. Normally, we would use those two windows'
-    //       plugin's loadBefore() method to have them to load before our
-    //       Pendulum window, but this can't be done since our Simulation
-    //       Experiment view depends on it...
-
-    static const QRegularExpression PendulumWindowPluginRegEx = QRegularExpression(".*PendulumWindow.*");
-    static const QRegularExpression SimulationExperimentViewPluginRegEx = QRegularExpression(".*SimulationExperiment.*");
-
-    int pendulumWindowPluginIndex = pluginFileNames.indexOf(PendulumWindowPluginRegEx);
-
-    if (pendulumWindowPluginIndex != -1) {
-        pluginFileNames.move(pendulumWindowPluginIndex, pluginFileNames.count()-1);
-    }
-
-    int simulationExperimentViewPluginIndex = pluginFileNames.indexOf(SimulationExperimentViewPluginRegEx);
-
-    if (simulationExperimentViewPluginIndex != -1) {
-        pluginFileNames.move(simulationExperimentViewPluginIndex, pluginFileNames.count()-1);
     }
 
     // Deal with all the plugins we need and want

@@ -26,7 +26,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
 #include "filemanager.h"
-#include "pendulumwindowwindow.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
@@ -35,7 +34,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewpythonwrapper.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
-#include "windowinterface.h"
 
 //==============================================================================
 
@@ -57,7 +55,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Category::Simulation, true, false,
-                          { "GraphPanelWidget", "PendulumWindow", "PythonQtSupport", "SimulationSupport" },
+                          { "GraphPanelWidget", "PythonQtSupport", "SimulationSupport" },
                           descriptions);
 }
 
@@ -223,16 +221,6 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
                     cellmlSimulationViewPlugins << plugin;
                 }
             }
-        }
-
-        // Look for our pendulum window
-
-        static const QString PendulumWindow = "PendulumWindow";
-
-        WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
-
-        if ((windowInterface != nullptr) && (plugin->name() == PendulumWindow)) {
-            mPendulumWindowWindow = static_cast<PendulumWindow::PendulumWindowWindow *>(windowInterface->windowWidget());
         }
     }
 
@@ -448,15 +436,6 @@ SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() co
     // Return our view widget
 
     return mViewWidget;
-}
-
-//==============================================================================
-
-PendulumWindow::PendulumWindowWindow * SimulationExperimentViewPlugin::pendulumWindowWindow() const
-{
-    // Return our pendulum window
-
-    return mPendulumWindowWindow;
 }
 
 //==============================================================================

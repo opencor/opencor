@@ -31,7 +31,6 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewpreferenceswidget.ui
     PLUGINS
         GraphPanelWidget
-        PendulumWindow
         PythonQtSupport
         SimulationSupport
 )
