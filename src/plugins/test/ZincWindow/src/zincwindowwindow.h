@@ -31,21 +31,20 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "zincbegin.h"
     #include "opencmiss/zinc/context.hpp"
+    #include "opencmiss/zinc/field.hpp"
+    #include "opencmiss/zinc/fieldvectoroperators.hpp"
+    #include "opencmiss/zinc/graphics.hpp"
 #include "zincend.h"
+
+//==============================================================================
+
+class QMenu;
 
 //==============================================================================
 
 namespace Ui {
     class ZincWindowWindow;
 } // namespace Ui
-
-//==============================================================================
-
-namespace OpenCMISS {
-namespace Zinc {
-    class Context;
-} // namespace Zinc
-} // namespace OpenCMISS
 
 //==============================================================================
 
@@ -73,7 +72,21 @@ public:
 
     void retranslateUi() override;
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
+
 private:
+    enum class GraphicsType {
+        All,
+        Axes,
+        Points,
+        Lines,
+        Surfaces,
+        Isosurfaces
+    };
+
     Ui::ZincWindowWindow *mGui;
 
     bool mShuttingDown = false;
@@ -83,14 +96,36 @@ private:
 
     char *mZincSceneViewerDescription = nullptr;
 
+    OpenCMISS::Zinc::Field mCoordinates;
+    OpenCMISS::Zinc::FieldMagnitude mMagnitude;
+    OpenCMISS::Zinc::Graphicspointattributes mAxesAttributes;
+    OpenCMISS::Zinc::Graphicspointattributes mPointsAttributes;
+    OpenCMISS::Zinc::GraphicsLines mLines;
+    OpenCMISS::Zinc::GraphicsSurfaces mSurfaces;
+    OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
+
+    QStringList mZincMeshFileNames;
+    bool mDroppedZincMeshFiles = false;
+
     int mAxesFontPointSize = 0;
 
-    QString mExFile;
+    QString mTrilinearCubeMeshFileName;
+
+    void showHideGraphics(GraphicsType pGraphicsType);
+
+    void loadZincMeshFiles(const QStringList &pZincMeshFiles);
 
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(int pDevicePixelRatio);
+
+    void actionAxesTriggered();
+    void actionPointsTriggered();
+    void actionLinesTriggered();
+    void actionSurfacesTriggered();
+    void actionIsosurfacesTriggered();
+    void actionTrilinearCubeTriggered();
 };
 
 //==============================================================================

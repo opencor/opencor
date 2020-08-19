@@ -32,6 +32,102 @@
     </property>
    </layout>
   </widget>
+  <action name="actionAxes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Axes</string>
+   </property>
+   <property name="toolTip">
+    <string>Axes</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide axes</string>
+   </property>
+  </action>
+  <action name="actionPoints">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Points</string>
+   </property>
+   <property name="toolTip">
+    <string>Points</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide points</string>
+   </property>
+  </action>
+  <action name="actionLines">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Lines</string>
+   </property>
+   <property name="toolTip">
+    <string>Lines</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide lines</string>
+   </property>
+  </action>
+  <action name="actionSurfaces">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Surfaces</string>
+   </property>
+   <property name="toolTip">
+    <string>Surfaces</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide surfaces</string>
+   </property>
+  </action>
+  <action name="actionIsosurfaces">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Isosurfaces</string>
+   </property>
+   <property name="toolTip">
+    <string>Isosurfaces</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide isosurfaces</string>
+   </property>
+  </action>
+  <action name="actionTrilinearCube">
+   <property name="text">
+    <string>Trilinear Cube</string>
+   </property>
+   <property name="iconText">
+    <string>Trilinear Cube</string>
+   </property>
+   <property name="toolTip">
+    <string>Trilinear Cube</string>
+   </property>
+   <property name="statusTip">
+    <string>Load the trilinear cube mesh</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
