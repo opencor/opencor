@@ -25,9 +25,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QMenu>
 #include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QTimer>
+
+//==============================================================================
+
+#include <array>
 
 //==============================================================================
 
@@ -69,12 +74,24 @@ ZincWidget::ZincWidget(QWidget *pParent) :
 
 //==============================================================================
 
-ZincWidget::~ZincWidget()
+void ZincWidget::reset()
 {
-    // Prevent our scene viewer from being recreated (by setContext()) when
-    // we are being destroyed
+    // Stop forwarding the fact that our context is going to be destroyed
 
-    mGraphicsInitialized = false;
+    disconnect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed,
+               this, &ZincWidget::contextAboutToBeDestroyed);
+
+    // Reset ourselves by (re)creating our OpenGL context
+
+    QOpenGLWidget::context()->create();
+
+    // Let people know that our old OpenCOR context is to be (was) detroyed
+
+    emit contextAboutToBeDestroyed();
+
+    // (Re)initialise OpenGL
+
+    QTimer::singleShot(0, this, &ZincWidget::initializeGL);
 }
 
 //==============================================================================
@@ -94,9 +111,25 @@ void ZincWidget::setContext(const OpenCMISS::Zinc::Context &pContext)
 
     mContext = pContext;
 
-    if (mGraphicsInitialized) {
-        createSceneViewer();
-    }
+    createSceneViewer();
+}
+
+//==============================================================================
+
+QMenu * ZincWidget::contextMenu() const
+{
+    // Return our context menu
+
+    return mContextMenu;
+}
+
+//==============================================================================
+
+void ZincWidget::setContextMenu(QMenu *pContextMenu)
+{
+    // Set our context menu
+
+    mContextMenu = pContextMenu;
 }
 
 //==============================================================================
@@ -269,12 +302,23 @@ void ZincWidget::createSceneViewer()
     mSceneViewer.setScene(mContext.getDefaultRegion().getScene());
     mSceneViewer.setScenefilter(mContext.getScenefiltermodule().getDefaultScenefilter());
 
+    // Use a white background by default
+
+    std::array<double, 4> backgroundColor = { 1.0, 1.0, 1.0, 1.0 };
+
+    mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
+
     // Get ourselves a scene viewer notifier and set its callback to our
     // callback class
 
     mSceneViewerNotifier = mSceneViewer.createSceneviewernotifier();
 
     mSceneViewerNotifier.setCallback(mZincWidgetSceneViewerCallback);
+
+    // Reset our device pixel ratio, so that it gets properly set when switching
+    // from normal DPI to high DPI (on macOS for instance)
+
+    mDevicePixelRatio = -1;
 
     // We are all set, so view all of our scene viewer
 
@@ -320,13 +364,7 @@ void ZincWidget::initializeGL()
     connect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed,
             this, &ZincWidget::contextAboutToBeDestroyed);
 
-    // Create our scene viewer if we have a context
-
-    mGraphicsInitialized = true;
-
-    if (mContext.isValid()) {
-        createSceneViewer();
-    }
+    // Let people know that our graphics is initialised
 
     emit graphicsInitialized();
 }
@@ -420,6 +458,10 @@ void ZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
     }
 
     mSceneViewer.processSceneviewerinput(sceneInput);
+
+    // The mouse has moved, so we definitely won't need to show our context menu
+
+    mNeedContextMenu = false;
 }
 
 //==============================================================================
@@ -436,6 +478,10 @@ void ZincWidget::mousePressEvent(QMouseEvent *pEvent)
     sceneInput.setPosition(pEvent->x(), pEvent->y());
 
     mSceneViewer.processSceneviewerinput(sceneInput);
+
+    // Check whether we might need to show our context menu
+
+    mNeedContextMenu = pEvent->button() == Qt::RightButton;
 }
 
 //==============================================================================
@@ -451,6 +497,12 @@ void ZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     sceneInput.setPosition(pEvent->x(), pEvent->y());
 
     mSceneViewer.processSceneviewerinput(sceneInput);
+
+    // Show our context menu, if still needed and possible
+
+    if (mNeedContextMenu && (mContextMenu != nullptr)) {
+        mContextMenu->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================

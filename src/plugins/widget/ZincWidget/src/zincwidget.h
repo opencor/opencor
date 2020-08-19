@@ -41,6 +41,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCMISS {
 namespace Zinc {
     class Context;
@@ -84,10 +88,14 @@ public:
     };
 
     explicit ZincWidget(QWidget *pParent);
-    ~ZincWidget() override;
+
+    void reset();
 
     OpenCMISS::Zinc::Context context() const;
     void setContext(const OpenCMISS::Zinc::Context &pContext);
+
+    QMenu * contextMenu() const;
+    void setContextMenu(QMenu *pContextMenu);
 
     OpenCMISS::Zinc::Sceneviewer sceneViewer() const;
 
@@ -123,8 +131,6 @@ protected:
     QSize sizeHint() const override;
 
 private:
-    bool mGraphicsInitialized = false;
-
     int mDevicePixelRatio = -1;
 
     OpenCMISS::Zinc::Context mContext;
@@ -132,6 +138,9 @@ private:
     OpenCMISS::Zinc::Sceneviewernotifier mSceneViewerNotifier;
 
     ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;
+
+    bool mNeedContextMenu = false;
+    QMenu *mContextMenu = nullptr;
 
     void createSceneViewer();
 
