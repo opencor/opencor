@@ -96,13 +96,13 @@ void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
     mMainFileName = pMainFileName;
     initAuxFile();
 
-    OpenCMISS::Zinc::Region region = mZincContext.createRegion();
-    mZincContext.setDefaultRegion(region);
+    //TODO the emit launched by reset make opencor crashing
+    //reset();
+
+    setup();
 
     setupRegion();
 
-    //mSceneViewer.setScene(region.getScene());
-    //draw();
     initializeGL();
     draw();
 }
