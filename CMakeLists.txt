@@ -53,6 +53,7 @@ option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of the PythonQt 
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
+option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 option(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
 
 if(ENABLE_TEST_PLUGINS)
@@ -915,6 +916,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             editing/RawSEDMLView
             editing/RawTextView
             editing/SEDMLEditingView
+            editing/CellMLZincMappingView
 
             miscellaneous/Compiler
             miscellaneous/Core
@@ -959,6 +961,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             thirdParty/QScintilla
             thirdParty/Qwt
             thirdParty/SUNDIALS
+            thirdParty/Zinc
 
             tools/CellMLTools
 
@@ -967,6 +970,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             widget/MathMLViewerWidget
             widget/QScintillaWidget
             widget/WebViewerWidget
+            widget/ZincWidget
         )
 
         # Build our sample plugins, if required
@@ -989,10 +993,6 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         if(ENABLE_TEST_PLUGINS)
             list(APPEND PLUGINS
                 test/ZincWindow
-
-                thirdParty/Zinc
-
-                widget/ZincWidget
             )
 
             # Let OpenCOR know about the test plugins being enabled
