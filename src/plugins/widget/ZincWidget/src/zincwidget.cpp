@@ -286,6 +286,15 @@ void ZincWidget::viewAll()
 
 //==============================================================================
 
+double ZincWidget::fps() const
+{
+    // Return our FPS
+
+    return mFps;
+}
+
+//==============================================================================
+
 void ZincWidget::createSceneViewer()
 {
     // Create our scene viewer and have it have the same OpenGL properties as
@@ -359,6 +368,10 @@ void ZincWidget::updateSceneViewerViewerportSize(int pWidth, int pHeight,
 
 void ZincWidget::initializeGL()
 {
+    // Start our FPS clock
+
+    mFpsClock.start();
+
     // Forward the fact that our context is going to be destroyed
 
     connect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed,
@@ -378,6 +391,19 @@ void ZincWidget::paintGL()
     updateSceneViewerViewerportSize(width(), height(), true);
 
     mSceneViewer.renderScene();
+
+    // Update our FPS, if needed
+
+    ++mNbOfFrames;
+
+    int fpsClockElapsed = mFpsClock.elapsed();
+
+    if (fpsClockElapsed >= 1000) {
+        mFps = 1000.0*mNbOfFrames/fpsClockElapsed;
+
+        mNbOfFrames = 0;
+        mFpsClock.start();
+    }
 }
 
 //==============================================================================

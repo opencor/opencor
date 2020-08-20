@@ -31,6 +31,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QOpenGLWidget>
+#include <QTime>
 
 //==============================================================================
 
@@ -118,6 +119,8 @@ public:
 
     void viewAll();
 
+    double fps() const;
+
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -141,6 +144,10 @@ private:
 
     bool mNeedContextMenu = false;
     QMenu *mContextMenu = nullptr;
+
+    QTime mFpsClock;
+    int mNbOfFrames = 0;
+    double mFps = 0.0;
 
     void createSceneViewer();
 
