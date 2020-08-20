@@ -48,6 +48,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "opencmiss/zinc/scenefilter.hpp"
     #include "opencmiss/zinc/field.hpp"
     #include "opencmiss/zinc/graphics.hpp"
+    #include "opencmiss/zinc/streamregion.hpp"
 #include "zincend.h"
 
 //==============================================================================
@@ -57,10 +58,10 @@ namespace CellMLZincMappingView {
 
 //==============================================================================
 
-CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParent, const QStringList &pZincMeshFileNames,
                                              CellMLZincMappingViewEditingWidget *pEditingWidget) :
     ZincWidget::ZincWidget(pParent),
-    mMainFileName(pMainFileName),
+    mZincMeshFileNames(pZincMeshFileNames),
     mEditingWidget(pEditingWidget),
     mNodeSize(pow(nodeSixeExp,nodeSizeOrigin)),
     mLookAtPositionOriginal()
@@ -91,9 +92,9 @@ CellMLZincMappingViewZincWidget::~CellMLZincMappingViewZincWidget()
 
 //==============================================================================
 
-void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
+void CellMLZincMappingViewZincWidget::changeSource(const QStringList &pZincMeshFileNames)
 {
-    mMainFileName = pMainFileName;
+    mZincMeshFileNames = pZincMeshFileNames;
     initAuxFile();
 
     OpenCMISS::Zinc::Region region = mZincContext.createRegion();
@@ -101,8 +102,6 @@ void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
 
     setupRegion();
 
-    //mSceneViewer.setScene(region.getScene());
-    //draw();
     initializeGL();
     draw();
 }
@@ -122,8 +121,8 @@ void CellMLZincMappingViewZincWidget::initializeGL()
 
     sceneViewer().setBackgroundColourRGBA(backgroundColor.data());
 
-    //OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
-    //mSceneViewer.setScene(region.getScene());
+    OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
+    sceneViewer().setScene(region.getScene());
 
     sceneViewer().getLookatPosition(mLookAtPositionOriginal);
 }
@@ -258,15 +257,18 @@ void CellMLZincMappingViewZincWidget::setupRegion()
 
 void CellMLZincMappingViewZincWidget::initAuxFile()
 {
-    mAuxFileName = mMainFileName;
-    mAuxFileName.remove(".exnode");
-    mAuxFileName.append(".exelem");
-
-    QFileInfo check_file;
-    check_file.setFile(mAuxFileName);
-
-    if (!check_file.exists()) {
-        mAuxFileName = "";
+    // for each exnode file, seek for the exelem
+    for (auto file : mZincMeshFileNames) {
+        if (file.endsWith(".exnode")) {
+            QString newFile = file;
+            newFile.remove(".exnode");
+            newFile.append(".exelem");
+            QFileInfo check_file;
+            check_file.setFile(newFile);
+            if (check_file.exists() && !mZincMeshFileNames.contains(newFile)) {
+                mZincMeshFileNames.append(newFile);
+            }
+        }
     }
 }
 
@@ -278,11 +280,15 @@ void CellMLZincMappingViewZincWidget::draw()
     OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
 
     //read files
-    region.readFile(mMainFileName.toUtf8().constData());
+    OpenCMISS::Zinc::StreaminformationRegion sir = region.createStreaminformationRegion();
 
-    if (mAuxFileName!="") {
-        region.readFile(mAuxFileName.toUtf8().constData());
+    if (!mZincMeshFileNames.empty()) {
+        for (const auto &zincMeshFileName : mZincMeshFileNames) {
+            sir.createStreamresourceFile(zincMeshFileName.toUtf8().constData());
+        }
     }
+
+    region.read(sir);
 
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
     OpenCMISS::Zinc::Scene scene = region.getScene();

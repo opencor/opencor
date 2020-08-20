@@ -87,7 +87,7 @@ class CellMLZincMappingViewEditingWidget : public Core::Widget
 
 public:
     explicit CellMLZincMappingViewEditingWidget(const QString &pCellmlFileName,
-                                                const QString &pMeshFileName,
+                                                const QStringList &pMeshFileName,
                                                 QWidget *pParent,
                                                 CellMLZincMappingViewWidget *pViewWidget);
 
@@ -99,7 +99,7 @@ public:
 
     void filePermissionsChanged();
 
-    bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
+    bool setMeshFiles(const QStringList &pFileNames, bool pShowWarning = true);
 
     void setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical);
 
@@ -144,7 +144,7 @@ private:
 
     CellMLZincMappingViewEditingModel *mVariableTreeModel;
 
-    QString mMeshFileName;
+    QStringList mZincMeshFileNames;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 

@@ -76,7 +76,7 @@ public:
 
     //bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
-    void setDefaultMeshFile(const QString &pFileName);
+    void setDefaultMeshFiles(const QStringList &pFileNames);
 
 private:
     QIntList mEditingWidgetHorizontalSizes;
@@ -85,7 +85,7 @@ private:
     CellMLZincMappingViewEditingWidget* mEditingWidget = nullptr;
     QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
 
-    QString mMeshFileName;
+    QStringList mZincMeshFileNames;
 
 private slots:
     void EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes);

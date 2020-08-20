@@ -72,7 +72,7 @@ static const char *SettingsMeshFile               = "MeshFile";
 
 void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
 {
-    static const QString DefaultMeshFileName = "/home/tuareg/Documents/OpenCOR/opencor/meshes/trilinearCube.exfile";
+    static const QStringList DefaultMeshFileNames = {};
 
     static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
     static const int AvailableGeometryHeight = AvailableGeometry.height();
@@ -87,7 +87,7 @@ void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
     mEditingWidgetHorizontalSizes = qVariantListToIntList(pSettings.value(SettingsEditingHoriontalSizes, DefaultEditingWidgetHorizontalSizes).toList());
     mEditingWidgetVerticalSizes = qVariantListToIntList(pSettings.value(SettingsEditingVerticalSizes, DefaultEditingWidgetVerticalSizes).toList());
 
-    mMeshFileName = pSettings.value(SettingsMeshFile,DefaultMeshFileName).toString();
+    mZincMeshFileNames= pSettings.value(SettingsMeshFile,DefaultMeshFileNames).toStringList();
 }
 
 //==============================================================================
@@ -97,7 +97,7 @@ void CellMLZincMappingViewWidget::saveSettings(QSettings &pSettings) const
     pSettings.setValue(SettingsEditingHoriontalSizes, qIntListToVariantList(mEditingWidgetHorizontalSizes));
     pSettings.setValue(SettingsEditingVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
 
-    pSettings.setValue(SettingsMeshFile,mMeshFileName);
+    pSettings.setValue(SettingsMeshFile,mZincMeshFileNames);
 }
 
 //==============================================================================
@@ -111,7 +111,7 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileName,this, this);
+        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mZincMeshFileNames,this, this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
 
@@ -226,9 +226,9 @@ void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const
 
 //==============================================================================
 
-void CellMLZincMappingViewWidget::setDefaultMeshFile(const QString &pFileName)
+void CellMLZincMappingViewWidget::setDefaultMeshFiles(const QStringList &pFileNames)
 {
-      mMeshFileName = pFileName;
+      mZincMeshFileNames = pFileNames;
 }
 
 

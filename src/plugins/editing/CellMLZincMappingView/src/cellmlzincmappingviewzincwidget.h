@@ -56,12 +56,12 @@ class CellMLZincMappingViewZincWidget : public ZincWidget::ZincWidget
     Q_OBJECT
 
 public:
-    explicit CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+    explicit CellMLZincMappingViewZincWidget(QWidget *pParent, const QStringList &pZincMeshFileNames,
                                    CellMLZincMappingViewEditingWidget *pEditingWidget);
 
     ~CellMLZincMappingViewZincWidget() override;
 
-    void changeSource(const QString &pMainFileName);
+    void changeSource(const QStringList &pZincMeshFileNames);
 
     static constexpr double nodeSizeOrigin = -6;
     static constexpr double nodeSixeExp = 1.1;    
@@ -85,8 +85,7 @@ protected:
 
 private:
 
-    QString mMainFileName;
-    QString mAuxFileName;
+    QStringList mZincMeshFileNames;
     QString mCoordinatesName;
 
     CellMLZincMappingViewEditingWidget *mEditingWidget;
