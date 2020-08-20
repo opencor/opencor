@@ -358,6 +358,16 @@ void CellMLZincMappingViewZincWidget::draw()
     sceneViewer().viewAll();
     sceneViewer().getLookatPosition(mLookAtPositionOriginal);
 
+    // Customise the size of our points
+
+    double left, right, bottom, top, nearPlane, farPlane;
+
+    sceneViewer().getViewingVolume(&left, &right, &bottom, &top, &nearPlane, &farPlane);
+
+    //TODO is it the best way to guess ? Maybe min is more accurate
+    double doubleValue = qLn(0.0015*qMax(right-left,qMax(top-bottom,farPlane-nearPlane)))*invLnNodeSizeExp;
+
+    setNodeSizes(doubleValue);
 }
 
 //==============================================================================
