@@ -70,14 +70,6 @@ ZincWidget::ZincWidget(QWidget *pParent) :
     Core::CommonWidget(this),
     mZincWidgetSceneViewerCallback(this)
 {
-    // Create and start a timer to check our device pixel ratio
-
-    mTimer = new QTimer(this);
-
-    connect(mTimer, &QTimer::timeout,
-            this, &ZincWidget::checkDevicePixelRatio);
-
-    mTimer->start(1000);
 }
 
 //==============================================================================
@@ -127,7 +119,7 @@ void ZincWidget::setContext(const OpenCMISS::Zinc::Context &pContext)
 
     mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
 
-    doCheckDevicePixelRatio(true);
+    checkDevicePixelRatio(true);
 
     // Further customise our scene viewer
 
@@ -333,7 +325,7 @@ double ZincWidget::fps() const
 
 //==============================================================================
 
-void ZincWidget::doCheckDevicePixelRatio(bool pForceSettingViewportSize)
+void ZincWidget::checkDevicePixelRatio(bool pForceSettingViewportSize)
 {
     // Check our device pixel ratio
 
@@ -367,15 +359,6 @@ void ZincWidget::doCheckDevicePixelRatio(bool pForceSettingViewportSize)
 
 //==============================================================================
 
-void ZincWidget::checkDevicePixelRatio()
-{
-    // Check our device pixel ratio
-
-    doCheckDevicePixelRatio();
-}
-
-//==============================================================================
-
 void ZincWidget::initializeGL()
 {
     // Start our FPS clock
@@ -396,6 +379,10 @@ void ZincWidget::initializeGL()
 
 void ZincWidget::paintGL()
 {
+    // Make sure that we are using the correct device pixel ratio
+
+    checkDevicePixelRatio();
+
     // Have our scene viewer render its scene
 
     mSceneViewer.renderScene();
@@ -424,7 +411,7 @@ void ZincWidget::resizeGL(int pWidth, int pHeight)
     // Update the viewport size of our scene viewer by forcing our device pixel
     // ratio to be checked
 
-    doCheckDevicePixelRatio(true);
+    checkDevicePixelRatio(true);
 }
 
 //==============================================================================
