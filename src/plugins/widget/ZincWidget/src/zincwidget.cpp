@@ -70,6 +70,14 @@ ZincWidget::ZincWidget(QWidget *pParent) :
     Core::CommonWidget(this),
     mZincWidgetSceneViewerCallback(this)
 {
+    // Create and start a timer to check our device pixel ratio
+
+    mTimer = new QTimer(this);
+
+    connect(mTimer, &QTimer::timeout,
+            this, &ZincWidget::checkDevicePixelRatio);
+
+    mTimer->start(1000);
 }
 
 //==============================================================================
@@ -111,7 +119,37 @@ void ZincWidget::setContext(const OpenCMISS::Zinc::Context &pContext)
 
     mContext = pContext;
 
-    createSceneViewer();
+    // Create our scene viewer and have it have the same OpenGL properties as
+    // QOpenGLWidget
+
+    mSceneViewer = mContext.getSceneviewermodule().createSceneviewer(OpenCMISS::Zinc::Sceneviewer::BUFFERING_MODE_DOUBLE,
+                                                                     OpenCMISS::Zinc::Sceneviewer::STEREO_MODE_DEFAULT);
+
+    mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
+
+    doCheckDevicePixelRatio(true);
+
+    // Further customise our scene viewer
+
+    mSceneViewer.setScene(mContext.getDefaultRegion().getScene());
+    mSceneViewer.setScenefilter(mContext.getScenefiltermodule().getDefaultScenefilter());
+
+    // Use a white background by default
+
+    std::array<double, 4> backgroundColor = { 1.0, 1.0, 1.0, 1.0 };
+
+    mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
+
+    // Get ourselves a scene viewer notifier and set its callback to our
+    // callback class
+
+    mSceneViewerNotifier = mSceneViewer.createSceneviewernotifier();
+
+    mSceneViewerNotifier.setCallback(mZincWidgetSceneViewerCallback);
+
+    // We are all set, so view all of our scene viewer
+
+    mSceneViewer.viewAll();
 }
 
 //==============================================================================
@@ -295,73 +333,46 @@ double ZincWidget::fps() const
 
 //==============================================================================
 
-void ZincWidget::createSceneViewer()
+void ZincWidget::doCheckDevicePixelRatio(bool pForceSettingViewportSize)
 {
-    // Create our scene viewer and have it have the same OpenGL properties as
-    // QOpenGLWidget
+    // Check our device pixel ratio
 
-    mSceneViewer = mContext.getSceneviewermodule().createSceneviewer(OpenCMISS::Zinc::Sceneviewer::BUFFERING_MODE_DOUBLE,
-                                                                     OpenCMISS::Zinc::Sceneviewer::STEREO_MODE_DEFAULT);
+    int newDevicePixelRatio = devicePixelRatio();
+    bool hasNewDevicePixelRatio = newDevicePixelRatio != mDevicePixelRatio;
 
-    mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
-    mSceneViewer.setViewportSize(width(), height());
+    if (pForceSettingViewportSize || hasNewDevicePixelRatio) {
+        // Small hack to force ourselves to resize
 
-    // Further customise our scene viewer
+        int crtWidth = width();
+        int crtHeight = height();
 
-    mSceneViewer.setScene(mContext.getDefaultRegion().getScene());
-    mSceneViewer.setScenefilter(mContext.getScenefiltermodule().getDefaultScenefilter());
+        if (!pForceSettingViewportSize && hasNewDevicePixelRatio) {
+            resize(crtWidth+1, crtHeight+1);
+            resize(crtWidth, crtHeight);
+        }
 
-    // Use a white background by default
+        // Keep track of our new device pixel ratio and update the viewport size
+        // of our scene viewer
 
-    std::array<double, 4> backgroundColor = { 1.0, 1.0, 1.0, 1.0 };
+        mDevicePixelRatio = newDevicePixelRatio;
 
-    mSceneViewer.setBackgroundColourRGBA(backgroundColor.data());
+        mSceneViewer.setViewportSize(newDevicePixelRatio*crtWidth, newDevicePixelRatio*crtHeight);
 
-    // Get ourselves a scene viewer notifier and set its callback to our
-    // callback class
+        // Let people know that our device pixel ratio has changed, if needed
 
-    mSceneViewerNotifier = mSceneViewer.createSceneviewernotifier();
-
-    mSceneViewerNotifier.setCallback(mZincWidgetSceneViewerCallback);
-
-    // Reset our device pixel ratio, so that it gets properly set when switching
-    // from normal DPI to high DPI (on macOS for instance)
-
-    mDevicePixelRatio = -1;
-
-    // We are all set, so view all of our scene viewer
-
-    mSceneViewer.viewAll();
+        if (hasNewDevicePixelRatio) {
+            emit devicePixelRatioChanged(newDevicePixelRatio);
+        }
+    }
 }
 
 //==============================================================================
 
-void ZincWidget::updateSceneViewerViewerportSize(int pWidth, int pHeight,
-                                                 bool pCheckDevicePixelRatio)
+void ZincWidget::checkDevicePixelRatio()
 {
-    // Update the viewport size of our scene viewer, keeping in mind our device
-    // pixel ratio
+    // Check our device pixel ratio
 
-    int newDevicePixelRatio = devicePixelRatio();
-
-    if (pCheckDevicePixelRatio) {
-        if (newDevicePixelRatio == mDevicePixelRatio) {
-            return;
-        }
-
-        // Small hack to force ourselves to resize
-
-        resize(pWidth+1, pHeight+1);
-        resize(pWidth, pHeight);
-
-        // Let people know that our device pixel ratio has changed
-
-        emit devicePixelRatioChanged(newDevicePixelRatio);
-    }
-
-    mDevicePixelRatio = newDevicePixelRatio;
-
-    mSceneViewer.setViewportSize(newDevicePixelRatio*pWidth, newDevicePixelRatio*pHeight);
+    doCheckDevicePixelRatio();
 }
 
 //==============================================================================
@@ -388,8 +399,6 @@ void ZincWidget::paintGL()
 {
     // Have our scene viewer render its scene
 
-    updateSceneViewerViewerportSize(width(), height(), true);
-
     mSceneViewer.renderScene();
 
     // Update our FPS, if needed
@@ -410,9 +419,13 @@ void ZincWidget::paintGL()
 
 void ZincWidget::resizeGL(int pWidth, int pHeight)
 {
-    // Update the viewport size of our scene viewer
+    Q_UNUSED(pWidth)
+    Q_UNUSED(pHeight)
 
-    updateSceneViewerViewerportSize(pWidth, pHeight);
+    // Update the viewport size of our scene viewer by forcing our device pixel
+    // ratio to be checked
+
+    doCheckDevicePixelRatio(true);
 }
 
 //==============================================================================

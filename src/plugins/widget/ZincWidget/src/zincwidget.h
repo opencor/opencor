@@ -43,6 +43,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 class QMenu;
+class QTimer;
 
 //==============================================================================
 
@@ -134,6 +135,8 @@ protected:
     QSize sizeHint() const override;
 
 private:
+    QTimer *mTimer;
+
     int mDevicePixelRatio = -1;
 
     OpenCMISS::Zinc::Context mContext;
@@ -149,18 +152,18 @@ private:
     int mNbOfFrames = 0;
     double mFps = 0.0;
 
-    void createSceneViewer();
-
-    void updateSceneViewerViewerportSize(int pWidth, int pHeight,
-                                         bool pCheckDevicePixelRatio = false);
-
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
+
+    void doCheckDevicePixelRatio(bool pForceSettingViewportSize = false);
 
 signals:
     void contextAboutToBeDestroyed();
     void graphicsInitialized();
     void devicePixelRatioChanged(int pDevicePixelRatio);
+
+private slots:
+    void checkDevicePixelRatio();
 };
 
 //==============================================================================
