@@ -501,15 +501,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
 //==============================================================================
 
-PmrWorkspacesWindowWidget::~PmrWorkspacesWindowWidget()
-{
-    // Delete some internal objects
-
-    delete mTimer;
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::retranslateUi()
 {
     // Retranslate our actions
