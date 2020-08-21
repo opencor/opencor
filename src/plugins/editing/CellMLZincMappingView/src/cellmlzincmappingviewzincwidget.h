@@ -63,6 +63,9 @@ public:
 
     void changeSource(const QStringList &pZincMeshFileNames);
 
+    bool hasNode(int pId);
+    void setNodeMapped(int pId);
+
     static constexpr double nodeSizeOrigin = -6;
     static constexpr double nodeSixeExp = 1.1;    
 

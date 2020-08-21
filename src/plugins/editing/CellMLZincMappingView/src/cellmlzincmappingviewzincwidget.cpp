@@ -108,6 +108,46 @@ void CellMLZincMappingViewZincWidget::changeSource(const QStringList &pZincMeshF
 
 //==============================================================================
 
+bool CellMLZincMappingViewZincWidget::hasNode(int pId)
+{
+    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
+    OpenCMISS::Zinc::Node node = fieldModule
+            .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
+            .findNodeByIdentifier(pId);
+    return node.isValid();
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewZincWidget::setNodeMapped(int pId)
+{
+    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
+    OpenCMISS::Zinc::Node node = fieldModule
+            .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
+            .findNodeByIdentifier(pId);
+
+    fieldModule.beginChange();
+
+        if (node.isValid()){
+            OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
+
+            if (!nodeGroupField.isValid()) {
+                nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
+            }
+            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
+            nodesetGroup.addNode(node);
+
+        } else {
+            if (mMappedSelectionGroup.isValid()) {
+                mZincContext.getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
+            }
+        }
+    fieldModule.endChange();
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewZincWidget::initializeGL()
 {
     ZincWidget::initializeGL();
@@ -195,30 +235,7 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 
     mEditingWidget->setNodeValue(mIdSelectedNode,splitText[1],splitText.first());
 
-    // select and highlight the current node
-
-    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
-    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
-
-    fieldModule.beginChange();
-
-        if (node.isValid()){
-            OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
-
-            if (!nodeGroupField.isValid()) {
-                nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
-            }
-            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
-            nodesetGroup.addNode(node);
-
-        } else {
-            if (mMappedSelectionGroup.isValid()) {
-                mZincContext.getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
-            }
-        }
-    fieldModule.endChange();
-
+    setNodeMapped(mIdSelectedNode);
 }
 
 //==============================================================================

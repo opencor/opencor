@@ -150,6 +150,8 @@ private:
 
     void populateTree();
     void saveMapping(const QString &pFileName);
+    void openMapping(const QString &pFileName);
+
     QString fileName(const QString &pFileName, const QString &pBaseFileName,
                      const QString &pFileExtension, const QString &pCaption,
                      const QStringList &pFileFilters);

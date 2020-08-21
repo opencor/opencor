@@ -311,6 +311,10 @@ void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
         if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
             acceptEvent = true;
         }
+        if (fileName.contains(".json")) {
+            acceptEvent = true;
+        }
+
     }
 
     if (acceptEvent) {
@@ -334,10 +338,12 @@ void CellMLZincMappingViewEditingWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 void CellMLZincMappingViewEditingWidget::dropEvent(QDropEvent *pEvent)
 {
     // Import/open the one or several files
-    QStringList fileList;
+    QStringList meshFileList;
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-            fileList.append(fileName);
+            meshFileList.append(fileName);
+        } else if (fileName.contains(".json")) {
+            openMapping(fileName);
         } else if (mFileTypeInterfaces.contains(fileName)) {
             //import(fileName); //?
             //TODO
@@ -346,7 +352,9 @@ void CellMLZincMappingViewEditingWidget::dropEvent(QDropEvent *pEvent)
         }
     }
 
-    setMeshFiles(fileList);
+    if (!meshFileList.isEmpty()) {
+        setMeshFiles(meshFileList);
+    }
 
     // Accept the proposed action for the event
 
@@ -415,8 +423,6 @@ void CellMLZincMappingViewEditingWidget::populateTree()
 
 void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
-
     //find a filename
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
@@ -432,7 +438,7 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
                                      QStringList());
 
     QJsonObject jsonContent;
-    jsonContent.insert("meshfile",QJsonValue::fromVariant(mZincMeshFileNames));
+    jsonContent.insert("meshfiles",QJsonValue::fromVariant(mZincMeshFileNames));
 
     //Jsonise the map
     QJsonArray jsonMapArray;
@@ -457,6 +463,81 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
     jsonFile.write(doc.toJson());
 }
 
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::openMapping(const QString &pFileName)
+{
+
+    //open the file
+
+    QFile file;
+    file.setFileName(pFileName);
+
+    if (!file.exists()) {
+        return;
+    }
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString val = file.readAll();
+    file.close();
+
+    //take element from json objects
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(val.toUtf8());
+
+    QJsonObject jsonObject = jsonDocument.object();
+    QStringList meshFiles = jsonObject.value("meshfiles").toVariant().toStringList();
+
+    //TODO check if mesh files are good
+
+    //clear the map
+
+    mMapMatch.clear();
+
+    //insert the new mapping points in the current mapping system
+
+    int id;
+    QString component, variable;
+    QMap<QString,QSet<QString>> variables;
+
+    //first collect the variables from the cellml tree o know what exists
+
+    auto treeRoot = mVariableTreeModel->invisibleRootItem();
+    int numberComponents = treeRoot->rowCount();
+    int numberVariables;
+
+    //TODO improvable by creating the Set on the side and linking it to the map after
+    for (int i = 0; i < numberComponents; ++i) {
+        QStandardItem *componentItem = treeRoot->child(i);
+        component = componentItem->text();
+
+        variables.insert(component, QSet<QString>());
+
+        numberVariables = componentItem->rowCount();
+        for (int j = 0; j < numberVariables; ++j) {
+            variables.find(component)->insert(componentItem->child(j)->text());
+        }
+    }
+
+
+    for (auto mapPointJson : jsonObject.value("map").toArray()) {
+        QJsonObject mapPoint = mapPointJson.toObject();
+
+        id = mapPoint.value("node").toInt();
+        component = mapPoint.value("component").toString();
+        variable = mapPoint.value("variable").toString();
+
+        // test if the point is valid
+
+        if (mZincWidget->hasNode(id)
+                && variables.contains(component)
+                && variables.find(component)->contains(variable)) {
+
+            mZincWidget->setNodeMapped(id);
+            setNodeValue(id,component,variable);
+        }
+    }
+}
 
 //==============================================================================
 
@@ -531,6 +612,8 @@ void CellMLZincMappingViewEditingWidget::saveMappingSlot()
 {
     saveMapping({});
 }
+
+//==============================================================================
 
 void CellMLZincMappingViewEditingWidget::loadMeshFile()
 {
