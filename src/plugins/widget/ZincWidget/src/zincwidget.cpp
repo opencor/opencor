@@ -81,11 +81,8 @@ void ZincWidget::reset()
     disconnect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed,
                this, &ZincWidget::contextAboutToBeDestroyed);
 
-    // Reset ourselves by (re)creating our OpenGL context
-
-    QOpenGLWidget::context()->create();
-
-    // Let people know that our old OpenCOR context is to be (was) detroyed
+    // Get people to reset things by letting them know that our OpenGL context
+    // is about to be destroyed
 
     emit contextAboutToBeDestroyed();
 
