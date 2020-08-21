@@ -359,11 +359,22 @@ void ZincWidget::checkDevicePixelRatio(bool pForceSettingViewportSize)
 
 //==============================================================================
 
-void ZincWidget::initializeGL()
+void ZincWidget::resetFps()
 {
-    // Start our FPS clock
+    // Reset our FPS internals
+
+    mNbOfFrames = 0;
 
     mFpsClock.start();
+}
+
+//==============================================================================
+
+void ZincWidget::initializeGL()
+{
+    // Reset our FPS
+
+    resetFps();
 
     // Forward the fact that our context is going to be destroyed
 
@@ -396,8 +407,7 @@ void ZincWidget::paintGL()
     if (fpsClockElapsed >= 1000) {
         mFps = 1000.0*mNbOfFrames/fpsClockElapsed;
 
-        mNbOfFrames = 0;
-        mFpsClock.start();
+        resetFps();
     }
 }
 

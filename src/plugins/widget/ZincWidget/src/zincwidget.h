@@ -152,6 +152,8 @@ private:
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
 
+    void resetFps();
+
     void checkDevicePixelRatio(bool pForceSettingViewportSize = false);
 
 signals:
