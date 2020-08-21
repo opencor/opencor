@@ -341,22 +341,21 @@ void ZincWidget::doCheckDevicePixelRatio(bool pForceSettingViewportSize)
     bool hasNewDevicePixelRatio = newDevicePixelRatio != mDevicePixelRatio;
 
     if (pForceSettingViewportSize || hasNewDevicePixelRatio) {
-        // Small hack to force ourselves to resize
-
-        int crtWidth = width();
-        int crtHeight = height();
-
-        if (!pForceSettingViewportSize && hasNewDevicePixelRatio) {
-            resize(crtWidth+1, crtHeight+1);
-            resize(crtWidth, crtHeight);
-        }
-
         // Keep track of our new device pixel ratio and update the viewport size
         // of our scene viewer
 
         mDevicePixelRatio = newDevicePixelRatio;
 
-        mSceneViewer.setViewportSize(newDevicePixelRatio*crtWidth, newDevicePixelRatio*crtHeight);
+        mSceneViewer.setViewportSize(newDevicePixelRatio*width(), newDevicePixelRatio*height());
+
+        // Ask ourselves to resize so that we can properly take advantage of our
+        // new device pixel ratio
+
+        if (!pForceSettingViewportSize && hasNewDevicePixelRatio) {
+            QResizeEvent event(size(), QSize());
+
+            resizeEvent(&event);
+        }
 
         // Let people know that our device pixel ratio has changed, if needed
 
