@@ -62,10 +62,6 @@ FileManager::FileManager()
 
 FileManager::~FileManager()
 {
-    // Delete some internal objects
-
-    delete mTimer;
-
     // Remove all the managed files
 
     for (auto file : mFiles) {

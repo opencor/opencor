@@ -97,8 +97,10 @@ void CellMLZincMappingViewZincWidget::changeSource(const QStringList &pZincMeshF
     mZincMeshFileNames = pZincMeshFileNames;
     initAuxFile();
 
-    OpenCMISS::Zinc::Region region = mZincContext.createRegion();
-    mZincContext.setDefaultRegion(region);
+    //TODO the emit launched by reset make opencor crashing
+    //reset();
+
+    setup();
 
     setupRegion();
 

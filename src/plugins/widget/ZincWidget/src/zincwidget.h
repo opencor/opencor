@@ -31,6 +31,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QOpenGLWidget>
+#include <QTime>
 
 //==============================================================================
 
@@ -118,6 +119,8 @@ public:
 
     void viewAll();
 
+    double fps() const;
+
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -142,13 +145,16 @@ private:
     bool mNeedContextMenu = false;
     QMenu *mContextMenu = nullptr;
 
-    void createSceneViewer();
-
-    void updateSceneViewerViewerportSize(int pWidth, int pHeight,
-                                         bool pCheckDevicePixelRatio = false);
+    QTime mFpsClock;
+    int mNbOfFrames = 0;
+    double mFps = 0.0;
 
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
+
+    void resetFps();
+
+    void checkDevicePixelRatio(bool pForceSettingViewportSize = false);
 
 signals:
     void contextAboutToBeDestroyed();
