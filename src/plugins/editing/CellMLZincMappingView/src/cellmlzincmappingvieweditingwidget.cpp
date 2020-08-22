@@ -115,9 +115,12 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mOpenMeshFile = Core::newAction(QIcon(":/oxygen/actions/document-open.png"),
                                         mToolBarWidget);
 
-        //TODO trash could be hidden when nothing to show
+        //TODO trash could be hidden when nothing selected
         mClearNode = Core::newAction(QIcon(":/oxygen/actions/edit-clear.png"),
                                                         mToolBarWidget);
+
+        mOpenMappingFile = Core::newAction(QIcon(":/oxygen/actions/document-import.png"),
+                                           mToolBarWidget);
 
         mDelayWidget = new QwtWheel(mToolBarWidget);
             mDelayWidget->setBorderWidth(0);
@@ -132,6 +135,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mToolBarWidget->addAction(mOpenMeshFile);
         mToolBarWidget->addAction(mClearNode);
         mToolBarWidget->addWidget(mDelayWidget);
+        mToolBarWidget->addAction(mOpenMappingFile);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -187,7 +191,9 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         connect(mSaveMapping, &QAction::triggered,
                 this, &CellMLZincMappingViewEditingWidget::saveMappingSlot);
         connect(mOpenMeshFile, &QAction::triggered,
-                this, &CellMLZincMappingViewEditingWidget::loadMeshFile);
+                this, &CellMLZincMappingViewEditingWidget::openMeshFile);
+        connect(mOpenMappingFile, &QAction::triggered,
+                this, &CellMLZincMappingViewEditingWidget::openMappingSlot);
 
         //create and add informative labels
 
@@ -615,7 +621,14 @@ void CellMLZincMappingViewEditingWidget::saveMappingSlot()
 
 //==============================================================================
 
-void CellMLZincMappingViewEditingWidget::loadMeshFile()
+void CellMLZincMappingViewEditingWidget::openMappingSlot()
+{
+    openMapping(Core::getOpenFileName("Open mapping file"));
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::openMeshFile()
 {
     setMeshFiles(Core::getOpenFileNames("Open mesh file"));
 }
