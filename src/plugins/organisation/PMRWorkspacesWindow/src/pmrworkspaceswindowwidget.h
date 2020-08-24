@@ -168,7 +168,6 @@ public:
     explicit PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                        PMRSupport::PmrWebService *pPmrWebService,
                                        PmrWorkspacesWindowWindow *pParent);
-    ~PmrWorkspacesWindowWidget() override;
 
     void retranslateUi() override;
 
