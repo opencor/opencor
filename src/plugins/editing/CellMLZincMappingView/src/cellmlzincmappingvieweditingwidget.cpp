@@ -277,6 +277,19 @@ bool CellMLZincMappingViewEditingWidget::setMeshFiles(const QStringList &pFileNa
     //TODO warnings ?
 Q_UNUSED(pShowWarning)
 
+    if (pFileNames.isEmpty()) {
+        return false;
+    }
+
+    for (QString fileName : pFileNames) {
+        QFileInfo check_file;
+        check_file.setFile(fileName);
+
+        if (!check_file.exists()) {
+            return false;
+        }
+    }
+
     mZincMeshFileNames = pFileNames;
     mZincWidget->changeSource(pFileNames);
     mMapMatch.clear();
