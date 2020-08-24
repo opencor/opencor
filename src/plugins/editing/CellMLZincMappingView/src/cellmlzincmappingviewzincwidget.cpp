@@ -365,8 +365,10 @@ void CellMLZincMappingViewZincWidget::draw()
     sceneViewer().getViewingVolume(&left, &right, &bottom, &top, &nearPlane, &farPlane);
 
     //TODO is it the best way to guess ? Maybe min is more accurate
+    //TODO is the cast in function below ok ??
     double doubleValue = qLn(0.0015*qMax(right-left,qMax(top-bottom,farPlane-nearPlane)))*invLnNodeSizeExp;
 
+    mEditingWidget->setWheelPosition(doubleValue);
     setNodeSizes(doubleValue);
 }
 
