@@ -193,7 +193,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         connect(mOpenMeshFile, &QAction::triggered,
                 this, &CellMLZincMappingViewEditingWidget::openMeshFile);
         connect(mOpenMappingFile, &QAction::triggered,
-                this, &CellMLZincMappingViewEditingWidget::openMappingSlot);
+                this, &CellMLZincMappingViewEditingWidget::openMappingFile);
 
         //create and add informative labels
 
@@ -634,7 +634,7 @@ void CellMLZincMappingViewEditingWidget::saveMappingSlot()
 
 //==============================================================================
 
-void CellMLZincMappingViewEditingWidget::openMappingSlot()
+void CellMLZincMappingViewEditingWidget::openMappingFile()
 {
     openMapping(Core::getOpenFileName("Open mapping file"));
 }
