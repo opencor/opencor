@@ -164,7 +164,7 @@ private slots:
     void emitVerticalSplitterMoved();
     void saveMappingSlot();
     void openMeshFile();
-    void openMappingSlot();
+    void openMappingFile();
 };
 
 //==============================================================================

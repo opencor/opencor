@@ -71,7 +71,7 @@ public:
 
 public slots:
     void setNodeSizes(int pSize);
-    void eraseNode();
+    void eraseNode(int pId = -1);
 
 protected:
     void initializeGL() override;

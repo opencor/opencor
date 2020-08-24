@@ -475,14 +475,18 @@ void CellMLZincMappingViewZincWidget:: setNodeSizes(int pSize) {
 
 //==============================================================================
 
-void CellMLZincMappingViewZincWidget::eraseNode()
-{
-    mEditingWidget->eraseNodeValue(mIdSelectedNode);
+void CellMLZincMappingViewZincWidget::eraseNode(int pId)
+{   
+    if (pId==-1) {
+        pId = mIdSelectedNode;
+    }
+
+    mEditingWidget->eraseNodeValue(pId);
 
     // select and highlight the current node
 
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
-    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
+    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(pId);
 
     fieldModule.beginChange();
 

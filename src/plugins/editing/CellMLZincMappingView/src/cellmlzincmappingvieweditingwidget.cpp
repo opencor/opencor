@@ -509,9 +509,12 @@ void CellMLZincMappingViewEditingWidget::openMapping(const QString &pFileName)
 
     //TODO check if mesh files are good
 
-    //clear the map
+    //clear the map and the graph
 
-    mMapMatch.clear();
+    for (int node : mMapMatch.keys()) {
+        mZincWidget->eraseNode(node);
+    }
+    mMapMatch.clear(); //should already be clear
 
     //insert the new mapping points in the current mapping system
 
