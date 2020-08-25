@@ -110,6 +110,15 @@ GraphPanelWidget::GraphPanelsWidget * SimulationExperimentViewContentsWidget::gr
 
 //==============================================================================
 
+SimulationExperimentViewZincWidget * SimulationExperimentViewContentsWidget::zincWidget() const
+{
+    // Return our zinc widget
+
+    return mZincWidget;
+}
+
+//==============================================================================
+
 void SimulationExperimentViewContentsWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved

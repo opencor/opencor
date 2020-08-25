@@ -64,6 +64,7 @@ public:
 
     SimulationExperimentViewInformationWidget * informationWidget() const;
     GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
+    SimulationExperimentViewZincWidget * zincWidget() const;
 
 private:
     SimulationExperimentViewInformationWidget *mInformationWidget;

@@ -25,6 +25,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QTimer>
+
+//==============================================================================
+
 #include "widget.h"
 
 //==============================================================================
@@ -34,11 +38,15 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "opencmiss/zinc/field.hpp"
     #include "opencmiss/zinc/fieldvectoroperators.hpp"
     #include "opencmiss/zinc/graphics.hpp"
+    #include "opencmiss/zinc/timekeeper.hpp"
 #include "zincend.h"
 
 //==============================================================================
 
 class QMenu;
+class QLabel;
+class QCheckBox;
+class QSlider;
 
 //==============================================================================
 
@@ -93,6 +101,15 @@ private:
     ZincWidget::ZincWidget *mZincWidget;
     OpenCMISS::Zinc::Context mZincContext;
 
+    QTimer mTimer;
+
+    QLabel *mTimeLabel;
+    QSlider *mTimeSlider;
+    QCheckBox *mTimeCheckBox;
+
+    OpenCMISS::Zinc::Fieldmodule mFieldModule;
+    OpenCMISS::Zinc::Timekeeper mTimeKeeper;
+
     char *mZincSceneViewerDescription = nullptr;
 
     OpenCMISS::Zinc::Field mCoordinates;
@@ -118,6 +135,10 @@ private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(int pDevicePixelRatio);
+
+    void timeSliderValueChanged(int pTime);
+    void timerTimeOut();
+    void autoMode();
 
     void actionAxesTriggered();
     void actionPointsTriggered();

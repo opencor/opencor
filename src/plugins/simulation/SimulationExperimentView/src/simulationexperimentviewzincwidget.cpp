@@ -33,6 +33,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QDragEnterEvent>
 #include <QMenu>
 #include <QLayout>
+#include <QLabel>
+#include <QCheckBox>
+#include <QSlider>
 
 //==============================================================================
 
@@ -131,7 +134,51 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     layout->addWidget(mZincWidget);
 #endif
 
+    // Create and add our time label and check box
+
+    Core::Widget *timeWidget = new Core::Widget(QSize(), this);
+
+    timeWidget->createLayout(Core::Widget::Layout::Horizontal);
+
+    mTimeLabel = new QLabel(timeWidget);
+
+    mTimeLabel->setEnabled(false);
+    mTimeLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+
+    timeWidget->layout()->addWidget(mTimeLabel);
+
+    mTimeCheckBox = new QCheckBox(timeWidget);
+
+    mTimeCheckBox->setEnabled(false);
+    mTimeCheckBox->setText(tr("Auto"));
+
+    connect(mTimeCheckBox, &QCheckBox::toggled,
+            this, &SimulationExperimentViewZincWidget::autoMode);
+
+    timeWidget->layout()->addWidget(mTimeCheckBox);
+
+    layout->addWidget(timeWidget);
+
+    // Create and add our time slider
+
+    mTimeSlider = new QSlider(this);
+
+    mTimeSlider->setEnabled(false);
+    mTimeSlider->setOrientation(Qt::Horizontal);
+
+    connect(mTimeSlider, &QSlider::valueChanged,
+            this, &SimulationExperimentViewZincWidget::timeSliderValueChanged);
+
+    layout->addWidget(mTimeSlider);
+
+    // Create Zinc Context
+
     createAndSetZincContext();
+
+    // Customise our timer
+
+    connect(&mTimer, &QTimer::timeout,
+            this, &SimulationExperimentViewZincWidget::timerTimeOut);
 }
 
 //==============================================================================
@@ -368,6 +415,50 @@ void SimulationExperimentViewZincWidget::devicePixelRatioChanged(int pDevicePixe
     scene.beginChange();
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
     scene.endChange();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::timeSliderValueChanged(int pTime)
+{
+    // Update our scene
+
+    double time = 0.01*pTime;
+
+    mTimeLabel->setText(tr("Time: %1 s").arg(time));
+
+    mTimeKeeper.setTime(time);
+}
+
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::timerTimeOut()
+{
+    // Update our scene
+
+    int value = mTimeSlider->value();
+
+    if (value == mTimeSlider->maximum()) {
+        value = 0;
+    } else {
+        ++value;
+    }
+
+    mTimeSlider->setValue(value);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::autoMode()
+{
+    // Enable/disable our timer
+
+    if (mTimeCheckBox->isChecked()) {
+        mTimer.start();
+    } else {
+        mTimer.stop();
+    }
 }
 
 //==============================================================================
