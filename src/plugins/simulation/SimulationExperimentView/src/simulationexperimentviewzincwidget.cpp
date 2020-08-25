@@ -56,6 +56,16 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 {
     QLayout *layout = createLayout();
 
+    //TODO remove this
+    mMappingFileName = "/ZincWindow/trilienear_mapping_TRUC.json";
+
+    mMappingFileLabel = new QLabel(mMappingFileName,this);
+
+    layout->addWidget(mMappingFileLabel);
+
+
+    // Create and connect our menu actions
+
     mActionAxes = Core::newAction(true,this);
     mActionPoints = Core::newAction(true,this);
     mActionLines = Core::newAction(true,this);

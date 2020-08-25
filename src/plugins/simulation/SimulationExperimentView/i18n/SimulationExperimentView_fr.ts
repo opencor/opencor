@@ -650,6 +650,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewZincWidget</name>
+    <message>
+        <source>Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time: %1 s</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>unable to close the simulation.</source>

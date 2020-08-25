@@ -103,6 +103,7 @@ private:
 
     QTimer mTimer;
 
+    QLabel *mMappingFileLabel;
     QLabel *mTimeLabel;
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
@@ -122,6 +123,8 @@ private:
 
     QStringList mZincMeshFileNames;
     bool mDroppedZincMeshFiles = false;
+
+    QString mMappingFileName;
 
     int mAxesFontPointSize = 0;
 
