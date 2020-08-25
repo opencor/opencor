@@ -47,6 +47,7 @@ namespace SimulationExperimentView {
 class SimulationExperimentViewInformationWidget;
 class SimulationExperimentViewSimulationWidget;
 class SimulationExperimentViewWidget;
+class SimulationExperimentViewZincWidget;
 
 //==============================================================================
 
@@ -67,6 +68,7 @@ public:
 private:
     SimulationExperimentViewInformationWidget *mInformationWidget;
     GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
+    SimulationExperimentViewZincWidget *mZincWidget;
 
 signals:
     void splitterMoved(const QIntList &pSizes);

@@ -27,10 +27,12 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewpythonwrapper.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
+        src/simulationexperimentviewzincwidget.cpp
     UIS
         src/simulationexperimentviewpreferenceswidget.ui
     PLUGINS
         GraphPanelWidget
         PythonQtSupport
         SimulationSupport
+        ZincWidget
 )
