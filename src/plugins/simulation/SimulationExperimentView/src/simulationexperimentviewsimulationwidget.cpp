@@ -44,6 +44,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
+#include "simulationexperimentviewzincwidget.h"
 #include "simulationmanager.h"
 #include "toolbarwidget.h"
 #include "usermessagewidget.h"
@@ -693,6 +694,10 @@ void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *p
                 break;
             }
         }
+        //TODO
+        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")||fileName.contains(".json")) {
+            acceptEvent = true;
+        }
     }
 
     if (acceptEvent) {
@@ -716,13 +721,21 @@ void SimulationExperimentViewSimulationWidget::dragMoveEvent(QDragMoveEvent *pEv
 void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
 {
     // Import/open the one or several files
-
+    QStringList zincMeshfiles;
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         if (mFileTypeInterfaces.contains(fileName)) {
             import(fileName);
+         //TODO
+        } else if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+            zincMeshfiles.append(fileName);
+        } else if (fileName.contains(".json")) {
+            mContentsWidget->zincWidget()->loadMappingFile(fileName);
         } else {
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
+    }
+    if (!zincMeshfiles.isEmpty()) {
+        mContentsWidget->zincWidget()->loadZincMeshFiles(zincMeshfiles);
     }
 
     // Accept the proposed action for the event

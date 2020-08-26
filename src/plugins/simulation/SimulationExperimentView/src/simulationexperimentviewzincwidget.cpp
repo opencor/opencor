@@ -31,9 +31,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QDir>
 #include <QDragEnterEvent>
-#include <QMenu>
-#include <QLayout>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QLabel>
+#include <QLayout>
+#include <QMenu>
 #include <QCheckBox>
 #include <QSlider>
 
@@ -56,13 +58,12 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 {
     QLayout *layout = createLayout();
 
+    mMappingFileLabel = new QLabel(this);
+    mMap = new QMap<int, _variable>();
     //TODO remove this
-    mMappingFileName = "/ZincWindow/trilienear_mapping_TRUC.json";
-
-    mMappingFileLabel = new QLabel(mMappingFileName,this);
+    loadMappingFile("/SimulationExperimentVier/trilinear_cube_mapping_francis_garcia_middleton_2013.json");
 
     layout->addWidget(mMappingFileLabel);
-
 
     // Create and connect our menu actions
 
@@ -212,33 +213,55 @@ void SimulationExperimentViewZincWidget::retranslateUi()
 
 //==============================================================================
 
-void SimulationExperimentViewZincWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+void SimulationExperimentViewZincWidget::loadMappingFile(QString pFileName)
 {
-    // Accept the proposed action for the event
+    // save and display the new file name
 
-    pEvent->acceptProposedAction();
-}
+    mMappingFileName = pFileName;
+    mMappingFileLabel->setText(mMappingFileName.split("/").last());
 
-//==============================================================================
+    //TODO reset mMap properly, the fields especially (if possible/useful)
+    if (!mMap->isEmpty()) {
+        mMap->clear();
+    }
 
-void SimulationExperimentViewZincWidget::dragMoveEvent(QDragMoveEvent *pEvent)
-{
-    // Accept the proposed action for the event
+    QFile file;
+    file.setFileName(pFileName);
 
-    pEvent->acceptProposedAction();
-}
+    if (!file.exists()) {
+        return;
+    }
 
-//==============================================================================
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString val = file.readAll();
+    file.close();
 
-void SimulationExperimentViewZincWidget::dropEvent(QDropEvent *pEvent)
-{
-    // Load the dropped files as Zinc mesh files
+    //take element from json objects
 
-    loadZincMeshFiles(Core::droppedFileNames(pEvent));
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(val.toUtf8());
 
-    // Accept the proposed action for the event
+    QJsonObject jsonObject = jsonDocument.object();
+    QStringList meshFiles = jsonObject.value("meshfiles").toVariant().toStringList();
 
-    pEvent->acceptProposedAction();
+    int id;
+    QString component, variable;
+
+    OpenCMISS::Zinc::Region defaultRegion = mZincContext.getDefaultRegion();
+
+    mFieldModule = defaultRegion.getFieldmodule();
+
+    mFieldModule.beginChange();
+        for (auto mapPointJson : jsonObject.value("map").toArray()) {
+            QJsonObject mapPoint = mapPointJson.toObject();
+
+            id = mapPoint.value("node").toInt();
+            component = mapPoint.value("component").toString();
+            variable = mapPoint.value("variable").toString();
+
+            mMap->insert(id,{component,variable,mFieldModule.createFieldFiniteElement(1)});
+        }
+    mFieldModule.endChange();
+
 }
 
 //==============================================================================

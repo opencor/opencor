@@ -37,6 +37,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "opencmiss/zinc/context.hpp"
     #include "opencmiss/zinc/field.hpp"
     #include "opencmiss/zinc/fieldvectoroperators.hpp"
+    #include "opencmiss/zinc/fieldfiniteelement.hpp"
     #include "opencmiss/zinc/graphics.hpp"
     #include "opencmiss/zinc/timekeeper.hpp"
 #include "zincend.h"
@@ -74,10 +75,8 @@ public:
 
     void retranslateUi() override;
 
-protected:
-    void dragEnterEvent(QDragEnterEvent *pEvent) override;
-    void dragMoveEvent(QDragMoveEvent *pEvent) override;
-    void dropEvent(QDropEvent *pEvent) override;
+    void loadMappingFile(QString pFileName);
+    void loadZincMeshFiles(const QStringList &pZincMeshFiles);
 
 private:
     enum class GraphicsType {
@@ -88,7 +87,13 @@ private:
         Surfaces,
         Isosurfaces
     };
-    ;
+
+    struct _variable {
+        QString component;
+        QString variable;
+        OpenCMISS::Zinc::FieldFiniteElement field;
+    };
+
     QAction *mActionAxes;
     QAction *mActionPoints;
     QAction *mActionLines;
@@ -111,6 +116,8 @@ private:
     OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
 
+    QMap<int, _variable> *mMap = nullptr;
+
     char *mZincSceneViewerDescription = nullptr;
 
     OpenCMISS::Zinc::Field mCoordinates;
@@ -131,8 +138,6 @@ private:
     QString mTrilinearCubeMeshFileName;
 
     void showHideGraphics(GraphicsType pGraphicsType);
-
-    void loadZincMeshFiles(const QStringList &pZincMeshFiles);
 
 private slots:
     void createAndSetZincContext();
