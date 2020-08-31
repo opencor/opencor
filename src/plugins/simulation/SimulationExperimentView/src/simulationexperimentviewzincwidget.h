@@ -78,6 +78,10 @@ public:
     void loadMappingFile(QString pFileName);
     void loadZincMeshFiles(const QStringList &pZincMeshFiles);
 
+    void initData(quint64 pDataSize, double pMinimumTime, double pMaximumTime,
+                      double pTimeInterval, QMap<QString, double *> &pMapVariableValues);
+    void addData(int pDataSize);
+
 private:
     enum class GraphicsType {
         All,
@@ -113,12 +117,18 @@ private:
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
 
-    OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
+    double* mTimeValues;
+    int mDataSize = 0;
+    QMap<int, double*> *mMapNodeValues = nullptr;
+    OpenCMISS::Zinc::Fieldcache mFieldCache;
+    OpenCMISS::Zinc::FieldFiniteElement mDataField;
 
-    QMap<int, _variable> *mMap = nullptr;
+    QMap<int, _variable> *mMapNodeVariables = nullptr;
 
     char *mZincSceneViewerDescription = nullptr;
+    bool mNeedZincSceneInitialization = true;
+    bool mNeedZincSceneViewerInitialization = true;
 
     OpenCMISS::Zinc::Field mCoordinates;
     OpenCMISS::Zinc::FieldMagnitude mMagnitude;
@@ -138,9 +148,11 @@ private:
     QString mTrilinearCubeMeshFileName;
 
     void showHideGraphics(GraphicsType pGraphicsType);
+    void createAndSetZincContext();
+    void initializeZincScene(int pDataSize);
+    void useCachedData();
 
 private slots:
-    void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(int pDevicePixelRatio);
 

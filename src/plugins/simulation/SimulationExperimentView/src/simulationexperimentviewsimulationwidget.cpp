@@ -3854,6 +3854,64 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             }
         }
     }
+
+
+    //
+
+    QMap<QString, CellMLSupport::CellmlFileRuntimeParameter *> mapVariableParameter = QMap<QString, CellMLSupport::CellmlFileRuntimeParameter *>();
+    QMap<QString, double *> mapVariableValue = QMap<QString, double *>();
+
+    if (pTask != SimulationExperimentViewSimulationWidget::Task::None) {
+        for (CellMLSupport::CellmlFileRuntimeParameter *parameter: simulation->runtime()->parameters()) {
+            QString parameterFullyFormattedName = parameter->fullyFormattedName();
+
+            //TODO usefull ?
+            mapVariableParameter.insert(parameterFullyFormattedName, parameter);
+
+            switch (parameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->states(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->constants(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->algebraic(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Data:
+
+                //boring case, multiple values can be there
+
+                //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->data(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->rates(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Floating:
+                //TODO what are suppose to do with that ? where are the results ?
+                //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()-> (parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::LocallyBound:
+                //TODO what are suppose to do with that ? where are the results ?
+                //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()-> (parameter->index()));
+                break;
+            default:
+                break;
+            }
+
+
+        }
+
+        mContentsWidget->zincWidget()->initData(simulation->size(),
+                                                simulation->data()->startingPoint(),
+                                                simulation->data()->endingPoint(),
+                                                simulation->data()->pointInterval(),
+                                                mapVariableValue);
+    } else {
+        quint64 simulationResultsSize = simulation->results()->size();
+        mContentsWidget->zincWidget()->addData(int(simulationResultsSize));
+    }
+
 }
 
 //==============================================================================
