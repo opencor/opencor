@@ -132,6 +132,7 @@ private:
 
     OpenCMISS::Zinc::Field mCoordinates;
     OpenCMISS::Zinc::FieldMagnitude mMagnitude;
+    OpenCMISS::Zinc::Nodetemplate mNodeTemplate;
     OpenCMISS::Zinc::Graphicspointattributes mAxesAttributes;
     OpenCMISS::Zinc::Graphicspointattributes mPointsAttributes;
     OpenCMISS::Zinc::GraphicsLines mLines;

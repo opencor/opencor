@@ -64,7 +64,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     mMapNodeVariables = new QMap<int, _variable>();
     mMapNodeValues = new QMap<int, double*>();
     //TODO remove this
-    loadMappingFile("please open something");
+    loadMappingFile("please open something, gimme a mapping file !");
 
     layout->addWidget(mMappingFileLabel);
 
@@ -337,16 +337,16 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
         static const double zero = 0.0;
         auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
         fieldModule.beginChange();
-            for (quint64 i = 0; i < pDataSize; ++i) {
-                mFieldCache.setTime(mTimeValues[i]);
+            for (int nodeId : mMapNodeValues->keys()) {
+                OpenCMISS::Zinc::Node node =
+                    fieldModule
+                    .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
+                    .findNodeByIdentifier(nodeId);
+                mFieldCache.setNode(node);
+                node.merge(mNodeTemplate);
 
-                for (int nodeId : mMapNodeValues->keys()) {
-                    OpenCMISS::Zinc::Node node =
-                            fieldModule
-                            .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
-                            .findNodeByIdentifier(nodeId);
-
-                    mFieldCache.setNode(node);
+                for (quint64 i = mDataSize; i < pDataSize; ++i) {
+                    mFieldCache.setTime(mTimeValues[i]);
 
                     mDataField.assignReal(mFieldCache, 1, &zero);
                 }
@@ -381,16 +381,17 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
 
     fieldModule.beginChange();
-        for (int i = mDataSize; i < pDataSize; ++i) {
-            mFieldCache.setTime(mTimeValues[i]);
+        OpenCMISS::Zinc::Nodeset nodeset = fieldModule
+                .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        for (int nodeId : mMapNodeValues->keys()) {
+            OpenCMISS::Zinc::Node node = nodeset.findNodeByIdentifier(nodeId);
+            qDebug("addData node valid %d/%d",node.isValid(),true);
+            mFieldCache.setNode(node);
+            node.merge(mNodeTemplate);
 
-            for (int nodeId : mMapNodeValues->keys()) {
-                OpenCMISS::Zinc::Node node =
-                        fieldModule
-                        .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
-                        .findNodeByIdentifier(nodeId);
+            for (int i = mDataSize; i < pDataSize; ++i) {
+                mFieldCache.setTime(mTimeValues[i]);
 
-                mFieldCache.setNode(node);
                 qDebug("addData assignReal %d", mDataField.assignReal(mFieldCache, 1 ,mMapNodeValues->value(nodeId)+i));
                 //qDebug("node %d, time %d : %f",nodeId,i,*(mMapNodeValues->value(nodeId)+i));
             }
@@ -505,11 +506,11 @@ void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
         qDebug("timeSequence %d/%d",timeSequence.isValid(),1==1);
         OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         qDebug("nodeSet %d/%d",nodeSet.isValid(),1==1);
-        OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
-        qDebug("nodeTemplate %d/%d",nodeTemplate.isValid(),1==1);
-        qDebug("defineField %d", nodeTemplate.defineField(mDataField));
+        mNodeTemplate = nodeSet.createNodetemplate();
+        qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),1==1);
+        qDebug("defineField %d", mNodeTemplate.defineField(mDataField));
 
-        qDebug("setTimesequence %d", nodeTemplate.setTimesequence(mDataField,timeSequence));
+        qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
 
         OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
 
