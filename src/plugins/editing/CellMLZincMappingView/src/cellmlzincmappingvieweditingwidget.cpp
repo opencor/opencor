@@ -37,6 +37,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QLayout>
 #include <QtGui>
 
+#include <QHeaderView>
+
 //==============================================================================
 
 #include "zincbegin.h" //TODO takeaway the useless
@@ -160,7 +162,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         mVariableTreeModel = new CellMLZincMappingViewEditingModel();
         mVariableTree->setModel(mVariableTreeModel);
-
+        mVariableTree->setHeaderHidden(true);
         mHorizontalSplitterWidget->addWidget(mVariableTree);
 
         // Keep track of our movement
@@ -366,7 +368,6 @@ void CellMLZincMappingViewEditingWidget::populateTree()
 
     mVariableTreeModel->clear();
     mVariableTree->setSelectionMode(QAbstractItemView::SingleSelection);
-
 
     // Retrieve the model's components
 
