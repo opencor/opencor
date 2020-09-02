@@ -97,6 +97,8 @@ public:
     void setNodeValue(const int pId, const QString &pComponent, const QString &pVariable);
     void eraseNodeValue(const int pId);
 
+    void setWheelPosition(int pValue);
+
     void filePermissionsChanged();
 
     bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
@@ -129,7 +131,7 @@ private:
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
 
-    QwtWheel *mDelayWidget;
+    QwtWheel *mNodeSizeWidget;
 
     Core::ToolBarWidget *mToolBarWidget;
 

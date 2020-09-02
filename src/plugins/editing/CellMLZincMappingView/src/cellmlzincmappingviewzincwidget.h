@@ -27,6 +27,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QFile>
 #include <QStandardItemModel>
+#include <QtMath>
 
 //==============================================================================
 
@@ -63,8 +64,8 @@ public:
 
     void changeSource(const QString &pMainFileName);
 
-    static constexpr double nodeSizeOrigin = -6;
-    static constexpr double nodeSixeExp = 1.1;    
+    static constexpr double nodeSizeOrigin = 0;
+    static constexpr double nodeSixeExp = 1.1;
 
 public slots:
     void setNodeSizes(int pSize);
@@ -84,6 +85,8 @@ protected:
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
+
+    double invLnNodeSizeExp = 1/qLn(nodeSixeExp);
 
     QString mMainFileName;
     QString mAuxFileName;

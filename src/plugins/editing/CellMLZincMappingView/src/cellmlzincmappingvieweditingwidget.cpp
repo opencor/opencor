@@ -119,19 +119,19 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mClearNode = Core::newAction(QIcon(":/oxygen/actions/edit-clear.png"),
                                                         mToolBarWidget);
 
-        mDelayWidget = new QwtWheel(mToolBarWidget);
-            mDelayWidget->setBorderWidth(0);
-            mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
-                                       mDelayWidget->height()/2);
-            mDelayWidget->setFocusPolicy(Qt::NoFocus);
-            mDelayWidget->setRange(-30.0, 100.0);
-            mDelayWidget->setWheelBorderWidth(0);
-            mDelayWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
+        mNodeSizeWidget = new QwtWheel(mToolBarWidget);
+            mNodeSizeWidget->setBorderWidth(0);
+            mNodeSizeWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                       mNodeSizeWidget->height()/2);
+            mNodeSizeWidget->setFocusPolicy(Qt::NoFocus);
+            mNodeSizeWidget->setRange(-50.0, 100.0);
+            mNodeSizeWidget->setWheelBorderWidth(0);
+            mNodeSizeWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 
         mToolBarWidget->addAction(mSaveMapping);
         mToolBarWidget->addAction(mOpenMeshFile);
         mToolBarWidget->addAction(mClearNode);
-        mToolBarWidget->addWidget(mDelayWidget);
+        mToolBarWidget->addWidget(mNodeSizeWidget);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -177,7 +177,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         connect(mClearNode, &QAction::triggered,
                 mZincWidget, &CellMLZincMappingViewZincWidget::eraseNode);
-        connect(mDelayWidget, &QwtWheel::valueChanged,
+        connect(mNodeSizeWidget, &QwtWheel::valueChanged,
                 mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes);
 
         mHorizontalSplitterWidget->addWidget(mZincWidget);
@@ -256,6 +256,13 @@ void CellMLZincMappingViewEditingWidget::eraseNodeValue(const int pId)
         mMapMatch.remove(pId);
         selectNode(pId);
     }
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::setWheelPosition(int pValue)
+{
+    mNodeSizeWidget->setValue(pValue);
 }
 
 //==============================================================================
