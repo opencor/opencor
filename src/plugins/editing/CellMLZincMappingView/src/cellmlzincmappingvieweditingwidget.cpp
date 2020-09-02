@@ -37,6 +37,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QLayout>
 #include <QtGui>
 #include <QLineEdit>
+#include <QFormLayout>
+
 //==============================================================================
 
 #include "zincbegin.h" //TODO takeaway the useless
@@ -152,24 +154,32 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
                 this, &CellMLZincMappingViewEditingWidget::emitVerticalSplitterMoved);
 
-        //create and add the variable tree:
+        // create vertical layout, for the left column
 
-        mVariableTree = new QTreeView(this);
-        mVariableTree->setDragEnabled(true);
-        mVariableTree->setEditTriggers(QTreeView::NoEditTriggers);
+        Core::Widget *verticalWidget = new Core::Widget(this);
+        QBoxLayout *verticalLayout = new QVBoxLayout(verticalWidget);
 
-        mVariableTreeModel = new CellMLZincMappingViewEditingModel();
-        mVariableTree->setModel(mVariableTreeModel);
-        mVariableTree->setHeaderHidden(true);
-        mHorizontalSplitterWidget->addWidget(mVariableTree);
+            //create and add the variable tree:
 
-        // Keep track of our movement
-        /*
-        connect(this, &Core::SplitterWidget::splitterMoved,
-                this, &MappingViewEditingWidget::splitterMoved);
-        */
+            mVariableTree = new QTreeView(this);
+            mVariableTree->setDragEnabled(true);
+            mVariableTree->setEditTriggers(QTreeView::NoEditTriggers);
 
-        //addWidget(mListWidgetVariables);
+            mVariableTreeModel = new CellMLZincMappingViewEditingModel();
+            mVariableTree->setModel(mVariableTreeModel);
+            mVariableTree->setHeaderHidden(true);
+
+            verticalLayout->addWidget(mVariableTree);
+
+            //create add and connect filter line edit
+
+            mFilterLineEdit = new QLineEdit(this);
+            verticalLayout->addWidget(mFilterLineEdit);
+
+            connect(mFilterLineEdit, &QLineEdit::textChanged,
+                    this, &CellMLZincMappingViewEditingWidget::filterChanged);
+
+        mHorizontalSplitterWidget->addWidget(verticalWidget);
 
         // add a Zinc widget
 
@@ -192,31 +202,19 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         //create and add informative labels
 
         Core::Widget *labelWidget = new Core::Widget(this);
-        QGridLayout *labelLayout = new QGridLayout(labelWidget);
+        QFormLayout *labelLayout = new QFormLayout(labelWidget);
 
         QLabel *nodeLabel = new QLabel("Node:",this);
-        labelLayout->addWidget(nodeLabel,0,0);
-
         mNodeValue = new QLabel(this);
-        labelLayout->addWidget(mNodeValue,0,1);
+        labelLayout->addRow(nodeLabel,mNodeValue);
 
         QLabel *componentLabel = new QLabel("Component:",this);
-        labelLayout->addWidget(componentLabel,1,0);
-
         mComponentValue = new QLabel(this);
-        labelLayout->addWidget(mComponentValue,1,1);
+        labelLayout->addRow(componentLabel,mComponentValue);
 
         QLabel *variableLabel = new QLabel("Variable:",this);
-        labelLayout->addWidget(variableLabel,2,0);
-
         mVariableValue = new QLabel(this);
-        labelLayout->addWidget(mVariableValue,2,1);
-
-        mFilterLineEdit = new QLineEdit(this);
-        labelLayout->addWidget(mFilterLineEdit,3,0);
-
-        connect(mFilterLineEdit, &QLineEdit::textChanged,
-                this, &CellMLZincMappingViewEditingWidget::filterChanged);
+        labelLayout->addRow(variableLabel,mVariableValue);
 
         //fill vertical Splitter
 
