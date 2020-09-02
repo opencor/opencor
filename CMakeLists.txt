@@ -911,12 +911,12 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             editing/CellMLAnnotationView
             editing/CellMLEditingView
             editing/CellMLTextView
+            editing/CellMLZincMappingView
             editing/EditingView
             editing/RawCellMLView
             editing/RawSEDMLView
             editing/RawTextView
             editing/SEDMLEditingView
-            editing/CellMLZincMappingView
 
             miscellaneous/Compiler
             miscellaneous/Core
