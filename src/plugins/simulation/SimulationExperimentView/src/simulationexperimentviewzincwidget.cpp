@@ -393,20 +393,17 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
     fieldModule.beginChange();
 
         OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
-        qDebug("timeSequence %d/%d",timeSequence.isValid(),1==1);
+        qDebug("timeSequence %d/%d",timeSequence.isValid(),true);
         OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        qDebug("nodeSet %d/%d",nodeSet.isValid(),1==1);
+        qDebug("nodeSet %d/%d",nodeSet.isValid(),true);
         mNodeTemplate = nodeSet.createNodetemplate();
-        qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),1==1);
+        qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),true);
         qDebug("defineField %d", mNodeTemplate.defineField(mDataField));
 
         qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
 
-
-        OpenCMISS::Zinc::Nodeset nodeset = fieldModule
-                .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         for (int nodeId : mMapNodeValues->keys()) {
-            OpenCMISS::Zinc::Node node = nodeset.findNodeByIdentifier(nodeId);
+            OpenCMISS::Zinc::Node node = nodeSet.findNodeByIdentifier(nodeId);
             qDebug("addData node valid %d/%d",node.isValid(),true);
             mFieldCache.setNode(node);
             node.merge(mNodeTemplate);
@@ -415,7 +412,6 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
                 mFieldCache.setTime(mTimeValues[i]);
 
                 qDebug("addData assignReal %d %f", mDataField.assignReal(mFieldCache, 1 ,mMapNodeValues->value(nodeId)+i), *(mMapNodeValues->value(nodeId)+i));
-                //qDebug("node %d, time %d : %f",nodeId,i,*(mMapNodeValues->value(nodeId)+i));
             }
         }
     fieldModule.endChange();
