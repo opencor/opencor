@@ -87,7 +87,7 @@ class CellMLZincMappingViewEditingWidget : public Core::Widget
 
 public:
     explicit CellMLZincMappingViewEditingWidget(const QString &pCellmlFileName,
-                                                const QString &pMeshFileName,
+                                                const QStringList &pMeshFileName,
                                                 QWidget *pParent,
                                                 CellMLZincMappingViewWidget *pViewWidget);
 
@@ -97,9 +97,11 @@ public:
     void setNodeValue(const int pId, const QString &pComponent, const QString &pVariable);
     void eraseNodeValue(const int pId);
 
+    void setWheelPosition(int pValue);
+
     void filePermissionsChanged();
 
-    bool setMeshFile(const QString &pFileName, bool pShowWarning = true);
+    bool setMeshFiles(const QStringList &pFileNames, bool pShowWarning = true);
 
     void setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical);
 
@@ -125,11 +127,12 @@ private:
     QAction *mClearNode;
     QAction *mSaveMapping;
     QAction *mOpenMeshFile;
+    QAction *mOpenMappingFile;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
 
-    QwtWheel *mDelayWidget;
+    QwtWheel *mNodeSizeWidget;
 
     Core::ToolBarWidget *mToolBarWidget;
 
@@ -146,12 +149,14 @@ private:
 
     CellMLZincMappingViewEditingModel *mVariableTreeModel;
 
-    QString mMeshFileName;
+    QStringList mZincMeshFileNames;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
     void populateTree();
     void saveMapping(const QString &pFileName);
+    void openMapping(const QString &pFileName);
+
     QString fileName(const QString &pFileName, const QString &pBaseFileName,
                      const QString &pFileExtension, const QString &pCaption,
                      const QStringList &pFileFilters);
@@ -163,7 +168,8 @@ private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
     void saveMappingSlot();
-    void loadMeshFile();
+    void openMeshFile();
+    void openMappingFile();
 };
 
 //==============================================================================

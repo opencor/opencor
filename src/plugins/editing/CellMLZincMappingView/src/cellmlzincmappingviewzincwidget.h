@@ -27,6 +27,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QFile>
 #include <QStandardItemModel>
+#include <QtMath>
 
 //==============================================================================
 
@@ -56,19 +57,22 @@ class CellMLZincMappingViewZincWidget : public ZincWidget::ZincWidget
     Q_OBJECT
 
 public:
-    explicit CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+    explicit CellMLZincMappingViewZincWidget(QWidget *pParent, const QStringList &pZincMeshFileNames,
                                    CellMLZincMappingViewEditingWidget *pEditingWidget);
 
     ~CellMLZincMappingViewZincWidget() override;
 
-    void changeSource(const QString &pMainFileName);
+    void changeSource(const QStringList &pZincMeshFileNames);
 
-    static constexpr double nodeSizeOrigin = -6;
-    static constexpr double nodeSixeExp = 1.1;    
+    bool hasNode(int pId);
+    void setNodeMapped(int pId);
+
+    static constexpr double nodeSizeOrigin = 0;
+    static constexpr double nodeSixeExp = 1.1;
 
 public slots:
     void setNodeSizes(int pSize);
-    void eraseNode();
+    void eraseNode(int pId = -1);
 
 protected:
     void initializeGL() override;
@@ -85,8 +89,9 @@ protected:
 
 private:
 
-    QString mMainFileName;
-    QString mAuxFileName;
+    double invLnNodeSizeExp = 1/qLn(nodeSixeExp);
+
+    QStringList mZincMeshFileNames;
     QString mCoordinatesName;
 
     CellMLZincMappingViewEditingWidget *mEditingWidget;

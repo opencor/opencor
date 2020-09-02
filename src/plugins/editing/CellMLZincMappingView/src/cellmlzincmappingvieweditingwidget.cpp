@@ -90,12 +90,12 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
 //==============================================================================
 
 CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QString &pFileName,
-                                                   const QString &pMeshFileName,
+                                                   const QStringList &pZincMeshFileNames,
                                                    QWidget *pParent, CellMLZincMappingViewWidget *pViewWidget) :
     Core::Widget(pParent),
     mViewWidget(pViewWidget),
     mMapMatch(),
-    mMeshFileName(pMeshFileName)
+    mZincMeshFileNames(pZincMeshFileNames)
 {
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
@@ -117,23 +117,27 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mOpenMeshFile = Core::newAction(QIcon(":/oxygen/actions/document-open.png"),
                                         mToolBarWidget);
 
-        //TODO trash could be hidden when nothing to show
+        //TODO trash could be hidden when nothing selected
         mClearNode = Core::newAction(QIcon(":/oxygen/actions/edit-clear.png"),
                                                         mToolBarWidget);
 
-        mDelayWidget = new QwtWheel(mToolBarWidget);
-            mDelayWidget->setBorderWidth(0);
-            mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
-                                       mDelayWidget->height()/2);
-            mDelayWidget->setFocusPolicy(Qt::NoFocus);
-            mDelayWidget->setRange(-30.0, 100.0);
-            mDelayWidget->setWheelBorderWidth(0);
-            mDelayWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
+        mOpenMappingFile = Core::newAction(QIcon(":/oxygen/actions/document-import.png"),
+                                           mToolBarWidget);
+        mNodeSizeWidget = new QwtWheel(mToolBarWidget);
+            mNodeSizeWidget->setBorderWidth(0);
+            mNodeSizeWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                       mNodeSizeWidget->height()/2);
+            mNodeSizeWidget->setFocusPolicy(Qt::NoFocus);
+            mNodeSizeWidget->setRange(-50.0, 100.0);
+            mNodeSizeWidget->setWheelBorderWidth(0);
+            mNodeSizeWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 
         mToolBarWidget->addAction(mSaveMapping);
         mToolBarWidget->addAction(mOpenMeshFile);
         mToolBarWidget->addAction(mClearNode);
-        mToolBarWidget->addWidget(mDelayWidget);
+
+        mToolBarWidget->addWidget(mNodeSizeWidget);
+        mToolBarWidget->addAction(mOpenMappingFile);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -183,11 +187,11 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         // add a Zinc widget
 
-        mZincWidget = new CellMLZincMappingViewZincWidget(this, mMeshFileName, this);
+        mZincWidget = new CellMLZincMappingViewZincWidget(this, mZincMeshFileNames, this);
 
         connect(mClearNode, &QAction::triggered,
                 mZincWidget, &CellMLZincMappingViewZincWidget::eraseNode);
-        connect(mDelayWidget, &QwtWheel::valueChanged,
+        connect(mNodeSizeWidget, &QwtWheel::valueChanged,
                 mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes);
 
         mHorizontalSplitterWidget->addWidget(mZincWidget);
@@ -197,7 +201,9 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         connect(mSaveMapping, &QAction::triggered,
                 this, &CellMLZincMappingViewEditingWidget::saveMappingSlot);
         connect(mOpenMeshFile, &QAction::triggered,
-                this, &CellMLZincMappingViewEditingWidget::loadMeshFile);
+                this, &CellMLZincMappingViewEditingWidget::openMeshFile);
+        connect(mOpenMappingFile, &QAction::triggered,
+                this, &CellMLZincMappingViewEditingWidget::openMappingFile);
 
         //create and add informative labels
 
@@ -262,22 +268,42 @@ void CellMLZincMappingViewEditingWidget::eraseNodeValue(const int pId)
 
 //==============================================================================
 
+void CellMLZincMappingViewEditingWidget::setWheelPosition(int pValue)
+{
+    mNodeSizeWidget->setValue(pValue);
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewEditingWidget::filePermissionsChanged()
 {
 }
 
 //==============================================================================
 
-bool CellMLZincMappingViewEditingWidget::setMeshFile(const QString &pFileName, bool pShowWarning)
+bool CellMLZincMappingViewEditingWidget::setMeshFiles(const QStringList &pFileNames, bool pShowWarning)
 {
     //TODO warnings ?
 Q_UNUSED(pShowWarning)
 
-    mMeshFileName = pFileName;
-    mZincWidget->changeSource(pFileName);
+    if (pFileNames.isEmpty()) {
+        return false;
+    }
+
+    for (QString fileName : pFileNames) {
+        QFileInfo check_file;
+        check_file.setFile(fileName);
+
+        if (!check_file.exists()) {
+            return false;
+        }
+    }
+
+    mZincMeshFileNames = pFileNames;
+    mZincWidget->changeSource(pFileNames);
     mMapMatch.clear();
     selectNode(-1);
-    mViewWidget->setDefaultMeshFile(pFileName);
+    mViewWidget->setDefaultMeshFiles(pFileNames);
     return true;
 }
 
@@ -313,6 +339,10 @@ void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
         if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
             acceptEvent = true;
         }
+        if (fileName.contains(".json")) {
+            acceptEvent = true;
+        }
+
     }
 
     if (acceptEvent) {
@@ -336,16 +366,22 @@ void CellMLZincMappingViewEditingWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 void CellMLZincMappingViewEditingWidget::dropEvent(QDropEvent *pEvent)
 {
     // Import/open the one or several files
-
+    QStringList meshFileList;
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-            setMeshFile(fileName);
+            meshFileList.append(fileName);
+        } else if (fileName.contains(".json")) {
+            openMapping(fileName);
         } else if (mFileTypeInterfaces.contains(fileName)) {
             //import(fileName); //?
             //TODO
         } else {
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
+    }
+
+    if (!meshFileList.isEmpty()) {
+        setMeshFiles(meshFileList);
     }
 
     // Accept the proposed action for the event
@@ -413,8 +449,6 @@ void CellMLZincMappingViewEditingWidget::populateTree()
 
 void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
-
     //find a filename
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
@@ -430,7 +464,7 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
                                      QStringList());
 
     QJsonObject jsonContent;
-    jsonContent.insert("meshfile",QJsonValue::fromVariant(mMeshFileName));
+    jsonContent.insert("meshfiles",QJsonValue::fromVariant(mZincMeshFileNames));
 
     //Jsonise the map
     QJsonArray jsonMapArray;
@@ -455,6 +489,84 @@ void CellMLZincMappingViewEditingWidget::saveMapping(const QString &pFileName)
     jsonFile.write(doc.toJson());
 }
 
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::openMapping(const QString &pFileName)
+{
+
+    //open the file
+
+    QFile file;
+    file.setFileName(pFileName);
+
+    if (!file.exists()) {
+        return;
+    }
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString val = file.readAll();
+    file.close();
+
+    //take element from json objects
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(val.toUtf8());
+
+    QJsonObject jsonObject = jsonDocument.object();
+    QStringList meshFiles = jsonObject.value("meshfiles").toVariant().toStringList();
+
+    //TODO check if mesh files are good
+
+    //clear the map and the graph
+
+    for (int node : mMapMatch.keys()) {
+        mZincWidget->eraseNode(node);
+    }
+    mMapMatch.clear(); //should already be clear
+
+    //insert the new mapping points in the current mapping system
+
+    int id;
+    QString component, variable;
+    QMap<QString,QSet<QString>> variables;
+
+    //first collect the variables from the cellml tree o know what exists
+
+    auto treeRoot = mVariableTreeModel->invisibleRootItem();
+    int numberComponents = treeRoot->rowCount();
+    int numberVariables;
+
+    //TODO improvable by creating the Set on the side and linking it to the map after
+    for (int i = 0; i < numberComponents; ++i) {
+        QStandardItem *componentItem = treeRoot->child(i);
+        component = componentItem->text();
+
+        variables.insert(component, QSet<QString>());
+
+        numberVariables = componentItem->rowCount();
+        for (int j = 0; j < numberVariables; ++j) {
+            variables.find(component)->insert(componentItem->child(j)->text());
+        }
+    }
+
+
+    for (auto mapPointJson : jsonObject.value("map").toArray()) {
+        QJsonObject mapPoint = mapPointJson.toObject();
+
+        id = mapPoint.value("node").toInt();
+        component = mapPoint.value("component").toString();
+        variable = mapPoint.value("variable").toString();
+
+        // test if the point is valid
+
+        if (mZincWidget->hasNode(id)
+                && variables.contains(component)
+                && variables.find(component)->contains(variable)) {
+
+            mZincWidget->setNodeMapped(id);
+            setNodeValue(id,component,variable);
+        }
+    }
+}
 
 //==============================================================================
 
@@ -551,9 +663,18 @@ void CellMLZincMappingViewEditingWidget::saveMappingSlot()
     saveMapping({});
 }
 
-void CellMLZincMappingViewEditingWidget::loadMeshFile()
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::openMappingFile()
 {
-    setMeshFile(Core::getOpenFileName("Open mesh file"));
+    openMapping(Core::getOpenFileName("Open mapping file"));
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::openMeshFile()
+{
+    setMeshFiles(Core::getOpenFileNames("Open mesh file"));
 }
 
 } // namespace MappingView
