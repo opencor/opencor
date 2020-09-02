@@ -337,6 +337,16 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
         static const double zero = 0.0;
         auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
         fieldModule.beginChange();
+            OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+            qDebug("timeSequence %d/%d",timeSequence.isValid(),1==1);
+            OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            qDebug("nodeSet %d/%d",nodeSet.isValid(),1==1);
+            mNodeTemplate = nodeSet.createNodetemplate();
+            qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),1==1);
+            qDebug("defineField %d", mNodeTemplate.defineField(mDataField));
+
+            qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
+
             for (int nodeId : mMapNodeValues->keys()) {
                 OpenCMISS::Zinc::Node node =
                     fieldModule
@@ -381,6 +391,18 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
 
     fieldModule.beginChange();
+
+        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+        qDebug("timeSequence %d/%d",timeSequence.isValid(),1==1);
+        OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        qDebug("nodeSet %d/%d",nodeSet.isValid(),1==1);
+        mNodeTemplate = nodeSet.createNodetemplate();
+        qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),1==1);
+        qDebug("defineField %d", mNodeTemplate.defineField(mDataField));
+
+        qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
+
+
         OpenCMISS::Zinc::Nodeset nodeset = fieldModule
                 .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         for (int nodeId : mMapNodeValues->keys()) {
@@ -392,7 +414,7 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
             for (int i = mDataSize; i < pDataSize; ++i) {
                 mFieldCache.setTime(mTimeValues[i]);
 
-                qDebug("addData assignReal %d", mDataField.assignReal(mFieldCache, 1 ,mMapNodeValues->value(nodeId)+i));
+                qDebug("addData assignReal %d %f", mDataField.assignReal(mFieldCache, 1 ,mMapNodeValues->value(nodeId)+i), *(mMapNodeValues->value(nodeId)+i));
                 //qDebug("node %d, time %d : %f",nodeId,i,*(mMapNodeValues->value(nodeId)+i));
             }
         }
@@ -447,6 +469,8 @@ void SimulationExperimentViewZincWidget::createAndSetZincContext()
 
 void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
 {
+    Q_UNUSED(pDataSize);
+
     // Add the Zinc mesh files to our default region, or show a tri-linear cube
     // if there are no Zinc mesh files
 
@@ -501,16 +525,6 @@ void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
             qDebug("autorange %d", spectrum.autorange(sceneViewer.getScene(),sceneViewer.getScenefilter()));
             spectrum.setMaterialOverwrite(true);
         spectrum.endChange();
-
-        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
-        qDebug("timeSequence %d/%d",timeSequence.isValid(),1==1);
-        OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        qDebug("nodeSet %d/%d",nodeSet.isValid(),1==1);
-        mNodeTemplate = nodeSet.createNodetemplate();
-        qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),1==1);
-        qDebug("defineField %d", mNodeTemplate.defineField(mDataField));
-
-        qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
 
         OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
 
