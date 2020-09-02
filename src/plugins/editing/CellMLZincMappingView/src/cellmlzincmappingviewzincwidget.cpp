@@ -48,6 +48,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "opencmiss/zinc/scenefilter.hpp"
     #include "opencmiss/zinc/field.hpp"
     #include "opencmiss/zinc/graphics.hpp"
+    #include "opencmiss/zinc/streamregion.hpp"
 #include "zincend.h"
 
 //==============================================================================
@@ -57,10 +58,10 @@ namespace CellMLZincMappingView {
 
 //==============================================================================
 
-CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParent, const QString &pMainFileName,
+CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParent, const QStringList &pZincMeshFileNames,
                                              CellMLZincMappingViewEditingWidget *pEditingWidget) :
     ZincWidget::ZincWidget(pParent),
-    mMainFileName(pMainFileName),
+    mZincMeshFileNames(pZincMeshFileNames),
     mEditingWidget(pEditingWidget),
     mNodeSize(pow(nodeSixeExp,nodeSizeOrigin)),
     mLookAtPositionOriginal()
@@ -91,9 +92,9 @@ CellMLZincMappingViewZincWidget::~CellMLZincMappingViewZincWidget()
 
 //==============================================================================
 
-void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
+void CellMLZincMappingViewZincWidget::changeSource(const QStringList &pZincMeshFileNames)
 {
-    mMainFileName = pMainFileName;
+    mZincMeshFileNames = pZincMeshFileNames;
     initAuxFile();
 
     //TODO the emit launched by reset make opencor crashing
@@ -105,6 +106,46 @@ void CellMLZincMappingViewZincWidget::changeSource(const QString &pMainFileName)
 
     initializeGL();
     draw();
+}
+
+//==============================================================================
+
+bool CellMLZincMappingViewZincWidget::hasNode(int pId)
+{
+    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
+    OpenCMISS::Zinc::Node node = fieldModule
+            .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
+            .findNodeByIdentifier(pId);
+    return node.isValid();
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewZincWidget::setNodeMapped(int pId)
+{
+    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
+    OpenCMISS::Zinc::Node node = fieldModule
+            .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
+            .findNodeByIdentifier(pId);
+
+    fieldModule.beginChange();
+
+        if (node.isValid()){
+            OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
+
+            if (!nodeGroupField.isValid()) {
+                nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
+            }
+            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
+            nodesetGroup.addNode(node);
+
+        } else {
+            if (mMappedSelectionGroup.isValid()) {
+                mZincContext.getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
+            }
+        }
+    fieldModule.endChange();
 }
 
 //==============================================================================
@@ -122,8 +163,8 @@ void CellMLZincMappingViewZincWidget::initializeGL()
 
     sceneViewer().setBackgroundColourRGBA(backgroundColor.data());
 
-    //OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
-    //mSceneViewer.setScene(region.getScene());
+    OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
+    sceneViewer().setScene(region.getScene());
 
     sceneViewer().getLookatPosition(mLookAtPositionOriginal);
 }
@@ -196,30 +237,7 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 
     mEditingWidget->setNodeValue(mIdSelectedNode,splitText[1],splitText.first());
 
-    // select and highlight the current node
-
-    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
-    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
-
-    fieldModule.beginChange();
-
-        if (node.isValid()){
-            OpenCMISS::Zinc::Nodeset nodes = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-            OpenCMISS::Zinc::FieldNodeGroup nodeGroupField = mMappedSelectionGroup.getFieldNodeGroup(nodes);
-
-            if (!nodeGroupField.isValid()) {
-                nodeGroupField = mMappedSelectionGroup.createFieldNodeGroup(nodes);
-            }
-            OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
-            nodesetGroup.addNode(node);
-
-        } else {
-            if (mMappedSelectionGroup.isValid()) {
-                mZincContext.getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
-            }
-        }
-    fieldModule.endChange();
-
+    setNodeMapped(mIdSelectedNode);
 }
 
 //==============================================================================
@@ -258,15 +276,18 @@ void CellMLZincMappingViewZincWidget::setupRegion()
 
 void CellMLZincMappingViewZincWidget::initAuxFile()
 {
-    mAuxFileName = mMainFileName;
-    mAuxFileName.remove(".exnode");
-    mAuxFileName.append(".exelem");
-
-    QFileInfo check_file;
-    check_file.setFile(mAuxFileName);
-
-    if (!check_file.exists()) {
-        mAuxFileName = "";
+    // for each exnode file, seek for the exelem
+    for (auto file : mZincMeshFileNames) {
+        if (file.endsWith(".exnode")) {
+            QString newFile = file;
+            newFile.remove(".exnode");
+            newFile.append(".exelem");
+            QFileInfo check_file;
+            check_file.setFile(newFile);
+            if (check_file.exists() && !mZincMeshFileNames.contains(newFile)) {
+                mZincMeshFileNames.append(newFile);
+            }
+        }
     }
 }
 
@@ -278,11 +299,15 @@ void CellMLZincMappingViewZincWidget::draw()
     OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
 
     //read files
-    region.readFile(mMainFileName.toUtf8().constData());
+    OpenCMISS::Zinc::StreaminformationRegion sir = region.createStreaminformationRegion();
 
-    if (mAuxFileName!="") {
-        region.readFile(mAuxFileName.toUtf8().constData());
+    if (!mZincMeshFileNames.empty()) {
+        for (const auto &zincMeshFileName : mZincMeshFileNames) {
+            sir.createStreamresourceFile(zincMeshFileName.toUtf8().constData());
+        }
     }
+
+    region.read(sir);
 
     OpenCMISS::Zinc::Fieldmodule fieldModule = region.getFieldmodule();
     OpenCMISS::Zinc::Scene scene = region.getScene();
@@ -462,14 +487,18 @@ void CellMLZincMappingViewZincWidget:: setNodeSizes(int pSize) {
 
 //==============================================================================
 
-void CellMLZincMappingViewZincWidget::eraseNode()
-{
-    mEditingWidget->eraseNodeValue(mIdSelectedNode);
+void CellMLZincMappingViewZincWidget::eraseNode(int pId)
+{   
+    if (pId==-1) {
+        pId = mIdSelectedNode;
+    }
+
+    mEditingWidget->eraseNodeValue(pId);
 
     // select and highlight the current node
 
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
-    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(mIdSelectedNode);
+    OpenCMISS::Zinc::Node node = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES).findNodeByIdentifier(pId);
 
     fieldModule.beginChange();
 
