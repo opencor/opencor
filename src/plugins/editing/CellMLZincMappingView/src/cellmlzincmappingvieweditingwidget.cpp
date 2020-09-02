@@ -491,8 +491,21 @@ QString CellMLZincMappingViewEditingWidget::fileName(const QString &pFileName,
 
 void CellMLZincMappingViewEditingWidget::filterChanged(const QString &text)
 {
-    filter = text;
-    populateTree();
+    int nbComponents = mVariableTreeModel->invisibleRootItem()->rowCount();
+    int nbVariables;
+    for (int t = 0; t<nbComponents; ++t) {
+        QStandardItem *componentItem = mVariableTreeModel->invisibleRootItem()->child(t);
+        bool variableSelected = false;
+        bool componentSelected = componentItem->text().contains(text);
+        nbVariables = componentItem->rowCount();
+        for (int i = 0; i<nbVariables; ++i) {
+            QStandardItem *variableItem = componentItem->child(i);
+            bool display = componentSelected || variableItem->text().contains(text);
+            variableSelected = variableSelected || display;
+            mVariableTree->setRowHidden(i,componentItem->index(),!display);
+        }
+        mVariableTree->setRowHidden(t,mVariableTreeModel->invisibleRootItem()->index(),!(componentSelected||variableSelected));
+    }
 }
 
 //==============================================================================

@@ -119,7 +119,6 @@ private:
     };
 
     CellMLZincMappingViewWidget *mViewWidget;
-    QString filter = "";
 
     QMap<int, _variable> mMapMatch;
 
