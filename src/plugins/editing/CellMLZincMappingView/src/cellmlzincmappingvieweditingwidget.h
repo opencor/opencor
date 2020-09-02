@@ -119,6 +119,7 @@ private:
     };
 
     CellMLZincMappingViewWidget *mViewWidget;
+    QString filter = "";
 
     QMap<int, _variable> mMapMatch;
 
@@ -136,6 +137,8 @@ private:
     Core::SplitterWidget *mVerticalSplitterWidget;
     Core::SplitterWidget *mHorizontalSplitterWidget;
     CellMLZincMappingViewZincWidget *mZincWidget;
+
+    QLineEdit *mFilterLineEdit;
 
     QLabel *mNodeValue;
     QLabel *mComponentValue;
@@ -157,6 +160,7 @@ private:
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
 private slots:
+    void filterChanged(const QString &text);
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
     void saveMappingSlot();

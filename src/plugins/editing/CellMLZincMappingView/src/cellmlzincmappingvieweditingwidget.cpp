@@ -36,9 +36,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QFile>
 #include <QLayout>
 #include <QtGui>
-
-#include <QHeaderView>
-
+#include <QLineEdit>
 //==============================================================================
 
 #include "zincbegin.h" //TODO takeaway the useless
@@ -214,7 +212,11 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mVariableValue = new QLabel(this);
         labelLayout->addWidget(mVariableValue,2,1);
 
-        labelLayout->columnMinimumWidth(0);
+        mFilterLineEdit = new QLineEdit(this);
+        labelLayout->addWidget(mFilterLineEdit,3,0);
+
+        connect(mFilterLineEdit, &QLineEdit::textChanged,
+                this, &CellMLZincMappingViewEditingWidget::filterChanged);
 
         //fill vertical Splitter
 
@@ -391,11 +393,10 @@ void CellMLZincMappingViewEditingWidget::populateTree()
                 QStandardItem *componentItem = new QStandardItem(QString::fromStdWString(component->name()));
                 componentItem->setDragEnabled(false);
 
-                mVariableTreeModel->invisibleRootItem()->appendRow(componentItem);
-
                 // Retrieve the model's component's variables themselves
 
                 ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
+                mVariableTreeModel->invisibleRootItem()->appendRow(componentItem);
 
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
                     componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
@@ -484,6 +485,14 @@ QString CellMLZincMappingViewEditingWidget::fileName(const QString &pFileName,
     QString firstFileFilter = pFileFilters.isEmpty()?QString():pFileFilters.first();
 
     return Core::getSaveFileName(pCaption, fileName, pFileFilters, &firstFileFilter);
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::filterChanged(const QString &text)
+{
+    filter = text;
+    populateTree();
 }
 
 //==============================================================================
