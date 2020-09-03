@@ -67,13 +67,11 @@ CellMLZincMappingViewEditingModel::CellMLZincMappingViewEditingModel(QObject *pP
 
 //==============================================================================
 
-const char *CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType = "opencor/mapping-view-editting";
-
-//==============================================================================
-
 QStringList CellMLZincMappingViewEditingModel::mimeTypes() const
 {
-    return {MappingViewEdittingMimeType};
+    // Return the MIME type supported by our model
+
+    return { CellMLZincMappingViewEditingMimeType };
 }
 
 //==============================================================================
@@ -87,7 +85,7 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
         names.append(itemFromIndex(index)->text()+"|"+itemFromIndex(index)->accessibleDescription());
     }
 
-    res->setData(MappingViewEdittingMimeType,names.toUtf8());
+    res->setData(CellMLZincMappingViewEditingMimeType, names.toUtf8());
 
     return res;
 }

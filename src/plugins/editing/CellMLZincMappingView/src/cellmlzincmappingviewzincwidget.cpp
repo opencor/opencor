@@ -206,7 +206,7 @@ void CellMLZincMappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
 
 void CellMLZincMappingViewZincWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
-    if (pEvent->mimeData()->hasFormat(CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType)) {
+    if (pEvent->mimeData()->hasFormat(CellMLZincMappingViewEditingMimeType)) {
         pEvent->acceptProposedAction();
     } else {
         pEvent->ignore();
@@ -230,7 +230,7 @@ void CellMLZincMappingViewZincWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 {
-    QString data = pEvent->mimeData()->data(CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType);
+    QString data = pEvent->mimeData()->data(CellMLZincMappingViewEditingMimeType);
     const QStringList splitText = data.split("|");
 
     pEvent->acceptProposedAction();

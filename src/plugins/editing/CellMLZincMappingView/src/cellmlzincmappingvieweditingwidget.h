@@ -62,24 +62,30 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLZincMappingView {
-    class CellMLZincMappingViewWidget;
 
 //==============================================================================
 
+static const auto CellMLZincMappingViewEditingMimeType = QStringLiteral("opencor/mapping-view-editing");
+
+//==============================================================================
 
 class CellMLZincMappingViewEditingModel : public QStandardItemModel
 {
     Q_OBJECT
 
 public:
-    static const char *MappingViewEdittingMimeType;
-
     explicit CellMLZincMappingViewEditingModel(QObject *pParent = nullptr);
 
     QStringList mimeTypes() const override;
     QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
 
 };
+
+//==============================================================================
+
+class CellMLZincMappingViewWidget;
+
+//==============================================================================
 
 class CellMLZincMappingViewEditingWidget : public Core::Widget
 {
