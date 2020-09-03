@@ -46,9 +46,10 @@ class CellMLZincMappingViewWidget;
 
 //==============================================================================
 
-class CellMLZincMappingViewPlugin : public QObject, public FileHandlingInterface,
-                         public I18nInterface, public PluginInterface,
-                         public ViewInterface
+class CellMLZincMappingViewPlugin : public QObject,
+                                    public FileHandlingInterface,
+                                    public I18nInterface,
+                                    public PluginInterface, public ViewInterface
 {
     Q_OBJECT
 

@@ -21,14 +21,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // CellML-Zinc Mapping view plugin
 //==============================================================================
 
-#include "coreguiutils.h"
 #include "cellmlzincmappingviewplugin.h"
 #include "cellmlzincmappingviewwidget.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 
 //==============================================================================
 
-#include <QIcon>
 #include <QMainWindow>
 
 //==============================================================================
