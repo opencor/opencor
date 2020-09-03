@@ -65,8 +65,8 @@ bool CellMLZincMappingViewPlugin::importFile(const QString &pFileName)
 //==============================================================================
 
 bool CellMLZincMappingViewPlugin::saveFile(const QString &pOldFileName,
-                                const QString &pNewFileName,
-                                bool &pNeedFeedback)
+                                           const QString &pNewFileName,
+                                           bool &pNeedFeedback)
 {
     Q_UNUSED(pOldFileName)
     Q_UNUSED(pNewFileName)
@@ -130,7 +130,7 @@ void CellMLZincMappingViewPlugin::fileReloaded(const QString &pFileName)
 //==============================================================================
 
 void CellMLZincMappingViewPlugin::fileRenamed(const QString &pOldFileName,
-                                   const QString &pNewFileName)
+                                              const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName)
 
@@ -181,7 +181,7 @@ bool CellMLZincMappingViewPlugin::definesPluginInterfaces()
 //==============================================================================
 
 bool CellMLZincMappingViewPlugin::pluginInterfacesOk(const QString &pFileName,
-                                          QObject *pInstance)
+                                                     QObject *pInstance)
 {
     Q_UNUSED(pFileName)
     Q_UNUSED(pInstance)
