@@ -21,27 +21,32 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // CellML-Zinc Mapping view editing widget
 //==============================================================================
 
-#include "interfaces.h"
 #include "cellmlfilemanager.h"
+#include "cellmlzincmappingvieweditingwidget.h"
+#include "cellmlzincmappingviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
-#include "cellmlzincmappingviewwidget.h"
-#include "cellmlzincmappingvieweditingwidget.h"
+#include "interfaces.h"
 #include "toolbarwidget.h"
 #include "zincwidget.h"
 
 //==============================================================================
 
-#include <QFile>
-#include <QLayout>
-#include <QtGui>
-#include <QLineEdit>
+#include <QApplication>
+#include <QDesktopServices>
+#include <QDragEnterEvent>
+#include <QFileInfo>
 #include <QFormLayout>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QLineEdit>
+#include <QMimeData>
+#include <QScreen>
 
 //==============================================================================
 
-#include "zincbegin.h" //TODO takeaway the useless
+#include "zincbegin.h"
     #include "opencmiss/zinc/fieldconstant.hpp"
     #include "opencmiss/zinc/fieldmodule.hpp"
     #include "opencmiss/zinc/fieldvectoroperators.hpp"
