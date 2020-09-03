@@ -109,23 +109,31 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileNames,this, this);
+        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileNames, this, this);
+
+        // Keep track of the sizes of our editing widget
+
+        connect(mEditingWidget, &CellMLZincMappingViewEditingWidget::horizontalSplitterMoved,
+                this, &CellMLZincMappingViewWidget::EditingWidgetHorizontalSplitterMoved);
+        connect(mEditingWidget, &CellMLZincMappingViewEditingWidget::verticalSplitterMoved,
+                this, &CellMLZincMappingViewWidget::EditingWidgetVerticalSplitterMoved);
+
+        // Keep track of our editing widget
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
-
-        //TODO mEditingWidget-> initialize ?
-
-        connect(mEditingWidget,&CellMLZincMappingViewEditingWidget::horizontalSplitterMoved,
-                this, &CellMLZincMappingViewWidget::EditingWidgetHorizontalSplitterMoved);
-
-        connect(mEditingWidget,&CellMLZincMappingViewEditingWidget::verticalSplitterMoved,
-                this, &CellMLZincMappingViewWidget::EditingWidgetVerticalSplitterMoved);
     }
 
-    mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,mEditingWidgetVerticalSizes);
+    // Update the sizes of our new editing widget
 
-    // Set our focus proxy to our 'new' simulation widget and make sure that the
+    mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,
+                             mEditingWidgetVerticalSizes);
+
+    // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
+    // Note: if we were not to immediately give the focus to our 'new' editor,
+    //       then the central widget would give the focus to our 'old' editor
+    //       (see CentralWidget::updateGui()), which is clearly not what we
+    //       want...
 
     setFocusProxy(mEditingWidget);
 
@@ -140,7 +148,7 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget!=nullptr) {
+    if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so delete it and
         // remove it from our list
 
@@ -150,7 +158,7 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 
         // Reset our memory of the current editor, if needed
 
-        if (editingWidget==mEditingWidget) {
+        if (editingWidget == mEditingWidget) {
             mEditingWidget = nullptr;
         }
     }

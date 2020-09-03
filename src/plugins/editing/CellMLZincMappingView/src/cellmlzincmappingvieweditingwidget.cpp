@@ -93,12 +93,12 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
 //==============================================================================
 
 CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QString &pFileName,
-                                                   const QStringList &pZincMeshFileNames,
-                                                   QWidget *pParent, CellMLZincMappingViewWidget *pViewWidget) :
+                                                                       const QStringList &pMeshFileNames,
+                                                                       QWidget *pParent,
+                                                                       CellMLZincMappingViewWidget *pViewWidget) :
     Core::Widget(pParent),
     mViewWidget(pViewWidget),
-    mMapMatch(),
-    mZincMeshFileNames(pZincMeshFileNames)
+    mZincMeshFileNames(pMeshFileNames)
 {
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
@@ -312,7 +312,8 @@ Q_UNUSED(pShowWarning)
 
 //==============================================================================
 
-void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical)
+void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizontal,
+                                                  const QIntList &pSizesVertical)
 {
     mHorizontalSplitterWidget->setSizes(pSizesHorizontal);
     mVerticalSplitterWidget->setSizes(pSizesVertical);

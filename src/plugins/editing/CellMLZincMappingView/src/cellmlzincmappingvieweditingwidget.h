@@ -93,7 +93,7 @@ class CellMLZincMappingViewEditingWidget : public Core::Widget
 
 public:
     explicit CellMLZincMappingViewEditingWidget(const QString &pCellmlFileName,
-                                                const QStringList &pMeshFileName,
+                                                const QStringList &pMeshFileNames,
                                                 QWidget *pParent,
                                                 CellMLZincMappingViewWidget *pViewWidget);
 
@@ -109,7 +109,8 @@ public:
 
     bool setMeshFiles(const QStringList &pFileNames, bool pShowWarning = true);
 
-    void setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical);
+    void setSizes(const QIntList &pSizesHorizontal,
+                  const QIntList &pSizesVertical);
 
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);
