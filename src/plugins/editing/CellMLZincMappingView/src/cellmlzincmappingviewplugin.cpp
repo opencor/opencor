@@ -41,8 +41,8 @@ PLUGININFO_FUNC CellMLZincMappingViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides a test view."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une vue de test."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to map <a href="https://cellml.org/">CellML</a> variables to Zinc nodes.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour mapper des variables <a href="https://cellml.org/">CellML</a> à des noeuds Zinc.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           { "Core" },
