@@ -199,8 +199,10 @@ void CellMLZincMappingViewPlugin::initializePlugin()
 
     mViewWidget = new CellMLZincMappingViewWidget(Core::mainWindow());
 
-    // Hide our Mapping view widget since it may not initially be shown in our
-    // central widget
+    mViewWidget->setObjectName("CellMLZincMappingViewWidget");
+
+    // Hide our CellML-Zinc Mapping view widget since it may not initially be
+    // shown in our central widget
 
     mViewWidget->setVisible(false);
 }
@@ -296,8 +298,6 @@ QString CellMLZincMappingViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLZincMappingViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Update and return our Mapping view widget using the given file
-
     // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
     // file
 
@@ -310,6 +310,9 @@ QWidget * CellMLZincMappingViewPlugin::viewWidget(const QString &pFileName)
     }
 
     mFileName = pFileName;
+
+    // Update and return our CellML-Zinc Mapping view widget using the given
+    // file
 
     mViewWidget->initialize(pFileName);
 
