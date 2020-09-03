@@ -36,6 +36,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QFile>
 #include <QLayout>
 #include <QtGui>
+#include <QLineEdit>
+#include <QFormLayout>
 
 //==============================================================================
 
@@ -156,24 +158,32 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         connect(mVerticalSplitterWidget, &Core::SplitterWidget::splitterMoved,
                 this, &CellMLZincMappingViewEditingWidget::emitVerticalSplitterMoved);
 
-        //create and add the variable tree:
+        // create vertical layout, for the left column
 
-        mVariableTree = new QTreeView(this);
-        mVariableTree->setDragEnabled(true);
-        mVariableTree->setEditTriggers(QTreeView::NoEditTriggers);
+        Core::Widget *verticalWidget = new Core::Widget(this);
+        QBoxLayout *verticalLayout = new QVBoxLayout(verticalWidget);
 
-        mVariableTreeModel = new CellMLZincMappingViewEditingModel();
-        mVariableTree->setModel(mVariableTreeModel);
+            //create and add the variable tree:
 
-        mHorizontalSplitterWidget->addWidget(mVariableTree);
+            mVariableTree = new QTreeView(this);
+            mVariableTree->setDragEnabled(true);
+            mVariableTree->setEditTriggers(QTreeView::NoEditTriggers);
 
-        // Keep track of our movement
-        /*
-        connect(this, &Core::SplitterWidget::splitterMoved,
-                this, &MappingViewEditingWidget::splitterMoved);
-        */
+            mVariableTreeModel = new CellMLZincMappingViewEditingModel();
+            mVariableTree->setModel(mVariableTreeModel);
+            mVariableTree->setHeaderHidden(true);
 
-        //addWidget(mListWidgetVariables);
+            verticalLayout->addWidget(mVariableTree);
+
+            //create add and connect filter line edit
+
+            mFilterLineEdit = new QLineEdit(this);
+            verticalLayout->addWidget(mFilterLineEdit);
+
+            connect(mFilterLineEdit, &QLineEdit::textChanged,
+                    this, &CellMLZincMappingViewEditingWidget::filterChanged);
+
+        mHorizontalSplitterWidget->addWidget(verticalWidget);
 
         // add a Zinc widget
 
@@ -198,27 +208,19 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         //create and add informative labels
 
         Core::Widget *labelWidget = new Core::Widget(this);
-        QGridLayout *labelLayout = new QGridLayout(labelWidget);
+        QFormLayout *labelLayout = new QFormLayout(labelWidget);
 
         QLabel *nodeLabel = new QLabel("Node:",this);
-        labelLayout->addWidget(nodeLabel,0,0);
-
         mNodeValue = new QLabel(this);
-        labelLayout->addWidget(mNodeValue,0,1);
+        labelLayout->addRow(nodeLabel,mNodeValue);
 
         QLabel *componentLabel = new QLabel("Component:",this);
-        labelLayout->addWidget(componentLabel,1,0);
-
         mComponentValue = new QLabel(this);
-        labelLayout->addWidget(mComponentValue,1,1);
+        labelLayout->addRow(componentLabel,mComponentValue);
 
         QLabel *variableLabel = new QLabel("Variable:",this);
-        labelLayout->addWidget(variableLabel,2,0);
-
         mVariableValue = new QLabel(this);
-        labelLayout->addWidget(mVariableValue,2,1);
-
-        labelLayout->columnMinimumWidth(0);
+        labelLayout->addRow(variableLabel,mVariableValue);
 
         //fill vertical Splitter
 
@@ -403,7 +405,6 @@ void CellMLZincMappingViewEditingWidget::populateTree()
     mVariableTreeModel->clear();
     mVariableTree->setSelectionMode(QAbstractItemView::SingleSelection);
 
-
     // Retrieve the model's components
 
     ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlModel->localComponents();
@@ -426,11 +427,10 @@ void CellMLZincMappingViewEditingWidget::populateTree()
                 QStandardItem *componentItem = new QStandardItem(QString::fromStdWString(component->name()));
                 componentItem->setDragEnabled(false);
 
-                mVariableTreeModel->invisibleRootItem()->appendRow(componentItem);
-
                 // Retrieve the model's component's variables themselves
 
                 ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
+                mVariableTreeModel->invisibleRootItem()->appendRow(componentItem);
 
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
                     componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
@@ -595,6 +595,27 @@ QString CellMLZincMappingViewEditingWidget::fileName(const QString &pFileName,
     QString firstFileFilter = pFileFilters.isEmpty()?QString():pFileFilters.first();
 
     return Core::getSaveFileName(pCaption, fileName, pFileFilters, &firstFileFilter);
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewEditingWidget::filterChanged(const QString &text)
+{
+    int nbComponents = mVariableTreeModel->invisibleRootItem()->rowCount();
+    int nbVariables;
+    for (int t = 0; t<nbComponents; ++t) {
+        QStandardItem *componentItem = mVariableTreeModel->invisibleRootItem()->child(t);
+        bool variableSelected = false;
+        bool componentSelected = componentItem->text().contains(text);
+        nbVariables = componentItem->rowCount();
+        for (int i = 0; i<nbVariables; ++i) {
+            QStandardItem *variableItem = componentItem->child(i);
+            bool display = componentSelected || variableItem->text().contains(text);
+            variableSelected = variableSelected || display;
+            mVariableTree->setRowHidden(i,componentItem->index(),!display);
+        }
+        mVariableTree->setRowHidden(t,mVariableTreeModel->invisibleRootItem()->index(),!(componentSelected||variableSelected));
+    }
 }
 
 //==============================================================================

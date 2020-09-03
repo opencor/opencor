@@ -140,6 +140,8 @@ private:
     Core::SplitterWidget *mHorizontalSplitterWidget;
     CellMLZincMappingViewZincWidget *mZincWidget;
 
+    QLineEdit *mFilterLineEdit;
+
     QLabel *mNodeValue;
     QLabel *mComponentValue;
     QLabel *mVariableValue;
@@ -162,6 +164,7 @@ private:
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
 private slots:
+    void filterChanged(const QString &text);
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
     void saveMappingSlot();
