@@ -121,8 +121,9 @@ private:
     double* mTimeValues;
     int mDataSize = 0;
     QMap<int, double*> *mMapNodeValues = nullptr;
-    OpenCMISS::Zinc::Fieldcache mFieldCache;
+    //OpenCMISS::Zinc::Fieldcache mFieldCache;
     OpenCMISS::Zinc::FieldFiniteElement mDataField;
+    OpenCMISS::Zinc::Spectrum mSpectrum;
 
     QMap<int, _variable> *mMapNodeVariables = nullptr;
 

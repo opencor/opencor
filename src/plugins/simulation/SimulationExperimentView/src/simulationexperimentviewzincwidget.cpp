@@ -296,6 +296,8 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
     //       SimulationExperimentViewWidget::checkSimulationResults()), hence we
     //       we create and populate mTimeValues ourselves...
 
+qDebug(">>> init data");
+
     mDataSize = 0;
 
     mTimeValues = new double[pDataSize];
@@ -347,18 +349,20 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
 
             qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
 
+            OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
             for (int nodeId : mMapNodeValues->keys()) {
                 OpenCMISS::Zinc::Node node =
                     fieldModule
                     .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
                     .findNodeByIdentifier(nodeId);
-                mFieldCache.setNode(node);
+                fieldCache.setNode(node);
                 node.merge(mNodeTemplate);
 
                 for (quint64 i = mDataSize; i < pDataSize; ++i) {
-                    mFieldCache.setTime(mTimeValues[i]);
+                    fieldCache.setTime(mTimeValues[i]);
 
-                    mDataField.assignReal(mFieldCache, 1, &zero);
+                    mDataField.assignReal(fieldCache, 1, &zero);
                 }
             }
         fieldModule.endChange();
@@ -388,6 +392,10 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
 {
     // Assign the time-varying parameters for mR0, mQ1 and mTheta
 
+
+
+    qDebug(">>> add data");
+
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
 
     fieldModule.beginChange();
@@ -402,19 +410,26 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
 
         qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
 
+        OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
         for (int nodeId : mMapNodeValues->keys()) {
             OpenCMISS::Zinc::Node node = nodeSet.findNodeByIdentifier(nodeId);
             qDebug("addData node valid %d/%d",node.isValid(),true);
-            mFieldCache.setNode(node);
+            fieldCache.setNode(node);
             node.merge(mNodeTemplate);
 
             for (int i = mDataSize; i < pDataSize; ++i) {
-                mFieldCache.setTime(mTimeValues[i]);
+                fieldCache.setTime(mTimeValues[i]);
 
-                qDebug("addData assignReal %d %f", mDataField.assignReal(mFieldCache, 1 ,mMapNodeValues->value(nodeId)+i), *(mMapNodeValues->value(nodeId)+i));
+                mDataField.assignReal(fieldCache, 1 ,mMapNodeValues->value(nodeId)+i);
             }
         }
     fieldModule.endChange();
+
+    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
+    mSpectrum.beginChange();
+        //mSpectrum.autorange(sceneViewer.getScene(),sceneViewer.getScenefilter());
+    mSpectrum.endChange();
 
     mDataSize = pDataSize;
 
@@ -467,6 +482,12 @@ void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
 {
     Q_UNUSED(pDataSize);
 
+    // Retrieve the default time keeper
+
+    OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext.getTimekeepermodule();
+
+    mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
+
     // Add the Zinc mesh files to our default region, or show a tri-linear cube
     // if there are no Zinc mesh files
 
@@ -514,15 +535,27 @@ void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
         qDebug("mDataField %d/%d", mDataField.isValid(),1==1);
 
         OpenCMISS::Zinc::Spectrummodule spectrumModule = mZincContext.getSpectrummodule();
-        OpenCMISS::Zinc::Spectrum spectrum = spectrumModule.getDefaultSpectrum();
+        mSpectrum = spectrumModule.getDefaultSpectrum();
 
         // setup spectrum
-        spectrum.beginChange();
-            qDebug("autorange %d", spectrum.autorange(sceneViewer.getScene(),sceneViewer.getScenefilter()));
-            spectrum.setMaterialOverwrite(true);
-        spectrum.endChange();
+        mSpectrum.beginChange();
+            //qDebug("autorange %d", mSpectrum.autorange(sceneViewer.getScene(),sceneViewer.getScenefilter()));
+            mSpectrum.setMaterialOverwrite(true);
+        mSpectrum.endChange();
 
-        OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
+
+        OpenCMISS::Zinc::Mesh mesh = fieldModule.findMeshByDimension(3);
+
+        OpenCMISS::Zinc::Elementtemplate elementTemplate = mesh.createElementtemplate();
+        OpenCMISS::Zinc::Elementiterator elementiter = mesh.createElementiterator();
+        OpenCMISS::Zinc::Element element;
+        while ((element = elementiter.next()).isValid()) {
+            OpenCMISS::Zinc::Elementfieldtemplate eft = element.getElementfieldtemplate(mCoordinates, 1);//  # use interpolation of first coordinate component, or -1 for all (works only if all defined identically).
+            elementTemplate.defineField(mDataField, -1, eft);//  # -1 = all components, but there is only 1
+            element.merge(elementTemplate);
+        }
+
 
     fieldModule.endChange();
 
@@ -549,21 +582,25 @@ void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
         //points.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("green"));
 
         mPointsAttributes = points.getGraphicspointattributes();
-        points.setSpectrum(spectrum);
+        points.setSpectrum(mSpectrum);
         points.setDataField(mDataField);
 
         // Lines
 
         mLines = scene.createGraphicsLines();
 
-        mLines.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("black"));
+        //mLines.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("black"));
 
+        mLines.setSpectrum(mSpectrum);
+        mLines.setDataField(mDataField);
 
         // Surfaces
 
         mSurfaces = scene.createGraphicsSurfaces();
 
-        mSurfaces.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("white"));
+        //mSurfaces.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("white"));
+        mSurfaces.setSpectrum(mSpectrum);
+        mSurfaces.setDataField(mDataField);
 
         // Isosurfaces
 
@@ -612,6 +649,10 @@ void SimulationExperimentViewZincWidget::initializeZincScene(int pDataSize)
 
 void SimulationExperimentViewZincWidget::useCachedData()
 {
+
+
+    qDebug(">>> usecached data");
+
     // (Re)initialise our Zinc scene, if we had one before
 
     if (!mNeedZincSceneInitialization) {
@@ -622,18 +663,31 @@ void SimulationExperimentViewZincWidget::useCachedData()
     // Use the cached time-varying parameters for mR0, mQ1 and mTheta, if any
 
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
+
     fieldModule.beginChange();
-        for (int i = 0; i < mDataSize; ++i) {
-            mFieldCache.setTime(mTimeValues[i]);
 
-            for (int nodeId : mMapNodeValues->keys()) {
-                OpenCMISS::Zinc::Node node =
-                        fieldModule
-                        .findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES)
-                        .findNodeByIdentifier(nodeId);
+        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(mDataSize, mTimeValues);
+        qDebug("timeSequence %d/%d",timeSequence.isValid(),true);
+        OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        qDebug("nodeSet %d/%d",nodeSet.isValid(),true);
+        mNodeTemplate = nodeSet.createNodetemplate();
+        qDebug("mNodeTemplate %d/%d",mNodeTemplate.isValid(),true);
+        qDebug("defineField %d", mNodeTemplate.defineField(mDataField));
 
-                mFieldCache.setNode(node);
-                qDebug("useCacheData assignReal %d", mDataField.assignReal(mFieldCache, 1 ,mMapNodeValues->value(nodeId)+i));
+        qDebug("setTimesequence %d", mNodeTemplate.setTimesequence(mDataField,timeSequence));
+
+        OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
+        for (int nodeId : mMapNodeValues->keys()) {
+            OpenCMISS::Zinc::Node node = nodeSet.findNodeByIdentifier(nodeId);
+            qDebug("useCachedData node valid %d/%d",node.isValid(),true);
+            fieldCache.setNode(node);
+            node.merge(mNodeTemplate);
+
+            for (int i = mDataSize; i < mDataSize; ++i) {
+                fieldCache.setTime(mTimeValues[i]);
+
+                qDebug("useCachedData assignReal %d %f", mDataField.assignReal(fieldCache, 1 ,mMapNodeValues->value(nodeId)+i), *(mMapNodeValues->value(nodeId)+i));
             }
         }
     fieldModule.endChange();
