@@ -27,9 +27,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopServices>
-#include <QDragEnterEvent>
-#include <QMenu>
 #include <QScreen>
 
 //==============================================================================
@@ -54,51 +51,51 @@ CellMLZincMappingViewWidget::~CellMLZincMappingViewWidget()
 
 void CellMLZincMappingViewWidget::retranslateUi()
 {
-    // Update ourself too since some widgets will have been reset following the
-    // retranslation (e.g. mGui->fileNameValue)
+    // Retranslate our editing widgets
 
-    for(auto editingWidget : mEditingWidgets) {
+    for (auto editingWidget : mEditingWidgets) {
         editingWidget->retranslateUi();
     }
 }
 
 //==============================================================================
 
-static const char *SettingsEditingHoriontalSizes  = "EditingHoriontalSizes";
-static const char *SettingsEditingVerticalSizes   = "EditingVerticalSizes";
-static const char *SettingsMeshFile               = "MeshFile";
-
+static const char *SettingsCellmlZincMappingViewEditingWidgetHorizontalSizes = "CellmlZincMappingViewEditingWidgetHorizontalSizes";
+static const char *SettingsCellmlZincMappingViewEditingWidgetVerticalSizes   = "CellmlZincMappingViewEditingWidgetVerticalSizes";
+static const char *SettingsCellmlZincMappingViewMeshFileNames                = "CellmlZincMappingViewMeshFileNames";
 
 //==============================================================================
 
 void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
 {
-    static const QStringList DefaultMeshFileNames = {};
+    // Retrieve the sizes of our editing widget and of the mesh file names
 
     static const QRect AvailableGeometry = qApp->primaryScreen()->availableGeometry();
     static const int AvailableGeometryHeight = AvailableGeometry.height();
     static const int AvailableGeometryWidth = AvailableGeometry.width();
-
     static const QVariantList DefaultEditingWidgetHorizontalSizes = { 0.20*AvailableGeometryWidth,
-                                                               0.80*AvailableGeometryWidth };
+                                                                      0.80*AvailableGeometryWidth };
     static const QVariantList DefaultEditingWidgetVerticalSizes = { 0.87*AvailableGeometryHeight,
-                                                               0.1*AvailableGeometryHeight,
-                                                               0.12*AvailableGeometryHeight};
+                                                                    0.10*AvailableGeometryHeight,
+                                                                    0.13*AvailableGeometryHeight};
+    static const QStringList DefaultMeshFileNames = {};
 
-    mEditingWidgetHorizontalSizes = qVariantListToIntList(pSettings.value(SettingsEditingHoriontalSizes, DefaultEditingWidgetHorizontalSizes).toList());
-    mEditingWidgetVerticalSizes = qVariantListToIntList(pSettings.value(SettingsEditingVerticalSizes, DefaultEditingWidgetVerticalSizes).toList());
+    mEditingWidgetHorizontalSizes = qVariantListToIntList(pSettings.value(SettingsCellmlZincMappingViewEditingWidgetHorizontalSizes, DefaultEditingWidgetHorizontalSizes).toList());
+    mEditingWidgetVerticalSizes = qVariantListToIntList(pSettings.value(SettingsCellmlZincMappingViewEditingWidgetVerticalSizes, DefaultEditingWidgetVerticalSizes).toList());
 
-    mZincMeshFileNames= pSettings.value(SettingsMeshFile,DefaultMeshFileNames).toStringList();
+    mMeshFileNames= pSettings.value(SettingsCellmlZincMappingViewMeshFileNames, DefaultMeshFileNames).toStringList();
 }
 
 //==============================================================================
 
 void CellMLZincMappingViewWidget::saveSettings(QSettings &pSettings) const
 {
-    pSettings.setValue(SettingsEditingHoriontalSizes, qIntListToVariantList(mEditingWidgetHorizontalSizes));
-    pSettings.setValue(SettingsEditingVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
+    // Keep track of the sizes of our editing widget and of the mesh file names
 
-    pSettings.setValue(SettingsMeshFile,mZincMeshFileNames);
+    pSettings.setValue(SettingsCellmlZincMappingViewEditingWidgetHorizontalSizes, qIntListToVariantList(mEditingWidgetHorizontalSizes));
+    pSettings.setValue(SettingsCellmlZincMappingViewEditingWidgetVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
+
+    pSettings.setValue(SettingsCellmlZincMappingViewMeshFileNames, mMeshFileNames);
 }
 
 //==============================================================================
@@ -112,7 +109,7 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
     if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
-        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mZincMeshFileNames,this, this);
+        mEditingWidget = new CellMLZincMappingViewEditingWidget(pFileName, mMeshFileNames,this, this);
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
 
@@ -229,7 +226,7 @@ void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const
 
 void CellMLZincMappingViewWidget::setDefaultMeshFiles(const QStringList &pFileNames)
 {
-      mZincMeshFileNames = pFileNames;
+      mMeshFileNames = pFileNames;
 }
 
 

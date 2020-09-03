@@ -82,7 +82,7 @@ private:
     CellMLZincMappingViewEditingWidget *mEditingWidget = nullptr;
     QMap<QString, CellMLZincMappingViewEditingWidget *> mEditingWidgets;
 
-    QStringList mZincMeshFileNames;
+    QStringList mMeshFileNames;
 
 private slots:
     void EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes);
