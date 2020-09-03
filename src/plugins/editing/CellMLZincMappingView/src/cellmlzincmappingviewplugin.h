@@ -68,8 +68,6 @@ public:
 
 private:
     CellMLZincMappingViewWidget *mViewWidget = nullptr;
-
-    QString mFileName;
 };
 
 //==============================================================================
