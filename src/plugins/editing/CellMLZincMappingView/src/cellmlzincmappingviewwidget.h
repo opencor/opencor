@@ -26,12 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "cellmlzincmappingvieweditingwidget.h"
 #include "viewwidget.h"
-
-//==============================================================================
-
-#include <QMap>
 
 //==============================================================================
 
@@ -46,6 +41,10 @@ namespace ZincWidget {
 //==============================================================================
 
 namespace CellMLZincMappingView {
+
+//==============================================================================
+
+class CellMLZincMappingViewEditingWidget;
 
 //==============================================================================
 
@@ -74,16 +73,14 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    //bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
-
     void setDefaultMeshFiles(const QStringList &pFileNames);
 
 private:
     QIntList mEditingWidgetHorizontalSizes;
     QIntList mEditingWidgetVerticalSizes;
 
-    CellMLZincMappingViewEditingWidget* mEditingWidget = nullptr;
-    QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
+    CellMLZincMappingViewEditingWidget *mEditingWidget = nullptr;
+    QMap<QString, CellMLZincMappingViewEditingWidget *> mEditingWidgets;
 
     QStringList mZincMeshFileNames;
 

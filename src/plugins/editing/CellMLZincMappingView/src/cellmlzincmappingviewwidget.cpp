@@ -21,6 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // CellML-Zinc Mapping view widget
 //==============================================================================
 
+#include "cellmlzincmappingvieweditingwidget.h"
 #include "cellmlzincmappingviewwidget.h"
 
 //==============================================================================
