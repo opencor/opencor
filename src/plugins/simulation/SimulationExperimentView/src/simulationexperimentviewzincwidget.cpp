@@ -339,7 +339,7 @@ qDebug(">>> init data");
         static const double zero = 0.0;
         auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
         fieldModule.beginChange();
-            OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+            OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(int(pDataSize), mTimeValues);
             qDebug("timeSequence %d/%d",timeSequence.isValid(),1==1);
             OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
             qDebug("nodeSet %d/%d",nodeSet.isValid(),1==1);

@@ -3896,6 +3896,9 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()-> (parameter->index()));
                 break;
             default:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Unknown:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
                 break;
             }
 
