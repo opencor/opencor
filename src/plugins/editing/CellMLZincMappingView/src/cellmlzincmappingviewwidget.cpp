@@ -185,7 +185,7 @@ void CellMLZincMappingViewWidget::filePermissionsChanged(const QString &pFileNam
 
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget!=nullptr) {
+    if (editingWidget != nullptr) {
         editingWidget->filePermissionsChanged();
     }
 }
