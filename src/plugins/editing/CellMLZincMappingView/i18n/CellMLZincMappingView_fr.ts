@@ -11,8 +11,8 @@
 <context>
     <name>OpenCOR::CellMLZincMappingView::CellMLZincMappingViewPlugin</name>
     <message>
-        <source>Mapping</source>
-        <translation type="unfinished">Mappeur</translation>
+        <source>CellML-Zinc Mapping</source>
+        <translation>CellML-Zinc Mappeur</translation>
     </message>
 </context>
 </TS>
