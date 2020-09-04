@@ -43,12 +43,6 @@ CellMLZincMappingViewWidget::CellMLZincMappingViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-CellMLZincMappingViewWidget::~CellMLZincMappingViewWidget()
-{
-}
-
-//==============================================================================
-
 void CellMLZincMappingViewWidget::retranslateUi()
 {
     // Retranslate our editing widgets
@@ -83,7 +77,7 @@ void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
     mEditingWidgetHorizontalSizes = qVariantListToIntList(pSettings.value(SettingsCellmlZincMappingViewEditingWidgetHorizontalSizes, DefaultEditingWidgetHorizontalSizes).toList());
     mEditingWidgetVerticalSizes = qVariantListToIntList(pSettings.value(SettingsCellmlZincMappingViewEditingWidgetVerticalSizes, DefaultEditingWidgetVerticalSizes).toList());
 
-    mMeshFileNames= pSettings.value(SettingsCellmlZincMappingViewMeshFileNames, DefaultMeshFileNames).toStringList();
+    mMeshFileNames = pSettings.value(SettingsCellmlZincMappingViewMeshFileNames, DefaultMeshFileNames).toStringList();
 }
 
 //==============================================================================
@@ -166,24 +160,6 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-CellMLZincMappingViewEditingWidget* CellMLZincMappingViewWidget::editingWidget(const QString &pFileName) const
-{
-    // Return the requested simulation widget
-
-    return mEditingWidgets.value(pFileName);
-}
-
-//==============================================================================
-
-QWidget * CellMLZincMappingViewWidget::widget(const QString &pFileName)
-{
-    // Return the requested (simulation) widget
-
-    return editingWidget(pFileName);
-}
-
-//==============================================================================
-
 void CellMLZincMappingViewWidget::filePermissionsChanged(const QString &pFileName)
 {
     // The given file has been un/locked, so enable/disable parts of our GUI,
@@ -198,13 +174,6 @@ void CellMLZincMappingViewWidget::filePermissionsChanged(const QString &pFileNam
 
 //==============================================================================
 
-void CellMLZincMappingViewWidget::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-}
-
-//==============================================================================
-
 void CellMLZincMappingViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
@@ -212,22 +181,31 @@ void CellMLZincMappingViewWidget::fileReloaded(const QString &pFileName)
     if (mEditingWidgets.contains(pFileName)) {
         finalize(pFileName);
         initialize(pFileName);
-        mEditingWidget->setSizes(mEditingWidgetHorizontalSizes,mEditingWidgetVerticalSizes);
     }
 }
 
 //==============================================================================
 
-void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
+void CellMLZincMappingViewWidget::fileRenamed(const QString &pOldFileName,
+                                              const QString &pNewFileName)
 {
     // The given file has been renamed, so update our editing widgets mapping
 
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget!=nullptr) {
+    if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
+}
+
+//==============================================================================
+
+QWidget * CellMLZincMappingViewWidget::widget(const QString &pFileName)
+{
+    // Return the requested (editing) widget
+
+    return mEditingWidgets.value(pFileName);
 }
 
 //==============================================================================
@@ -237,14 +215,23 @@ void CellMLZincMappingViewWidget::setDefaultMeshFiles(const QStringList &pFileNa
       mMeshFileNames = pFileNames;
 }
 
+//==============================================================================
 
 void CellMLZincMappingViewWidget::EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes)
 {
+    // The horizontal splitter of our editing widget has moved, so keep track of
+    // its new sizes
+
     mEditingWidgetHorizontalSizes = pSizes;
 }
 
+//==============================================================================
+
 void CellMLZincMappingViewWidget::EditingWidgetVerticalSplitterMoved(const QIntList &pSizes)
 {
+    // The vertical splitter of our editing widget has moved, so keep track of
+    // its new sizes
+
     mEditingWidgetVerticalSizes = pSizes;
 }
 
