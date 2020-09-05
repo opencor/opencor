@@ -103,7 +103,6 @@ private:
     QAction *mActionLines;
     QAction *mActionSurfaces;
     QAction *mActionIsosurfaces;
-    QAction *mActionTrilinearCube;
 
     bool mShuttingDown = false;
 
@@ -133,7 +132,6 @@ private:
 
     OpenCMISS::Zinc::Field mCoordinates;
     OpenCMISS::Zinc::FieldMagnitude mMagnitude;
-    OpenCMISS::Zinc::Nodetemplate mNodeTemplate;
     OpenCMISS::Zinc::Graphicspointattributes mAxesAttributes;
     OpenCMISS::Zinc::Graphicspointattributes mPointsAttributes;
     OpenCMISS::Zinc::GraphicsLines mLines;
@@ -147,11 +145,10 @@ private:
 
     int mAxesFontPointSize = 0;
 
-    QString mTrilinearCubeMeshFileName;
-
     void showHideGraphics(GraphicsType pGraphicsType);
     void createAndSetZincContext();
-    void initializeZincScene(int pDataSize);
+    void initializeZincScene();
+    void updateNodeValues(int pDataSize, bool pReset = false);
     void useCachedData();
 
 private slots:
@@ -167,7 +164,6 @@ private slots:
     void actionLinesTriggered();
     void actionSurfacesTriggered();
     void actionIsosurfacesTriggered();
-    void actionTrilinearCubeTriggered();
 };
 
 //==============================================================================
