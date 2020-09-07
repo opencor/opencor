@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view plugin
+// CellML-Zinc Mapping view plugin
 //==============================================================================
 
 #pragma once
@@ -46,9 +46,10 @@ class CellMLZincMappingViewWidget;
 
 //==============================================================================
 
-class CellMLZincMappingViewPlugin : public QObject, public FileHandlingInterface,
-                         public I18nInterface, public PluginInterface,
-                         public ViewInterface
+class CellMLZincMappingViewPlugin : public QObject,
+                                    public FileHandlingInterface,
+                                    public I18nInterface,
+                                    public PluginInterface, public ViewInterface
 {
     Q_OBJECT
 
@@ -67,8 +68,6 @@ public:
 
 private:
     CellMLZincMappingViewWidget *mViewWidget = nullptr;
-
-    QString mFileName;
 };
 
 //==============================================================================

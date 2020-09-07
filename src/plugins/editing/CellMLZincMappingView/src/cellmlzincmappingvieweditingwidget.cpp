@@ -18,30 +18,35 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view widget
+// CellML-Zinc Mapping view editing widget
 //==============================================================================
 
-#include "interfaces.h"
 #include "cellmlfilemanager.h"
+#include "cellmlzincmappingvieweditingwidget.h"
+#include "cellmlzincmappingviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
-#include "cellmlzincmappingviewwidget.h"
-#include "cellmlzincmappingvieweditingwidget.h"
+#include "interfaces.h"
 #include "toolbarwidget.h"
 #include "zincwidget.h"
 
 //==============================================================================
 
-#include <QFile>
-#include <QLayout>
-#include <QtGui>
-#include <QLineEdit>
+#include <QApplication>
+#include <QDesktopServices>
+#include <QDragEnterEvent>
+#include <QFileInfo>
 #include <QFormLayout>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QLineEdit>
+#include <QMimeData>
+#include <QScreen>
 
 //==============================================================================
 
-#include "zincbegin.h" //TODO takeaway the useless
+#include "zincbegin.h"
     #include "opencmiss/zinc/fieldconstant.hpp"
     #include "opencmiss/zinc/fieldmodule.hpp"
     #include "opencmiss/zinc/fieldvectoroperators.hpp"
@@ -62,13 +67,11 @@ CellMLZincMappingViewEditingModel::CellMLZincMappingViewEditingModel(QObject *pP
 
 //==============================================================================
 
-const char *CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType = "opencor/mapping-view-editting";
-
-//==============================================================================
-
 QStringList CellMLZincMappingViewEditingModel::mimeTypes() const
 {
-    return {MappingViewEdittingMimeType};
+    // Return the MIME type supported by our model
+
+    return { CellMLZincMappingViewEditingMimeType };
 }
 
 //==============================================================================
@@ -82,7 +85,7 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
         names.append(itemFromIndex(index)->text()+"|"+itemFromIndex(index)->accessibleDescription());
     }
 
-    res->setData(MappingViewEdittingMimeType,names.toUtf8());
+    res->setData(CellMLZincMappingViewEditingMimeType, names.toUtf8());
 
     return res;
 }
@@ -90,12 +93,12 @@ QMimeData * CellMLZincMappingViewEditingModel::mimeData(const QModelIndexList &p
 //==============================================================================
 
 CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QString &pFileName,
-                                                   const QStringList &pZincMeshFileNames,
-                                                   QWidget *pParent, CellMLZincMappingViewWidget *pViewWidget) :
+                                                                       const QStringList &pMeshFileNames,
+                                                                       QWidget *pParent,
+                                                                       CellMLZincMappingViewWidget *pViewWidget) :
     Core::Widget(pParent),
     mViewWidget(pViewWidget),
-    mMapMatch(),
-    mZincMeshFileNames(pZincMeshFileNames)
+    mZincMeshFileNames(pMeshFileNames)
 {
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
@@ -309,7 +312,8 @@ Q_UNUSED(pShowWarning)
 
 //==============================================================================
 
-void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical)
+void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizontal,
+                                                  const QIntList &pSizesVertical)
 {
     mHorizontalSplitterWidget->setSizes(pSizesHorizontal);
     mVerticalSplitterWidget->setSizes(pSizesVertical);

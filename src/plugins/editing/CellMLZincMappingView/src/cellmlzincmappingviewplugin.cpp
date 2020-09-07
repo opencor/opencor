@@ -18,17 +18,18 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view plugin
+// CellML-Zinc Mapping view plugin
 //==============================================================================
 
-#include "coreguiutils.h"
+#include "cellmlfile.h"
+#include "cellmlsupportplugin.h"
 #include "cellmlzincmappingviewplugin.h"
 #include "cellmlzincmappingviewwidget.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
 
 //==============================================================================
 
-#include <QIcon>
 #include <QMainWindow>
 
 //==============================================================================
@@ -42,8 +43,8 @@ PLUGININFO_FUNC CellMLZincMappingViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides a test view."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une vue de test."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to map <a href="https://cellml.org/">CellML</a> variables to Zinc nodes.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour mapper des variables <a href="https://cellml.org/">CellML</a> à des noeuds Zinc.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           { "Core" },
@@ -66,8 +67,8 @@ bool CellMLZincMappingViewPlugin::importFile(const QString &pFileName)
 //==============================================================================
 
 bool CellMLZincMappingViewPlugin::saveFile(const QString &pOldFileName,
-                                const QString &pNewFileName,
-                                bool &pNeedFeedback)
+                                           const QString &pNewFileName,
+                                           bool &pNeedFeedback)
 {
     Q_UNUSED(pOldFileName)
     Q_UNUSED(pNewFileName)
@@ -94,9 +95,7 @@ void CellMLZincMappingViewPlugin::filePermissionsChanged(const QString &pFileNam
     // The given file has had its permissions changed, so update our view
     // widget, if needed
 
-    if (pFileName == mFileName) {
-        mViewWidget->filePermissionsChanged(pFileName);
-    }
+    mViewWidget->filePermissionsChanged(pFileName);
 }
 
 //==============================================================================
@@ -121,38 +120,28 @@ void CellMLZincMappingViewPlugin::fileSaved(const QString &pFileName)
 
 void CellMLZincMappingViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so update our view widget, if needed
+    // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileName == mFileName) {
-        mViewWidget->fileReloaded(pFileName);
-    }
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
 
 void CellMLZincMappingViewPlugin::fileRenamed(const QString &pOldFileName,
-                                   const QString &pNewFileName)
+                                              const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName)
+    // The given file has been renamed, so let our view widget know about it
 
-    // The given file has been renamed, so update our view widget, if needed
-
-    if (pOldFileName == mFileName) {
-        mFileName = pNewFileName;
-
-        mViewWidget->fileRenamed(pOldFileName,pNewFileName);
-    }
+    mViewWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
 
 void CellMLZincMappingViewPlugin::fileClosed(const QString &pFileName)
 {
-    // The given file has been closed, so update our internals, if needed
+    Q_UNUSED(pFileName)
 
-    if (pFileName == mFileName) {
-        mFileName = QString();
-    }
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -161,11 +150,9 @@ void CellMLZincMappingViewPlugin::fileClosed(const QString &pFileName)
 
 void CellMLZincMappingViewPlugin::retranslateUi()
 {
-    // Retranslate our view widget, if needed
+    // Retranslate our CellML-Zinc Mapping view widget
 
-    if (!mFileName.isEmpty()) {
-        mViewWidget->retranslateUi();
-    }
+    mViewWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -182,7 +169,7 @@ bool CellMLZincMappingViewPlugin::definesPluginInterfaces()
 //==============================================================================
 
 bool CellMLZincMappingViewPlugin::pluginInterfacesOk(const QString &pFileName,
-                                          QObject *pInstance)
+                                                     QObject *pInstance)
 {
     Q_UNUSED(pFileName)
     Q_UNUSED(pInstance)
@@ -196,14 +183,16 @@ bool CellMLZincMappingViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void CellMLZincMappingViewPlugin::initializePlugin()
 {
-    // Create our Mapping view widget
+    // Create our CellML-Zinc Mapping view widget
 
     mViewWidget = new CellMLZincMappingViewWidget(Core::mainWindow());
 
-    // Hide our Mapping view widget since it may not initially be shown in our
-    // central widget
+    mViewWidget->setObjectName("CellMLZincMappingViewWidget");
 
-    mViewWidget->setVisible(false);
+    // Hide our CellML-Zinc Mapping view widget since it may not initially be
+    // shown in our central widget
+
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -226,7 +215,7 @@ void CellMLZincMappingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugi
 
 void CellMLZincMappingViewPlugin::loadSettings(QSettings &pSettings)
 {
-    // Retrieve our Simulation Experiment view settings
+    // Retrieve our CellML-Zinc Mapping view widget settings
 
     pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -237,7 +226,7 @@ void CellMLZincMappingViewPlugin::loadSettings(QSettings &pSettings)
 
 void CellMLZincMappingViewPlugin::saveSettings(QSettings &pSettings) const
 {
-    // Keep track of our Simulation Experiment view settings
+    // Keep track of our CellML-Zinc Mapping view widget settings
 
     pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -268,9 +257,9 @@ ViewInterface::Mode CellMLZincMappingViewPlugin::viewMode() const
 
 QStringList CellMLZincMappingViewPlugin::viewMimeTypes() const
 {
-    // Return the MIME types we support, i.e. any in our case
+    // Return the MIME types we support
 
-    return {};
+    return { CellMLSupport::CellmlMimeType };
 }
 
 //==============================================================================
@@ -279,9 +268,9 @@ QString CellMLZincMappingViewPlugin::viewMimeType(const QString &pFileName) cons
 {
     Q_UNUSED(pFileName)
 
-    // Return the MIME type for the given file
+    // Return the MIME type for the given CellML file
 
-    return {};
+    return CellMLSupport::CellmlMimeType;
 }
 
 //==============================================================================
@@ -290,15 +279,13 @@ QString CellMLZincMappingViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support
 
-    return {};
+    return CellMLSupport::CellmlFileExtension;
 }
 
 //==============================================================================
 
 QWidget * CellMLZincMappingViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Update and return our Mapping view widget using the given file
-
     // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
     // file
 
@@ -310,7 +297,8 @@ QWidget * CellMLZincMappingViewPlugin::viewWidget(const QString &pFileName)
         return nullptr;
     }
 
-    mFileName = pFileName;
+    // Update and return our CellML-Zinc Mapping view widget using the given
+    // file
 
     mViewWidget->initialize(pFileName);
 
@@ -321,20 +309,18 @@ QWidget * CellMLZincMappingViewPlugin::viewWidget(const QString &pFileName)
 
 void CellMLZincMappingViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    Q_UNUSED(pFileName)
+    // Ask our CellML-Zinc Mapping view widget to finalise the given CellML file
 
-    // Reset our internals
-
-    mFileName = QString();
+    mViewWidget->finalize(pFileName);
 }
 
 //==============================================================================
 
 QString CellMLZincMappingViewPlugin::viewName() const
 {
-    // Return our Mapping view's name
+    // Return our CellML-Zinc Mapping view's name
 
-    return tr("Mapping");
+    return tr("CellML-Zinc Mapping");
 }
 
 //==============================================================================
@@ -345,7 +331,9 @@ QIcon CellMLZincMappingViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    return {};
+    static const QIcon NoIcon;
+
+    return NoIcon;
 }
 
 //==============================================================================

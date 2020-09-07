@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc widget
+// CellML-Zinc Mapping view Zinc widget
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -206,7 +206,7 @@ void CellMLZincMappingViewZincWidget::wheelEvent(QWheelEvent *pEvent)
 
 void CellMLZincMappingViewZincWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
-    if (pEvent->mimeData()->hasFormat(CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType)) {
+    if (pEvent->mimeData()->hasFormat(CellMLZincMappingViewEditingMimeType)) {
         pEvent->acceptProposedAction();
     } else {
         pEvent->ignore();
@@ -230,7 +230,7 @@ void CellMLZincMappingViewZincWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
 {
-    QString data = pEvent->mimeData()->data(CellMLZincMappingViewEditingModel::MappingViewEdittingMimeType);
+    QString data = pEvent->mimeData()->data(CellMLZincMappingViewEditingMimeType);
     const QStringList splitText = data.split("|");
 
     pEvent->acceptProposedAction();
@@ -258,7 +258,7 @@ void CellMLZincMappingViewZincWidget::setup()
 
 void CellMLZincMappingViewZincWidget::setupRegion()
 {
-    //Create and initialize region and scene
+    // Create and initialize region and scene
 
     OpenCMISS::Zinc::Scene scene = mZincContext.getDefaultRegion().getScene();
 
@@ -276,7 +276,8 @@ void CellMLZincMappingViewZincWidget::setupRegion()
 
 void CellMLZincMappingViewZincWidget::initAuxFile()
 {
-    // for each exnode file, seek for the exelem
+    // For each exnode file, seek for the exelem
+
     for (auto file : mZincMeshFileNames) {
         if (file.endsWith(".exnode")) {
             QString newFile = file;
@@ -336,7 +337,7 @@ void CellMLZincMappingViewZincWidget::draw()
     scene.beginChange();
         OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
 
-        //Black lines
+        // Black lines
 
         OpenCMISS::Zinc::GraphicsLines lines = scene.createGraphicsLines();
 
@@ -488,7 +489,7 @@ void CellMLZincMappingViewZincWidget:: setNodeSizes(int pSize) {
 //==============================================================================
 
 void CellMLZincMappingViewZincWidget::eraseNode(int pId)
-{   
+{
     if (pId==-1) {
         pId = mIdSelectedNode;
     }
