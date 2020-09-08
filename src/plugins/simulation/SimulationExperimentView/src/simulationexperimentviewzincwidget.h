@@ -95,7 +95,7 @@ private:
     struct _variable {
         QString component;
         QString variable;
-        OpenCMISS::Zinc::FieldFiniteElement field;
+        OpenCMISS::Zinc::FieldFiniteElement field; //TODO useless ?
     };
 
     QAction *mActionAxes;
@@ -127,8 +127,6 @@ private:
     QMap<int, _variable> *mMapNodeVariables = nullptr;
 
     char *mZincSceneViewerDescription = nullptr;
-    bool mNeedZincSceneInitialization = true;
-    bool mNeedZincSceneViewerInitialization = true;
 
     OpenCMISS::Zinc::Field mCoordinates;
     OpenCMISS::Zinc::FieldMagnitude mMagnitude;
@@ -149,7 +147,6 @@ private:
     void createAndSetZincContext();
     void initializeZincScene();
     void updateNodeValues(int pDataSize, bool pReset = false);
-    void useCachedData();
 
 private slots:
     void graphicsInitialized();
