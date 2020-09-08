@@ -57,6 +57,15 @@ ToolBarWidget::ToolBarWidget()
 
 //==============================================================================
 
+QAction * ToolBarWidget::addWidgetAction(QWidget *pWidget)
+{
+    // Add the given widget to ourselves
+
+    return addWidget(pWidget);
+}
+
+//==============================================================================
+
 } // namespace Core
 } // namespace OpenCOR
 

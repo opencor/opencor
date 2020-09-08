@@ -111,7 +111,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    toolBarWidget->addWidget(spacer);
+    toolBarWidget->addWidgetAction(spacer);
     toolBarWidget->addAction(mGui->actionPmr);
 
     mLoggedOnIcon = Core::tintedIcon(UserIcon, Qt::darkGreen);

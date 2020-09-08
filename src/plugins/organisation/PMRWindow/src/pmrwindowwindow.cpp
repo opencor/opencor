@@ -87,9 +87,9 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mFilterValue, &QLineEdit::textChanged,
             this, &PmrWindowWindow::filterValueChanged);
 
-    toolBarWidget->addWidget(spacer);
-    toolBarWidget->addWidget(mFilterLabel);
-    toolBarWidget->addWidget(mFilterValue);
+    toolBarWidget->addWidgetAction(spacer);
+    toolBarWidget->addWidgetAction(mFilterLabel);
+    toolBarWidget->addWidgetAction(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
 
     mGui->layout->addWidget(toolBarWidget);

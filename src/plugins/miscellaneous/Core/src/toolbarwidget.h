@@ -44,6 +44,8 @@ class CORE_EXPORT ToolBarWidget : public QToolBar
 
 public:
     explicit ToolBarWidget();
+
+    QAction * addWidgetAction(QWidget *pWidget);
 };
 
 //==============================================================================

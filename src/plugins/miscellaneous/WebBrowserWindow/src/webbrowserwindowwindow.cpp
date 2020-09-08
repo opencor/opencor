@@ -98,8 +98,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mUrlValue, &QLineEdit::returnPressed,
             this, &WebBrowserWindowWindow::returnPressed);
 
-    topToolBarWidget->addWidget(spacer);
-    topToolBarWidget->addWidget(mUrlValue);
+    topToolBarWidget->addWidgetAction(spacer);
+    topToolBarWidget->addWidgetAction(mUrlValue);
     topToolBarWidget->addAction(mGui->actionReload);
 
     mGui->layout->addWidget(topToolBarWidget);

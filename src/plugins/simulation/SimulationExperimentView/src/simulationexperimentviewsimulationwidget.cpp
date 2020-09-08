@@ -365,23 +365,23 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(mDelayWidget);
+    mToolBarWidget->addWidgetAction(mDelayWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mToolBarWidget->addWidget(delaySpaceWidget);
+    mToolBarWidget->addWidgetAction(delaySpaceWidget);
 #endif
-    mToolBarWidget->addWidget(mDelayValueWidget);
+    mToolBarWidget->addWidgetAction(mDelayValueWidget);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mDevelopmentModeAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mAddGraphPanelAction);
-    mToolBarWidget->addWidget(removeGraphPanelToolButton);
+    mToolBarWidget->addWidgetAction(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(cellmlOpenToolButton);
+    mToolBarWidget->addWidgetAction(cellmlOpenToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(sedmlExportToolButton);
+    mToolBarWidget->addWidgetAction(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(dataImportToolButton);
-    mToolBarWidget->addWidget(simulationResultsExportToolButton);
+    mToolBarWidget->addWidgetAction(dataImportToolButton);
+    mToolBarWidget->addWidgetAction(simulationResultsExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mPreferencesAction);
 
