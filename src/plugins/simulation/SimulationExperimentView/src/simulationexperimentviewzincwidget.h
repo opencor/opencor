@@ -118,7 +118,7 @@ private:
 
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
     double* mTimeValues;
-    int mDataSize = 0;
+    int mDataSize = 1;
     QMap<int, double*> *mMapNodeValues = nullptr;
     //OpenCMISS::Zinc::Fieldcache mFieldCache;
     OpenCMISS::Zinc::FieldFiniteElement mDataField;
@@ -145,7 +145,7 @@ private:
 
     void showHideGraphics(GraphicsType pGraphicsType);
     void createAndSetZincContext();
-    void initializeZincScene();
+    void initializeZincRegion();
     void updateNodeValues(int pDataSize, bool pReset = false);
 
 private slots:
