@@ -262,14 +262,13 @@ void SimulationExperimentViewZincWidget::loadZincMeshFiles(const QStringList &pZ
 
     mZincWidget->reset();
 
-    //createAndSetZincContext();
-
     mZincContext.setDefaultRegion(mZincContext.createRegion());
     mZincWidget->sceneViewer().setScene(mZincContext.getDefaultRegion().getScene());
 
+    // Fill the region with the new model
+
     initializeZincRegion();
 
-    //mZincWidget->viewAll();
 }
 
 //==============================================================================
@@ -288,6 +287,8 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
 qDebug(">>> init data");
 
     mDataSize = 0;
+    mValueMin = 0;
+    mValueMax = 0;
 
     mTimeValues = new double[pDataSize];
 
@@ -334,7 +335,7 @@ qDebug(">>> init data");
 
     // Reset our different fields
     if (pDataSize>0) {
-        updateNodeValues(pDataSize,true);
+        updateNodeValues(0, pDataSize,true);
     }
 
     // Set the range of valid times in our default time keeper
@@ -363,13 +364,10 @@ qDebug(">>> init data");
 void SimulationExperimentViewZincWidget::addData(int pDataSize)
 {
 
-    updateNodeValues(pDataSize);
+    updateNodeValues(mDataSize,pDataSize);
 
-    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
     mSpectrum.beginChange();
-        //mSpectrum.autorange(sceneViewer.getScene(),sceneViewer.getScenefilter());
         mSpectrum.setMaterialOverwrite(true);
-
     mSpectrum.endChange();
 
     mDataSize = pDataSize;
@@ -386,8 +384,9 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
 }
 
 
-void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pReset)
+void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int pValueEnd, bool pReset)
 {
+    Q_UNUSED(pValueBegin)
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
 
     fieldModule.beginChange();
@@ -399,7 +398,7 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pR
         qDebug("mNodeTemplate %d/%d",nodeTemplate.isValid(),true);
         qDebug("defineField %d", nodeTemplate.defineField(mDataField));
 
-        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pValueEnd, mTimeValues);
         qDebug("timeSequence %d/%d",timeSequence.isValid(),true);
         qDebug("setTimesequence %d", nodeTemplate.setTimesequence(mDataField,timeSequence));
 
@@ -409,8 +408,6 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pR
         static const double zero = 0.0;
         OpenCMISS::Zinc::Nodeiterator nodeIter = nodeSet.createNodeiterator();
         OpenCMISS::Zinc::Node node;
-        double min = 0;
-        double max = 0;
 
         while ((node = nodeIter.next()).isValid()) {
 
@@ -418,21 +415,28 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pR
             fieldCache.setNode(node);
             node.merge(nodeTemplate);
 
-            for (int i = 0; i < pDataSize; ++i) {
-                fieldCache.setTime(mTimeValues[i]);
-                if (!pReset && mMapNodeValues->contains(nodeId)) {
+            //TODO
+            // it shouldn't start at 0 but at pValueBegin, but it seems that
+            // the values before it are reset to 0 in this case
+
+            if (!pReset && mMapNodeValues->contains(nodeId)) {
+                for (int i = 0; i < pValueEnd; ++i) {
+                    fieldCache.setTime(mTimeValues[i]);
                     double *target = mMapNodeValues->value(nodeId)+i;
                     mDataField.assignReal(fieldCache, 1, target);
                     //qDebug("assigningReal %d",mDataField.assignReal(fieldCache, 1 ,mMapNodeValues->value(nodeId)+i));
                     //qDebug("assigning %d %d %f",nodeId, i,*target);
 
-                    if (min > *target) {
-                        min = *target;
+                    if (mValueMin > *target) {
+                        mValueMin = *target;
                     }
-                    if (max < *target) {
-                        max = *target;
+                    if (mValueMax < *target) {
+                        mValueMax = *target;
                     }
-                } else {
+                }
+            } else {
+                for (int i = 0; i < pValueEnd; ++i) {
+                    fieldCache.setTime(mTimeValues[i]);
                     mDataField.assignReal(fieldCache, 1, &zero);
                 }
             }
@@ -441,8 +445,8 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pR
 
     mSpectrum.beginChange();
         auto firstComponent = mSpectrum.getFirstSpectrumcomponent();
-        firstComponent.setRangeMaximum(max);
-        firstComponent.setRangeMinimum(min);
+        firstComponent.setRangeMinimum(mValueMin);
+        firstComponent.setRangeMaximum(mValueMax);
     mSpectrum.endChange();
 }
 
@@ -623,9 +627,10 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
     // initialisation of the dataField
 
     if (mDataSize==0) {
-        updateNodeValues(1, true);
+        //put just zeros at time 0
+        updateNodeValues(0, 1, true);
     } else {
-        updateNodeValues(mDataSize);
+        updateNodeValues(0, mDataSize);
     }
     // Display all our objects
 

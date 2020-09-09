@@ -118,7 +118,10 @@ private:
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
     double mTimeInterval = 0.;
     double* mTimeValues;
-    int mDataSize = 1;
+    int mDataSize = 0;
+    double mValueMin = 0.;
+    double mValueMax = 0.;
+
     QMap<int, double*> *mMapNodeValues = nullptr;
     OpenCMISS::Zinc::FieldFiniteElement mDataField;
     OpenCMISS::Zinc::Spectrum mSpectrum;
@@ -144,7 +147,7 @@ private:
     void showHideGraphics(GraphicsType pGraphicsType);
     void createAndSetZincContext();
     void initializeZincRegion();
-    void updateNodeValues(int pDataSize, bool pReset = false);
+    void updateNodeValues(int pValueBegin, int pValueEnd, bool pReset = false);
 
 private slots:
     void graphicsInitialized();
