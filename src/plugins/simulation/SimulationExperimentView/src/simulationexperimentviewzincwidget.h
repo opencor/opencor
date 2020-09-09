@@ -116,7 +116,9 @@ private:
     QCheckBox *mTimeCheckBox;
 
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
-    double mTimeInterval = 0.;
+    double mTimeInterval = 1.;
+    double mSpeedBoost = 0.003;
+    int mTimeStep = 1;
     double* mTimeValues;
     int mDataSize = 0;
     double mDefaultValue = 0.;

@@ -290,7 +290,12 @@ qDebug(">>> init data");
     mValueMin = mDefaultValue;
     mValueMax = mDefaultValue;
 
-    mTimeValues = new double[pDataSize];
+    if (pDataSize > 0) {
+        mTimeValues = new double[pDataSize];
+    } else {
+        // to initialize the field with a dummy value
+        mTimeValues = new double(0.);
+    }
 
     for (quint64 i = 0; i < pDataSize; ++i) {
         mTimeValues[i] = double(i)*pTimeInterval;
@@ -324,9 +329,13 @@ qDebug(">>> init data");
 
         }
     }
-    // Reset our different fields
+
+    // Reset our field
+
     if (pDataSize>0) {
         updateNodeValues(0, pDataSize,true);
+    } else {
+        updateNodeValues(0, 1, true);
     }
 
     // Set the range of valid times in our default time keeper
@@ -338,7 +347,12 @@ qDebug(">>> init data");
     mTimeSlider->setMaximum(int(pMaximumTime/pTimeInterval));
     mTimeInterval = pTimeInterval;
 
-    auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
+    // applying the speed boost
+
+    mTimeStep = int(mSpeedBoost*(pMaximumTime-pMinimumTime)/pTimeInterval);
+    if (mTimeStep <= 0) {
+        mTimeStep = 1;
+    }
 
     // Disable our time-related widgets
 
@@ -697,10 +711,10 @@ void SimulationExperimentViewZincWidget::timerTimeOut()
 
     int value = mTimeSlider->value();
 
-    if (value == mTimeSlider->maximum()) {
-        value = 0;
+    if (value + mTimeStep > mTimeSlider->maximum()) {
+        value = mTimeSlider->minimum();
     } else {
-        ++value;
+        value += mTimeStep;
     }
 
     mTimeSlider->setValue(value);
