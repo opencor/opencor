@@ -29,6 +29,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include "qwtbegin.h"
+    #include "qwt_wheel.h"
+#include "qwtend.h"
+
+//==============================================================================
+
 #include "widget.h"
 
 //==============================================================================
@@ -114,10 +120,11 @@ private:
     QLabel *mTimeLabel;
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
+    QwtWheel *mSpeedWidget;
+
 
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
     double mTimeInterval = 1.;
-    double mSpeedBoost = 0.003;
     int mTimeStep = 1;
     double* mTimeValues;
     int mDataSize = 0;
@@ -159,6 +166,8 @@ private slots:
     void timeSliderValueChanged(int pTime);
     void timerTimeOut();
     void autoMode();
+
+    void setTimeStep(int value);
 
     void actionAxesTriggered();
     void actionPointsTriggered();

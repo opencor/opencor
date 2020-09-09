@@ -29,14 +29,15 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QCheckBox>
 #include <QDir>
 #include <QDragEnterEvent>
+#include <QtGui>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QLabel>
 #include <QLayout>
 #include <QMenu>
-#include <QCheckBox>
 #include <QSlider>
 
 //==============================================================================
@@ -146,6 +147,21 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     mTimeLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
     timeWidget->layout()->addWidget(mTimeLabel);
+
+    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+
+    mSpeedWidget = new QwtWheel(mTimeLabel);
+        mSpeedWidget->setBorderWidth(0);
+        mSpeedWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                   mSpeedWidget->height()/2);
+        mSpeedWidget->setFocusPolicy(Qt::NoFocus);
+        mSpeedWidget->setRange(1, 50);
+        mSpeedWidget->setWheelBorderWidth(0);
+        mSpeedWidget->setValue(1);
+    connect(mSpeedWidget, &QwtWheel::valueChanged,
+            this, &SimulationExperimentViewZincWidget::setTimeStep);
+
+    timeWidget->layout()->addWidget(mSpeedWidget);
 
     mTimeCheckBox = new QCheckBox(timeWidget);
 
@@ -346,13 +362,6 @@ qDebug(">>> init data");
     mTimeSlider->setMinimum(int(pMinimumTime/pTimeInterval));
     mTimeSlider->setMaximum(int(pMaximumTime/pTimeInterval));
     mTimeInterval = pTimeInterval;
-
-    // applying the speed boost
-
-    mTimeStep = int(mSpeedBoost*(pMaximumTime-pMinimumTime)/pTimeInterval);
-    if (mTimeStep <= 0) {
-        mTimeStep = 1;
-    }
 
     // Disable our time-related widgets
 
@@ -789,6 +798,13 @@ Q_UNUSED(pGraphicsType)
                                                 OpenCMISS::Zinc::Field());
         }
     scene.endChange();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::setTimeStep(int value)
+{
+    mTimeStep = int(pow(1.1,value));
 }
 
 //==============================================================================
