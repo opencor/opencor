@@ -45,7 +45,7 @@ namespace Core {
 
 //==============================================================================
 
-BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
+BusyWidget::BusyWidget(double pProgress, QWidget *pParent) :
     QWidget(pParent),
     mParent(pParent),
     mProgress(pProgress)
