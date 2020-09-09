@@ -239,22 +239,15 @@ void SimulationExperimentViewZincWidget::loadMappingFile(QString pFileName)
     int id;
     QString component, variable;
 
-    OpenCMISS::Zinc::Region defaultRegion = mZincContext.getDefaultRegion();
+    for (auto mapPointJson : jsonObject.value("map").toArray()) {
+        QJsonObject mapPoint = mapPointJson.toObject();
 
-    auto fieldModule = defaultRegion.getFieldmodule();
+        id = mapPoint.value("node").toInt();
+        component = mapPoint.value("component").toString();
+        variable = mapPoint.value("variable").toString();
 
-    fieldModule.beginChange();
-        for (auto mapPointJson : jsonObject.value("map").toArray()) {
-            QJsonObject mapPoint = mapPointJson.toObject();
-
-            id = mapPoint.value("node").toInt();
-            component = mapPoint.value("component").toString();
-            variable = mapPoint.value("variable").toString();
-
-            mMapNodeVariables->insert(id,{component, variable, fieldModule.createFieldFiniteElement(1)});
-        }
-    fieldModule.endChange();
-
+        mMapNodeVariables->insert(id,{component, variable});
+    }
 }
 
 //==============================================================================
@@ -264,7 +257,6 @@ void SimulationExperimentViewZincWidget::loadZincMeshFiles(const QStringList &pZ
     // Keep track of Zinc mesh files and reset our scene viewer description
 
     mZincMeshFileNames = pZincMeshFiles;
-    mDroppedZincMeshFiles = true;
 
     // Reset our Zinc widget
 
@@ -295,7 +287,7 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
 
 qDebug(">>> init data");
 
-    mDataSize = 1;
+    mDataSize = 0;
 
     mTimeValues = new double[pDataSize];
 
@@ -303,15 +295,31 @@ qDebug(">>> init data");
         mTimeValues[i] = double(i)*pTimeInterval;
     }
 
-    //link node numbers and double *values
+    // clear the groups
 
+    QMap<QString, double *> mapVariableValues = QMap<QString, double *>();
+
+    for (QString variable : pMapVariableValues.keys()) {
+        QStringList variablePieces = variable.split(".");
+        int len = variablePieces.length();
+        if (len > 2) {
+            QString cleanVariable = variablePieces[len-2]+"."+variablePieces[len-1];
+            mapVariableValues.insert(cleanVariable, pMapVariableValues.value(variable));
+        } else {
+            mapVariableValues.insert(variable, pMapVariableValues.value(variable));
+        }
+    }
+
+    // link node numbers and double *values
+
+    mMapNodeValues->clear();
     for (int nodeId : mMapNodeVariables->keys()) {
         _variable _variable = mMapNodeVariables->value(nodeId);
         QString variable = _variable.component+"."+_variable.variable;
 
         // check if values are provided for this node
-        if (pMapVariableValues.contains(variable)) {
-            mMapNodeValues->insert(nodeId, pMapVariableValues.value(variable));
+        if (mapVariableValues.contains(variable)) {
+            mMapNodeValues->insert(nodeId, mapVariableValues.value(variable));
 
         } else {
             //filling with 0s
@@ -336,6 +344,7 @@ qDebug(">>> init data");
 
     mTimeSlider->setMinimum(int(pMinimumTime/pTimeInterval));
     mTimeSlider->setMaximum(int(pMaximumTime/pTimeInterval));
+    mTimeInterval = pTimeInterval;
 
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
 
@@ -400,6 +409,9 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pR
         static const double zero = 0.0;
         OpenCMISS::Zinc::Nodeiterator nodeIter = nodeSet.createNodeiterator();
         OpenCMISS::Zinc::Node node;
+        double min = 0;
+        double max = 0;
+
         while ((node = nodeIter.next()).isValid()) {
 
             int nodeId = node.getIdentifier();
@@ -409,15 +421,29 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pDataSize, bool pR
             for (int i = 0; i < pDataSize; ++i) {
                 fieldCache.setTime(mTimeValues[i]);
                 if (!pReset && mMapNodeValues->contains(nodeId)) {
-                    mDataField.assignReal(fieldCache, 1 ,mMapNodeValues->value(nodeId)+i);
+                    double *target = mMapNodeValues->value(nodeId)+i;
+                    mDataField.assignReal(fieldCache, 1, target);
                     //qDebug("assigningReal %d",mDataField.assignReal(fieldCache, 1 ,mMapNodeValues->value(nodeId)+i));
-                    //qDebug("assigning %d %d %f",nodeId, i,*(mMapNodeValues->value(nodeId)+i));
+                    //qDebug("assigning %d %d %f",nodeId, i,*target);
+
+                    if (min > *target) {
+                        min = *target;
+                    }
+                    if (max < *target) {
+                        max = *target;
+                    }
                 } else {
                     mDataField.assignReal(fieldCache, 1, &zero);
                 }
             }
         }
     fieldModule.endChange();
+
+    mSpectrum.beginChange();
+        auto firstComponent = mSpectrum.getFirstSpectrumcomponent();
+        firstComponent.setRangeMaximum(max);
+        firstComponent.setRangeMinimum(min);
+    mSpectrum.endChange();
 }
 
 //==============================================================================
@@ -433,10 +459,9 @@ void SimulationExperimentViewZincWidget::createAndSetZincContext()
 
     // Keep track of our current scene viewer's description, if needed
     //TODO move to the right place when know what it is
-    mZincSceneViewerDescription = mDroppedZincMeshFiles?
-                                      nullptr:
-                                      mZincWidget->sceneViewer().writeDescription();
-    mDroppedZincMeshFiles = false;
+    //mZincSceneViewerDescription = mDroppedZincMeshFiles?
+    //                                  nullptr:
+    //                                  mZincWidget->sceneViewer().writeDescription();
 
     // Create and set our Zinc context
 
@@ -452,7 +477,6 @@ void SimulationExperimentViewZincWidget::createAndSetZincContext()
     OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext.getTimekeepermodule();
 
     mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
-    qDebug("TimeKeeper valid: %d/%d",mTimeKeeper.isValid(),true);
 }
 
 //==============================================================================
@@ -596,8 +620,13 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
     */
     scene.endChange();
 
+    // initialisation of the dataField
 
-    updateNodeValues(mDataSize);
+    if (mDataSize==0) {
+        updateNodeValues(1, true);
+    } else {
+        updateNodeValues(mDataSize);
+    }
     // Display all our objects
 
     showHideGraphics(GraphicsType::All);
@@ -653,7 +682,7 @@ void SimulationExperimentViewZincWidget::timeSliderValueChanged(int pTime)
 {
     // Update our scene
 
-    double time = 0.01*pTime;
+    double time = mTimeInterval*pTime;
 
     mTimeLabel->setText(tr("Time: %1 s").arg(time));
 
@@ -662,7 +691,6 @@ void SimulationExperimentViewZincWidget::timeSliderValueChanged(int pTime)
     //mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
     mTimeKeeper.setTime(time);
-    //qDebug("setTime %d %f/%f/%f",mTimeKeeper.setTime(time),mTimeKeeper.getMinimumTime(),mTimeKeeper.getTime(),mTimeKeeper.getMaximumTime());
 }
 
 

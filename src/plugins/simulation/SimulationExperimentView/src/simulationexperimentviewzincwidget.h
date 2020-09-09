@@ -95,7 +95,6 @@ private:
     struct _variable {
         QString component;
         QString variable;
-        OpenCMISS::Zinc::FieldFiniteElement field; //TODO useless ?
     };
 
     QAction *mActionAxes;
@@ -117,10 +116,10 @@ private:
     QCheckBox *mTimeCheckBox;
 
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
+    double mTimeInterval = 0.;
     double* mTimeValues;
     int mDataSize = 1;
     QMap<int, double*> *mMapNodeValues = nullptr;
-    //OpenCMISS::Zinc::Fieldcache mFieldCache;
     OpenCMISS::Zinc::FieldFiniteElement mDataField;
     OpenCMISS::Zinc::Spectrum mSpectrum;
 
@@ -137,7 +136,6 @@ private:
     OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
 
     QStringList mZincMeshFileNames;
-    bool mDroppedZincMeshFiles = false;
 
     QString mMappingFileName;
 
