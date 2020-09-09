@@ -322,17 +322,8 @@ qDebug(">>> init data");
         if (mapVariableValues.contains(variable)) {
             mMapNodeValues->insert(nodeId, mapVariableValues.value(variable));
 
-        } else {
-            //filling with 0s
-            //TODO usefull ?
-            double* toInsert = new double[pDataSize];
-            for (quint64 t = 0; t < pDataSize; ++t) {
-                toInsert[t] = mDefaultValue;
-            }
-            mMapNodeValues->insert(nodeId, toInsert);
         }
     }
-
     // Reset our different fields
     if (pDataSize>0) {
         updateNodeValues(0, pDataSize,true);
