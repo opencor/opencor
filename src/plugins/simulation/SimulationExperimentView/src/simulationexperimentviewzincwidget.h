@@ -119,8 +119,9 @@ private:
     double mTimeInterval = 0.;
     double* mTimeValues;
     int mDataSize = 0;
-    double mValueMin = 0.;
-    double mValueMax = 0.;
+    double mDefaultValue = 0.;
+    double mValueMin = mDefaultValue;
+    double mValueMax = mDefaultValue;
 
     QMap<int, double*> *mMapNodeValues = nullptr;
     OpenCMISS::Zinc::FieldFiniteElement mDataField;

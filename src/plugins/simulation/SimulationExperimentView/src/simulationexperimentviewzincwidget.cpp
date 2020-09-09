@@ -287,8 +287,8 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
 qDebug(">>> init data");
 
     mDataSize = 0;
-    mValueMin = 0;
-    mValueMax = 0;
+    mValueMin = mDefaultValue;
+    mValueMax = mDefaultValue;
 
     mTimeValues = new double[pDataSize];
 
@@ -327,7 +327,7 @@ qDebug(">>> init data");
             //TODO usefull ?
             double* toInsert = new double[pDataSize];
             for (quint64 t = 0; t < pDataSize; ++t) {
-                toInsert[t] = 0;
+                toInsert[t] = mDefaultValue;
             }
             mMapNodeValues->insert(nodeId, toInsert);
         }
@@ -405,7 +405,6 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
         OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
 
         //for (int nodeId : mMapNodeValues->keys()) {
-        static const double zero = 0.0;
         OpenCMISS::Zinc::Nodeiterator nodeIter = nodeSet.createNodeiterator();
         OpenCMISS::Zinc::Node node;
 
@@ -437,7 +436,7 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
             } else {
                 for (int i = 0; i < pValueEnd; ++i) {
                     fieldCache.setTime(mTimeValues[i]);
-                    mDataField.assignReal(fieldCache, 1, &zero);
+                    mDataField.assignReal(fieldCache, 1, &mDefaultValue);
                 }
             }
         }
