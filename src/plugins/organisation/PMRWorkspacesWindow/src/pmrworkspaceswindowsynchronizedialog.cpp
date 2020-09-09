@@ -263,7 +263,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     webViewerWidget->setLayout(webViewerLayout);
 
-    auto webViewerToolBarWidget = new Core::ToolBarWidget();
+    auto webViewerToolBarWidget = new Core::ToolBarWidget(this);
     auto webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
 
     webViewerLabel->setAlignment(Qt::AlignBottom);

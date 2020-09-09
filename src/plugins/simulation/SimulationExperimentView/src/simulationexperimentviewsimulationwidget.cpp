@@ -143,7 +143,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create a tool bar
 
-    mToolBarWidget = new Core::ToolBarWidget();
+    mToolBarWidget = new Core::ToolBarWidget(this);
 
     // Create, customise and handle various actions
 

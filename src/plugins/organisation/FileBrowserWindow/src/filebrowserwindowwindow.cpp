@@ -62,7 +62,7 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    auto toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget(this);
 
     toolBarWidget->addAction(mGui->actionHome);
     toolBarWidget->addSeparator();
