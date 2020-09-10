@@ -61,6 +61,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class ToolBarWidget;
+} // namespace Core
+
+//==============================================================================
+
 namespace ZincWidget {
     class ZincWidget;
 } // namespace ZincWidget
@@ -120,6 +126,7 @@ private:
     QLabel *mTimeLabel;
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
+    Core::ToolBarWidget *mToolBarWidget;
     QwtWheel *mSpeedWidget;
 
 

@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "simulationexperimentviewzincwidget.h"
+#include "toolbarwidget.h"
 #include "zincwidget.h"
 
 //==============================================================================
@@ -60,6 +61,8 @@ namespace SimulationExperimentView {
 SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *pParent) :
     Core::Widget(pParent)
 {
+    mTimeValues = new double(0.);
+
     QLayout *layout = createLayout();
 
     mMappingFileLabel = new QLabel(this);
@@ -148,30 +151,35 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 
     timeWidget->layout()->addWidget(mTimeLabel);
 
-    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+    mToolBarWidget = new Core::ToolBarWidget();
 
-    mSpeedWidget = new QwtWheel(mTimeLabel);
-        mSpeedWidget->setBorderWidth(0);
-        mSpeedWidget->setFixedSize(int(0.07*availableGeometry.width()),
-                                   mSpeedWidget->height()/2);
-        mSpeedWidget->setFocusPolicy(Qt::NoFocus);
-        mSpeedWidget->setRange(1, 50);
-        mSpeedWidget->setWheelBorderWidth(0);
-        mSpeedWidget->setValue(1);
-    connect(mSpeedWidget, &QwtWheel::valueChanged,
-            this, &SimulationExperimentViewZincWidget::setTimeStep);
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-    timeWidget->layout()->addWidget(mSpeedWidget);
+        mSpeedWidget = new QwtWheel(mTimeLabel);
+            mSpeedWidget->setBorderWidth(0);
+            mSpeedWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                       mSpeedWidget->height()/2);
+            mSpeedWidget->setFocusPolicy(Qt::NoFocus);
+            mSpeedWidget->setRange(1, 50);
+            mSpeedWidget->setWheelBorderWidth(0);
+            mSpeedWidget->setValue(0);
+        connect(mSpeedWidget, &QwtWheel::valueChanged,
+                this, &SimulationExperimentViewZincWidget::setTimeStep);
 
-    mTimeCheckBox = new QCheckBox(timeWidget);
+        mToolBarWidget->addWidget(mSpeedWidget);
+        mToolBarWidget->addSeparator();
 
-    mTimeCheckBox->setEnabled(false);
-    mTimeCheckBox->setText(tr("Auto"));
+        mTimeCheckBox = new QCheckBox(timeWidget);
 
-    connect(mTimeCheckBox, &QCheckBox::toggled,
-            this, &SimulationExperimentViewZincWidget::autoMode);
+        mTimeCheckBox->setEnabled(false);
+        mTimeCheckBox->setText(tr("Auto"));
 
-    timeWidget->layout()->addWidget(mTimeCheckBox);
+        connect(mTimeCheckBox, &QCheckBox::toggled,
+                this, &SimulationExperimentViewZincWidget::autoMode);
+
+        mToolBarWidget->addWidget(mTimeCheckBox);
+
+    timeWidget->layout()->addWidget(mToolBarWidget);
 
     layout->addWidget(timeWidget);
 
@@ -187,6 +195,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 
     layout->addWidget(mTimeSlider);
 
+
     // Create Zinc Context
 
     createAndSetZincContext();
@@ -198,7 +207,6 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     connect(&mTimer, &QTimer::timeout,
             this, &SimulationExperimentViewZincWidget::timerTimeOut);
 
-    mTimeValues = new double(0.);
 
 }
 
