@@ -269,10 +269,6 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     webViewerLabel->setAlignment(Qt::AlignBottom);
     webViewerLabel->setFont(newFont);
 
-    auto webViewerSpacer = new QWidget(webViewerToolBarWidget);
-
-    webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
     auto webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
     auto webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
     auto webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
@@ -291,7 +287,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     mWebViewerCellmlTextFormatAction->setCheckable(true);
 
     webViewerToolBarWidget->addWidgetAction(webViewerLabel);
-    webViewerToolBarWidget->addWidgetAction(webViewerSpacer);
+    webViewerToolBarWidget->addSpacerWidget(QSizePolicy::Expanding, QSizePolicy::Expanding);
     webViewerToolBarWidget->addAction(mWebViewerCellmlTextFormatAction);
     webViewerToolBarWidget->addSeparator();
     webViewerToolBarWidget->addAction(webViewerNormalSizeAction);
