@@ -45,8 +45,8 @@ class CORE_EXPORT ToolBarWidget : public QToolBar
 public:
     explicit ToolBarWidget(QWidget *pParent);
 
-    QAction * addSpacerWidget(QSizePolicy::Policy pHorizontalSizePolicy,
-                              QSizePolicy::Policy pVerticalSizePolicy);
+    QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
+                                    QSizePolicy::Policy pVerticalSizePolicy);
     QAction * addWidgetAction(QWidget *pWidget);
 };
 

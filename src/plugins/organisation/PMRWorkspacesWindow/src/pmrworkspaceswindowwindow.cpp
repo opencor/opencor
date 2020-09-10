@@ -106,7 +106,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addAction(mGui->actionReload);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionPreferences);
-    toolBarWidget->addSpacerWidget(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);
     toolBarWidget->addAction(mGui->actionPmr);
 
     mLoggedOnIcon = Core::tintedIcon(UserIcon, Qt::darkGreen);

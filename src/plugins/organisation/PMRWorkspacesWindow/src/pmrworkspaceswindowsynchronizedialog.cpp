@@ -287,7 +287,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     mWebViewerCellmlTextFormatAction->setCheckable(true);
 
     webViewerToolBarWidget->addWidgetAction(webViewerLabel);
-    webViewerToolBarWidget->addSpacerWidget(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    webViewerToolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);
     webViewerToolBarWidget->addAction(mWebViewerCellmlTextFormatAction);
     webViewerToolBarWidget->addSeparator();
     webViewerToolBarWidget->addAction(webViewerNormalSizeAction);

@@ -94,7 +94,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mUrlValue, &QLineEdit::returnPressed,
             this, &WebBrowserWindowWindow::returnPressed);
 
-    topToolBarWidget->addSpacerWidget(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    topToolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
     topToolBarWidget->addWidgetAction(mUrlValue);
     topToolBarWidget->addAction(mGui->actionReload);
 

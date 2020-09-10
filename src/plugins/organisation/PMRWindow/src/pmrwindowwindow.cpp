@@ -83,7 +83,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mFilterValue, &QLineEdit::textChanged,
             this, &PmrWindowWindow::filterValueChanged);
 
-    toolBarWidget->addSpacerWidget(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
     toolBarWidget->addWidgetAction(mFilterLabel);
     toolBarWidget->addWidgetAction(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
