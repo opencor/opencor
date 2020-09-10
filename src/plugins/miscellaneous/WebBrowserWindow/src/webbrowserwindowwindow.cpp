@@ -84,10 +84,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     //       bar widget...
 
     auto topToolBarWidget = new Core::ToolBarWidget(this);
-    auto spacer = new QWidget(topToolBarWidget);
-
-    spacer->setMinimumSize(0, 0);
-    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mUrlValue = new QLineEdit(topToolBarWidget);
 
@@ -98,7 +94,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     connect(mUrlValue, &QLineEdit::returnPressed,
             this, &WebBrowserWindowWindow::returnPressed);
 
-    topToolBarWidget->addWidgetAction(spacer);
+    topToolBarWidget->addSpacerWidget(QSizePolicy::Fixed, QSizePolicy::Expanding);
     topToolBarWidget->addWidgetAction(mUrlValue);
     topToolBarWidget->addAction(mGui->actionReload);
 

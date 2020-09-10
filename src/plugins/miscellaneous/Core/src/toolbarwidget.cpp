@@ -58,6 +58,21 @@ ToolBarWidget::ToolBarWidget(QWidget *pParent)
 
 //==============================================================================
 
+QAction * ToolBarWidget::addSpacerWidget(QSizePolicy::Policy pHorizontalSizePolicy,
+                                         QSizePolicy::Policy pVerticalSizePolicy)
+{
+    // Return a spacer widget
+
+    auto spacer = new QWidget(this);
+
+    spacer->setMinimumSize(0, 0);
+    spacer->setSizePolicy(pHorizontalSizePolicy, pVerticalSizePolicy);
+
+    return addWidget(spacer);
+}
+
+//==============================================================================
+
 QAction * ToolBarWidget::addWidgetAction(QWidget *pWidget)
 {
     // Add the given widget to ourselves

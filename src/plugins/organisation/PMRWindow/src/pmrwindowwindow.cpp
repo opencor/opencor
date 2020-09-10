@@ -66,10 +66,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     //       bar widget...
 
     auto toolBarWidget = new Core::ToolBarWidget(this);
-    auto spacer = new QWidget(toolBarWidget);
-
-    spacer->setMinimumSize(0, 0);
-    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mFilterLabel = new QLabel(toolBarWidget);
     mFilterValue = new QLineEdit(toolBarWidget);
@@ -87,7 +83,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mFilterValue, &QLineEdit::textChanged,
             this, &PmrWindowWindow::filterValueChanged);
 
-    toolBarWidget->addWidgetAction(spacer);
+    toolBarWidget->addSpacerWidget(QSizePolicy::Fixed, QSizePolicy::Expanding);
     toolBarWidget->addWidgetAction(mFilterLabel);
     toolBarWidget->addWidgetAction(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
