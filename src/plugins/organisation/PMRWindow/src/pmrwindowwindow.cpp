@@ -50,6 +50,32 @@ namespace PMRWindow {
 
 //==============================================================================
 
+void retranslateFilterLabel(QLabel *pLabel)
+{
+    // Retranslate our filter label
+
+    pLabel->setText(QObject::tr("Filter:"));
+}
+
+//==============================================================================
+
+void configureFilterLabel(QLabel *pLabel)
+{
+    // Configure our filter label
+
+    QFont font = pLabel->font();
+
+    font.setBold(true);
+
+    pLabel->setFont(font);
+
+    // Retranslate our filter label
+
+    retranslateFilterLabel(pLabel);
+}
+
+//==============================================================================
+
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWindowWindow)
@@ -67,14 +93,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     auto toolBarWidget = new Core::ToolBarWidget(this);
 
-    mFilterLabel = new QLabel(toolBarWidget);
     mFilterValue = new QLineEdit(toolBarWidget);
-
-    QFont font = mFilterLabel->font();
-
-    font.setBold(true);
-
-    mFilterLabel->setFont(font);
 
 #ifdef Q_OS_MAC
     mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -84,7 +103,9 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             this, &PmrWindowWindow::filterValueChanged);
 
     toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
-    toolBarWidget->addWidgetAction(mFilterLabel);
+
+    mFilterLabelAction = toolBarWidget->addLabelWidgetAction(configureFilterLabel);
+
     toolBarWidget->addWidgetAction(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
 
@@ -190,7 +211,9 @@ void PmrWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    mFilterLabel->setText(tr("Filter:"));
+    for (const auto &label : mFilterLabelAction->labels()) {
+        retranslateFilterLabel(label);
+    }
 
     mPmrInstanceLabel->setText(mPmrWebService->siteName());
 

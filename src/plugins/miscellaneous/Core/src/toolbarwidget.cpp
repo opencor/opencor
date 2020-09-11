@@ -25,8 +25,51 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QLabel>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+ToolBarLabelWidgetAction::ToolBarLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction,
+                                                   QWidget *pParent)
+    : QWidgetAction(pParent),
+      mInitializeFunction(pInitializeFunction)
+{
+}
+
+//==============================================================================
+
+QWidget * ToolBarLabelWidgetAction::createWidget(QWidget *pParent)
+{
+    // Create, initialise and return a label widget
+
+    auto res = new QLabel(pParent);
+
+    if (mInitializeFunction != nullptr) {
+        mInitializeFunction(res);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QList<QLabel *> ToolBarLabelWidgetAction::labels() const
+{
+    // Return our created labels
+
+    QList<QLabel *> res;
+
+    for (const auto &label : createdWidgets()) {
+        res << static_cast<QLabel *>(label);
+    }
+
+    return res;
+}
 
 //==============================================================================
 
@@ -69,6 +112,19 @@ QAction * ToolBarWidget::addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSi
     spacer->setSizePolicy(pHorizontalSizePolicy, pVerticalSizePolicy);
 
     return addWidget(spacer);
+}
+
+//==============================================================================
+
+ToolBarLabelWidgetAction * ToolBarWidget::addLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction)
+{
+    // Add and return a label widget action
+
+    auto res = new ToolBarLabelWidgetAction(pInitializeFunction, this);
+
+    addAction(res);
+
+    return res;
 }
 
 //==============================================================================
