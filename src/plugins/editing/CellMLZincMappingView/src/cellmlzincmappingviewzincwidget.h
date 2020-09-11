@@ -65,7 +65,7 @@ public:
     void changeSource(const QStringList &pZincMeshFileNames);
 
     bool hasNode(int pId);
-    void setNodeMapped(int pId);
+    void setNodeMapped(int pId, QString pComponent, QString pVariable);
 
     static constexpr double nodeSizeOrigin = 0;
     static constexpr double nodeSixeExp = 1.1;
@@ -116,6 +116,8 @@ private:
     OpenCMISS::Zinc::FieldGroup mMappedSelectionGroup;
     OpenCMISS::Zinc::GraphicsPoints mNodePoints;
     OpenCMISS::Zinc::GraphicsPoints mMappedPoints;
+    OpenCMISS::Zinc::GraphicsPoints mLabelPoints;
+    OpenCMISS::Zinc::FieldStoredString mDisplayField;
 
     void initAuxFile();
     void setup();

@@ -566,7 +566,7 @@ void CellMLZincMappingViewEditingWidget::openMapping(const QString &pFileName)
                 && variables.contains(component)
                 && variables.find(component)->contains(variable)) {
 
-            mZincWidget->setNodeMapped(id);
+            mZincWidget->setNodeMapped(id,component,variable);
             setNodeValue(id,component,variable);
         }
     }

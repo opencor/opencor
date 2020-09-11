@@ -121,7 +121,7 @@ bool CellMLZincMappingViewZincWidget::hasNode(int pId)
 
 //==============================================================================
 
-void CellMLZincMappingViewZincWidget::setNodeMapped(int pId)
+void CellMLZincMappingViewZincWidget::setNodeMapped(int pId, QString pComponent, QString pVariable)
 {
     auto fieldModule = mZincContext.getDefaultRegion().getFieldmodule();
     OpenCMISS::Zinc::Node node = fieldModule
@@ -140,11 +140,23 @@ void CellMLZincMappingViewZincWidget::setNodeMapped(int pId)
             OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
             nodesetGroup.addNode(node);
 
+            OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
+            nodeTemplate.defineField(mDisplayField);
+
+            OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
+            fieldCache.setNode(node);
+            node.merge(nodeTemplate);
+
+            mDisplayField.assignString(fieldCache,qPrintable(pComponent + " " + pVariable));
+
         } else {
             if (mMappedSelectionGroup.isValid()) {
                 mZincContext.getDefaultRegion().getScene().setSelectionField(OpenCMISS::Zinc::Field());
             }
         }
+
     fieldModule.endChange();
 }
 
@@ -234,10 +246,12 @@ void CellMLZincMappingViewZincWidget::dropEvent(QDropEvent *pEvent)
     const QStringList splitText = data.split("|");
 
     pEvent->acceptProposedAction();
+    QString component = splitText[1];
+    QString variable = splitText.first();
 
-    mEditingWidget->setNodeValue(mIdSelectedNode,splitText[1],splitText.first());
+    mEditingWidget->setNodeValue(mIdSelectedNode,component,variable);
 
-    setNodeMapped(mIdSelectedNode);
+    setNodeMapped(mIdSelectedNode,component,variable);
 }
 
 //==============================================================================
@@ -332,6 +346,26 @@ void CellMLZincMappingViewZincWidget::draw()
         mMappedSelectionGroup = fieldModule.createFieldGroup();
         mMappedSelectionGroup.setName("Mapped");
 
+        // Create display field and initialize it with empty strings
+
+        mDisplayField = fieldModule.createFieldStoredString();
+
+        OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
+        nodeTemplate.defineField(mDisplayField);
+
+        OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
+        OpenCMISS::Zinc::Nodeiterator nodeIter = nodeSet.createNodeiterator();
+        OpenCMISS::Zinc::Node node;
+
+        while ((node = nodeIter.next()).isValid()) {
+            fieldCache.setNode(node);
+            node.merge(nodeTemplate);
+
+            mDisplayField.assignString(fieldCache,"");
+        }
+
     fieldModule.endChange();
 
     scene.beginChange();
@@ -351,7 +385,6 @@ void CellMLZincMappingViewZincWidget::draw()
         mNodePoints.setCoordinateField(coordinates);
         mNodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         mNodePoints.setMaterial(materialModule.findMaterialByName("grey"));
-
 
         // Size of our green spheres
 
@@ -376,6 +409,24 @@ void CellMLZincMappingViewZincWidget::draw()
         pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
 
         scene.moveGraphicsBefore(mMappedPoints, mNodePoints);
+
+        // create label points
+
+        mLabelPoints = scene.createGraphicsPoints();
+        mLabelPoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        mLabelPoints.setCoordinateField(coordinates);
+        mLabelPoints.setSubgroupField(mMappedSelectionGroup);
+
+        mLabelPoints.setMaterial(materialModule.findMaterialByName("black"));
+        mLabelPoints.setSelectedMaterial(materialModule.findMaterialByName("black"));
+
+        pointAttr = mLabelPoints.getGraphicspointattributes();
+
+        pointAttr.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_NONE);
+
+        pointAttr.setLabelField(mDisplayField);
+        double dist = 0.55;
+        pointAttr.setLabelOffset(3,&dist);
 
     scene.endChange();
 
@@ -483,6 +534,7 @@ void CellMLZincMappingViewZincWidget:: setNodeSizes(int pSize) {
     scene.beginChange();
         mNodePoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
         mMappedPoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
+        mLabelPoints.getGraphicspointattributes().setBaseSize(1, &mNodeSize);
     scene.endChange();
 }
 
@@ -512,6 +564,18 @@ void CellMLZincMappingViewZincWidget::eraseNode(int pId)
             }
             OpenCMISS::Zinc::NodesetGroup nodesetGroup = nodeGroupField.getNodesetGroup();
             nodesetGroup.removeNode(node);
+
+            OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
+            nodeTemplate.defineField(mDisplayField);
+
+            OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+
+            fieldCache.setNode(node);
+            node.merge(nodeTemplate);
+
+            mDisplayField.assignString(fieldCache,"");
+
 
         } else {
             if (mMappedSelectionGroup.isValid()) {
