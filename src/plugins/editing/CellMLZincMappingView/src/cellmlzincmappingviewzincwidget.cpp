@@ -439,7 +439,7 @@ void CellMLZincMappingViewZincWidget::draw()
         // Black lines
 
         mLines = scene.createGraphicsLines();
-
+        mLines.setCoordinateField(mCoordinates);
         mLines.setMaterial(materialModule.findMaterialByName("black"));
 
         // Green spheres limiting our scene
@@ -493,19 +493,18 @@ void CellMLZincMappingViewZincWidget::draw()
 
         // Axes
 
-        OpenCMISS::Zinc::GraphicsPoints axes = scene.createGraphicsPoints();
+        OpenCMISS::Zinc::GraphicsPoints mAxes = scene.createGraphicsPoints();
 
-        axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
-        axes.setMaterial(materialModule.findMaterialByName("blue"));
+        mAxes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
+        mAxes.setMaterial(materialModule.findMaterialByName("blue"));
 
         // usefull with devicePixelRatioChanged
         //mAxesFontPointSize = axes.getGraphicspointattributes().getFont().getPointSize();
 
-        mAxesAttributes = axes.getGraphicspointattributes();
-
         // Surfaces
 
         mSurfaces = scene.createGraphicsSurfaces();
+        mSurfaces.setCoordinateField(mCoordinates);
 
         mSurfaces.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("white"));
 
@@ -518,6 +517,7 @@ void CellMLZincMappingViewZincWidget::draw()
         tessellation.setMinimumDivisions(1, &intValue);
 
         mIsosurfaces = scene.createGraphicsContours();
+        mIsosurfaces.setCoordinateField(mCoordinates);
 
         double doubleValue = 1.0;
 
@@ -561,45 +561,35 @@ void CellMLZincMappingViewZincWidget::showHideGraphics(GraphicsType pGraphicsTyp
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Axes)) {
-            mAxesAttributes.setGlyphShapeType(mActionAxes->isChecked()?
-                                                  OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ:
-                                                  OpenCMISS::Zinc::Glyph::SHAPE_TYPE_NONE);
+            mAxes.setVisibilityFlag(mActionAxes->isChecked());
         }
 
         // Lines
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Lines)) {
-            mLines.setCoordinateField(mActionLines->isChecked()?
-                                          mCoordinates:
-                                          OpenCMISS::Zinc::Field());
+            mLines.setVisibilityFlag(mActionLines->isChecked());
         }
 
         // Surfaces
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Surfaces)) {
-            mSurfaces.setCoordinateField(mActionSurfaces->isChecked()?
-                                             mCoordinates:
-                                             OpenCMISS::Zinc::Field());
+            mSurfaces.setVisibilityFlag(mActionSurfaces->isChecked());
         }
 
         // Isosurfaces
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Isosurfaces)) {
-            mIsosurfaces.setCoordinateField(mActionIsosurfaces->isChecked()?
-                                                mCoordinates:
-                                                OpenCMISS::Zinc::Field());
+            mIsosurfaces.setVisibilityFlag(mActionIsosurfaces->isChecked());
         }
 
         // Labels
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Label)) {
-            mLabelPoints.getGraphicspointattributes().setLabelField(mActionLabel->isChecked()?
-                                                                         mDisplayField:
-                                                                         OpenCMISS::Zinc::Field());
+            mLabelPoints.setVisibilityFlag(mActionLabel->isChecked());
         }
 
     scene.endChange();

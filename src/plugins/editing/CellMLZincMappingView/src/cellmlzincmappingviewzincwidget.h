@@ -139,7 +139,7 @@ private:
     OpenCMISS::Zinc::GraphicsPoints mMappedPoints;
     OpenCMISS::Zinc::GraphicsPoints mLabelPoints;
     OpenCMISS::Zinc::FieldStoredString mDisplayField;
-    OpenCMISS::Zinc::Graphicspointattributes mAxesAttributes;
+    OpenCMISS::Zinc::GraphicsPoints mAxes;
     OpenCMISS::Zinc::GraphicsLines mLines;
     OpenCMISS::Zinc::GraphicsSurfaces mSurfaces;
     OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
