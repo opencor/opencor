@@ -517,7 +517,7 @@ void CellMLZincMappingViewZincWidget::draw()
 
         // Axes
 
-        OpenCMISS::Zinc::GraphicsPoints mAxes = scene.createGraphicsPoints();
+        mAxes = scene.createGraphicsPoints();
 
         mAxes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
         mAxes.setMaterial(materialModule.findMaterialByName("blue"));
