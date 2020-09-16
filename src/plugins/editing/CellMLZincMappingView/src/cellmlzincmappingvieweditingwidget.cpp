@@ -193,7 +193,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mZincWidget = new CellMLZincMappingViewZincWidget(this, mZincMeshFileNames, this);
 
         connect(mClearNode, &QAction::triggered,
-                mZincWidget, &CellMLZincMappingViewZincWidget::eraseNode);
+                mZincWidget, &CellMLZincMappingViewZincWidget::eraseNodeSlot);
         connect(mNodeSizeWidget, &QwtWheel::valueChanged,
                 mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes);
 

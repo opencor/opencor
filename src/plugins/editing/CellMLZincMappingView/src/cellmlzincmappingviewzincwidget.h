@@ -69,6 +69,7 @@ public:
 
     bool hasNode(int pId);
     void setNodeMapped(int pId, QString pComponent, QString pVariable);
+    void eraseNode(int pId);
 
     QList<bool> getCheckedAction();
     void setCheckedAction(QList<bool>);
@@ -78,7 +79,7 @@ public:
 
 public slots:
     void setNodeSizes(int pSize);
-    void eraseNode(int pId = -1);
+    void eraseNodeSlot();
 
 protected:
     void initializeGL() override;

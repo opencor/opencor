@@ -710,12 +710,15 @@ void CellMLZincMappingViewZincWidget:: setNodeSizes(int pSize) {
 
 //==============================================================================
 
+void CellMLZincMappingViewZincWidget::eraseNodeSlot()
+{
+    eraseNode(mIdSelectedNode);
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewZincWidget::eraseNode(int pId)
 {
-    if (pId==-1) {
-        pId = mIdSelectedNode;
-    }
-
     mEditingWidget->eraseNodeValue(pId);
 
     // select and highlight the current node
