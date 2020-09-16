@@ -54,6 +54,7 @@ void CellMLZincMappingViewWidget::retranslateUi()
 
 //==============================================================================
 
+static const char *SettingsCellmlZincMappingViewDisplayedZincField           = "CellmlZincMappingViewDisplayedZincField";
 static const char *SettingsCellmlZincMappingViewEditingWidgetHorizontalSizes = "CellmlZincMappingViewEditingWidgetHorizontalSizes";
 static const char *SettingsCellmlZincMappingViewEditingWidgetVerticalSizes   = "CellmlZincMappingViewEditingWidgetVerticalSizes";
 static const char *SettingsCellmlZincMappingViewMeshFileNames                = "CellmlZincMappingViewMeshFileNames";
@@ -74,10 +75,18 @@ void CellMLZincMappingViewWidget::loadSettings(QSettings &pSettings)
                                                                     0.13*AvailableGeometryHeight};
     static const QStringList DefaultMeshFileNames = {};
 
+    static const QVariantList DefaultDisplayedZincFields = {true, true, true, true, true};
+
     mEditingWidgetHorizontalSizes = qVariantListToIntList(pSettings.value(SettingsCellmlZincMappingViewEditingWidgetHorizontalSizes, DefaultEditingWidgetHorizontalSizes).toList());
     mEditingWidgetVerticalSizes = qVariantListToIntList(pSettings.value(SettingsCellmlZincMappingViewEditingWidgetVerticalSizes, DefaultEditingWidgetVerticalSizes).toList());
 
     mMeshFileNames = pSettings.value(SettingsCellmlZincMappingViewMeshFileNames, DefaultMeshFileNames).toStringList();
+
+    mDisplayedZincFields.clear();
+
+    for (QVariant variant : pSettings.value(SettingsCellmlZincMappingViewDisplayedZincField, DefaultDisplayedZincFields).toList()) {
+        mDisplayedZincFields.append(variant.toBool());
+    }
 }
 
 //==============================================================================
@@ -90,12 +99,27 @@ void CellMLZincMappingViewWidget::saveSettings(QSettings &pSettings) const
     pSettings.setValue(SettingsCellmlZincMappingViewEditingWidgetVerticalSizes, qIntListToVariantList(mEditingWidgetVerticalSizes));
 
     pSettings.setValue(SettingsCellmlZincMappingViewMeshFileNames, mMeshFileNames);
+
+    QVariantList toVariant;
+    for (bool value : mDisplayedZincFields) {
+        toVariant.append(QVariant(value));
+    }
+
+    pSettings.setValue(SettingsCellmlZincMappingViewDisplayedZincField, toVariant);
 }
 
 //==============================================================================
 
 void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
 {
+
+    // Try to get back the last state of display
+
+    if (mEditingWidget != nullptr) {
+        mDisplayedZincFields = mEditingWidget->getZincWidget()->getCheckedAction();
+    }
+
+
     // Retrieve the editing widget associated with the given file, if any
 
     mEditingWidget = mEditingWidgets.value(pFileName);
@@ -116,6 +140,10 @@ void CellMLZincMappingViewWidget::initialize(const QString &pFileName)
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
     }
+
+    // load its settings
+
+    mEditingWidget->getZincWidget()->setCheckedAction(mDisplayedZincFields);
 
     // Update the sizes of our new editing widget
 
@@ -143,6 +171,9 @@ void CellMLZincMappingViewWidget::finalize(const QString &pFileName)
     CellMLZincMappingViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget != nullptr) {
+
+        mDisplayedZincFields = editingWidget->getZincWidget()->getCheckedAction();
+
         // There is an editing widget for the given file name, so delete it and
         // remove it from our list
 

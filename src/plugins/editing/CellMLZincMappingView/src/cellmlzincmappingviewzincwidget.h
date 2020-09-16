@@ -70,6 +70,9 @@ public:
     bool hasNode(int pId);
     void setNodeMapped(int pId, QString pComponent, QString pVariable);
 
+    QList<bool> getCheckedAction();
+    void setCheckedAction(QList<bool>);
+
     static constexpr double nodeSizeOrigin = 0;
     static constexpr double nodeSixeExp = 1.1;
 

@@ -321,6 +321,13 @@ void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizont
 
 //==============================================================================
 
+CellMLZincMappingViewZincWidget * CellMLZincMappingViewEditingWidget::getZincWidget()
+{
+    return mZincWidget;
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if it refers to one or

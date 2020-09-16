@@ -220,6 +220,30 @@ void CellMLZincMappingViewZincWidget::setNodeMapped(int pId, QString pComponent,
 
 //==============================================================================
 
+QList<bool> CellMLZincMappingViewZincWidget::getCheckedAction()
+{
+    return {mActionAxes->isChecked(),
+            mActionLines->isChecked(),
+            mActionSurfaces->isChecked(),
+            mActionIsosurfaces->isChecked(),
+            mActionLabel->isChecked()};
+}
+
+//==============================================================================
+
+void CellMLZincMappingViewZincWidget::setCheckedAction(QList<bool> values)
+{
+    mActionAxes->setChecked(values.isEmpty() ? true : values.takeFirst());
+    mActionLines->setChecked(values.isEmpty() ? true : values.takeFirst());
+    mActionSurfaces->setChecked(values.isEmpty() ? true : values.takeFirst());
+    mActionIsosurfaces->setChecked(values.isEmpty() ? true : values.takeFirst());
+    mActionLabel->setChecked(values.isEmpty() ? true : values.takeFirst());
+
+    showHideGraphics(GraphicsType::All);
+}
+
+//==============================================================================
+
 void CellMLZincMappingViewZincWidget::initializeGL()
 {
     ZincWidget::initializeGL();
