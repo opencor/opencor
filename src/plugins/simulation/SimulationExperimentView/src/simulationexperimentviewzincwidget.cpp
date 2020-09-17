@@ -444,7 +444,7 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
                     //qDebug("assigning %d %d %f",nodeId, i,*target);
 
                     if (mValueMin > *target) {
-                        mValueMin = *target;
+                        //mValueMin = *target;
                     }
                     if (mValueMax < *target) {
                         mValueMax = *target;
@@ -463,6 +463,9 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
         auto firstComponent = mSpectrum.getFirstSpectrumcomponent();
         firstComponent.setRangeMinimum(mValueMin);
         firstComponent.setRangeMaximum(mValueMax);
+        qDebug("min %f max %f",mValueMin,mValueMax);
+        firstComponent.setExtendBelow(true);
+        firstComponent.setExtendAbove(true);
     mSpectrum.endChange();
 }
 
@@ -556,6 +559,9 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
 
         mSpectrum.beginChange();
             //mSpectrum.setMaterialOverwrite(false); //doesn't work
+            OpenCMISS::Zinc::Spectrumcomponent firstComponent = mSpectrum.getFirstSpectrumcomponent();
+            firstComponent.setScaleType(OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LOG);
+            firstComponent.setExaggeration(100.);
         mSpectrum.endChange();
 
         // hic sunt dracones
@@ -599,6 +605,7 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
 
         mPointsAttributes = points.getGraphicspointattributes();
         points.setSpectrum(mSpectrum);
+        //points.getGraphicspointattributes().setLabelField(mDataField);
 
         points.setDataField(mDataField);
 
