@@ -131,7 +131,6 @@ private:
 
 
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
-    double mTimeInterval = 1.;
     int mTimeStep = 1;
     double* mTimeValues;
     int mDataSize = 0;

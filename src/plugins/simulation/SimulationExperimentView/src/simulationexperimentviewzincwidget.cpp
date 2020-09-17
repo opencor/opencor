@@ -301,18 +301,13 @@ void SimulationExperimentViewZincWidget::loadZincMeshFiles(const QStringList &pZ
 void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMinimumTime, double pMaximumTime,
                   double pTimeInterval, QMap<QString, double *> &pMapVariableValues)
 {
-    // Initialise our data
-    // Note: mTimeValues must be fully populated for Zinc to work as expected.
-    //       However, the list of simulation's results' points is effectively
-    //       empty when coming here (see the call to this method from
-    //       SimulationExperimentViewWidget::checkSimulationResults()), hence we
-    //       we create and populate mTimeValues ourselves...
-
-qDebug(">>> init data");
+    // Initialise our data with the setup of the experiment
 
     mDataSize = 0;
     mValueMin = mDefaultValue;
     mValueMax = mDefaultValue;
+
+    // set our time values, crating a dummy one to initialize the dataField if have nothing
 
     if (pDataSize > 0) {
         mTimeValues = new double[pDataSize];
@@ -322,10 +317,10 @@ qDebug(">>> init data");
     }
 
     for (quint64 i = 0; i < pDataSize; ++i) {
-        mTimeValues[i] = double(i)*pTimeInterval;
+        mTimeValues[i] = pMinimumTime + double(i)*pTimeInterval;
     }
 
-    // clear the groups
+    // clear the groups from the variables received
 
     QMap<QString, double *> mapVariableValues = QMap<QString, double *>();
 
@@ -369,7 +364,6 @@ qDebug(">>> init data");
 
     mTimeSlider->setMinimum(int(pMinimumTime/pTimeInterval));
     mTimeSlider->setMaximum(int(pMaximumTime/pTimeInterval));
-    mTimeInterval = pTimeInterval;
 
     // Disable our time-related widgets
 
@@ -405,6 +399,7 @@ void SimulationExperimentViewZincWidget::addData(int pDataSize)
     }
 }
 
+//==============================================================================
 
 void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int pValueEnd, bool pReset)
 {
@@ -560,7 +555,7 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         // setup spectrum
 
         mSpectrum.beginChange();
-            mSpectrum.setMaterialOverwrite(false); //doesn't work
+            //mSpectrum.setMaterialOverwrite(false); //doesn't work
         mSpectrum.endChange();
 
         // hic sunt dracones
@@ -708,7 +703,7 @@ void SimulationExperimentViewZincWidget::timeSliderValueChanged(int pTime)
 {
     // Update our scene
 
-    double time = mTimeInterval*pTime;
+    double time = mTimeValues[pTime];
 
     mTimeLabel->setText(tr("Time: %1 s").arg(time));
 
