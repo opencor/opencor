@@ -653,11 +653,15 @@
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewZincWidget</name>
     <message>
         <source>Auto</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto</translation>
     </message>
     <message>
         <source>Time: %1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps: %1 s</translation>
+    </message>
+    <message>
+        <source>Log colors</source>
+        <translation>Couleurs log.</translation>
     </message>
 </context>
 <context>
