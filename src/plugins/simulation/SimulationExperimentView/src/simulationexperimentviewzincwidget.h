@@ -54,6 +54,7 @@ class QMenu;
 class QLabel;
 class QCheckBox;
 class QSlider;
+class QLineEdit;
 
 //==============================================================================
 
@@ -126,6 +127,8 @@ private:
     QLabel *mTimeLabel;
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
+    QCheckBox *mLogCheckBox;
+    QLineEdit *mLogAmpliLineEdit;
     Core::ToolBarWidget *mToolBarWidget;
     QwtWheel *mSpeedWidget;
 
@@ -180,6 +183,9 @@ private slots:
     void actionLinesTriggered();
     void actionSurfacesTriggered();
     void actionIsosurfacesTriggered();
+
+    void changedSpectrumExageration(QString pValue);
+    void setSpectrumScale();
 };
 
 //==============================================================================

@@ -32,12 +32,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QCheckBox>
 #include <QDir>
+#include <QDoubleValidator>
 #include <QDragEnterEvent>
 #include <QtGui>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QLabel>
 #include <QLayout>
+#include <QLineEdit>
 #include <QMenu>
 #include <QSlider>
 
@@ -152,6 +154,26 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     timeWidget->layout()->addWidget(mTimeLabel);
 
     mToolBarWidget = new Core::ToolBarWidget();
+
+        mLogCheckBox = new QCheckBox(timeWidget);
+
+        mLogCheckBox->setEnabled(false);
+        mLogCheckBox->setText(tr("Log colors"));
+
+        connect(mLogCheckBox, &QCheckBox::toggled,
+                this, &SimulationExperimentViewZincWidget::setSpectrumScale);
+
+        mToolBarWidget->addWidget(mLogCheckBox);
+
+        mLogAmpliLineEdit = new QLineEdit(timeWidget);
+        mLogAmpliLineEdit->setValidator(new QDoubleValidator(timeWidget));
+        mLogAmpliLineEdit->setEnabled(false);
+        mLogAmpliLineEdit->setText("1.00");
+
+        connect(mLogAmpliLineEdit, &QLineEdit::textEdited,
+                this, &SimulationExperimentViewZincWidget::changedSpectrumExageration);
+
+        mToolBarWidget->addWidget(mLogAmpliLineEdit);
 
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
@@ -288,6 +310,11 @@ void SimulationExperimentViewZincWidget::loadZincMeshFiles(const QStringList &pZ
 
     mZincContext.setDefaultRegion(mZincContext.createRegion());
     mZincWidget->sceneViewer().setScene(mZincContext.getDefaultRegion().getScene());
+
+    // hide spectrum accesses
+
+    mLogCheckBox->setEnabled(false);
+    mLogAmpliLineEdit->setEnabled(false);
 
     // Fill the region with the new model
 
@@ -444,7 +471,7 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
                     //qDebug("assigning %d %d %f",nodeId, i,*target);
 
                     if (mValueMin > *target) {
-                        //mValueMin = *target;
+                        mValueMin = *target;
                     }
                     if (mValueMax < *target) {
                         mValueMax = *target;
@@ -560,9 +587,13 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         mSpectrum.beginChange();
             //mSpectrum.setMaterialOverwrite(false); //doesn't work
             OpenCMISS::Zinc::Spectrumcomponent firstComponent = mSpectrum.getFirstSpectrumcomponent();
-            firstComponent.setScaleType(OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LOG);
-            firstComponent.setExaggeration(100.);
+            //firstComponent.setScaleType(OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LOG);
+            //firstComponent.setExaggeration(100.);
         mSpectrum.endChange();
+
+        // show spectrum accesses
+
+        mLogCheckBox->setEnabled(true);
 
         // hic sunt dracones
 
@@ -860,6 +891,24 @@ void SimulationExperimentViewZincWidget::actionIsosurfacesTriggered()
     // Show/hide our isosurfaces
 
     showHideGraphics(GraphicsType::Isosurfaces);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::changedSpectrumExageration(QString pValue)
+{
+    mSpectrum.getFirstSpectrumcomponent().setExaggeration(pValue.toFloat());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::setSpectrumScale()
+{
+    mSpectrum.getFirstSpectrumcomponent().setScaleType(mLogCheckBox->isChecked()?
+                                                           OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LOG:
+                                                           OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LINEAR);
+
+    mLogAmpliLineEdit->setEnabled(mLogCheckBox->isChecked());
 }
 
 //==============================================================================
