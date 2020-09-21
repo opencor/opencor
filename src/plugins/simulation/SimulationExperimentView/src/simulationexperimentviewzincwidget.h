@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QTimer>
+#include <QtMath>
 
 //==============================================================================
 
@@ -111,6 +112,10 @@ private:
         QString variable;
     };
 
+    static constexpr double nodeSizeOrigin = 0;
+    static constexpr double nodeSixeExp = 1.1;
+    double invLnNodeSizeExp = 1/qLn(nodeSixeExp);
+
     QAction *mActionAxes;
     QAction *mActionPoints;
     QAction *mActionLines;
@@ -127,6 +132,7 @@ private:
 
     QLabel *mMappingFileLabel;
     QLabel *mTimeLabel;
+    QwtWheel *mNodeSizeWidget;
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
     QCheckBox *mLogCheckBox;
@@ -174,6 +180,7 @@ private:
 private slots:
     void graphicsInitialized();
     void devicePixelRatioChanged(int pDevicePixelRatio);
+    void setNodeSizes(int pSize);
 
     void timeSliderValueChanged(int pTime);
     void timerTimeOut();

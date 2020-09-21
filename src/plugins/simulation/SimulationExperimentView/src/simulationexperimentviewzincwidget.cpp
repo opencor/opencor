@@ -162,6 +162,22 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 
     mToolBarWidget = new Core::ToolBarWidget();
 
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+
+        mNodeSizeWidget = new QwtWheel(mToolBarWidget);
+            mNodeSizeWidget->setBorderWidth(0);
+            mNodeSizeWidget->setFixedSize(int(0.07*availableGeometry.width()),
+                                       mNodeSizeWidget->height()/2);
+            mNodeSizeWidget->setFocusPolicy(Qt::NoFocus);
+            mNodeSizeWidget->setRange(-50.0, 100.0);
+            mNodeSizeWidget->setWheelBorderWidth(0);
+            mNodeSizeWidget->setValue(nodeSizeOrigin);
+
+        mToolBarWidget->addWidget(mNodeSizeWidget);
+
+        connect(mNodeSizeWidget, &QwtWheel::valueChanged,
+                this, &SimulationExperimentViewZincWidget::setNodeSizes);
+
         mLogCheckBox = new QCheckBox(timeWidget);
 
         mLogCheckBox->setEnabled(false);
@@ -182,7 +198,6 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 
         mToolBarWidget->addWidget(mLogAmpliLineEdit);
 
-        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
         mSpeedWidget = new QwtWheel(mTimeLabel);
             mSpeedWidget->setBorderWidth(0);
@@ -642,7 +657,7 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         mLabels.setCoordinateField(mCoordinates);
         mLabels.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         mLabels.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("black"));
-        mLabels.getGraphicspointattributes().setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_NONE);
+        mLabels.getGraphicspointattributes().setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
 
         mLabels.getGraphicspointattributes().setLabelField(mDataField);
 
@@ -717,13 +732,14 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
 
     mAxes.getGraphicspointattributes().setBaseSize(1, &doubleValue);
 
-    doubleValue = 0.02*right;
+    doubleValue = qCeil(qLn(0.0017*qMax(right-left,qMax(top-bottom,farPlane-nearPlane)))*invLnNodeSizeExp);
 
-    mPoints.getGraphicspointattributes().setBaseSize(1, &doubleValue);
+    mNodeSizeWidget->setValue(doubleValue);
+    setNodeSizes(doubleValue);
 
-    doubleValue *= 0.7;
+    doubleValue = 0.75;
 
-    mLabels.getGraphicspointattributes().setLabelOffset(3,&doubleValue);
+    mLabels.getGraphicspointattributes().setLabelOffset(1,&doubleValue);
 }
 
 //==============================================================================
@@ -745,6 +761,22 @@ void SimulationExperimentViewZincWidget::devicePixelRatioChanged(int pDevicePixe
 
     scene.beginChange();
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
+    scene.endChange();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget:: setNodeSizes(int pSize) {
+    double nodeSize = pow(nodeSixeExp,pSize);
+    //TODO change size of mapped nodes
+
+    OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
+
+    OpenCMISS::Zinc::Scene scene = region.getScene();
+
+    scene.beginChange();
+        mPoints.getGraphicspointattributes().setBaseSize(1, &nodeSize);
+        mLabels.getGraphicspointattributes().setBaseSize(1, &nodeSize);
     scene.endChange();
 }
 
