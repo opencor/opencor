@@ -102,7 +102,8 @@ private:
         Points,
         Lines,
         Surfaces,
-        Isosurfaces
+        Isosurfaces,
+        Labels
     };
 
     struct _variable {
@@ -115,6 +116,7 @@ private:
     QAction *mActionLines;
     QAction *mActionSurfaces;
     QAction *mActionIsosurfaces;
+    QAction *mActionLabels;
 
     bool mShuttingDown = false;
 
@@ -153,6 +155,7 @@ private:
     OpenCMISS::Zinc::FieldMagnitude mMagnitude;
     OpenCMISS::Zinc::GraphicsPoints mAxes;
     OpenCMISS::Zinc::GraphicsPoints mPoints;
+    OpenCMISS::Zinc::GraphicsPoints mLabels;
     OpenCMISS::Zinc::GraphicsLines mLines;
     OpenCMISS::Zinc::GraphicsSurfaces mSurfaces;
     OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
@@ -183,6 +186,7 @@ private slots:
     void actionLinesTriggered();
     void actionSurfacesTriggered();
     void actionIsosurfacesTriggered();
+    void actionLabelsTriggered();
 
     void changedSpectrumExageration(QString pValue);
     void setSpectrumScale();

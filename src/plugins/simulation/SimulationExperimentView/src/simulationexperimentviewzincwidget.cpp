@@ -82,6 +82,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     mActionLines = Core::newAction(true,this);
     mActionSurfaces = Core::newAction(true,this);
     mActionIsosurfaces = Core::newAction(true,this);
+    mActionLabels = Core::newAction(true,this);
 
     //TODO put this in settings
     mActionAxes->setChecked(true);
@@ -89,12 +90,14 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     mActionLines->setChecked(true);
     mActionSurfaces->setChecked(true);
     mActionIsosurfaces->setChecked(true);
+    mActionLabels->setChecked(true);
 
     mActionAxes->setText("Axes");
     mActionPoints->setText("Points");
     mActionLines->setText("Lines");
     mActionSurfaces->setText("Surfaces");
     mActionIsosurfaces->setText("Isosurfaces");
+    mActionLabels->setText("Labels");
 
     connect(mActionAxes, &QAction::triggered,
             this, &SimulationExperimentViewZincWidget::actionAxesTriggered);
@@ -106,6 +109,8 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
             this, &SimulationExperimentViewZincWidget::actionSurfacesTriggered);
     connect(mActionIsosurfaces, &QAction::triggered,
             this, &SimulationExperimentViewZincWidget::actionIsosurfacesTriggered);
+    connect(mActionLabels, &QAction::triggered,
+            this, &SimulationExperimentViewZincWidget::actionLabelsTriggered);
 
     // Allow for things to be dropped on us
 
@@ -120,6 +125,8 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     contextMenu->addAction(mActionLines);
     contextMenu->addAction(mActionSurfaces);
     contextMenu->addAction(mActionIsosurfaces);
+    contextMenu->addSeparator();
+    contextMenu->addAction(mActionLabels);
 
     // Create and add a Zinc widget
 
@@ -629,6 +636,16 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         mPoints.setSpectrum(mSpectrum);
         mPoints.setDataField(mDataField);
 
+        // Labels
+
+        mLabels = scene.createGraphicsPoints();
+        mLabels.setCoordinateField(mCoordinates);
+        mLabels.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        mLabels.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("black"));
+        mLabels.getGraphicspointattributes().setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_NONE);
+
+        mLabels.getGraphicspointattributes().setLabelField(mDataField);
+
         // Lines
 
         mLines = scene.createGraphicsLines();
@@ -703,6 +720,10 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
     doubleValue = 0.02*right;
 
     mPoints.getGraphicspointattributes().setBaseSize(1, &doubleValue);
+
+    doubleValue *= 0.7;
+
+    mLabels.getGraphicspointattributes().setLabelOffset(3,&doubleValue);
 }
 
 //==============================================================================
@@ -819,6 +840,14 @@ void SimulationExperimentViewZincWidget::showHideGraphics(GraphicsType pGraphics
             || (pGraphicsType == GraphicsType::Isosurfaces)) {
             mIsosurfaces.setVisibilityFlag(mActionIsosurfaces->isChecked());
         }
+
+        // Labels
+
+            if (   (pGraphicsType == GraphicsType::All)
+                || (pGraphicsType == GraphicsType::Labels)) {
+                mLabels.setVisibilityFlag(mActionLabels->isChecked());
+            }
+
     scene.endChange();
 }
 
@@ -872,6 +901,15 @@ void SimulationExperimentViewZincWidget::actionIsosurfacesTriggered()
     // Show/hide our isosurfaces
 
     showHideGraphics(GraphicsType::Isosurfaces);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::actionLabelsTriggered()
+{
+    // Show/hide our labels
+
+    showHideGraphics(GraphicsType::Labels);
 }
 
 //==============================================================================
