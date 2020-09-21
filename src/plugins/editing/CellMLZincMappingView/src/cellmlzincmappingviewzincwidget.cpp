@@ -474,6 +474,7 @@ void CellMLZincMappingViewZincWidget::draw()
         mNodePoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         mNodePoints.setMaterial(materialModule.findMaterialByName("grey"));
 
+
         // Size of our green spheres
 
         OpenCMISS::Zinc::Graphicspointattributes pointAttr = mNodePoints.getGraphicspointattributes();
@@ -521,6 +522,7 @@ void CellMLZincMappingViewZincWidget::draw()
 
         mAxes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
         mAxes.setMaterial(materialModule.findMaterialByName("blue"));
+        mAxes.getGraphicspointattributes().setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
 
         // usefull with devicePixelRatioChanged
         //mAxesFontPointSize = axes.getGraphicspointattributes().getFont().getPointSize();
