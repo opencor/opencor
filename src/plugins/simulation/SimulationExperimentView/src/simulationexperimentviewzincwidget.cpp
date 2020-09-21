@@ -582,15 +582,6 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         OpenCMISS::Zinc::Spectrummodule spectrumModule = mZincContext.getSpectrummodule();
         mSpectrum = spectrumModule.getDefaultSpectrum();
 
-        // setup spectrum
-
-        mSpectrum.beginChange();
-            //mSpectrum.setMaterialOverwrite(false); //doesn't work
-            OpenCMISS::Zinc::Spectrumcomponent firstComponent = mSpectrum.getFirstSpectrumcomponent();
-            //firstComponent.setScaleType(OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LOG);
-            //firstComponent.setExaggeration(100.);
-        mSpectrum.endChange();
-
         // show spectrum accesses
 
         mLogCheckBox->setEnabled(true);
@@ -617,33 +608,31 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
     scene.beginChange();
         // Axes
 
-        OpenCMISS::Zinc::GraphicsPoints axes = scene.createGraphicsPoints();
+        mAxes = scene.createGraphicsPoints();
         OpenCMISS::Zinc::Materialmodule materialModule = mZincContext.getMaterialmodule();
 
-        axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
-        axes.setMaterial(materialModule.findMaterialByName("blue"));
+        mAxes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
+        mAxes.setMaterial(materialModule.findMaterialByName("blue"));
 
-        mAxesFontPointSize = axes.getGraphicspointattributes().getFont().getPointSize();
-        mAxesAttributes = axes.getGraphicspointattributes();
+        mAxesFontPointSize = mAxes.getGraphicspointattributes().getFont().getPointSize();
+        mAxes.getGraphicspointattributes().setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
 
         // Points
 
-        OpenCMISS::Zinc::GraphicsPoints points = scene.createGraphicsPoints();
+        mPoints = scene.createGraphicsPoints();
 
-        points.setCoordinateField(mCoordinates);
-        points.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        points.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("green"));
+        mPoints.setCoordinateField(mCoordinates);
+        mPoints.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        mPoints.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("green"));
+        mPoints.getGraphicspointattributes().setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE);
 
-        mPointsAttributes = points.getGraphicspointattributes();
-        points.setSpectrum(mSpectrum);
-        //points.getGraphicspointattributes().setLabelField(mDataField);
-
-        points.setDataField(mDataField);
+        mPoints.setSpectrum(mSpectrum);
+        mPoints.setDataField(mDataField);
 
         // Lines
 
         mLines = scene.createGraphicsLines();
-
+        mLines.setCoordinateField(mCoordinates);
         mLines.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("black"));
         mLines.setSpectrum(mSpectrum);
         mLines.setDataField(mDataField);
@@ -651,6 +640,7 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         // Surfaces
 
         mSurfaces = scene.createGraphicsSurfaces();
+        mSurfaces.setCoordinateField(mCoordinates);
 
         mSurfaces.setSpectrum(mSpectrum);
         mSurfaces.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("white"));
@@ -659,7 +649,7 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         double doubleValue;
 
         // Isosurfaces
-    /*
+
         OpenCMISS::Zinc::Tessellation tessellation = mZincContext.getTessellationmodule().createTessellation();
         int intValue = 8;
 
@@ -667,15 +657,17 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         tessellation.setMinimumDivisions(1, &intValue);
 
         mIsosurfaces = scene.createGraphicsContours();
+        mIsosurfaces.setCoordinateField(mCoordinates);
 
-        double doubleValue = 1.0;
+        doubleValue = 1.0;
 
         mIsosurfaces.setIsoscalarField(mMagnitude);
         mIsosurfaces.setListIsovalues(1, &doubleValue);
         mIsosurfaces.setMaterial(mZincContext.getMaterialmodule().findMaterialByName("gold"));
         mIsosurfaces.setSpectrum(mSpectrum);
+        mIsosurfaces.setDataField(mDataField);
         mIsosurfaces.setTessellation(tessellation);
-    */
+
     scene.endChange();
 
     // initialisation of the dataField
@@ -706,11 +698,11 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
 
     doubleValue = 0.65*right;
 
-    mAxesAttributes.setBaseSize(1, &doubleValue);
+    mAxes.getGraphicspointattributes().setBaseSize(1, &doubleValue);
 
     doubleValue = 0.02*right;
 
-    mPointsAttributes.setBaseSize(1, &doubleValue);
+    mPoints.getGraphicspointattributes().setBaseSize(1, &doubleValue);
 }
 
 //==============================================================================
@@ -794,49 +786,38 @@ void SimulationExperimentViewZincWidget::showHideGraphics(GraphicsType pGraphics
 
     scene.beginChange();
         // Axes
-Q_UNUSED(pGraphicsType)
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Axes)) {
-            mAxesAttributes.setGlyphShapeType(mActionAxes->isChecked()?
-                                                  OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ:
-                                                  OpenCMISS::Zinc::Glyph::SHAPE_TYPE_NONE);
+            mAxes.setVisibilityFlag(mActionAxes->isChecked());
         }
 
         // Points
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Points)) {
-            mPointsAttributes.setGlyphShapeType(mActionPoints->isChecked()?
-                                                    OpenCMISS::Zinc::Glyph::SHAPE_TYPE_SPHERE:
-                                                    OpenCMISS::Zinc::Glyph::SHAPE_TYPE_NONE);
+            mPoints.setVisibilityFlag(mActionPoints->isChecked());
         }
 
         // Lines
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Lines)) {
-            mLines.setCoordinateField(mActionLines->isChecked()?
-                                          mCoordinates:
-                                          OpenCMISS::Zinc::Field());
+            mLines.setVisibilityFlag(mActionLines->isChecked());
         }
 
         // Surfaces
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Surfaces)) {
-            mSurfaces.setCoordinateField(mActionSurfaces->isChecked()?
-                                             mCoordinates:
-                                             OpenCMISS::Zinc::Field());
+            mSurfaces.setVisibilityFlag(mActionSurfaces->isChecked());
         }
 
         // Isosurfaces
 
         if (   (pGraphicsType == GraphicsType::All)
             || (pGraphicsType == GraphicsType::Isosurfaces)) {
-            mIsosurfaces.setCoordinateField(mActionIsosurfaces->isChecked()?
-                                                mCoordinates:
-                                                OpenCMISS::Zinc::Field());
+            mIsosurfaces.setVisibilityFlag(mActionIsosurfaces->isChecked());
         }
     scene.endChange();
 }

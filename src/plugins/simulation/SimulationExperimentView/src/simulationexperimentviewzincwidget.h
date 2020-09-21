@@ -151,8 +151,8 @@ private:
 
     OpenCMISS::Zinc::Field mCoordinates;
     OpenCMISS::Zinc::FieldMagnitude mMagnitude;
-    OpenCMISS::Zinc::Graphicspointattributes mAxesAttributes;
-    OpenCMISS::Zinc::Graphicspointattributes mPointsAttributes;
+    OpenCMISS::Zinc::GraphicsPoints mAxes;
+    OpenCMISS::Zinc::GraphicsPoints mPoints;
     OpenCMISS::Zinc::GraphicsLines mLines;
     OpenCMISS::Zinc::GraphicsSurfaces mSurfaces;
     OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
