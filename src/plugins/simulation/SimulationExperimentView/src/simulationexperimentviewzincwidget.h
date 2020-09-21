@@ -130,6 +130,9 @@ private:
 
     QTimer mTimer;
 
+    QLineEdit *mMaxValueLineEdit;
+    QLineEdit *mMinValueLineEdit;
+    QLineEdit *mDefaultValueLineEdit;
     QLabel *mMappingFileLabel;
     QLabel *mTimeLabel;
     QwtWheel *mNodeSizeWidget;
@@ -195,8 +198,11 @@ private slots:
     void actionIsosurfacesTriggered();
     void actionLabelsTriggered();
 
-    void changedSpectrumExageration(QString pValue);
+    void setSpectrumExageration(QString pValue);
     void setSpectrumScale();
+    void setMaxValue(QString pValue);
+    void setMinValue(QString pValue);
+    void setDefaultValue(QString pValue);
 };
 
 //==============================================================================

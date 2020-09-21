@@ -164,6 +164,32 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
 
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
+        mMaxValueLineEdit = new QLineEdit(timeWidget);
+        mMaxValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
+        mMaxValueLineEdit->setEnabled(false);
+
+        connect(mMaxValueLineEdit, &QLineEdit::textEdited,
+                this, &SimulationExperimentViewZincWidget::setMaxValue);
+
+        mMinValueLineEdit = new QLineEdit(timeWidget);
+        mMinValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
+        mMinValueLineEdit->setEnabled(false);
+
+        connect(mMinValueLineEdit, &QLineEdit::textEdited,
+                this, &SimulationExperimentViewZincWidget::setMinValue);
+
+        mDefaultValueLineEdit = new QLineEdit(timeWidget);
+        mDefaultValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
+        mDefaultValueLineEdit->setText(QString::number(mDefaultValue));
+
+        connect(mDefaultValueLineEdit, &QLineEdit::textEdited,
+                this, &SimulationExperimentViewZincWidget::setDefaultValue);
+
+        mToolBarWidget->addWidget(mMaxValueLineEdit);
+        mToolBarWidget->addWidget(mMinValueLineEdit);
+        mToolBarWidget->addWidget(mDefaultValueLineEdit);
+
+
         mNodeSizeWidget = new QwtWheel(mToolBarWidget);
             mNodeSizeWidget->setBorderWidth(0);
             mNodeSizeWidget->setFixedSize(int(0.07*availableGeometry.width()),
@@ -194,10 +220,9 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mLogAmpliLineEdit->setText("1.00");
 
         connect(mLogAmpliLineEdit, &QLineEdit::textEdited,
-                this, &SimulationExperimentViewZincWidget::changedSpectrumExageration);
+                this, &SimulationExperimentViewZincWidget::setSpectrumExageration);
 
         mToolBarWidget->addWidget(mLogAmpliLineEdit);
-
 
         mSpeedWidget = new QwtWheel(mTimeLabel);
             mSpeedWidget->setBorderWidth(0);
@@ -337,6 +362,8 @@ void SimulationExperimentViewZincWidget::loadZincMeshFiles(const QStringList &pZ
 
     mLogCheckBox->setEnabled(false);
     mLogAmpliLineEdit->setEnabled(false);
+    mMaxValueLineEdit->setEnabled(false);
+    mMinValueLineEdit->setEnabled(false);
 
     // Fill the region with the new model
 
@@ -516,6 +543,9 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
         firstComponent.setExtendBelow(true);
         firstComponent.setExtendAbove(true);
     mSpectrum.endChange();
+
+    mMaxValueLineEdit->setText(QString::number(mValueMax));
+    mMinValueLineEdit->setText(QString::number(mValueMin));
 }
 
 //==============================================================================
@@ -607,6 +637,8 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
         // show spectrum accesses
 
         mLogCheckBox->setEnabled(true);
+        mMaxValueLineEdit->setEnabled(true);
+        mMinValueLineEdit->setEnabled(true);
 
         // hic sunt dracones
 
@@ -946,7 +978,7 @@ void SimulationExperimentViewZincWidget::actionLabelsTriggered()
 
 //==============================================================================
 
-void SimulationExperimentViewZincWidget::changedSpectrumExageration(QString pValue)
+void SimulationExperimentViewZincWidget::setSpectrumExageration(QString pValue)
 {
     mSpectrum.getFirstSpectrumcomponent().setExaggeration(pValue.toFloat());
 }
@@ -960,6 +992,29 @@ void SimulationExperimentViewZincWidget::setSpectrumScale()
                                                            OpenCMISS::Zinc::Spectrumcomponent::SCALE_TYPE_LINEAR);
 
     mLogAmpliLineEdit->setEnabled(mLogCheckBox->isChecked());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::setMaxValue(QString pValue)
+{
+    mValueMax = pValue.toDouble();
+    mSpectrum.getFirstSpectrumcomponent().setRangeMaximum(mValueMax);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::setMinValue(QString pValue)
+{
+    mValueMin = pValue.toDouble();
+    mSpectrum.getFirstSpectrumcomponent().setRangeMinimum(mValueMin);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewZincWidget::setDefaultValue(QString pValue)
+{
+    mDefaultValue = pValue.toDouble();
 }
 
 //==============================================================================
