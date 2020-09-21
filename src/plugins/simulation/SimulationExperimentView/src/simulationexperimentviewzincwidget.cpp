@@ -167,6 +167,8 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mMaxValueLineEdit = new QLineEdit(timeWidget);
         mMaxValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mMaxValueLineEdit->setEnabled(false);
+        mMaxValueLineEdit->setFixedSize(int(0.03*availableGeometry.width()),
+                                        mMaxValueLineEdit->height()*0.6);
 
         connect(mMaxValueLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setMaxValue);
@@ -174,6 +176,8 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mMinValueLineEdit = new QLineEdit(timeWidget);
         mMinValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mMinValueLineEdit->setEnabled(false);
+        mMinValueLineEdit->setFixedSize(int(0.035*availableGeometry.width()),
+                                        mMinValueLineEdit->height()*0.6);
 
         connect(mMinValueLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setMinValue);
@@ -181,13 +185,20 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mDefaultValueLineEdit = new QLineEdit(timeWidget);
         mDefaultValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mDefaultValueLineEdit->setText(QString::number(mDefaultValue));
+        mDefaultValueLineEdit->setFixedSize(int(0.035*availableGeometry.width()),
+                                        mDefaultValueLineEdit->height()*0.6);
 
         connect(mDefaultValueLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setDefaultValue);
 
+
+        mToolBarWidget->addWidget(new QLabel("Max:",timeWidget));
         mToolBarWidget->addWidget(mMaxValueLineEdit);
+        mToolBarWidget->addWidget(new QLabel("Min:",timeWidget));
         mToolBarWidget->addWidget(mMinValueLineEdit);
+        mToolBarWidget->addWidget(new QLabel("Default:",timeWidget));
         mToolBarWidget->addWidget(mDefaultValueLineEdit);
+        mToolBarWidget->addSeparator();
 
 
         mNodeSizeWidget = new QwtWheel(mToolBarWidget);
@@ -200,6 +211,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
             mNodeSizeWidget->setValue(nodeSizeOrigin);
 
         mToolBarWidget->addWidget(mNodeSizeWidget);
+        mToolBarWidget->addSeparator();
 
         connect(mNodeSizeWidget, &QwtWheel::valueChanged,
                 this, &SimulationExperimentViewZincWidget::setNodeSizes);
@@ -218,11 +230,14 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mLogAmpliLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mLogAmpliLineEdit->setEnabled(false);
         mLogAmpliLineEdit->setText("1.00");
+        mLogAmpliLineEdit->setFixedSize(int(0.025*availableGeometry.width()),
+                                        mLogAmpliLineEdit->height()*0.6);
 
         connect(mLogAmpliLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setSpectrumExageration);
 
         mToolBarWidget->addWidget(mLogAmpliLineEdit);
+        mToolBarWidget->addSeparator();
 
         mSpeedWidget = new QwtWheel(mTimeLabel);
             mSpeedWidget->setBorderWidth(0);
@@ -428,7 +443,7 @@ void SimulationExperimentViewZincWidget::initData(quint64 pDataSize, double pMin
     // Reset our field
 
     if (pDataSize>0) {
-        updateNodeValues(0, pDataSize,true);
+        updateNodeValues(0, int(pDataSize),true);
     } else {
         updateNodeValues(0, 1, true);
     }
@@ -798,7 +813,7 @@ void SimulationExperimentViewZincWidget::devicePixelRatioChanged(int pDevicePixe
 
 //==============================================================================
 
-void SimulationExperimentViewZincWidget:: setNodeSizes(int pSize) {
+void SimulationExperimentViewZincWidget:: setNodeSizes(double pSize) {
     double nodeSize = pow(nodeSixeExp,pSize);
     //TODO change size of mapped nodes
 

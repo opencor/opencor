@@ -183,7 +183,7 @@ private:
 private slots:
     void graphicsInitialized();
     void devicePixelRatioChanged(int pDevicePixelRatio);
-    void setNodeSizes(int pSize);
+    void setNodeSizes(double pSize);
 
     void timeSliderValueChanged(int pTime);
     void timerTimeOut();
