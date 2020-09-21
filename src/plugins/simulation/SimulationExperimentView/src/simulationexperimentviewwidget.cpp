@@ -91,6 +91,10 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
     mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, DefaultContentsWidgetSizes).toList());
     mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, DefaultSimulationWidgetSizes).toList());
 
+    if (mContentsWidgetSizes.length() < 3) {
+        mContentsWidgetSizes = qVariantListToIntList(DefaultContentsWidgetSizes);
+    }
+
     // Retrieve the collapsed states of our collapsible widget
 
     static const QVariantList DefaultCollapsed = { false, false, false };
