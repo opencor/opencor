@@ -235,6 +235,16 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
     // Allow for things to be dropped on us
 
     setAcceptDrops(true);
+
+    QString potentialMappingFile = pFileName;
+    potentialMappingFile.replace(".cellml",".json");
+
+    QFile file;
+    file.setFileName(potentialMappingFile);
+
+    if (file.exists()) {
+        openMapping(potentialMappingFile);
+    }
 }
 
 //==============================================================================
@@ -675,6 +685,8 @@ void CellMLZincMappingViewEditingWidget::openFile()
     }
 
 }
+
+//==============================================================================
 
 } // namespace MappingView
 } // namespace OpenCOR
