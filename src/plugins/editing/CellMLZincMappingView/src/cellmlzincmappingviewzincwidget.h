@@ -117,7 +117,6 @@ private:
     OpenCMISS::Zinc::GraphicsPoints mNodePoints;
     OpenCMISS::Zinc::GraphicsPoints mMappedPoints;
 
-    void initAuxFile();
     void setup();
     void setupRegion();
     void draw();
