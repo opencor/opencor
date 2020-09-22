@@ -168,7 +168,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mMaxValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mMaxValueLineEdit->setEnabled(false);
         mMaxValueLineEdit->setFixedSize(int(0.03*availableGeometry.width()),
-                                        mMaxValueLineEdit->height()*0.6);
+                                        int(mMaxValueLineEdit->height()*0.6));
 
         connect(mMaxValueLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setMaxValue);
@@ -177,7 +177,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mMinValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mMinValueLineEdit->setEnabled(false);
         mMinValueLineEdit->setFixedSize(int(0.035*availableGeometry.width()),
-                                        mMinValueLineEdit->height()*0.6);
+                                        int(mMinValueLineEdit->height()*0.6));
 
         connect(mMinValueLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setMinValue);
@@ -186,7 +186,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mDefaultValueLineEdit->setValidator(new QDoubleValidator(timeWidget));
         mDefaultValueLineEdit->setText(QString::number(mDefaultValue));
         mDefaultValueLineEdit->setFixedSize(int(0.035*availableGeometry.width()),
-                                        mDefaultValueLineEdit->height()*0.6);
+                                        int(mDefaultValueLineEdit->height()*0.6));
 
         connect(mDefaultValueLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setDefaultValue);
@@ -231,7 +231,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
         mLogAmpliLineEdit->setEnabled(false);
         mLogAmpliLineEdit->setText("1.00");
         mLogAmpliLineEdit->setFixedSize(int(0.025*availableGeometry.width()),
-                                        mLogAmpliLineEdit->height()*0.6);
+                                        int(mLogAmpliLineEdit->height()*0.6));
 
         connect(mLogAmpliLineEdit, &QLineEdit::textEdited,
                 this, &SimulationExperimentViewZincWidget::setSpectrumExageration);
@@ -995,7 +995,7 @@ void SimulationExperimentViewZincWidget::actionLabelsTriggered()
 
 void SimulationExperimentViewZincWidget::setSpectrumExageration(QString pValue)
 {
-    mSpectrum.getFirstSpectrumcomponent().setExaggeration(pValue.toFloat());
+    mSpectrum.getFirstSpectrumcomponent().setExaggeration(pValue.toDouble());
 }
 
 //==============================================================================
