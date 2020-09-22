@@ -133,8 +133,7 @@ private:
 
     QAction *mClearNode;
     QAction *mSaveMapping;
-    QAction *mOpenMeshFile;
-    QAction *mOpenMappingFile;
+    QAction *mOpenFile;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -175,8 +174,7 @@ private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
     void saveMappingSlot();
-    void openMeshFile();
-    void openMappingFile();
+    void openFile();
 };
 
 //==============================================================================
