@@ -76,9 +76,9 @@ if(USE_PREBUILT_ZLIB_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e98147832b1933945e5a29c194fd570669e49f0f
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 22ddaed08e3d9216c8d2fe5d1644da46e61ecc99
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9c23f1d64dfa64a120e77521c896ac8e645156b1)
+                              SHA1_VALUES 078be4cd94765d3bd18cf2a8cc3ac6d3a3fc1058)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 31a17a86ec78a19bae8df80a1a1a69dae990a710
