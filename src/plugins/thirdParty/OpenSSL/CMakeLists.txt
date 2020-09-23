@@ -107,11 +107,11 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0ab1129027372ffc790fd2891f3e2512a6a8930a
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a86021dde9e02dfc3749f6e04660c0f1bf3b9fed
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c991f95ca72ccb96d59ee733bb76a21606e65940
-                                          1ffd3a1c60b802f656529642de9ce8d8a47184e7)
+                              SHA1_VALUES fb58bc337362f58ee4b1f304b6504ae4cea8a7d3
+                                          dad15f81dd55833658d0d0ecbf410836f2214963)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8d69d9d17226d28bfa0736c43030d21b3f91c5c6
@@ -142,6 +142,8 @@ else()
 
         if(APPLE)
             set(PLATFORM darwin64-x86_64-cc)
+
+            list(APPEND CONFIG_OPTIONS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         else()
             set(PLATFORM linux-x86_64)
 
