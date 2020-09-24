@@ -207,19 +207,19 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0ae16141fe435ab7fbe9d9d4e024401bff7c91e2
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} acdaab6b2b9216bfe43f3ff9a4767f2f70e266da
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 12d0a63575bbe04cda516289bbc72493a49f479c
-                                          27395a0a9990a2321ceec397b9fed8678885c227
-                                          e21c57015e4c036c71d4f6df7d124e7a96be28fd
-                                          9ca037e802d27932f69a8ffa835deb64949fdfa3
-                                          9bf0abbdc923cfbebc5470f4ac7e5e012ee0cc9e
-                                          e61db3c289a2e5c6a7793b9fffdc06c19c378a21
-                                          6a523b4caaeb3a9e28bc2d244953e95d88f1ddd8
-                                          701d6679ff656c439c4e669b8317c75561ec156c
-                                          056062047102c43c5727752e1ddfd2382966661f)
+                              SHA1_VALUES d7365baa4fcebea79a1653647782dc702a31f0fe
+                                          41de1c586e50ee14bf2544db3cd82347f3b03c50
+                                          4b69558d97db9de1445bcb8114fe3b995e2396ba
+                                          be8cae5c983531f9bc51bc45cfa2b91eff4d7aa2
+                                          5e63d2d31469cfef4cc36029356cef51f266a21d
+                                          2ba11bc26c71d2314cd17fafd718d63781f1c6d5
+                                          58b50c14785109e6fbe4e728104cb1163eceb0d5
+                                          86b7a8211936161c0d47c7727218b1aa165ec5a9
+                                          6436271e06982312e90ed9967d381318b9ab31f3)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 62f4f9e61fe1c9dfadbfbeb324f81eb618d1e104

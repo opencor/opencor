@@ -80,10 +80,10 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3b7eded9638921deb79cf7799f071d5ca0013679
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 870f483fc45caa334a06157a44986c5050308260
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2dfe843431d36ceddccbdce314aaed6a64c041ed)
+                              SHA1_VALUES c4a869805ce88c9fd562d106a9c4b8b13a6e7d50)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c1289908db4167e867a9e26b90522e544cdf5aa0

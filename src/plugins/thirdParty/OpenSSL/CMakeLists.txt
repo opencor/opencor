@@ -3,7 +3,7 @@ project(OpenSSLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 1.1.1g)
+set(PACKAGE_VERSION 1.1.1h)
 
 # Version of our library
 
@@ -15,11 +15,11 @@ endif()
 
 # Git tag for our library
 
-set(GIT_TAG OpenSSL_1_1_1g)
+set(GIT_TAG OpenSSL_1_1_1h)
 
 # Release tag
 
-set(RELEASE_TAG OpenSSL_1_1_1g)
+set(RELEASE_TAG OpenSSL_1_1_1h)
 
 # Specify where our local package will be installed
 
@@ -76,21 +76,21 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0bdf986007375c49d58297a1a7437ee321bb3139
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fc2b9f47d5a581b5e7a9630bdc5aabc528ce60ac
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a149dd3394650beb7556fba6afccedfb64773f90
-                                              09f4ef5c352c8e277f3ac2e3ed5fa80661f7b18b
-                                              400cc6624174c02f876ff8fb40a71d0716903f59
+                                  SHA1_VALUES 8254953811efb6bd02eeacad7a94384e3b3a962e
+                                              3dcc6cc909977bd7943fc9854a40b98e245b1311
+                                              b3d1dc0a546887fc457bbc91eea1c57ac2ada6da
                                               1f962949bf8a1b67959c3a8476ff786ca109bbad)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3c08bb773914b4ca8b737ac61e6dafb26224353d
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5e4c26fd209e6923fd74d6851d8fc3d653e7f9b0
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES add8b204a05b5c47f42bd8108e20fe3edcae2b6d
-                                              2daa4e9a4fa02794255384293780deb7bacef968
-                                              400cc6624174c02f876ff8fb40a71d0716903f59
+                                  SHA1_VALUES d583f08ebf70935f466f42332cf567746fc5b7d2
+                                              d67aa8ea4893177861b1f272ba2fabdcb724beed
+                                              b3d1dc0a546887fc457bbc91eea1c57ac2ada6da
                                               1f962949bf8a1b67959c3a8476ff786ca109bbad)
         endif()
 
@@ -107,18 +107,18 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 59b479c7910e0f733529a961416917b0bc7349ab
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a86021dde9e02dfc3749f6e04660c0f1bf3b9fed
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 682ca57d38d0cf0788994c5e89c2d9d48066d2fb
-                                          6bdbe1b4dc471cf480a7a8060a4faeaac93c288b)
+                              SHA1_VALUES fb58bc337362f58ee4b1f304b6504ae4cea8a7d3
+                                          dad15f81dd55833658d0d0ecbf410836f2214963)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 69f875f7d4b743ed8486b30a8efa5dd624dc793b
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 8d69d9d17226d28bfa0736c43030d21b3f91c5c6
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6ff7d44204edf455a691844a0f6223730b07e43c
-                                          d2424a58e7c8ea3a5e29cc45e851d8c26bf0f715)
+                              SHA1_VALUES 1fb93f821bdd892f199d04c43d7f83676b39c7dc
+                                          f3641038276e503a8e73e26a0f35627f1eb7ce9a)
     endif()
 else()
     # We require Perl to build OpenSSL
@@ -142,6 +142,8 @@ else()
 
         if(APPLE)
             set(PLATFORM darwin64-x86_64-cc)
+
+            list(APPEND CONFIG_OPTIONS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         else()
             set(PLATFORM linux-x86_64)
 
