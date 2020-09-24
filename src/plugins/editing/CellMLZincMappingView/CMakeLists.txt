@@ -17,6 +17,7 @@ add_plugin(CellMLZincMappingView
     PLUGINS
         Core
         CellMLSupport
-        ZincWidget
         Qwt
+        ZincWidget
+        ZincSupport
 )

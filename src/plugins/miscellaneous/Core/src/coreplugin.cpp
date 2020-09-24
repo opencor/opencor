@@ -557,11 +557,13 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
     FileTypeInterfaces fileTypeInterfaces;
     FileTypeInterfaces dataStoreFileTypeInterfaces;
+    FileTypeInterfaces meshFileTypeInterfaces;
     SolverInterfaces solverInterfaces;
     DataStoreInterfaces dataStoreInterfaces;
 
     for (auto plugin : pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
+        MeshInterface *meshInterface = qobject_cast<MeshInterface *>(plugin->instance());
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
 
@@ -571,6 +573,8 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         if (fileTypeInterface != nullptr) {
             if (dataStoreInterface != nullptr) {
                 dataStoreFileTypeInterfaces << fileTypeInterface;
+            } else if (meshInterface != nullptr) {
+                meshFileTypeInterfaces << fileTypeInterface;
             } else {
                 fileTypeInterfaces << fileTypeInterface;
             }
@@ -592,7 +596,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Keep track of our various interfaces
 
     static InterfacesData data(fileTypeInterfaces, dataStoreFileTypeInterfaces,
-                               solverInterfaces, dataStoreInterfaces);
+                               meshFileTypeInterfaces, solverInterfaces, dataStoreInterfaces);
 
     globalInstance(InterfacesDataSignature, &data);
 

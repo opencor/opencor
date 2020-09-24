@@ -948,6 +948,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             support/SEDMLSupport
             support/SimulationSupport
             support/StandardSupport
+            support/ZincSupport
             support/ZIPSupport
 
             thirdParty/CellMLAPI
