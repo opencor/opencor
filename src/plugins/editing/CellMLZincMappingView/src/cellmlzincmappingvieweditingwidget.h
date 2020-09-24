@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view widget
+// CellML-Zinc Mapping view editing widget
 //==============================================================================
 
 #pragma once
@@ -62,18 +62,18 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLZincMappingView {
-    class CellMLZincMappingViewWidget;
 
 //==============================================================================
 
+static const auto CellMLZincMappingViewEditingMimeType = QStringLiteral("opencor/mapping-view-editing");
+
+//==============================================================================
 
 class CellMLZincMappingViewEditingModel : public QStandardItemModel
 {
     Q_OBJECT
 
 public:
-    static const char *MappingViewEdittingMimeType;
-
     explicit CellMLZincMappingViewEditingModel(QObject *pParent = nullptr);
 
     QStringList mimeTypes() const override;
@@ -81,13 +81,19 @@ public:
 
 };
 
+//==============================================================================
+
+class CellMLZincMappingViewWidget;
+
+//==============================================================================
+
 class CellMLZincMappingViewEditingWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
     explicit CellMLZincMappingViewEditingWidget(const QString &pCellmlFileName,
-                                                const QStringList &pMeshFileName,
+                                                const QStringList &pMeshFileNames,
                                                 QWidget *pParent,
                                                 CellMLZincMappingViewWidget *pViewWidget);
 
@@ -103,7 +109,8 @@ public:
 
     bool setMeshFiles(const QStringList &pFileNames, bool pShowWarning = true);
 
-    void setSizes(const QIntList &pSizesHorizontal, const QIntList &pSizesVertical);
+    void setSizes(const QIntList &pSizesHorizontal,
+                  const QIntList &pSizesVertical);
 
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);

@@ -335,6 +335,17 @@ set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
 
 set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
+# On macOS, make sure that we support version 10.14 and later, unless a specific
+# deployment target has been specified
+
+if(APPLE)
+    if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
+    endif()
+
+    set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
+endif()
+
 # A few constants to help us with building an external project
 # Note: the idea is to ensure that we compile external projects using the exact
 #       same compilers than the ones we want to use in the first place (i.e.
@@ -356,6 +367,7 @@ endif()
 if(APPLE)
     list(APPEND CMAKE_ARGS
         -DCMAKE_MACOSX_RPATH=ON
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
     )
 endif()
 
@@ -563,17 +575,6 @@ add_definitions(-DQT_DEPRECATED_WARNINGS)
 # Note: at least needed for QtSingleApplication on Windows...
 
 add_definitions(-DUNICODE)
-
-# On macOS, make sure that we support version 10.14 and later, unless a specific
-# deployment target has been specified
-
-if(APPLE)
-    if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
-    endif()
-
-    set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
-endif()
 
 # Destination of our plugins so that we don't have to deploy OpenCOR on Windows
 # and Linux before being able to test it

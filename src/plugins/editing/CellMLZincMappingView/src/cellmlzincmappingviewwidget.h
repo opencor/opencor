@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Mapping view widget
+// CellML-Zinc Mapping view widget
 //==============================================================================
 
 #pragma once
@@ -26,12 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "cellmlzincmappingvieweditingwidget.h"
 #include "viewwidget.h"
-
-//==============================================================================
-
-#include <QMap>
 
 //==============================================================================
 
@@ -49,32 +44,30 @@ namespace CellMLZincMappingView {
 
 //==============================================================================
 
+class CellMLZincMappingViewEditingWidget;
+
+//==============================================================================
+
 class CellMLZincMappingViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
 public:
     explicit CellMLZincMappingViewWidget(QWidget *pParent);
-    ~CellMLZincMappingViewWidget() override;
-
-    void retranslateUi() override;
 
     void loadSettings(QSettings &pSettings) override;
     void saveSettings(QSettings &pSettings) const override;
 
+    void retranslateUi() override;
+
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
-    CellMLZincMappingViewEditingWidget * editingWidget(const QString &pFileName) const;
-
-    QWidget * widget(const QString &pFileName) override;
-
     void filePermissionsChanged(const QString &pFileName);
-    void fileSaved(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    //bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
+    QWidget * widget(const QString &pFileName) override;
 
     void setDefaultMeshFiles(const QStringList &pFileNames);
 
@@ -82,10 +75,10 @@ private:
     QIntList mEditingWidgetHorizontalSizes;
     QIntList mEditingWidgetVerticalSizes;
 
-    CellMLZincMappingViewEditingWidget* mEditingWidget = nullptr;
-    QMap<QString, CellMLZincMappingViewEditingWidget*> mEditingWidgets;
+    CellMLZincMappingViewEditingWidget *mEditingWidget = nullptr;
+    QMap<QString, CellMLZincMappingViewEditingWidget *> mEditingWidgets;
 
-    QStringList mZincMeshFileNames;
+    QStringList mMeshFileNames;
 
 private slots:
     void EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes);

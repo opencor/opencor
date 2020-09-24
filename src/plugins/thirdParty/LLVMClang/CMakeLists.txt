@@ -70,9 +70,9 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 96bfff650401518f9bebdf5f11d57cecf3dc63f8
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0bbabdf339c04723b78bae5e627e82e7b8a7bdd2
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7fdfa54a3a1beee7cc3872515920ed773a74a16e)
+                              SHA1_VALUES 37695a9a4157e32b168e3b4a243bdef9ebc92d2b)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a0d535344b9ad3c9297cdcb4e3ccb4c440ce5b8a
