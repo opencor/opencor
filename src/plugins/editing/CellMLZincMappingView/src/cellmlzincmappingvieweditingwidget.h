@@ -112,6 +112,8 @@ public:
     void setSizes(const QIntList &pSizesHorizontal,
                   const QIntList &pSizesVertical);
 
+    CellMLZincMappingViewZincWidget * getZincWidget();
+
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);
     void verticalSplitterMoved(const QIntList &pSizes);

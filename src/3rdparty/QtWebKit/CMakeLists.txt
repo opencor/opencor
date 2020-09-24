@@ -123,11 +123,11 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e4c32b340516792d4d16807b1cac28bd5181abbe
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 65e287c3b5ddf2900bdf5ac6e95d974dca7ddf3e
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 818ce4e16892876260559494c6ae56f16935fd38
-                                          06e5a1a883d52481d636a7fa790c745738bf20aa)
+                              SHA1_VALUES 3340c7136aea9e81ca5afe701f3246ace1638cef
+                                          9f220a4f04e439a3bdf52ff387b5c58038799b08)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2a8472a8894842cf515cac601705e4e8a4e80970

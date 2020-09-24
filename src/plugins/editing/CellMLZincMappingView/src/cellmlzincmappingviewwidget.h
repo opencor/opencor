@@ -80,6 +80,8 @@ private:
 
     QStringList mMeshFileNames;
 
+    QList<bool> mDisplayedZincFields;
+
 private slots:
     void EditingWidgetHorizontalSplitterMoved(const QIntList &pSizes);
     void EditingWidgetVerticalSplitterMoved(const QIntList &pSizes);
