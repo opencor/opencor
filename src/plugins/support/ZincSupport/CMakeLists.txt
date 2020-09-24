@@ -6,6 +6,7 @@ add_plugin(ZincSupport
     SOURCES
         ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
+        ../../meshinterface.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
 

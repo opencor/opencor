@@ -47,7 +47,7 @@ PLUGININFO_FUNC CellMLZincMappingViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8(R"(une extension pour mapper des variables <a href="https://cellml.org/">CellML</a> à des noeuds Zinc.)"));
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
-                          { "Core" },
+                          { "Core", "ZincSupport" },
                           descriptions);
 }
 

@@ -41,8 +41,8 @@ PLUGININFO_FUNC ZincSupportPluginInfo();
 
 //==============================================================================
 
-static const auto ZincMeshMimeType      = QStringLiteral("application/zincMesh");
-static const auto ZincMeshFileExtension = QStringLiteral("zincMesh");
+static const auto ZincMeshMimeType      = QStringLiteral("application/zinc");
+static const auto ZincMeshFileExtension = QStringLiteral("exfile");
 
 //==============================================================================
 
@@ -54,6 +54,7 @@ class ZincSupportPlugin : public QObject, public FileTypeInterface,
     Q_PLUGIN_METADATA(IID "OpenCOR.ZincSupportPlugin" FILE "zincsupportplugin.json")
 
     Q_INTERFACES(OpenCOR::FileTypeInterface)
+    Q_INTERFACES(OpenCOR::MeshInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
