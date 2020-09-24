@@ -3895,7 +3895,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //TODO what are suppose to do with that ? where are the results ?
                 //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()-> (parameter->index()));
                 break;
-            default:
             case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
             case CellMLSupport::CellmlFileRuntimeParameter::Type::Unknown:
             case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
