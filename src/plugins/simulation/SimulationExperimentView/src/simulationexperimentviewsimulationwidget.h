@@ -268,6 +268,7 @@ private:
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
+    QMap<QString, FileTypeInterface *> mMeshFileTypeInterfaces;
 
     QString styledOutput();
     void output(const QString &pMessage);

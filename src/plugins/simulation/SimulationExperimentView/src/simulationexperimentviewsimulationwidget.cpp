@@ -688,16 +688,21 @@ void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *p
         for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
                 mFileTypeInterfaces.insert(fileName, fileTypeInterface);
-
                 acceptEvent = true;
-
                 break;
             }
         }
-        //TODO
-        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")||fileName.contains(".json")) {
+        for (auto fileTypeInterface : Core::meshFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                mMeshFileTypeInterfaces.insert(fileName, fileTypeInterface);
+                acceptEvent = true;
+            }
+        }
+
+        if (fileName.contains(".json")) {
             acceptEvent = true;
         }
+
     }
 
     if (acceptEvent) {
@@ -720,20 +725,20 @@ void SimulationExperimentViewSimulationWidget::dragMoveEvent(QDragMoveEvent *pEv
 
 void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
 {
-    // Import/open the one or several files
+    // Import/open the one or several files, depending of teir kind
     QStringList zincMeshfiles;
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         if (mFileTypeInterfaces.contains(fileName)) {
             import(fileName);
-         //TODO
-        } else if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+        } else if (mMeshFileTypeInterfaces.contains(fileName)) {
             zincMeshfiles.append(fileName);
         } else if (fileName.contains(".json")) {
             mContentsWidget->zincWidget()->loadMappingFile(fileName);
-        } else {
+        } else if (mFileTypeInterfaces.contains(fileName)) {
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
     }
+
     if (!zincMeshfiles.isEmpty()) {
         mContentsWidget->zincWidget()->loadZincMeshFiles(zincMeshfiles);
     }
@@ -3880,7 +3885,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Type::Data:
 
-                //boring case, multiple values can be there
+                //boring case, multiple values ccould be there
 
                 //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->data(parameter->index()));
                 break;

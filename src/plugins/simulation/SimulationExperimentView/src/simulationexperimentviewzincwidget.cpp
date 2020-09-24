@@ -46,11 +46,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "zincbegin.h"
-    #include "opencmiss/zinc/result.hpp"
     #include "opencmiss/zinc/fieldfiniteelement.hpp"
-    #include "opencmiss/zinc/streamregion.hpp"
-    #include "opencmiss/zinc/spectrum.hpp"
     #include "opencmiss/zinc/fieldtime.hpp"
+    #include "opencmiss/zinc/result.hpp"
+    #include "opencmiss/zinc/spectrum.hpp"
+    #include "opencmiss/zinc/streamregion.hpp"
 #include "zincend.h"
 
 //==============================================================================

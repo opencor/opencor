@@ -338,15 +338,6 @@ void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
             }
         }
 
-        //TODO
-        /*
-        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-            acceptEvent = true;
-        }
-        */
-
-        qDebug("%d",Core::meshFileTypeInterfaces().length());
-
         for (auto fileTypeInterface : Core::meshFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
                 mMeshFileTypeInterfaces.insert(fileName, fileTypeInterface);

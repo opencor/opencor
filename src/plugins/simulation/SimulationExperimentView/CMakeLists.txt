@@ -34,5 +34,6 @@ add_plugin(SimulationExperimentView
         GraphPanelWidget
         PythonQtSupport
         SimulationSupport
+        ZincSupport
         ZincWidget
 )
