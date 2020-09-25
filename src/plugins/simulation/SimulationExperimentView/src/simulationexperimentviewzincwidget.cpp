@@ -34,7 +34,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QDir>
 #include <QDoubleValidator>
 #include <QDragEnterEvent>
-#include <QtGui>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QLabel>
@@ -42,6 +41,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QLineEdit>
 #include <QMenu>
 #include <QSlider>
+#include <QtGui>
 
 //==============================================================================
 
@@ -70,8 +70,8 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     mMappingFileLabel = new QLabel(this);
     mMapNodeVariables = new QMap<int, _variable>();
     mMapNodeValues = new QMap<int, double*>();
-    //TODO remove this
-    loadMappingFile("please open something, gimme a mapping file !");
+
+    loadMappingFile("please open a json, gimme a mapping file !");
 
     layout->addWidget(mMappingFileLabel);
 
@@ -84,7 +84,7 @@ SimulationExperimentViewZincWidget::SimulationExperimentViewZincWidget(QWidget *
     mActionIsosurfaces = Core::newAction(true,this);
     mActionLabels = Core::newAction(true,this);
 
-    //TODO put this in settings
+    //TODO put this in settings ?
     mActionAxes->setChecked(true);
     mActionPoints->setChecked(true);
     mActionLines->setChecked(true);
@@ -500,19 +500,13 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
     fieldModule.beginChange();
 
         OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        qDebug("nodeSet %d/%d",nodeSet.isValid(),true);
 
         OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
-        qDebug("mNodeTemplate %d/%d",nodeTemplate.isValid(),true);
-        qDebug("defineField %d", nodeTemplate.defineField(mDataField));
 
         OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pValueEnd, mTimeValues);
-        qDebug("timeSequence %d/%d",timeSequence.isValid(),true);
-        qDebug("setTimesequence %d", nodeTemplate.setTimesequence(mDataField,timeSequence));
 
         OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
 
-        //for (int nodeId : mMapNodeValues->keys()) {
         OpenCMISS::Zinc::Nodeiterator nodeIter = nodeSet.createNodeiterator();
         OpenCMISS::Zinc::Node node;
 
@@ -531,8 +525,6 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
                     fieldCache.setTime(mTimeValues[i]);
                     double *target = mMapNodeValues->value(nodeId)+i;
                     mDataField.assignReal(fieldCache, 1, target);
-                    //qDebug("assigningReal %d",mDataField.assignReal(fieldCache, 1 ,mMapNodeValues->value(nodeId)+i));
-                    //qDebug("assigning %d %d %f",nodeId, i,*target);
 
                     if (mValueMin > *target) {
                         mValueMin = *target;
@@ -554,7 +546,6 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
         auto firstComponent = mSpectrum.getFirstSpectrumcomponent();
         firstComponent.setRangeMinimum(mValueMin);
         firstComponent.setRangeMaximum(mValueMax);
-        qDebug("min %f max %f",mValueMin,mValueMax);
         firstComponent.setExtendBelow(true);
         firstComponent.setExtendAbove(true);
     mSpectrum.endChange();
@@ -639,12 +630,11 @@ void SimulationExperimentViewZincWidget::initializeZincRegion()
             field = fieldIterator.next();
         }
 
-        //mMagnitude = fieldModule.createFieldMagnitude(mCoordinates);
+        mMagnitude = fieldModule.createFieldMagnitude(mCoordinates);
 
-        //mMagnitude.setManaged(true);
+        mMagnitude.setManaged(true);
 
         mDataField = fieldModule.createFieldFiniteElement(1);
-        qDebug("mDataField %d/%d", mDataField.isValid(),true);
 
         OpenCMISS::Zinc::Spectrummodule spectrumModule = mZincContext.getSpectrummodule();
         mSpectrum = spectrumModule.getDefaultSpectrum();
@@ -813,9 +803,12 @@ void SimulationExperimentViewZincWidget::devicePixelRatioChanged(int pDevicePixe
 
 //==============================================================================
 
-void SimulationExperimentViewZincWidget:: setNodeSizes(double pSize) {
+void SimulationExperimentViewZincWidget:: setNodeSizes(double pSize)
+{
+    // Set the size of the nodes, and the labels too (to keep them far
+    //      enough from the node to not be hidden in the node)
+
     double nodeSize = pow(nodeSixeExp,pSize);
-    //TODO change size of mapped nodes
 
     OpenCMISS::Zinc::Region region = mZincContext.getDefaultRegion();
 
@@ -836,10 +829,6 @@ void SimulationExperimentViewZincWidget::timeSliderValueChanged(int pTime)
     double time = mTimeValues[pTime];
 
     mTimeLabel->setText(tr("Time: %1 s").arg(time));
-
-    //OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext.getTimekeepermodule();
-
-    //mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
     mTimeKeeper.setTime(time);
 }
