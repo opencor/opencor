@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QAction>
 #include <QFile>
 #include <QStandardItemModel>
 #include <QtMath>
@@ -37,6 +38,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "zincbegin.h"
     #include "opencmiss/zinc/fieldfiniteelement.hpp"
+    #include "opencmiss/zinc/fieldvectoroperators.hpp"
     #include "opencmiss/zinc/timekeeper.hpp"
     #include "opencmiss/zinc/scenepicker.hpp"
 #include "zincend.h"
@@ -44,6 +46,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
+
 namespace CellMLZincMappingView {
 
 //==============================================================================
@@ -65,14 +68,18 @@ public:
     void changeSource(const QStringList &pZincMeshFileNames);
 
     bool hasNode(int pId);
-    void setNodeMapped(int pId);
+    void setNodeMapped(int pId, QString pComponent, QString pVariable);
+    void eraseNode(int pId);
+
+    QList<bool> getCheckedAction();
+    void setCheckedAction(QList<bool>);
 
     static constexpr double nodeSizeOrigin = 0;
     static constexpr double nodeSixeExp = 1.1;
 
 public slots:
     void setNodeSizes(int pSize);
-    void eraseNode(int pId = -1);
+    void eraseNodeSlot();
 
 protected:
     void initializeGL() override;
@@ -88,6 +95,15 @@ protected:
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
+    enum class GraphicsType {
+            All,
+            Axes,
+            Points,
+            Lines,
+            Surfaces,
+            Isosurfaces,
+            Label
+        };
 
     double invLnNodeSizeExp = 1/qLn(nodeSixeExp);
 
@@ -95,6 +111,12 @@ private:
     QString mCoordinatesName;
 
     CellMLZincMappingViewEditingWidget *mEditingWidget;
+
+    QAction *mActionAxes;
+    QAction *mActionLines;
+    QAction *mActionSurfaces;
+    QAction *mActionIsosurfaces;
+    QAction *mActionLabel;
 
     QPoint mMousePosClick;
 
@@ -112,20 +134,35 @@ private:
 
     OpenCMISS::Zinc::Context mZincContext;
     OpenCMISS::Zinc::Scenepicker mScenePicker;
+    OpenCMISS::Zinc::Field mCoordinates;
+
+    OpenCMISS::Zinc::FieldMagnitude mMagnitude;
 
     OpenCMISS::Zinc::FieldGroup mMappedSelectionGroup;
     OpenCMISS::Zinc::GraphicsPoints mNodePoints;
     OpenCMISS::Zinc::GraphicsPoints mMappedPoints;
+    OpenCMISS::Zinc::GraphicsPoints mLabelPoints;
+    OpenCMISS::Zinc::FieldStoredString mDisplayField;
+    OpenCMISS::Zinc::GraphicsPoints mAxes;
+    OpenCMISS::Zinc::GraphicsLines mLines;
+    OpenCMISS::Zinc::GraphicsSurfaces mSurfaces;
+    OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
 
     void initAuxFile();
     void setup();
     void setupRegion();
     void draw();
+    void showHideGraphics(GraphicsType pGraphicsType);
 
     void click(int pX, int pY, bool pCanDiscard = true);
 
     //TODO ?
-//private slots:
+private slots:
+    void actionAxesTriggered();
+    void actionLinesTriggered();
+    void actionSurfacesTriggered();
+    void actionIsosurfacesTriggered();
+    void actionLabelTriggered();
     //void devicePixelRatioChanged(int pDevicePixelRatio);
 
 };

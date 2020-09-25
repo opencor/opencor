@@ -193,7 +193,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mZincWidget = new CellMLZincMappingViewZincWidget(this, mZincMeshFileNames, this);
 
         connect(mClearNode, &QAction::triggered,
-                mZincWidget, &CellMLZincMappingViewZincWidget::eraseNode);
+                mZincWidget, &CellMLZincMappingViewZincWidget::eraseNodeSlot);
         connect(mNodeSizeWidget, &QwtWheel::valueChanged,
                 mZincWidget, &CellMLZincMappingViewZincWidget::setNodeSizes);
 
@@ -317,6 +317,13 @@ void CellMLZincMappingViewEditingWidget::setSizes(const QIntList &pSizesHorizont
 {
     mHorizontalSplitterWidget->setSizes(pSizesHorizontal);
     mVerticalSplitterWidget->setSizes(pSizesVertical);
+}
+
+//==============================================================================
+
+CellMLZincMappingViewZincWidget * CellMLZincMappingViewEditingWidget::getZincWidget()
+{
+    return mZincWidget;
 }
 
 //==============================================================================
@@ -566,7 +573,7 @@ void CellMLZincMappingViewEditingWidget::openMapping(const QString &pFileName)
                 && variables.contains(component)
                 && variables.find(component)->contains(variable)) {
 
-            mZincWidget->setNodeMapped(id);
+            mZincWidget->setNodeMapped(id,component,variable);
             setNodeValue(id,component,variable);
         }
     }
