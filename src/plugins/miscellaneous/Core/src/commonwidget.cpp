@@ -106,7 +106,7 @@ void CommonWidget::showBusyWidget(double pProgress)
     // but only if we are visible (i.e. our parent is visible)
 
     if (mParent->isVisible() && (++mCounter == 1)) {
-        mBusyWidget = new BusyWidget(mParent, pProgress);
+        mBusyWidget = new BusyWidget(pProgress, mParent);
 
         resizeBusyWidget();
 

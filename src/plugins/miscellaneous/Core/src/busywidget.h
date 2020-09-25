@@ -44,7 +44,7 @@ class BusyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BusyWidget(QWidget *pParent, double pProgress);
+    explicit BusyWidget(double pProgress, QWidget *pParent);
 
     int fps() const;
     void setFps(int pFps);
