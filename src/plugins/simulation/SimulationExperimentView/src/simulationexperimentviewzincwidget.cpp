@@ -502,8 +502,10 @@ void SimulationExperimentViewZincWidget::updateNodeValues(int pValueBegin, int p
         OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
 
         OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
+        nodeTemplate.defineField(mDataField);
 
         OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(pValueEnd, mTimeValues);
+        nodeTemplate.setTimesequence(mDataField,timeSequence);
 
         OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
 
