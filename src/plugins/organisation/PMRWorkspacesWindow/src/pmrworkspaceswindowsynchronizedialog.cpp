@@ -232,7 +232,6 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     auto messageLayout = new QVBoxLayout(messageWidget);
 
     messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
-
     messageWidget->setLayout(messageLayout);
 
     auto messageLabel = new QLabel(tr("Message:"), messageWidget);
