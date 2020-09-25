@@ -65,7 +65,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Note: the spacers is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    auto toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget(this);
     auto spacer = new QWidget(toolBarWidget);
 
     spacer->setMinimumSize(0, 0);

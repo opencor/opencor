@@ -65,7 +65,7 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
 
-    auto toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget(this);
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int plusIconSize = int(0.57*folderIconSize);
