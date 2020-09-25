@@ -148,7 +148,6 @@ private:
     OpenCMISS::Zinc::GraphicsSurfaces mSurfaces;
     OpenCMISS::Zinc::GraphicsContours mIsosurfaces;
 
-    void initAuxFile();
     void setup();
     void setupRegion();
     void draw();

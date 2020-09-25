@@ -131,8 +131,6 @@ CellMLZincMappingViewZincWidget::CellMLZincMappingViewZincWidget(QWidget *pParen
 
     setup();
 
-    initAuxFile();
-
     setupRegion();
 
     draw();
@@ -153,7 +151,6 @@ CellMLZincMappingViewZincWidget::~CellMLZincMappingViewZincWidget()
 void CellMLZincMappingViewZincWidget::changeSource(const QStringList &pZincMeshFileNames)
 {
     mZincMeshFileNames = pZincMeshFileNames;
-    initAuxFile();
 
     //TODO the emit launched by reset make opencor crashing
     //reset();
@@ -366,26 +363,6 @@ void CellMLZincMappingViewZincWidget::setupRegion()
     OpenCMISS::Zinc::Scenefilter nodeFilter =
             sceneFilterModule.createScenefilterFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
     mScenePicker.setScenefilter(nodeFilter);
-}
-
-//==============================================================================
-
-void CellMLZincMappingViewZincWidget::initAuxFile()
-{
-    // For each exnode file, seek for the exelem
-
-    for (auto file : mZincMeshFileNames) {
-        if (file.endsWith(".exnode")) {
-            QString newFile = file;
-            newFile.remove(".exnode");
-            newFile.append(".exelem");
-            QFileInfo check_file;
-            check_file.setFile(newFile);
-            if (check_file.exists() && !mZincMeshFileNames.contains(newFile)) {
-                mZincMeshFileNames.append(newFile);
-            }
-        }
-    }
 }
 
 //==============================================================================

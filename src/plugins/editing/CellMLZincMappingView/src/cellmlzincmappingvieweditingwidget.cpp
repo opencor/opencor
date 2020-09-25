@@ -117,15 +117,13 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
         mSaveMapping = Core::newAction(QIcon(":/oxygen/actions/document-save.png"),
                                        mToolBarWidget);
 
-        mOpenMeshFile = Core::newAction(QIcon(":/oxygen/actions/document-open.png"),
+        mOpenFile = Core::newAction(QIcon(":/oxygen/actions/document-open.png"),
                                         mToolBarWidget);
 
         //TODO trash could be hidden when nothing selected
         mClearNode = Core::newAction(QIcon(":/oxygen/actions/edit-clear.png"),
                                                         mToolBarWidget);
 
-        mOpenMappingFile = Core::newAction(QIcon(":/oxygen/actions/document-import.png"),
-                                           mToolBarWidget);
         mNodeSizeWidget = new QwtWheel(mToolBarWidget);
             mNodeSizeWidget->setBorderWidth(0);
             mNodeSizeWidget->setFixedSize(int(0.07*availableGeometry.width()),
@@ -136,11 +134,10 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
             mNodeSizeWidget->setValue(CellMLZincMappingViewZincWidget::nodeSizeOrigin);
 
         mToolBarWidget->addAction(mSaveMapping);
-        mToolBarWidget->addAction(mOpenMeshFile);
+        mToolBarWidget->addAction(mOpenFile);
         mToolBarWidget->addAction(mClearNode);
 
         mToolBarWidget->addWidget(mNodeSizeWidget);
-        mToolBarWidget->addAction(mOpenMappingFile);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -203,10 +200,8 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         connect(mSaveMapping, &QAction::triggered,
                 this, &CellMLZincMappingViewEditingWidget::saveMappingSlot);
-        connect(mOpenMeshFile, &QAction::triggered,
-                this, &CellMLZincMappingViewEditingWidget::openMeshFile);
-        connect(mOpenMappingFile, &QAction::triggered,
-                this, &CellMLZincMappingViewEditingWidget::openMappingFile);
+        connect(mOpenFile, &QAction::triggered,
+                this, &CellMLZincMappingViewEditingWidget::openFile);
 
         //create and add informative labels
 
@@ -240,6 +235,16 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
     // Allow for things to be dropped on us
 
     setAcceptDrops(true);
+
+    QString potentialMappingFile = pFileName;
+    potentialMappingFile.replace(".cellml",".json");
+
+    QFile file;
+    file.setFileName(potentialMappingFile);
+
+    if (file.exists()) {
+        openMapping(potentialMappingFile);
+    }
 }
 
 //==============================================================================
@@ -676,17 +681,19 @@ void CellMLZincMappingViewEditingWidget::saveMappingSlot()
 
 //==============================================================================
 
-void CellMLZincMappingViewEditingWidget::openMappingFile()
+void CellMLZincMappingViewEditingWidget::openFile()
 {
-    openMapping(Core::getOpenFileName("Open mapping file"));
+    QStringList files = Core::getOpenFileNames("Open mesh or mapping file");
+
+    if (files.length() == 1 && files.first().endsWith(".json")) {
+        openMapping(files.first());
+    } else {
+        setMeshFiles(files);
+    }
+
 }
 
 //==============================================================================
-
-void CellMLZincMappingViewEditingWidget::openMeshFile()
-{
-    setMeshFiles(Core::getOpenFileNames("Open mesh file"));
-}
 
 } // namespace MappingView
 } // namespace OpenCOR
