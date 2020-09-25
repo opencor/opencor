@@ -112,6 +112,8 @@ public:
     void setSizes(const QIntList &pSizesHorizontal,
                   const QIntList &pSizesVertical);
 
+    CellMLZincMappingViewZincWidget * getZincWidget();
+
 signals:
     void horizontalSplitterMoved(const QIntList &pSizes);
     void verticalSplitterMoved(const QIntList &pSizes);
@@ -133,8 +135,7 @@ private:
 
     QAction *mClearNode;
     QAction *mSaveMapping;
-    QAction *mOpenMeshFile;
-    QAction *mOpenMappingFile;
+    QAction *mOpenFile;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -176,8 +177,7 @@ private slots:
     void emitHorizontalSplitterMoved();
     void emitVerticalSplitterMoved();
     void saveMappingSlot();
-    void openMeshFile();
-    void openMappingFile();
+    void openFile();
 };
 
 //==============================================================================
