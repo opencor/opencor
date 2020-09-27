@@ -73,7 +73,7 @@ public:
 
     QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
                                     QSizePolicy::Policy pVerticalSizePolicy);
-    ToolBarLabelWidgetAction * addLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction);
+    ToolBarLabelWidgetAction * addLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction = nullptr);
     QAction * addWidgetAction(QWidget *pWidget);
 };
 

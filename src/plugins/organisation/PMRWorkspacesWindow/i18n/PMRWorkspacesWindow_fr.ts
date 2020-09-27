@@ -35,10 +35,6 @@
         <translation>%1 changements :</translation>
     </message>
     <message>
-        <source>Changes:</source>
-        <translation>Changements :</translation>
-    </message>
-    <message>
         <source>Normal Size</source>
         <translation>Taille Normale</translation>
     </message>
@@ -277,6 +273,13 @@
     <message>
         <source>Preferences for PMR support</source>
         <translation>Préférences pour le support PMR</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Changes:</source>
+        <translation>Changements :</translation>
     </message>
 </context>
 </TS>
