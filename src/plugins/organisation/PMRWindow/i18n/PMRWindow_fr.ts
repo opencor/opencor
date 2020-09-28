@@ -48,6 +48,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
+    <message>
+        <source>Filter:</source>
+        <translation>Filtre :</translation>
+    </message>
+</context>
+<context>
     <name>PmrWindowWindow</name>
     <message>
         <source>PMR</source>
@@ -60,13 +67,6 @@
     <message>
         <source>Reload the list of exposures</source>
         <translation>Recharger la liste d&apos;expositions</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Filter:</source>
-        <translation>Filtre :</translation>
     </message>
 </context>
 </TS>

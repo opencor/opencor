@@ -49,6 +49,7 @@ namespace OpenCOR {
 
 namespace Core {
     class SplitterWidget;
+    class ToolBarLabelWidgetAction;
 } // namespace Core
 
 //==============================================================================
@@ -150,6 +151,7 @@ private:
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
     QAction *mWebViewerCellmlTextFormatAction;
+    Core::ToolBarLabelWidgetAction *mWebViewerLabelAction;
 
     QCheckBox *mSelectAllChangesCheckBox;
 
@@ -179,6 +181,8 @@ private:
     QString cleanHtmlEscaped(const QString &pString);
 
 private slots:
+    void webViewerLabelCreated(QLabel *pLabel);
+
     void refreshChanges();
 
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = nullptr);

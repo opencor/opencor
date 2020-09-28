@@ -72,21 +72,6 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-void configureWebViewerLabel(QLabel *pLabel)
-{
-    // Configure our Web viewer label
-
-    QFont font = pLabel->font();
-
-    font.setBold(true);
-
-    pLabel->setAlignment(Qt::AlignBottom);
-    pLabel->setFont(font);
-    pLabel->setText(QObject::tr("Changes:"));
-}
-
-//==============================================================================
-
 PmrWorkspacesWindowSynchronizeDialogItem::PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode) :
     QStandardItem(pFileNode->path()),
     mFileNode(pFileNode)
@@ -296,7 +281,11 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mWebViewerCellmlTextFormatAction->setCheckable(true);
 
-    webViewerToolBarWidget->addLabelWidgetAction(configureWebViewerLabel);
+    mWebViewerLabelAction = webViewerToolBarWidget->addLabelWidgetAction();
+
+    connect(mWebViewerLabelAction, &Core::ToolBarLabelWidgetAction::labelCreated,
+            this, &PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated);
+
     webViewerToolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);
     webViewerToolBarWidget->addAction(mWebViewerCellmlTextFormatAction);
     webViewerToolBarWidget->addSeparator();
@@ -462,6 +451,25 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 
         Core::Dialog::keyPressEvent(pEvent);
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated(QLabel *pLabel)
+{
+    // Configure our Web viewer label, if still valid
+
+    if (!mWebViewerLabelAction->validLabel(pLabel)) {
+        return;
+    }
+
+    QFont font = pLabel->font();
+
+    font.setBold(true);
+
+    pLabel->setAlignment(Qt::AlignBottom);
+    pLabel->setFont(font);
+    pLabel->setText(tr("Changes:"));
 }
 
 //==============================================================================

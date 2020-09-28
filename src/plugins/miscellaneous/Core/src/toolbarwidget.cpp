@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QLabel>
+#include <QTimer>
 
 //==============================================================================
 
@@ -34,10 +35,8 @@ namespace Core {
 
 //==============================================================================
 
-ToolBarLabelWidgetAction::ToolBarLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction,
-                                                   QWidget *pParent)
-    : QWidgetAction(pParent),
-      mInitializeFunction(pInitializeFunction)
+ToolBarLabelWidgetAction::ToolBarLabelWidgetAction(QWidget *pParent)
+    : QWidgetAction(pParent)
 {
 }
 
@@ -45,13 +44,16 @@ ToolBarLabelWidgetAction::ToolBarLabelWidgetAction(ToolBarLabelWidgetActionIniti
 
 QWidget * ToolBarLabelWidgetAction::createWidget(QWidget *pParent)
 {
-    // Create, initialise and return a label widget
+    // Create and return a label widget
+    // Note: in some cases, to emit the labelCreated() signal directly after
+    //       creating the label may result in the signal being emitted before a
+    //       caller gets a chance to create a connection for it, hence we emit
+    //       the signal through a single shot...
 
     auto res = new QLabel(pParent);
 
-    if (mInitializeFunction != nullptr) {
-        mInitializeFunction(res);
-    }
+    QTimer::singleShot(0, this, std::bind(&ToolBarLabelWidgetAction::emitLabelCreated,
+                                          this, res));
 
     return res;
 }
@@ -69,6 +71,33 @@ QList<QLabel *> ToolBarLabelWidgetAction::labels() const
     }
 
     return res;
+}
+
+//==============================================================================
+
+bool ToolBarLabelWidgetAction::validLabel(QLabel *pLabel) const
+{
+    // Return whether the given label is (still) valid
+    // Note: this method is needed so that people who handle the labelCreated()
+    //       signal can ensure that the label is still valid since QWidgetAction
+    //       is in charge of creating/destroying them...
+
+    for (const auto &label : createdWidgets()) {
+        if (pLabel == label) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+void ToolBarLabelWidgetAction::emitLabelCreated(QLabel *pLabel)
+{
+    // Let people know that a label widget has been created
+
+    emit labelCreated(pLabel);
 }
 
 //==============================================================================
@@ -116,11 +145,11 @@ QAction * ToolBarWidget::addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSi
 
 //==============================================================================
 
-ToolBarLabelWidgetAction * ToolBarWidget::addLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction)
+ToolBarLabelWidgetAction * ToolBarWidget::addLabelWidgetAction()
 {
     // Add and return a label widget action
 
-    auto res = new ToolBarLabelWidgetAction(pInitializeFunction, this);
+    auto res = new ToolBarLabelWidgetAction(this);
 
     addAction(res);
 

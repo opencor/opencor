@@ -50,32 +50,6 @@ namespace PMRWindow {
 
 //==============================================================================
 
-void retranslateFilterLabel(QLabel *pLabel)
-{
-    // Retranslate our filter label
-
-    pLabel->setText(QObject::tr("Filter:"));
-}
-
-//==============================================================================
-
-void configureFilterLabel(QLabel *pLabel)
-{
-    // Configure our filter label
-
-    QFont font = pLabel->font();
-
-    font.setBold(true);
-
-    pLabel->setFont(font);
-
-    // Retranslate our filter label
-
-    retranslateFilterLabel(pLabel);
-}
-
-//==============================================================================
-
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWindowWindow)
@@ -104,7 +78,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-    mFilterLabelAction = toolBarWidget->addLabelWidgetAction(configureFilterLabel);
+    mFilterLabelAction = toolBarWidget->addLabelWidgetAction();
+
+    connect(mFilterLabelAction, &Core::ToolBarLabelWidgetAction::labelCreated,
+            this, &PmrWindowWindow::filterLabelCreated);
 
     toolBarWidget->addWidgetAction(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
@@ -262,6 +239,36 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
         retrieveExposures(isVisible(), true);
     }
+}
+
+//==============================================================================
+
+void PmrWindowWindow::retranslateFilterLabel(QLabel *pLabel)
+{
+    // Retranslate our filter label
+
+    pLabel->setText(tr("Filter:"));
+}
+
+//==============================================================================
+
+void PmrWindowWindow::filterLabelCreated(QLabel *pLabel)
+{
+    // Configure our filter label, if still valid
+
+    if (!mFilterLabelAction->validLabel(pLabel)) {
+        return;
+    }
+
+    QFont font = pLabel->font();
+
+    font.setBold(true);
+
+    pLabel->setFont(font);
+
+    // Retranslate our filter label
+
+    retranslateFilterLabel(pLabel);
 }
 
 //==============================================================================

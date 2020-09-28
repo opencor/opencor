@@ -70,6 +70,10 @@
         <source>Binary File</source>
         <translation>Fichier Binaire</translation>
     </message>
+    <message>
+        <source>Changes:</source>
+        <translation>Changements :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
@@ -273,13 +277,6 @@
     <message>
         <source>Preferences for PMR support</source>
         <translation>Préférences pour le support PMR</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Changes:</source>
-        <translation>Changements :</translation>
     </message>
 </context>
 </TS>

@@ -104,9 +104,12 @@ private:
 
     void busy(bool pBusy, bool pResetCounter);
 
+    void retranslateFilterLabel(QLabel *pLabel);
+
 private slots:
     void actionReloadTriggered();
 
+    void filterLabelCreated(QLabel *pLabel);
     void filterValueChanged(const QString &pText);
 
     void busy(bool pBusy);

@@ -43,23 +43,24 @@ namespace Core {
 
 //==============================================================================
 
-using ToolBarLabelWidgetActionInitializeFunction = void (*)(QLabel *pLabel);
-
-//==============================================================================
-
 class CORE_EXPORT ToolBarLabelWidgetAction : public QWidgetAction
 {
+    Q_OBJECT
+
 public:
-    ToolBarLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction,
-                             QWidget *pParent);
+    ToolBarLabelWidgetAction(QWidget *pParent);
 
     QList<QLabel *> labels() const;
+    bool validLabel(QLabel *pLabel) const;
 
 protected:
     QWidget * createWidget(QWidget *pParent) override;
 
 private:
-    ToolBarLabelWidgetActionInitializeFunction mInitializeFunction = nullptr;
+    void emitLabelCreated(QLabel *pLabel);
+
+signals:
+    void labelCreated(QLabel *pLabel);
 };
 
 //==============================================================================
@@ -73,7 +74,7 @@ public:
 
     QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
                                     QSizePolicy::Policy pVerticalSizePolicy);
-    ToolBarLabelWidgetAction * addLabelWidgetAction(ToolBarLabelWidgetActionInitializeFunction pInitializeFunction = nullptr);
+    ToolBarLabelWidgetAction * addLabelWidgetAction();
     QAction * addWidgetAction(QWidget *pWidget);
 };
 
