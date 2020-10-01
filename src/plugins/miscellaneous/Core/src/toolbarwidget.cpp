@@ -173,13 +173,6 @@ void ToolBarLineEditWidgetAction::emitCreated(QLineEdit *pLineEdit)
 ToolBarWidget::ToolBarWidget(QWidget *pParent)
     : QToolBar(pParent)
 {
-    // Note: we do NOT want a parent! Indeed, if we did have a parent, then to
-    //       start OpenCOR using the Simulation Experiment view would, on macOS,
-    //       result in the tool bar having the wrong style!? Yet, the tool bar
-    //       would look fine for other files, just not the one with which
-    //       OpenCOR started!? The only case where it works as expected is when
-    //       we don't have a parent...
-
     // Remove the border which is normally drawn for a tool bar widget (indeed,
     // it doesn't look great when on a docked window) and make sure that we have
     // a spacing of 4 pixels (indeed, on Windows/Linux, the layout has no
