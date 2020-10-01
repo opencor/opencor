@@ -35,6 +35,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 class QLabel;
+class QLineEdit;
 
 //==============================================================================
 
@@ -65,6 +66,28 @@ signals:
 
 //==============================================================================
 
+class CORE_EXPORT ToolBarLineEditWidgetAction : public QWidgetAction
+{
+    Q_OBJECT
+
+public:
+    ToolBarLineEditWidgetAction(QWidget *pParent);
+
+    QList<QLineEdit *> lineEdits() const;
+    bool validLineEdit(QLineEdit *pLineEdit) const;
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitLineEditCreated(QLineEdit *pLineEdit);
+
+signals:
+    void lineEditCreated(QLineEdit *pLineEdit);
+};
+
+//==============================================================================
+
 class CORE_EXPORT ToolBarWidget : public QToolBar
 {
     Q_OBJECT
@@ -75,6 +98,7 @@ public:
     QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
                                     QSizePolicy::Policy pVerticalSizePolicy);
     ToolBarLabelWidgetAction * addLabelWidgetAction();
+    ToolBarLineEditWidgetAction * addLineEditWidgetAction();
     QAction * addWidgetAction(QWidget *pWidget);
 };
 

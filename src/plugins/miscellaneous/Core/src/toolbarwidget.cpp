@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QLabel>
+#include <QLineEdit>
 #include <QTimer>
 
 //==============================================================================
@@ -102,6 +103,74 @@ void ToolBarLabelWidgetAction::emitLabelCreated(QLabel *pLabel)
 
 //==============================================================================
 
+ToolBarLineEditWidgetAction::ToolBarLineEditWidgetAction(QWidget *pParent)
+    : QWidgetAction(pParent)
+{
+}
+
+//==============================================================================
+
+QWidget * ToolBarLineEditWidgetAction::createWidget(QWidget *pParent)
+{
+    // Create and return a line edit widget
+    // Note: in some cases, to emit the lineEditCreated() signal directly after
+    //       creating the line edit may result in the signal being emitted
+    //       before a caller gets a chance to create a connection for it, hence
+    //       we emit the signal through a single shot...
+
+    auto res = new QLineEdit(pParent);
+
+    QTimer::singleShot(0, this, std::bind(&ToolBarLineEditWidgetAction::emitLineEditCreated,
+                                          this, res));
+
+    return res;
+}
+
+//==============================================================================
+
+QList<QLineEdit *> ToolBarLineEditWidgetAction::lineEdits() const
+{
+    // Return our created line edits
+
+    QList<QLineEdit *> res;
+
+    for (const auto &lineEdit : createdWidgets()) {
+        res << static_cast<QLineEdit *>(lineEdit);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+bool ToolBarLineEditWidgetAction::validLineEdit(QLineEdit *pLineEdit) const
+{
+    // Return whether the given line edit is (still) valid
+    // Note: this method is needed so that people who handle the
+    //       lineEditCreated() signal can ensure that the line edit is still
+    //       valid since QWidgetAction is in charge of creating/destroying
+    //       them...
+
+    for (const auto &lineEdit : createdWidgets()) {
+        if (pLineEdit == lineEdit) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+void ToolBarLineEditWidgetAction::emitLineEditCreated(QLineEdit *pLineEdit)
+{
+    // Let people know that a line edit widget has been created
+
+    emit lineEditCreated(pLineEdit);
+}
+
+//==============================================================================
+
 ToolBarWidget::ToolBarWidget(QWidget *pParent)
     : QToolBar(pParent)
 {
@@ -150,6 +219,19 @@ ToolBarLabelWidgetAction * ToolBarWidget::addLabelWidgetAction()
     // Add and return a label widget action
 
     auto res = new ToolBarLabelWidgetAction(this);
+
+    addAction(res);
+
+    return res;
+}
+
+//==============================================================================
+
+ToolBarLineEditWidgetAction * ToolBarWidget::addLineEditWidgetAction()
+{
+    // Add and return a line edit widget action
+
+    auto res = new ToolBarLineEditWidgetAction(this);
 
     addAction(res);
 
