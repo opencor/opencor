@@ -283,7 +283,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mWebViewerLabelAction = webViewerToolBarWidget->addLabelWidgetAction();
 
-    connect(mWebViewerLabelAction, &Core::ToolBarLabelWidgetAction::labelCreated,
+    connect(mWebViewerLabelAction, &Core::ToolBarLabelWidgetAction::created,
             this, &PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated);
 
     webViewerToolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);

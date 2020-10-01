@@ -80,7 +80,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mFilterLabelAction = toolBarWidget->addLabelWidgetAction();
 
-    connect(mFilterLabelAction, &Core::ToolBarLabelWidgetAction::labelCreated,
+    connect(mFilterLabelAction, &Core::ToolBarLabelWidgetAction::created,
             this, &PmrWindowWindow::filterLabelCreated);
 
     toolBarWidget->addWidgetAction(mFilterValue);

@@ -46,14 +46,14 @@ ToolBarLabelWidgetAction::ToolBarLabelWidgetAction(QWidget *pParent)
 QWidget * ToolBarLabelWidgetAction::createWidget(QWidget *pParent)
 {
     // Create and return a label widget
-    // Note: in some cases, to emit the labelCreated() signal directly after
-    //       creating the label may result in the signal being emitted before a
-    //       caller gets a chance to create a connection for it, hence we emit
-    //       the signal through a single shot...
+    // Note: in some cases, to emit the created() signal directly after creating
+    //       the label may result in the signal being emitted before a caller
+    //       gets a chance to create a connection for it, hence we emit the
+    //       signal through a single shot...
 
     auto res = new QLabel(pParent);
 
-    QTimer::singleShot(0, this, std::bind(&ToolBarLabelWidgetAction::emitLabelCreated,
+    QTimer::singleShot(0, this, std::bind(&ToolBarLabelWidgetAction::emitCreated,
                                           this, res));
 
     return res;
@@ -79,7 +79,7 @@ QList<QLabel *> ToolBarLabelWidgetAction::labels() const
 bool ToolBarLabelWidgetAction::validLabel(QLabel *pLabel) const
 {
     // Return whether the given label is (still) valid
-    // Note: this method is needed so that people who handle the labelCreated()
+    // Note: this method is needed so that people who handle the created()
     //       signal can ensure that the label is still valid since QWidgetAction
     //       is in charge of creating/destroying them...
 
@@ -94,11 +94,11 @@ bool ToolBarLabelWidgetAction::validLabel(QLabel *pLabel) const
 
 //==============================================================================
 
-void ToolBarLabelWidgetAction::emitLabelCreated(QLabel *pLabel)
+void ToolBarLabelWidgetAction::emitCreated(QLabel *pLabel)
 {
     // Let people know that a label widget has been created
 
-    emit labelCreated(pLabel);
+    emit created(pLabel);
 }
 
 //==============================================================================
@@ -113,14 +113,14 @@ ToolBarLineEditWidgetAction::ToolBarLineEditWidgetAction(QWidget *pParent)
 QWidget * ToolBarLineEditWidgetAction::createWidget(QWidget *pParent)
 {
     // Create and return a line edit widget
-    // Note: in some cases, to emit the lineEditCreated() signal directly after
-    //       creating the line edit may result in the signal being emitted
-    //       before a caller gets a chance to create a connection for it, hence
-    //       we emit the signal through a single shot...
+    // Note: in some cases, to emit the created() signal directly after creating
+    //       the line edit may result in the signal being emitted before a
+    //       caller gets a chance to create a connection for it, hence we emit
+    //       the signal through a single shot...
 
     auto res = new QLineEdit(pParent);
 
-    QTimer::singleShot(0, this, std::bind(&ToolBarLineEditWidgetAction::emitLineEditCreated,
+    QTimer::singleShot(0, this, std::bind(&ToolBarLineEditWidgetAction::emitCreated,
                                           this, res));
 
     return res;
@@ -146,10 +146,9 @@ QList<QLineEdit *> ToolBarLineEditWidgetAction::lineEdits() const
 bool ToolBarLineEditWidgetAction::validLineEdit(QLineEdit *pLineEdit) const
 {
     // Return whether the given line edit is (still) valid
-    // Note: this method is needed so that people who handle the
-    //       lineEditCreated() signal can ensure that the line edit is still
-    //       valid since QWidgetAction is in charge of creating/destroying
-    //       them...
+    // Note: this method is needed so that people who handle the created()
+    //       signal can ensure that the line edit is still valid since
+    //       QWidgetAction is in charge of creating/destroying them...
 
     for (const auto &lineEdit : createdWidgets()) {
         if (pLineEdit == lineEdit) {
@@ -162,11 +161,11 @@ bool ToolBarLineEditWidgetAction::validLineEdit(QLineEdit *pLineEdit) const
 
 //==============================================================================
 
-void ToolBarLineEditWidgetAction::emitLineEditCreated(QLineEdit *pLineEdit)
+void ToolBarLineEditWidgetAction::emitCreated(QLineEdit *pLineEdit)
 {
     // Let people know that a line edit widget has been created
 
-    emit lineEditCreated(pLineEdit);
+    emit created(pLineEdit);
 }
 
 //==============================================================================

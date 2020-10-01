@@ -58,10 +58,10 @@ protected:
     QWidget * createWidget(QWidget *pParent) override;
 
 private:
-    void emitLabelCreated(QLabel *pLabel);
+    void emitCreated(QLabel *pLabel);
 
 signals:
-    void labelCreated(QLabel *pLabel);
+    void created(QLabel *pLabel);
 };
 
 //==============================================================================
@@ -80,10 +80,10 @@ protected:
     QWidget * createWidget(QWidget *pParent) override;
 
 private:
-    void emitLineEditCreated(QLineEdit *pLineEdit);
+    void emitCreated(QLineEdit *pLineEdit);
 
 signals:
-    void lineEditCreated(QLineEdit *pLineEdit);
+    void created(QLineEdit *pLineEdit);
 };
 
 //==============================================================================
