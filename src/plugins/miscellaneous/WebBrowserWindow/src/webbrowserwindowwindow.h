@@ -41,6 +41,15 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ToolBarLineEditWidgetAction;
+} // namespace Core
+
+//==============================================================================
+
 namespace WebBrowserWindow {
 
 //==============================================================================
@@ -69,7 +78,10 @@ private:
 
     QMenu *mContextMenu;
 
-    QLineEdit *mUrlValue;
+    Core::ToolBarLineEditWidgetAction *mUrlValueAction;
+    QString mUrlValue;
+
+    void loadUrl(const QString &pUrl);
 
 private slots:
     void actionClearTriggered();
@@ -83,7 +95,8 @@ private slots:
     void actionInspectTriggered();
     void actionReloadTriggered();
 
-    void returnPressed();
+    void urlValueCreated(QLineEdit *pLineEdit);
+    void urlValueReturnPressed(const QString &pText);
 
     void urlChanged(const QUrl &pUrl);
     void showCustomContextMenu() const;

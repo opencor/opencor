@@ -76,14 +76,18 @@ public:
     QList<QLineEdit *> lineEdits() const;
     bool validLineEdit(QLineEdit *pLineEdit) const;
 
+    void setText(const QString &pText);
+
 protected:
     QWidget * createWidget(QWidget *pParent) override;
 
 private:
     void emitCreated(QLineEdit *pLineEdit);
+    void emitReturnPressed();
 
 signals:
     void created(QLineEdit *pLineEdit);
+    void returnPressed(const QString &pText);
 };
 
 //==============================================================================
