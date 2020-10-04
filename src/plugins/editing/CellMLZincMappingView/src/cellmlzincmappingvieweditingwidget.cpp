@@ -108,7 +108,7 @@ CellMLZincMappingViewEditingWidget::CellMLZincMappingViewEditingWidget(const QSt
 
         //create and add toolbar
 
-        mToolBarWidget = new Core::ToolBarWidget();
+        mToolBarWidget = new Core::ToolBarWidget(this);
 
         //create and add widget and actions
 
