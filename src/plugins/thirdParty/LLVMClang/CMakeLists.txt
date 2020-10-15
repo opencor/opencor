@@ -3,16 +3,16 @@ project(LLVMClangPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME LLVMClang)
-set(PACKAGE_VERSION 10.0.1)
+set(PACKAGE_VERSION 11.0.0)
 
 # Version of our library
 
-set(MAJOR_LIBRARY_VERSION 10)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
+set(MAJOR_LIBRARY_VERSION 11)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v10.0.1)
+set(GIT_TAG v11.0.0)
 
 # Specify where our local package will be installed
 
