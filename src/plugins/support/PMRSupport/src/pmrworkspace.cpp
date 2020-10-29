@@ -261,7 +261,7 @@ void PmrWorkspace::clone(const QString &pPath)
         cloned = false;
     }
 
-    git_strarray_free(&authorizationStrArray);
+    git_strarray_dispose(&authorizationStrArray);
 
     // Open ourselves in the given path and ask the workspace manager to keep
     // track of us, if we have been successfully cloned
@@ -1293,7 +1293,7 @@ bool PmrWorkspace::fetch()
         git_remote_free(gitRemote);
     }
 
-    git_strarray_free(&authorizationStrArray);
+    git_strarray_dispose(&authorizationStrArray);
 
     return res;
 }
@@ -1394,7 +1394,7 @@ void PmrWorkspace::push()
         git_remote_free(gitRemote);
     }
 
-    git_strarray_free(&authorizationStrArray);
+    git_strarray_dispose(&authorizationStrArray);
 }
 
 //==============================================================================
