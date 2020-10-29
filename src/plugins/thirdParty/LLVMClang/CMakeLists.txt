@@ -83,7 +83,7 @@ else()
     # Allow for big objects and ignore some warnings
 
     if(WIN32)
-        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4251 /wd4275 /wd4530 /wd4996")
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4251 /wd4275 /wd4307 /wd4530 /wd4996")
     endif()
 
     # Build LLVM+Clang as an external project
