@@ -34,8 +34,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "llvmclangbegin.h"
-    #include "llvm/ADT/IntrusiveRefCntPtr.h"
     #include "llvm/ExecutionEngine/ExecutionEngine.h"
+    #include "llvm/Support/Host.h"
     #include "llvm/Support/TargetSelect.h"
 
     #include "llvm-c/Core.h"
