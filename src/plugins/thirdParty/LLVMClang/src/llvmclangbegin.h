@@ -57,6 +57,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma clang diagnostic ignored "-Wsigned-enum-bitfield"
     #pragma clang diagnostic ignored "-Wswitch-enum"
     #pragma clang diagnostic ignored "-Wundef"
+    #pragma clang diagnostic ignored "-Wundefined-func-template"
     #pragma clang diagnostic ignored "-Wundefined-reinterpret-cast"
     #pragma clang diagnostic ignored "-Wunused-parameter"
     #pragma clang diagnostic ignored "-Wunused-template"
