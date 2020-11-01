@@ -170,6 +170,7 @@ private:
                      const QStringList &pFileFilters);
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
+    QMap<QString, FileTypeInterface *> mMeshFileTypeInterfaces;
 
 private slots:
     void filterChanged(const QString &text);

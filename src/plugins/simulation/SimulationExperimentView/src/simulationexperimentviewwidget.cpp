@@ -83,12 +83,17 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
     static const int AvailableGeometryWidth = AvailableGeometry.width();
     static const double PanelsRelativeWidth = 0.25*AvailableGeometryWidth;
     static const QVariantList DefaultContentsWidgetSizes = { PanelsRelativeWidth,
-                                                             0.75*AvailableGeometryWidth };
+                                                             0.40*AvailableGeometryWidth,
+                                                             0.30*AvailableGeometryWidth};
     static const QVariantList DefaultSimulationWidgetSizes = { 0.91*AvailableGeometryHeight,
                                                                0.09*AvailableGeometryHeight };
 
     mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, DefaultContentsWidgetSizes).toList());
     mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSimulationSizes, DefaultSimulationWidgetSizes).toList());
+
+    if (mContentsWidgetSizes.length() < 3) {
+        mContentsWidgetSizes = qVariantListToIntList(DefaultContentsWidgetSizes);
+    }
 
     // Retrieve the collapsed states of our collapsible widget
 

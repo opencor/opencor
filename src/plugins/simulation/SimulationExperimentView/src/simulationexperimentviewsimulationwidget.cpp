@@ -44,6 +44,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
+#include "simulationexperimentviewzincwidget.h"
 #include "simulationmanager.h"
 #include "toolbarwidget.h"
 #include "usermessagewidget.h"
@@ -687,12 +688,21 @@ void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *p
         for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
                 mFileTypeInterfaces.insert(fileName, fileTypeInterface);
-
                 acceptEvent = true;
-
                 break;
             }
         }
+        for (auto fileTypeInterface : Core::meshFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                mMeshFileTypeInterfaces.insert(fileName, fileTypeInterface);
+                acceptEvent = true;
+            }
+        }
+
+        if (fileName.contains(".json")) {
+            acceptEvent = true;
+        }
+
     }
 
     if (acceptEvent) {
@@ -715,14 +725,22 @@ void SimulationExperimentViewSimulationWidget::dragMoveEvent(QDragMoveEvent *pEv
 
 void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
 {
-    // Import/open the one or several files
-
+    // Import/open the one or several files, depending of teir kind
+    QStringList zincMeshfiles;
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         if (mFileTypeInterfaces.contains(fileName)) {
             import(fileName);
-        } else {
+        } else if (mMeshFileTypeInterfaces.contains(fileName)) {
+            zincMeshfiles.append(fileName);
+        } else if (fileName.contains(".json")) {
+            mContentsWidget->zincWidget()->loadMappingFile(fileName);
+        } else if (mFileTypeInterfaces.contains(fileName)) {
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
+    }
+
+    if (!zincMeshfiles.isEmpty()) {
+        mContentsWidget->zincWidget()->loadZincMeshFiles(zincMeshfiles);
     }
 
     // Accept the proposed action for the event
@@ -3841,6 +3859,66 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             }
         }
     }
+
+
+    //
+
+    QMap<QString, CellMLSupport::CellmlFileRuntimeParameter *> mapVariableParameter = QMap<QString, CellMLSupport::CellmlFileRuntimeParameter *>();
+    QMap<QString, double *> mapVariableValue = QMap<QString, double *>();
+
+    if (pTask != SimulationExperimentViewSimulationWidget::Task::None) {
+        for (CellMLSupport::CellmlFileRuntimeParameter *parameter: simulation->runtime()->parameters()) {
+            QString parameterFullyFormattedName = parameter->fullyFormattedName();
+
+            //TODO usefull ?
+            mapVariableParameter.insert(parameterFullyFormattedName, parameter);
+
+            switch (parameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->states(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->constants(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->algebraic(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Data:
+
+                //boring case, multiple values ccould be there
+
+                //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->data(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
+                mapVariableValue.insert(parameterFullyFormattedName, simulation->results()->rates(parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Floating:
+                //TODO what are suppose to do with that ? where are the results ?
+                //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()-> (parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::LocallyBound:
+                //TODO what are suppose to do with that ? where are the results ?
+                //mapVariableValue.insert(parameterFullyFormattedName, simulation->results()-> (parameter->index()));
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Unknown:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
+                break;
+            }
+
+
+        }
+
+        mContentsWidget->zincWidget()->initData(simulation->size(),
+                                                simulation->data()->startingPoint(),
+                                                simulation->data()->endingPoint(),
+                                                simulation->data()->pointInterval(),
+                                                mapVariableValue);
+    } else {
+        quint64 simulationResultsSize = simulation->results()->size();
+        mContentsWidget->zincWidget()->addData(int(simulationResultsSize));
+    }
+
 }
 
 //==============================================================================

@@ -19,4 +19,5 @@ add_plugin(CellMLZincMappingView
         CellMLSupport
         Qwt
         ZincWidget
+        ZincSupport
 )

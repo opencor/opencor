@@ -673,6 +673,7 @@ set(SOURCES
     src/plugins/filetypeinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
+    src/plugins/meshinterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/plugininterface.cpp
@@ -949,6 +950,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             support/SEDMLSupport
             support/SimulationSupport
             support/StandardSupport
+            support/ZincSupport
             support/ZIPSupport
 
             thirdParty/CellMLAPI

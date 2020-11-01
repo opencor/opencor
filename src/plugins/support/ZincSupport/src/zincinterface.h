@@ -18,15 +18,18 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view contents widget
+// Zinc interface
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "splitterwidget.h"
+#include "zincsupportglobal.h"
+
+//==============================================================================
+
+#include <QObject>
 
 //==============================================================================
 
@@ -34,53 +37,36 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace GraphPanelWidget {
-    class GraphPanelsWidget;
-} // namespace GraphPanelWidget
+class FileTypeInterface;
 
 //==============================================================================
 
-namespace SimulationExperimentView {
+namespace ZincSupport {
 
 //==============================================================================
 
-class SimulationExperimentViewInformationWidget;
-class SimulationExperimentViewSimulationWidget;
-class SimulationExperimentViewWidget;
-class SimulationExperimentViewZincWidget;
+static const auto ZincInterfaceDataSignature = QStringLiteral("OpenCOR::ZincSupport::ZincInterfaceData");
 
 //==============================================================================
 
-class SimulationExperimentViewContentsWidget : public Core::SplitterWidget
+class ZincInterfaceData
 {
-    Q_OBJECT
-
 public:
-    explicit SimulationExperimentViewContentsWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                    SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                    QWidget *pParent);
+    explicit ZincInterfaceData(FileTypeInterface *pFileTypeInterface);
 
-    void retranslateUi() override;
-
-    SimulationExperimentViewInformationWidget * informationWidget() const;
-    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
-    SimulationExperimentViewZincWidget * zincWidget() const;
+    FileTypeInterface * fileTypeInterface() const;
 
 private:
-    SimulationExperimentViewInformationWidget *mInformationWidget;
-    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
-    SimulationExperimentViewZincWidget *mZincWidget;
-
-signals:
-    void splitterMoved(const QIntList &pSizes);
-
-private slots:
-    void emitSplitterMoved();
+    FileTypeInterface *mFileTypeInterface;
 };
 
 //==============================================================================
 
-} // namespace SimulationExperimentView
+FileTypeInterface ZINCSUPPORT_EXPORT * fileTypeInterface();
+
+//==============================================================================
+
+} // namespace ZincSupport
 } // namespace OpenCOR
 
 //==============================================================================

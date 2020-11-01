@@ -18,69 +18,56 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Interfaces
+// Zinc support plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "coreglobal.h"
-#include "datastoreinterface.h"
 #include "filetypeinterface.h"
-#include "solverinterface.h"
 #include "meshinterface.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace ZincSupport {
 
 //==============================================================================
 
-static const auto InterfacesDataSignature = QStringLiteral("OpenCOR::Core::InterfacesData");
+PLUGININFO_FUNC ZincSupportPluginInfo();
 
 //==============================================================================
 
-class InterfacesData
+static const auto ZincMeshMimeType      = QStringLiteral("application/zinc");
+static const auto ZincMeshFileExtension = QStringLiteral("exfile");
+
+//==============================================================================
+
+class ZincSupportPlugin : public QObject, public FileTypeInterface,
+                            public PluginInterface, public MeshInterface
 {
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.ZincSupportPlugin" FILE "zincsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::FileTypeInterface)
+    Q_INTERFACES(OpenCOR::MeshInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
 public:
-    explicit InterfacesData(const FileTypeInterfaces &pFileTypeInterfaces,
-                            const FileTypeInterfaces &pDataStoreFileTypeInterfaces,
-                            const FileTypeInterfaces &pMeshFileTypeInterfaces,
-                            const SolverInterfaces &pSolverInterfaces,
-                            const DataStoreInterfaces &pDataStoreInterfaces);
+    explicit ZincSupportPlugin();
 
-    FileTypeInterfaces fileTypeInterfaces() const;
-    FileTypeInterfaces dataStoreFileTypeInterfaces() const;
-    FileTypeInterfaces meshFileTypeInterfaces() const;
-    SolverInterfaces solverInterfaces() const;
-    DataStoreInterfaces dataStoreInterfaces() const;
+#include "filetypeinterface.inl"
+#include "plugininterface.inl"
 
-private:
-    FileTypeInterfaces mFileTypeInterfaces;
-    FileTypeInterfaces mDataStoreFileTypeInterfaces;
-    FileTypeInterfaces mMeshFileTypeInterfaces;
-    SolverInterfaces mSolverInterfaces;
-    DataStoreInterfaces mDataStoreInterfaces;
 };
 
 //==============================================================================
 
-FileTypeInterfaces CORE_EXPORT fileTypeInterfaces();
-FileTypeInterfaces CORE_EXPORT dataStoreFileTypeInterfaces();
-FileTypeInterfaces CORE_EXPORT meshFileTypeInterfaces();
-SolverInterfaces CORE_EXPORT solverInterfaces();
-DataStoreInterfaces CORE_EXPORT dataStoreInterfaces();
-
-//==============================================================================
-
-FileTypeInterface CORE_EXPORT * fileTypeInterface(DataStoreInterface *pDataStoreInterface);
-DataStoreInterface CORE_EXPORT * dataStoreInterface(FileTypeInterface *pFileTypeInterface);
-
-//==============================================================================
-
-} // namespace Core
+} // namespace ZincSupport
 } // namespace OpenCOR
 
 //==============================================================================

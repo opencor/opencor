@@ -18,15 +18,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view contents widget
+// Mesh interface
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "splitterwidget.h"
+#include <QObject>
 
 //==============================================================================
 
@@ -34,54 +33,23 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace GraphPanelWidget {
-    class GraphPanelsWidget;
-} // namespace GraphPanelWidget
+extern "C" Q_DECL_EXPORT int meshInterfaceVersion();
 
 //==============================================================================
 
-namespace SimulationExperimentView {
-
-//==============================================================================
-
-class SimulationExperimentViewInformationWidget;
-class SimulationExperimentViewSimulationWidget;
-class SimulationExperimentViewWidget;
-class SimulationExperimentViewZincWidget;
-
-//==============================================================================
-
-class SimulationExperimentViewContentsWidget : public Core::SplitterWidget
+class MeshInterface
 {
-    Q_OBJECT
-
 public:
-    explicit SimulationExperimentViewContentsWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                    SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                    QWidget *pParent);
-
-    void retranslateUi() override;
-
-    SimulationExperimentViewInformationWidget * informationWidget() const;
-    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
-    SimulationExperimentViewZincWidget * zincWidget() const;
-
-private:
-    SimulationExperimentViewInformationWidget *mInformationWidget;
-    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
-    SimulationExperimentViewZincWidget *mZincWidget;
-
-signals:
-    void splitterMoved(const QIntList &pSizes);
-
-private slots:
-    void emitSplitterMoved();
+    virtual ~MeshInterface();
 };
 
 //==============================================================================
 
-} // namespace SimulationExperimentView
 } // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::MeshInterface, "OpenCOR::MeshInterface")
 
 //==============================================================================
 // End of file

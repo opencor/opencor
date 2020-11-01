@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "graphpanelswidget.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationwidget.h"
+#include "simulationexperimentviewzincwidget.h"
 
 //==============================================================================
 
@@ -59,12 +60,20 @@ SimulationExperimentViewContentsWidget::SimulationExperimentViewContentsWidget(S
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
 
+    // Create our ZincWidget
+
+    mZincWidget = new SimulationExperimentViewZincWidget(this);
+
+    mZincWidget->setObjectName("3DRendering");
+
     // Add our information and graph panels widgets to ourselves
 
     addWidget(new Core::BorderedWidget(mInformationWidget,
                                        false, false, true, true));
     addWidget(new Core::BorderedWidget(mGraphPanelsWidget,
-                                       false, true, true, false));
+                                       false, false, true, false));
+    addWidget(new Core::BorderedWidget(mZincWidget,
+                                       false,true,true,false));
 
     // Make our graph panels widget our focus proxy
 
@@ -97,6 +106,15 @@ GraphPanelWidget::GraphPanelsWidget * SimulationExperimentViewContentsWidget::gr
     // Return our graph panels widget
 
     return mGraphPanelsWidget;
+}
+
+//==============================================================================
+
+SimulationExperimentViewZincWidget * SimulationExperimentViewContentsWidget::zincWidget() const
+{
+    // Return our zinc widget
+
+    return mZincWidget;
 }
 
 //==============================================================================

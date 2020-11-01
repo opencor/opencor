@@ -30,6 +30,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "interfaces.h"
 #include "toolbarwidget.h"
 #include "zincwidget.h"
+#include "zincsupportplugin.h"
 
 //==============================================================================
 
@@ -344,17 +345,18 @@ void CellMLZincMappingViewEditingWidget::dragEnterEvent(QDragEnterEvent *pEvent)
         for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
                 mFileTypeInterfaces.insert(fileName, fileTypeInterface);
-
                 acceptEvent = true;
-
                 break;
             }
         }
 
-        //TODO
-        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
-            acceptEvent = true;
+        for (auto fileTypeInterface : Core::meshFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                mMeshFileTypeInterfaces.insert(fileName, fileTypeInterface);
+                acceptEvent = true;
+            }
         }
+
         if (fileName.contains(".json")) {
             acceptEvent = true;
         }
@@ -384,14 +386,11 @@ void CellMLZincMappingViewEditingWidget::dropEvent(QDropEvent *pEvent)
     // Import/open the one or several files
     QStringList meshFileList;
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
-        if (fileName.contains(".exelem")||fileName.contains(".exnode")||fileName.contains(".exfile")) {
+        if (mMeshFileTypeInterfaces.contains(fileName)) {
             meshFileList.append(fileName);
         } else if (fileName.contains(".json")) {
             openMapping(fileName);
         } else if (mFileTypeInterfaces.contains(fileName)) {
-            //import(fileName); //?
-            //TODO
-        } else {
             QDesktopServices::openUrl("opencor://openFile/"+fileName);
         }
     }
