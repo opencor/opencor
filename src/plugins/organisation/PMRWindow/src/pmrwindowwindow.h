@@ -49,6 +49,7 @@ namespace OpenCOR {
 
 namespace Core {
     class ToolBarLabelWidgetAction;
+    class ToolBarLineEditWidgetAction;
 } // namespace Core
 
 //==============================================================================
@@ -86,7 +87,8 @@ private:
     Ui::PmrWindowWindow *mGui;
 
     Core::ToolBarLabelWidgetAction *mFilterLabelAction;
-    QLineEdit *mFilterValue;
+    Core::ToolBarLineEditWidgetAction *mFilterValueAction;
+    QString mFilterValue;
 
     QLabel *mPmrInstanceLabel;
 
@@ -110,7 +112,9 @@ private slots:
     void actionReloadTriggered();
 
     void filterLabelCreated(QLabel *pLabel);
-    void filterValueChanged(const QString &pText);
+
+    void filterValueCreated(QLineEdit *pLineEdit);
+    void filterValueTextChanged(const QString &pText);
 
     void busy(bool pBusy);
 

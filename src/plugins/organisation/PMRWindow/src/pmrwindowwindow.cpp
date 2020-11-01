@@ -67,15 +67,14 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     auto toolBarWidget = new Core::ToolBarWidget(this);
 
-    mFilterValue = new QLineEdit(toolBarWidget);
-
-#ifdef Q_OS_MAC
-    mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-#endif
-
-    connect(mFilterValue, &QLineEdit::textChanged,
-            this, &PmrWindowWindow::filterValueChanged);
-
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
     toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mFilterLabelAction = toolBarWidget->addLabelWidgetAction();
@@ -83,14 +82,16 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mFilterLabelAction, &Core::ToolBarLabelWidgetAction::created,
             this, &PmrWindowWindow::filterLabelCreated);
 
-    toolBarWidget->addWidgetAction(mFilterValue);
+    mFilterValueAction = toolBarWidget->addLineEditWidgetAction();
+
+    connect(mFilterValueAction, &Core::ToolBarLineEditWidgetAction::created,
+            this, &PmrWindowWindow::filterValueCreated);
+    connect(mFilterValueAction, &Core::ToolBarLineEditWidgetAction::textChanged,
+            this, &PmrWindowWindow::filterValueTextChanged);
+
     toolBarWidget->addAction(mGui->actionReload);
 
     mGui->layout->addWidget(toolBarWidget);
-
-    // Make the filter value our focus proxy
-
-    setFocusProxy(mFilterValue);
 
     // Create and add a label to highlight the repository we are using
 
@@ -273,8 +274,37 @@ void PmrWindowWindow::filterLabelCreated(QLabel *pLabel)
 
 //==============================================================================
 
-void PmrWindowWindow::filterValueChanged(const QString &pText)
+void PmrWindowWindow::filterValueCreated(QLineEdit *pLineEdit)
 {
+    // Configure our filter value, if still valid
+
+    if (!mFilterValueAction->validLineEdit(pLineEdit)) {
+        return;
+    }
+
+#ifdef Q_OS_MAC
+    pLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    pLineEdit->setText(mFilterValue);
+
+    // Make our filter value our focus proxy
+
+    setFocusProxy(pLineEdit);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::filterValueTextChanged(const QString &pText)
+{
+    // Keep track of the filter value and update other filter value actions
+
+    mFilterValue = pText;
+
+    for (const auto &lineEdit : mFilterValueAction->lineEdits()) {
+        lineEdit->setText(pText);
+    }
+
     // Ask our PMR widget to filter its output using the given regular
     // expression
 
@@ -305,7 +335,7 @@ void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
         mPmrWindowWidget->showBusyWidget();
     } else if (!pBusy && (counter == 0)) {
         // Re-enable the GUI side and give, within the current window, the focus
-        // to mFilterValue, but only if the current window already has the
+        // to mFilterValueAction, but only if the current window already has the
         // focus, or to mPmrWindowWidget if it was previously double clicked
 
         mGui->dockWidgetContents->setEnabled(true);
@@ -315,7 +345,7 @@ void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
 
             mPmrWindowWidget->setFocus();
         } else {
-            Core::setFocusTo(mFilterValue);
+            Core::setFocusTo(mFilterValueAction->lineEdits().first());
         }
 
         mPmrWindowWidget->hideBusyWidget();
@@ -394,7 +424,7 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), {});
+    mPmrWindowWidget->initialize(pExposures, mFilterValueAction->text(), {});
 }
 
 //==============================================================================
