@@ -120,6 +120,8 @@ QWidget * ToolBarLineEditWidgetAction::createWidget(QWidget *pParent)
 
     auto res = new QLineEdit(pParent);
 
+    connect(res, &QLineEdit::textChanged,
+            this, &ToolBarLineEditWidgetAction::emitTextChanged);
     connect(res, &QLineEdit::returnPressed,
             this, &ToolBarLineEditWidgetAction::emitReturnPressed);
 
@@ -180,6 +182,15 @@ void ToolBarLineEditWidgetAction::emitCreated(QLineEdit *pLineEdit)
     // Let people know that a line edit widget has been created
 
     emit created(pLineEdit);
+}
+
+//==============================================================================
+
+void ToolBarLineEditWidgetAction::emitTextChanged()
+{
+    // Let people know that the text has changed
+
+    emit textChanged(qobject_cast<QLineEdit *>(sender())->text());
 }
 
 //==============================================================================
