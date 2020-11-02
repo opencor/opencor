@@ -118,11 +118,11 @@ void ToolBarWidgetLineEditWidgetAction::emitCreated(QLineEdit *pLineEdit)
 
 //==============================================================================
 
-void ToolBarWidgetLineEditWidgetAction::emitTextChanged()
+void ToolBarWidgetLineEditWidgetAction::emitTextChanged(const QString &pText)
 {
     // Let people know that the text has changed
 
-    emit textChanged(qobject_cast<QLineEdit *>(sender())->text());
+    emit textChanged(pText);
 }
 
 //==============================================================================
@@ -131,7 +131,7 @@ void ToolBarWidgetLineEditWidgetAction::emitReturnPressed()
 {
     // Let people know that return was pressed
 
-    emit returnPressed(qobject_cast<QLineEdit *>(sender())->text());
+    emit returnPressed();
 }
 
 //==============================================================================

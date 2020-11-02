@@ -59,13 +59,13 @@ protected:
 
 private:
     void emitCreated(QLineEdit *pLineEdit);
-    void emitTextChanged();
+    void emitTextChanged(const QString &pText);
     void emitReturnPressed();
 
 signals:
     void created(QLineEdit *pLineEdit);
     void textChanged(const QString &pText);
-    void returnPressed(const QString &pText);
+    void returnPressed();
 };
 
 //==============================================================================

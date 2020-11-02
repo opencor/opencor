@@ -92,6 +92,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::created,
             this, &WebBrowserWindowWindow::urlValueCreated);
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::textChanged,
+            this, &WebBrowserWindowWindow::urlValueTextChanged);
     connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::returnPressed,
             this, &WebBrowserWindowWindow::urlValueReturnPressed);
 
@@ -404,14 +406,23 @@ void WebBrowserWindowWindow::loadUrl(const QString &pUrl)
 
 //==============================================================================
 
-void WebBrowserWindowWindow::urlValueReturnPressed(const QString &pText)
+void WebBrowserWindowWindow::urlValueTextChanged(const QString &pText)
 {
-    // Go to our home page (i.e. blank page), if the URL is empty, or load the
+    // Keep track of the URL value
+
+    mUrlValue = pText;
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::urlValueReturnPressed()
+{
+    // Go to our home page (i.e. a blank page), if the URL is empty, or load the
     // URL
 
-    loadUrl(pText.isEmpty()?
+    loadUrl(mUrlValue.isEmpty()?
                 mWebBrowserWindowWidget->homePage():
-                pText);
+                mUrlValue);
 }
 
 //==============================================================================

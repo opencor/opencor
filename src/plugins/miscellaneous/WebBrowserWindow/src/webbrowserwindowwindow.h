@@ -96,7 +96,8 @@ private slots:
     void actionReloadTriggered();
 
     void urlValueCreated(QLineEdit *pLineEdit);
-    void urlValueReturnPressed(const QString &pText);
+    void urlValueTextChanged(const QString &pText);
+    void urlValueReturnPressed();
 
     void urlChanged(const QUrl &pUrl);
     void showCustomContextMenu() const;
