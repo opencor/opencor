@@ -25,8 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QApplication>
-#include <QScreen>
 #include <QTimer>
 
 //==============================================================================
@@ -58,13 +56,7 @@ QWidget * ToolBarWidgetWheelWidgetAction::createWidget(QWidget *pParent)
     //       the signal through a single shot...
 
     auto res = new QwtWheel(pParent);
-    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-    res->setBorderWidth(0);
-    res->setFixedSize(int(0.07*availableGeometry.width()), res->height()/2);
-    res->setFocusPolicy(Qt::NoFocus);
-//    res->setRange(0.0, 55.0);
-    res->setWheelBorderWidth(0);
 
     QTimer::singleShot(0, this, std::bind(&ToolBarWidgetWheelWidgetAction::emitCreated,
                                           this, res));
