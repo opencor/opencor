@@ -61,7 +61,7 @@ namespace PMRSupport {
 //==============================================================================
 
 namespace ToolBarWidget {
-    class ToolBarLabelWidgetAction;
+    class ToolBarWidgetLabelWidgetAction;
 } // namespace ToolBarWidget
 
 //==============================================================================
@@ -156,7 +156,7 @@ private:
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
     QAction *mWebViewerCellmlTextFormatAction;
-    ToolBarWidget::ToolBarLabelWidgetAction *mWebViewerLabelAction;
+    ToolBarWidget::ToolBarWidgetLabelWidgetAction *mWebViewerLabelAction;
 
     QCheckBox *mSelectAllChangesCheckBox;
 

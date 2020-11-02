@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Tool bar widget wheel widget action
 //==============================================================================
 
 #pragma once
@@ -29,7 +29,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QToolBar>
+#include <QWidgetAction>
+
+//==============================================================================
+
+class QwtWheel;
 
 //==============================================================================
 
@@ -38,25 +42,24 @@ namespace ToolBarWidget {
 
 //==============================================================================
 
-class ToolBarWidgetLabelWidgetAction;
-class ToolBarWidgetLineEditWidgetAction;
-class ToolBarWidgetWheelWidgetAction;
-
-//==============================================================================
-
-class TOOLBARWIDGET_EXPORT ToolBarWidget : public QToolBar
+class TOOLBARWIDGET_EXPORT ToolBarWidgetWheelWidgetAction : public QWidgetAction
 {
     Q_OBJECT
 
 public:
-    explicit ToolBarWidget(QWidget *pParent);
+    ToolBarWidgetWheelWidgetAction(QWidget *pParent);
 
-    QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
-                                    QSizePolicy::Policy pVerticalSizePolicy);
-    ToolBarWidgetLabelWidgetAction * addLabelWidgetAction();
-    ToolBarWidgetLineEditWidgetAction * addLineEditWidgetAction();
-    ToolBarWidgetWheelWidgetAction * addWheelWidgetAction();
-    QAction * addWidgetAction(QWidget *pWidget);
+    QList<QwtWheel *> wheels() const;
+    bool validWheel(QwtWheel *pWheel) const;
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitCreated(QwtWheel *pWheel);
+
+signals:
+    void created(QwtWheel *pWheel);
 };
 
 //==============================================================================

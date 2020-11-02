@@ -22,267 +22,22 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "toolbarwidget.h"
+#include "toolbarwidgetlabelwidgetaction.h"
+#include "toolbarwidgetlineeditwidgetaction.h"
+#include "toolbarwidgetwheelwidgetaction.h"
 
 //==============================================================================
 
-#include <QApplication>
-#include <QLabel>
-#include <QLineEdit>
-#include <QScreen>
-#include <QTimer>
-
-//==============================================================================
-
-#include "qwtbegin.h"
-    #include "qwt_wheel.h"
-#include "qwtend.h"
+//#include <QApplication>
+//#include <QLabel>
+//#include <QLineEdit>
+//#include <QScreen>
+//#include <QTimer>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace ToolBarWidget {
-
-//==============================================================================
-
-ToolBarLabelWidgetAction::ToolBarLabelWidgetAction(QWidget *pParent)
-    : QWidgetAction(pParent)
-{
-}
-
-//==============================================================================
-
-QWidget * ToolBarLabelWidgetAction::createWidget(QWidget *pParent)
-{
-    // Create and return a label widget
-    // Note: in some cases, to emit the created() signal directly after creating
-    //       the label widget may result in the signal being emitted before a
-    //       caller gets a chance to create a connection for it, hence we emit
-    //       the signal through a single shot...
-
-    auto res = new QLabel(pParent);
-
-    QTimer::singleShot(0, this, std::bind(&ToolBarLabelWidgetAction::emitCreated,
-                                          this, res));
-
-    return res;
-}
-
-//==============================================================================
-
-QList<QLabel *> ToolBarLabelWidgetAction::labels() const
-{
-    // Return our created labels
-
-    QList<QLabel *> res;
-
-    for (const auto &label : createdWidgets()) {
-        res << static_cast<QLabel *>(label);
-    }
-
-    return res;
-}
-
-//==============================================================================
-
-bool ToolBarLabelWidgetAction::validLabel(QLabel *pLabel) const
-{
-    // Return whether the given label is (still) valid
-    // Note: this method is needed so that people who handle the created()
-    //       signal can ensure that the label is still valid since QWidgetAction
-    //       is in charge of creating/destroying them...
-
-    for (const auto &label : createdWidgets()) {
-        if (pLabel == label) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-//==============================================================================
-
-void ToolBarLabelWidgetAction::emitCreated(QLabel *pLabel)
-{
-    // Let people know that a label widget has been created
-
-    emit created(pLabel);
-}
-
-//==============================================================================
-
-ToolBarLineEditWidgetAction::ToolBarLineEditWidgetAction(QWidget *pParent)
-    : QWidgetAction(pParent)
-{
-}
-
-//==============================================================================
-
-QWidget * ToolBarLineEditWidgetAction::createWidget(QWidget *pParent)
-{
-    // Create and return a line edit widget
-    // Note: in some cases, to emit the created() signal directly after creating
-    //       the line edit widget may result in the signal being emitted before
-    //       a caller gets a chance to create a connection for it, hence we emit
-    //       the signal through a single shot...
-
-    auto res = new QLineEdit(pParent);
-
-    connect(res, &QLineEdit::textChanged,
-            this, &ToolBarLineEditWidgetAction::emitTextChanged);
-    connect(res, &QLineEdit::returnPressed,
-            this, &ToolBarLineEditWidgetAction::emitReturnPressed);
-
-    QTimer::singleShot(0, this, std::bind(&ToolBarLineEditWidgetAction::emitCreated,
-                                          this, res));
-
-    return res;
-}
-
-//==============================================================================
-
-QList<QLineEdit *> ToolBarLineEditWidgetAction::lineEdits() const
-{
-    // Return our created line edits
-
-    QList<QLineEdit *> res;
-
-    for (const auto &lineEdit : createdWidgets()) {
-        res << static_cast<QLineEdit *>(lineEdit);
-    }
-
-    return res;
-}
-
-//==============================================================================
-
-bool ToolBarLineEditWidgetAction::validLineEdit(QLineEdit *pLineEdit) const
-{
-    // Return whether the given line edit is (still) valid
-    // Note: this method is needed so that people who handle the created()
-    //       signal can ensure that the line edit is still valid since
-    //       QWidgetAction is in charge of creating/destroying them...
-
-    for (const auto &lineEdit : createdWidgets()) {
-        if (pLineEdit == lineEdit) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-//==============================================================================
-
-void ToolBarLineEditWidgetAction::setText(const QString &pText)
-{
-    // Set the text of all our created line edits
-
-    for (const auto &lineEdit : lineEdits()) {
-        lineEdit->setText(pText);
-    }
-}
-
-//==============================================================================
-
-void ToolBarLineEditWidgetAction::emitCreated(QLineEdit *pLineEdit)
-{
-    // Let people know that a line edit widget has been created
-
-    emit created(pLineEdit);
-}
-
-//==============================================================================
-
-void ToolBarLineEditWidgetAction::emitTextChanged()
-{
-    // Let people know that the text has changed
-
-    emit textChanged(qobject_cast<QLineEdit *>(sender())->text());
-}
-
-//==============================================================================
-
-void ToolBarLineEditWidgetAction::emitReturnPressed()
-{
-    // Let people know that return was pressed
-
-    emit returnPressed(qobject_cast<QLineEdit *>(sender())->text());
-}
-
-//==============================================================================
-
-ToolBarWheelWidgetAction::ToolBarWheelWidgetAction(QWidget *pParent)
-    : QWidgetAction(pParent)
-{
-}
-
-//==============================================================================
-
-QWidget * ToolBarWheelWidgetAction::createWidget(QWidget *pParent)
-{
-    // Create and return a line edit widget
-    // Note: in some cases, to emit the created() signal directly after creating
-    //       the wheel widget may result in the signal being emitted before a
-    //       caller gets a chance to create a connection for it, hence we emit
-    //       the signal through a single shot...
-
-    auto res = new QwtWheel(pParent);
-    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
-
-    res->setBorderWidth(0);
-    res->setFixedSize(int(0.07*availableGeometry.width()), res->height()/2);
-    res->setFocusPolicy(Qt::NoFocus);
-//    res->setRange(0.0, 55.0);
-    res->setWheelBorderWidth(0);
-
-    QTimer::singleShot(0, this, std::bind(&ToolBarWheelWidgetAction::emitCreated,
-                                          this, res));
-
-    return res;
-}
-
-//==============================================================================
-
-QList<QwtWheel *> ToolBarWheelWidgetAction::wheels() const
-{
-    // Return our created wheels
-
-    QList<QwtWheel *> res;
-
-    for (const auto &wheel : createdWidgets()) {
-        res << static_cast<QwtWheel *>(wheel);
-    }
-
-    return res;
-}
-
-//==============================================================================
-
-bool ToolBarWheelWidgetAction::validWheel(QwtWheel *pWheel) const
-{
-    // Return whether the given wheel is (still) valid
-    // Note: this method is needed so that people who handle the created()
-    //       signal can ensure that the wheel is still valid since QWidgetAction
-    //       is in charge of creating/destroying them...
-
-    for (const auto &wheel : createdWidgets()) {
-        if (pWheel == wheel) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-//==============================================================================
-
-void ToolBarWheelWidgetAction::emitCreated(QwtWheel *pWheel)
-{
-    // Let people know that a wheel widget has been created
-
-    emit created(pWheel);
-}
 
 //==============================================================================
 
@@ -322,11 +77,11 @@ QAction * ToolBarWidget::addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSi
 
 //==============================================================================
 
-ToolBarLabelWidgetAction * ToolBarWidget::addLabelWidgetAction()
+ToolBarWidgetLabelWidgetAction * ToolBarWidget::addLabelWidgetAction()
 {
     // Add and return a label widget action
 
-    auto res = new ToolBarLabelWidgetAction(this);
+    auto res = new ToolBarWidgetLabelWidgetAction(this);
 
     addAction(res);
 
@@ -335,11 +90,11 @@ ToolBarLabelWidgetAction * ToolBarWidget::addLabelWidgetAction()
 
 //==============================================================================
 
-ToolBarLineEditWidgetAction * ToolBarWidget::addLineEditWidgetAction()
+ToolBarWidgetLineEditWidgetAction * ToolBarWidget::addLineEditWidgetAction()
 {
     // Add and return a line edit widget action
 
-    auto res = new ToolBarLineEditWidgetAction(this);
+    auto res = new ToolBarWidgetLineEditWidgetAction(this);
 
     addAction(res);
 
@@ -348,11 +103,11 @@ ToolBarLineEditWidgetAction * ToolBarWidget::addLineEditWidgetAction()
 
 //==============================================================================
 
-ToolBarWheelWidgetAction * ToolBarWidget::addWheelWidgetAction()
+ToolBarWidgetWheelWidgetAction * ToolBarWidget::addWheelWidgetAction()
 {
     // Add and return a wheel widget action
 
-    auto res = new ToolBarWheelWidgetAction(this);
+    auto res = new ToolBarWidgetWheelWidgetAction(this);
 
     addAction(res);
 

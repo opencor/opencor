@@ -32,6 +32,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "splitterwidget.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetlabelwidgetaction.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -283,7 +284,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mWebViewerLabelAction = webViewerToolBarWidget->addLabelWidgetAction();
 
-    connect(mWebViewerLabelAction, &ToolBarWidget::ToolBarLabelWidgetAction::created,
+    connect(mWebViewerLabelAction, &ToolBarWidget::ToolBarWidgetLabelWidgetAction::created,
             this, &PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated);
 
     webViewerToolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);

@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "coreguiutils.h"
 #include "progressbarwidget.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetlineeditwidgetaction.h"
 #include "webbrowserwindowwidget.h"
 #include "webbrowserwindowwindow.h"
 
@@ -89,9 +90,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mUrlValueAction = topToolBarWidget->addLineEditWidgetAction();
 
-    connect(mUrlValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::created,
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::created,
             this, &WebBrowserWindowWindow::urlValueCreated);
-    connect(mUrlValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::returnPressed,
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::returnPressed,
             this, &WebBrowserWindowWindow::urlValueReturnPressed);
 
     topToolBarWidget->addAction(mGui->actionReload);

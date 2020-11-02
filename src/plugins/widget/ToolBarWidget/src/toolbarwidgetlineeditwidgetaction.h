@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Tool bar widget line edit widget action
 //==============================================================================
 
 #pragma once
@@ -29,7 +29,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QToolBar>
+#include <QWidgetAction>
+
+//==============================================================================
+
+class QLineEdit;
 
 //==============================================================================
 
@@ -38,25 +42,30 @@ namespace ToolBarWidget {
 
 //==============================================================================
 
-class ToolBarWidgetLabelWidgetAction;
-class ToolBarWidgetLineEditWidgetAction;
-class ToolBarWidgetWheelWidgetAction;
-
-//==============================================================================
-
-class TOOLBARWIDGET_EXPORT ToolBarWidget : public QToolBar
+class TOOLBARWIDGET_EXPORT ToolBarWidgetLineEditWidgetAction : public QWidgetAction
 {
     Q_OBJECT
 
 public:
-    explicit ToolBarWidget(QWidget *pParent);
+    ToolBarWidgetLineEditWidgetAction(QWidget *pParent);
 
-    QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
-                                    QSizePolicy::Policy pVerticalSizePolicy);
-    ToolBarWidgetLabelWidgetAction * addLabelWidgetAction();
-    ToolBarWidgetLineEditWidgetAction * addLineEditWidgetAction();
-    ToolBarWidgetWheelWidgetAction * addWheelWidgetAction();
-    QAction * addWidgetAction(QWidget *pWidget);
+    QList<QLineEdit *> lineEdits() const;
+    bool validLineEdit(QLineEdit *pLineEdit) const;
+
+    void setText(const QString &pText);
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitCreated(QLineEdit *pLineEdit);
+    void emitTextChanged();
+    void emitReturnPressed();
+
+signals:
+    void created(QLineEdit *pLineEdit);
+    void textChanged(const QString &pText);
+    void returnPressed(const QString &pText);
 };
 
 //==============================================================================

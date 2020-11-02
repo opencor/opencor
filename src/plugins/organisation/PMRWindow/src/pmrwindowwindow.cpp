@@ -31,6 +31,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "pmrwindowwindow.h"
 #include "preferencesinterface.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetlabelwidgetaction.h"
+#include "toolbarwidgetlineeditwidgetaction.h"
 
 //==============================================================================
 
@@ -71,14 +73,14 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mFilterLabelAction = toolBarWidget->addLabelWidgetAction();
 
-    connect(mFilterLabelAction, &ToolBarWidget::ToolBarLabelWidgetAction::created,
+    connect(mFilterLabelAction, &ToolBarWidget::ToolBarWidgetLabelWidgetAction::created,
             this, &PmrWindowWindow::filterLabelCreated);
 
     mFilterValueAction = toolBarWidget->addLineEditWidgetAction();
 
-    connect(mFilterValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::created,
+    connect(mFilterValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::created,
             this, &PmrWindowWindow::filterValueCreated);
-    connect(mFilterValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::textChanged,
+    connect(mFilterValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::textChanged,
             this, &PmrWindowWindow::filterValueTextChanged);
 
     toolBarWidget->addAction(mGui->actionReload);

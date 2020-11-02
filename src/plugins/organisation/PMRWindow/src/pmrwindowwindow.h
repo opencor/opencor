@@ -54,8 +54,8 @@ namespace PMRSupport {
 //==============================================================================
 
 namespace ToolBarWidget {
-    class ToolBarLabelWidgetAction;
-    class ToolBarLineEditWidgetAction;
+    class ToolBarWidgetLabelWidgetAction;
+    class ToolBarWidgetLineEditWidgetAction;
 } // namespace ToolBarWidget
 
 //==============================================================================
@@ -86,8 +86,8 @@ protected:
 private:
     Ui::PmrWindowWindow *mGui;
 
-    ToolBarWidget::ToolBarLabelWidgetAction *mFilterLabelAction;
-    ToolBarWidget::ToolBarLineEditWidgetAction *mFilterValueAction;
+    ToolBarWidget::ToolBarWidgetLabelWidgetAction *mFilterLabelAction;
+    ToolBarWidget::ToolBarWidgetLineEditWidgetAction *mFilterValueAction;
     QString mFilterValue;
 
     QLabel *mPmrInstanceLabel;
