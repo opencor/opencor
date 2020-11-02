@@ -59,8 +59,6 @@ protected:
 
 private:
     void emitCreated(QLineEdit *pLineEdit);
-    void emitTextChanged(const QString &pText);
-    void emitReturnPressed();
 
 signals:
     void created(QLineEdit *pLineEdit);

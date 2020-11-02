@@ -57,7 +57,6 @@ protected:
 
 private:
     void emitCreated(QwtWheel *pWheel);
-    void emitValueChanged(double pValue);
 
 signals:
     void created(QwtWheel *pWheel);

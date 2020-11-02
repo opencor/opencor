@@ -58,7 +58,7 @@ QWidget * ToolBarWidgetWheelWidgetAction::createWidget(QWidget *pParent)
     auto res = new QwtWheel(pParent);
 
     connect(res, &QwtWheel::valueChanged,
-            this, &ToolBarWidgetWheelWidgetAction::emitValueChanged);
+            this, &ToolBarWidgetWheelWidgetAction::valueChanged);
 
     QTimer::singleShot(0, this, std::bind(&ToolBarWidgetWheelWidgetAction::emitCreated,
                                           this, res));
@@ -106,15 +106,6 @@ void ToolBarWidgetWheelWidgetAction::emitCreated(QwtWheel *pWheel)
     // Let people know that a wheel widget has been created
 
     emit created(pWheel);
-}
-
-//==============================================================================
-
-void ToolBarWidgetWheelWidgetAction::emitValueChanged(double pValue)
-{
-    // Let people know that the value has changed
-
-    emit valueChanged(pValue);
 }
 
 //==============================================================================

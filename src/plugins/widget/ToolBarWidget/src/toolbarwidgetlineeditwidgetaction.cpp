@@ -53,9 +53,9 @@ QWidget * ToolBarWidgetLineEditWidgetAction::createWidget(QWidget *pParent)
     auto res = new QLineEdit(pParent);
 
     connect(res, &QLineEdit::textChanged,
-            this, &ToolBarWidgetLineEditWidgetAction::emitTextChanged);
+            this, &ToolBarWidgetLineEditWidgetAction::textChanged);
     connect(res, &QLineEdit::returnPressed,
-            this, &ToolBarWidgetLineEditWidgetAction::emitReturnPressed);
+            this, &ToolBarWidgetLineEditWidgetAction::returnPressed);
 
     QTimer::singleShot(0, this, std::bind(&ToolBarWidgetLineEditWidgetAction::emitCreated,
                                           this, res));
@@ -114,24 +114,6 @@ void ToolBarWidgetLineEditWidgetAction::emitCreated(QLineEdit *pLineEdit)
     // Let people know that a line edit widget has been created
 
     emit created(pLineEdit);
-}
-
-//==============================================================================
-
-void ToolBarWidgetLineEditWidgetAction::emitTextChanged(const QString &pText)
-{
-    // Let people know that the text has changed
-
-    emit textChanged(pText);
-}
-
-//==============================================================================
-
-void ToolBarWidgetLineEditWidgetAction::emitReturnPressed()
-{
-    // Let people know that return was pressed
-
-    emit returnPressed();
 }
 
 //==============================================================================
