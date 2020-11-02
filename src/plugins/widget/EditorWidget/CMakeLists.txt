@@ -2,14 +2,6 @@ project(EditorWidgetPlugin)
 
 # Add the plugin
 
-if(WIN32)
-    if(RELEASE_MODE)
-        set(MODE_DIR release)
-    else()
-        set(MODE_DIR debug)
-    endif()
-endif()
-
 add_plugin(EditorWidget
     SOURCES
         ../../i18ninterface.cpp
