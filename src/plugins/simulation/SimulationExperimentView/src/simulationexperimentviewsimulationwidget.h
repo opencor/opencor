@@ -76,7 +76,6 @@ namespace Core {
     class Property;
     class PropertyEditorWidget;
     class SplitterWidget;
-    class ToolBarWidget;
     class UserMessageWidget;
 } // namespace Core
 
@@ -106,6 +105,12 @@ namespace SEDMLSupport {
 namespace SimulationSupport {
     class Simulation;
 } // namespace SimulationSupport
+
+//==============================================================================
+
+namespace ToolBarWidget {
+    class ToolBarWidget;
+} // namespace ToolBarWidget
 
 //==============================================================================
 
@@ -199,7 +204,7 @@ private:
     int mProgress = -1;
     bool mLockedDevelopmentMode = false;
 
-    Core::ToolBarWidget *mToolBarWidget;
+    ToolBarWidget::ToolBarWidget *mToolBarWidget;
 
     QMenu *mSimulationResultsExportDropDownMenu;
 

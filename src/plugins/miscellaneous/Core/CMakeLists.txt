@@ -45,7 +45,6 @@ add_plugin(Core
         src/remotefiledialog.cpp
         src/splitterwidget.cpp
         src/tabbarwidget.cpp
-        src/toolbarwidget.cpp
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
         src/viewwidget.cpp

@@ -47,16 +47,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class ToolBarLabelWidgetAction;
-    class ToolBarLineEditWidgetAction;
-} // namespace Core
-
-//==============================================================================
-
 namespace PMRSupport {
     class PmrWebService;
 } // namespace PMRSupport
+
+//==============================================================================
+
+namespace ToolBarWidget {
+    class ToolBarLabelWidgetAction;
+    class ToolBarLineEditWidgetAction;
+} // namespace ToolBarWidget
 
 //==============================================================================
 
@@ -86,8 +86,8 @@ protected:
 private:
     Ui::PmrWindowWindow *mGui;
 
-    Core::ToolBarLabelWidgetAction *mFilterLabelAction;
-    Core::ToolBarLineEditWidgetAction *mFilterValueAction;
+    ToolBarWidget::ToolBarLabelWidgetAction *mFilterLabelAction;
+    ToolBarWidget::ToolBarLineEditWidgetAction *mFilterValueAction;
     QString mFilterValue;
 
     QLabel *mPmrInstanceLabel;

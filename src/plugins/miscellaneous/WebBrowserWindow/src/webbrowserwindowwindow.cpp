@@ -83,15 +83,15 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    auto topToolBarWidget = new Core::ToolBarWidget(this);
+    auto topToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     topToolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mUrlValueAction = topToolBarWidget->addLineEditWidgetAction();
 
-    connect(mUrlValueAction, &Core::ToolBarLineEditWidgetAction::created,
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::created,
             this, &WebBrowserWindowWindow::urlValueCreated);
-    connect(mUrlValueAction, &Core::ToolBarLineEditWidgetAction::returnPressed,
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::returnPressed,
             this, &WebBrowserWindowWindow::urlValueReturnPressed);
 
     topToolBarWidget->addAction(mGui->actionReload);
@@ -100,7 +100,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    auto bottomToolBarWidget = new Core::ToolBarWidget(this);
+    auto bottomToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     bottomToolBarWidget->addAction(mGui->actionClear);
     bottomToolBarWidget->addSeparator();

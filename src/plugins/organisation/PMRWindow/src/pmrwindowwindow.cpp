@@ -65,20 +65,20 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Note: the spacers is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    auto toolBarWidget = new Core::ToolBarWidget(this);
+    auto toolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mFilterLabelAction = toolBarWidget->addLabelWidgetAction();
 
-    connect(mFilterLabelAction, &Core::ToolBarLabelWidgetAction::created,
+    connect(mFilterLabelAction, &ToolBarWidget::ToolBarLabelWidgetAction::created,
             this, &PmrWindowWindow::filterLabelCreated);
 
     mFilterValueAction = toolBarWidget->addLineEditWidgetAction();
 
-    connect(mFilterValueAction, &Core::ToolBarLineEditWidgetAction::created,
+    connect(mFilterValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::created,
             this, &PmrWindowWindow::filterValueCreated);
-    connect(mFilterValueAction, &Core::ToolBarLineEditWidgetAction::textChanged,
+    connect(mFilterValueAction, &ToolBarWidget::ToolBarLineEditWidgetAction::textChanged,
             this, &PmrWindowWindow::filterValueTextChanged);
 
     toolBarWidget->addAction(mGui->actionReload);

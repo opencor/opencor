@@ -262,7 +262,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     webViewerWidget->setLayout(webViewerLayout);
 
-    auto webViewerToolBarWidget = new Core::ToolBarWidget(this);
+    auto webViewerToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     auto webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
     auto webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
@@ -283,7 +283,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mWebViewerLabelAction = webViewerToolBarWidget->addLabelWidgetAction();
 
-    connect(mWebViewerLabelAction, &Core::ToolBarLabelWidgetAction::created,
+    connect(mWebViewerLabelAction, &ToolBarWidget::ToolBarLabelWidgetAction::created,
             this, &PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated);
 
     webViewerToolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);

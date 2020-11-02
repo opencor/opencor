@@ -75,7 +75,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    auto toolBarWidget = new Core::ToolBarWidget(this);
+    auto toolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     toolBarWidget->addAction(mGui->actionHome);
     toolBarWidget->addSeparator();

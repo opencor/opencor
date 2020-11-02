@@ -25,7 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "coreglobal.h"
+#include "toolbarwidgetglobal.h"
 
 //==============================================================================
 
@@ -39,12 +39,16 @@ class QLineEdit;
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace Core {
+class QwtWheel;
 
 //==============================================================================
 
-class CORE_EXPORT ToolBarLabelWidgetAction : public QWidgetAction
+namespace OpenCOR {
+namespace ToolBarWidget {
+
+//==============================================================================
+
+class TOOLBARWIDGET_EXPORT ToolBarLabelWidgetAction : public QWidgetAction
 {
     Q_OBJECT
 
@@ -66,7 +70,7 @@ signals:
 
 //==============================================================================
 
-class CORE_EXPORT ToolBarLineEditWidgetAction : public QWidgetAction
+class TOOLBARWIDGET_EXPORT ToolBarLineEditWidgetAction : public QWidgetAction
 {
     Q_OBJECT
 
@@ -94,7 +98,29 @@ signals:
 
 //==============================================================================
 
-class CORE_EXPORT ToolBarWidget : public QToolBar
+class TOOLBARWIDGET_EXPORT ToolBarWheelWidgetAction : public QWidgetAction
+{
+    Q_OBJECT
+
+public:
+    ToolBarWheelWidgetAction(QWidget *pParent);
+
+    QList<QwtWheel *> wheels() const;
+    bool validWheel(QwtWheel *pWheel) const;
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitCreated(QwtWheel *pWheel);
+
+signals:
+    void created(QwtWheel *pWheel);
+};
+
+//==============================================================================
+
+class TOOLBARWIDGET_EXPORT ToolBarWidget : public QToolBar
 {
     Q_OBJECT
 
@@ -105,12 +131,13 @@ public:
                                     QSizePolicy::Policy pVerticalSizePolicy);
     ToolBarLabelWidgetAction * addLabelWidgetAction();
     ToolBarLineEditWidgetAction * addLineEditWidgetAction();
+    ToolBarWheelWidgetAction * addWheelWidgetAction();
     QAction * addWidgetAction(QWidget *pWidget);
 };
 
 //==============================================================================
 
-} // namespace Core
+} // namespace ToolBarWidget
 } // namespace OpenCOR
 
 //==============================================================================

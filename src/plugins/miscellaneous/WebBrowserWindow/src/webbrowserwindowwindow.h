@@ -44,9 +44,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
+namespace ToolBarWidget {
     class ToolBarLineEditWidgetAction;
-} // namespace Core
+} // namespace ToolBarWidget
 
 //==============================================================================
 
@@ -78,7 +78,7 @@ private:
 
     QMenu *mContextMenu;
 
-    Core::ToolBarLineEditWidgetAction *mUrlValueAction;
+    ToolBarWidget::ToolBarLineEditWidgetAction *mUrlValueAction;
     QString mUrlValue;
 
     void loadUrl(const QString &pUrl);

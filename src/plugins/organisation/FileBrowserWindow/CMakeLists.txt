@@ -16,5 +16,5 @@ add_plugin(FileBrowserWindow
     UIS
         src/filebrowserwindowwindow.ui
     PLUGINS
-        Core
+        ToolBarWidget
 )

@@ -49,7 +49,6 @@ namespace OpenCOR {
 
 namespace Core {
     class SplitterWidget;
-    class ToolBarLabelWidgetAction;
 } // namespace Core
 
 //==============================================================================
@@ -58,6 +57,12 @@ namespace PMRSupport {
     class PmrWorkspace;
     class PmrWorkspaceFileNode;
 } // namespace PMRSupport
+
+//==============================================================================
+
+namespace ToolBarWidget {
+    class ToolBarLabelWidgetAction;
+} // namespace ToolBarWidget
 
 //==============================================================================
 
@@ -151,7 +156,7 @@ private:
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
     QAction *mWebViewerCellmlTextFormatAction;
-    Core::ToolBarLabelWidgetAction *mWebViewerLabelAction;
+    ToolBarWidget::ToolBarLabelWidgetAction *mWebViewerLabelAction;
 
     QCheckBox *mSelectAllChangesCheckBox;
 
