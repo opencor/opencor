@@ -51,7 +51,7 @@ ToolBarWidgetWheelWidgetAction::ToolBarWidgetWheelWidgetAction(QWidget *pParent)
 
 QWidget * ToolBarWidgetWheelWidgetAction::createWidget(QWidget *pParent)
 {
-    // Create and return a line edit widget
+    // Create and return a wheel widget
     // Note: in some cases, to emit the created() signal directly after creating
     //       the wheel widget may result in the signal being emitted before a
     //       caller gets a chance to create a connection for it, hence we emit
