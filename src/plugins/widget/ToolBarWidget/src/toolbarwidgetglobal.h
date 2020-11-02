@@ -25,7 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#ifdef ToolBarWidgetWidget_PLUGIN
+#ifdef ToolBarWidget_PLUGIN
     #define TOOLBARWIDGET_EXPORT Q_DECL_EXPORT
 #else
     #define TOOLBARWIDGET_EXPORT Q_DECL_IMPORT
