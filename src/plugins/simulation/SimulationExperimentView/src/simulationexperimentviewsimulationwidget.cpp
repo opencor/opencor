@@ -835,7 +835,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
 void SimulationExperimentViewSimulationWidget::updateRunPauseAction(bool pRunActionEnabled)
 {
-    // Update our various actions
+    // Update our run/pause action
 
     static const QIcon StartIcon = QIcon(":/oxygen/actions/media-playback-start.png");
     static const QIcon PauseIcon = QIcon(":/oxygen/actions/media-playback-pause.png");
