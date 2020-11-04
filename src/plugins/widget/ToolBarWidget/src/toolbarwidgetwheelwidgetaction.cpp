@@ -57,6 +57,10 @@ QWidget * ToolBarWidgetWheelWidgetAction::createWidget(QWidget *pParent)
 
     auto res = new QwtWheel(pParent);
 
+    res->setBorderWidth(0);
+    res->setFocusPolicy(Qt::NoFocus);
+    res->setWheelBorderWidth(0);
+
     connect(res, &QwtWheel::valueChanged,
             this, &ToolBarWidgetWheelWidgetAction::valueChanged);
     connect(res, &QwtWheel::wheelReleased,

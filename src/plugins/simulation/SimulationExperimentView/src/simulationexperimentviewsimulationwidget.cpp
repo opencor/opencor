@@ -3001,13 +3001,9 @@ void SimulationExperimentViewSimulationWidget::delayWheelCreated(QwtWheel *pWhee
 
     QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-    pWheel->setBorderWidth(0);
     pWheel->setFixedSize(int(0.07*availableGeometry.width()),
                          mToolBarWidget->height()/2);
-    pWheel->setFocusPolicy(Qt::NoFocus);
     pWheel->setRange(0.0, 55.0);
-    pWheel->setWheelBorderWidth(0);
-
     pWheel->setValue(mDelayWheelValue);
 
     // (Re)translate ourselves by updating ourselves
