@@ -110,6 +110,7 @@ namespace SimulationSupport {
 
 namespace ToolBarWidget {
     class ToolBarWidget;
+    class ToolBarWidgetDropDownListWidgetAction;
     class ToolBarWidgetLabelWidgetAction;
     class ToolBarWidgetWheelWidgetAction;
 } // namespace ToolBarWidget
@@ -208,8 +209,6 @@ private:
 
     ToolBarWidget::ToolBarWidget *mToolBarWidget;
 
-    QMenu *mSimulationResultsExportDropDownMenu;
-
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
 
@@ -233,11 +232,23 @@ private:
     QAction *mSimulationResultsExportAction;
     QAction *mPreferencesAction;
 
+    QMenu *mRemoveGraphPanelDropDownMenu;
+    QMenu *mCellmlOpenDropDownMenu;
+    QMenu *mSedmlExportDropDownMenu;
+    QMenu *mDataImportDropDownMenu;
+    QMenu *mSimulationResultsExportDropDownMenu;
+
     ToolBarWidget::ToolBarWidgetWheelWidgetAction *mDelayWheelWidgetAction;
     double mDelayWheelValue = 0.0;
 
     ToolBarWidget::ToolBarWidgetLabelWidgetAction *mDelayLabelValueWidgetAction;
     QString mDelayLabelValue;
+
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mRemoveGraphPanelDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mCellmlOpenDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mSedmlExportDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mDataImportDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mSimulationResultsExportDropDownListWidgetAction;
 
     Core::SplitterWidget *mSplitterWidget;
 

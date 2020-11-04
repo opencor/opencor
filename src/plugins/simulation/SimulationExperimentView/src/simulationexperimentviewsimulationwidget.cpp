@@ -46,6 +46,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewwidget.h"
 #include "simulationmanager.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetdropdownlistwidgetaction.h"
 #include "toolbarwidgetlabelwidgetaction.h"
 #include "toolbarwidgetwheelwidgetaction.h"
 #include "usermessagewidget.h"
@@ -242,29 +243,19 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
                                        && (mSimulation->fileType() == SimulationSupport::Simulation::FileType::CellmlFile));
 
-    // Create various tool buttons
+    // Create various drop-down menus for our drop-down list widget actions
 
-    auto removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
-    auto removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
+    mRemoveGraphPanelDropDownMenu = new QMenu(mToolBarWidget);
 
-    removeGraphPanelDropDownMenu->addAction(mRemoveCurrentGraphPanelAction);
-    removeGraphPanelDropDownMenu->addAction(mRemoveAllGraphPanelsAction);
+    mRemoveGraphPanelDropDownMenu->addAction(mRemoveCurrentGraphPanelAction);
+    mRemoveGraphPanelDropDownMenu->addAction(mRemoveAllGraphPanelsAction);
 
-    removeGraphPanelToolButton->setDefaultAction(mRemoveGraphPanelAction);
-    removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
-    removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-
-    auto cellmlOpenToolButton = new QToolButton(mToolBarWidget);
-    auto cellmlOpenDropDownMenu = new QMenu(cellmlOpenToolButton);
-
-    cellmlOpenToolButton->setDefaultAction(mCellmlOpenAction);
-    cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
-    cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    mCellmlOpenDropDownMenu = new QMenu(mToolBarWidget);
 
     for (auto cellmlEditingViewPlugin : pViewWidget->cellmlEditingViewPlugins()) {
         auto action = Core::newAction(Core::mainWindow());
 
-        cellmlOpenDropDownMenu->addAction(action);
+        mCellmlOpenDropDownMenu->addAction(action);
 
         mCellmlBasedViewPlugins.insert(action, cellmlEditingViewPlugin);
 
@@ -272,12 +263,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                 this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
-    cellmlOpenDropDownMenu->addSeparator();
+    mCellmlOpenDropDownMenu->addSeparator();
 
     for (auto cellmlSimulationViewPlugin : pViewWidget->cellmlSimulationViewPlugins()) {
         auto action = Core::newAction(Core::mainWindow());
 
-        cellmlOpenDropDownMenu->addAction(action);
+        mCellmlOpenDropDownMenu->addAction(action);
 
         mCellmlBasedViewPlugins.insert(action, cellmlSimulationViewPlugin);
 
@@ -285,38 +276,22 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                 this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
-    auto sedmlExportToolButton = new QToolButton(mToolBarWidget);
-    auto sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
-
-    sedmlExportToolButton->setDefaultAction(mSedmlExportAction);
-    sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
-    sedmlExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    mSedmlExportDropDownMenu = new QMenu(mToolBarWidget);
 
     if (mSedmlExportSedmlFileAction != nullptr) {
-        sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
+        mSedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
     }
 
     if (mSedmlExportCombineArchiveAction != nullptr) {
-        sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
+        mSedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
     }
 
-    auto dataImportToolButton = new QToolButton(mToolBarWidget);
-    auto dataImportDropDownMenu = new QMenu(dataImportToolButton);
+    mDataImportDropDownMenu = new QMenu(mToolBarWidget);
 
-    dataImportToolButton->setDefaultAction(mDataImportAction);
-    dataImportToolButton->setMenu(dataImportDropDownMenu);
-    dataImportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    mDataImportDropDownMenu->addAction(mLocalDataImportAction);
+    mDataImportDropDownMenu->addAction(mRemoteDataImportAction);
 
-    dataImportDropDownMenu->addAction(mLocalDataImportAction);
-    dataImportDropDownMenu->addAction(mRemoteDataImportAction);
-
-    auto simulationResultsExportToolButton = new QToolButton(mToolBarWidget);
-
-    mSimulationResultsExportDropDownMenu = new QMenu(simulationResultsExportToolButton);
-
-    simulationResultsExportToolButton->setDefaultAction(mSimulationResultsExportAction);
-    simulationResultsExportToolButton->setMenu(mSimulationResultsExportDropDownMenu);
-    simulationResultsExportToolButton->setPopupMode(QToolButton::InstantPopup);
+    mSimulationResultsExportDropDownMenu = new QMenu(mToolBarWidget);
 
     for (auto dataStoreInterface : Core::dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
@@ -367,14 +342,27 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addAction(mDevelopmentModeAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mAddGraphPanelAction);
-    mToolBarWidget->addWidgetAction(removeGraphPanelToolButton);
+
+    mRemoveGraphPanelDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mRemoveGraphPanelAction,
+                                                                                            mRemoveGraphPanelDropDownMenu);
+
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidgetAction(cellmlOpenToolButton);
+
+    mCellmlOpenDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mCellmlOpenAction,
+                                                                                      mCellmlOpenDropDownMenu);
+
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidgetAction(sedmlExportToolButton);
+
+    mSedmlExportDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mSedmlExportAction,
+                                                                                       mSedmlExportDropDownMenu);
+
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidgetAction(dataImportToolButton);
-    mToolBarWidget->addWidgetAction(simulationResultsExportToolButton);
+
+    mDataImportDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mDataImportAction,
+                                                                                      mDataImportDropDownMenu);
+    mSimulationResultsExportDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mSimulationResultsExportAction,
+                                                                                                   mSimulationResultsExportDropDownMenu);
+
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mPreferencesAction);
 
