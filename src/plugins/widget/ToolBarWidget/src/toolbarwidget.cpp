@@ -22,6 +22,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "toolbarwidget.h"
+#include "toolbarwidgetdropdownlistwidgetaction.h"
 #include "toolbarwidgetlabelwidgetaction.h"
 #include "toolbarwidgetlineeditwidgetaction.h"
 #include "toolbarwidgetwheelwidgetaction.h"
@@ -73,6 +74,20 @@ QAction * ToolBarWidget::addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSi
     spacer->setSizePolicy(pHorizontalSizePolicy, pVerticalSizePolicy);
 
     return addWidget(spacer);
+}
+
+//==============================================================================
+
+ToolBarWidgetDropDownListWidgetAction * ToolBarWidget::addDropDownListWidgetAction(QAction *pDefaultAction,
+                                                                                   QMenu *pDropDownMenu)
+{
+    // Add and return a drop-down list widget action
+
+    auto res = new ToolBarWidgetDropDownListWidgetAction(pDefaultAction, pDropDownMenu, this);
+
+    addAction(res);
+
+    return res;
 }
 
 //==============================================================================

@@ -7,6 +7,7 @@ add_plugin(ToolBarWidget
         ../../plugininfo.cpp
 
         src/toolbarwidget.cpp
+        src/toolbarwidgetdropdownlistwidgetaction.cpp
         src/toolbarwidgetlabelwidgetaction.cpp
         src/toolbarwidgetlineeditwidgetaction.cpp
         src/toolbarwidgetplugin.cpp

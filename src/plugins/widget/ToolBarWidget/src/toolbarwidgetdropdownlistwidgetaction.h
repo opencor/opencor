@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Tool bar widget drop-down list widget action
 //==============================================================================
 
 #pragma once
@@ -29,7 +29,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QToolBar>
+#include <QWidgetAction>
+
+//==============================================================================
+
+class QToolButton;
 
 //==============================================================================
 
@@ -38,28 +42,29 @@ namespace ToolBarWidget {
 
 //==============================================================================
 
-class ToolBarWidgetDropDownListWidgetAction;
-class ToolBarWidgetLabelWidgetAction;
-class ToolBarWidgetLineEditWidgetAction;
-class ToolBarWidgetWheelWidgetAction;
-
-//==============================================================================
-
-class TOOLBARWIDGET_EXPORT ToolBarWidget : public QToolBar
+class TOOLBARWIDGET_EXPORT ToolBarWidgetDropDownListWidgetAction : public QWidgetAction
 {
     Q_OBJECT
 
 public:
-    explicit ToolBarWidget(QWidget *pParent);
+    ToolBarWidgetDropDownListWidgetAction(QAction *pDefaultAction,
+                                          QMenu *pDropDownMenu,
+                                          QWidget *pParent);
 
-    QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
-                                    QSizePolicy::Policy pVerticalSizePolicy);
-    ToolBarWidgetDropDownListWidgetAction * addDropDownListWidgetAction(QAction *pDefaultAction,
-                                                                        QMenu *pDropDownMenu);
-    ToolBarWidgetLabelWidgetAction * addLabelWidgetAction();
-    ToolBarWidgetLineEditWidgetAction * addLineEditWidgetAction();
-    ToolBarWidgetWheelWidgetAction * addWheelWidgetAction();
-    QAction * addWidgetAction(QWidget *pWidget);
+    QList<QToolButton *> dropDownLists() const;
+    bool validDropDownList(QToolButton *pDropDownList) const;
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    QAction *mDefaultAction;
+    QMenu *mDropDownMenu;
+
+    void emitCreated(QToolButton *pDropDownList);
+
+signals:
+    void created(QToolButton *pDropDownList);
 };
 
 //==============================================================================
