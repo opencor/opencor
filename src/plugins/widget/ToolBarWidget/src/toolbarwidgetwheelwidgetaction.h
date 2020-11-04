@@ -61,6 +61,7 @@ private:
 signals:
     void created(QwtWheel *pWheel);
     void valueChanged(double pValue);
+    void wheelReleased();
 };
 
 //==============================================================================

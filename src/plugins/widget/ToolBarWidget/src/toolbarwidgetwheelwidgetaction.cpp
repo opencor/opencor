@@ -59,6 +59,8 @@ QWidget * ToolBarWidgetWheelWidgetAction::createWidget(QWidget *pParent)
 
     connect(res, &QwtWheel::valueChanged,
             this, &ToolBarWidgetWheelWidgetAction::valueChanged);
+    connect(res, &QwtWheel::wheelReleased,
+            this, &ToolBarWidgetWheelWidgetAction::wheelReleased);
 
     QTimer::singleShot(0, this, std::bind(&ToolBarWidgetWheelWidgetAction::emitCreated,
                                           this, res));
