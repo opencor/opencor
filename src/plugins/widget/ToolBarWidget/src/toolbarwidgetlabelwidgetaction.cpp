@@ -82,13 +82,7 @@ bool ToolBarWidgetLabelWidgetAction::validLabel(QLabel *pLabel) const
     //       signal can ensure that the label is still valid since QWidgetAction
     //       is in charge of creating/destroying them...
 
-    for (const auto &label : createdWidgets()) {
-        if (pLabel == label) {
-            return true;
-        }
-    }
-
-    return false;
+    return createdWidgets().contains(pLabel);
 }
 
 //==============================================================================

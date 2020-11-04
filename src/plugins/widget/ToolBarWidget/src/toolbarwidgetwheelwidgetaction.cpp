@@ -96,13 +96,7 @@ bool ToolBarWidgetWheelWidgetAction::validWheel(QwtWheel *pWheel) const
     //       signal can ensure that the wheel is still valid since QWidgetAction
     //       is in charge of creating/destroying them...
 
-    for (const auto &wheel : createdWidgets()) {
-        if (pWheel == wheel) {
-            return true;
-        }
-    }
-
-    return false;
+    return createdWidgets().contains(pWheel);
 }
 
 //==============================================================================
