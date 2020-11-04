@@ -87,13 +87,7 @@ bool ToolBarWidgetLineEditWidgetAction::validLineEdit(QLineEdit *pLineEdit) cons
     //       signal can ensure that the line edit is still valid since
     //       QWidgetAction is in charge of creating/destroying them...
 
-    for (const auto &lineEdit : createdWidgets()) {
-        if (pLineEdit == lineEdit) {
-            return true;
-        }
-    }
-
-    return false;
+    return createdWidgets().contains(pLineEdit);
 }
 
 //==============================================================================

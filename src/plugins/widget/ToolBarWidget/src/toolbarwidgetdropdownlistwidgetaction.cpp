@@ -90,13 +90,7 @@ bool ToolBarWidgetDropDownListWidgetAction::validDropDownList(QToolButton *pDrop
     //       signal can ensure that the drop-down list is still valid since
     //       QWidgetAction is in charge of creating/destroying them...
 
-    for (const auto &dropDownList : createdWidgets()) {
-        if (pDropDownList == dropDownList) {
-            return true;
-        }
-    }
-
-    return false;
+    return createdWidgets().contains(pDropDownList);
 }
 
 //==============================================================================
