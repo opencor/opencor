@@ -15,5 +15,5 @@ add_plugin(FileOrganiserWindow
     UIS
         src/fileorganiserwindowwindow.ui
     PLUGINS
-        Core
+        ToolBarWidget
 )

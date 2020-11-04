@@ -43,7 +43,7 @@ PLUGININFO_FUNC WebViewerWidgetPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
-                          { "Core" },
+                          { "ToolBarWidget" },
                           descriptions);
 }
 

@@ -53,6 +53,13 @@ namespace PMRSupport {
 
 //==============================================================================
 
+namespace ToolBarWidget {
+    class ToolBarWidgetLabelWidgetAction;
+    class ToolBarWidgetLineEditWidgetAction;
+} // namespace ToolBarWidget
+
+//==============================================================================
+
 namespace PMRWindow {
 
 //==============================================================================
@@ -79,8 +86,9 @@ protected:
 private:
     Ui::PmrWindowWindow *mGui;
 
-    QLabel *mFilterLabel;
-    QLineEdit *mFilterValue;
+    ToolBarWidget::ToolBarWidgetLabelWidgetAction *mFilterLabelAction;
+    ToolBarWidget::ToolBarWidgetLineEditWidgetAction *mFilterValueAction;
+    QString mFilterValue;
 
     QLabel *mPmrInstanceLabel;
 
@@ -98,10 +106,15 @@ private:
 
     void busy(bool pBusy, bool pResetCounter);
 
+    void retranslateFilterLabel(QLabel *pLabel);
+
 private slots:
     void actionReloadTriggered();
 
-    void filterValueChanged(const QString &pText);
+    void filterLabelCreated(QLabel *pLabel);
+
+    void filterValueCreated(QLineEdit *pLineEdit);
+    void filterValueTextChanged(const QString &pText);
 
     void busy(bool pBusy);
 

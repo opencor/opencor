@@ -18,94 +18,53 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Web Browser window
+// Tool bar widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "windowwidget.h"
+#include "toolbarwidgetglobal.h"
 
 //==============================================================================
 
-class QLineEdit;
-class QMenu;
-
-//==============================================================================
-
-namespace Ui {
-    class WebBrowserWindowWindow;
-} // namespace Ui
+#include <QToolBar>
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace ToolBarWidget {
-    class ToolBarWidgetLineEditWidgetAction;
-} // namespace ToolBarWidget
 
 //==============================================================================
 
-namespace WebBrowserWindow {
+class ToolBarWidgetDropDownListWidgetAction;
+class ToolBarWidgetLabelWidgetAction;
+class ToolBarWidgetLineEditWidgetAction;
+class ToolBarWidgetWheelWidgetAction;
 
 //==============================================================================
 
-class WebBrowserWindowWidget;
-
-//==============================================================================
-
-class WebBrowserWindowWindow : public Core::WindowWidget
+class TOOLBARWIDGET_EXPORT ToolBarWidget : public QToolBar
 {
     Q_OBJECT
 
 public:
-    explicit WebBrowserWindowWindow(QWidget *pParent);
-    ~WebBrowserWindowWindow() override;
+    explicit ToolBarWidget(QWidget *pParent);
 
-    void retranslateUi() override;
-
-    void loadSettings(QSettings &pSettings) override;
-    void saveSettings(QSettings &pSettings) const override;
-
-private:
-    Ui::WebBrowserWindowWindow *mGui;
-
-    WebBrowserWindowWidget *mWebBrowserWindowWidget;
-
-    QMenu *mContextMenu;
-
-    ToolBarWidget::ToolBarWidgetLineEditWidgetAction *mUrlValueAction;
-    QString mUrlValue;
-
-    void loadUrl(const QString &pUrl);
-
-private slots:
-    void actionClearTriggered();
-    void actionBackTriggered();
-    void actionForwardTriggered();
-    void actionCopyTriggered();
-    void actionNormalSizeTriggered();
-    void actionZoomInTriggered();
-    void actionZoomOutTriggered();
-    void actionPrintTriggered();
-    void actionInspectTriggered();
-    void actionReloadTriggered();
-
-    void urlValueCreated(QLineEdit *pLineEdit);
-    void urlValueTextChanged(const QString &pText);
-    void urlValueReturnPressed();
-
-    void urlChanged(const QUrl &pUrl);
-    void showCustomContextMenu() const;
+    QAction * addSpacerWidgetAction(QSizePolicy::Policy pHorizontalSizePolicy,
+                                    QSizePolicy::Policy pVerticalSizePolicy);
+    ToolBarWidgetDropDownListWidgetAction * addDropDownListWidgetAction(QAction *pDefaultAction,
+                                                                        QMenu *pDropDownMenu);
+    ToolBarWidgetLabelWidgetAction * addLabelWidgetAction();
+    ToolBarWidgetLineEditWidgetAction * addLineEditWidgetAction();
+    ToolBarWidgetWheelWidgetAction * addWheelWidgetAction();
+    QAction * addWidgetAction(QWidget *pWidget);
 };
 
 //==============================================================================
 
-} // namespace WebBrowserWindow
+} // namespace ToolBarWidget
 } // namespace OpenCOR
 
 //==============================================================================

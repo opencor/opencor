@@ -18,38 +18,18 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Tool bar widget global
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "coreglobal.h"
-
-//==============================================================================
-
-#include <QToolBar>
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace Core {
-
-//==============================================================================
-
-class CORE_EXPORT ToolBarWidget : public QToolBar
-{
-    Q_OBJECT
-
-public:
-    explicit ToolBarWidget(QWidget *pParent);
-};
-
-//==============================================================================
-
-} // namespace Core
-} // namespace OpenCOR
+#ifdef ToolBarWidget_PLUGIN
+    #define TOOLBARWIDGET_EXPORT Q_DECL_EXPORT
+#else
+    #define TOOLBARWIDGET_EXPORT Q_DECL_IMPORT
+#endif
 
 //==============================================================================
 // End of file

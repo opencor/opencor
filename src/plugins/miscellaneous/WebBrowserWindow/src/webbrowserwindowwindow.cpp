@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "coreguiutils.h"
 #include "progressbarwidget.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetlineeditwidgetaction.h"
 #include "webbrowserwindowwidget.h"
 #include "webbrowserwindowwindow.h"
 
@@ -83,34 +84,26 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    auto topToolBarWidget = new Core::ToolBarWidget(this);
-    auto spacer = new QWidget(topToolBarWidget);
+    auto topToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
-    spacer->setMinimumSize(0, 0);
-    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    topToolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-    mUrlValue = new QLineEdit(topToolBarWidget);
+    mUrlValueAction = topToolBarWidget->addLineEditWidgetAction();
 
-#ifdef Q_OS_MAC
-    mUrlValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-#endif
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::created,
+            this, &WebBrowserWindowWindow::urlValueCreated);
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::textChanged,
+            this, &WebBrowserWindowWindow::urlValueTextChanged);
+    connect(mUrlValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::returnPressed,
+            this, &WebBrowserWindowWindow::urlValueReturnPressed);
 
-    connect(mUrlValue, &QLineEdit::returnPressed,
-            this, &WebBrowserWindowWindow::returnPressed);
-
-    topToolBarWidget->addWidget(spacer);
-    topToolBarWidget->addWidget(mUrlValue);
     topToolBarWidget->addAction(mGui->actionReload);
 
     mGui->layout->addWidget(topToolBarWidget);
 
-    // Make the URL value our focus proxy
-
-    setFocusProxy(mUrlValue);
-
     // Create a tool bar widget with different buttons
 
-    auto bottomToolBarWidget = new Core::ToolBarWidget(this);
+    auto bottomToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     bottomToolBarWidget->addAction(mGui->actionClear);
     bottomToolBarWidget->addSeparator();
@@ -237,9 +230,11 @@ void WebBrowserWindowWindow::loadSettings(QSettings &pSettings)
 
     // Retrieve our current URL (and load it)
 
-    mUrlValue->setText(pSettings.value(SettingsUrl).toString());
+    QString url = pSettings.value(SettingsUrl).toString();
 
-    returnPressed();
+    mUrlValueAction->setText(url);
+
+    loadUrl(url);
 }
 
 //==============================================================================
@@ -254,7 +249,7 @@ void WebBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 
     // Keep track of our current URL
 
-    pSettings.setValue(SettingsUrl, mUrlValue->text());
+    pSettings.setValue(SettingsUrl, mUrlValue);
 }
 
 //==============================================================================
@@ -265,7 +260,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
     QString url = pUrl.toString();
 
-    mUrlValue->setText((url != mWebBrowserWindowWidget->homePage())?url:QString());
+    mUrlValueAction->setText((url != mWebBrowserWindowWidget->homePage())?url:QString());
 }
 
 //==============================================================================
@@ -374,21 +369,60 @@ void WebBrowserWindowWindow::actionReloadTriggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::returnPressed()
+void WebBrowserWindowWindow::urlValueCreated(QLineEdit *pLineEdit)
 {
-    // Go to our home page (i.e. blank page), if the URL is empty, or load the
-    // URL
+    // Configure our URL value, if still valid
+
+    if (!mUrlValueAction->validLineEdit(pLineEdit)) {
+        return;
+    }
+
+#ifdef Q_OS_MAC
+    pLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    pLineEdit->setText(mUrlValue);
+
+    // Make our URL value our focus proxy
+
+    setFocusProxy(pLineEdit);
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::loadUrl(const QString &pUrl)
+{
+    // Load the given URL
     // Note: we enable/disable the progress bar based on whether the URL is our
     //       homepage since we don't want to see its progress in the latter
     //       case...
 
-    QString url = mUrlValue->text().isEmpty()?
-                      mWebBrowserWindowWidget->homePage():
-                      mUrlValue->text();
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(pUrl != mWebBrowserWindowWidget->homePage());
 
-    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(url != mWebBrowserWindowWidget->homePage());
+    mWebBrowserWindowWidget->webView()->load(pUrl);
 
-    mWebBrowserWindowWidget->webView()->load(url);
+    mUrlValue = pUrl;
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::urlValueTextChanged(const QString &pText)
+{
+    // Keep track of the URL value
+
+    mUrlValue = pText;
+}
+
+//==============================================================================
+
+void WebBrowserWindowWindow::urlValueReturnPressed()
+{
+    // Go to our home page (i.e. a blank page), if the URL is empty, or load the
+    // URL
+
+    loadUrl(mUrlValue.isEmpty()?
+                mWebBrowserWindowWidget->homePage():
+                mUrlValue);
 }
 
 //==============================================================================

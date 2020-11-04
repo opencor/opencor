@@ -18,18 +18,54 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Graph panel widget global
+// Tool bar widget label widget action
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef GraphPanelWidget_PLUGIN
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_EXPORT
-#else
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_IMPORT
-#endif
+#include "toolbarwidgetglobal.h"
+
+//==============================================================================
+
+#include <QWidgetAction>
+
+//==============================================================================
+
+class QLabel;
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace ToolBarWidget {
+
+//==============================================================================
+
+class TOOLBARWIDGET_EXPORT ToolBarWidgetLabelWidgetAction : public QWidgetAction
+{
+    Q_OBJECT
+
+public:
+    ToolBarWidgetLabelWidgetAction(QWidget *pParent);
+
+    QList<QLabel *> labels() const;
+    bool validLabel(QLabel *pLabel) const;
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitCreated(QLabel *pLabel);
+
+signals:
+    void created(QLabel *pLabel);
+};
+
+//==============================================================================
+
+} // namespace ToolBarWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

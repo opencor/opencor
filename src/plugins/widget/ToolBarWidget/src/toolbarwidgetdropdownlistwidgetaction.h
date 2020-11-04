@@ -18,94 +18,58 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Web Browser window
+// Tool bar widget drop-down list widget action
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "windowwidget.h"
+#include "toolbarwidgetglobal.h"
 
 //==============================================================================
 
-class QLineEdit;
-class QMenu;
+#include <QWidgetAction>
 
 //==============================================================================
 
-namespace Ui {
-    class WebBrowserWindowWindow;
-} // namespace Ui
+class QToolButton;
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace ToolBarWidget {
-    class ToolBarWidgetLineEditWidgetAction;
-} // namespace ToolBarWidget
 
 //==============================================================================
 
-namespace WebBrowserWindow {
-
-//==============================================================================
-
-class WebBrowserWindowWidget;
-
-//==============================================================================
-
-class WebBrowserWindowWindow : public Core::WindowWidget
+class TOOLBARWIDGET_EXPORT ToolBarWidgetDropDownListWidgetAction : public QWidgetAction
 {
     Q_OBJECT
 
 public:
-    explicit WebBrowserWindowWindow(QWidget *pParent);
-    ~WebBrowserWindowWindow() override;
+    ToolBarWidgetDropDownListWidgetAction(QAction *pDefaultAction,
+                                          QMenu *pDropDownMenu,
+                                          QWidget *pParent);
 
-    void retranslateUi() override;
+    QList<QToolButton *> dropDownLists() const;
+    bool validDropDownList(QToolButton *pDropDownList) const;
 
-    void loadSettings(QSettings &pSettings) override;
-    void saveSettings(QSettings &pSettings) const override;
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
 
 private:
-    Ui::WebBrowserWindowWindow *mGui;
+    QAction *mDefaultAction;
+    QMenu *mDropDownMenu;
 
-    WebBrowserWindowWidget *mWebBrowserWindowWidget;
+    void emitCreated(QToolButton *pDropDownList);
 
-    QMenu *mContextMenu;
-
-    ToolBarWidget::ToolBarWidgetLineEditWidgetAction *mUrlValueAction;
-    QString mUrlValue;
-
-    void loadUrl(const QString &pUrl);
-
-private slots:
-    void actionClearTriggered();
-    void actionBackTriggered();
-    void actionForwardTriggered();
-    void actionCopyTriggered();
-    void actionNormalSizeTriggered();
-    void actionZoomInTriggered();
-    void actionZoomOutTriggered();
-    void actionPrintTriggered();
-    void actionInspectTriggered();
-    void actionReloadTriggered();
-
-    void urlValueCreated(QLineEdit *pLineEdit);
-    void urlValueTextChanged(const QString &pText);
-    void urlValueReturnPressed();
-
-    void urlChanged(const QUrl &pUrl);
-    void showCustomContextMenu() const;
+signals:
+    void created(QToolButton *pDropDownList);
 };
 
 //==============================================================================
 
-} // namespace WebBrowserWindow
+} // namespace ToolBarWidget
 } // namespace OpenCOR
 
 //==============================================================================

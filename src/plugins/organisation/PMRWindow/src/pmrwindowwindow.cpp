@@ -31,6 +31,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "pmrwindowwindow.h"
 #include "preferencesinterface.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetlabelwidgetaction.h"
+#include "toolbarwidgetlineeditwidgetaction.h"
 
 //==============================================================================
 
@@ -65,38 +67,25 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Note: the spacers is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    auto toolBarWidget = new Core::ToolBarWidget(this);
-    auto spacer = new QWidget(toolBarWidget);
+    auto toolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
-    spacer->setMinimumSize(0, 0);
-    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    toolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-    mFilterLabel = new QLabel(toolBarWidget);
-    mFilterValue = new QLineEdit(toolBarWidget);
+    mFilterLabelAction = toolBarWidget->addLabelWidgetAction();
 
-    QFont font = mFilterLabel->font();
+    connect(mFilterLabelAction, &ToolBarWidget::ToolBarWidgetLabelWidgetAction::created,
+            this, &PmrWindowWindow::filterLabelCreated);
 
-    font.setBold(true);
+    mFilterValueAction = toolBarWidget->addLineEditWidgetAction();
 
-    mFilterLabel->setFont(font);
+    connect(mFilterValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::created,
+            this, &PmrWindowWindow::filterValueCreated);
+    connect(mFilterValueAction, &ToolBarWidget::ToolBarWidgetLineEditWidgetAction::textChanged,
+            this, &PmrWindowWindow::filterValueTextChanged);
 
-#ifdef Q_OS_MAC
-    mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-#endif
-
-    connect(mFilterValue, &QLineEdit::textChanged,
-            this, &PmrWindowWindow::filterValueChanged);
-
-    toolBarWidget->addWidget(spacer);
-    toolBarWidget->addWidget(mFilterLabel);
-    toolBarWidget->addWidget(mFilterValue);
     toolBarWidget->addAction(mGui->actionReload);
 
     mGui->layout->addWidget(toolBarWidget);
-
-    // Make the filter value our focus proxy
-
-    setFocusProxy(mFilterValue);
 
     // Create and add a label to highlight the repository we are using
 
@@ -194,7 +183,9 @@ void PmrWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    mFilterLabel->setText(tr("Filter:"));
+    for (const auto &label : mFilterLabelAction->labels()) {
+        retranslateFilterLabel(label);
+    }
 
     mPmrInstanceLabel->setText(mPmrWebService->siteName());
 
@@ -247,8 +238,67 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWindowWindow::filterValueChanged(const QString &pText)
+void PmrWindowWindow::retranslateFilterLabel(QLabel *pLabel)
 {
+    // Retranslate our filter label
+
+    pLabel->setText(tr("Filter:"));
+}
+
+//==============================================================================
+
+void PmrWindowWindow::filterLabelCreated(QLabel *pLabel)
+{
+    // Configure our filter label, if still valid
+
+    if (!mFilterLabelAction->validLabel(pLabel)) {
+        return;
+    }
+
+    QFont font = pLabel->font();
+
+    font.setBold(true);
+
+    pLabel->setFont(font);
+
+    // Retranslate our filter label
+
+    retranslateFilterLabel(pLabel);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::filterValueCreated(QLineEdit *pLineEdit)
+{
+    // Configure our filter value, if still valid
+
+    if (!mFilterValueAction->validLineEdit(pLineEdit)) {
+        return;
+    }
+
+#ifdef Q_OS_MAC
+    pLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    pLineEdit->setText(mFilterValue);
+
+    // Make our filter value our focus proxy
+
+    setFocusProxy(pLineEdit);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::filterValueTextChanged(const QString &pText)
+{
+    // Keep track of the filter value and update other filter value actions
+
+    mFilterValue = pText;
+
+    for (const auto &lineEdit : mFilterValueAction->lineEdits()) {
+        lineEdit->setText(pText);
+    }
+
     // Ask our PMR widget to filter its output using the given regular
     // expression
 
@@ -279,7 +329,7 @@ void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
         mPmrWindowWidget->showBusyWidget();
     } else if (!pBusy && (counter == 0)) {
         // Re-enable the GUI side and give, within the current window, the focus
-        // to mFilterValue, but only if the current window already has the
+        // to mFilterValueAction, but only if the current window already has the
         // focus, or to mPmrWindowWidget if it was previously double clicked
 
         mGui->dockWidgetContents->setEnabled(true);
@@ -289,7 +339,7 @@ void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
 
             mPmrWindowWidget->setFocus();
         } else {
-            Core::setFocusTo(mFilterValue);
+            Core::setFocusTo(mFilterValueAction->lineEdits().first());
         }
 
         mPmrWindowWidget->hideBusyWidget();
@@ -368,7 +418,7 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), {});
+    mPmrWindowWidget->initialize(pExposures, mFilterValueAction->text(), {});
 }
 
 //==============================================================================

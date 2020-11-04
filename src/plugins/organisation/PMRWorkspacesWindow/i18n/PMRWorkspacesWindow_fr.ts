@@ -35,10 +35,6 @@
         <translation>%1 changements :</translation>
     </message>
     <message>
-        <source>Changes:</source>
-        <translation>Changements :</translation>
-    </message>
-    <message>
         <source>Normal Size</source>
         <translation>Taille Normale</translation>
     </message>
@@ -73,6 +69,10 @@
     <message>
         <source>Binary File</source>
         <translation>Fichier Binaire</translation>
+    </message>
+    <message>
+        <source>Changes:</source>
+        <translation>Changements :</translation>
     </message>
 </context>
 <context>

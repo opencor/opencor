@@ -76,7 +76,6 @@ namespace Core {
     class Property;
     class PropertyEditorWidget;
     class SplitterWidget;
-    class ToolBarWidget;
     class UserMessageWidget;
 } // namespace Core
 
@@ -106,6 +105,15 @@ namespace SEDMLSupport {
 namespace SimulationSupport {
     class Simulation;
 } // namespace SimulationSupport
+
+//==============================================================================
+
+namespace ToolBarWidget {
+    class ToolBarWidget;
+    class ToolBarWidgetDropDownListWidgetAction;
+    class ToolBarWidgetLabelWidgetAction;
+    class ToolBarWidgetWheelWidgetAction;
+} // namespace ToolBarWidget
 
 //==============================================================================
 
@@ -199,9 +207,7 @@ private:
     int mProgress = -1;
     bool mLockedDevelopmentMode = false;
 
-    Core::ToolBarWidget *mToolBarWidget;
-
-    QMenu *mSimulationResultsExportDropDownMenu;
+    ToolBarWidget::ToolBarWidget *mToolBarWidget;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -226,8 +232,23 @@ private:
     QAction *mSimulationResultsExportAction;
     QAction *mPreferencesAction;
 
-    QwtWheel *mDelayWidget;
-    QLabel *mDelayValueWidget;
+    QMenu *mRemoveGraphPanelDropDownMenu;
+    QMenu *mCellmlOpenDropDownMenu;
+    QMenu *mSedmlExportDropDownMenu;
+    QMenu *mDataImportDropDownMenu;
+    QMenu *mSimulationResultsExportDropDownMenu;
+
+    ToolBarWidget::ToolBarWidgetWheelWidgetAction *mDelayWheelWidgetAction;
+    double mDelayWheelValue = 0.0;
+
+    ToolBarWidget::ToolBarWidgetLabelWidgetAction *mDelayLabelValueWidgetAction;
+    QString mDelayLabelValue;
+
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mRemoveGraphPanelDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mCellmlOpenDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mSedmlExportDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mDataImportDropDownListWidgetAction;
+    ToolBarWidget::ToolBarWidgetDropDownListWidgetAction *mSimulationResultsExportDropDownListWidgetAction;
 
     Core::SplitterWidget *mSplitterWidget;
 
@@ -277,6 +298,10 @@ private:
     int tabBarPixmapSize() const;
 
     void updateRunPauseAction(bool pRunActionEnabled);
+
+    void updateDelayWidget(QWidget *pDelayWidget);
+    void updateDelayWheelWidgetAction();
+    void updateDelayLabelValueWidgetAction();
 
     void updateDataStoreActions();
 
@@ -379,7 +404,11 @@ private slots:
 
     void simulationResultsExport();
 
-    void updateDelayValue(double pDelayValue);
+    void delayWheelCreated(QwtWheel *pWheel);
+    void delayValueCreated(QLabel *pLabel);
+
+    void delayWheelValueChanged(double pValue);
+    void delayWheelReleased();
 
     void simulationRunning(bool pIsResuming);
     void simulationPaused();

@@ -18,18 +18,56 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Graph panel widget global
+// Tool bar widget wheel widget action
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef GraphPanelWidget_PLUGIN
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_EXPORT
-#else
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_IMPORT
-#endif
+#include "toolbarwidgetglobal.h"
+
+//==============================================================================
+
+#include <QWidgetAction>
+
+//==============================================================================
+
+class QwtWheel;
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace ToolBarWidget {
+
+//==============================================================================
+
+class TOOLBARWIDGET_EXPORT ToolBarWidgetWheelWidgetAction : public QWidgetAction
+{
+    Q_OBJECT
+
+public:
+    ToolBarWidgetWheelWidgetAction(QWidget *pParent);
+
+    QList<QwtWheel *> wheels() const;
+    bool validWheel(QwtWheel *pWheel) const;
+
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitCreated(QwtWheel *pWheel);
+
+signals:
+    void created(QwtWheel *pWheel);
+    void valueChanged(double pValue);
+    void wheelReleased();
+};
+
+//==============================================================================
+
+} // namespace ToolBarWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -32,6 +32,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "splitterwidget.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetlabelwidgetaction.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -262,15 +263,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     webViewerWidget->setLayout(webViewerLayout);
 
-    auto webViewerToolBarWidget = new Core::ToolBarWidget(this);
-    auto webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
-
-    webViewerLabel->setAlignment(Qt::AlignBottom);
-    webViewerLabel->setFont(newFont);
-
-    auto webViewerSpacer = new QWidget(webViewerToolBarWidget);
-
-    webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    auto webViewerToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     auto webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
     auto webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
@@ -289,8 +282,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mWebViewerCellmlTextFormatAction->setCheckable(true);
 
-    webViewerToolBarWidget->addWidget(webViewerLabel);
-    webViewerToolBarWidget->addWidget(webViewerSpacer);
+    mWebViewerLabelAction = webViewerToolBarWidget->addLabelWidgetAction();
+
+    connect(mWebViewerLabelAction, &ToolBarWidget::ToolBarWidgetLabelWidgetAction::created,
+            this, &PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated);
+
+    webViewerToolBarWidget->addSpacerWidgetAction(QSizePolicy::Expanding, QSizePolicy::Expanding);
     webViewerToolBarWidget->addAction(mWebViewerCellmlTextFormatAction);
     webViewerToolBarWidget->addSeparator();
     webViewerToolBarWidget->addAction(webViewerNormalSizeAction);
@@ -455,6 +452,25 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 
         Core::Dialog::keyPressEvent(pEvent);
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::webViewerLabelCreated(QLabel *pLabel)
+{
+    // Configure our Web viewer label, if still valid
+
+    if (!mWebViewerLabelAction->validLabel(pLabel)) {
+        return;
+    }
+
+    QFont font = pLabel->font();
+
+    font.setBold(true);
+
+    pLabel->setAlignment(Qt::AlignBottom);
+    pLabel->setFont(font);
+    pLabel->setText(tr("Changes:"));
 }
 
 //==============================================================================

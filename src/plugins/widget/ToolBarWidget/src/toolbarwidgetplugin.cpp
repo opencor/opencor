@@ -18,18 +18,34 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Graph panel widget global
+// Tool bar widget plugin
 //==============================================================================
 
-#pragma once
+#include "toolbarwidgetplugin.h"
 
 //==============================================================================
 
-#ifdef GraphPanelWidget_PLUGIN
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_EXPORT
-#else
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_IMPORT
-#endif
+namespace OpenCOR {
+namespace ToolBarWidget {
+
+//==============================================================================
+
+PLUGININFO_FUNC ToolBarWidgetPluginInfo()
+{
+    Descriptions descriptions;
+
+    descriptions.insert("en", QString::fromUtf8("a plugin to display a tool bar."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour afficher une barre d'outils."));
+
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
+                          { "Qwt" },
+                          descriptions);
+}
+
+//==============================================================================
+
+} // namespace ToolBarWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

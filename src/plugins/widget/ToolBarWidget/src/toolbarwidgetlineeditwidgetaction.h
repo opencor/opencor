@@ -18,47 +18,57 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Tool bar widget
+// Tool bar widget line edit widget action
 //==============================================================================
 
-#include "toolbarwidget.h"
+#pragma once
+
+//==============================================================================
+
+#include "toolbarwidgetglobal.h"
+
+//==============================================================================
+
+#include <QWidgetAction>
+
+//==============================================================================
+
+class QLineEdit;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace ToolBarWidget {
 
 //==============================================================================
 
-ToolBarWidget::ToolBarWidget(QWidget *pParent)
-    : QToolBar(pParent)
+class TOOLBARWIDGET_EXPORT ToolBarWidgetLineEditWidgetAction : public QWidgetAction
 {
-    // Note: we do NOT want a parent! Indeed, if we did have a parent, then to
-    //       start OpenCOR using the Simulation Experiment view would, on macOS,
-    //       result in the tool bar having the wrong style!? Yet, the tool bar
-    //       would look fine for other files, just not the one with which
-    //       OpenCOR started!? The only case where it works as expected is when
-    //       we don't have a parent...
+    Q_OBJECT
 
-    // Remove the border which is normally drawn for a tool bar widget (indeed,
-    // it doesn't look great when on a docked window) and make sure that we have
-    // a spacing of 4 pixels (indeed, on Windows/Linux, the layout has no
-    // spacing, which doesn't look great in some cases)
+public:
+    ToolBarWidgetLineEditWidgetAction(QWidget *pParent);
 
-    setStyleSheet("QToolBar {"
-                  "    border: none;"
-                  "    spacing: 4px;"
-                  "}");
+    QList<QLineEdit *> lineEdits() const;
+    bool validLineEdit(QLineEdit *pLineEdit) const;
 
-    // Force the size of the icons to be 20 by 20 pixels
-    // Note: this ensures that our icons have a decent size on HiDPI screens...
+    void setText(const QString &pText);
 
-    setIconSize(QSize(20, 20));
-}
+protected:
+    QWidget * createWidget(QWidget *pParent) override;
+
+private:
+    void emitCreated(QLineEdit *pLineEdit);
+
+signals:
+    void created(QLineEdit *pLineEdit);
+    void textChanged(const QString &pText);
+    void returnPressed();
+};
 
 //==============================================================================
 
-} // namespace Core
+} // namespace ToolBarWidget
 } // namespace OpenCOR
 
 //==============================================================================

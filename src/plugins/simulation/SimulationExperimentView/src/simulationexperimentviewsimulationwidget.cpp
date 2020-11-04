@@ -46,6 +46,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewwidget.h"
 #include "simulationmanager.h"
 #include "toolbarwidget.h"
+#include "toolbarwidgetdropdownlistwidgetaction.h"
+#include "toolbarwidgetlabelwidgetaction.h"
+#include "toolbarwidgetwheelwidgetaction.h"
 #include "usermessagewidget.h"
 
 //==============================================================================
@@ -143,7 +146,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create a tool bar
 
-    mToolBarWidget = new Core::ToolBarWidget(this);
+    mToolBarWidget = new ToolBarWidget::ToolBarWidget(this);
 
     // Create, customise and handle various actions
 
@@ -240,56 +243,19 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
                                        && (mSimulation->fileType() == SimulationSupport::Simulation::FileType::CellmlFile));
 
-    // Create a wheel (and a label to show its value) to specify the delay (in
-    // milliseconds) between the output of two data points
+    // Create various drop-down menus for our drop-down list widget actions
 
-    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+    mRemoveGraphPanelDropDownMenu = new QMenu(mToolBarWidget);
 
-    mDelayWidget = new QwtWheel(mToolBarWidget);
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    auto delaySpaceWidget = new QWidget(mToolBarWidget);
-#endif
-    mDelayValueWidget = new QLabel(mToolBarWidget);
+    mRemoveGraphPanelDropDownMenu->addAction(mRemoveCurrentGraphPanelAction);
+    mRemoveGraphPanelDropDownMenu->addAction(mRemoveAllGraphPanelsAction);
 
-    mDelayWidget->setBorderWidth(0);
-    mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
-                               mDelayWidget->height()/2);
-    mDelayWidget->setFocusPolicy(Qt::NoFocus);
-    mDelayWidget->setRange(0.0, 55.0);
-    mDelayWidget->setWheelBorderWidth(0);
-
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    delaySpaceWidget->setFixedWidth(4);
-#endif
-
-    connect(mDelayWidget, &QwtWheel::valueChanged,
-            this, &SimulationExperimentViewSimulationWidget::updateDelayValue);
-
-    mDelayWidget->setValue(0.0);
-
-    // Create various tool buttons
-
-    auto removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
-    auto removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
-
-    removeGraphPanelDropDownMenu->addAction(mRemoveCurrentGraphPanelAction);
-    removeGraphPanelDropDownMenu->addAction(mRemoveAllGraphPanelsAction);
-
-    removeGraphPanelToolButton->setDefaultAction(mRemoveGraphPanelAction);
-    removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
-    removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-
-    auto cellmlOpenToolButton = new QToolButton(mToolBarWidget);
-    auto cellmlOpenDropDownMenu = new QMenu(cellmlOpenToolButton);
-
-    cellmlOpenToolButton->setDefaultAction(mCellmlOpenAction);
-    cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
-    cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    mCellmlOpenDropDownMenu = new QMenu(mToolBarWidget);
 
     for (auto cellmlEditingViewPlugin : pViewWidget->cellmlEditingViewPlugins()) {
         auto action = Core::newAction(Core::mainWindow());
 
-        cellmlOpenDropDownMenu->addAction(action);
+        mCellmlOpenDropDownMenu->addAction(action);
 
         mCellmlBasedViewPlugins.insert(action, cellmlEditingViewPlugin);
 
@@ -297,12 +263,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                 this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
-    cellmlOpenDropDownMenu->addSeparator();
+    mCellmlOpenDropDownMenu->addSeparator();
 
     for (auto cellmlSimulationViewPlugin : pViewWidget->cellmlSimulationViewPlugins()) {
         auto action = Core::newAction(Core::mainWindow());
 
-        cellmlOpenDropDownMenu->addAction(action);
+        mCellmlOpenDropDownMenu->addAction(action);
 
         mCellmlBasedViewPlugins.insert(action, cellmlSimulationViewPlugin);
 
@@ -310,38 +276,22 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                 this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
-    auto sedmlExportToolButton = new QToolButton(mToolBarWidget);
-    auto sedmlExportDropDownMenu = new QMenu(sedmlExportToolButton);
-
-    sedmlExportToolButton->setDefaultAction(mSedmlExportAction);
-    sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
-    sedmlExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    mSedmlExportDropDownMenu = new QMenu(mToolBarWidget);
 
     if (mSedmlExportSedmlFileAction != nullptr) {
-        sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
+        mSedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
     }
 
     if (mSedmlExportCombineArchiveAction != nullptr) {
-        sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
+        mSedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
     }
 
-    auto dataImportToolButton = new QToolButton(mToolBarWidget);
-    auto dataImportDropDownMenu = new QMenu(dataImportToolButton);
+    mDataImportDropDownMenu = new QMenu(mToolBarWidget);
 
-    dataImportToolButton->setDefaultAction(mDataImportAction);
-    dataImportToolButton->setMenu(dataImportDropDownMenu);
-    dataImportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    mDataImportDropDownMenu->addAction(mLocalDataImportAction);
+    mDataImportDropDownMenu->addAction(mRemoteDataImportAction);
 
-    dataImportDropDownMenu->addAction(mLocalDataImportAction);
-    dataImportDropDownMenu->addAction(mRemoteDataImportAction);
-
-    auto simulationResultsExportToolButton = new QToolButton(mToolBarWidget);
-
-    mSimulationResultsExportDropDownMenu = new QMenu(simulationResultsExportToolButton);
-
-    simulationResultsExportToolButton->setDefaultAction(mSimulationResultsExportAction);
-    simulationResultsExportToolButton->setMenu(mSimulationResultsExportDropDownMenu);
-    simulationResultsExportToolButton->setPopupMode(QToolButton::InstantPopup);
+    mSimulationResultsExportDropDownMenu = new QMenu(mToolBarWidget);
 
     for (auto dataStoreInterface : Core::dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
@@ -365,23 +315,54 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(mDelayWidget);
+
+    mDelayWheelWidgetAction = mToolBarWidget->addWheelWidgetAction();
+
+    connect(mDelayWheelWidgetAction, &ToolBarWidget::ToolBarWidgetWheelWidgetAction::created,
+            this, &SimulationExperimentViewSimulationWidget::delayWheelCreated);
+    connect(mDelayWheelWidgetAction, &ToolBarWidget::ToolBarWidgetWheelWidgetAction::valueChanged,
+            this, &SimulationExperimentViewSimulationWidget::delayWheelValueChanged);
+    connect(mDelayWheelWidgetAction, &ToolBarWidget::ToolBarWidgetWheelWidgetAction::wheelReleased,
+            this, &SimulationExperimentViewSimulationWidget::delayWheelReleased);
+
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mToolBarWidget->addWidget(delaySpaceWidget);
+    auto delaySpaceWidget = new QWidget(mToolBarWidget);
+
+    delaySpaceWidget->setFixedWidth(4);
+
+    mToolBarWidget->addWidgetAction(delaySpaceWidget);
 #endif
-    mToolBarWidget->addWidget(mDelayValueWidget);
+
+    mDelayLabelValueWidgetAction = mToolBarWidget->addLabelWidgetAction();
+
+    connect(mDelayLabelValueWidgetAction, &ToolBarWidget::ToolBarWidgetLabelWidgetAction::created,
+            this, &SimulationExperimentViewSimulationWidget::delayValueCreated);
+
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mDevelopmentModeAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mAddGraphPanelAction);
-    mToolBarWidget->addWidget(removeGraphPanelToolButton);
+
+    mRemoveGraphPanelDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mRemoveGraphPanelAction,
+                                                                                            mRemoveGraphPanelDropDownMenu);
+
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(cellmlOpenToolButton);
+
+    mCellmlOpenDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mCellmlOpenAction,
+                                                                                      mCellmlOpenDropDownMenu);
+
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(sedmlExportToolButton);
+
+    mSedmlExportDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mSedmlExportAction,
+                                                                                       mSedmlExportDropDownMenu);
+
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(dataImportToolButton);
-    mToolBarWidget->addWidget(simulationResultsExportToolButton);
+
+    mDataImportDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mDataImportAction,
+                                                                                      mDataImportDropDownMenu);
+    mSimulationResultsExportDropDownListWidgetAction = mToolBarWidget->addDropDownListWidgetAction(mSimulationResultsExportAction,
+                                                                                                   mSimulationResultsExportDropDownMenu);
+
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mPreferencesAction);
 
@@ -599,17 +580,10 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
     I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
                                      tr("Export the simulation results"));
 
-    // Retranslate our delay and delay value widgets
+    // Retranslate our delay wheel and label widget actions
 
-    updateDelayValue(mDelayWidget->value());
-    // Note: we do this because we want to display the delay using digit
-    //       grouping, this respecting the current locale...
-
-    mDelayWidget->setToolTip(tr("Simulation Delay"));
-    mDelayValueWidget->setToolTip(mDelayWidget->toolTip());
-
-    mDelayWidget->setStatusTip(tr("Delay between two data points"));
-    mDelayValueWidget->setStatusTip(mDelayWidget->statusTip());
+    updateDelayWheelWidgetAction();
+    updateDelayLabelValueWidgetAction();
 
     // Retranslate our run/pause action
 
@@ -835,7 +809,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
 void SimulationExperimentViewSimulationWidget::updateRunPauseAction(bool pRunActionEnabled)
 {
-    // Update our various actions
+    // Update our run/pause action
 
     static const QIcon StartIcon = QIcon(":/oxygen/actions/media-playback-start.png");
     static const QIcon PauseIcon = QIcon(":/oxygen/actions/media-playback-pause.png");
@@ -857,6 +831,42 @@ void SimulationExperimentViewSimulationWidget::updateRunPauseAction(bool pRunAct
                                              tr("Resume the simulation"):
                                              tr("Run the simulation"):
                                          tr("Pause the simulation"));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateDelayWidget(QWidget *pDelayWidget)
+{
+    // Update the given delay widget
+
+    pDelayWidget->setToolTip(tr("Simulation Delay"));
+    pDelayWidget->setStatusTip(tr("Delay between two data points"));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateDelayWheelWidgetAction()
+{
+    // Update our delay wheel widget action
+
+    for (auto *wheel : mDelayWheelWidgetAction->wheels()) {
+        updateDelayWidget(wheel);
+    }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateDelayLabelValueWidgetAction()
+{
+    // Update our delay label value widget action
+
+    delayWheelValueChanged(mDelayWheelValue);
+    // Note: we do this because we want to display the delay using digit
+    //       grouping, this respecting the current locale...
+
+    for (auto *label : mDelayLabelValueWidgetAction->labels()) {
+        updateDelayWidget(label);
+    }
 }
 
 //==============================================================================
@@ -2981,15 +2991,56 @@ void SimulationExperimentViewSimulationWidget::resetDataStoreExporterConnections
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayValue)
+void SimulationExperimentViewSimulationWidget::delayWheelCreated(QwtWheel *pWheel)
+{
+    // Configure our delay wheel, if still valid
+
+    if (!mDelayWheelWidgetAction->validWheel(pWheel)) {
+        return;
+    }
+
+    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+
+    pWheel->setFixedSize(int(0.07*availableGeometry.width()),
+                         mToolBarWidget->height()/2);
+    pWheel->setRange(0.0, 55.0);
+    pWheel->setValue(mDelayWheelValue);
+
+    // (Re)translate ourselves by updating ourselves
+
+    updateDelayWheelWidgetAction();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::delayValueCreated(QLabel *pLabel)
+{
+    // Configure our delay value, if still valid
+
+    if (!mDelayLabelValueWidgetAction->validLabel(pLabel)) {
+        return;
+    }
+
+    pLabel->setText(mDelayLabelValue);
+
+    // (Re)translate ourselves by updating ourselves
+
+    updateDelayLabelValueWidgetAction();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::delayWheelValueChanged(double pValue)
 {
     // Update our delay value widget
+
+    mDelayWheelValue = pValue;
 
     quint64 delay = 0;
     quint64 increment = 1;
     quint64 multiple = 10;
 
-    for (int i = 0, iMax = int(pDelayValue); i < iMax; ++i) {
+    for (int i = 0, iMax = int(pValue); i < iMax; ++i) {
         delay += increment;
 
         if (delay%multiple == 0) {
@@ -2998,11 +3049,26 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayVal
         }
     }
 
-    mDelayValueWidget->setText(QLocale().toString(delay));
+    QString delayString = QLocale().toString(delay);
+
+    for (auto *label : mDelayLabelValueWidgetAction->labels()) {
+        label->setText(delayString);
+    }
 
     // Also update our simulation object
 
     mSimulation->setDelay(delay);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::delayWheelReleased()
+{
+    // Update the value of our various delay wheels
+
+    for (auto *wheel : mDelayWheelWidgetAction->wheels()) {
+        wheel->setValue(mDelayWheelValue);
+    }
 }
 
 //==============================================================================

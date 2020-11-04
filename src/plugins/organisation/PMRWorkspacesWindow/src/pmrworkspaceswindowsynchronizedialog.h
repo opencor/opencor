@@ -60,6 +60,12 @@ namespace PMRSupport {
 
 //==============================================================================
 
+namespace ToolBarWidget {
+    class ToolBarWidgetLabelWidgetAction;
+} // namespace ToolBarWidget
+
+//==============================================================================
+
 namespace WebViewerWidget {
     class WebViewerWidget;
 } // namespace WebViewerWidget
@@ -150,6 +156,7 @@ private:
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
     QAction *mWebViewerCellmlTextFormatAction;
+    ToolBarWidget::ToolBarWidgetLabelWidgetAction *mWebViewerLabelAction;
 
     QCheckBox *mSelectAllChangesCheckBox;
 
@@ -179,6 +186,8 @@ private:
     QString cleanHtmlEscaped(const QString &pString);
 
 private slots:
+    void webViewerLabelCreated(QLabel *pLabel);
+
     void refreshChanges();
 
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = nullptr);

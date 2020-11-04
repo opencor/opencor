@@ -20,4 +20,5 @@ add_plugin(SimulationSupport
         COMBINESupport
         DataStore
         PythonQtSupport
+        ToolBarWidget
 )

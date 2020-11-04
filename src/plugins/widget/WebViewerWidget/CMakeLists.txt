@@ -10,7 +10,7 @@ add_plugin(WebViewerWidget
         src/webviewerwidget.cpp
         src/webviewerwidgetplugin.cpp
     PLUGINS
-        Core
+        ToolBarWidget
     QT_MODULES
         PrintSupport
         WebKitWidgets

@@ -967,6 +967,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             widget/GraphPanelWidget
             widget/MathMLViewerWidget
             widget/QScintillaWidget
+            widget/ToolBarWidget
             widget/WebViewerWidget
         )
 

@@ -18,18 +18,37 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// Graph panel widget global
+// Tool bar widget plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef GraphPanelWidget_PLUGIN
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_EXPORT
-#else
-    #define GRAPHPANELWIDGET_EXPORT Q_DECL_IMPORT
-#endif
+#include "plugininfo.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace ToolBarWidget {
+
+//==============================================================================
+
+PLUGININFO_FUNC ToolBarWidgetPluginInfo();
+
+//==============================================================================
+
+class ToolBarWidgetPlugin : public QObject
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.ToolBarWidgetPlugin" FILE "toolbarwidgetplugin.json")
+};
+
+//==============================================================================
+
+} // namespace ToolBarWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
