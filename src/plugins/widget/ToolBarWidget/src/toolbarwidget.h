@@ -59,7 +59,6 @@ public:
     ToolBarWidgetLabelWidgetAction * addLabelWidgetAction();
     ToolBarWidgetLineEditWidgetAction * addLineEditWidgetAction();
     ToolBarWidgetWheelWidgetAction * addWheelWidgetAction();
-    QAction * addWidgetAction(QWidget *pWidget);
 };
 
 //==============================================================================

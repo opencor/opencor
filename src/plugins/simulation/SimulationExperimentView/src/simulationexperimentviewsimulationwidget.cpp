@@ -326,11 +326,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::delayWheelReleased);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    auto delaySpaceWidget = new QWidget(mToolBarWidget);
-
-    delaySpaceWidget->setFixedWidth(4);
-
-    mToolBarWidget->addWidgetAction(delaySpaceWidget);
+    mToolBarWidget->addSpacerWidgetAction(QSizePolicy::Fixed, QSizePolicy::Expanding);
 #endif
 
     mDelayLabelValueWidgetAction = mToolBarWidget->addLabelWidgetAction();

@@ -131,15 +131,6 @@ ToolBarWidgetWheelWidgetAction * ToolBarWidget::addWheelWidgetAction()
 
 //==============================================================================
 
-QAction * ToolBarWidget::addWidgetAction(QWidget *pWidget)
-{
-    // Add the given widget to ourselves
-
-    return addWidget(pWidget);
-}
-
-//==============================================================================
-
 } // namespace ToolBarWidget
 } // namespace OpenCOR
 
