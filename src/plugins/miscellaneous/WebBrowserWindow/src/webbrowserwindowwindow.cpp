@@ -377,10 +377,6 @@ void WebBrowserWindowWindow::urlValueCreated(QLineEdit *pLineEdit)
         return;
     }
 
-#ifdef Q_OS_MAC
-    pLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
-#endif
-
     pLineEdit->setText(mUrlValue);
 
     // Make our URL value our focus proxy
