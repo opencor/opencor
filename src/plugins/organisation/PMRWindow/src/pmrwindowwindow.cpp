@@ -276,10 +276,6 @@ void PmrWindowWindow::filterValueCreated(QLineEdit *pLineEdit)
         return;
     }
 
-#ifdef Q_OS_MAC
-    pLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
-#endif
-
     pLineEdit->setText(mFilterValue);
 
     // Make our filter value our focus proxy

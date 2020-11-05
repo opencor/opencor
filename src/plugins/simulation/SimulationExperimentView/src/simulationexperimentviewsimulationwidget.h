@@ -405,10 +405,10 @@ private slots:
     void simulationResultsExport();
 
     void delayWheelCreated(QwtWheel *pWheel);
-    void delayValueCreated(QLabel *pLabel);
-
     void delayWheelValueChanged(double pValue);
     void delayWheelReleased();
+
+    void delayValueCreated(QLabel *pLabel);
 
     void simulationRunning(bool pIsResuming);
     void simulationPaused();

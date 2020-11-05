@@ -52,6 +52,10 @@ QWidget * ToolBarWidgetLineEditWidgetAction::createWidget(QWidget *pParent)
 
     auto res = new QLineEdit(pParent);
 
+#ifdef Q_OS_MAC
+    res->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
     connect(res, &QLineEdit::textChanged,
             this, &ToolBarWidgetLineEditWidgetAction::textChanged);
     connect(res, &QLineEdit::returnPressed,
