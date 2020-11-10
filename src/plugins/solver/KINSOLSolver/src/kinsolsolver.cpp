@@ -296,25 +296,25 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
         if (linearSolverValue == DenseLinearSolver) {
             matrix = SUNDenseMatrix(pSize, pSize);
-            linearSolver = SUNDenseLinearSolver(parametersVector, matrix);
+            linearSolver = SUNLinSol_Dense(parametersVector, matrix);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (linearSolverValue == BandedLinearSolver) {
             matrix = SUNBandMatrix(pSize, upperHalfBandwidthValue,
                                           lowerHalfBandwidthValue);
-            linearSolver = SUNBandLinearSolver(parametersVector, matrix);
+            linearSolver = SUNLinSol_Band(parametersVector, matrix);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (linearSolverValue == GmresLinearSolver) {
-            linearSolver = SUNSPGMR(parametersVector, PREC_NONE, 0);
+            linearSolver = SUNLinSol_SPGMR(parametersVector, PREC_NONE, 0);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (linearSolverValue == BiCgStabLinearSolver) {
-            linearSolver = SUNSPBCGS(parametersVector, PREC_NONE, 0);
+            linearSolver = SUNLinSol_SPBCGS(parametersVector, PREC_NONE, 0);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else {
-            linearSolver = SUNSPTFQMR(parametersVector, PREC_NONE, 0);
+            linearSolver = SUNLinSol_SPTFQMR(parametersVector, PREC_NONE, 0);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         }
