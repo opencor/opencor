@@ -12,6 +12,7 @@ set(GIT_TAG "opencor-3.7.5")
 # Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
+set(RELEASE_TAG v3.7.5-test)
 
 # Version of our library
 
@@ -214,6 +215,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 878e2fcebbf35d7fdb97eadb633bdc5ebf974ac7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 89ac7f192dc7868b2e06cd62324e06eb82f1ffb3
                                               e87ec400ec5e77c0a73860b999ceaae5fd7c1c01
@@ -226,6 +228,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d8e460ff4fcb5a38a26dd5001688a9cf296dbc9b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 2f57b9010257750d11848884e3814f21b31a00c8
                                               02092fc4b32b62bb009a71b67190701714c092c4
@@ -239,19 +242,21 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bdd08ebae1b333334dfc216f2fa33e0e9f2cbd67
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
                                           a5bb84978412350b916071805f2632fcce4dac25)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6d9ad358816df273bd0fce4e176aeb94fb76dcc
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b226e4efc76f91129d3bb216db19e608ccf7400c
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ad55b200ba7a7d2498afd5b9f63c5ac19822a606
-                                          1a887bd6842d6c0fcffbfd1384c28a461a19ff66
-                                          e31279667a5265975fe0bcda6bc7822fac6e0a3f
-                                          8fad95e8c2db2ca60f65c455d8bcc66ff5f33459
-                                          561eee6b2f229c953eae711f40b25e834fb1124a)
+                              SHA1_VALUES 50b47e10df44209b3e78f145350a2e1e35b960f7
+                                          d62aba8cb5e3fc2bbe9f54dd5d85d1601daf2d27
+                                          ee42ca256c6feb7412c37313e1935d2e31a0a1de
+                                          d850f87b53d12db9434476fa84977e69c8ceb243
+                                          38161dee3a32f4b3a70ffa997aa42c9c8a8b2aa3)
     endif()
 else()
     # Set platform-specific configuration options
