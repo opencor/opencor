@@ -25,7 +25,7 @@ var jsonData = { "versions": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
-                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                       { "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
                          "files": [
                            { "extension": ".tar.gz" }
                          ]
