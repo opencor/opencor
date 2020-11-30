@@ -18,7 +18,7 @@ set(TYPEDOBJECT_LIBRARY_VERSION ${MAJOR_TYPEDOBJECT_LIBRARY_VERSION}.1)
 set(GIT_TAG_BIOSIGNALML v0.8.4)
 set(GIT_TAG_TYPEDOBJECT v1.1.2)
 
-# Package repository and release tag
+# Package repository and release tags
 
 set(PACKAGE_REPOSITORY libbiosignalml)
 set(RELEASE_TAG v0.8.4)
