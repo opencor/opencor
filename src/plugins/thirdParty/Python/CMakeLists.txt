@@ -9,10 +9,14 @@ set(PACKAGE_VERSION 3.7.5)
 
 set(GIT_TAG "opencor-3.7.5")
 
-# Package repository and release tag
+# Package repository and release tags
 
 set(PACKAGE_REPOSITORY python)
 set(RELEASE_TAG v3.7.5-test)
+
+# Package repository tag
+
+set(PACKAGE_REPOSITORY python)
 
 # Version of our library
 
