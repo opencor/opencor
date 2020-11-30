@@ -306,7 +306,6 @@ else()
         add_dependencies(${PACKAGE_BUILD} installSphinx)
         add_dependencies(installSphinx installNumpy)
         add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
-
     else()
         # Install NumPy, SciPy and Matplotlib
 
