@@ -5,7 +5,7 @@ project(PythonPackagesPlugin)
 set(PACKAGE_NAME PythonPackages)
 set(PACKAGE_VERSION ${PYTHON_VERSION})
 
-# Package repository and release tag
+# Package repository and release tags
 
 set(PACKAGE_REPOSITORY python)
 
