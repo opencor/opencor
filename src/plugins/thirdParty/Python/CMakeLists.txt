@@ -5,10 +5,13 @@ project(PythonPlugin)
 set(PACKAGE_NAME Python)
 set(PACKAGE_VERSION 3.7.5)
 
-# Package repository and release tag
+# Git tag for our library
+
+set(GIT_TAG "opencor-3.7.5")
+
+# Package repository tag
 
 set(PACKAGE_REPOSITORY python)
-set(GIT_TAG "opencor-3.7.5")
 
 # Version of our library
 
