@@ -19,6 +19,7 @@ set(SETUPTOOLS_GIT_TAG "v41.2.0")
 set(IPYKERNEL_VERSION 5.1.2)
 set(IPYTHON_VERSION 7.8.0)
 set(IPYWIDGETS_VERSION 7.5.1)
+set(JUPYTER_CLIENT_VERSION 5.3.4)
 set(JUPYTER_CONSOLE_VERSION 6.0.0)
 set(JUPYTERLAB_VERSION 1.1.3)
 set(LXML_VERSION 4.4.1)
@@ -343,6 +344,7 @@ else()
                                            ipykernel==${IPYKERNEL_VERSION}
                                            ipython==${IPYTHON_VERSION}
                                            ipywidgets==${IPYWIDGETS_VERSION}
+                                           jupyter_client==${JUPYTER_CLIENT_VERSION}
                                            jupyter_console==${JUPYTER_CONSOLE_VERSION}
                                            jupyterlab==${JUPYTERLAB_VERSION}
                                            nbconvert==${NBCONVERT_VERSION}
