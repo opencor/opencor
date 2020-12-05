@@ -120,7 +120,7 @@ void TabBarWidget::wheelEvent(QWheelEvent *pEvent)
         }
     }
 
-    QWidget::wheelEvent(event);
+    QWidget::wheelEvent(pEvent);
 }
 
 //==============================================================================
