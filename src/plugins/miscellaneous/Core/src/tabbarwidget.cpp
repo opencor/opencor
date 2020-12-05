@@ -108,9 +108,8 @@ void TabBarWidget::setOldIndex(int pOldIndex)
 
 void TabBarWidget::wheelEvent(QWheelEvent *pEvent)
 {
-    // Switch to the next/previous tab, if possible and needed
+    // Switch to the next/previous tab
 
-#ifdef Q_OS_MAC
     int offset = (pEvent->delta() < 0)?1:-1;
 
     for (int i = currentIndex()+offset; (i >= 0) && (i < count()); i += offset) {
@@ -120,9 +119,8 @@ void TabBarWidget::wheelEvent(QWheelEvent *pEvent)
             break;
         }
     }
-#endif
 
-    QTabBar::wheelEvent(pEvent);
+    QWidget::wheelEvent(event);
 }
 
 //==============================================================================
