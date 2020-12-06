@@ -215,7 +215,6 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 878e2fcebbf35d7fdb97eadb633bdc5ebf974ac7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 89ac7f192dc7868b2e06cd62324e06eb82f1ffb3
                                               e87ec400ec5e77c0a73860b999ceaae5fd7c1c01
@@ -228,7 +227,6 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d8e460ff4fcb5a38a26dd5001688a9cf296dbc9b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 2f57b9010257750d11848884e3814f21b31a00c8
                                               02092fc4b32b62bb009a71b67190701714c092c4
@@ -242,7 +240,6 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bdd08ebae1b333334dfc216f2fa33e0e9f2cbd67
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
                                           a5bb84978412350b916071805f2632fcce4dac25)
