@@ -1,8 +1,8 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"/..
+appDir=$(cd $(dirname $0); pwd)/..
 
-if [ -d "${appDir}/build" ]; then
+if [ -d $appDir/build ]; then
     if [ "$1" = "Release" ]; then
         cmakeBuildType=Release
         enableSamplePlugins=OFF
@@ -47,7 +47,7 @@ if [ -d "${appDir}/build" ]; then
 
     origDir=`pwd`
 
-    cd ${appDir}/build
+    cd $appDir/build
 
     cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_SAMPLE_PLUGINS=$enableSamplePlugins -DENABLE_TEST_PLUGINS=$enableTestPlugins -DENABLE_TESTS=$enableTests ..
 

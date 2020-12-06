@@ -6,12 +6,12 @@ else
     echo "\033[44;37;1mCleaning OpenCOR...\033[0m"
 fi
 
-appDir="$(cd "$(dirname "$0")"; pwd)"/..
+appDir=$(cd $(dirname $0); pwd)/..
 
-rm -fr ${appDir}/build/.clang-tidy ${appDir}/build/.ninja* ${appDir}/build/* > /dev/null 2>&1
+rm -fr $appDir/build/.clang-tidy $appDir/build/.ninja* $appDir/build/* > /dev/null 2>&1
 
 if [ "$1" = "all" ]; then
-    rm -fr ${appDir}/ext/* > /dev/null 2>&1
+    rm -fr $appDir/ext/* > /dev/null 2>&1
 fi
 
 echo "\033[42;37;1mAll done!\033[0m"

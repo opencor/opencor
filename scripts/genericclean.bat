@@ -9,8 +9,8 @@ IF "%1" == "all" (
 SET AppDir=%~dp0..\
 SET OrigDir=%CD%
 
-IF EXIST "%AppDir%build" (
-    CD "%AppDir%build"
+IF EXIST %AppDir%build (
+    CD %AppDir%build
 
     FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
     FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
@@ -18,12 +18,12 @@ IF EXIST "%AppDir%build" (
 )
 
 IF "%1" == "all" (
-    IF EXIST "%AppDir%ext" (
-        CD "%AppDir%ext"
+    IF EXIST %AppDir%ext (
+        CD %AppDir%ext
 
         FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
         FOR    %%I IN (*.*) DO IF NOT "%%I" == ".gitignore" DEL /Q "%%I"
     )
 )
 
-CD "%OrigDir%"
+CD %OrigDir%

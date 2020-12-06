@@ -2,7 +2,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 SET AppDir=%~dp0..\
 
-IF EXIST "%AppDir%build" (
+IF EXIST %AppDir%build (
     IF "%1" == "Release" (
         SET CMakeBuildType=Release
         SET EnableSamplePlugins=OFF
@@ -47,7 +47,7 @@ IF EXIST "%AppDir%build" (
 
     SET OrigDir=%CD%
 
-    CD "%AppDir%build"
+    CD %AppDir%build
 
     IF DEFINED NinjaFound (
         SET CMakeGenerator=Ninja
