@@ -5,24 +5,14 @@ appDir=$(cd $(dirname $0); pwd)/..
 if [ -d $appDir/build ]; then
     if [ "$1" = "Release" ]; then
         cmakeBuildType=Release
-        enableSamplePlugins=OFF
-        enableTestPlugins=OFF
         enableTests=OFF
     elif [ "$1" = "Debug" ]; then
         cmakeBuildType=Debug
-        enableSamplePlugins=OFF
-        enableTestPlugins=OFF
         enableTests=ON
-    elif [ "$1" = "CIRelease" ]; then
-        cmakeBuildType=Release
-        enableSamplePlugins=ON
-        enableTestPlugins=ON
-        enableTests=ON
-    elif [ "$1" = "CIDebug" ]; then
-        cmakeBuildType=Debug
-        enableSamplePlugins=ON
-        enableTestPlugins=ON
-        enableTests=ON
+    else
+        echo "Only the Release and Debug options are supported."
+
+        exit 1
     fi
 
     if [ "`hash ninja 2>&1`" = "" ]; then
@@ -37,19 +27,15 @@ if [ -d $appDir/build ]; then
 
     if [ "$1" = "Debug" ]; then
         extraTitleInfo=" for testing"
-    elif [ "$1" = "CIRelease" ]; then
-        extraTitleInfo=" for CI release"
-    elif [ "$1" = "CIDebug" ]; then
-        extraTitleInfo=" for CI debug"
     fi
 
-    echo "\033[44;37;1mMaking OpenCOR$extraTitleInfo (using $generator)...\033[0m"
+    echo "\033[44;37;1mBuilding OpenCOR$extraTitleInfo (using $generator)...\033[0m"
 
     origDir=`pwd`
 
     cd $appDir/build
 
-    cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_SAMPLE_PLUGINS=$enableSamplePlugins -DENABLE_TEST_PLUGINS=$enableTestPlugins -DENABLE_TESTS=$enableTests ..
+    cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
     exitCode=$?
 
