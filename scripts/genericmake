@@ -6,11 +6,11 @@ if [ -d $appDir/build ]; then
     if [ "$1" = "Release" ]; then
         cmakeBuildType=Release
         enableTests=OFF
-    elif [ "$1" = "Debug" ]; then
+    elif [ "$1" = "Tests" ]; then
         cmakeBuildType=Debug
         enableTests=ON
     else
-        echo "Only the Release and Debug options are supported."
+        echo "Only the Release and Tests options are supported."
 
         exit 1
     fi

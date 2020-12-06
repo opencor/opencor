@@ -6,11 +6,11 @@ IF EXIST !AppDir!build (
     IF "%1" == "Release" (
         SET CMakeBuildType=Release
         SET EnableTests=OFF
-    ) ELSE IF "%1" == "Debug" (
+    ) ELSE IF "%1" == "Tests" (
         SET CMakeBuildType=Debug
         SET EnableTests=ON
     ) ELSE (
-        ECHO Only the Release and Debug options are supported.
+        ECHO Only the Release and Tests options are supported.
 
         EXIT /B 1
     )
