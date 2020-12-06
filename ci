@@ -17,7 +17,7 @@ if [ -d "$appDir/build" ]; then
 
     $appDir/clean
 
-    echo "\033[44;37;1mBuilding and testing the release version of OpenCOR (using $generator)...\033[0m"
+    echo "\033[44;37;1mBuilding and testing the release version of OpenCOR using $generator...\033[0m"
 
     cd $appDir/build
 
@@ -65,7 +65,7 @@ if [ -d "$appDir/build" ]; then
 
     $appDir/clean
 
-    echo "\033[44;37;1mBuilding and testing the debug version of OpenCOR (using $generator)...\033[0m"
+    echo "\033[44;37;1mBuilding and testing the debug version of OpenCOR using $generator...\033[0m"
 
     cd $appDir/build
 

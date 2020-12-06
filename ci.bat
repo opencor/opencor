@@ -1,6 +1,8 @@
 @ECHO OFF
 
-SET AppDir=%~dp0..\
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+SET AppDir=%~dp0
 
 IF EXIST %AppDir%build (
     FOR %%X IN (ninja.exe) DO (
@@ -15,22 +17,22 @@ IF EXIST %AppDir%build (
         SET CMakeGenerator=NMake Makefiles JOM
     )
 
-    SET OrigDir=%CD%
+    SET OrigDir=!CD!
 
-    CALL %AppDir%clean
+    CALL !AppDir!clean
 
-    TITLE Building and testing the release version of OpenCOR (using !Generator!)...
+    TITLE Building and testing the release version of OpenCOR using !Generator!...
 
     CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
-    CD %AppDir%build
+    CD !AppDir!build
 
     cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=Release -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
 
     SET ExitCode=!ERRORLEVEL!
 
     IF NOT !ExitCode! EQU 0 (
-        CD %OrigDir%
+        CD !OrigDir!
 
         EXIT /B !ExitCode!
     )
@@ -49,15 +51,15 @@ IF EXIST %AppDir%build (
         SET ExitCode=!ERRORLEVEL!
     )
 
-    CD %OrigDir%
+    CD !OrigDir!
 
     IF NOT !ExitCode! EQU 0 (
         EXIT /B !ExitCode!
     )
 
-    SET AppTestsExe=%AppDir%build\bin\runtests.exe
+    SET AppTestsExe=!AppDir!build\bin\runtests.exe
 
-    %AppTestsExe%
+    !AppTestsExe!
 
     SET ExitCode=!ERRORLEVEL!
 
@@ -65,18 +67,18 @@ IF EXIST %AppDir%build (
         EXIT /B !ExitCode!
     )
 
-    CALL %AppDir%clean
+    CALL !AppDir!clean
 
-    TITLE Building and testing the debug version of OpenCOR (using !Generator!)...
+    TITLE Building and testing the debug version of OpenCOR using !Generator!...
 
-    CD %AppDir%build
+    CD !AppDir!build
 
     cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=Debug -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
 
     SET ExitCode=!ERRORLEVEL!
 
     IF NOT !ExitCode! EQU 0 (
-        CD %OrigDir%
+        CD !OrigDir!
 
         EXIT /B !ExitCode!
     )
@@ -91,15 +93,15 @@ IF EXIST %AppDir%build (
         SET ExitCode=!ERRORLEVEL!
     )
 
-    CD %OrigDir%
+    CD !OrigDir!
 
     IF NOT !ExitCode! EQU 0 (
         EXIT /B !ExitCode!
     )
 
-    SET AppTestsExe=%AppDir%build\bin\runtests.exe
+    SET AppTestsExe=!AppDir!build\bin\runtests.exe
 
-    %AppTestsExe%
+    !AppTestsExe!
 
     SET ExitCode=!ERRORLEVEL!
 

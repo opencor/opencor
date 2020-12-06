@@ -1,9 +1,11 @@
 @ECHO OFF
 
-SET AppDir=%~dp0
-SET OrigDir=%CD%
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-IF EXIST %AppDir%src (
+SET AppDir=%~dp0
+SET OrigDir=!CD!
+
+IF EXIST !AppDir!src (
     TITLE Formatting OpenCOR...
 
     FOR %%X IN (clang-format.exe) DO (
@@ -11,7 +13,7 @@ IF EXIST %AppDir%src (
     )
 
     IF DEFINED ClangFormatFound (
-        CD %AppDir%src
+        CD !AppDir!src
 
         FOR /R %%I IN (*.cpp *.h) DO (
             ECHO.%%I | FINDSTR /V "3rdparty \ext\ \qzip">NUL && (
@@ -21,7 +23,7 @@ IF EXIST %AppDir%src (
             )
         )
 
-        CD %OrigDir%
+        CD !OrigDir!
     ) ELSE (
         ECHO Clang-Format is not installed.
     )

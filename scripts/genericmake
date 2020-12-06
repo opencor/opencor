@@ -29,7 +29,7 @@ if [ -d $appDir/build ]; then
         extraTitleInfo=" for testing"
     fi
 
-    echo "\033[44;37;1mBuilding OpenCOR$extraTitleInfo (using $generator)...\033[0m"
+    echo "\033[44;37;1mBuilding OpenCOR$extraTitleInfo using $generator...\033[0m"
 
     origDir=`pwd`
 

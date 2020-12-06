@@ -2,7 +2,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 SET AppDir=%~dp0..\
 
-IF EXIST %AppDir%build (
+IF EXIST !AppDir!build (
     IF "%1" == "Release" (
         SET CMakeBuildType=Release
         SET EnableTests=OFF
@@ -33,20 +33,20 @@ IF EXIST %AppDir%build (
         SET TitleTests= and its tests
     )
 
-    TITLE Building OpenCOR!TitleTests! (using !Generator!)...
+    TITLE Building OpenCOR!TitleTests! using !Generator!...
 
     CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
-    SET OrigDir=%CD%
+    SET OrigDir=!CD!
 
-    CD %AppDir%build
+    CD !AppDir!build
 
     cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! ..
 
     SET ExitCode=!ERRORLEVEL!
 
     IF NOT !ExitCode! EQU 0 (
-        CD %OrigDir%
+        CD !OrigDir!
 
         EXIT /B !ExitCode!
     )
@@ -65,7 +65,7 @@ IF EXIST %AppDir%build (
         SET ExitCode=!ERRORLEVEL!
     )
 
-    CD %OrigDir%
+    CD !OrigDir!
 
     EXIT /B !ExitCode!
 ) ELSE (
