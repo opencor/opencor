@@ -1,0 +1,29 @@
+#!/bin/sh
+
+$(cd $(dirname $0); pwd)/clean
+$(cd $(dirname $0); pwd)/scripts/genericmake CIRelease "$@"
+
+exitCode=$?
+
+if [ $exitCode -ne 0 ]; then
+    exit $exitCode
+fi
+
+$(cd $(dirname $0); pwd)/runtests
+
+exitCode=$?
+
+if [ $exitCode -ne 0 ]; then
+    exit $exitCode
+fi
+
+$(cd $(dirname $0); pwd)/clean
+$(cd $(dirname $0); pwd)/scripts/genericmake CIDebug "$@"
+
+exitCode=$?
+
+if [ $exitCode -ne 0 ]; then
+    exit $exitCode
+fi
+
+$(cd $(dirname $0); pwd)/runtests

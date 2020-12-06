@@ -3,12 +3,25 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 SET AppDir=%~dp0..\
 
 IF EXIST "%AppDir%build" (
-    SET CMakeBuildType=%1
-
-    IF "!CMakeBuildType!" == "Release" (
+    IF "%1" == "Release" (
+        SET CMakeBuildType=Release
+        SET EnableSamplePlugins=OFF
+        SET EnableTestPlugins=OFF
         SET EnableTests=OFF
-    ) ELSE (
+    ) ELSE IF "%1" == "Debug" (
         SET CMakeBuildType=Debug
+        SET EnableSamplePlugins=OFF
+        SET EnableTestPlugins=OFF
+        SET EnableTests=ON
+    ) ELSE IF "%1" == "CIRelease" (
+        SET CMakeBuildType=Release
+        SET EnableSamplePlugins=ON
+        SET EnableTestPlugins=ON
+        SET EnableTests=ON
+    ) ELSE IF "%1" == "CIDebug" (
+        SET CMakeBuildType=Debug
+        SET EnableSamplePlugins=ON
+        SET EnableTestPlugins=ON
         SET EnableTests=ON
     )
 
@@ -22,7 +35,7 @@ IF EXIST "%AppDir%build" (
         SET Generator=JOM
     )
 
-    IF "!CMakeBuildType!" == "Release" (
+    IF "%1" == "Release" (
         SET TitleTests=
     ) ELSE (
         SET TitleTests= and its tests
@@ -42,7 +55,7 @@ IF EXIST "%AppDir%build" (
         SET CMakeGenerator=NMake Makefiles JOM
     )
 
-    cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! ..
+    cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_SAMPLE_PLUGINS=!EnableSamplePlugins! -DENABLE_TEST_PLUGINS=!EnableTestPlugins! -DENABLE_TESTS=!EnableTests! ..
 
     SET ExitCode=!ERRORLEVEL!
 
