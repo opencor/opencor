@@ -116,10 +116,10 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               SHA1_VALUES 4443d8cb01dcc0edc148f9d095201b13fd09f923)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ecbb9933c748558c9dd41d2fe837489205cac3dd
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c1635192f1e69e60eb99e39763962a8410c5ed8a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 80632ca1842b5a8668616766ef3bb2d01ed84e63)
+                              SHA1_VALUES ab335a162a99ac36a751f58308b9674ba1844bae)
     endif()
 else()
     # Install Python packages using pip
