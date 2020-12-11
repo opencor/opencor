@@ -9,10 +9,9 @@ set(PACKAGE_VERSION 3.7.5)
 
 set(GIT_TAG "opencor-3.7.5")
 
-# Package repository and release tags
+# Package repository tag
 
 set(PACKAGE_REPOSITORY python)
-set(RELEASE_TAG v3.7.5-test)
 
 # Version of our library
 
@@ -245,12 +244,12 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                           a5bb84978412350b916071805f2632fcce4dac25)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ade6663abf55f18a62dd65dfeb3f334ed5bb0779
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0982331f1719017596c28e010cc5b46825346d99
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 50b47e10df44209b3e78f145350a2e1e35b960f7
-                                          a3d5f12fb6b175302a4c0a9fa26fdd0d9438b340
+                                          920daa60a973fbc24cc05f7ad12ee90dd9e69a56
                                           ee42ca256c6feb7412c37313e1935d2e31a0a1de
                                           d850f87b53d12db9434476fa84977e69c8ceb243
                                           38161dee3a32f4b3a70ffa997aa42c9c8a8b2aa3)
