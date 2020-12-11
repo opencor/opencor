@@ -212,46 +212,47 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 878e2fcebbf35d7fdb97eadb633bdc5ebf974ac7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 10d28302ba9a75544c0c65704ab9dd192ba6fb8d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 89ac7f192dc7868b2e06cd62324e06eb82f1ffb3
-                                              e87ec400ec5e77c0a73860b999ceaae5fd7c1c01
-                                              599a6df061280855fad67d7c775c242345b0bb2d
+                                  SHA1_VALUES 7b48002df4a74dee491edc654295769f6a3965c6
+                                              51e8b112ec4429be34a6585b810768ceaa33150b
+                                              40357926b13a9c18b849c4ce875579ea5f9ee5e7
                                               0b14ddd87cbe6a7c186ee55737eca4cee363dc47
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              6b18ad09e35ab061e837b221192258ce59667277
-                                              3a94214f7737077c327ce0c69b1d56039560f9ae)
+                                              aed440552b24a5971891533938feff48a74bc2e0
+                                              f0f8aac6a1ebd6111129bdc3287cf6834a790f06)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d8e460ff4fcb5a38a26dd5001688a9cf296dbc9b
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 31cedabe85a1f28e435f64bc5842e52b1055b3d6
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 2f57b9010257750d11848884e3814f21b31a00c8
-                                              02092fc4b32b62bb009a71b67190701714c092c4
-                                              7314ef1eb91964755ebc5f3d3544935b2b5cb1c0
+                                  SHA1_VALUES ae8ace1ba76098ed84fbb1aa10d9a07ac17a9379
+                                              352113e80e2136ef0374c437c7cc4be5c0987403
+                                              323c7afb3139adb71c098079dfc029ac2ea698d1
                                               0b14ddd87cbe6a7c186ee55737eca4cee363dc47
                                               3970ffe8aefe0c30daaec65b85fb103c0fc0f2a7
-                                              b9bc2ec69fbfd0dc24ed6b65504d372ade8d5de7
-                                              701edf33206f3a1757480869e2a1f89e23afa7d3)
+                                              d7074d2f2662088a6eef3b8438321bb1236a75d8
+                                              16e6b4d74e222f1f3339fa655d8bd90741135c2f)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bdd08ebae1b333334dfc216f2fa33e0e9f2cbd67
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2d61f9d1fccf8ba1d50e4865e1953574006c5204
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
-                                          a5bb84978412350b916071805f2632fcce4dac25)
+                              SHA1_VALUES a7b082bfabf3bad70e84d233212d0aab40d3befb
+                                          0c6d7618e9b660efda8389ecd45e9114718dbd6c)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6d9ad358816df273bd0fce4e176aeb94fb76dcc
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0982331f1719017596c28e010cc5b46825346d99
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ad55b200ba7a7d2498afd5b9f63c5ac19822a606
-                                          1a887bd6842d6c0fcffbfd1384c28a461a19ff66
-                                          e31279667a5265975fe0bcda6bc7822fac6e0a3f
-                                          8fad95e8c2db2ca60f65c455d8bcc66ff5f33459
-                                          561eee6b2f229c953eae711f40b25e834fb1124a)
+                              SHA1_VALUES 50b47e10df44209b3e78f145350a2e1e35b960f7
+                                          920daa60a973fbc24cc05f7ad12ee90dd9e69a56
+                                          ee42ca256c6feb7412c37313e1935d2e31a0a1de
+                                          d850f87b53d12db9434476fa84977e69c8ceb243
+                                          38161dee3a32f4b3a70ffa997aa42c9c8a8b2aa3)
     endif()
 else()
     # Set platform-specific configuration options
@@ -598,6 +599,7 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES ${PACKAGED_FILES}
+                        RELEASE_TAG ${RELEASE_TAG}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 

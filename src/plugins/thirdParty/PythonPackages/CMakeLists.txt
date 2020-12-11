@@ -19,6 +19,7 @@ set(SETUPTOOLS_GIT_TAG "v41.2.0")
 set(IPYKERNEL_VERSION 5.1.2)
 set(IPYTHON_VERSION 7.8.0)
 set(IPYWIDGETS_VERSION 7.5.1)
+set(JUPYTER_CLIENT_VERSION 5.3.4)
 set(JUPYTER_CONSOLE_VERSION 6.0.0)
 set(JUPYTERLAB_VERSION 1.1.3)
 set(LXML_VERSION 4.4.1)
@@ -96,29 +97,29 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 953af675f8f5ea21378d6a3dbc7ea68a4554e22f
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e1fd63b7ffb61de6bef75471d838bffeb4c7773c
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 360dfb74ccaca4d0152f5184c9adfeb4a65fd5d3)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c406f6601bca4d86132d15cb62fb04e4b641255e
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 4b30113cdbfa654daeacb925fe334cb6ef22e39d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 541c554a3e665c411a79517dac3afc45116c02ed)
+                                  SHA1_VALUES 6d4bef2a551cb92102f934636dcbc200986a18b0)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bccff03442bcab783691e8ce2f2da160b3084c67
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 494f3690b6ba45f6ede3b2109a5159e0f37f00a4
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 4443d8cb01dcc0edc148f9d095201b13fd09f923)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ecbb9933c748558c9dd41d2fe837489205cac3dd
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c1635192f1e69e60eb99e39763962a8410c5ed8a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 80632ca1842b5a8668616766ef3bb2d01ed84e63)
+                              SHA1_VALUES ab335a162a99ac36a751f58308b9674ba1844bae)
     endif()
 else()
     # Install Python packages using pip
@@ -343,6 +344,7 @@ else()
                                            ipykernel==${IPYKERNEL_VERSION}
                                            ipython==${IPYTHON_VERSION}
                                            ipywidgets==${IPYWIDGETS_VERSION}
+                                           jupyter_client==${JUPYTER_CLIENT_VERSION}
                                            jupyter_console==${JUPYTER_CONSOLE_VERSION}
                                            jupyterlab==${JUPYTERLAB_VERSION}
                                            nbconvert==${NBCONVERT_VERSION}

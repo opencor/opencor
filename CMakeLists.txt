@@ -1495,8 +1495,7 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # Library needed on Ubuntu 19.04 and later (while we build OpenCOR on Ubuntu
-    # 18.04 LTS)
+    # Library needed by Qt, but not present on Ubuntu 20.04 LTS and later
 
     foreach(LIBRARY tinfo.so.5)
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})

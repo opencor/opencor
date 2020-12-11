@@ -4,23 +4,23 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 SET AppDir=%~dp0
 
-CALL %AppDir%clean
-CALL %AppDir%make %*
+CALL !AppDir!clean
+CALL !AppDir!make %*
 
 SET ExitCode=!ERRORLEVEL!
 
 IF !ExitCode! EQU 0 (
     TITLE Packaging OpenCOR...
 
-    SET OrigDir=%CD%
+    SET OrigDir=!CD!
 
-    CD %AppDir%build
+    CD !AppDir!build
 
     cpack
 
     SET ExitCode=!ERRORLEVEL!
 
-    CD %OrigDir%
+    CD !OrigDir!
 )
 
 EXIT /B !ExitCode!

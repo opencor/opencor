@@ -1,15 +1,18 @@
 #!/bin/sh
 
-appDir="$(cd "$(dirname "$0")"; pwd)"/..
+appDir=$(cd $(dirname $0); pwd)/..
 
-if [ -d "${appDir}/build" ]; then
-    cmakeBuildType=$1
-
-    if [ "$cmakeBuildType" = "Release" ]; then
+if [ -d $appDir/build ]; then
+    if [ "$1" = "Release" ]; then
+        cmakeBuildType=Release
         enableTests=OFF
-    else
+    elif [ "$1" = "Tests" ]; then
         cmakeBuildType=Debug
         enableTests=ON
+    else
+        echo "Only the Release and Tests options are supported."
+
+        exit 1
     fi
 
     if [ "`hash ninja 2>&1`" = "" ]; then
@@ -22,15 +25,15 @@ if [ -d "${appDir}/build" ]; then
         cmakeGenerator="Unix Makefiles"
     fi
 
-    if [ "$cmakeBuildType" = "Debug" ]; then
-        titleTests=" and its tests"
+    if [ "$1" = "Debug" ]; then
+        extraTitleInfo=" for testing"
     fi
 
-    echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
+    echo "\033[44;37;1mBuilding OpenCOR$extraTitleInfo using $generator...\033[0m"
 
     origDir=`pwd`
 
-    cd ${appDir}/build
+    cd $appDir/build
 
     cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
