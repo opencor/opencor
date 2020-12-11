@@ -237,11 +237,11 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bdd08ebae1b333334dfc216f2fa33e0e9f2cbd67
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2d61f9d1fccf8ba1d50e4865e1953574006c5204
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 527efe36f3f59beb888f988e6039234f50dc87a2
-                                          a5bb84978412350b916071805f2632fcce4dac25)
+                              SHA1_VALUES a7b082bfabf3bad70e84d233212d0aab40d3befb
+                                          0c6d7618e9b660efda8389ecd45e9114718dbd6c)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0982331f1719017596c28e010cc5b46825346d99
