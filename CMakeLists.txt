@@ -1507,21 +1507,6 @@ else()
                 RENAME ${FULL_LIBRARY})
     endforeach()
 
-    # Library needed on Ubuntu 20.04 and later (while we build OpenCOR on Ubuntu
-    # 18.04 LTS)
-    # Note: the library is needed by Python, hence the user will need to
-    #       symbolically link this library to /usr/lib...
-
-    foreach(LIBRARY ffi.so.6)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-
-        get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
-    endforeach()
-
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY ${QT_LIBRARIES} DBus XcbQpa)
