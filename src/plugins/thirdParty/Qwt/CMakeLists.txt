@@ -64,6 +64,12 @@ if(WIN32)
     )
 endif()
 
+# Determine whether we should strip the libraries
+
+if(NOT WIN32 AND NOT APPLE)
+    set(NO_STRIP NO_STRIP)
+endif()
+
 # Use the pre-built version of our package unless instructed otherwise
 
 if(USE_PREBUILT_QWT_PACKAGE)
@@ -167,10 +173,11 @@ else()
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyQwtmathmlLibrary)
         else()
-            # Note: we wouldn't normally strip the library here since it's done
-            #       elsewhere in our build process, but it happens that there is
-            #       an issue with the system version of patchelf that prevents
-            #       the library from being stripped afterwards...
+            # Note: we strip the libraries here (rather than through
+            #       create_package() and add_plugin(), hence we pass NO_STRIP to
+            #       them) due to an issue with the system version of patchelf,
+            #       which prevents the libraries from being safely stripped
+            #       after being patched...
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND strip -x ${QWT_SHARED_LIBRARY}
@@ -189,7 +196,8 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+                        TARGET ${PACKAGE_BUILD}
+                        ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
@@ -219,6 +227,7 @@ add_plugin(${PACKAGE_NAME}
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
+    ${NO_STRIP}
     DEPENDS_ON
         ${DEPENDS_ON}
 )
