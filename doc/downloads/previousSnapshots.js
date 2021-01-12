@@ -216,7 +216,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> support <a href=\"https://en.wikipedia.org/wiki/Ubuntu_version_history#Ubuntu_19.04_(Disco_Dingo)\">Ubuntu 19.04</a> by shipping <a href=\"https://packages.ubuntu.com/bionic/libtinfo5\">libtinfo.so.5</a> on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/2075\">#2075</a>). now return the exit code of a <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> plugin command (see issue <a href=\"https://github.com/opencor/opencor/issues/2107\">#2107</a>)." },
+                       { "change": "<strong>General:</strong> support <a href=\"https://en.wikipedia.org/wiki/Ubuntu_version_history#Ubuntu_19.04_(Disco_Dingo)\">Ubuntu 19.04</a> by shipping <a href=\"https://packages.ubuntu.com/bionic/libtinfo5\">libtinfo.so.5</a> on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/2075\">#2075</a>). Now return the exit code of a <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> plugin command (see issue <a href=\"https://github.com/opencor/opencor/issues/2107\">#2107</a>)." },
                        { "change": "<strong>CellML support:</strong> improved the validation reporting of models with imports (see issue <a href=\"https://github.com/opencor/opencor/issues/2109\">#2109</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://openssl.org/\">OpenSSL</a> to version 1.0.2s (see issue <a href=\"https://github.com/opencor/opencor/issues/2105\">#2105</a>)." }
                      ]

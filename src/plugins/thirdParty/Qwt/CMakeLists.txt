@@ -64,6 +64,12 @@ if(WIN32)
     )
 endif()
 
+# Determine whether we should strip the libraries
+
+if(NOT WIN32 AND NOT APPLE)
+    set(NO_STRIP NO_STRIP)
+endif()
+
 # Use the pre-built version of our package unless instructed otherwise
 
 if(USE_PREBUILT_QWT_PACKAGE)
@@ -95,10 +101,10 @@ if(USE_PREBUILT_QWT_PACKAGE)
                                           c5f75ce6480ea2de0f09d833820ef5c3596f248e)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d17311bd120d440aa27ac1729818c8d0ac29b020
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5ee172c1ac68e68769547df0cac4542c90b1f678
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9eae7ef4d1151641c2eeaba969ef47f9a060920a
-                                          878ce7cbc09d6f429f26b7bb8941e4913734d998)
+                              SHA1_VALUES c9ce68c39227122df1db28c27dda10f2e7ce9ea4
+                                          49ab4378944896e7dfdecf29d32b6bd0e4cafcd4)
     endif()
 else()
     # Set platform specific configuration options
@@ -167,10 +173,11 @@ else()
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyQwtmathmlLibrary)
         else()
-            # Note: we wouldn't normally strip the library here since it's done
-            #       elsewhere in our build process, but it happens that there is
-            #       an issue with the system version of patchelf that prevents
-            #       the library from being stripped afterwards...
+            # Note: we strip the libraries here (rather than through
+            #       create_package() and add_plugin(), hence we pass NO_STRIP to
+            #       them) due to an issue with the system version of patchelf,
+            #       which prevents the libraries from being safely stripped
+            #       after being patched...
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND strip -x ${QWT_SHARED_LIBRARY}
@@ -189,7 +196,8 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+                        TARGET ${PACKAGE_BUILD}
+                        ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
@@ -219,6 +227,7 @@ add_plugin(${PACKAGE_NAME}
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
+    ${NO_STRIP}
     DEPENDS_ON
         ${DEPENDS_ON}
 )

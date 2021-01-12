@@ -172,10 +172,10 @@ macro(strip_file PROJECT_TARGET FILENAME)
 
     if(RELEASE_MODE)
         if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+            execute_process(COMMAND strip -x ${FILENAME})
         else()
             add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+                               COMMAND strip -x ${FILENAME})
         endif()
     endif()
 endmacro()
@@ -187,7 +187,9 @@ macro(add_plugin PLUGIN_NAME)
 
     set(PLUGIN_NAME ${PLUGIN_NAME})
 
-    set(OPTIONS)
+    set(OPTIONS
+        NO_STRIP
+    )
     set(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
         EXTERNAL_SOURCE_DIR
@@ -341,7 +343,7 @@ macro(add_plugin PLUGIN_NAME)
 
             # Strip the external library of all its local symbols, if possible
 
-            if(NOT WIN32)
+            if(NOT WIN32 AND NOT ARG_NO_STRIP)
                 strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
@@ -837,7 +839,9 @@ endmacro()
 macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
     # Various initialisations
 
-    set(OPTIONS)
+    set(OPTIONS
+        NO_STRIP
+    )
     set(ONE_VALUE_KEYWORDS
         PACKAGE_REPOSITORY
         RELEASE_TAG
@@ -913,12 +917,14 @@ foreach(SHA1_FILE IN LISTS SHA1_FILES)
     if(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
         message(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
     endif()
+")
 
-    if(NOT WIN32 AND RELEASE_MODE)
-        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x \$\{REAL_SHA1_FILENAME\})
+    if(NOT WIN32 AND RELEASE_MODE AND NOT ARG_NO_STRIP)
+        set(CMAKE_CODE "${CMAKE_CODE}\n    execute_process(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
+")
     endif()
 
-    file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
+    set(CMAKE_CODE "${CMAKE_CODE}\n    file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
 
     list(APPEND SHA1_VALUES \$\{SHA1_VALUE\})
 endforeach()

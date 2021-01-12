@@ -55,6 +55,12 @@ if(WIN32)
     )
 endif()
 
+# Determine whether we should strip the library
+
+if(NOT WIN32 AND NOT APPLE)
+    set(NO_STRIP NO_STRIP)
+endif()
+
 # Use the pre-built version of our package unless instructed otherwise
 
 if(USE_PREBUILT_QSCINTILLA_PACKAGE)
@@ -81,9 +87,9 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
                               SHA1_VALUES edc99e05796941b7d5ba949b655224d7e1aae45b)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 371b10d6af78f33d1b03fa9082853d38aa003ee9
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 831204f5747e1e831d1670d0025f53b447784602
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 87e961b63598ae278ec1f9882f601010cbbf29b5)
+                              SHA1_VALUES d91f27b0f9bcacd86e771cc56fee3d8714425ad4)
     endif()
 else()
     # Set platform specific configuration options
@@ -142,10 +148,11 @@ else()
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyLibrary)
         else()
-            # Note: we wouldn't normally strip the library here since it's done
-            #       elsewhere in our build process, but it happens that there is
-            #       an issue with the system version of patchelf that prevents
-            #       the library from being stripped afterwards...
+            # Note: we strip the library here (rather than through
+            #       create_package() and add_plugin(), hence we pass NO_STRIP to
+            #       them) due to an issue with the system version of patchelf,
+            #       which prevents the library from being safely stripped after
+            #       being patched...
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND strip -x ${SHARED_LIBRARY}
@@ -161,7 +168,8 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+                        TARGET ${PACKAGE_BUILD}
+                        ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
@@ -185,6 +193,7 @@ add_plugin(${PACKAGE_NAME}
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
+    ${NO_STRIP}
     DEPENDS_ON
         ${DEPENDS_ON}
 )
