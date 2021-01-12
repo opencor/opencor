@@ -172,10 +172,10 @@ macro(strip_file PROJECT_TARGET FILENAME)
 
     if(RELEASE_MODE)
         if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+            execute_process(COMMAND strip -x ${FILENAME})
         else()
             add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+                               COMMAND strip -x ${FILENAME})
         endif()
     endif()
 endmacro()
@@ -915,7 +915,7 @@ foreach(SHA1_FILE IN LISTS SHA1_FILES)
     endif()
 
     if(NOT WIN32 AND RELEASE_MODE)
-        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x \$\{REAL_SHA1_FILENAME\})
+        execute_process(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
     endif()
 
     file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
