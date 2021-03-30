@@ -57,6 +57,8 @@ IF EXIST %AppDir%build (
         EXIT /B !ExitCode!
     )
 
+    !AppDir!build\bin\run -c PythonShell !AppDir!\src\plugins\support\PythonSupport\tests\data\coveragetests.py
+
     SET AppTestsExe=!AppDir!build\bin\runtests.exe
 
     !AppTestsExe!
