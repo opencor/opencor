@@ -40,6 +40,9 @@ var jsonData = { "versions": [
                        {
                          "change": "<strong>Python support:</strong> fixed an issue with the standalone Python not finding libpython3 on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/2445\">#2445</a>)."
                        },
+                       {
+                         "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2447\">#2447</a>)."
+                       }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
