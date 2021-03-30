@@ -41,7 +41,7 @@ var jsonData = { "versions": [
                          "change": "<strong>Python support:</strong> fixed an issue with the standalone Python not finding libpython3 on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/2445\">#2445</a>)."
                        },
                        {
-                         "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2447\">#2447</a>)."
+                         "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2447\">#2447</a>). Upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.6.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2449\">#2449</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2450\">#2450</a>)."
                        }
                      ]
                    },
