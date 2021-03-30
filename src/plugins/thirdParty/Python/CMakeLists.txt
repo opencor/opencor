@@ -237,16 +237,15 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 2d61f9d1fccf8ba1d50e4865e1953574006c5204
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 76a9567f0e9b6ab0284047dda301add5704b04a9
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES a7b082bfabf3bad70e84d233212d0aab40d3befb
-                                          0c6d7618e9b660efda8389ecd45e9114718dbd6c)
+                              SHA1_VALUES abb51c13f494869383d6fb5f4546e29da328c926
+                                          0984ed1d0834eb67b3a2f2b39589663dd020d19a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0982331f1719017596c28e010cc5b46825346d99
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 50b47e10df44209b3e78f145350a2e1e35b960f7
                                           920daa60a973fbc24cc05f7ad12ee90dd9e69a56
@@ -420,6 +419,12 @@ else()
         set(APPLY_PATCHES OFF)
     endif()
 
+    # Ignore some warnings
+
+    if(APPLE)
+        set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-function-declaration")
+    endif()
+
     # Build Python as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -444,6 +449,7 @@ else()
         CMAKE_ARGS
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}
 
@@ -599,7 +605,6 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES ${PACKAGED_FILES}
-                        RELEASE_TAG ${RELEASE_TAG}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
