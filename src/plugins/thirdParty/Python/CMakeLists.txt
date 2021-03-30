@@ -246,7 +246,6 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0982331f1719017596c28e010cc5b46825346d99
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 50b47e10df44209b3e78f145350a2e1e35b960f7
                                           920daa60a973fbc24cc05f7ad12ee90dd9e69a56
