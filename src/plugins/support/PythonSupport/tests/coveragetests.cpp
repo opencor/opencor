@@ -41,7 +41,8 @@ void CoverageTests::tests()
     QStringList output;
 
     QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.py") }, output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests.out")));
+    QVERIFY(   (output == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests_connection_timed_out.out")))
+            || (output == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/coveragetests_host_not_found.out"))));
 }
 
 //==============================================================================
