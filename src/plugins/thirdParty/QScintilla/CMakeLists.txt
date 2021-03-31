@@ -69,27 +69,27 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 81998fa0ae79174ee46ae407259f71833e063d5c
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d57f0f16d38c091801b445c3730f938830b73e26
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 68c226988931b88333dc4ce076b7b573e46e816b
+                                  SHA1_VALUES 5b665db2377f41ece02262e67d9220e3fd5bd9d6
                                               1c253a60134481292b9ea508c79ca42b2808f8e0)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d9125662875f47675539ef0bbd76ed48a12456c7
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 7c9af6d22652764c1ad331181ed53589d314d22e
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 248466d735dceb87e8c56f532795a1eb46b8f777
+                                  SHA1_VALUES 73f47aa1244e6dbf214d6045cb677bce110442ff
                                               62af84b7b5119516b6a804c5cce55457087bd514)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 23400baf34f48d68236a5c53de21199978532cfd
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e4a9b0754c115bd3596792e491f642f270513595
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES edc99e05796941b7d5ba949b655224d7e1aae45b)
+                              SHA1_VALUES 49b8439da99a850eb31bdb48c9d44d1af2c93451)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 831204f5747e1e831d1670d0025f53b447784602
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 9486767d0738e47c7765de8665b51e1abf713f6c
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES d91f27b0f9bcacd86e771cc56fee3d8714425ad4)
+                              SHA1_VALUES 455572417164a96240c7d5938ddd1be7b2524dd3)
     endif()
 else()
     # Set platform specific configuration options
