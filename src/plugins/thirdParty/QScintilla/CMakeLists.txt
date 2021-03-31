@@ -3,16 +3,16 @@ project(QScintillaPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.11.6)
+set(PACKAGE_VERSION 2.12.1)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 15)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
 
 # Git tag for our library
 
-set(GIT_TAG v2.11.6)
+set(GIT_TAG v2.12.1)
 
 # Specify where our local package will be installed
 
@@ -118,7 +118,7 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE_COMMAND} <SOURCE_DIR>/Qt4Qt5 OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
+            ${QMAKE_COMMAND} <SOURCE_DIR>/src OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
             ${MAKE_JOM_COMMAND} ${MAKEFILE}
         INSTALL_COMMAND
