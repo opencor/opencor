@@ -1,13 +1,5 @@
 var jsonData = { "versions": [
-                   {
-                     "major": 0,
-                     "minor": 0,
-                     "patch": 0,
-                     "day": 13,
-                     "month": 1,
-                     "year": 2021,
-                     "type": 2,
-                     "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 1, "year": 2021, "type": 2, "license": 2,
                      "platforms": [{
                          "name": "Windows",
                          "supported": "Windows 10",
