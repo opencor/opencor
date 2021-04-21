@@ -4,6 +4,6 @@ For Each Arg in WScript.Arguments
     Args = Args&" "&Arg
 Next
 
-cmd = Left(Wscript.ScriptFullName, Len(Wscript.ScriptFullName)-Len(Wscript.ScriptName))&"bin\${CMAKE_PROJECT_NAME}.exe"&Args
+cmd = """"&Left(Wscript.ScriptFullName, Len(Wscript.ScriptFullName)-Len(Wscript.ScriptName))&"bin\${CMAKE_PROJECT_NAME}.exe"&args&""""
 
 CreateObject("WScript.Shell").Run cmd, 1, False

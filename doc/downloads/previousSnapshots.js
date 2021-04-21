@@ -1,13 +1,32 @@
 var jsonData = { "versions": [
-                   {
-                     "major": 0,
-                     "minor": 0,
-                     "patch": 0,
-                     "day": 13,
-                     "month": 1,
-                     "year": 2021,
-                     "type": 2,
-                     "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 4, "year": 2021, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       {
+                         "change": "<strong>Python support:</strong> fixed an issue with the standalone Python not finding libpython3 on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/2445\">#2445</a>)."
+                       },
+                       {
+                         "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 11.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2439\">#2439</a>). Upgraded <a href=\"https://openssl.org/\">OpenSSL</a> to version 1.1.1k (see issue <a href=\"https://github.com/opencor/opencor/issues/2440\">#2440</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.12.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2441\">#2441</a>). Upgraded <a href=\"https://computation.llnl.gov/projects/sundials\">SUNDIALS</a> to version 5.7.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2444\">#2444</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2447\">#2447</a>). Upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.6.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2449\">#2449</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2450\">#2450</a>)."
+                       }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 1, "year": 2021, "type": 2, "license": 2,
                      "platforms": [{
                          "name": "Windows",
                          "supported": "Windows 10",
