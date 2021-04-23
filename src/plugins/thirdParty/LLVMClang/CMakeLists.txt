@@ -57,27 +57,27 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 06b51329081e81e188e36598d487bd90d34c961a
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ed82257c05796e6d9eba1bd696d14427d40d2a87
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 3035cc37de615135e0c26781dffa1c0810ed6b15
-                                              4adac8a5ffaac57e8abc4ad9db7050fd7f55252b)
+                                  SHA1_VALUES 83496be750265ec150cd130ec5abe055b542463e
+                                              799be50704e088e602bf8e2ccffeb92593132fc4)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 94d4084fcd01c08244d5c59e80a348e474cb8f21
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6927384d0456e8bc5e4508b81620d11ba4a4f752
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES dbaf9e0c63cf46cb6f9f9a690430c17b87072e8b
-                                              8c3ea3520af92030a911bc08d6dfe28ed7c11465)
+                                  SHA1_VALUES f7c6a3288d49d844b30a4f4f6d1c8cf158231004
+                                              63e71c681f8df925bfb630b08e2baac6916c36a8)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b29792b92dfb2bd4024f4829ed3e82c8707d2784
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f525ec8f5e0a6e09478d1ad40ff4663b4a75c76d
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9c083b53bd2122d09e8758ba799c0b44c58d2ee0)
+                              SHA1_VALUES 730a63044bf0ba0734cc5fcece0229419a0d7384)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 26a50d04c213a22f5340d2850a2d8e480638caec
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e350de937fa02d80b85b49aac0df0177502efcdb
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9d5628fe1ff37fa2b90d2767d70e6820ec5d6f4d)
+                              SHA1_VALUES 00a2579d3ca3bedb67f744d09c30910fb55e949c)
     endif()
 else()
     # Allow for big objects and ignore some warnings
