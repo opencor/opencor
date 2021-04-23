@@ -39,6 +39,9 @@ var jsonData = { "versions": [
                      "changes": [
                        {
                          "change": "<strong>Python support:</strong> fixed an issue with our scripts which didn't support paths with spaces (see issue <a href=\"https://github.com/opencor/opencor/issues/2460\">#2460</a>)."
+                       },
+                       {
+                        "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 12.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2459\">#2459</a>)."
                        }
                      ]
                    },
