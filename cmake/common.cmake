@@ -25,9 +25,12 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
             -Wno-global-constructors
             -Wno-header-hygiene
             -Wno-missing-prototypes
+            -Wno-non-c-typedef-for-linkage
             -Wno-padded
             -Wno-redundant-parens
             -Wno-sign-conversion
+            -Wno-suggest-destructor-override
+            -Wno-suggest-override
             -Wno-unknown-warning-option
             -Wno-used-but-marked-unused
             -Wno-zero-as-null-pointer-constant
