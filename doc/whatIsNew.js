@@ -1,8 +1,9 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 1, "month": 4, "year": 2021,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 29, "month": 4, "year": 2021,
                      "categories": [
                        { "name": "General",
                          "entries": [
+                           { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                            { "type": "improved", "description": "Plugin framework." },
                            { "type": "added", "description": "Support for <a href=\"https://python.org/\">Python</a>." }
