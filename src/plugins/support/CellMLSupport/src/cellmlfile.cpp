@@ -335,11 +335,13 @@ bool CellmlFile::load(const QString &pFileContents,
     // Try to create the model
 
     try {
+        QString fileContents = pFileContents;
+
         if (pFileContents.isEmpty()) {
-            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
-        } else {
-            *pModel = modelLoader->createFromText(pFileContents.toStdWString());
+            Core::readFile(mFileName, fileContents);
         }
+
+        *pModel = modelLoader->createFromText(fileContents.toStdWString());
     } catch (iface::cellml_api::CellMLException &exception) {
         // Something went wrong with the loading of the model
 
@@ -1163,15 +1165,11 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    ObjRef<iface::cellml_api::Model> model;
+    QString fileContents;
 
-    try {
-        model = CreateCellMLBootstrap()->modelLoader()->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
-    } catch (...) {
-        return Version::Unknown;
-    }
+    Core::readFile(pFileName, fileContents);
 
-    return modelVersion(model);
+    return fileContentsVersion(fileContents);
 }
 
 //==============================================================================
