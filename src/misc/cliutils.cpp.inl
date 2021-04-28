@@ -471,37 +471,20 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
 {
     // Determine whether pInFileNameOrUrl refers to a local or a remote file,
     // and set pOutIsLocalFile and pOutFileNameOrUrl accordingly
-    // Note #1: to use QUrl::isLocalFile() is not enough. Indeed, say that
-    //          pInFileNameOrUrl is equal to
-    //              /home/me/mymodel.cellml
-    //          then QUrl(pInFileNameOrUrl).isLocalFile() will be false. For it
-    //          to be true, we would have to initialise the QUrl object using
-    //          QUrl::fromLocalFile(), but we can't do that since we don't know
-    //          whether pInFileNameOrUrl refers to a local file or not. So,
-    //          instead we test for the scheme and host of the QUrl object...
-    // Note #2: a local file can be passed as a URL. For example,
-    //              file:///home/me/mymodel.cellml
-    //          is a URL, but effectively a local file, hence pOutIsLocalFile is
-    //          to be true and pOutFileNameOrUrl is to be set to
-    //              /home/me/mymodel.cellml
-    //          However, to use fileNameOrUrl.toLocalFile() to retrieve that
-    //          file won't work with a path that contains spaces, hence we
-    //          return pInFileNameOrUrl after having removed "file:///" or
-    //          "file://" from it on Windows and Linux/macOS, respectively...
 
-    static const QString File = "file";
+    if (pInFileNameOrUrl.contains("://")) {
+        static const QString File = "file";
 
-    QUrl fileNameOrUrl = pInFileNameOrUrl;
+        QUrl fileNameOrUrl = pInFileNameOrUrl;
 
-    pOutIsLocalFile =    (fileNameOrUrl.scheme() == File)
-                      || fileNameOrUrl.host().isEmpty();
-    pOutFileNameOrUrl = pOutIsLocalFile?
-#ifdef Q_OS_WIN
-                            canonicalFileName(QString(pInFileNameOrUrl).remove("file:///")):
-#else
-                            canonicalFileName(QString(pInFileNameOrUrl).remove("file://")):
-#endif
-                            fileNameOrUrl.url();
+        pOutIsLocalFile = fileNameOrUrl.scheme() == File;
+        pOutFileNameOrUrl = pOutIsLocalFile?
+                                fileNameOrUrl.toLocalFile():
+                                fileNameOrUrl.url();
+    } else {
+        pOutIsLocalFile = true;
+        pOutFileNameOrUrl = QFileInfo(pInFileNameOrUrl).filePath();
+    }
 }
 
 //==============================================================================
