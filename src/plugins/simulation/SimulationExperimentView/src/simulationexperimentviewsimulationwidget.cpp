@@ -979,13 +979,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
                                                                                           .arg(simulationIssue.line())
                                                                                           .arg(simulationIssue.column())
                                                                                           .arg(simulationIssue.typeAsString(),
-                                                                                               Core::formatMessage(simulationIssue.message().toHtmlEscaped()))
+                                                                                               Core::formatMessage(simulationIssue.message()))
                                    +OutputBrLn;
                 } else {
                     information +=  OutputTab
                                    +tr("<span %1><strong>%2:</strong> %3.</span>").arg(OutputBad,
                                                                                        simulationIssue.typeAsString(),
-                                                                                       Core::formatMessage(simulationIssue.message().toHtmlEscaped()))
+                                                                                       Core::formatMessage(simulationIssue.message()))
                                    +OutputBrLn;
                 }
             }
