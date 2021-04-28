@@ -37,12 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       {
-                         "change": "<strong>Python support:</strong> fixed an issue with our scripts which didn't support paths with spaces (see issue <a href=\"https://github.com/opencor/opencor/issues/2460\">#2460</a>)."
-                       },
-                       {
-                        "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 12.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2459\">#2459</a>)."
-                       }
+                       { "change": "<strong>General:</strong> fixed an issue with \"native\" network-based files not being supported on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/2463\">#2463</a>)." },
+                       { "change": "<strong>Python support:</strong> fixed an issue with our scripts which didn't support paths with spaces (see issue <a href=\"https://github.com/opencor/opencor/issues/2460\">#2460</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 12.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2459\">#2459</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
