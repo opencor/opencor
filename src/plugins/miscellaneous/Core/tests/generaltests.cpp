@@ -405,6 +405,65 @@ void GeneralTests::newFileNameTests()
 
 //==============================================================================
 
+void GeneralTests::checkFileNameOrUrl()
+{
+    // Test the checkFileNameOrUrl() method
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+#ifdef Q_OS_WIN
+    OpenCOR::Core::checkFileNameOrUrl("C:\\My\\path\\my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "C:/My/path/my_file.txt");
+#else
+    OpenCOR::Core::checkFileNameOrUrl("/My/path/my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "/My/path/my_file.txt");
+#endif
+
+#ifdef Q_OS_WIN
+    OpenCOR::Core::checkFileNameOrUrl("file:///C:/My/path/my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "C:/My/path/my_file.txt");
+#else
+    OpenCOR::Core::checkFileNameOrUrl("file:///My/path/my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "/My/path/my_file.txt");
+#endif
+
+#ifdef Q_OS_WIN
+    OpenCOR::Core::checkFileNameOrUrl("\\\\My.domain.com\\My\\path\\my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "//My.domain.com/My/path/my_file.txt");
+#endif
+
+    OpenCOR::Core::checkFileNameOrUrl("my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "my_file.txt");
+
+#ifdef Q_OS_WIN
+    OpenCOR::Core::checkFileNameOrUrl("..\\My\\path\\my_file.txt", isLocalFile, fileNameOrUrl);
+#else
+    OpenCOR::Core::checkFileNameOrUrl("../My/path/my_file.txt", isLocalFile, fileNameOrUrl);
+#endif
+    QCOMPARE(isLocalFile, true);
+    QCOMPARE(fileNameOrUrl, "../My/path/my_file.txt");
+
+    OpenCOR::Core::checkFileNameOrUrl("https://my.domain.com/my_file.txt", isLocalFile, fileNameOrUrl);
+
+    QCOMPARE(isLocalFile, false);
+    QCOMPARE(fileNameOrUrl, "https://my.domain.com/my_file.txt");
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(GeneralTests)
 
 //==============================================================================

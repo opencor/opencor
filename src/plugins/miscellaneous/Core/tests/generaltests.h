@@ -47,6 +47,7 @@ private slots:
     void stringPositionAsLineColumnTests();
     void stringLineColumnAsPositionTests();
     void newFileNameTests();
+    void checkFileNameOrUrl();
 };
 
 //==============================================================================

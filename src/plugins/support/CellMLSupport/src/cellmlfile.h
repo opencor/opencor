@@ -142,6 +142,8 @@ public:
 private:
     ObjRef<iface::cellml_api::Model> mModel;
 
+    QString mXmlBase;
+
     ObjRef<iface::rdf_api::RDFAPIRepresentation> mRdfApiRepresentation;
     ObjRef<iface::rdf_api::DataSource> mRdfDataSource;
 

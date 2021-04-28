@@ -186,12 +186,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
             // Retrieve the list of imports, together with their XML base values
 
-            ObjRef<iface::cellml_api::URI> baseUri = pModel->xmlBase();
             QList<iface::cellml_api::CellMLImport *> importList;
             QStringList importXmlBaseList;
 
-            retrieveImports(QString::fromStdWString(baseUri->asText()),
-                            pModel, importList, importXmlBaseList);
+            retrieveImports(xmlBase(), pModel, importList, importXmlBaseList);
 
             // Instantiate all the imports in our list
 
@@ -337,11 +335,13 @@ bool CellmlFile::load(const QString &pFileContents,
     // Try to create the model
 
     try {
+        QString fileContents = pFileContents;
+
         if (pFileContents.isEmpty()) {
-            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
-        } else {
-            *pModel = modelLoader->createFromText(pFileContents.toStdWString());
+            Core::readFile(mFileName, fileContents);
         }
+
+        *pModel = modelLoader->createFromText(fileContents.toStdWString());
     } catch (iface::cellml_api::CellMLException &exception) {
         // Something went wrong with the loading of the model
 
@@ -356,23 +356,13 @@ bool CellmlFile::load(const QString &pFileContents,
         return false;
     }
 
-    // Update the base URI, should the CellML file be a remote one or its
-    // contents be directly passed onto us
+    // Set the XML base
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    ObjRef<iface::cellml_api::URI> baseUri = (*pModel)->xmlBase();
 
-    if (fileManagerInstance->isRemote(mFileName)) {
-        // We are dealing with a remote file, so its XML base value should point
-        // to its remote location
-
-        baseUri->asText(fileManagerInstance->url(mFileName).toStdWString());
-    } else if (!pFileContents.isEmpty()) {
-        // We are dealing with a file which contents was directly passed onto
-        // us, so its XML base value should point to its actual location
-
-        baseUri->asText(mFileName.toStdWString());
-    }
+    mXmlBase = (fileManagerInstance->isRemote(mFileName))?
+                   fileManagerInstance->url(mFileName):
+                   QFileInfo(mFileName).canonicalPath()+"/";
 
     return true;
 }
@@ -1003,7 +993,7 @@ QString CellmlFile::xmlBase()
     // Return our base URI
 
     if (load()) {
-        return QString::fromStdWString(mModel->xmlBase()->asText());
+        return mXmlBase;
     }
 
     return {};
@@ -1175,15 +1165,11 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    ObjRef<iface::cellml_api::Model> model;
+    QString fileContents;
 
-    try {
-        model = CreateCellMLBootstrap()->modelLoader()->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
-    } catch (...) {
-        return Version::Unknown;
-    }
+    Core::readFile(pFileName, fileContents);
 
-    return modelVersion(model);
+    return fileContentsVersion(fileContents);
 }
 
 //==============================================================================
