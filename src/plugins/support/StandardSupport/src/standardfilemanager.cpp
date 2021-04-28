@@ -69,7 +69,7 @@ bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking) 
     }
 
     // The given file is not managed, so consider it of the right type if it is
-    // an empty file (after having been trimmed) or it can be loaded
+    // an empty file (after having been trimmed) or if it can be loaded
 
     QByteArray fileContents;
 
