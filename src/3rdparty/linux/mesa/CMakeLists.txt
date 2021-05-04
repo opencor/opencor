@@ -3,11 +3,11 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 21.0.1)
+set(PACKAGE_VERSION 21.0.3)
 
 # Git tag for our library
 
-set(GIT_TAG v21.0.1)
+set(GIT_TAG v21.0.3)
 
 # Specify where our local package will be installed
 
@@ -16,7 +16,7 @@ string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
 
 # Name of our package's shared library
 
-set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.1)
+set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.3)
 
 # Specify the files that need to have their SHA-1 value checked
 
