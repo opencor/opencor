@@ -38,7 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>Python Console window:</strong> automatically reload imported modules (see issue <a href=\"https://github.com/opencor/opencor/issues/2466\">#2466</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2468\">#2468</a>). Upgraded <a href=\"https://github.com/NuML/NuML/\">libNuML</a> to version 1.1.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2470\">#2470</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2468\">#2468</a>). Upgraded <a href=\"https://github.com/NuML/NuML/\">libNuML</a> to version 1.1.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2470\">#2470</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.0.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/2471\">#2471</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
