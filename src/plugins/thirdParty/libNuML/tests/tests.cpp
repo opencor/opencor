@@ -42,7 +42,7 @@ void Tests::basicTests()
 
     // Check the version of libNuML
 
-    QCOMPARE(libnuml::getLibNUMLDottedVersion(), "1.1.1");
+    QCOMPARE(libnuml::getLibNUMLDottedVersion(), "1.1.4");
 
     // Create a NuML document with a model inside it, then set the name of the
     // model and check that it has been properly set
