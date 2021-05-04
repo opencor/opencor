@@ -3,16 +3,16 @@ project(libNuMLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libNuML)
-set(PACKAGE_VERSION 1.1.1)
+set(PACKAGE_VERSION 1.1.4)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.4)
 
 # Git tag for our library
 
-set(GIT_TAG v1.1.1)
+set(GIT_TAG v1.1.4)
 
 # Package repository
 
@@ -61,31 +61,31 @@ if(USE_PREBUILT_LIBNUML_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a39cae2ca11d65a3b4696ce0ba7b3f2429437b96
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a1436d4733db8b8a1a94128381ff478afa75c806
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9ba23228511e627e33928e3010b94fd9bc70d9f4
-                                              93dd2336f2d580afe793f22dd65479cb622dbf11)
+                                  SHA1_VALUES 86c867c697eb933f7814a72c337605a485347d27
+                                              be2037223df8c76fe3a76a55a2c52e2696b41019)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 080bfc0e7d1fbfaacccc78ca7564d4a78bbb7020
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 09bbe60176aba305468e57621a9960b12f3c716b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 36cd7e24d6b514d882d7600fc1544f5499ac7507
-                                              93dd2336f2d580afe793f22dd65479cb622dbf11)
+                                  SHA1_VALUES 4185b44003c97134ba30d35466a90f5500f51f10
+                                              be2037223df8c76fe3a76a55a2c52e2696b41019)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 7c9407dc140d7eb19261182f557407124162de2d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b71d6595e6ccd9de246a248a6cce12ab67f578e1
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3cccf0afc1826a3aef7a356a0be0ed0ea1ea2101)
+                              SHA1_VALUES f39b6a01e5cf3dba2f679507577357cfcf1707fb)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 270dda02e5950e5f17673224f0f136ad693774b2
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6e144496043bd9916a85d998bbf3f97d4b95991
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6db4bb2e39c254f1740c3a80a40c61c776f3c9a9)
+                              SHA1_VALUES 92b1e91be089a379b08b3df683bc965604450dd4)
     endif()
 else()
     # Build libNuML as an external project
