@@ -78,6 +78,11 @@ class QtConsole(object):
         self._kernel.shell.enable_gui()
         self._kernel.shell.enable_matplotlib()
 
+        # Automatically reload imported modules
+
+        self._kernel.shell.run_cell('%load_ext autoreload', store_history=False)
+        self._kernel.shell.run_cell('%autoreload 2', store_history=False)
+
         # Start the kernel's client
 
         self._kernel_client = self._kernel_manager.client()
