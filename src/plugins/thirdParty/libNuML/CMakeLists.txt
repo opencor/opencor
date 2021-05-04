@@ -3,16 +3,16 @@ project(libNuMLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libNuML)
-set(PACKAGE_VERSION 1.1.1)
+set(PACKAGE_VERSION 1.1.4)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.4)
 
 # Git tag for our library
 
-set(GIT_TAG v1.1.1)
+set(GIT_TAG v1.1.4)
 
 # Package repository
 
