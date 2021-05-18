@@ -2338,8 +2338,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     if (!combineArchive->addFile(realImportedFileName,
                                                  relativeImportedFileName,
                                                  COMBINESupport::CombineArchiveFile::Format::Cellml)) {
-                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
-                                                                                                                " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+")");
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(QDir::toNativeSeparators(combineArchiveName),
+                                                                                                                " ("+tr("<strong>%1</strong> could not be added").arg(QDir::toNativeSeparators(relativeImportedFileName))+")");
 
                         break;
                     }
@@ -2349,15 +2349,15 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     // Now, we can effectively save (update) the COMBINE archive
 
                     if (!combineArchive->update(combineArchiveName)) {
-                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(combineArchiveName);
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(QDir::toNativeSeparators(combineArchiveName));
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
-                                                                                                        " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+")");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(QDir::toNativeSeparators(combineArchiveName),
+                                                                                                        " ("+tr("<strong>%1</strong> could not be added").arg(QDir::toNativeSeparators(modelSource))+")");
             }
         } else {
-            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
+            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(QDir::toNativeSeparators(combineArchiveName),
                                                                                                     " ("+tr("the master SED-ML file could not be added")+")");
         }
 
