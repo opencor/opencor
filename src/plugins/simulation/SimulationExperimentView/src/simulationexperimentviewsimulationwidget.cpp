@@ -2295,7 +2295,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         // Determine the location of our main CellML file
 
-        QString modelSource = QString(cellmlFileName).remove(commonPath);
+        QString modelSource = QString(cellmlFileName).remove(commonPath, Qt::CaseInsensitive);
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
@@ -2333,7 +2333,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     QString realImportedFileName = remoteCellmlFile?
                                                        remoteImportedFileNames.value(importedFileName):
                                                        importedFileName;
-                    QString relativeImportedFileName = QString(importedFileName).remove(commonPath);
+                    QString relativeImportedFileName = QString(importedFileName).remove(commonPath, Qt::CaseInsensitive);
 
                     if (!combineArchive->addFile(realImportedFileName,
                                                  relativeImportedFileName,
