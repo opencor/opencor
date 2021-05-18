@@ -2339,7 +2339,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                                                  relativeImportedFileName,
                                                  COMBINESupport::CombineArchiveFile::Format::Cellml)) {
                         errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
-                                                                                                                " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
+                                                                                                                " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+")");
 
                         break;
                     }
@@ -2354,11 +2354,11 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                 }
             } else {
                 errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
-                                                                                                        " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
+                                                                                                        " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+")");
             }
         } else {
             errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName,
-                                                                                                    " ("+tr("the master SED-ML file could not be added")+").");
+                                                                                                    " ("+tr("the master SED-ML file could not be added")+")");
         }
 
         if (isCellmlOrSedmlFile) {
