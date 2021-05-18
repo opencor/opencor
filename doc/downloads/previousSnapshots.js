@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 5, "year": 2021, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Python Console window:</strong> automatically reload imported modules (see issue <a href=\"https://github.com/opencor/opencor/issues/2466\">#2466</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2468\">#2468</a>). Upgraded <a href=\"https://github.com/NuML/NuML/\">libNuML</a> to version 1.1.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2470\">#2470</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.0.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/2471\">#2471</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 4, "year": 2021, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 10",
