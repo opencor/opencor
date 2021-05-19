@@ -39,7 +39,7 @@ void Tests::runtimeTest(const QString &pFileName, const QString &pCellmlVersion,
                         const QStringList &pModelParameters, bool pIsValid)
 {
     // Get a CellML file object for the given CellML file and make sure that it
-    // is considered of the expected CellML version
+    // is considered to be of the expected CellML version
 
     OpenCOR::CellMLSupport::CellmlFile cellmlFile(pFileName);
 
@@ -105,7 +105,7 @@ void Tests::runtimeTests()
     //    directly visible);
     //  - A 'new' version of a bond graph model implementation where the
     //    VOI is now visible in the main CellML file (as well as some other
-    //    model parameters); and
+    //    model parameters);
     //  - A model (Noble 1962) that imports its units (and no components) from a
     //    child model; and
     //  - A somewhat comprehensive model (Faville 2008).
