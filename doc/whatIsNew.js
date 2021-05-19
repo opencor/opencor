@@ -88,7 +88,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
-                               { "type": "added", "description": "Validation of a <a href=\"https://cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
+                               { "type": "added", "description": "Validation of a <a href=\"https://cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                               { "type": "fixed", "description": "Export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model with e-notation based numbers to <a href=\"https://cellml.org/\">CellML</a> 1.0." }
                              ]
                            }
                          ]
