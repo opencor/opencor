@@ -707,18 +707,24 @@ bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
 {
     // Save the given model or ouput it to the console, if no file name has been
     // provided, and this after having reformatted the given model
+    // Note: for some reasons, the MathML type of e-notation based numbers gets
+    //       moved to the CellML namespace, so we revert that behaviour...
 
     QDomDocument domDocument;
 
     domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
 
+    QByteArray serialisedDomDocument = Core::serialiseDomDocument(domDocument);
+
+    serialisedDomDocument.replace("cellml:type=\"e-notation\"", "type=\"e-notation\"");
+
     if (pFileName.isEmpty()) {
-        std::cout << QString(Core::serialiseDomDocument(domDocument)).toStdString() << std::endl;
+        std::cout << QString(serialisedDomDocument).toStdString() << std::endl;
 
         return true;
     }
 
-    return Core::writeFile(pFileName, Core::serialiseDomDocument(domDocument));
+    return Core::writeFile(pFileName, serialisedDomDocument);
 }
 
 //==============================================================================

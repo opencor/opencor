@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="e_notation" xmlns="http://www.cellml.org/cellml/1.0#">
+    <component name="main">
+        <variable name="x" units="dimensionless"/>
+        <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+            <apply>
+                <eq/>
+                <ci>x</ci>
+                <cn type="e-notation" cellml:units="dimensionless">6.948<sep/>-6</cn>
+            </apply>
+        </math>
+    </component>
+</model>

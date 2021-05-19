@@ -102,6 +102,13 @@ void Tests::exportToCellml10Tests()
     QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, "cellml_1_0" }, mOutput));
     QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
 
+    // Export a CellML 1.1 file with an e-notation number to CellML 1.0
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/e_notation.cellml");
+
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, "cellml_1_0" }, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/e_notation_export.out")) << QString());
+
     // Try to export a non-existing CellML file to CellML 1.0
 
     QVERIFY(OpenCOR::runCli({ "-c", "CellMLTools::export", "non_existing_file", "cellml_1_0" }, mOutput));
