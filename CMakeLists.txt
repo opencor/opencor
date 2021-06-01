@@ -1468,11 +1468,6 @@ elseif(APPLE)
         configure_file(${PLATFORM_DISTRIB_DIR}/runipython.in ${RUN_IPYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
-        install(FILES ${RUN_IPYTHON_FILENAME}
-                      ${RUN_JUPYTER_FILENAME}
-                DESTINATION .
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
         set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
         set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
