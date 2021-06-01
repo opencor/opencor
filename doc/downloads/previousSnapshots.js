@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 5, "year": 2021, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                      { "change": "<strong>CellML tools:</strong> e-notation based numbers now get properly exported from <a href=\"https://cellml.org/\">CellML</a> 1.1 to <a href=\"https://cellml.org/\">CellML</a> 1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2479\">#2479</a>)." },
+                      { "change": "<strong>Simulation Experiment view:</strong> make sure that we can (once again) export a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to a <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/2478\">#2478</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 5, "year": 2021, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 10",
