@@ -1388,13 +1388,17 @@ if(WIN32)
 
             set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
 
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . ipython.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyter.bat)
             configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.bat.in ${JUPYTER_CONSOLE_FILENAME})
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
 
-            install(FILES ${JUPYTER_CONSOLE_FILENAME}
+            install(FILES ${PLATFORM_DISTRIB_DIR}/ipython.bat
+                          ${PLATFORM_DISTRIB_DIR}/jupyter.bat
+                          ${JUPYTER_CONSOLE_FILENAME}
                           ${PLATFORM_DISTRIB_DIR}/jupyterlab.bat
                           ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
                           ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
@@ -1468,17 +1472,23 @@ elseif(APPLE)
         configure_file(${PLATFORM_DISTRIB_DIR}/runipython.in ${RUN_IPYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
+        set(IPYTHON_FILENAME ${PROJECT_BUILD_DIR}/ipython)
+        set(JUPYTER_FILENAME ${PROJECT_BUILD_DIR}/jupyter)
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
         set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
         set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
         set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
+        configure_file(${PLATFORM_DISTRIB_DIR}/ipython.in ${IPYTHON_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/jupyter.in ${JUPYTER_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
-        install(FILES ${JUPYTER_CONSOLE_FILENAME}
+        install(FILES ${IPYTHON_FILENAME}
+                      ${JUPYTER_FILENAME}
+                      ${JUPYTER_CONSOLE_FILENAME}
                       ${JUPYTER_LAB_FILENAME}
                       ${JUPYTER_NOTEBOOK_FILENAME}
                       ${PYTHON_SHELL_FILENAME}
@@ -1558,12 +1568,16 @@ else()
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
         set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . ipython)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyter)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
         configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
-        install(FILES ${JUPYTER_CONSOLE_FILENAME}
+        install(FILES ${PLATFORM_DISTRIB_DIR}/ipython
+                      ${PLATFORM_DISTRIB_DIR}/jupyter
+                      ${JUPYTER_CONSOLE_FILENAME}
                       ${PLATFORM_DISTRIB_DIR}/jupyterlab
                       ${PLATFORM_DISTRIB_DIR}/jupyternotebook
                       ${PYTHON_SHELL_FILENAME}
