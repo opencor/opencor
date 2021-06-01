@@ -37,9 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                      { "change": "<strong>CellML tools:</strong> e-notation based numbers now get properly exported from <a href=\"https://cellml.org/\">CellML</a> 1.1 to <a href=\"https://cellml.org/\">CellML</a> 1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2479\">#2479</a>)." },
-                      { "change": "<strong>Simulation Experiment view:</strong> make sure that we can (once again) export a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to a <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/2478\">#2478</a>)." }
-                     ]
+                      { "change": "<strong>Python support:</strong> provided a script to run <a href=\"https://ipython.org/\">IPython</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2486\">#2486</a>)." }
+                    ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
                      "platforms": [
