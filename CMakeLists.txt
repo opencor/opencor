@@ -1367,7 +1367,7 @@ if(WIN32)
     install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    # Batch files to setup and run Python and Jupyter
+    # Batch files to setup and run Python, IPython and Jupyter
     # Note: on Windows, it's technically very difficult, if not impossible, to
     #       get a debug version of any of our Jupyter-related scripts, so we
     #       skip them in that case (see
@@ -1375,10 +1375,14 @@ if(WIN32)
 
     if(PYTHON_SUPPORT)
         if(RELEASE_MODE)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runipython.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_ipython.py)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
 
-            install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
+            install(FILES ${PLATFORM_DISTRIB_DIR}/runipython.bat
+                          ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
+                          ${PLATFORM_DISTRIB_DIR}/start_ipython.py
                           ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
                     DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
 
@@ -1455,14 +1459,17 @@ elseif(APPLE)
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-    # Shell scripts to setup and run Python and Jupyter
+    # Shell scripts to setup and run Python, IPython and Jupyter
 
     if(PYTHON_SUPPORT)
+        set(RUN_IPYTHON_FILENAME ${PYTHON_SCRIPT_DIR}/runipython)
         set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
 
+        configure_file(${PLATFORM_DISTRIB_DIR}/runipython.in ${RUN_IPYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
 
-        install(FILES ${RUN_JUPYTER_FILENAME}
+        install(FILES ${RUN_IPYTHON_FILENAME}
+                      ${RUN_JUPYTER_FILENAME}
                 DESTINATION .
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
@@ -1542,12 +1549,14 @@ else()
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
 
-    # Shell scripts to setup and run Python and Jupyter
+    # Shell scripts to setup and run Python, IPython and Jupyter
 
     if(PYTHON_SUPPORT)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runipython)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
 
-        install(FILES ${PLATFORM_DISTRIB_DIR}/runjupyter
+        install(FILES ${PLATFORM_DISTRIB_DIR}/runipython
+                      ${PLATFORM_DISTRIB_DIR}/runjupyter
                 DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
