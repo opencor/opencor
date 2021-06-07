@@ -15,6 +15,10 @@
         <source>the starting point cannot be greater than the ending point</source>
         <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
     </message>
+    <message>
+        <source>&apos;%1&apos; must be a CellML file, a SED-ML file or a COMBINE archive.</source>
+        <translation>&apos;%1&apos; doit être un fichier CellML, un fichier SED-ML ou une archive COMBINE.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>

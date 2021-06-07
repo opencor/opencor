@@ -1447,7 +1447,9 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
                     FileType::CellmlFile:
                     (mSedmlFile != nullptr)?
                         FileType::SedmlFile:
-                        FileType::CombineArchive;
+                        (mCombineArchive != nullptr)?
+                            FileType::CombineArchive:
+                            FileType::Unknown;
 
     // We have a COMBINE archive, so we need to retrieve its corresponding
     // SED-ML file
@@ -1572,6 +1574,17 @@ void Simulation::checkIssues()
     mNeedCheckIssues = false;
     mIssues = SimulationIssues();
     mHasBlockingIssues = false;
+
+    // Make sure that we are dealing with a CellML file, a SED-ML file or a
+    // COMBINE archive
+
+    if (mFileType == FileType::Unknown) {
+        mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("'%1' must be a CellML file, a SED-ML file or a COMBINE archive.").arg(mFileName)));
+
+        mHasBlockingIssues = true;
+
+        return;
+    }
 
     // Determine whether we have issues with our SED-ML and our COMBINE archive
 
