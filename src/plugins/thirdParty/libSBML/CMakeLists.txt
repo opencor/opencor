@@ -14,7 +14,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.19.0)
 
 set(GIT_TAG v5.19.0)
 
-# Package repository tag
+# Package repository
 
 set(PACKAGE_REPOSITORY libsbml)
 

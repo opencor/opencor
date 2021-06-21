@@ -14,7 +14,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.4)
 
 set(GIT_TAG v1.1.4)
 
-# Package repository tag
+# Package repository
 
 set(PACKAGE_REPOSITORY NuML)
 

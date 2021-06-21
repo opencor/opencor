@@ -14,7 +14,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.4)
 
 set(GIT_TAG 0.4.4)
 
-# Package repository tag
+# Package repository
 
 set(PACKAGE_REPOSITORY libSEDML)
 
