@@ -38,7 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                       { "change": "<strong>Python support:</strong> provided a script to run <a href=\"https://ipython.org/\">IPython</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2486\">#2486</a>)." },
-                      { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.1.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/2365\">#2365</a>)." }
+                      { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.1.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/2483\">#2483</a>)." }
                     ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
