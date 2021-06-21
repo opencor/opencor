@@ -164,7 +164,7 @@ else()
         set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
     endif()
 
-    execute_process(COMMAND ${C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} -std=c99 -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 endif()
 
