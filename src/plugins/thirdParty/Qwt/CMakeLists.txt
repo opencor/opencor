@@ -3,16 +3,16 @@ project(QwtPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Qwt)
-set(PACKAGE_VERSION 6.1.5)
+set(PACKAGE_VERSION 6.1.6)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 6)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.5)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.6)
 
 # Git tag for our library
 
-set(GIT_TAG v6.1.5)
+set(GIT_TAG v6.1.6)
 
 # Specify where our local package will be installed
 
@@ -78,33 +78,33 @@ if(USE_PREBUILT_QWT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c63a227194df2f497a9009ca1301ebbdf895d2d9
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5c525e04ca0597dd3ac90059b03d68f981be75a9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ba0533c37188c727574118e60c1ede9138797e0a
-                                              2779556eb2fad7826cf42b095ce49859278fc943
-                                              9d1eff44ae61c9a35841ee64d8db78f4fe795667
+                                  SHA1_VALUES c3e3bf3184cac0fe5d05f9a2bab44b6034d702da
+                                              5d4a990e21c799c10d44d0d162d2dc599fce209d
+                                              4d04ecbc6c1ea50d4fc7ae8094af9d5f97706064
                                               ab7fc33185dd02cc9e6f39daf87b49b23b72fbaa)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b0b521df5367611b7b2fe7b0062201b0de413258
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e9fee7a8e8bec8b42b24875be1cc9e18e452c7f6
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6ce76189b563c823b3311c77bfa0079cc4d7e793
-                                              29841ba77a22bb1028349ab7105ef7f107e74532
-                                              d70e61c76e8e62e545b69d9abe7945aaf09e9dff
+                                  SHA1_VALUES 286c84aa5a76656345ce49474b6500719faffa7f
+                                              c95238d47fb42144251dd331d6ca71fa164533b1
+                                              58bdc94d8f1c531a3d324bf2c7e69a3b2362d0f5
                                               d3c451f84b79b2479dc8165475e739c5653835e6)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cc015b05e2a142d65bedd22f7aa326a0e97cd789
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} da96c14e1f0cb45fddafe1aede1e01b56dc98eea
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e13d6c174a84dc5ff5282d521ac4ed79cf2d792f
-                                          c5f75ce6480ea2de0f09d833820ef5c3596f248e)
+                              SHA1_VALUES 07877f6eef44bd668437c899923c66441288a85c
+                                          6c97bf61a498e1f54f1d9fe330e3d185b6a29c01)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5ee172c1ac68e68769547df0cac4542c90b1f678
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3f7a69ba895b9663478180c220e7e5fb0835c486
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c9ce68c39227122df1db28c27dda10f2e7ce9ea4
-                                          49ab4378944896e7dfdecf29d32b6bd0e4cafcd4)
+                              SHA1_VALUES 0cee985445814100cc627396276b16d3f882e4aa
+                                          d4d1f0bc0eed3009ca45f919456480fcdce43b9b)
     endif()
 else()
     # Set platform specific configuration options
