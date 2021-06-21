@@ -7,16 +7,16 @@ set(PACKAGE_VERSION 3.7.5)
 
 # Git tag for our library
 
-set(GIT_TAG "opencor-3.7.5")
+set(GIT_TAG opencor-3.7.5)
 
-# Package repository tag
+# Package repository
 
 set(PACKAGE_REPOSITORY python)
 
 # Version of our library
 
-set(MAJOR_MINOR_LIBRARY_VERSION "3.7")
-set(LIBRARY_VERSION "${MAJOR_MINOR_LIBRARY_VERSION}.5")
+set(MAJOR_MINOR_LIBRARY_VERSION 3.7)
+set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.5)
 set(NUMERIC_LIBRARY_VERSION 37)
 
 # Specify where our local package will be installed
