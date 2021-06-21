@@ -5,14 +5,14 @@ project(PythonPackagesPlugin)
 set(PACKAGE_NAME PythonPackages)
 set(PACKAGE_VERSION ${PYTHON_VERSION})
 
-# Package repository and release tags
+# Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
 
 # Git tags of Python package installers
 
-set(PIP_GIT_TAG "19.2.3")
-set(SETUPTOOLS_GIT_TAG "v41.2.0")
+set(PIP_GIT_TAG 19.2.3)
+set(SETUPTOOLS_GIT_TAG v41.2.0)
 
 # Version of our different Python packages
 

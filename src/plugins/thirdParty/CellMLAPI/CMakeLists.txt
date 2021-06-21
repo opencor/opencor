@@ -38,7 +38,7 @@ set(VACSS_LIBRARY_VERSION 1.13)
 
 set(GIT_TAG 1.12)
 
-# Package repository and release tags
+# Package repository and release tag
 
 set(PACKAGE_REPOSITORY cellml-api)
 set(RELEASE_TAG 1.12)
