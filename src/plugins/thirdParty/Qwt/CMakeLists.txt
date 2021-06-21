@@ -3,16 +3,16 @@ project(QwtPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Qwt)
-set(PACKAGE_VERSION 6.1.5)
+set(PACKAGE_VERSION 6.1.6)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 6)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.5)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.6)
 
 # Git tag for our library
 
-set(GIT_TAG v6.1.5)
+set(GIT_TAG v6.1.6)
 
 # Specify where our local package will be installed
 
