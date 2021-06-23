@@ -217,17 +217,12 @@ SimulationExperimentViewInformationParametersWidget * SimulationExperimentViewIn
 
 //==============================================================================
 
-void SimulationExperimentViewInformationWidget::finishEditing(bool pPausedSimulation)
+void SimulationExperimentViewInformationWidget::finishEditing()
 {
     // Finish the editing of any of the information we support
-    // Note: when a simulation is paused, the simulation and solvers widgets are
-    //       disabled, so no editing to finish...
 
-    if (!pPausedSimulation) {
-        mSimulationWidget->finishEditing();
-        mSolversWidget->finishEditing();
-    }
-
+    mSimulationWidget->finishEditing();
+    mSolversWidget->finishEditing();
     mGraphPanelAndGraphsWidget->finishEditing();
     mParametersWidget->finishEditing();
 }
