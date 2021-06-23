@@ -907,11 +907,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
     //       updates (e.g. when reloading a SED-ML file that references a remote
     //       CellML file)...
 
-    mContentsWidget->setUpdatesEnabled(false);
-        // Stop tracking certain things (so that updatePlot() doesn't get called
-        // unnecessarily)
-        // Note: see the corresponding code towards the end of this method...
+    // Stop tracking certain things (so that updatePlot() doesn't get called
+    // unnecessarily)
+    // Note: see the corresponding code towards the end of this method...
 
+    mContentsWidget->setUpdatesEnabled(false);
         SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
         SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
@@ -1468,13 +1468,13 @@ void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
 
 void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 {
-    setUpdatesEnabled(false);
-        // Clear our simulation results
-        // Note: we temporarily disable updates to prevent the GUI from taking
-        //       too long to update itself (something that would happen if we
-        //       were to have several graph panels since they would try to
-        //       realign themselves)...
+    // Clear our simulation results
+    // Note: we temporarily disable updates to prevent the GUI from taking too
+    //       long to update itself (something that would happen if we were to
+    //       have several graph panels since they would try to realign
+    //       themselves)...
 
+    setUpdatesEnabled(false);
         mSimulation->results()->reset();
     setUpdatesEnabled(true);
 }
@@ -3212,11 +3212,11 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
 
 void SimulationExperimentViewSimulationWidget::simulationResultsReset()
 {
-    setUpdatesEnabled(false);
-        // Update our simulation mode and check for results
-        // Note: see clearSimulationResults() for the reason behind temporarily
-        //       disabling updates...
+    // Update our simulation mode and check for results
+    // Note: see clearSimulationResults() for the reason behind temporarily
+    //       disabling updates...
 
+    setUpdatesEnabled(false);
         updateSimulationMode();
 
         mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
