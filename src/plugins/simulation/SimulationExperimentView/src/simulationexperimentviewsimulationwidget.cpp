@@ -1408,7 +1408,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
         // simulation and solvers properties (without resetting our NLA solver)
         // before running/resuming it
 
-        mContentsWidget->informationWidget()->finishEditing(mSimulation->isPaused());
+        mContentsWidget->informationWidget()->finishEditing();
 
         if (!mSimulation->isPaused()) {
             updateSimulationProperties();

@@ -76,7 +76,7 @@ public:
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget * graphPanelAndGraphsWidget() const;
     SimulationExperimentViewInformationParametersWidget * parametersWidget() const;
 
-    void finishEditing(bool pPausedSimulation);
+    void finishEditing();
 
 private:
     Core::CollapsibleWidget *mCollapsibleWidget;
