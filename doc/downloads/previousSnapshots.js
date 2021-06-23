@@ -93,27 +93,21 @@ var jsonData = { "versions": [
                      ]
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 1, "year": 2021, "type": 2, "license": 2,
-                     "platforms": [{
-                         "name": "Windows", "supported": "Windows 10",
-                         "files": [{
-                           "extension": ".exe"
-                         }, {
-                           "extension": ".zip"
-                         }]
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
                        },
-                       {
-                         "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
-                         "files": [{
-                           "extension": ".tar.gz"
-                         }]
+                       { "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
                        },
-                       {
-                         "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
-                         "files": [{
-                           "extension": ".pkg"
-                         }, {
-                           "extension": ".zip"
-                         }]
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
                        }
                      ],
                      "changes": [
