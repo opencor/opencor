@@ -253,7 +253,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCellmlOpenDropDownMenu = new QMenu(mToolBarWidget);
 
     for (auto cellmlEditingViewPlugin : pViewWidget->cellmlEditingViewPlugins()) {
-        auto action = Core::newAction(Core::mainWindow());
+        QAction *action = Core::newAction(Core::mainWindow());
 
         mCellmlOpenDropDownMenu->addAction(action);
 
@@ -266,7 +266,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCellmlOpenDropDownMenu->addSeparator();
 
     for (auto cellmlSimulationViewPlugin : pViewWidget->cellmlSimulationViewPlugins()) {
-        auto action = Core::newAction(Core::mainWindow());
+        QAction *action = Core::newAction(Core::mainWindow());
 
         mCellmlOpenDropDownMenu->addAction(action);
 

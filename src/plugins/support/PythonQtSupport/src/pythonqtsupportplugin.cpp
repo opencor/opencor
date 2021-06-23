@@ -135,8 +135,8 @@ void PythonQtSupportPlugin::initializePlugin()
     // Note: we need to use an intermediate variable as otherwise the cast
     //       results in an empty string
 
-    auto wSetPythonPathScript = setPythonPathScript.toStdWString();
-    auto wPythonHome = pythonHome.toStdWString();
+    std::wstring wSetPythonPathScript = setPythonPathScript.toStdWString();
+    std::wstring wPythonHome = pythonHome.toStdWString();
 
     mArgV[0] = const_cast<wchar_t *>(wSetPythonPathScript.c_str());
     mArgV[1] = const_cast<wchar_t *>(wPythonHome.c_str());

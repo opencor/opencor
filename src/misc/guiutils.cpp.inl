@@ -345,7 +345,7 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
     messageBox.setTextInteractionFlags(pFlags);
 
-    auto buttonBox = messageBox.findChild<QDialogButtonBox*>();
+    auto buttonBox = messageBox.findChild<QDialogButtonBox *>();
 
     Q_ASSERT(buttonBox);
 
@@ -480,7 +480,7 @@ void aboutMessageBox(const QString &pTitle, const QString &pText)
 #ifdef Q_OS_MAC
     oldMessageBox = messageBox;
 
-    auto buttonBox = messageBox->findChild<QDialogButtonBox*>();
+    auto buttonBox = messageBox->findChild<QDialogButtonBox *>();
 
     Q_ASSERT(buttonBox);
 

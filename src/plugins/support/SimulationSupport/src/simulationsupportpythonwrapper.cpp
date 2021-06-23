@@ -343,7 +343,7 @@ PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
     // Return a list of issues the given simulation has, if any
 
     PyObject *issuesList = PyList_New(0);
-    auto simulationIssues = pSimulation->issues();
+    SimulationIssues simulationIssues = pSimulation->issues();
 
     for (const auto &simulationIssue : simulationIssues) {
         QString information;
