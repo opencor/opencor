@@ -1468,6 +1468,10 @@ void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
 
 void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 {
+    // Make sure that all editings are finished
+
+    mContentsWidget->informationWidget()->finishEditing();
+
     // Clear our simulation results
     // Note: we temporarily disable updates to prevent the GUI from taking too
     //       long to update itself (something that would happen if we were to
