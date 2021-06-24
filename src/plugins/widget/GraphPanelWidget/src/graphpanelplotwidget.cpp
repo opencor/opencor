@@ -319,7 +319,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
     // Determine our default colour
 
     static QList<QColor> GraphColors = { DarkBlue, Orange, Yellow, Purple, Green, LightBlue, Red };
-    static QMap<GraphPanelWidget *, int> GraphColorIndexes;
+    static QHash<GraphPanelWidget *, int> GraphColorIndexes;
 
     int graphColorIndex = pOwner->graphs().isEmpty()?
                               -1:
@@ -367,7 +367,7 @@ void GraphPanelPlotGraph::attach(GraphPanelPlotWidget *pPlot)
 
     mDummyRun->attach(pPlot);
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         run->attach(pPlot);
     }
 
@@ -384,7 +384,7 @@ void GraphPanelPlotGraph::detach()
 
     mDummyRun->detach();
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         run->detach();
     }
 
@@ -446,7 +446,7 @@ void GraphPanelPlotGraph::removeRuns()
 {
     // Delete all our runs
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         delete run;
     }
 
@@ -568,7 +568,7 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         run->setPen(pPen);
     }
 }
@@ -596,7 +596,7 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
     mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
     }
 }
@@ -622,7 +622,7 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
     mDummyRun->setTitle(pTitle);
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         run->setTitle(pTitle);
     }
 }
@@ -648,7 +648,7 @@ void GraphPanelPlotGraph::setVisible(bool pVisible)
 
     mDummyRun->setVisible(pVisible);
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         run->setVisible(pVisible);
     }
 }
@@ -659,7 +659,7 @@ bool GraphPanelPlotGraph::hasData() const
 {
     // Return whether we have some data for any of our runs
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         if (run->dataSize() != 0) {
             return true;
         }
@@ -737,7 +737,7 @@ QRectF GraphPanelPlotGraph::boundingRect()
     if ((mBoundingRect == InvalidRect) && !mRuns.isEmpty()) {
         mBoundingRect = QRectF();
 
-        for (auto run : mRuns) {
+        for (auto run : qAsConst(mRuns)) {
             if (run->dataSize() != 0) {
                 QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
 
@@ -817,7 +817,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
     if ((mBoundingLogRect == InvalidRect) && !mRuns.isEmpty()) {
         mBoundingLogRect = QRectF();
 
-        for (auto run : mRuns) {
+        for (auto run : qAsConst(mRuns)) {
             if (run->dataSize() != 0) {
                 QRectF boundingLogRect = mBoundingLogRects.value(run, InvalidRect);
 
@@ -1734,7 +1734,7 @@ GraphPanelPlotWidget::~GraphPanelPlotWidget()
 
     delete mDirectPainter;
 
-    for (auto graph : mGraphs) {
+    for (auto graph : qAsConst(mGraphs)) {
         delete graph;
     }
 }
@@ -1804,7 +1804,7 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                     int index = -1;
 
-                    for (auto graph : mGraphs) {
+                    for (auto graph : qAsConst(mGraphs)) {
                         const QwtSymbol *graphSymbol = graph->symbol();
 
                         ++index;
@@ -1833,7 +1833,7 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                 mEnabledGridLinesColor = gridLinesColor();
 
-                for (auto graph : mGraphs) {
+                for (auto graph : qAsConst(mGraphs)) {
                     const QwtSymbol *graphSymbol = graph->symbol();
 
                     mEnabledGraphPens << graph->pen();
@@ -1858,7 +1858,7 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                 setGridLinesColor(opaqueWindowTextColor);
 
-                for (auto graph : mGraphs) {
+                for (auto graph : qAsConst(mGraphs)) {
                     QPen pen = graph->pen();
                     const QwtSymbol *graphSymbol = graph->symbol();
 
@@ -2966,7 +2966,7 @@ bool GraphPanelPlotWidget::hasData() const
     // Determine and return whether at least one of the graphs, which are valid
     // and selected, has some data
 
-    for (auto graph : mGraphs) {
+    for (auto graph : qAsConst(mGraphs)) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             return true;
         }
@@ -2986,7 +2986,7 @@ bool GraphPanelPlotWidget::dataRect(QRectF &pDataRect) const
 
     pDataRect = QRectF();
 
-    for (auto graph : mGraphs) {
+    for (auto graph : qAsConst(mGraphs)) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataRect |= graph->boundingRect();
 
@@ -3008,7 +3008,7 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
     pDataLogRect = QRectF();
 
-    for (auto graph : mGraphs) {
+    for (auto graph : qAsConst(mGraphs)) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataLogRect |= graph->boundingLogRect();
 
@@ -3181,19 +3181,19 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
-                for (auto plot : mNeighbors) {
+                for (auto plot : qAsConst(mNeighbors)) {
                     plot->setAxes(pMinX, pMaxX, pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
             } else if (   xAxisValuesChanged
                        && mSynchronizeXAxisAction->isChecked()) {
-                for (auto plot : mNeighbors) {
+                for (auto plot : qAsConst(mNeighbors)) {
                     plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(),
                                   false, false, false, true, false, false);
                 }
             } else if (   yAxisValuesChanged
                        && mSynchronizeYAxisAction->isChecked()) {
-                for (auto plot : mNeighbors) {
+                for (auto plot : qAsConst(mNeighbors)) {
                     plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
@@ -3358,7 +3358,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int legendWidth = 0;
 
-    for (auto plot : selfPlusNeighbors)  {
+    for (auto plot : qAsConst(selfPlusNeighbors)) {
         auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         if (legend != nullptr) {
@@ -3371,7 +3371,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
         }
     }
 
-    for (auto plot : selfPlusNeighbors) {
+    for (auto plot : qAsConst(selfPlusNeighbors)) {
         auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         if (legend != nullptr) {
@@ -3930,7 +3930,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
-    for (auto plot : selfPlusNeighbors) {
+    for (auto plot : qAsConst(selfPlusNeighbors)) {
         // Determine how much space we should have directly to the left and
         // right of the X axis
 
@@ -3976,7 +3976,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                              || !qFuzzyCompare(newMinExtentY, oldMinExtentY);
     bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
-    for (auto plot : selfPlusNeighbors) {
+    for (auto plot : qAsConst(selfPlusNeighbors)) {
         auto xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
         xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
@@ -4032,11 +4032,12 @@ void GraphPanelPlotWidget::exportTo()
     static const QString ImageXbitmap         = "image/x-xbitmap";
     static const QString ImageXpixmap         = "image/x-xpixmap";
 
+    const QList<QByteArray> supportedMimeTypes = QImageWriter::supportedMimeTypes();
     QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
     QStringList filters = { pdfFilter,
                             tr("SVG File - Scalable Vector Graphics (*.svg)") };
 
-    for (const auto &supportedMimeType : QImageWriter::supportedMimeTypes()) {
+    for (const auto &supportedMimeType : supportedMimeTypes) {
         if (supportedMimeType == ImageBmp) {
             filters << tr("BMP File - Windows Bitmap (*.bmp)");
         } else if (supportedMimeType == ImageJpeg) {

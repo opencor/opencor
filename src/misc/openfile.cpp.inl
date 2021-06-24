@@ -94,7 +94,7 @@ QString cliOpenFile(const QString &pFileName, File::Type pType,
     //       settingsLoaded()...
 
 #ifdef GUI_SUPPORT
-    for (auto plugin : mLoadedFileHandlingPlugins) {
+    for (auto plugin : qAsConst(mLoadedFileHandlingPlugins)) {
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
     }
 #endif

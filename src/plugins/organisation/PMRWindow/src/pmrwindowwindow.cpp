@@ -183,7 +183,9 @@ void PmrWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    for (const auto &label : mFilterLabelAction->labels()) {
+    const QList<QLabel *> labels = mFilterLabelAction->labels();
+
+    for (const auto &label : labels) {
         retranslateFilterLabel(label);
     }
 
@@ -291,7 +293,9 @@ void PmrWindowWindow::filterValueTextChanged(const QString &pText)
 
     mFilterValue = pText;
 
-    for (const auto &lineEdit : mFilterValueAction->lineEdits()) {
+    const QList<QLineEdit *> lineEdits = mFilterValueAction->lineEdits();
+
+    for (const auto &lineEdit : lineEdits) {
         lineEdit->setText(pText);
     }
 
@@ -335,7 +339,9 @@ void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
 
             mPmrWindowWidget->setFocus();
         } else {
-            Core::setFocusTo(mFilterValueAction->lineEdits().first());
+            QList<QLineEdit *> lineEdits = mFilterValueAction->lineEdits();
+
+            Core::setFocusTo(lineEdits.first());
         }
 
         mPmrWindowWidget->hideBusyWidget();

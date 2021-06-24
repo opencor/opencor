@@ -69,6 +69,7 @@ void CheckForUpdatesEngine::check()
         QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
+            const QList<QVariant> versionList = versions.object().toVariantMap()["versions"].toList();
             QVariantMap versionMap;
             int versionMajor;
             int versionMinor;
@@ -79,7 +80,7 @@ void CheckForUpdatesEngine::check()
             QString versionVersion;
             QString versionDate;
 
-            for (const auto &version : versions.object().toVariantMap()["versions"].toList()) {
+            for (const auto &version : versionList) {
                 // Retrieve the version and date of the current version
 
                 versionMap = version.toMap();
@@ -267,9 +268,10 @@ void CheckForUpdatesDialog::updateGui()
                 // OpenCOR, so first look for a snapshot and go for an official
                 // version, if no snapshot is available
 
+                const QStringList newerVersions = mEngine->newerVersions();
                 QString version;
 
-                for (const auto &newerVersion : mEngine->newerVersions()) {
+                for (const auto &newerVersion : newerVersions) {
                     if (newerVersion.contains('-')) {
                         version = newerVersion;
 
@@ -278,7 +280,7 @@ void CheckForUpdatesDialog::updateGui()
                 }
 
                 if (version.isEmpty()) {
-                    version = mEngine->newerVersions().first();
+                    version = newerVersions.first();
                 }
 
                 if (version.contains('-')) {
@@ -296,9 +298,10 @@ void CheckForUpdatesDialog::updateGui()
             // The user is only after an official version of OpenCOR, so look
             // for the first one available
 
+            const QStringList newerVersions = mEngine->newerVersions();
             QString version;
 
-            for (const auto &newerVersion : mEngine->newerVersions()) {
+            for (const auto &newerVersion : newerVersions) {
                 if (!newerVersion.contains('-')) {
                     version = newerVersion;
 

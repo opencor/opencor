@@ -112,7 +112,7 @@ void BiosignalmlDataStoreExporterWorker::run()
             std::vector<std::string> uris;
             std::vector<rdf::URI> units;
 
-            for (auto variable : variables) {
+            for (auto variable : qAsConst(variables)) {
                 uris.emplace_back(std::string().append(recordingUri).append("/signal/").append(variable->uri().toStdString()).append(runNb));
                 units.emplace_back(rdf::URI(baseUnits+variable->unit().toStdString()));
             }
@@ -126,7 +126,7 @@ void BiosignalmlDataStoreExporterWorker::run()
             bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
             bsml::HDF5::SignalArray::size_type n = 0;
 
-            for (auto variable : variables) {
+            for (auto variable : qAsConst(variables)) {
                 (*signalArray)[n]->set_label(variable->name().toStdString());
 
                 ++n;
@@ -137,7 +137,7 @@ void BiosignalmlDataStoreExporterWorker::run()
             size_t rowCount = 0;
 
             for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j) {
-                for (auto variable : variables) {
+                for (auto variable : qAsConst(variables)) {
                     *dataPointer++ = variable->value(j, i);
                 }
 

@@ -59,6 +59,7 @@ QString Simulation::furtherInitialize() const
     libsbml::XMLNode *annotation = sedmlUniformTimeCourse->getAnnotation();
 
     if (annotation != nullptr) {
+        const SolverInterfaces solverInterfaces = Core::solverInterfaces();
 #ifndef GUI_SUPPORT
         bool mustHaveNlaSolver = false;
 #endif
@@ -79,7 +80,7 @@ QString Simulation::furtherInitialize() const
 #endif
                 nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
-                for (auto solverInterface : Core::solverInterfaces()) {
+                for (auto solverInterface : solverInterfaces) {
                     if (nlaSolverName == solverInterface->solverName()) {
 #ifdef GUI_SUPPORT
                         nlaSolverProperties = nlaSolverData->solversProperties().value(solverInterface->solverName());
@@ -106,7 +107,7 @@ QString Simulation::furtherInitialize() const
 #ifdef GUI_SUPPORT
                             bool propertySet = false;
 
-                            for (auto solverProperty : nlaSolverProperties) {
+                            for (auto solverProperty : qAsConst(nlaSolverProperties)) {
                                 if (solverProperty->id() == id) {
                                     solverProperty->setValue(value);
 

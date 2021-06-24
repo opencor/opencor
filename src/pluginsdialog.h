@@ -83,7 +83,7 @@ private:
     QMap<QString, bool> mInitialLoadingStates;
 
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
-    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
+    QHash<QStandardItem *, PluginInfo::Category> mItemCategories;
 
     QStandardItem * pluginCategoryItem(PluginInfo::Category pCategory);
 

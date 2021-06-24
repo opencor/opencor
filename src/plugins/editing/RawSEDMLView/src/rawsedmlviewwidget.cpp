@@ -85,7 +85,7 @@ void RawSedmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    for (auto editingWidget : mEditingWidgets) {
+    for (auto editingWidget : qAsConst(mEditingWidgets)) {
         editingWidget->retranslateUi();
     }
 }
@@ -316,7 +316,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
         // Add whatever issue there may be to our list and select the first one
         // of them
 
-        for (const auto &sedmlFileIssue : sedmlFileIssues) {
+        for (const auto &sedmlFileIssue : qAsConst(sedmlFileIssues)) {
             if (   !pOnlyErrors
                 || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Type::Error)) {
                 EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Type::Fatal;

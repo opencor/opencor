@@ -74,8 +74,9 @@ QList<QLineEdit *> ToolBarWidgetLineEditWidgetAction::lineEdits() const
     // Return our created line edits
 
     QList<QLineEdit *> res;
+    const QList<QWidget *> lineEdits = createdWidgets();
 
-    for (const auto &lineEdit : createdWidgets()) {
+    for (const auto &lineEdit : lineEdits) {
         res << static_cast<QLineEdit *>(lineEdit);
     }
 
@@ -100,7 +101,9 @@ void ToolBarWidgetLineEditWidgetAction::setText(const QString &pText)
 {
     // Set the text of all our created line edits
 
-    for (const auto &lineEdit : lineEdits()) {
+    const QList<QLineEdit *> lineEdits = ToolBarWidgetLineEditWidgetAction::lineEdits();
+
+    for (const auto &lineEdit : lineEdits) {
         lineEdit->setText(pText);
     }
 }

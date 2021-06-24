@@ -449,7 +449,7 @@ private:
 
     bool mRightClicking = false;
 
-    QMap<Property *, bool> mPropertyChecked;
+    QHash<Property *, bool> mPropertyChecked;
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 

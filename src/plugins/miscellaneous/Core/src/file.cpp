@@ -126,7 +126,7 @@ File::Status File::check()
     QString newSha1 = sha1();
     QStringList newDependenciesSha1;
 
-    for (const auto &dependency : mDependencies) {
+    for (const auto &dependency : qAsConst(mDependencies)) {
         newDependenciesSha1 << sha1(dependency);
     }
 

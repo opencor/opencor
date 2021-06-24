@@ -213,7 +213,8 @@ QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
     }
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString res = canonicalFileName(dialog.selectedFiles().first());
+        QStringList selectedFiles = dialog.selectedFiles();
+        QString res = canonicalFileName(selectedFiles.first());
 
         if (!res.isEmpty()) {
             // We have retrieved an open file name, so keep track of the folder
@@ -318,7 +319,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
             *pSelectedFilter = dialog.selectedNameFilter();
         }
 
-        QString res = canonicalFileName(dialog.selectedFiles().first());
+        QStringList selectedFiles = dialog.selectedFiles();
+        QString res = canonicalFileName(selectedFiles.first());
 
         // Make sure that we have got a save file name
 
@@ -391,7 +393,8 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
             break;
         }
 
-        QString res = canonicalDirName(dialog.selectedFiles().first());
+        QStringList selectedFiles = dialog.selectedFiles();
+        QString res = canonicalDirName(selectedFiles.first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so update our active directory
@@ -766,8 +769,9 @@ QIcon tintedIcon(const QIcon &pIcon, const QColor &pColor)
     // and colour
 
     QIcon res;
+    const QList<QSize> sizes = pIcon.availableSizes();
 
-    for (const auto &size : pIcon.availableSizes()) {
+    for (const auto &size : sizes) {
         QGraphicsScene scene(0, 0, size.width(), size.height());
         QGraphicsPixmapItem pixmapItem;
         QGraphicsColorizeEffect effect;
@@ -875,9 +879,9 @@ QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
 {
     // Return a scaled version of the given icon
 
-    return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
-                                                               pAspectMode,
-                                                               pMode);
+    QList<QSize> sizes = pIcon.availableSizes();
+
+    return pIcon.pixmap(sizes.first()).scaled(pWidth, pHeight, pAspectMode, pMode);
 }
 
 //==============================================================================

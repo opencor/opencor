@@ -94,7 +94,7 @@ private:
     SimulationExperimentViewInformationSolversWidgetData *mOdeSolverData;
     SimulationExperimentViewInformationSolversWidgetData *mNlaSolverData;
 
-    QMap<Core::Property *, Descriptions> mDescriptions;
+    QHash<Core::Property *, Descriptions> mDescriptions;
 
     void updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 

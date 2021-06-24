@@ -766,7 +766,7 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 
     QIntList sectionKeys = mGraphPanelSectionsExpanded.keys();
 
-    for (auto section : sectionKeys) {
+    for (auto section : qAsConst(sectionKeys)) {
         informationWidget->graphPanelAndGraphsWidget()->setGraphPanelSectionExpanded(section, mGraphPanelSectionsExpanded.value(section));
     }
 }

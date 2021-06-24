@@ -135,7 +135,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     // Let our plot's neighbours know about our plot
 
-    for (auto neighbor : neighbors) {
+    for (auto neighbor : qAsConst(neighbors)) {
         neighbor->addNeighbor(mPlot);
     }
 }
@@ -155,7 +155,9 @@ GraphPanelWidget::~GraphPanelWidget()
     // Let our plot's neighbours know that our plot is not going to be their
     // neighbour anymore
 
-    for (auto plot : mPlot->neighbors()) {
+    const GraphPanelPlotWidgets plots = mPlot->neighbors();
+
+    for (auto plot : plots) {
         if (plot != mPlot) {
             plot->removeNeighbor(mPlot);
         }

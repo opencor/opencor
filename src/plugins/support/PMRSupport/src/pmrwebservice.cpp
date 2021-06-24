@@ -109,8 +109,9 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
 
     PmrExposures exposures;
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    const QList<QVariant> linksList = collectionMap["links"].toList();
 
-    for (const auto &links : collectionMap["links"].toList()) {
+    for (const auto &links : linksList) {
         QVariantMap linksMap = links.toMap();
 
         if (linksMap["rel"].toString() == Bookmark) {
@@ -153,7 +154,7 @@ PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
     if (pmrResponse != nullptr) {
         QEventLoop waitLoop;
 
-        connect(pmrResponse, &PmrWebServiceResponse::finished, [&]() {
+        connect(pmrResponse, &PmrWebServiceResponse::finished, this, [&]() {
             waitLoop.quit();
         });
 
@@ -192,6 +193,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         static const QString Id          = "id";
         static const QString Git         = "git";
 
+        const QList<QVariant> datas = itemsList.first().toMap()["data"].toList();
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
         QString storage;
         QString workspaceDescription;
@@ -199,7 +201,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         QString workspaceName;
         QString workspaceId;
 
-        for (const auto &data : itemsList.first().toMap()["data"].toList()) {
+        for (const auto &data : datas) {
             QVariantMap dataMap = data.toMap();
             QString name = dataMap["name"].toString();
 
@@ -299,8 +301,9 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
 
     PmrWorkspaces workspaces;
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    const QList<QVariant> linksList = collectionMap["links"].toList();
 
-    for (const auto &links : collectionMap["links"].toList()) {
+    for (const auto &links : linksList) {
         QVariantMap linksMap = links.toMap();
 
         if (linksMap["rel"].toString() == Bookmark) {
@@ -360,13 +363,14 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
         static const QString Title       = "title";
         static const QString Git         = "git";
 
+        const QList<QVariant> datas = itemsList.first().toMap()["data"].toList();
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
         QString storage;
         QString workspaceDescription;
         QString workspaceOwner;
         QString workspaceName;
 
-        for (const auto &data : itemsList.first().toMap()["data"].toList()) {
+        for (const auto &data : datas) {
             QVariantMap dataMap = data.toMap();
 
             if (dataMap["name"].toString() == Storage) {
@@ -544,7 +548,7 @@ void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
     if (pmrResponse != nullptr) {
         QEventLoop waitLoop;
 
-        connect(pmrResponse, &PmrWebServiceResponse::finished, [&]() {
+        connect(pmrResponse, &PmrWebServiceResponse::finished, this, [&]() {
             waitLoop.quit();
         });
 
@@ -623,7 +627,9 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     static const QString LaunchWithOpencor = "Launch with OpenCOR";
                     static const QString Section           = "section";
 
-                    for (const auto &links : collectionMap["links"].toList()) {
+                    const QList<QVariant> subLinksList = collectionMap["links"].toList();
+
+                    for (const auto &links : subLinksList) {
                         QVariantMap linksMap = links.toMap();
                         QString prompt = linksMap["prompt"].toString();
                         QString rel = linksMap["rel"].toString();
@@ -714,10 +720,11 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         static const QString Bookmark = "bookmark";
 
         QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+        const QList<QVariant> linksList = collectionMap["links"].toList();
         QString workspaceUrl;
         QStringList exposureFileUrls;
 
-        for (const auto &links : collectionMap["links"].toList()) {
+        for (const auto &links : linksList) {
             QVariantMap linksMap = links.toMap();
             QString rel = linksMap["rel"].toString();
 
@@ -756,7 +763,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         // hasn't already been done
 
         if (exposure->exposureFiles().isEmpty()) {
-            for (const auto &exposureFileUrl : exposureFileUrls) {
+            for (const auto &exposureFileUrl : qAsConst(exposureFileUrls)) {
                 requestExposureFileInformation(exposureFileUrl, exposure);
             }
         }

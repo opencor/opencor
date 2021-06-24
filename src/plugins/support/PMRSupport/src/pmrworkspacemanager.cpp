@@ -146,7 +146,7 @@ void PmrWorkspaceManager::clearWorkspaces()
 {
     // Stop tracking all of our workspaces
 
-    for (auto workspace : mUrlWorkspaces) {
+    for (auto workspace : qAsConst(mUrlWorkspaces)) {
         workspace->close();
     }
 

@@ -238,10 +238,10 @@ private:
     QColor mColor;
 
     QRectF mBoundingRect;
-    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingRects;
+    QHash<GraphPanelPlotGraphRun *, QRectF> mBoundingRects;
 
     QRectF mBoundingLogRect;
-    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
+    QHash<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
 
     GraphPanelPlotWidget *mPlot = nullptr;
 
@@ -355,7 +355,7 @@ private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
 
-    QMap<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
+    QHash<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
 
     int mSizeHintWidth = 0;
 

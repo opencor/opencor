@@ -86,7 +86,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     auto toolBarWidget = new ToolBarWidget::ToolBarWidget(this);
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
-    int folderIconSize = folderIcon.availableSizes().first().width();
+    QList<QSize> folderIconSizes = folderIcon.availableSizes();
+    int folderIconSize = folderIconSizes.first().width();
     int plusIconSize = int(0.57*folderIconSize);
     int scaledIconSize = devicePixelRatio()*toolBarWidget->iconSize().width();
     // Note: we scale the icon in case we are on a non-HiDPI screen, in which

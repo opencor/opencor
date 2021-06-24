@@ -480,8 +480,9 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
     // List all the files that have changed
 
     PmrWorkspacesWindowSynchronizeDialogItems res;
+    const PMRSupport::PmrWorkspaceFileNodes fileNodes = pFileNode->children();
 
-    for (auto fileNode : pFileNode->children()) {
+    for (auto fileNode : fileNodes) {
         if (fileNode->hasChildren()) {
             // This is a folder, so populate ourselves with its children
 
@@ -606,7 +607,7 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
     // Delete old unused items
 
-    for (auto oldItem : oldItems) {
+    for (auto oldItem : qAsConst(oldItems)) {
         if (!newItems.contains(oldItem)) {
             mDiffHtmls.remove(oldItem->text());
             mCellmlDiffHtmls.remove(oldItem->text());
@@ -644,7 +645,9 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
                    this, &PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox);
 
         if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(pItem->index()))) {
-            for (const auto &fileIndex : mChangesValue->selectionModel()->selectedIndexes()) {
+            const QModelIndexList fileIndexes = mChangesValue->selectionModel()->selectedIndexes();
+
+            for (const auto &fileIndex : fileIndexes) {
                 mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
             }
         }
@@ -916,7 +919,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     int removeLineNumber = 0;
     PmrWorkspacesWindowSynchronizeDialogDifferencesData differencesData;
 
-    for (const auto &difference : differencesList) {
+    for (const auto &difference : qAsConst(differencesList)) {
         ++differenceNumber;
 
         if (difference.startsWith("@@") && difference.endsWith("@@")) {
@@ -1092,7 +1095,7 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
     if (indexes.isEmpty()) {
         // No selected indexes, so select the previously selected indexes
 
-        for (const auto &index : mPreviouslySelectedIndexes) {
+        for (const auto &index : qAsConst(mPreviouslySelectedIndexes)) {
             mChangesValue->selectionModel()->select(index, QItemSelectionModel::Select);
         }
     } else {

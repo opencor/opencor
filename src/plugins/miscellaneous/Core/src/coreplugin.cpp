@@ -719,7 +719,7 @@ void CorePlugin::updateFileReopenMenu()
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
-    for (auto recentFileAction : mRecentFileActions) {
+    for (auto recentFileAction : qAsConst(mRecentFileActions)) {
         mFileReopenSubMenu->removeAction(recentFileAction);
 
         delete recentFileAction;
@@ -731,7 +731,7 @@ void CorePlugin::updateFileReopenMenu()
 
     bool enabled = mFileOpenAction->isEnabled();
 
-    for (const auto &recentFile : mRecentFiles) {
+    for (const auto &recentFile : qAsConst(mRecentFiles)) {
         auto action = newAction(mainWindow());
 
         action->setEnabled(enabled);

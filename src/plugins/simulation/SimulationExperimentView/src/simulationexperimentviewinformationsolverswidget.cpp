@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "interfaces.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -146,7 +147,9 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
     // Note: this is effectively to have the description of our solvers'
     //       properties properly updated...
 
-    for (auto property : allProperties()) {
+    const Core::Properties properties = allProperties();
+
+    for (auto property : properties) {
         if (mDescriptions.contains(property)) {
             // The property has a description associated with it, so retrieve
             // the version, if any, which corresponds to our current locale
@@ -181,13 +184,14 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
     // Retrieve the name of the solvers which type is the one in which we are
     // interested
 
+    const SolverInterfaces solverInterfaces = Core::solverInterfaces();
     QMap<QString, SolverInterface *> solversInterfaces;
     Core::Property *solversProperty = nullptr;
     Core::Property *solversListProperty = nullptr;
     QStringList solversNames;
     QMap<QString, Core::Properties> solversProperties;
 
-    for (auto solverInterface : Core::solverInterfaces()) {
+    for (auto solverInterface : solverInterfaces) {
         if (solverInterface->solverType() == pSolverType) {
             // Keep track of the solver's interface
 

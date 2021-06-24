@@ -739,34 +739,46 @@ void ConversionTests::warningConversionTests()
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/cellml_unknown_element.cellml")).join('\n')));
-    QCOMPARE(converter.warnings().count(), 1);
-    QCOMPARE(converter.warnings().first().message(),
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverterWarnings converterWarnings = converter.warnings();
+
+    QCOMPARE(converterWarnings.count(), 1);
+    QCOMPARE(converterWarnings.first().message(),
              QString("A 'unknown_element' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
-    QCOMPARE(converter.warnings().first().lineNumber(), 3);
-    QCOMPARE(converter.warnings().first().columnNumber(), 21);
+    QCOMPARE(converterWarnings.first().lineNumber(), 3);
+    QCOMPARE(converterWarnings.first().columnNumber(), 21);
 
     // Known, but unsupported MathML elements
 
     QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/mathml_semantics.cellml")).join('\n')));
-    QCOMPARE(converter.warnings().count(), 1);
-    QCOMPARE(converter.warnings().first().message(),
+
+    converterWarnings = converter.warnings();
+
+    QCOMPARE(converterWarnings.count(), 1);
+    QCOMPARE(converterWarnings.first().message(),
              QString("A 'semantics' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
-    QCOMPARE(converter.warnings().first().lineNumber(), 5);
-    QCOMPARE(converter.warnings().first().columnNumber(), 23);
+    QCOMPARE(converterWarnings.first().lineNumber(), 5);
+    QCOMPARE(converterWarnings.first().columnNumber(), 23);
 
     QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/mathml_annotation.cellml")).join('\n')));
-    QCOMPARE(converter.warnings().count(), 1);
-    QCOMPARE(converter.warnings().first().lineNumber(), 5);
-    QCOMPARE(converter.warnings().first().columnNumber(), 24);
-    QCOMPARE(converter.warnings().first().message(),
+
+    converterWarnings = converter.warnings();
+
+    QCOMPARE(converterWarnings.count(), 1);
+    QCOMPARE(converterWarnings.first().lineNumber(), 5);
+    QCOMPARE(converterWarnings.first().columnNumber(), 24);
+    QCOMPARE(converterWarnings.first().message(),
              QString("An 'annotation' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
 
     QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/mathml_annotation-xml.cellml")).join('\n')));
-    QCOMPARE(converter.warnings().count(), 1);
-    QCOMPARE(converter.warnings().first().message(),
+
+    converterWarnings = converter.warnings();
+
+    QCOMPARE(converterWarnings.count(), 1);
+    QCOMPARE(converterWarnings.first().message(),
              QString("An 'annotation-xml' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
-    QCOMPARE(converter.warnings().first().lineNumber(), 5);
-    QCOMPARE(converter.warnings().first().columnNumber(), 28);
+    QCOMPARE(converterWarnings.first().lineNumber(), 5);
+    QCOMPARE(converterWarnings.first().columnNumber(), 28);
 }
 
 //==============================================================================

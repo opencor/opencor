@@ -121,14 +121,14 @@ private:
 
     SimulationSupport::Simulation *mSimulation = nullptr;
 
-    QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
-    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
-    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
+    QHash<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
+    QHash<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
+    QHash<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
     Core::PropertyEditorWidget *mGraphPanelPropertyEditor = nullptr;
     Core::PropertyEditorWidget *mGraphsPropertyEditor = nullptr;
 
-    QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
+    QHash<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
+    QHash<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
     QMenu *mGraphPanelContextMenu;
 
@@ -144,7 +144,7 @@ private:
     QAction *mUnselectAllGraphsAction;
     QAction *mSelectGraphColorAction;
 
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
+    QHash<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QMap<QString, QString> mRenamedModelListValues;
 

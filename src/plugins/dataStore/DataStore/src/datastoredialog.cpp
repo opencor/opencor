@@ -118,10 +118,11 @@ DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
+    const DataStoreVariables variables = pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables();
     QString dataHierarchy;
     QStandardItem *hierarchyItem = nullptr;
 
-    for (auto variable : pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
+    for (auto variable : variables) {
         if (variable->isVisible()) {
             // Check whether the variable is in the same hierarchy as the
             // previous one
@@ -135,9 +136,10 @@ DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
                 // a new section hierarchy for our 'new' component, reusing
                 // existing sections, whenever possible
 
+                const QStringList hierarchyParts = crtDataHierarchy.split('/');
                 QStandardItem *parentHierarchyItem = mModel->invisibleRootItem();
 
-                for (const auto &hierarchyPart : crtDataHierarchy.split('/')) {
+                for (const auto &hierarchyPart : hierarchyParts) {
                     hierarchyItem = nullptr;
 
                     for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {

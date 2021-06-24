@@ -94,7 +94,7 @@ void CellmlAnnotationViewWidget::retranslateUi()
 {
     // Retranslate our editing widgets
 
-    for (auto editingWidget : mEditingWidgets) {
+    for (auto editingWidget : qAsConst(mEditingWidgets)) {
         editingWidget->retranslateUi();
     }
 }

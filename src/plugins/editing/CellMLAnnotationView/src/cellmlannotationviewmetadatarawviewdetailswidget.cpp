@@ -73,7 +73,9 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     // Remove all previous RDF triples from our tree view widget
 
     while (mModel->hasChildren()) {
-        for (auto item : mModel->takeRow(0)) {
+        const QList<QStandardItem *> items = mModel->takeRow(0);
+
+        for (auto item : items) {
             delete item;
         }
     }
@@ -84,9 +86,10 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
+    const CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
     int rdfTripleCounter = 0;
 
-    for (auto rdfTriple : mCellmlFile->rdfTriples(pElement)) {
+    for (auto rdfTriple : rdfTriples) {
         mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
                                                                         << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::Type::UriReference)?
                                                                                                  rdfTriple->metadataId():
