@@ -2887,12 +2887,9 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
                 this, &SimulationExperimentViewSimulationWidget::resetDataStoreImporterConnections);
 
         QEventLoop waitLoop;
-        auto connection = std::make_shared<QMetaObject::Connection>();
 
-        *connection = connect(this, &SimulationExperimentViewSimulationWidget::importDone, this, [&]() {
+        connect(this, &SimulationExperimentViewSimulationWidget::importDone, this, [&]() {
             waitLoop.quit();
-
-            disconnect(*connection);
         });
 
         dataStoreImporter->importData(dataStoreImportData);

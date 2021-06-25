@@ -295,12 +295,9 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         // Run our simulation and wait for it to complete
 
         QEventLoop waitLoop;
-        auto connection = std::make_shared<QMetaObject::Connection>();
 
-        *connection = connect(pSimulation, &Simulation::done, this, [&]() {
+        connect(pSimulation, &Simulation::done, this, [&]() {
             waitLoop.quit();
-
-            disconnect(*connection);
         });
 
         pSimulation->run();
