@@ -316,7 +316,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         //       in a SED-ML file...
 
         bool hasImports = model->imports()->length() != 0;
-        QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
+        QHash<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
         QList<iface::cellml_api::CellMLVariable *> realMainVariables;
         ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = model->localComponents()->iterateComponents();
 
@@ -518,10 +518,11 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
+    const QStringList initConstsString = cleanCode(mCodeInformation->initConstsString()).split('\n');
     QString initConsts;
     QString compCompConsts;
 
-    for (const auto &initConst : cleanCode(mCodeInformation->initConstsString()).split('\n')) {
+    for (const auto &initConst : initConstsString) {
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
@@ -774,7 +775,7 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues,
             delete mVoi;
         }
 
-        for (auto parameter : mParameters) {
+        for (auto parameter : qAsConst(mParameters)) {
             delete parameter;
         }
 
@@ -934,8 +935,9 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
 
     QString res;
+    const QStringList codes = QString::fromStdWString(pCode).split("\r\n");
 
-    for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
+    for (const auto &code : codes) {
         if (!CommentRegEx.match(code.trimmed()).hasMatch()) {
             res += QString("%1").arg(res.isEmpty()?"":"\n")+code;
         }

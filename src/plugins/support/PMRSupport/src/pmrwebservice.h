@@ -31,6 +31,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QHash>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRSupport {
 
@@ -84,7 +88,7 @@ private:
     PmrWebServiceManager *mPmrWebServiceManager;
 
     QMap<QString, PmrExposure *> mUrlExposures;
-    QMap<PmrExposure *, int> mFileExposuresLeftCount;
+    QHash<PmrExposure *, int> mFileExposuresLeftCount;
 
     void requestWorkspaceInformation(const QString &pUrl,
                                      const QString &pPath,

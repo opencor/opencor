@@ -254,7 +254,9 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     // Make sure that we are loaded, if the given file contents is empty (i.e.
     // we want to validate ourselves rather than some given file contents)
 
-    if (pFileContents.isEmpty()) {
+    bool fileContentsEmpty = pFileContents.isEmpty();
+
+    if (fileContentsEmpty) {
         load();
     }
 
@@ -275,7 +277,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     libsedml::SedDocument *sedmlDocument = mSedmlDocument;
 
-    if (!pFileContents.isEmpty()) {
+    if (!fileContentsEmpty) {
         QTemporaryFile file;
         QByteArray fileContentsByteArray = pFileContents.toUtf8();
 
@@ -332,7 +334,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     bool res = !hasErrors();
 
-    if (!pFileContents.isEmpty()) {
+    if (!fileContentsEmpty) {
         delete sedmlDocument;
     }
 
@@ -355,7 +357,9 @@ SolverInterface * SedmlFile::solverInterface(const QString &pKisaoId)
     // Retrieve and return the solver interface for the given KiSAO id and make
     // sure that it's of the type we want
 
-    for (auto solverInterface : Core::solverInterfaces()) {
+    const SolverInterfaces solverInterfaces = Core::solverInterfaces();
+
+    for (auto solverInterface : solverInterfaces) {
         if (solverInterface->id(pKisaoId) == solverInterface->solverName()) {
             if (solverInterface->solverType() != Solver::Type::Ode) {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
@@ -684,7 +688,9 @@ bool SedmlFile::isSupported()
         }
 
         libsbml::XMLNode *firstAnnotation = firstSimulationAlgorithm->getAnnotation();
-        libsbml::XMLNode *secondAnnotation = secondSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *secondAnnotation = (secondSimulationAlgorithm != nullptr)?
+                                                 secondSimulationAlgorithm->getAnnotation():
+                                                 nullptr;
 
         if (firstAnnotation != nullptr) {
             firstAnnotation->write(firstXmlStream);

@@ -81,7 +81,7 @@ private:
 
     QStandardItemModel *mModel;
 
-    QMap<QStandardItem *, DataStoreVariable *> mData;
+    QHash<QStandardItem *, DataStoreVariable *> mData;
     int mNbOfData = 0;
 
     DataStoreVariables selectedData(QStandardItem *pItem) const;

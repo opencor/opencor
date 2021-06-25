@@ -196,9 +196,9 @@ private:
 
     SimulationExperimentViewWidget *mViewWidget;
 
-    QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
+    QHash<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
-    QMap<QAction *, Plugin *> mCellmlBasedViewPlugins;
+    QHash<QAction *, Plugin *> mCellmlBasedViewPlugins;
 
     SimulationSupport::Simulation *mSimulation;
 
@@ -271,13 +271,13 @@ private:
 
     QVariantList mSimulationProperties;
     QVariantList mSolversProperties;
-    QMap<Core::PropertyEditorWidget *, QVariantList> mGraphPanelProperties;
-    QMap<Core::PropertyEditorWidget *, QVariantList> mGraphsProperties;
+    QHash<Core::PropertyEditorWidget *, QVariantList> mGraphPanelProperties;
+    QHash<Core::PropertyEditorWidget *, QVariantList> mGraphsProperties;
 
     bool mSimulationPropertiesModified = false;
     bool mSolversPropertiesModified = false;
-    QMap<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
-    QMap<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
+    QHash<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
+    QHash<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
 
     QIntList mGraphPanelsWidgetSizes;
     bool mGraphPanelsWidgetSizesModified = false;
@@ -286,7 +286,7 @@ private:
 
     bool mNeedUpdatePlots = false;
 
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
+    QHash<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 

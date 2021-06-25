@@ -196,7 +196,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     QStringList keys = mNamespaces.keys();
 
-    for (const auto &key : keys) {
+    for (const auto &key : qAsConst(keys)) {
         mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
     }
 

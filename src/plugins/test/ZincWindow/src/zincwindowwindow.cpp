@@ -227,7 +227,7 @@ void ZincWindowWindow::createAndSetZincContext()
     if (mZincMeshFileNames.empty()) {
         sir.createStreamresourceFile(mTrilinearCubeMeshFileName.toUtf8().constData());
     } else {
-        for (const auto &zincMeshFileName : mZincMeshFileNames) {
+        for (const auto &zincMeshFileName : qAsConst(mZincMeshFileNames)) {
             sir.createStreamresourceFile(zincMeshFileName.toUtf8().constData());
         }
     }

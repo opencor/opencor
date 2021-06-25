@@ -47,7 +47,7 @@ class TOOLBARWIDGET_EXPORT ToolBarWidgetLabelWidgetAction : public QWidgetAction
     Q_OBJECT
 
 public:
-    ToolBarWidgetLabelWidgetAction(QWidget *pParent);
+    explicit ToolBarWidgetLabelWidgetAction(QWidget *pParent);
 
     QList<QLabel *> labels() const;
     bool validLabel(QLabel *pLabel) const;

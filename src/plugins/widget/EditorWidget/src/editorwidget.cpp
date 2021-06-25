@@ -80,8 +80,8 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     //       in our QScintilla plugin and that we don't know anything about
     //       it...
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SIGNAL(cursorPositionChanged(int, int)));
+    connect(mEditor, SIGNAL(cursorPositionChanged(int,int)),
+            this, SIGNAL(cursorPositionChanged(int,int)));
 
     connect(mEditor, SIGNAL(textChanged()),
             this, SIGNAL(textChanged()));

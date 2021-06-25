@@ -127,7 +127,8 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     static const QIcon ArrowDownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
-    int folderIconSize = folderIcon.availableSizes().first().width();
+    QList<QSize> folderIconSizes = folderIcon.availableSizes();
+    int folderIconSize = folderIconSizes.first().width();
     int overlayIconSize = int(0.57*folderIconSize);
 
     mContextMenu = new QMenu(this);
@@ -345,7 +346,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
     if (item != nullptr) {
         static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
-        for (const auto &exposureFile : sortedExposureFiles) {
+        for (const auto &exposureFile : qAsConst(sortedExposureFiles)) {
             item->appendRow(new PmrWindowItem(PmrWindowItem::Type::ExposureFile,
                                               QString(exposureFile).remove(FilePathRegEx),
                                               exposureFile));

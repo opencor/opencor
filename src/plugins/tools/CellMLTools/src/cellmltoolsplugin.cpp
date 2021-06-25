@@ -294,7 +294,9 @@ void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
         QString errorMessage;
 
         if (!cellmlFile->issues().isEmpty()) {
-            errorMessage = " ("+cellmlFile->issues().first().message()+")";
+            CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
+
+            errorMessage = " ("+cellmlFileIssues.first().message()+")";
             // Note: if there are 'cellmlFile->issues()', then there can be only
             //       one of them following a CellML export...
         }
@@ -424,8 +426,10 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
                                 || (isCellml10Format && !cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
                                 output = "The file could not be exported";
 
-                                if (!cellmlFile->issues().isEmpty()) {
-                                    output += " ("+cellmlFile->issues().first().message()+")";
+                                CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
+
+                                if (!cellmlFileIssues.isEmpty()) {
+                                    output += " ("+cellmlFileIssues.first().message()+")";
                                     // Note: if there are CellML issues then
                                     //       there can be only one of them
                                     //       following a CellML export...
@@ -442,7 +446,7 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
 
                     validFile = cellmlFile->isValid();
 
-                    CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
+                    const CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
 
                     for (const auto &cellmlFileIssue : cellmlFileIssues) {
                         output += QString("%1[%2] [%3:%4] %5").arg(output.isEmpty()?QString():"\n",
@@ -541,12 +545,13 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
     if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
+        CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
         QString errorMessage;
 
-        if (!cellmlFile->issues().isEmpty()) {
-            errorMessage = " ("+cellmlFile->issues().first().message()+")";
-            // Note: if there are 'cellmlFile->issues()', then there can be only
-            //       one of them following a CellML export...
+        if (!cellmlFileIssues.isEmpty()) {
+            errorMessage = " ("+cellmlFileIssues.first().message()+")";
+            // Note: if there are CellML file issues, then there can be only one
+            //       of them following a CellML export...
         }
 
         Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),

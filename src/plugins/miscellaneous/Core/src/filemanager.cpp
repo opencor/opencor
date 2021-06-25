@@ -64,7 +64,7 @@ FileManager::~FileManager()
 {
     // Remove all the managed files
 
-    for (auto file : mFiles) {
+    for (auto file : qAsConst(mFiles)) {
         delete file;
     }
 }
@@ -753,7 +753,7 @@ void FileManager::checkFiles()
     //       them, and to check a file that has been removed will crash
     //       OpenCOR...
 
-    for (auto file : mFiles) {
+    for (auto file : qAsConst(mFiles)) {
         if (!mFiles.contains(file)) {
             continue;
         }

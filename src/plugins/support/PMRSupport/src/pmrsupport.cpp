@@ -68,7 +68,8 @@ QString getNonGitDirectory()
             break;
         }
 
-        QString res = Core::canonicalDirName(dialog.selectedFiles().first());
+        QStringList selectedFiles = dialog.selectedFiles();
+        QString res = Core::canonicalDirName(selectedFiles.first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so update our active directory

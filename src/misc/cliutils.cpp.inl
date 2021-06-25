@@ -327,12 +327,16 @@ bool hasInternetConnection()
     // all of our network interfaces and checking whether one of them is both
     // active and is not a loopback, and has at least one IPv4 IP address
 
-    for (const auto &networkInterface : QNetworkInterface::allInterfaces()) {
+    const QList<QNetworkInterface> networkInterfaces = QNetworkInterface::allInterfaces();
+
+    for (const auto &networkInterface : networkInterfaces) {
         QNetworkInterface::InterfaceFlags interfaceFlags = networkInterface.flags();
 
         if (    interfaceFlags.testFlag(QNetworkInterface::IsUp)
             && !interfaceFlags.testFlag(QNetworkInterface::IsLoopBack)) {
-            for (const auto &addressEntry : networkInterface.addressEntries()) {
+            const QList<QNetworkAddressEntry> addressEntries = networkInterface.addressEntries();
+
+            for (const auto &addressEntry : addressEntries) {
                 QAbstractSocket::NetworkLayerProtocol protocol = addressEntry.ip().protocol();
 
                 if (   (protocol == QAbstractSocket::IPv4Protocol)

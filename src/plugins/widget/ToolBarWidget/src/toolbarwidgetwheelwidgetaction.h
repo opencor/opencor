@@ -47,7 +47,7 @@ class TOOLBARWIDGET_EXPORT ToolBarWidgetWheelWidgetAction : public QWidgetAction
     Q_OBJECT
 
 public:
-    ToolBarWidgetWheelWidgetAction(QWidget *pParent);
+    explicit ToolBarWidgetWheelWidgetAction(QWidget *pParent);
 
     QList<QwtWheel *> wheels() const;
     bool validWheel(QwtWheel *pWheel) const;

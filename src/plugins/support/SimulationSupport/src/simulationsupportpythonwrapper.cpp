@@ -55,13 +55,17 @@ static void setOdeSolver(SimulationData *pSimulationData,
     // Set the ODE solver for the given simulation data using the given ODE
     // solver name
 
-    for (auto solverInterface : Core::solverInterfaces()) {
+    const SolverInterfaces solverInterfaces = Core::solverInterfaces();
+
+    for (auto solverInterface : solverInterfaces) {
         if (pOdeSolverName == solverInterface->solverName()) {
             // Set the ODE solver's name
 
             pSimulationData->setOdeSolverName(pOdeSolverName);
 
-            for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
+            const Solver::Properties solverInterfaceProperties = solverInterface->solverProperties();
+
+            for (const auto &solverInterfaceProperty : solverInterfaceProperties) {
                 // Set each ODE solver property to their default value
 
                 pSimulationData->setOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
@@ -82,13 +86,17 @@ static void setNlaSolver(SimulationData *pSimulationData,
     // Set the NLA solver for the given simulation data using the given NLA
     // solver name
 
-    for (auto solverInterface : Core::solverInterfaces()) {
+    const SolverInterfaces solverInterfaces = Core::solverInterfaces();
+
+    for (auto solverInterface : solverInterfaces) {
         if (pNlaSolverName == solverInterface->solverName()) {
             // Set the NLA solver's name
 
             pSimulationData->setNlaSolverName(pNlaSolverName);
 
-            for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
+            const Solver::Properties solverInterfaceProperties = solverInterface->solverProperties();
+
+            for (const auto &solverInterfaceProperty : solverInterfaceProperties) {
                 // Set each NLA solver property to their default value
 
                 pSimulationData->setNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
@@ -127,10 +135,11 @@ static PyObject * initializeSimulation(const QString &pFileName)
         // Note: this is useful in case our simulation is solely based on a
         //       CellML file...
 
+        const SolverInterfaces solverInterfaces = Core::solverInterfaces();
         QString odeSolverName;
         QString nlaSolverName;
 
-        for (auto solverInterface : Core::solverInterfaces()) {
+        for (auto solverInterface : solverInterfaces) {
             QString solverName = solverInterface->solverName();
 
             if (solverInterface->solverType() == Solver::Type::Ode) {
@@ -284,16 +293,11 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
                 Qt::UniqueConnection);
 
         // Run our simulation and wait for it to complete
-        // Note: we use a queued connection because the event is in our
-        //       thread...
 
         QEventLoop waitLoop;
-        auto connection = std::make_shared<QMetaObject::Connection>();
 
-        *connection = connect(pSimulation, &Simulation::done, [&]() {
+        connect(pSimulation, &Simulation::done, this, [&]() {
             waitLoop.quit();
-
-            disconnect(*connection);
         });
 
         pSimulation->run();
@@ -342,8 +346,8 @@ PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 {
     // Return a list of issues the given simulation has, if any
 
-    PyObject *issuesList = PyList_New(0);
-    auto simulationIssues = pSimulation->issues();
+    PyObject *res = PyList_New(0);
+    const SimulationIssues simulationIssues = pSimulation->issues();
 
     for (const auto &simulationIssue : simulationIssues) {
         QString information;
@@ -358,10 +362,10 @@ PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
                                                  Core::formatMessage(simulationIssue.message()));
         }
 
-        PyList_Append(issuesList, PyUnicode_FromString(information.toUtf8().constData()));
+        PyList_Append(res, PyUnicode_FromString(information.toUtf8().constData()));
     }
 
-    return issuesList;
+    return res;
 }
 
 //==============================================================================

@@ -121,7 +121,9 @@ FileTypeInterface * fileTypeInterface(DataStoreInterface *pDataStoreInterface)
     // Return the file type interface corresponding to the given data store
     // interface
 
-    return dataStoreFileTypeInterfaces()[dataStoreInterfaces().indexOf(pDataStoreInterface)];
+    FileTypeInterfaces interfaces = dataStoreFileTypeInterfaces();
+
+    return interfaces[dataStoreInterfaces().indexOf(pDataStoreInterface)];
 }
 
 //==============================================================================
@@ -131,7 +133,9 @@ DataStoreInterface * dataStoreInterface(FileTypeInterface *pFileTypeInterface)
     // Return the data store interface corresponding to the given file type
     // interface
 
-    return dataStoreInterfaces()[dataStoreFileTypeInterfaces().indexOf(pFileTypeInterface)];
+    DataStoreInterfaces interfaces = dataStoreInterfaces();
+
+    return interfaces[dataStoreFileTypeInterfaces().indexOf(pFileTypeInterface)];
 }
 
 //==============================================================================

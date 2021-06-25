@@ -615,7 +615,7 @@ void cleanContentMathml(QDomElement *pDomElement)
         }
     }
 
-    for (const auto &nonMathmlAttribute : nonMathmlAttributes) {
+    for (const auto &nonMathmlAttribute : qAsConst(nonMathmlAttributes)) {
         pDomElement->removeAttributeNode(nonMathmlAttribute.toAttr());
     }
 
@@ -1004,7 +1004,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     QStringList elementAttributeKeys = elementsAttributes.keys();
 
-    for (const auto &elementAttribute : elementAttributeKeys) {
+    for (const auto &elementAttribute : qAsConst(elementAttributeKeys)) {
         res.replace(elementAttribute+R"(="")", elementsAttributes.value(elementAttribute));
     }
 

@@ -134,7 +134,7 @@ public:
                int pSize, void *pUserData) override;
 
 private:
-    QMap<void *, KinsolSolverData *> mData;
+    QHash<void *, KinsolSolverData *> mData;
 };
 
 //==============================================================================

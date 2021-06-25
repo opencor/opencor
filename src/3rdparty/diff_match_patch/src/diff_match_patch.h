@@ -1760,7 +1760,7 @@ class diff_match_patch {
    */
  private:
   double match_bitapScore(int e, int x, int loc, const string_t &pattern) const {
-    const float accuracy = static_cast<float> (e) / pattern.length();
+    const double accuracy = double(e) / pattern.length();
     const int proximity = (loc - x < 0)? (x - loc) : (loc - x);
     if (Match_Distance == 0) {
       // Dodge divide by zero error.

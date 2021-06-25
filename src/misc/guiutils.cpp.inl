@@ -131,7 +131,9 @@ QMainWindow * mainWindow()
     static QMainWindow *res = nullptr;
 
     if (firstTime) {
-        for (auto widget : qApp->topLevelWidgets()) {
+        const QWidgetList widgets = qApp->topLevelWidgets();
+
+        for (auto widget : widgets) {
             if (widget->inherits("OpenCOR::MainWindow")) {
                 res = qobject_cast<QMainWindow *>(widget);
 
@@ -345,7 +347,7 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
     messageBox.setTextInteractionFlags(pFlags);
 
-    auto buttonBox = messageBox.findChild<QDialogButtonBox*>();
+    auto buttonBox = messageBox.findChild<QDialogButtonBox *>();
 
     Q_ASSERT(buttonBox);
 
@@ -480,7 +482,7 @@ void aboutMessageBox(const QString &pTitle, const QString &pText)
 #ifdef Q_OS_MAC
     oldMessageBox = messageBox;
 
-    auto buttonBox = messageBox->findChild<QDialogButtonBox*>();
+    auto buttonBox = messageBox->findChild<QDialogButtonBox *>();
 
     Q_ASSERT(buttonBox);
 

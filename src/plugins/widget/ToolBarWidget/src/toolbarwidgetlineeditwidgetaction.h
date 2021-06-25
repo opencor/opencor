@@ -47,7 +47,7 @@ class TOOLBARWIDGET_EXPORT ToolBarWidgetLineEditWidgetAction : public QWidgetAct
     Q_OBJECT
 
 public:
-    ToolBarWidgetLineEditWidgetAction(QWidget *pParent);
+    explicit ToolBarWidgetLineEditWidgetAction(QWidget *pParent);
 
     QList<QLineEdit *> lineEdits() const;
     bool validLineEdit(QLineEdit *pLineEdit) const;

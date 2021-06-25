@@ -128,7 +128,7 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
 {
     // Check whether we already have the given child and, if so, return it
 
-    for (auto child : mChildren) {
+    for (auto child : qAsConst(mChildren)) {
         if (child->name() == pName) {
             // This is the child we are trying to add, so update its status and
             // return it

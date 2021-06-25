@@ -181,24 +181,36 @@ void Tests::loadingErrorTests()
     OpenCOR::COMBINESupport::CombineArchive combineArchive(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/nonexistent.omex"));
 
     QVERIFY(!combineArchive.load());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("the archive does not exist"));
+
+    OpenCOR::COMBINESupport::CombineArchiveIssues combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
+             QString("the archive does not exist"));
 
     // Try to load a non-signed COMBINE archive
 
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/notsigned.omex"));
 
     QVERIFY(!combineArchive.reload());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("the archive is not signed"));
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
+             QString("the archive is not signed"));
 
     // Try to load a badly signed COMBINE archive
 
     combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/badlysigned.omex"));
 
     QVERIFY(!combineArchive.reload());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(), QString("the archive does not have the correct signature"));
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
+             QString("the archive does not have the correct signature"));
 
     // Try to load a COMBINE archive with no manifest
 
@@ -206,8 +218,11 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(),
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
              QString("the archive does not have a manifest"));
 
     // Try to load a COMBINE archive which manifest is not a valid OMEX file
@@ -216,8 +231,11 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(),
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
              QString("the manifest is not a valid OMEX file"));
 
     // Try to load a COMBINE archive that contains a non-existent file
@@ -226,8 +244,11 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(),
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
              QString("'nonexistentfile.txt' could not be found"));
 
     // Try to load a COMBINE archive which manifest doesn't reference the
@@ -237,8 +258,11 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(),
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
              QString("no reference to the COMBINE archive itself could be found"));
 
     // Try to load a COMBINE archive which manifest references a file with its
@@ -264,8 +288,11 @@ void Tests::loadingErrorTests()
 
     QVERIFY(combineArchive.reload());
     QVERIFY(!combineArchive.isValid());
-    QVERIFY(combineArchive.issues().count() == 1);
-    QCOMPARE(combineArchive.issues().first().message(),
+
+    combineArchiveIssues = combineArchive.issues();
+
+    QVERIFY(combineArchiveIssues.count() == 1);
+    QCOMPARE(combineArchiveIssues.first().message(),
              QString("the manifest is not a valid OMEX file"));
 }
 

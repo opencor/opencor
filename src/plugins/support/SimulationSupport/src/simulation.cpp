@@ -167,7 +167,9 @@ double * SimulationData::constants() const
 {
     // Return our constants array
 
-    return mConstantsArray->data();
+    return (mConstantsArray != nullptr)?
+                mConstantsArray->data():
+                nullptr;
 }
 
 //==============================================================================
@@ -176,7 +178,9 @@ double * SimulationData::rates() const
 {
     // Return our rates array
 
-    return mRatesArray->data();
+    return (mRatesArray != nullptr)?
+                mRatesArray->data():
+                nullptr;
 }
 
 //==============================================================================
@@ -185,7 +189,9 @@ double * SimulationData::states() const
 {
     // Return our states array
 
-    return mStatesArray->data();
+    return (mStatesArray != nullptr)?
+                mStatesArray->data():
+                nullptr;
 }
 
 //==============================================================================
@@ -194,7 +200,9 @@ double * SimulationData::algebraic() const
 {
     // Return our algebraic array
 
-    return mAlgebraicArray->data();
+    return (mAlgebraicArray != nullptr)?
+                mAlgebraicArray->data():
+                nullptr;
 }
 
 //==============================================================================
@@ -348,7 +356,9 @@ SolverInterface * SimulationData::solverInterface(const QString &pSolverName) co
 {
     // Return the named solver interface, if any
 
-    for (auto solverInterface : Core::solverInterfaces()) {
+    const SolverInterfaces solverInterfaces = Core::solverInterfaces();
+
+    for (auto solverInterface : solverInterfaces) {
         if (solverInterface->solverName() == pSolverName) {
             return solverInterface;
         }
@@ -793,7 +803,7 @@ void SimulationData::deleteArrays()
         mAlgebraicArray->release();
     }
 
-    for (auto data : mData) {
+    for (auto data : qAsConst(mData)) {
         delete[] data;
     }
 
@@ -884,12 +894,13 @@ void SimulationResults::createDataStore()
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->parameters();
     DataStore::DataStoreValues *constantsValues = simulationData->constantsValues();
     DataStore::DataStoreValues *ratesValues = simulationData->ratesValues();
     DataStore::DataStoreValues *statesValues = simulationData->statesValues();
     DataStore::DataStoreValues *algebraicValues = simulationData->algebraicValues();
 
-    for (auto parameter : runtime->parameters()) {
+    for (auto parameter : parameters) {
         CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
         DataStore::DataStoreVariable *variable = nullptr;
         DataStore::DataStoreValue *value = nullptr;
@@ -931,7 +942,7 @@ void SimulationResults::createDataStore()
 
     QList<double *> dataKeys = mDataDataStores.keys();
 
-    for (auto data : dataKeys) {
+    for (auto data : qAsConst(dataKeys)) {
         DataStore::DataStore *importDataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
 
@@ -1025,7 +1036,9 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 
     // Customise our imported data
 
-    for (auto parameter : runtime->dataParameters(resultsValues)) {
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->dataParameters(resultsValues);
+
+    for (auto parameter : parameters) {
         DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
 
         variable->setType(int(parameter->type()));
@@ -1195,7 +1208,7 @@ void SimulationResults::addPoint(double pPoint)
     QList<double *> dataKeys = mDataDataStores.keys();
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto data : dataKeys) {
+    for (auto data : qAsConst(dataKeys)) {
         DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
@@ -1356,7 +1369,7 @@ SimulationImportData::~SimulationImportData()
 {
     // Delete some internal objects
 
-    for (auto dataStore : mDataStores) {
+    for (auto dataStore : qAsConst(mDataStores)) {
         delete dataStore;
     }
 }
@@ -1599,7 +1612,7 @@ void Simulation::checkIssues()
         // There is one or several issues with our COMBINE archive, so list
         // it/them
 
-        for (const auto &combineArchiveIssue : combineArchiveIssues) {
+        for (const auto &combineArchiveIssue : qAsConst(combineArchiveIssues)) {
             SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
 
             switch (combineArchiveIssue.type()) {
@@ -1632,7 +1645,7 @@ void Simulation::checkIssues()
     if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
-        for (const auto &sedmlFileIssue : sedmlFileIssues) {
+        for (const auto &sedmlFileIssue : qAsConst(sedmlFileIssues)) {
             SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
 
             switch (sedmlFileIssue.type()) {
@@ -1694,11 +1707,13 @@ void Simulation::checkIssues()
                 //       cases...
 
                 if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
-                    for (const auto &issue : (mRuntime != nullptr)?
-                                                 mRuntime->issues():
-                                                 (mCellmlFile != nullptr)?
-                                                     mCellmlFile->issues():
-                                                     CellMLSupport::CellmlFileIssues()) {
+                    const CellMLSupport::CellmlFileIssues issues = (mRuntime != nullptr)?
+                                                                       mRuntime->issues():
+                                                                       (mCellmlFile != nullptr)?
+                                                                           mCellmlFile->issues():
+                                                                           CellMLSupport::CellmlFileIssues();
+
+                    for (const auto &issue : issues) {
                         mIssues.append(SimulationIssue((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?
                                                            SimulationIssue::Type::Error:
                                                            SimulationIssue::Type::Warning,

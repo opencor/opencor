@@ -72,6 +72,7 @@ void MathmlTests::tests(const QString &pCategory)
     // Convert some Content MathML to Presentation MathML
 
     QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+"/"+pCategory+"/";
+    const QStringList fileNames = QDir(dirName).entryList({ "*.in" });
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
     OpenCOR::Core::DummyMessageHandler dummyMessageHandler;
     QString actualOutput;
@@ -80,7 +81,7 @@ void MathmlTests::tests(const QString &pCategory)
 
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
-    for (const auto &fileName : QDir(dirName).entryList({ "*.in" })) {
+    for (const auto &fileName : fileNames) {
         QString focus = OpenCOR::rawFileContents(dirName+fileName);
 
         xmlQuery.setFocus(focus);

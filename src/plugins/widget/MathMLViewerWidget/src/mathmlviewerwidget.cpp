@@ -440,9 +440,10 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
         // icon in our center
 
         static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
-
-        static const int WarningIconWidth  = WarningIcon.availableSizes().first().width();
-        static const int WarningIconHeight = WarningIcon.availableSizes().first().height();
+        static const QList<QSize> WarningIconSizes = WarningIcon.availableSizes();
+        static const QSize FirstWarningIconSize = WarningIconSizes.first();
+        static const int WarningIconWidth  = FirstWarningIconSize.width();
+        static const int WarningIconHeight = FirstWarningIconSize.height();
 
         int painterRectWidth = WarningIconWidth;
         int painterRectHeight = WarningIconHeight;

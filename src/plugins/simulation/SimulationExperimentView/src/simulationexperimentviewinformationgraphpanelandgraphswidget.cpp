@@ -228,17 +228,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
 
     // Retranslate all our property editors
 
-    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors) {
+    for (auto graphPanelPropertyEditor : qAsConst(mGraphPanelPropertyEditors)) {
         graphPanelPropertyEditor->retranslateUi();
     }
 
-    for (auto graphsPropertyEditor : mGraphsPropertyEditors) {
+    for (auto graphsPropertyEditor : qAsConst(mGraphsPropertyEditors)) {
         graphsPropertyEditor->retranslateUi();
     }
 
     // Retranslate the contents of our graph panel property editors
 
-    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors) {
+    for (auto graphPanelPropertyEditor : qAsConst(mGraphPanelPropertyEditors)) {
         retranslateGraphPanelPropertyEditor(graphPanelPropertyEditor);
     }
 
@@ -281,7 +281,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
     // Remove all our graphs' runs
 
-    for (auto graph : mGraphs) {
+    for (auto graph : qAsConst(mGraphs)) {
         graph->removeRuns();
     }
 }
@@ -300,13 +300,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(Da
 
     // Create our import sub-menu
 
-    auto importSubMenu = new QMenu(pImportData->hierarchy().last(), mImportMenu);
+    QStringList importDataHierarchy = pImportData->hierarchy();
+    auto importSubMenu = new QMenu(importDataHierarchy.last(), mImportMenu);
 
     mImportMenu->addMenu(importSubMenu);
 
     // Populate our import sub-menu with the given data
 
-    for (auto parameter : mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()))) {
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()));
+
+    for (auto parameter : parameters) {
         QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
                                                             parameter->formattedName());
 
@@ -551,7 +554,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
 
     static const QIcon BlankIcon = QIcon(":/SimulationExperimentView/blank.png");
 
-    graphProperty->properties()[1]->setIcon(BlankIcon);
+    Core::Properties graphProperties = graphProperty->properties();
+
+    graphProperties[1]->setIcon(BlankIcon);
 
     // Create some line properties for our graph
 
@@ -634,7 +639,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend(
 {
     // Toggle our legend property
 
-    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
+    Core::Properties graphPanelProperties = mGraphPanelPropertyEditor->properties();
+    Core::Property *legendProperty = graphPanelProperties[4];
 
     legendProperty->setBooleanValue(!legendProperty->booleanValue());
 }
@@ -645,7 +651,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarit
 {
     // Toggle our logarithmic X axis property
 
-    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+    Core::Properties graphPanelProperties = mGraphPanelPropertyEditor->properties();
+    Core::Property *logarithmicXAxisProperty = graphPanelProperties[8]->properties()[0];
 
     logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
 }
@@ -656,7 +663,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarit
 {
     // Toggle our logarithmic Y axis property
 
-    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[9]->properties()[0];
+    Core::Properties graphPanelProperties = mGraphPanelPropertyEditor->properties();
+    Core::Property *logarithmicYAxisProperty = graphPanelProperties[9]->properties()[0];
 
     logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
 }
@@ -731,9 +739,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     disconnect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
+    const Core::Properties properties = mGraphsPropertyEditor->properties();
     GraphPanelWidget::GraphPanelPlotGraphs graphs = GraphPanelWidget::GraphPanelPlotGraphs();
 
-    for (auto property : mGraphsPropertyEditor->properties()) {
+    for (auto property : properties) {
         property->setChecked(pSelect);
 
         GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(property);
@@ -792,7 +801,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::fileRenamed(c
         // A previous model list value has been renamed again, so find its
         // original value and update its new renamed version, if needed
 
-        QStringList origModelListValueKeys = mRenamedModelListValues.keys();
+        const QStringList origModelListValueKeys = mRenamedModelListValues.keys();
 
         for (const auto &origModelListValue : origModelListValueKeys) {
             QString renamedOrigModelListValue = mRenamedModelListValues.value(origModelListValue);
@@ -880,13 +889,15 @@ Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::g
     // graph panel and file name, if any
 
     Core::Properties res;
+    const Core::Properties properties = mGraphsPropertyEditors.value(pGraphPanel)->properties();
 
-    for (auto property : mGraphsPropertyEditors.value(pGraphPanel)->properties()) {
+    for (auto property : properties) {
         // The property should be returned if its first sub-property (i.e. to
         // which model the graph applies) has either a value of "Current" or
         // that of the given file name
 
-        QString modelPropertyValue = property->properties().first()->value();
+        Core::Properties propertyProperties = property->properties();
+        QString modelPropertyValue = propertyProperties.first()->value();
 
         if (   (modelPropertyValue == tr("Current"))
             || (modelPropertyValue.split(PropertySeparator).last() == pFileName)) {
@@ -1030,10 +1041,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
     mRemoveCurrentGraphAction->setEnabled(crtProperty != nullptr);
     mRemoveAllGraphsAction->setEnabled(!mGraphsPropertyEditor->properties().isEmpty());
 
+    const Core::Properties properties = mGraphsPropertyEditor->properties();
     bool canSelectAllGraphs = false;
     bool canUnselectAllGraphs = false;
 
-    for (auto property : mGraphsPropertyEditor->properties()) {
+    for (auto property : properties) {
         bool graphSelected = property->isChecked();
 
         canSelectAllGraphs = canSelectAllGraphs || !graphSelected;
@@ -1157,10 +1169,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Now, add our model parameters to it
 
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = pRuntime->parameters();
     QString componentHierarchy;
     QMenu *componentMenu = nullptr;
 
-    for (auto parameter : pRuntime->parameters()) {
+    for (auto parameter : parameters) {
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
@@ -1171,9 +1184,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
+            const QStringList components = parameter->componentHierarchy();
             QMenu *parentComponentMenu = mGraphParametersContextMenu;
 
-            for (const auto &component : parameter->componentHierarchy()) {
+            for (const auto &component : components) {
                 // Check whether we already have a menu for our current
                 // component
 
@@ -1262,7 +1276,9 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::checkParamete
 
         // Check whether we can find our property among our runtime's parameters
 
-        for (auto parameter : pRuntime->parameters()) {
+        const CellMLSupport::CellmlFileRuntimeParameters parameters = pRuntime->parameters();
+
+        for (auto parameter : parameters) {
             if (   (parameter->componentHierarchy() == componentHierarchy)
                 && (parameter->name() == parameterName)
                 && (parameter->degree() == parameterDegree)) {
@@ -1632,7 +1648,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     if (pSectionProperty != nullptr) {
         graphProperties << pSectionProperty;
     } else {
-        for (auto property : mGraphsPropertyEditor->properties()) {
+        const Core::Properties properties = mGraphsPropertyEditor->properties();
+
+        for (auto property : properties) {
             if (rootProperty(property)) {
                 graphProperties << property;
             }
@@ -1645,7 +1663,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     QStringList modelListValues;
 
     if (!graphProperties.isEmpty()) {
-        for (const auto &fileName : mViewWidget->fileNames()) {
+        const QStringList fileNames = mViewWidget->fileNames();
+
+        for (const auto &fileName : fileNames) {
             Core::File *file = Core::FileManager::instance()->file(fileName);
             QString fileNameOrUrl = file->isLocal()?fileName:file->url();
 
@@ -1661,7 +1681,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     // Go through our graph properties and update (incl. retranslate) their
     // information
 
-    for (auto graphProperty : graphProperties) {
+    for (auto graphProperty : qAsConst(graphProperties)) {
         // Set the label of our graph properties
 
         Core::Properties graphPropertyProperties = graphProperty->properties();
@@ -1753,7 +1773,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateAllGrap
     // Go through our graphs property editors and update the information about
     // the graph properties they hold
 
-    for (auto graphsPropertyEditor : mGraphsPropertyEditors) {
+    for (auto graphsPropertyEditor : qAsConst(mGraphsPropertyEditors)) {
         mGraphsPropertyEditor = graphsPropertyEditor;
 
         updateGraphsInfo();

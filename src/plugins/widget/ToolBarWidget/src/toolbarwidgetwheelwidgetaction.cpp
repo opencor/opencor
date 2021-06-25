@@ -79,8 +79,9 @@ QList<QwtWheel *> ToolBarWidgetWheelWidgetAction::wheels() const
     // Return our created wheels
 
     QList<QwtWheel *> res;
+    const QList<QWidget *> wheels = createdWidgets();
 
-    for (const auto &wheel : createdWidgets()) {
+    for (const auto &wheel : wheels) {
         res << static_cast<QwtWheel *>(wheel);
     }
 
