@@ -60,8 +60,8 @@ void Tests::runtimeTest(const QString &pFileName, const QString &pCellmlVersion,
     // the Simulation Experiment view) for our model and check that they contain
     // the information we would expect
 
+    const OpenCOR::CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->parameters();
     QStringList modelParameters;
-    OpenCOR::CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->parameters();
 
     for (auto parameter : parameters) {
         modelParameters << QString("%1 (%2)").arg(parameter->fullyFormattedName(),

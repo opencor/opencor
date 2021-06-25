@@ -414,7 +414,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
-    for (const auto &itemInformationSha1 : mItemInformationSha1s) {
+    for (const auto &itemInformationSha1 : qAsConst(mItemInformationSha1s)) {
         CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
         bool enabledButton;
 
@@ -979,12 +979,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
             if (jsonParseError.error == QJsonParseError::NoError) {
                 // Retrieve the list of terms
 
+                const QList<QVariant> results = jsonDocument.object().toVariantMap()["results"].toList();
                 QVariantMap termMap;
                 QString name;
                 QString resource;
                 QString id;
 
-                for (const auto &terms : jsonDocument.object().toVariantMap()["results"].toList()) {
+                for (const auto &terms : results) {
                     termMap = terms.toMap();
                     name = termMap["name"].toString();
 

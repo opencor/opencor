@@ -92,7 +92,7 @@ void RawCellmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    for (auto editingWidget : mEditingWidgets) {
+    for (auto editingWidget : qAsConst(mEditingWidgets)) {
         editingWidget->retranslateUi();
     }
 }
@@ -338,7 +338,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         // Add whatever issue there may be to our list and select the first one
         // of them
 
-        for (const auto &cellmlFileIssue : cellmlFileIssues) {
+        for (const auto &cellmlFileIssue : qAsConst(cellmlFileIssues)) {
             if (   !pOnlyErrors
                 || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)) {
                 editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?

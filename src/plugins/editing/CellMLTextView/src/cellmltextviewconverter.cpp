@@ -664,7 +664,7 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
         outputString();
     }
 
-    for (const auto &commentLine : commentLines) {
+    for (const auto &commentLine : qAsConst(commentLines)) {
         outputString(Output::Comment, QString("//%1").arg(processCommentString(commentLine)));
     }
 }

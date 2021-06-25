@@ -107,9 +107,9 @@ private:
     QStandardItemModel *mModel;
 
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
-    QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
-    QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
-    QMap<Preferences::PreferencesWidget *, QString> mPreferencesWidgetPluginNames;
+    QHash<QStandardItem *, PluginInfo::Category> mItemCategories;
+    QHash<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
+    QHash<Preferences::PreferencesWidget *, QString> mPreferencesWidgetPluginNames;
 
     PreferencesPluginCategoryWidget *mPluginCategoryWidget;
 

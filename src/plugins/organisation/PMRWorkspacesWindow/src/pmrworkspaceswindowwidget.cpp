@@ -303,7 +303,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mCollapsedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     mExpandedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirOpenIcon);
 
-    int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
+    QList<QSize> folderIconSizes = mCollapsedWorkspaceIcon.availableSizes();
+    int folderIconSize = folderIconSizes.first().width();
     int overlayIconSize = int(0.57*folderIconSize);
 
     mStagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, StagedIcon,
@@ -367,7 +368,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     mFileIcon = QFileIconProvider().icon(QFileIconProvider::File);
 
-    int fileIconSize = mFileIcon.availableSizes().first().width();
+    QList<QSize> fileIconSizes = mFileIcon.availableSizes();
+    int fileIconSize = fileIconSizes.first().width();
 
     overlayIconSize = int(0.57*fileIconSize);
 
@@ -547,7 +549,9 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings &pSettings)
     // Note: for the key, we use the PMR URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    for (const auto &clonedWorkspaceFolder : pSettings.value(QString(SettingsClonedWorkspaceFolders).arg(QUrl(mPmrUrl).host())).toStringList()) {
+    const QStringList clonedWorkspaceFolders = pSettings.value(QString(SettingsClonedWorkspaceFolders).arg(QUrl(mPmrUrl).host())).toStringList();
+
+    for (const auto &clonedWorkspaceFolder : clonedWorkspaceFolders) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -809,7 +813,9 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     mModel->clear();
 
-    for (auto workspace : workspaceManager->workspaces()) {
+    const PMRSupport::PmrWorkspaces workspaces = workspaceManager->workspaces();
+
+    for (auto workspace : workspaces) {
         addWorkspace(workspace);
     }
 
@@ -1021,7 +1027,9 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     pIsUnstaged = false;
     pHasConflicts = false;
 
-    for (auto fileNode : pFileNode->children()) {
+    const PMRSupport::PmrWorkspaceFileNodes fileNodes = pFileNode->children();
+
+    for (auto fileNode : fileNodes) {
         // Check whether we already know about the file node
 
         PmrWorkspacesWindowItem *newItem = nullptr;
@@ -1417,7 +1425,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
     int workspacesCount = workspaces.count();
     int workspaceNb = 0;
 
-    for (auto workspace : workspaces) {
+    for (auto workspace : qAsConst(workspaces)) {
         refreshWorkspace(workspace, ++workspaceNb == workspacesCount);
     }
 }

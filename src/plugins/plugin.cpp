@@ -81,11 +81,12 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             //       its dependencies are not loaded. Still, it doesn't harm
             //       doing the same on Linux/macOS...
 
+            const QStringList dependencies = pInfo->dependencies();
             bool pluginDependenciesLoaded = true;
 
             mStatusErrors = QString();
 
-            for (const auto &dependency : pInfo->dependencies()) {
+            for (const auto &dependency : dependencies) {
                 Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
                 if (   (pluginDependency == nullptr)
@@ -216,7 +217,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 
                             bool pluginInterfacesOk = true;
 
-                            for (auto pluginWithInterfaces : pluginsWithInterfaces) {
+                            for (auto pluginWithInterfaces : qAsConst(pluginsWithInterfaces)) {
                                 if (!pluginWithInterfaces->pluginInterfacesOk(pFileName, mInstance)) {
                                     pluginInterfacesOk = false;
 
@@ -562,7 +563,9 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
         return res;
     }
 
-    for (const auto &plugin : pluginInfo->dependencies()) {
+    const QStringList dependencies = pluginInfo->dependencies();
+
+    for (const auto &plugin : dependencies) {
         res << fullDependencies(pPluginsDir, plugin, pLevel+1);
     }
 

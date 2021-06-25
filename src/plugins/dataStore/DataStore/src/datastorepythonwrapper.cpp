@@ -75,7 +75,7 @@ static PyObject * DataStoreValuesDict_subscript(PyObject *pValuesDict,
 {
     // Get and return a subscripted item from a values dictionary
 
-    auto *dataStoreValue = getDataStoreValue(pValuesDict, pKey);
+    DataStoreValue *dataStoreValue = getDataStoreValue(pValuesDict, pKey);
 
     if (dataStoreValue != nullptr) {
         return PyFloat_FromDouble(dataStoreValue->value());
@@ -106,7 +106,7 @@ static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
 
     PyNumber_Check(pValue);
 
-    auto dataStoreValue = getDataStoreValue(pValuesDict, pKey);
+    DataStoreValue *dataStoreValue = getDataStoreValue(pValuesDict, pKey);
 
     if (dataStoreValue != nullptr) {
 #include "pythonbegin.h"
@@ -369,7 +369,7 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pD
 
     if (pDataStoreValues != nullptr) {
         for (int i = 0, iMax = pDataStoreValues->size(); i < iMax; ++i) {
-            auto value = pDataStoreValues->at(i);
+            DataStoreValue *value = pDataStoreValues->at(i);
 
             PythonQtSupport::addObject(res, value->uri(), value);
         }

@@ -193,7 +193,7 @@ DataStoreValues::~DataStoreValues()
 {
     // Delete our DataStoreValue objects
 
-    for (DataStoreValue *dataStoreValue : *this) {
+    for (auto dataStoreValue : qAsConst(*this)) {
         delete dataStoreValue;
     }
 
@@ -297,7 +297,7 @@ DataStoreVariable::~DataStoreVariable()
 {
     // Delete some internal objects
 
-    for (auto run : mRuns) {
+    for (auto run : qAsConst(mRuns)) {
         delete run;
     }
 }
@@ -627,7 +627,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
         if (!pRunSizes.isEmpty()) {
             for (auto runSize : pRunSizes) {
-                for (auto resultsVariables : mResultsVariables) {
+                for (auto resultsVariables : qAsConst(mResultsVariables)) {
                     if (!resultsVariables->addRun(runSize)) {
                         throw std::exception();
                     }
@@ -814,7 +814,7 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    for (auto variable : mVariables) {
+    for (auto variable : qAsConst(mVariables)) {
         delete variable;
     }
 }
@@ -851,7 +851,7 @@ bool DataStore::addRun(quint64 pCapacity)
             throw std::exception();
         }
 
-        for (auto variable : mVariables) {
+        for (auto variable : qAsConst(mVariables)) {
             if (!variable->addRun(pCapacity)) {
                 throw std::exception();
             }
@@ -862,7 +862,7 @@ bool DataStore::addRun(quint64 pCapacity)
 
         mVoi->keepRuns(oldRunsCount);
 
-        for (auto variable : mVariables) {
+        for (auto variable : qAsConst(mVariables)) {
             variable->keepRuns(oldRunsCount);
         }
 
@@ -982,7 +982,7 @@ void DataStore::addValues(double pVoiValue)
     //       the VOI value first, we might in some cases (see issue #1579 for
     //       example) end up with the wrong size...
 
-    for (auto variable : mVariables) {
+    for (auto variable : qAsConst(mVariables)) {
         variable->addValue();
     }
 

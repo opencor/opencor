@@ -200,7 +200,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     // Populate the data model with our plugins that support the Preferences
     // interface
 
-    for (auto plugin : mPluginManager->sortedPlugins()) {
+    const Plugins plugins = mPluginManager->sortedPlugins();
+
+    for (auto plugin : plugins) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
         if (   (preferencesInterface != nullptr)
@@ -307,7 +309,7 @@ void PreferencesDialog::buttonBoxAccepted()
 
     mPluginNames = QStringList();
 
-    for (auto preferencesWidget : mItemPreferencesWidgets) {
+    for (auto preferencesWidget : qAsConst(mItemPreferencesWidgets)) {
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
@@ -381,7 +383,7 @@ void PreferencesDialog::resetAll()
 {
     // Reset all of our general and plugins' preferences
 
-    for (auto preferencesWidget : mItemPreferencesWidgets) {
+    for (auto preferencesWidget : qAsConst(mItemPreferencesWidgets)) {
         preferencesWidget->resetPreferences();
     }
 }

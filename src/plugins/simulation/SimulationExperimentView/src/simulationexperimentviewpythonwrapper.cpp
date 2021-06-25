@@ -59,7 +59,7 @@ static PyObject * simulation(const QString &pFileName,
         SimulationSupport::SimulationIssues simulationIssues = simulation->issues();
 
         if (!simulationIssues.isEmpty()) {
-            auto simulationIssue = simulationIssues.first();
+            SimulationSupport::SimulationIssue simulationIssue = simulationIssues.first();
 
             if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
                 PyErr_SetString(PyExc_ValueError, qPrintable(QObject::tr("[%1:%2] %3: %4.").arg(simulationIssue.line())

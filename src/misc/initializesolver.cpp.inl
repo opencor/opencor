@@ -10,12 +10,13 @@ QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameter
     // Initialise our solver using the given SED-ML algorithm parameters and
     // KiSAO id
 
+    SolverInterfaces solverInterfaces = Core::solverInterfaces();
     SolverInterface *solverInterface = nullptr;
 #ifdef GUI_SUPPORT
     Core::Properties solverProperties;
 #endif
 
-    for (auto coreSolverInterface : Core::solverInterfaces()) {
+    for (auto coreSolverInterface : solverInterfaces) {
         if (coreSolverInterface->id(pKisaoId) == coreSolverInterface->solverName()) {
             solverInterface = coreSolverInterface;
 #ifdef GUI_SUPPORT
@@ -49,7 +50,7 @@ QString Simulation::initializeSolver(const libsedml::SedListOfAlgorithmParameter
         QString id = solverInterface->id(parameterKisaoId);
         bool propertySet = false;
 
-        for (auto solverProperty : solverProperties) {
+        for (auto solverProperty : qAsConst(solverProperties)) {
             if (solverProperty->id() == id) {
                 QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
 

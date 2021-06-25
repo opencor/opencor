@@ -184,11 +184,12 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Create our import "sub-component"
 
-    Core::Property *importSubComponent = addSectionProperty(pImportData->hierarchy().last(), mImportComponent);
+    QStringList importDataHierarchy = pImportData->hierarchy();
+    Core::Property *importSubComponent = addSectionProperty(importDataHierarchy.last(), mImportComponent);
 
     // Add the given data to our model
 
-    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()));
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()));
 
     for (auto parameter : parameters) {
         Core::Property *property = addDoubleProperty(importSubComponent);
@@ -222,7 +223,7 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Create our import sub-menu
 
-    auto importSubMenu = new QMenu(pImportData->hierarchy().last(), mImportMenu);
+    auto importSubMenu = new QMenu(importDataHierarchy.last(), mImportMenu);
 
     mImportMenu->addMenu(importSubMenu);
 
@@ -250,7 +251,9 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
 {
     // Update our data
 
-    for (auto property : allProperties()) {
+    const Core::Properties properties = allProperties();
+
+    for (auto property : properties) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter != nullptr) {
@@ -313,7 +316,7 @@ void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::
 
 //==============================================================================
 
-QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SimulationExperimentViewInformationParametersWidget::parameters() const
+QHash<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SimulationExperimentViewInformationParametersWidget::parameters() const
 {
     // Return our parameters
 
@@ -326,10 +329,11 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 {
     // Populate our property editor with the parameters
 
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = pRuntime->parameters();
     QString componentHierarchy;
     Core::Property *sectionProperty = nullptr;
 
-    for (auto parameter : pRuntime->parameters()) {
+    for (auto parameter : parameters) {
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
@@ -340,9 +344,10 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
             // create a new section hierarchy for our 'new' component, reusing
             // existing sections, whenever possible
 
+            const QStringList components = parameter->componentHierarchy();
             Core::Property *parentSectionProperty = nullptr;
 
-            for (const auto &component : parameter->componentHierarchy()) {
+            for (const auto &component : components) {
                 // Check whether we already have a section for our current
                 // component
 
@@ -367,7 +372,9 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                     // We don't have a parent section, so go through our
                     // properties and retrieve the one for our current component
 
-                    for (auto property : properties()) {
+                    const Core::Properties properties = PropertyEditorWidget::properties();
+
+                    for (auto property : properties) {
                         if (   (property->type() == Core::Property::Type::Section)
                             && (property->name() == component)) {
                             sectionProperty = property;
@@ -465,10 +472,11 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     // Populate our context menu with the parameters
 
+    const CellMLSupport::CellmlFileRuntimeParameters parameters = pRuntime->parameters();
     QString componentHierarchy;
     QMenu *componentMenu = nullptr;
 
-    for (auto parameter : pRuntime->parameters()) {
+    for (auto parameter : parameters) {
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
@@ -479,9 +487,10 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
+            const QStringList components = parameter->componentHierarchy();
             QMenu *menu = mPlotAgainstMenu;
 
-            for (const auto &component : parameter->componentHierarchy()) {
+            for (const auto &component : components) {
                 // Check whether we already have a menu for our current
                 // component
 
@@ -547,7 +556,9 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our properties
 
-    for (auto property : allProperties()) {
+    const Core::Properties properties = allProperties();
+
+    for (auto property : properties) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter != nullptr) {

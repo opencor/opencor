@@ -199,7 +199,7 @@ void EditorWidgetEditorWidget::setReadOnly(bool pReadOnly)
 
     // Update our background colour
 
-    for (auto readOnlyStyle : mReadOnlyStyles) {
+    for (auto readOnlyStyle : qAsConst(mReadOnlyStyles)) {
         setBackgroundColor(readOnlyStyle,
                            pReadOnly?
                                Core::lockedColor(Core::baseColor()):

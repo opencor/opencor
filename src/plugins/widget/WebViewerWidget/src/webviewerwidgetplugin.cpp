@@ -113,7 +113,9 @@ void WebViewerWidgetPlugin::saveSettings(QSettings &pSettings) const
 
     static const QString QWebInspectorClassWindow = "QWebInspectorClassWindow";
 
-    for (auto window : QGuiApplication::topLevelWindows()) {
+    const QWindowList windows = QGuiApplication::topLevelWindows();
+
+    for (auto window : windows) {
         if (window->objectName() == QWebInspectorClassWindow) {
             window->close();
         }

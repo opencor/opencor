@@ -235,7 +235,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     if (!rdfTriples.isEmpty()) {
         // Add the RDF triples
 
-        for (auto rdfTriple : rdfTriples) {
+        for (auto rdfTriple : qAsConst(rdfTriples)) {
             addRdfTriple(rdfTriple, false);
         }
     } else {
@@ -646,7 +646,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::filePermissionsChanged
     bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
     QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
-    for (const auto &rdfTripleInformationSha1 : mRdfTripleInformationSha1s) {
+    for (const auto &rdfTripleInformationSha1 : qAsConst(mRdfTripleInformationSha1s)) {
         documentElement.findFirst(QString("td[id=button_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", fileReadableAndWritable?"table-cell":"none");
         documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", (!fileReadableAndWritable)?"table-cell":"none");
     }

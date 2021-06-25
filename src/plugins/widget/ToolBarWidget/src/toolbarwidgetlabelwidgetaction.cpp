@@ -65,8 +65,9 @@ QList<QLabel *> ToolBarWidgetLabelWidgetAction::labels() const
     // Return our created labels
 
     QList<QLabel *> res;
+    const QList<QWidget *> labels = createdWidgets();
 
-    for (const auto &label : createdWidgets()) {
+    for (const auto &label : labels) {
         res << static_cast<QLabel *>(label);
     }
 

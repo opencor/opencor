@@ -71,7 +71,7 @@ public:
 
     void importData(DataStore::DataStoreImportData *pImportData);
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
+    QHash<Core::Property *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
 protected:
     void contextMenuEvent(QContextMenuEvent *pEvent) override;
@@ -81,8 +81,8 @@ private:
     QAction *mPlotAgainstVoiMenuAction = nullptr;
     QMenu *mPlotAgainstMenu = nullptr;
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
+    QHash<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
+    QHash<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     SimulationSupport::Simulation *mSimulation = nullptr;
 

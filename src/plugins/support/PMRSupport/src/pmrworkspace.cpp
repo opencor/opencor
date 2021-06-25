@@ -579,10 +579,11 @@ PmrWorkspaceFileNode * PmrWorkspace::parentFileNode(const QString &pPath,
     // child of our parent file node and, if so, use it to recursively retrieve
     // the parent file node of the given path, otherwise create one
 
+    const PmrWorkspaceFileNodes childFileNodes = realParentFileNode->children();
     QString topFolder = pathComponents.first();
     PmrWorkspaceFileNode *newParentFileNode = nullptr;
 
-    for (auto childFileNode : realParentFileNode->children()) {
+    for (auto childFileNode : childFileNodes) {
         if (topFolder == childFileNode->name()) {
             newParentFileNode = childFileNode;
 
@@ -605,7 +606,7 @@ void PmrWorkspace::refreshStatus()
 {
     // Keep track of our 'old' file nodes
 
-    PmrWorkspaceFileNodes oldFileNodes = mRepositoryStatusMap.values();
+    const PmrWorkspaceFileNodes oldFileNodes = mRepositoryStatusMap.values();
 
     // Refresh our status
 
@@ -676,7 +677,9 @@ void PmrWorkspace::refreshStatus()
     } else if (mRootFileNode->hasChildren()) {
         // We are not open, so clear our root file node
 
-        for (auto child : mRootFileNode->children()) {
+        const PmrWorkspaceFileNodes children = mRootFileNode->children();
+
+        for (auto child : children) {
             delete child;
         }
     }
@@ -694,7 +697,9 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
     }
 
     if (pFileNode->hasChildren()) {
-        for (auto child : pFileNode->children()) {
+        const PmrWorkspaceFileNodes children = pFileNode->children();
+
+        for (auto child : children) {
             deleteFileNodes(child, pFileNodes);
         }
 
@@ -1330,7 +1335,7 @@ bool PmrWorkspace::merge()
                 errorMessage += "\n\n"+tr("The following files have conflicts:");
             }
 
-            for (const auto &conflictedFile : mConflictedFiles) {
+            for (const auto &conflictedFile : qAsConst(mConflictedFiles)) {
                 ++counter;
 
                 if (counter == nbOfConflictedFiles) {

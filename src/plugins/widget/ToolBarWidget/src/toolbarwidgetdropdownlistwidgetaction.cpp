@@ -73,8 +73,9 @@ QList<QToolButton *> ToolBarWidgetDropDownListWidgetAction::dropDownLists() cons
     // Return our created drop-down lists
 
     QList<QToolButton *> res;
+    const QList<QWidget *> dropDownLists = createdWidgets();
 
-    for (const auto &dropDownList : createdWidgets()) {
+    for (const auto &dropDownList : dropDownLists) {
         res << static_cast<QToolButton *>(dropDownList);
     }
 

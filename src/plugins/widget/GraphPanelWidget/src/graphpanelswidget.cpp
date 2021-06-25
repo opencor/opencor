@@ -74,7 +74,7 @@ void GraphPanelsWidget::retranslateUi()
 
     // Retranslate all our graph panels
 
-    for (auto graphPanel : mGraphPanels) {
+    for (auto graphPanel : qAsConst(mGraphPanels)) {
         graphPanel->retranslateUi();
     }
 }
@@ -365,7 +365,7 @@ void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
 
     // Inactivate all the other graph panels
 
-    for (auto graphPanel : mGraphPanels) {
+    for (auto graphPanel : qAsConst(mGraphPanels)) {
         if (graphPanel != pGraphPanel) {
             // We are not dealing with the graph panel that just got activated,
             // so inactivate it

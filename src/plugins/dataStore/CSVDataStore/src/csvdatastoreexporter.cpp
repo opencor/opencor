@@ -101,7 +101,7 @@ void CsvDataStoreExporterWorker::run()
 
             int j = -1;
 
-            for (auto variable : variables) {
+            for (auto variable : qAsConst(variables)) {
                 variablesRuns[++j] << variable;
             }
         }
@@ -130,7 +130,7 @@ void CsvDataStoreExporterWorker::run()
                                  QString());
         }
 
-        for (auto variable : variables) {
+        for (auto variable : qAsConst(variables)) {
             for (int i = 0; i < nbOfRuns; ++i) {
                 if (!header.isEmpty()) {
                     header += ',';
@@ -169,7 +169,7 @@ void CsvDataStoreExporterWorker::run()
                     updateRunsIndex << false;
                 }
 
-                for (const auto &variableRuns : variablesRuns) {
+                for (const auto &variableRuns : qAsConst(variablesRuns)) {
                     int j = 0;
 
                     for (auto variableRun : variableRuns) {
