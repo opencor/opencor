@@ -65,7 +65,8 @@ QString dirOrFileName(const QString &pDirOrFileName)
     // Format and return the given directory or file name, so that it can be
     // used on all our supported platforms
 
-    static const QString SourceDir = OpenCOR::fileContents(":/source_directory").first();
+    static const QStringList SourceDirs = OpenCOR::fileContents(":/source_directory");
+    static const QString SourceDir = SourceDirs.first();
 
     return QDir::toNativeSeparators(SourceDir+"/"+QString(pDirOrFileName));
 }
@@ -146,7 +147,8 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     // Go to the directory where our tests are located
     // Note: see main()...
 
-    static const QString BuildDir = OpenCOR::fileContents(":/build_directory").first();
+    static const QStringList BuildDirs = OpenCOR::fileContents(":/build_directory");
+    static const QString BuildDir = BuildDirs.first();
 
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
