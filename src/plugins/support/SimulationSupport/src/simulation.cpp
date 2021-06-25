@@ -1592,7 +1592,11 @@ void Simulation::checkIssues()
     // COMBINE archive
 
     if (mFileType == FileType::Unknown) {
-        mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("'%1' must be a CellML file, a SED-ML file or a COMBINE archive.").arg(mFileName)));
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+        mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("'%1' must be a CellML file, a SED-ML file or a COMBINE archive.").arg(fileManagerInstance->isRemote(mFileName)?
+                                                                                                                                                   fileManagerInstance->url(mFileName):
+                                                                                                                                                   mFileName)));
 
         mHasBlockingIssues = true;
 

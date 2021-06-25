@@ -100,7 +100,7 @@ def run_simulation(simulation, step):
     values(results.algebraic(), 'Algebraic', '   ')
 
 
-def test_simulation(title, file_name_or_url, first=True):
+def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
     # Header
 
     header(title, first)
@@ -123,6 +123,9 @@ def test_simulation(title, file_name_or_url, first=True):
         print('    - Issues:\n       - %s' % '\n       - '.join(issues))
     else:
         print('    - Issues: none')
+
+    if expected_fail:
+        return
 
     # Run #1: run the simulation using the default settings, except if we are
     #         dealing with a CellML file, in which case we set a few initial

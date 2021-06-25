@@ -26,3 +26,11 @@ if __name__ == '__main__':
     utils.test_simulation('Remote COMBINE archive',
                           'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/combine/lorenz.omex',
                           False)
+
+    # Test for a local/remote file that is not a CellML file, a SED-ML file or
+    # a COMBINE archive
+
+    utils.test_simulation('Local unknown file', 'tests/jupyter/lorenz.ipynb', False, True)
+    utils.test_simulation('Remote unknown file',
+                          'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/jupyter/lorenz.ipynb',
+                          False, True)
