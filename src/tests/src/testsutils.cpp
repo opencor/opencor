@@ -96,16 +96,16 @@ QByteArray rawFileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
+    QByteArray res;
     QFile file(pFileName);
-    QByteArray contents;
 
     if (file.open(QIODevice::ReadOnly)) {
-        contents = file.readAll();
+        res = file.readAll();
 
         file.close();
     }
 
-    return contents;
+    return res;
 }
 
 //==============================================================================
@@ -114,19 +114,19 @@ QStringList fileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
+    QString res;
     QFile file(pFileName);
-    QString contents;
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         // Note: QIODevice::Text ensures that end-of-line terminators are
         //       converted to "\n", which is exactly what we want...
 
-        contents = file.readAll();
+        res = file.readAll();
 
         file.close();
     }
 
-    return contents.split('\n');
+    return res.split('\n');
 }
 
 //==============================================================================
