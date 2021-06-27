@@ -29,20 +29,11 @@ def open_simulation(file_name_or_url):
     return simulation
 
 
-def round_str_value(value):
+def str_value(value):
     res = format(value, '.1f')
 
     if res == '-0.0':
         return '0.0'
-
-    return res
-
-
-def clean_str_value(value):
-    res = str(value).rstrip('0')
-
-    if res.endswith('.'):
-        res += '0'
 
     return res
 
@@ -54,8 +45,8 @@ def print_values(data):
         data_len = len(data)
 
         print('[ %s, %s, %s, ..., %s, %s, %s ]'
-              % (round_str_value(data[0]), round_str_value(data[1]), round_str_value(data[2]),
-                 round_str_value(data[data_len - 3]), round_str_value(data[data_len - 2]), round_str_value(data[data_len - 1])))
+              % (str_value(data[0]), str_value(data[1]), str_value(data[2]),
+                 str_value(data[data_len - 3]), str_value(data[data_len - 2]), str_value(data[data_len - 1])))
 
 
 def values(data, data_type, indent=''):
@@ -68,7 +59,7 @@ def values(data, data_type, indent=''):
             try:
                 print_values(item.values())
             except Exception:
-                print(round_str_value(item.value()))
+                print(str_value(item.value()))
     else:
         print('%s    - %s: empty' % (indent, data_type))
 
@@ -81,9 +72,9 @@ def run_simulation(simulation, step):
 
     data = simulation.data()
 
-    print('       - Starting point: %s' % clean_str_value(data.starting_point()))
-    print('       - Ending point: %s' % clean_str_value(data.ending_point()))
-    print('       - Point interval: %s' % clean_str_value(data.point_interval()))
+    print('       - Starting point: %f' % data.starting_point())
+    print('       - Ending point: %f' % data.ending_point())
+    print('       - Point interval: %f' % data.point_interval())
     print('       - ODE solver: %s' % data.ode_solver_name())
     print('       - Initial values:')
 
@@ -147,8 +138,8 @@ def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
         data.set_point_interval(0.001)
 
         print(' - Initial settings:')
-        print('    - Ending point: %s' % clean_str_value(data.ending_point()))
-        print('    - Point interval: %s' % clean_str_value(data.point_interval()))
+        print('    - Ending point: %f' % data.ending_point())
+        print('    - Point interval: %f' % data.point_interval())
 
     run_simulation(simulation, 1)
 
@@ -166,9 +157,9 @@ def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
     data.set_ode_solver_property('Step', 0.01)
 
     print(' - New settings:')
-    print('    - Starting point: %s' % clean_str_value(data.starting_point()))
-    print('    - Ending point: %s' % clean_str_value(data.ending_point()))
-    print('    - Point interval: %s' % clean_str_value(data.point_interval()))
+    print('    - Starting point: %f' % data.starting_point())
+    print('    - Ending point: %f' % data.ending_point())
+    print('    - Point interval: %f' % data.point_interval())
     print('    - ODE solver: %s' % data.ode_solver_name())
 
     run_simulation(simulation, 2)
