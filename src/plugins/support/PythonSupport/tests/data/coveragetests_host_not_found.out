@@ -24,13 +24,13 @@
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
  - Initial settings:
-    - Ending point: 50.000000
-    - Point interval: 0.001000
+    - Ending point: 50.0
+    - Point interval: 0.001
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants: empty
@@ -48,13 +48,13 @@
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
  - Initial settings:
-    - Ending point: 50.000000
-    - Point interval: 0.001000
+    - Ending point: 50.0
+    - Point interval: 0.001
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants: empty

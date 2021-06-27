@@ -6,13 +6,13 @@
     - Valid: yes
     - Issues: none
  - Initial settings:
-    - Ending point: 50.000000
-    - Point interval: 0.001000
+    - Ending point: 50.0
+    - Point interval: 0.001
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants:
@@ -44,15 +44,15 @@
           - main/z/prime = [ -1.7, -1.6, -1.6, ..., -25.3, -25.2, -25.0 ]
        - Algebraic: empty
  - New settings:
-    - Starting point: 10.000000
-    - Ending point: 30.000000
-    - Point interval: 0.100000
+    - Starting point: 10.0
+    - Ending point: 30.0
+    - Point interval: 0.1
     - ODE solver: Euler (forward)
  - Run simulation [2]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -85,9 +85,9 @@
        - Algebraic: empty
  - Run simulation [3]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -127,13 +127,13 @@
     - Valid: yes
     - Issues: none
  - Initial settings:
-    - Ending point: 50.000000
-    - Point interval: 0.001000
+    - Ending point: 50.0
+    - Point interval: 0.001
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants:
@@ -165,15 +165,15 @@
           - main/z/prime = [ -1.7, -1.6, -1.6, ..., -25.3, -25.2, -25.0 ]
        - Algebraic: empty
  - New settings:
-    - Starting point: 10.000000
-    - Ending point: 30.000000
-    - Point interval: 0.100000
+    - Starting point: 10.0
+    - Ending point: 30.0
+    - Point interval: 0.1
     - ODE solver: Euler (forward)
  - Run simulation [2]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -206,9 +206,9 @@
        - Algebraic: empty
  - Run simulation [3]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -249,9 +249,9 @@
     - Issues: none
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants:
@@ -283,15 +283,15 @@
           - main/z/prime = [ -1.7, -1.6, -1.6, ..., -25.3, -25.2, -25.0 ]
        - Algebraic: empty
  - New settings:
-    - Starting point: 10.000000
-    - Ending point: 30.000000
-    - Point interval: 0.100000
+    - Starting point: 10.0
+    - Ending point: 30.0
+    - Point interval: 0.1
     - ODE solver: Euler (forward)
  - Run simulation [2]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -324,9 +324,9 @@
        - Algebraic: empty
  - Run simulation [3]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -367,9 +367,9 @@
     - Issues: none
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants:
@@ -401,15 +401,15 @@
           - main/z/prime = [ -1.7, -1.6, -1.6, ..., -25.3, -25.2, -25.0 ]
        - Algebraic: empty
  - New settings:
-    - Starting point: 10.000000
-    - Ending point: 30.000000
-    - Point interval: 0.100000
+    - Starting point: 10.0
+    - Ending point: 30.0
+    - Point interval: 0.1
     - ODE solver: Euler (forward)
  - Run simulation [2]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -442,9 +442,9 @@
        - Algebraic: empty
  - Run simulation [3]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -485,9 +485,9 @@
     - Issues: none
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants:
@@ -519,15 +519,15 @@
           - main/z/prime = [ -1.7, -1.6, -1.6, ..., -25.3, -25.2, -25.0 ]
        - Algebraic: empty
  - New settings:
-    - Starting point: 10.000000
-    - Ending point: 30.000000
-    - Point interval: 0.100000
+    - Starting point: 10.0
+    - Ending point: 30.0
+    - Point interval: 0.1
     - ODE solver: Euler (forward)
  - Run simulation [2]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -560,9 +560,9 @@
        - Algebraic: empty
  - Run simulation [3]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -603,9 +603,9 @@
     - Issues: none
  - Run simulation [1]:
     - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
+       - Starting point: 0.0
+       - Ending point: 50.0
+       - Point interval: 0.001
        - ODE solver: CVODE
        - Initial values:
           - Constants:
@@ -637,15 +637,15 @@
           - main/z/prime = [ -1.7, -1.6, -1.6, ..., -25.3, -25.2, -25.0 ]
        - Algebraic: empty
  - New settings:
-    - Starting point: 10.000000
-    - Ending point: 30.000000
-    - Point interval: 0.100000
+    - Starting point: 10.0
+    - Ending point: 30.0
+    - Point interval: 0.1
     - ODE solver: Euler (forward)
  - Run simulation [2]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -678,9 +678,9 @@
        - Algebraic: empty
  - Run simulation [3]:
     - Settings:
-       - Starting point: 10.000000
-       - Ending point: 30.000000
-       - Point interval: 0.100000
+       - Starting point: 10.0
+       - Ending point: 30.0
+       - Point interval: 0.1
        - ODE solver: Euler (forward)
        - Initial values:
           - Constants:
@@ -719,7 +719,7 @@
  - Check simulation:
     - Valid: no
     - Issues:
-       - Error: 'models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
+       - Error: '/Users/Alan/Work/Programming/OpenCOR/models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
 
 ---------------------------------------
           Remote unknown file
