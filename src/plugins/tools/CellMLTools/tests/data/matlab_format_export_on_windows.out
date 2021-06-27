@@ -135,7 +135,7 @@ function [RATES, ALGEBRAIC] = computeRates(VOI, STATES, CONSTANTS)
     ALGEBRAIC(:,11) =  CONSTANTS(:,12).*power(STATES(:,4), 4.00000);
     ALGEBRAIC(:,12) =  ALGEBRAIC(:,11).*(STATES(:,1) - CONSTANTS(:,9));
     ALGEBRAIC(:,13) =  CONSTANTS(:,13).*(STATES(:,1) - CONSTANTS(:,10));
-    ALGEBRAIC(:,2) = piecewise({ rem(VOI, CONSTANTS(:,1))<CONSTANTS(:,2), CONSTANTS(:,3) }, 0.000000);
+    ALGEBRAIC(:,2) = piecewise({ rem(VOI, CONSTANTS(:,1))<CONSTANTS(:,2), CONSTANTS(:,3) }, 0.00000);
     RATES(:,1) = (ALGEBRAIC(:,2) - (ALGEBRAIC(:,10)+ALGEBRAIC(:,12)+ALGEBRAIC(:,13)))./CONSTANTS(:,14);
    RATES = RATES';
 end
@@ -162,7 +162,7 @@ function ALGEBRAIC = computeAlgebraic(ALGEBRAIC, CONSTANTS, STATES, VOI)
     ALGEBRAIC(:,11) =  CONSTANTS(:,12).*power(STATES(:,4), 4.00000);
     ALGEBRAIC(:,12) =  ALGEBRAIC(:,11).*(STATES(:,1) - CONSTANTS(:,9));
     ALGEBRAIC(:,13) =  CONSTANTS(:,13).*(STATES(:,1) - CONSTANTS(:,10));
-    ALGEBRAIC(:,2) = piecewise({ rem(VOI, CONSTANTS(:,1))<CONSTANTS(:,2), CONSTANTS(:,3) }, 0.000000);
+    ALGEBRAIC(:,2) = piecewise({ rem(VOI, CONSTANTS(:,1))<CONSTANTS(:,2), CONSTANTS(:,3) }, 0.00000);
     ALGEBRAIC(:,1) =  - STATES(:,1);
 end
 
