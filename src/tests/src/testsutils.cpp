@@ -111,7 +111,7 @@ QByteArray rawFileContents(const QString &pFileName)
 
 //==============================================================================
 
-QStringList fileContents(const QString &pFileName)
+QString textFileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
@@ -127,7 +127,25 @@ QStringList fileContents(const QString &pFileName)
         file.close();
     }
 
-    return res.split('\n');
+    return res;
+}
+
+//==============================================================================
+
+QStringList fileContents(const QString &pFileName)
+{
+    // Read and return the contents of the given file
+
+    return textFileContents(pFileName).split('\n');
+}
+
+//==============================================================================
+
+QStringList fileContents(const QString &pFileName, const QString &pArg)
+{
+    // Read and return the contents of the given file
+
+    return textFileContents(pFileName).arg(pArg).split('\n');
 }
 
 //==============================================================================

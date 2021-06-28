@@ -40,6 +40,7 @@ QString fileName(const QString &pFileName);
 
 QByteArray rawFileContents(const QString &pFileName);
 QStringList fileContents(const QString &pFileName);
+QStringList fileContents(const QString &pFileName, const QString &pArg);
 
 QString fileSha1(const QString &pFileName);
 
