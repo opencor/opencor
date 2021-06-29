@@ -23,8 +23,8 @@
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
     <message>
-        <source>The simulation has blocking issues and cannot therefore be run.</source>
-        <translation>La simulation a des problèmes blocants et ne peut donc pas être exécutée.</translation>
+        <source>The simulation has issues and cannot therefore be run.</source>
+        <translation>La simulation a des problèmes et ne peut donc pas être exécutée.</translation>
     </message>
     <message>
         <source>The simulation has an invalid runtime and cannot therefore be run.</source>

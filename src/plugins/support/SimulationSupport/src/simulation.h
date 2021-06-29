@@ -397,7 +397,6 @@ private:
 
     bool mNeedCheckIssues = true;
     SimulationIssues mIssues;
-    bool mHasBlockingIssues = false;
 
     CellMLSupport::CellmlFileRuntime *mRuntime = nullptr;
 
@@ -428,7 +427,6 @@ public slots:
     QString fileName() const;
 
     bool hasIssues();
-    bool hasBlockingIssues();
 
     void save();
     void reload();

@@ -1586,7 +1586,6 @@ void Simulation::checkIssues()
 
     mNeedCheckIssues = false;
     mIssues = SimulationIssues();
-    mHasBlockingIssues = false;
 
     // Make sure that we are dealing with a CellML file, a SED-ML file or a
     // COMBINE archive
@@ -1597,8 +1596,6 @@ void Simulation::checkIssues()
         mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("'%1' must be a CellML file, a SED-ML file or a COMBINE archive.").arg(fileManagerInstance->isRemote(mFileName)?
                                                                                                                                                    fileManagerInstance->url(mFileName):
                                                                                                                                                    mFileName)));
-
-        mHasBlockingIssues = true;
 
         return;
     }
@@ -1627,8 +1624,6 @@ void Simulation::checkIssues()
             case COMBINESupport::CombineArchiveIssue::Type::Error:
                 issueType = SimulationIssue::Type::Error;
 
-                mHasBlockingIssues = true;
-
                 break;
             case COMBINESupport::CombineArchiveIssue::Type::Warning:
                 issueType = SimulationIssue::Type::Warning;
@@ -1636,8 +1631,6 @@ void Simulation::checkIssues()
                 break;
             case COMBINESupport::CombineArchiveIssue::Type::Fatal:
                 issueType = SimulationIssue::Type::Fatal;
-
-                mHasBlockingIssues = true;
 
                 break;
             }
@@ -1660,8 +1653,6 @@ void Simulation::checkIssues()
             case SEDMLSupport::SedmlFileIssue::Type::Error:
                 issueType = SimulationIssue::Type::Error;
 
-                mHasBlockingIssues = true;
-
                 break;
             case SEDMLSupport::SedmlFileIssue::Type::Warning:
                 issueType = SimulationIssue::Type::Warning;
@@ -1669,8 +1660,6 @@ void Simulation::checkIssues()
                 break;
             case SEDMLSupport::SedmlFileIssue::Type::Fatal:
                 issueType = SimulationIssue::Type::Fatal;
-
-                mHasBlockingIssues = true;
 
                 break;
             }
@@ -1682,7 +1671,7 @@ void Simulation::checkIssues()
         }
     }
 
-    if (!mHasBlockingIssues) {
+    if (mIssues.empty()) {
         bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
         CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?
                                                              mRuntime->voi():
@@ -1746,20 +1735,7 @@ bool Simulation::hasIssues()
 {
     // Return whether we have issues, after having checked for them
 
-    checkIssues();
-
-    return !mIssues.empty();
-}
-
-//==============================================================================
-
-bool Simulation::hasBlockingIssues()
-{
-    // Return whether we have blocking issues, after having checked for them
-
-    checkIssues();
-
-    return mHasBlockingIssues;
+    return !issues().empty();
 }
 
 //==============================================================================
