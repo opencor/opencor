@@ -729,3 +729,21 @@
     - Valid: no
     - Issues:
        - Error: 'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
+
+---------------------------------------
+     Unsupported local SED-ML file
+---------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+
+---------------------------------------
+    Unsupported remote SED-ML file
+---------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.

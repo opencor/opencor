@@ -125,7 +125,7 @@ static PyObject * initializeSimulation(const QString &pFileName)
     if (simulation != nullptr) {
         // Check for issues with the simulation
 
-        if (simulation->hasBlockingIssues()) {
+        if (simulation->hasIssues()) {
             // We return the simulation to allow the user to view its issues
 
             return PythonQt::priv()->wrapQObject(simulation);

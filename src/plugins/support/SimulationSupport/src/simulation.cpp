@@ -1742,6 +1742,17 @@ SimulationIssues Simulation::issues()
 
 //==============================================================================
 
+bool Simulation::hasIssues()
+{
+    // Return whether we have issues, after having checked for them
+
+    checkIssues();
+
+    return !mIssues.empty();
+}
+
+//==============================================================================
+
 bool Simulation::hasBlockingIssues()
 {
     // Return whether we have blocking issues, after having checked for them

@@ -427,6 +427,7 @@ signals:
 public slots:
     QString fileName() const;
 
+    bool hasIssues();
     bool hasBlockingIssues();
 
     void save();
