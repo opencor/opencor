@@ -43,7 +43,7 @@ void BasicTests::tests()
     QVERIFY(   (output == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out"),
                                                 "models/tests/jupyter/lorenz.ipynb"))
             || (output == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out"),
-                                                 QFileInfo(OpenCOR::fileName("models/tests/jupyter/lorenz.ipynb")).canonicalFilePath())));
+                                                QFileInfo(OpenCOR::fileName("models/tests/jupyter/lorenz.ipynb")).canonicalFilePath())));
 }
 
 //==============================================================================

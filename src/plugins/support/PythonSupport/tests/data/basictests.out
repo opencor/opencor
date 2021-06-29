@@ -719,7 +719,7 @@
  - Check simulation:
     - Valid: no
     - Issues:
-       - Error: '/Users/Alan/Work/Programming/OpenCOR/models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
+       - Error: '%1' must be a CellML file, a SED-ML file or a COMBINE archive.
 
 ---------------------------------------------------------------------
                          Remote unknown file
