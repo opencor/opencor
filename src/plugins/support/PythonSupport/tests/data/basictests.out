@@ -738,3 +738,12 @@
     - Valid: no
     - Issues:
        - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+
+---------------------------------------
+     Unsupported local SED-ML file
+---------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm (KISAO:0000029).
