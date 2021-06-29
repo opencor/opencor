@@ -38,6 +38,6 @@ if __name__ == '__main__':
     # Test for a SED-ML file that uses an unsupported output start time
 
     utils.test_simulation('Unsupported local SED-ML file', 'tests/sedml/lorenz_unsupported_output_start_time.sedml', False, True)
-    utils.test_simulation('Unsupported remote SED-ML file',
-                          'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_unsupported_output_start_time.sedml',
-                          False, True)
+    # utils.test_simulation('Unsupported remote SED-ML file',
+    #                       'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_unsupported_output_start_time.sedml',
+    #                       False, True)
