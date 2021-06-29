@@ -106,8 +106,7 @@ if __name__ == '__main__':
         print(' - %s' % repr(e))
 
     try:
-        utils.test_simulation('Unknown remote file',
-                              'https://unknown', False)
+        utils.test_simulation('Unknown remote file', 'https://unknown', False)
     except Exception as e:
         print(' - %s' % repr(e))
 
