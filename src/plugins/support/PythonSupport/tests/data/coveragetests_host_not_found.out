@@ -1,41 +1,41 @@
----------------------------------------
-     No file name or URL provided
----------------------------------------
+---------------------------------------------------------------------
+                    No file name or URL provided
+---------------------------------------------------------------------
  - Open simulation
  - OSError("'' could not be opened.")
----------------------------------------
-          Unknown local file
----------------------------------------
+---------------------------------------------------------------------
+                         Unknown local file
+---------------------------------------------------------------------
  - Open simulation
  - OSError("'unknown' could not be opened.")
 
----------------------------------------
-          Unknown remote file
----------------------------------------
+---------------------------------------------------------------------
+                         Unknown remote file
+---------------------------------------------------------------------
  - Open simulation
  - OSError("'https://unknown' could not be opened (host unknown not found).")
 
----------------------------------------
-          Invalid local file
----------------------------------------
+---------------------------------------------------------------------
+                         Invalid local file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: no
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
 
----------------------------------------
-          Invalid remote file
----------------------------------------
+---------------------------------------------------------------------
+                         Invalid remote file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: no
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
 
----------------------------------------
-     SimulationData coverage tests
----------------------------------------
+---------------------------------------------------------------------
+                    SimulationData coverage tests
+---------------------------------------------------------------------
  - Test SimulationData.constants():
     - Size: 3
     - main/offset:
@@ -83,9 +83,9 @@
        - DAE solver property: 200
        - Test DAE solver property properly set: yes
 
----------------------------------------
-   SimulationResults coverage tests
----------------------------------------
+---------------------------------------------------------------------
+                  SimulationResults coverage tests
+---------------------------------------------------------------------
  - Test SimulationResults.voi():
     - Name: time
     - Unit: dimensionless
