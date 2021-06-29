@@ -23,21 +23,6 @@
     - Valid: no
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
- - Initial settings:
-    - Ending point: 50.000000
-    - Point interval: 0.001000
- - Run simulation [1]:
-    - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
-       - ODE solver: CVODE
-       - Initial values:
-          - Constants: empty
-          - States: empty
-          - Rates: empty
-          - Algebraic: empty
- - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
           Invalid remote file
@@ -47,21 +32,6 @@
     - Valid: no
     - Issues:
        - Error: the model is underconstrained (i.e. some variables need to be initialised or computed).
- - Initial settings:
-    - Ending point: 50.000000
-    - Point interval: 0.001000
- - Run simulation [1]:
-    - Settings:
-       - Starting point: 0.000000
-       - Ending point: 50.000000
-       - Point interval: 0.001000
-       - ODE solver: CVODE
-       - Initial values:
-          - Constants: empty
-          - States: empty
-          - Rates: empty
-          - Algebraic: empty
- - RuntimeError('std::runtime_error: The simulation has an invalid runtime and cannot therefore be run.')
 
 ---------------------------------------
      SimulationData coverage tests
