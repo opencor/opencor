@@ -113,14 +113,16 @@ if __name__ == '__main__':
     # Test for an invalid local/remote file
 
     try:
-        utils.test_simulation('Invalid local file', 'tests/cellml/underconstrained_model.cellml', False)
+        utils.test_simulation('Invalid local file',
+                              'tests/cellml/underconstrained_model.cellml',
+                              False, True)
     except Exception as e:
         print(' - %s' % repr(e))
 
     try:
         utils.test_simulation('Invalid remote file',
                               'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/cellml/underconstrained_model.cellml',
-                              False)
+                              False, True)
     except Exception as e:
         print(' - %s' % repr(e))
 
