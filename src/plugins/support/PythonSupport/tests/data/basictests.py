@@ -37,18 +37,27 @@ if __name__ == '__main__':
 
     # Test for a SED-ML file that uses an unsupported output start time
 
-    utils.test_simulation('Unsupported local SED-ML file',
+    utils.test_simulation('Unsupported local SED-ML file (output start time)',
                           'tests/sedml/lorenz_unsupported_output_start_time.sedml',
                           False, True)
-    # utils.test_simulation('Unsupported remote SED-ML file',
+    # utils.test_simulation('Unsupported remote SED-ML file (output start time)',
     #                       'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_unsupported_output_start_time.sedml',
     #                       False, True)
 
     # Test for a SED-ML file that uses an unsupported algorithm
 
-    utils.test_simulation('Unsupported local SED-ML file',
+    utils.test_simulation('Unsupported local SED-ML file (algorithm)',
                           'tests/sedml/lorenz_unsupported_algorithm.sedml',
                           False, True)
-    # utils.test_simulation('Unsupported remote SED-ML file',
+    # utils.test_simulation('Unsupported remote SED-ML file (algorithm)',
     #                       'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_unsupported_algorithm.sedml',
+    #                       False, True)
+
+    # Test for a SED-ML file that uses an unsupported algorithm
+
+    utils.test_simulation('Unsupported local SED-ML file (algorithm parameter)',
+                          'tests/sedml/lorenz_unsupported_algorithm_parameter.sedml',
+                          False, True)
+    # utils.test_simulation('Unsupported remote SED-ML file (algorithm parameter)',
+    #                       'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_unsupported_algorithm_parameter.sedml',
     #                       False, True)

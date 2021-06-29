@@ -9,9 +9,11 @@ def header(title, first=True):
     if not first:
         print()
 
-    print('---------------------------------------')
-    print(' ' * math.floor((39 - len(title)) / 2) + title)
-    print('---------------------------------------')
+    header_length = 69
+
+    print(header_length * '-')
+    print(' ' * math.floor((header_length - len(title)) / 2) + title)
+    print(header_length * '-')
 
 
 def open_simulation(file_name_or_url):

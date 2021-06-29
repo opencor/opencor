@@ -1,6 +1,6 @@
----------------------------------------
-           Local CellML file
----------------------------------------
+---------------------------------------------------------------------
+                          Local CellML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -119,9 +119,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-          Remote CellML file
----------------------------------------
+---------------------------------------------------------------------
+                         Remote CellML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -240,9 +240,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-           Local SED-ML file
----------------------------------------
+---------------------------------------------------------------------
+                          Local SED-ML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -358,9 +358,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-          Remote SED-ML file
----------------------------------------
+---------------------------------------------------------------------
+                         Remote SED-ML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -476,9 +476,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-         Local COMBINE archive
----------------------------------------
+---------------------------------------------------------------------
+                        Local COMBINE archive
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -594,9 +594,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-        Remote COMBINE archive
----------------------------------------
+---------------------------------------------------------------------
+                       Remote COMBINE archive
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -712,38 +712,47 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-          Local unknown file
----------------------------------------
+---------------------------------------------------------------------
+                         Local unknown file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: no
     - Issues:
-       - Error: '%1' must be a CellML file, a SED-ML file or a COMBINE archive.
+       - Error: '/Users/Alan/Work/Programming/OpenCOR/models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
 
----------------------------------------
-          Remote unknown file
----------------------------------------
+---------------------------------------------------------------------
+                         Remote unknown file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: no
     - Issues:
        - Error: 'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
 
----------------------------------------
-     Unsupported local SED-ML file
----------------------------------------
+---------------------------------------------------------------------
+          Unsupported local SED-ML file (output start time)
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: no
     - Issues:
        - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
 
----------------------------------------
-     Unsupported local SED-ML file
----------------------------------------
+---------------------------------------------------------------------
+              Unsupported local SED-ML file (algorithm)
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: no
     - Issues:
        - Information: unsupported algorithm (KISAO:0000029).
+
+---------------------------------------------------------------------
+         Unsupported local SED-ML file (algorithm parameter)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm parameter (KISAO:0000219).
