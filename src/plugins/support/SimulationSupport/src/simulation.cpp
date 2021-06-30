@@ -82,13 +82,13 @@ QString SimulationIssue::typeAsString() const
     // Return the issue's type as a string
 
     switch (mType) {
-    case SimulationSupport::SimulationIssue::Type::Information:
+    case Type::Information:
         return QObject::tr("Information");
-    case SimulationSupport::SimulationIssue::Type::Error:
+    case Type::Error:
         return QObject::tr("Error");
-    case SimulationSupport::SimulationIssue::Type::Warning:
+    case Type::Warning:
         return QObject::tr("Warning");
-    case SimulationSupport::SimulationIssue::Type::Fatal:
+    case Type::Fatal:
         return QObject::tr("Fatal");
     }
 
