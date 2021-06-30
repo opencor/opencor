@@ -49,7 +49,8 @@ public:
         Information,
         Error,
         Warning,
-        Fatal
+        Fatal,
+        Unsupported
     };
 
     explicit SedmlFileIssue(Type pType, int pLine, int pColumn,

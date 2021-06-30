@@ -23,8 +23,8 @@
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
     <message>
-        <source>The simulation has issues and cannot therefore be run.</source>
-        <translation>La simulation a des problèmes et ne peut donc pas être exécutée.</translation>
+        <source>The simulation has blocking issues and cannot therefore be run.</source>
+        <translation>La simulation a des problèmes bloquants et ne peut donc pas être exécutée.</translation>
     </message>
     <message>
         <source>The simulation has an invalid runtime and cannot therefore be run.</source>
@@ -76,6 +76,10 @@
     <message>
         <source>the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).</source>
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée).</translation>
+    </message>
+    <message>
+        <source>Unsupported</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

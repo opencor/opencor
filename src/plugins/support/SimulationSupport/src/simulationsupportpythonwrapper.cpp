@@ -125,7 +125,7 @@ static PyObject * initializeSimulation(const QString &pFileName)
     if (simulation != nullptr) {
         // Check for issues with the simulation
 
-        if (simulation->hasIssues()) {
+        if (simulation->hasBlockingIssues()) {
             // We return the simulation to allow the user to view its issues
 
             return PythonQt::priv()->wrapQObject(simulation);
@@ -245,7 +245,7 @@ bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
 {
     // Return whether the given simulation is valid
 
-    if (!pSimulation->hasIssues()) {
+    if (!pSimulation->hasBlockingIssues()) {
         CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
 
         return (runtime != nullptr) && runtime->isValid();
@@ -261,8 +261,8 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
     // Run the given simulation, but only if it doesn't have blocking issues and
     // if it is valid
 
-    if (pSimulation->hasIssues()) {
-        throw std::runtime_error(tr("The simulation has issues and cannot therefore be run.").toStdString());
+    if (pSimulation->hasBlockingIssues()) {
+        throw std::runtime_error(tr("The simulation has blocking issues and cannot therefore be run.").toStdString());
     }
 
     if (!valid(pSimulation)) {

@@ -373,7 +373,7 @@ SolverInterface * SedmlFile::solverInterface(const QString &pKisaoId)
         }
     }
 
-    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                               tr("unsupported algorithm (%1)").arg(pKisaoId));
 
     return nullptr;
@@ -397,7 +397,7 @@ bool SedmlFile::validAlgorithmParameters(const libsedml::SedListOfAlgorithmParam
         QString id = pSolverInterface->id(parameterKisaoId);
 
         if (id.isEmpty() || (id == pSolverInterface->solverName())) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("unsupported algorithm parameter (%1)").arg(parameterKisaoId));
 
             return false;
@@ -476,7 +476,7 @@ bool SedmlFile::isSupported()
     // Make sure that there is only one model
 
     if (mSedmlDocument->getNumModels() != 1) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files with one model are supported"));
 
         return false;
@@ -490,7 +490,7 @@ bool SedmlFile::isSupported()
     if (   (language != Language::Cellml)
         && (language != Language::Cellml_1_0)
         && (language != Language::Cellml_1_1)) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files with a CellML file are supported"));
 
         return false;
@@ -501,7 +501,7 @@ bool SedmlFile::isSupported()
     uint nbOfSimulations = mSedmlDocument->getNumSimulations();
 
     if ((nbOfSimulations != 1) && (nbOfSimulations != 2)) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files with one or two simulations are supported"));
 
         return false;
@@ -512,7 +512,7 @@ bool SedmlFile::isSupported()
     libsedml::SedSimulation *firstSimulation = mSedmlDocument->getSimulation(0);
 
     if (firstSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
 
         return false;
@@ -529,7 +529,7 @@ bool SedmlFile::isSupported()
     int nbOfPoints = uniformTimeCourse->getNumberOfPoints();
 
     if (!qFuzzyCompare(initialTime, outputStartTime)) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported"));
 
         return false;
@@ -596,7 +596,7 @@ bool SedmlFile::isSupported()
                     }
 
                     if (!validSolverProperties) {
-                        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                   int(solverPropertiesNode.getLine()),
                                                   int(solverPropertiesNode.getColumn()),
                                                   tr("incomplete algorithm annotation (missing algorithm property information)"));
@@ -643,7 +643,7 @@ bool SedmlFile::isSupported()
             }
         }
     } else {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files with one or two simulations with an algorithm are supported"));
 
         return false;
@@ -657,7 +657,7 @@ bool SedmlFile::isSupported()
         // Make sure that the second simulation is a one-step simulation
 
         if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with a one-step simulation as a second simulation are supported"));
 
             return false;
@@ -712,7 +712,7 @@ bool SedmlFile::isSupported()
         }
 
         if (firstStream.str() != secondStream.str()) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with two simulations with the same algorithm are supported"));
 
             return false;
@@ -725,7 +725,7 @@ bool SedmlFile::isSupported()
     uint totalNbOfTasks = (secondSimulation != nullptr)?3:2;
 
     if (mSedmlDocument->getNumTasks() != totalNbOfTasks) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files that execute one or two simulations once are supported"));
 
         return false;
@@ -808,7 +808,7 @@ bool SedmlFile::isSupported()
         || !firstSubTaskOk || (repeatedTaskFirstSubTaskId != firstSubTaskId)
         || (   (secondSimulation != nullptr)
             && (!secondSubTaskOk || (repeatedTaskSecondSubTaskId != secondSubTaskId)))) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                   tr("only SED-ML files that execute one or two simulations once are supported"));
 
         return false;
@@ -823,7 +823,7 @@ bool SedmlFile::isSupported()
         libsedml::SedDataGenerator *dataGenerator = mSedmlDocument->getDataGenerator(i);
 
         if ((dataGenerator->getNumVariables() != 1) || (dataGenerator->getNumParameters() != 0)) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with data generators for one variable are supported"));
 
             return false;
@@ -832,14 +832,14 @@ bool SedmlFile::isSupported()
         libsedml::SedVariable *variable = dataGenerator->getVariable(0);
 
         if (!variable->getSymbol().empty() || !variable->getModelReference().empty()) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with data generators for one variable with a target and a task reference are supported"));
 
             return false;
         }
 
         if (variable->getTaskReference() != repeatedTask->getId()) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with data generators for one variable with a reference to a repeated task are supported"));
 
             return false;
@@ -873,7 +873,7 @@ bool SedmlFile::isSupported()
         }
 
         if (!referencingCellmlVariable) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with data generators for one variable with a reference to a CellML variable are supported"));
 
             return false;
@@ -897,7 +897,7 @@ bool SedmlFile::isSupported()
                     }
 
                     if (!validVariableDegree) {
-                        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                                   int(variableDegreeNode.getLine()),
                                                   int(variableDegreeNode.getColumn()),
                                                   tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
@@ -912,7 +912,7 @@ bool SedmlFile::isSupported()
 
         if (   (mathNode->getType() != libsbml::AST_NAME)
             || (variable->getId() != mathNode->getName())) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with data generators for one variable that is not modified are supported"));
 
             return false;
@@ -925,7 +925,7 @@ bool SedmlFile::isSupported()
         libsedml::SedOutput *output = mSedmlDocument->getOutput(i);
 
         if (output->getTypeCode() != libsedml::SEDML_OUTPUT_PLOT2D) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+            mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("only SED-ML files with 2D outputs are supported"));
 
             return false;
@@ -1272,7 +1272,7 @@ bool SedmlFile::isSupported()
             }
 
             if ((curve->getLogX() != logX) || (curve->getLogY() != logY)) {
-                mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
+                mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                           tr("only SED-ML files with curves of the same type (with regards to linear/logarithmic scaling) are supported"));
 
                 return false;

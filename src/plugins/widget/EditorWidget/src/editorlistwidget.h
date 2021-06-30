@@ -48,7 +48,8 @@ public:
         Warning     = QStandardItem::UserType+1,
         Hint        = QStandardItem::UserType+2,
         Information = QStandardItem::UserType+3,
-        Fatal       = QStandardItem::UserType+4
+        Fatal       = QStandardItem::UserType+4,
+        Unsupported = QStandardItem::UserType+5
     };
 
     explicit EditorListItem(Type pType, int pLine, int pColumn,

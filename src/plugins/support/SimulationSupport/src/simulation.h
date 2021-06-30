@@ -94,7 +94,8 @@ public:
         Information,
         Error,
         Warning,
-        Fatal
+        Fatal,
+        Unsupported
     };
 
     explicit SimulationIssue(Type pType, int pLine, int pColumn,
@@ -426,7 +427,7 @@ signals:
 public slots:
     QString fileName() const;
 
-    bool hasIssues();
+    bool hasBlockingIssues();
 
     void save();
     void reload();

@@ -74,6 +74,10 @@
         <source>Fatal</source>
         <translation>Fatal</translation>
     </message>
+    <message>
+        <source>Unsupported</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::EditorWidget::EditorWidgetFindReplaceWidget</name>

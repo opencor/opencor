@@ -737,7 +737,7 @@
  - Check simulation:
     - Valid: no
     - Issues:
-       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+       - Unsupported: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
 
 ---------------------------------------------------------------------
               Unsupported local SED-ML file (algorithm)
@@ -746,7 +746,7 @@
  - Check simulation:
     - Valid: no
     - Issues:
-       - Information: unsupported algorithm (KISAO:0000029).
+       - Unsupported: unsupported algorithm (KISAO:0000029).
 
 ---------------------------------------------------------------------
          Unsupported local SED-ML file (algorithm parameter)
@@ -755,4 +755,4 @@
  - Check simulation:
     - Valid: no
     - Issues:
-       - Information: unsupported algorithm parameter (KISAO:0000219).
+       - Unsupported: unsupported algorithm parameter (KISAO:0000219).

@@ -90,6 +90,8 @@ QString SimulationIssue::typeAsString() const
         return QObject::tr("Warning");
     case Type::Fatal:
         return QObject::tr("Fatal");
+    case Type::Unsupported:
+        return QObject::tr("Unsupported");
     }
 
     return "???";
@@ -1633,6 +1635,10 @@ void Simulation::checkIssues()
                 issueType = SimulationIssue::Type::Fatal;
 
                 break;
+            case COMBINESupport::CombineArchiveIssue::Type::Unsupported:
+                issueType = SimulationIssue::Type::Unsupported;
+
+                break;
             }
 
             mIssues.append(SimulationIssue(issueType, combineArchiveIssue.message()));
@@ -1662,6 +1668,10 @@ void Simulation::checkIssues()
                 issueType = SimulationIssue::Type::Fatal;
 
                 break;
+            case SEDMLSupport::SedmlFileIssue::Type::Unsupported:
+                issueType = SimulationIssue::Type::Unsupported;
+
+                break;
             }
 
             mIssues.append(SimulationIssue(issueType,
@@ -1671,7 +1681,7 @@ void Simulation::checkIssues()
         }
     }
 
-    if (mIssues.empty()) {
+    if (!hasBlockingIssues()) {
         bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
         CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?
                                                              mRuntime->voi():
@@ -1731,11 +1741,21 @@ SimulationIssues Simulation::issues()
 
 //==============================================================================
 
-bool Simulation::hasIssues()
+bool Simulation::hasBlockingIssues()
 {
-    // Return whether we have issues, after having checked for them
+    // Return whether we have blocking issues, after having checked for them
 
-    return !issues().empty();
+    const SimulationIssues issues = Simulation::issues();
+
+    for (const auto &issue : issues) {
+        if (   (issue.type() == SimulationIssue::Type::Error)
+            || (issue.type() == SimulationIssue::Type::Fatal)
+            || (issue.type() == SimulationIssue::Type::Unsupported)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================
