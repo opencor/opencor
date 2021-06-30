@@ -58,7 +58,6 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
     static const QIcon HintIcon        = QIcon(":/oxygen/actions/help-hint.png");
     static const QIcon InformationIcon = QIcon(":/oxygen/actions/help-about.png");
     static const QIcon FatalIcon       = QIcon(":/oxygen/actions/edit-bomb.png");
-    static const QIcon UnsupportedIcon = QIcon(":/oxygen/emotes/face-sad.png");
 
     if ((pLine == -1) && (pColumn == -1)) {
         if (pFileInfo.isEmpty()) {
@@ -113,7 +112,7 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
 
         break;
     case Type::Unsupported:
-        setIcon(UnsupportedIcon);
+        setIcon(InformationIcon);
 
         break;
     }
@@ -357,7 +356,7 @@ void EditorListWidget::copyToClipboard()
 
             break;
         case EditorListItem::Type::Unsupported:
-            itemType = tr("Unsupported");
+            itemType = tr("Information");
 
             break;
         }

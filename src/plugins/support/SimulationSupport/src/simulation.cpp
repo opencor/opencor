@@ -91,7 +91,7 @@ QString SimulationIssue::typeAsString() const
     case Type::Fatal:
         return QObject::tr("Fatal");
     case Type::Unsupported:
-        return QObject::tr("Unsupported");
+        return QObject::tr("Information");
     }
 
     return "???";

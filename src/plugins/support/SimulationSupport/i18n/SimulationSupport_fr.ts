@@ -77,9 +77,5 @@
         <source>the requested curve (%1) could not be set (the variable %2 in component %3 could not be found).</source>
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée).</translation>
     </message>
-    <message>
-        <source>Unsupported</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>
