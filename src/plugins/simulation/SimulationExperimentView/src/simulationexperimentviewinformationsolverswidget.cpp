@@ -212,61 +212,62 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
 
             // Add the solver's properties
 
+            const Solver::Properties solverProperties = solverInterface->solverProperties();
             Core::Property *property = nullptr;
             Core::Properties properties;
 
-            for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
+            for (const auto &solverProperty : solverProperties) {
                 // Add the solver's property and set its default value
 
-                switch (solverInterfaceProperty.type()) {
+                switch (solverProperty.type()) {
                 case Solver::Property::Type::Boolean:
-                    property = addBooleanProperty(solverInterfaceProperty.defaultValue().toBool(),
+                    property = addBooleanProperty(solverProperty.defaultValue().toBool(),
                                                   solversProperty);
 
                     break;
                 case Solver::Property::Type::Integer:
-                    property = addIntegerProperty(solverInterfaceProperty.defaultValue().toInt(),
+                    property = addIntegerProperty(solverProperty.defaultValue().toInt(),
                                                   solversProperty);
 
                     break;
                 case Solver::Property::Type::IntegerGe0:
-                    property = addIntegerGe0Property(solverInterfaceProperty.defaultValue().toInt(),
+                    property = addIntegerGe0Property(solverProperty.defaultValue().toInt(),
                                                      solversProperty);
 
                     break;
                 case Solver::Property::Type::IntegerGt0:
-                    property = addIntegerGt0Property(solverInterfaceProperty.defaultValue().toInt(),
+                    property = addIntegerGt0Property(solverProperty.defaultValue().toInt(),
                                                      solversProperty);
 
                     break;
                 case Solver::Property::Type::Double:
-                    property = addDoubleProperty(solverInterfaceProperty.defaultValue().toDouble(),
+                    property = addDoubleProperty(solverProperty.defaultValue().toDouble(),
                                                  solversProperty);
 
                     break;
                 case Solver::Property::Type::DoubleGe0:
-                    property = addDoubleGe0Property(solverInterfaceProperty.defaultValue().toDouble(),
+                    property = addDoubleGe0Property(solverProperty.defaultValue().toDouble(),
                                                     solversProperty);
 
                     break;
                 case Solver::Property::Type::DoubleGt0:
-                    property = addDoubleGt0Property(solverInterfaceProperty.defaultValue().toDouble(),
+                    property = addDoubleGt0Property(solverProperty.defaultValue().toDouble(),
                                                     solversProperty);
 
                     break;
                 case Solver::Property::Type::List:
-                    property = addListProperty(solverInterfaceProperty.listValues(),
-                                               solverInterfaceProperty.defaultValue().toString(),
+                    property = addListProperty(solverProperty.listValues(),
+                                               solverProperty.defaultValue().toString(),
                                                solversProperty);
 
                     break;
                 }
 
-                property->setId(solverInterfaceProperty.id());
+                property->setId(solverProperty.id());
 
                 // Set the solver's property's 'unit', if needed
 
-                if (solverInterfaceProperty.hasVoiUnit()) {
+                if (solverProperty.hasVoiUnit()) {
                     property->setUnit("???");
                     // Note: to assign a non-empty string to our unit item is
                     //       just a way for us to make sure that the property's
@@ -279,7 +280,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
 
                 // Keep track of the solver's property's descriptions
 
-                mDescriptions.insert(property, solverInterfaceProperty.descriptions());
+                mDescriptions.insert(property, solverProperty.descriptions());
             }
 
             // Keep track of the solver's properties
@@ -324,10 +325,12 @@ void SimulationExperimentViewInformationSolversWidget::setPropertiesUnit(Simulat
 
     // Go through the solvers' properties and set the unit of the relevant ones
 
-    for (const auto &properties : pSolverData->solversProperties()) {
-        for (auto property : properties) {
-            if (!property->unit().isEmpty()) {
-                property->setUnit(pVoiUnit);
+    const QMap<QString, Core::Properties> solversProperties = pSolverData->solversProperties();
+
+    for (const auto &solverProperties : solversProperties) {
+        for (auto solverProperty : solverProperties) {
+            if (!solverProperty->unit().isEmpty()) {
+                solverProperty->setUnit(pVoiUnit);
             }
         }
     }
@@ -431,7 +434,7 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
 
     // Retrieve our solver properties values
 
-    Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
+    const Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
     QMap<QString, QString> solverPropertiesValues;
 
     for (auto solverProperty : solverProperties) {
