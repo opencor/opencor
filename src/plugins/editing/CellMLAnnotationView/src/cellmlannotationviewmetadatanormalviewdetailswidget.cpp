@@ -230,12 +230,12 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Populate our Web view, but only if there is at least one RDF triple
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
+    const CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
 
     if (!rdfTriples.isEmpty()) {
         // Add the RDF triples
 
-        for (auto rdfTriple : qAsConst(rdfTriples)) {
+        for (auto rdfTriple : rdfTriples) {
             addRdfTriple(rdfTriple, false);
         }
     } else {

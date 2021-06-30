@@ -194,9 +194,9 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     //       being referenced all over the place, which is really not what we
     //       want since that unnecessarily pollutes things...
 
-    QStringList keys = mNamespaces.keys();
+    const QStringList keys = mNamespaces.keys();
 
-    for (const auto &key : qAsConst(keys)) {
+    for (const auto &key : keys) {
         mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
     }
 

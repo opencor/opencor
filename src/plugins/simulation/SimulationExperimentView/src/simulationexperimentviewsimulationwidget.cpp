@@ -1653,9 +1653,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulationAlgorithm(libse
     // properties
 
     if (pSolverInterface != nullptr) {
-        QStringList solverPropertyKeys = pSolverProperties.keys();
+        const QStringList solverPropertyKeys = pSolverProperties.keys();
 
-        for (const auto &solverProperty : qAsConst(solverPropertyKeys)) {
+        for (const auto &solverProperty : solverPropertyKeys) {
             QString kisaoId = pSolverInterface->kisaoId(solverProperty);
             QVariant solverPropertyValue = pSolverProperties.value(solverProperty);
             QString value = (solverPropertyValue.type() == QVariant::Double)?
@@ -1697,10 +1697,10 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
     if ((runtime != nullptr) && runtime->needNlaSolver()) {
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
-        QStringList nlaSolverPropertyKeys = nlaSolverProperties.keys();
+        const QStringList nlaSolverPropertyKeys = nlaSolverProperties.keys();
         QString nlaSolverAnnotation;
 
-        for (const auto &nlaSolverProperty : qAsConst(nlaSolverPropertyKeys)) {
+        for (const auto &nlaSolverProperty : nlaSolverPropertyKeys) {
             nlaSolverAnnotation += QString(R"(<%1 %2="%3" %4="%5"/>)").arg(SEDMLSupport::SolverProperty,
                                                                            SEDMLSupport::Id,
                                                                            nlaSolverProperty,

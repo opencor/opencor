@@ -942,9 +942,9 @@ void SimulationResults::createDataStore()
     // Reimport our data, if any, and update their array so that it contains the
     // computed values for our start point
 
-    QList<double *> dataKeys = mDataDataStores.keys();
+    const QList<double *> dataKeys = mDataDataStores.keys();
 
-    for (auto data : qAsConst(dataKeys)) {
+    for (auto data : dataKeys) {
         DataStore::DataStore *importDataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
 
@@ -1207,10 +1207,10 @@ void SimulationResults::addPoint(double pPoint)
     // Make sure that we have the correct imported data values for the given
     // point, keeping in mind that we may have several runs
 
-    QList<double *> dataKeys = mDataDataStores.keys();
+    const QList<double *> dataKeys = mDataDataStores.keys();
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto data : qAsConst(dataKeys)) {
+    for (auto data : dataKeys) {
         DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
@@ -1604,18 +1604,15 @@ void Simulation::checkIssues()
 
     // Determine whether we have issues with our SED-ML and our COMBINE archive
 
-    SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSedmlFile != nullptr)?
-                                                        mSedmlFile->issues():
-                                                        SEDMLSupport::SedmlFileIssues();
-    COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mCombineArchive != nullptr)?
-                                                                    mCombineArchive->issues():
-                                                                    COMBINESupport::CombineArchiveIssues();
+    const COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mCombineArchive != nullptr)?
+                                                                          mCombineArchive->issues():
+                                                                          COMBINESupport::CombineArchiveIssues();
 
     if (!combineArchiveIssues.isEmpty()) {
         // There is one or several issues with our COMBINE archive, so list
         // it/them
 
-        for (const auto &combineArchiveIssue : qAsConst(combineArchiveIssues)) {
+        for (const auto &combineArchiveIssue : combineArchiveIssues) {
             SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
 
             switch (combineArchiveIssue.type()) {
@@ -1645,10 +1642,14 @@ void Simulation::checkIssues()
         }
     }
 
+    const SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSedmlFile != nullptr)?
+                                                              mSedmlFile->issues():
+                                                              SEDMLSupport::SedmlFileIssues();
+
     if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
-        for (const auto &sedmlFileIssue : qAsConst(sedmlFileIssues)) {
+        for (const auto &sedmlFileIssue : sedmlFileIssues) {
             SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
 
             switch (sedmlFileIssue.type()) {

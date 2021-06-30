@@ -336,9 +336,9 @@ void CentralWidget::loadSettings(QSettings &pSettings)
     // Note: if a file is not a remote file then openRemoteFile() will open it
     //       as a normal file...
 
-    QStringList fileNamesOrUrls = pSettings.value(SettingsFileNamesOrUrls).toStringList();
+    const QStringList fileNamesOrUrls = pSettings.value(SettingsFileNamesOrUrls).toStringList();
 
-    for (const auto &fileNameOrUrl : qAsConst(fileNamesOrUrls)) {
+    for (const auto &fileNameOrUrl : fileNamesOrUrls) {
         openRemoteFile(fileNameOrUrl, false);
     }
 
@@ -1554,13 +1554,13 @@ void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
         QMenu *actionMenu = action->menu();
 
         if (actionMenu != nullptr) {
-            QList<QAction *> actionMenuActions = actionMenu->actions();
+            const QList<QAction *> actionMenuActions = actionMenu->actions();
 
             showEnableActions(actionMenuActions);
 
             bool showEnable = false;
 
-            for (auto actionMenuAction : qAsConst(actionMenuActions)) {
+            for (auto actionMenuAction : actionMenuActions) {
                 if (   !actionMenuAction->isSeparator()
                     &&  actionMenuAction->isVisible()) {
                     showEnable = true;

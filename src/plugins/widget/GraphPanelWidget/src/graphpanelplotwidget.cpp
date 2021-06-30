@@ -3355,10 +3355,10 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
 {
     // Resize our legend and that of our neighbours
 
-    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    const GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int legendWidth = 0;
 
-    for (auto plot : qAsConst(selfPlusNeighbors)) {
+    for (auto plot : selfPlusNeighbors) {
         auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         if (legend != nullptr) {
@@ -3371,7 +3371,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
         }
     }
 
-    for (auto plot : qAsConst(selfPlusNeighbors)) {
+    for (auto plot : selfPlusNeighbors) {
         auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         if (legend != nullptr) {
@@ -3920,7 +3920,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                           || mSynchronizeXAxisAction->isChecked()
                           || mSynchronizeYAxisAction->isChecked();
 
-    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    const GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int oldMinBorderDistStartX = 0;
     int oldMinBorderDistEndX = 0;
     int newMinBorderDistStartX = 0;
@@ -3930,7 +3930,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
-    for (auto plot : qAsConst(selfPlusNeighbors)) {
+    for (auto plot : selfPlusNeighbors) {
         // Determine how much space we should have directly to the left and
         // right of the X axis
 
@@ -3976,7 +3976,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                              || !qFuzzyCompare(newMinExtentY, oldMinExtentY);
     bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
-    for (auto plot : qAsConst(selfPlusNeighbors)) {
+    for (auto plot : selfPlusNeighbors) {
         auto xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
         xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
