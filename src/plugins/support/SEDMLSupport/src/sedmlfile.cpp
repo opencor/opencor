@@ -432,8 +432,7 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                   int(pPropertyNode.getLine()),
                                   int(pPropertyNode.getColumn()),
-                                  tr("the '%1' property must have a value of %2").arg(pPropertyName,
-                                                                                      values));
+                                  tr("the value of '%1' must be %2").arg(pPropertyName, values));
 
         return false;
     }
@@ -455,7 +454,7 @@ bool SedmlFile::validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                   int(pPropertyNode.getLine()),
                                   int(pPropertyNode.getColumn()),
-                                  tr("the '%1' property must have a value of '#RRGGBB' or '#AARRGGBB'").arg(pPropertyName));
+                                  tr("the value of '%1' must be '#RRGGBB' or '#AARRGGBB'").arg(pPropertyName));
 
         return false;
     }
@@ -537,14 +536,14 @@ bool SedmlFile::isSupported()
 
     if (qFuzzyCompare(outputStartTime, outputEndTime)) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                  tr("the values for 'outputStartTime' and 'outputEndTime' must be different"));
+                                  tr("the values of 'outputStartTime' and 'outputEndTime' must be different"));
 
         return false;
     }
 
     if (nbOfPoints <= 0) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                  tr("the value for 'numberOfPoints' must be greater than zero"));
+                                  tr("the value of 'numberOfPoints' must be greater than zero"));
 
         return false;
     }
@@ -667,7 +666,7 @@ bool SedmlFile::isSupported()
 
         if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                      tr("the value for step must be greater than zero"));
+                                      tr("the value of 'step' must be greater than zero"));
 
             return false;
         }
@@ -961,7 +960,7 @@ bool SedmlFile::isSupported()
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
-                                                      tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
+                                                      tr("the value of '%1' must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
                         }
@@ -976,7 +975,7 @@ bool SedmlFile::isSupported()
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
-                                                      tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
+                                                      tr("the value of '%1' must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
                         }
@@ -1000,7 +999,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(gridLinesPropertyNode.getLine()),
                                                               int(gridLinesPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be a number greater than zero").arg(gridLinesPropertyNodeName));
+                                                              tr("the value of '%1' must be a number greater than zero").arg(gridLinesPropertyNodeName));
 
                                     return false;
                                 }
@@ -1020,7 +1019,7 @@ bool SedmlFile::isSupported()
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
-                                                      tr("the '%1' property must have a value of 'true' or 'false'").arg(Legend));
+                                                      tr("the value of '%1' must be 'true' or 'false'").arg(Legend));
 
                             return false;
                         } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
@@ -1035,7 +1034,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(legendPropertyNode.getLine()),
                                                               int(legendPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be an integer greater than zero").arg(legendPropertyNodeName));
+                                                              tr("the value of '%1' must be an integer greater than zero").arg(legendPropertyNodeName));
 
                                     return false;
                                 }
@@ -1046,7 +1045,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(legendPropertyNode.getLine()),
                                                               int(legendPropertyNode.getColumn()),
-                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(LogarithmicScale));
+                                                              tr("the value of '%1' must be 'true' or 'false'").arg(LogarithmicScale));
 
                                     return false;
                                 }
@@ -1071,7 +1070,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(pointCoordinatesPropertyNode.getLine()),
                                                               int(pointCoordinatesPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be a number greater than zero").arg(pointCoordinatesPropertyNodeName));
+                                                              tr("the value of '%1' must be a number greater than zero").arg(pointCoordinatesPropertyNodeName));
 
                                     return false;
                                 }
@@ -1091,7 +1090,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(pointCoordinatesPropertyNode.getLine()),
                                                               int(pointCoordinatesPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be an integer greater than zero").arg(pointCoordinatesPropertyNodeName));
+                                                              tr("the value of '%1' must be an integer greater than zero").arg(pointCoordinatesPropertyNodeName));
 
                                     return false;
                                 }
@@ -1135,7 +1134,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(xAxisPropertyNode.getLine()),
                                                               int(xAxisPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be an integer greater than zero").arg(xAxisPropertyNodeName));
+                                                              tr("the value of '%1' must be an integer greater than zero").arg(xAxisPropertyNodeName));
 
                                     return false;
                                 }
@@ -1146,7 +1145,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(xAxisPropertyNode.getLine()),
                                                               int(xAxisPropertyNode.getColumn()),
-                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(LogarithmicScale));
+                                                              tr("the value of '%1' must be 'true' or 'false'").arg(LogarithmicScale));
 
                                     return false;
                                 }
@@ -1170,7 +1169,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(yAxisPropertyNode.getLine()),
                                                               int(yAxisPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be an integer greater than zero").arg(yAxisPropertyNodeName));
+                                                              tr("the value of '%1' must be an integer greater than zero").arg(yAxisPropertyNodeName));
 
                                     return false;
                                 }
@@ -1181,7 +1180,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(yAxisPropertyNode.getLine()),
                                                               int(yAxisPropertyNode.getColumn()),
-                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(LogarithmicScale));
+                                                              tr("the value of '%1' must be 'true' or 'false'").arg(LogarithmicScale));
 
                                     return false;
                                 }
@@ -1206,7 +1205,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(zoomRegionPropertyNode.getLine()),
                                                               int(zoomRegionPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be a number greater than zero").arg(zoomRegionPropertyNodeName));
+                                                              tr("the value of '%1' must be a number greater than zero").arg(zoomRegionPropertyNodeName));
 
                                     return false;
                                 }
@@ -1226,7 +1225,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(zoomRegionPropertyNode.getLine()),
                                                               int(zoomRegionPropertyNode.getColumn()),
-                                                              tr("the '%1' property value must be an integer greater than zero").arg(zoomRegionPropertyNodeName));
+                                                              tr("the value of '%1' must be an integer greater than zero").arg(zoomRegionPropertyNodeName));
 
                                     return false;
                                 }
@@ -1237,7 +1236,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(zoomRegionPropertyNode.getLine()),
                                                               int(zoomRegionPropertyNode.getColumn()),
-                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(Filled));
+                                                              tr("the value of '%1' must be 'true' or 'false'").arg(Filled));
 
                                     return false;
                                 }
@@ -1317,7 +1316,7 @@ bool SedmlFile::isSupported()
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                                   int(linePropertyNode.getLine()),
                                                                   int(linePropertyNode.getColumn()),
-                                                                  tr("the '%1' property value must be a number greater than zero").arg(linePropertyNodeName));
+                                                                  tr("the value of '%1' must be a number greater than zero").arg(linePropertyNodeName));
 
                                         return false;
                                     }
@@ -1343,7 +1342,7 @@ bool SedmlFile::isSupported()
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                                   int(symbolPropertyNode.getLine()),
                                                                   int(symbolPropertyNode.getColumn()),
-                                                                  tr("the '%1' property value must be an integer greater than zero").arg(symbolPropertyNodeName));
+                                                                  tr("the value of '%1' must be an integer greater than zero").arg(symbolPropertyNodeName));
 
                                         return false;
                                     }
@@ -1359,7 +1358,7 @@ bool SedmlFile::isSupported()
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                                   int(symbolPropertyNode.getLine()),
                                                                   int(symbolPropertyNode.getColumn()),
-                                                                  tr("the '%1' property must have a value of 'true' or 'false'").arg(Filled));
+                                                                  tr("the value of '%1' must be 'true' or 'false'").arg(Filled));
 
                                         return false;
                                     }
