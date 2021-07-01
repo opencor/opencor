@@ -38,7 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                       { "change": "<strong>General:</strong> improved the quality of our codebase (see issue <a href=\"https://github.com/opencor/opencor/issues/2499\">#2499</a>)." },
-                      { "change": "<strong>Python support:</strong> provided a script to run <a href=\"https://ipython.org/\">IPython</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2486\">#2486</a>)." },
+                      { "change": "<strong>Python support:</strong> improved error handling (see issue <a href=\"https://github.com/opencor/opencor/issues/2493\">#2493</a>). Provided a script to run <a href=\"https://ipython.org/\">IPython</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2486\">#2486</a>)." },
                       { "change": "<strong>Simulation Experiment view:</strong> prevent a potential crash on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a> when clearing all simulation results (see issue <a href=\"https://github.com/opencor/opencor/issues/2497\">#2497</a>)." },
                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.1.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/2483\">#2483</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.11 (see issue <a href=\"https://github.com/opencor/opencor/issues/2504\">#2504</a>)." }
                     ]
