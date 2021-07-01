@@ -140,7 +140,7 @@
     </message>
     <message>
         <source>the value of &apos;%1&apos; must be an integer greater than zero</source>
-        <translation>la valeur de &apos;%1&apos; doit être un entier plus grand que zéro</translation>
+        <translation>la valeur de &apos;%1&apos; doit être un nombre entier plus grand que zéro</translation>
     </message>
     <message>
         <source>the value of &apos;%1&apos; must be &apos;true&apos; or &apos;false&apos;</source>
@@ -157,6 +157,38 @@
     <message>
         <source>%1 could not be retrieved (%2)</source>
         <translation>%1 n&apos;a pas pu être retrouvé (%2)</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be &apos;true&apos; or &apos;false&apos;</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être &apos;true&apos; or &apos;false&apos;</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be an integer</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre entier</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be an integer greater or equal to zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre entier plus grand ou égal à zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be an integer greater than zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre entier plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be a number</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be a number greater or equal to zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre plus grand ou égal à zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be a number greater than zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be %3</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être %3</translation>
     </message>
 </context>
 <context>

@@ -61,3 +61,12 @@ if __name__ == '__main__':
     # utils.test_simulation('Unsupported remote SED-ML file (algorithm parameter)',
     #                       'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_unsupported_algorithm_parameter.sedml',
     #                       False, True)
+
+    # Test for a SED-ML file that uses an invalid parameter value
+
+    utils.test_simulation('Invalid local SED-ML file (parameter value)',
+                          'tests/sedml/lorenz_invalid_parameter_value.sedml',
+                          False, True)
+    # utils.test_simulation('Invalid remote SED-ML file (parameter value)',
+    #                       'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/sedml/lorenz_invalid_parameter_value.sedml',
+    #                       False, True)

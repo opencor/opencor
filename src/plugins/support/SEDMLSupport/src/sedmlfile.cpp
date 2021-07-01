@@ -392,19 +392,148 @@ bool SedmlFile::validAlgorithmParameters(const libsedml::SedListOfAlgorithmParam
 
     // Recursively check whether the parameters of the given algorithm are valid
 
+    bool res = true;
+    const Solver::Properties solverProperties = pSolverInterface->solverProperties();
+
     for (uint i = 0, iMax = pSedmlAlgorithmParameters->getNumAlgorithmParameters(); i < iMax; ++i) {
         QString parameterKisaoId = QString::fromStdString(pSedmlAlgorithmParameters->get(i)->getKisaoID());
         QString id = pSolverInterface->id(parameterKisaoId);
+
+        // Make sure that the algorithm parameter is supported
 
         if (id.isEmpty() || (id == pSolverInterface->solverName())) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Unsupported,
                                       tr("unsupported algorithm parameter (%1)").arg(parameterKisaoId));
 
-            return false;
+            res = false;
+        } else {
+            // Make sure that the algorithm parameter value is valid
+
+            auto solverProperty = *std::find_if(solverProperties.begin(), solverProperties.end(), [&](const auto &property) {
+                return id == property.id();
+            });
+            Descriptions solverPropertyDescriptions = solverProperty.descriptions();
+            QString parameterName = solverPropertyDescriptions.value(Core::locale());
+            QString parameterValue = QString::fromStdString(pSedmlAlgorithmParameters->get(i)->getValue());
+
+            switch (solverProperty.type()) {
+            case Solver::Property::Type::Boolean:
+                if ((parameterValue != "true") && (parameterValue != "false")) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be 'true' or 'false'").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            case Solver::Property::Type::Integer: {
+                bool ok;
+
+                parameterValue.toInt(&ok);
+
+                if (!ok) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be an integer").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            }
+            case Solver::Property::Type::IntegerGe0: {
+                bool ok;
+                int value = parameterValue.toInt(&ok);
+
+                if (!ok || (value < 0)) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be an integer greater or equal to zero").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            }
+            case Solver::Property::Type::IntegerGt0: {
+                bool ok;
+                int value = parameterValue.toInt(&ok);
+
+                if (!ok || (value <= 0)) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be an integer greater than zero").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            }
+            case Solver::Property::Type::Double: {
+                bool ok;
+
+                parameterValue.toDouble(&ok);
+
+                if (!ok) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be a number").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            }
+            case Solver::Property::Type::DoubleGe0: {
+                bool ok;
+                double value = parameterValue.toDouble(&ok);
+
+                if (!ok || (value < 0.0)) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be a number greater or equal to zero").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            }
+            case Solver::Property::Type::DoubleGt0: {
+                bool ok;
+                double value = parameterValue.toDouble(&ok);
+
+                if (!ok || (value <= 0.0)) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be a number greater than zero").arg(parameterName, parameterKisaoId));
+
+                    res = false;
+                }
+
+                break;
+            }
+            case Solver::Property::Type::List:
+                const QStringList values = solverProperty.listValues();
+
+                if (!values.contains(parameterValue)) {
+                    QString validValues;
+                    int j = -1;
+                    int lastValueIndex = values.count()-1;
+
+                    for (const auto &value : values) {
+                        if (++j != 0) {
+                            validValues += (j == lastValueIndex)?" "+tr("or")+" ":", ";
+                        }
+
+                        validValues += "'"+value+"'";
+                    }
+
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                              tr("the value of '%1' (%2) must be %3").arg(parameterName, parameterKisaoId, validValues));
+
+                    res = false;
+                }
+
+                break;
+            }
         }
     }
 
-    return true;
+    return res;
 }
 
 //==============================================================================
