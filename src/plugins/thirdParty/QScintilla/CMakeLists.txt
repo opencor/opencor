@@ -8,7 +8,7 @@ set(PACKAGE_VERSION 2.13.0)
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 15)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.0)
 
 # Git tag for our library
 
