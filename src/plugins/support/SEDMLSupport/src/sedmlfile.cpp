@@ -550,12 +550,12 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         int i = -1;
         int lastValueIndex = pValuesList.count()-1;
 
-        for (const auto &lineStyle : pValuesList) {
+        for (const auto &value : pValuesList) {
             if (++i != 0) {
                 values += (i == lastValueIndex)?" "+tr("or")+" ":", ";
             }
 
-            values += "'"+lineStyle+"'";
+            values += "'"+value+"'";
         }
 
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
