@@ -1421,11 +1421,11 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
         return;
     }
 
-    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
+    const PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
     int workspacesCount = workspaces.count();
     int workspaceNb = 0;
 
-    for (auto workspace : qAsConst(workspaces)) {
+    for (auto workspace : workspaces) {
         refreshWorkspace(workspace, ++workspaceNb == workspacesCount);
     }
 }

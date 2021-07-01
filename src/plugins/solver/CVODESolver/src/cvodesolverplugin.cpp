@@ -286,7 +286,7 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
              Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, {}, UpperHalfBandwidthDefaultValue, false),
              Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, {}, LowerHalfBandwidthDefaultValue, false),
              Solver::Property(Solver::Property::Type::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, {}, RelativeToleranceDefaultValue, false),
-             Solver::Property(Solver::Property::Type::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, {}, AbsoluteToleranceDefaultValue, false),
+             Solver::Property(Solver::Property::Type::DoubleGe0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, {}, AbsoluteToleranceDefaultValue, false),
              Solver::Property(Solver::Property::Type::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, {}, InterpolateSolutionDefaultValue, false) };
 }
 

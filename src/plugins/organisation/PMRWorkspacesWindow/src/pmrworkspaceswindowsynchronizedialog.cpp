@@ -911,7 +911,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     static const QRegularExpression AfterNumberOfLinesRegEx = QRegularExpression(" .*");
 
     QString html;
-    QStringList differencesList = differences.split('\n');
+    const QStringList differencesList = differences.split('\n');
     int differenceNumber = 0;
     int differenceMaxNumber = differencesList.count()-1;
     int addLineNumber = 0;
@@ -919,7 +919,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     int removeLineNumber = 0;
     PmrWorkspacesWindowSynchronizeDialogDifferencesData differencesData;
 
-    for (const auto &difference : qAsConst(differencesList)) {
+    for (const auto &difference : differencesList) {
         ++differenceNumber;
 
         if (difference.startsWith("@@") && difference.endsWith("@@")) {

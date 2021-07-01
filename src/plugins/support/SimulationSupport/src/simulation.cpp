@@ -82,14 +82,16 @@ QString SimulationIssue::typeAsString() const
     // Return the issue's type as a string
 
     switch (mType) {
-    case SimulationSupport::SimulationIssue::Type::Information:
+    case Type::Information:
         return QObject::tr("Information");
-    case SimulationSupport::SimulationIssue::Type::Error:
+    case Type::Error:
         return QObject::tr("Error");
-    case SimulationSupport::SimulationIssue::Type::Warning:
+    case Type::Warning:
         return QObject::tr("Warning");
-    case SimulationSupport::SimulationIssue::Type::Fatal:
+    case Type::Fatal:
         return QObject::tr("Fatal");
+    case Type::Unsupported:
+        return QObject::tr("Information");
     }
 
     return "???";
@@ -940,9 +942,9 @@ void SimulationResults::createDataStore()
     // Reimport our data, if any, and update their array so that it contains the
     // computed values for our start point
 
-    QList<double *> dataKeys = mDataDataStores.keys();
+    const QList<double *> dataKeys = mDataDataStores.keys();
 
-    for (auto data : qAsConst(dataKeys)) {
+    for (auto data : dataKeys) {
         DataStore::DataStore *importDataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
 
@@ -1205,10 +1207,10 @@ void SimulationResults::addPoint(double pPoint)
     // Make sure that we have the correct imported data values for the given
     // point, keeping in mind that we may have several runs
 
-    QList<double *> dataKeys = mDataDataStores.keys();
+    const QList<double *> dataKeys = mDataDataStores.keys();
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto data : qAsConst(dataKeys)) {
+    for (auto data : dataKeys) {
         DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
@@ -1460,7 +1462,9 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
                     FileType::CellmlFile:
                     (mSedmlFile != nullptr)?
                         FileType::SedmlFile:
-                        FileType::CombineArchive;
+                        (mCombineArchive != nullptr)?
+                            FileType::CombineArchive:
+                            FileType::Unknown;
 
     // We have a COMBINE archive, so we need to retrieve its corresponding
     // SED-ML file
@@ -1584,22 +1588,31 @@ void Simulation::checkIssues()
 
     mNeedCheckIssues = false;
     mIssues = SimulationIssues();
-    mHasBlockingIssues = false;
+
+    // Make sure that we are dealing with a CellML file, a SED-ML file or a
+    // COMBINE archive
+
+    if (mFileType == FileType::Unknown) {
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+        mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("'%1' must be a CellML file, a SED-ML file or a COMBINE archive.").arg(fileManagerInstance->isRemote(mFileName)?
+                                                                                                                                                   fileManagerInstance->url(mFileName):
+                                                                                                                                                   mFileName)));
+
+        return;
+    }
 
     // Determine whether we have issues with our SED-ML and our COMBINE archive
 
-    SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSedmlFile != nullptr)?
-                                                        mSedmlFile->issues():
-                                                        SEDMLSupport::SedmlFileIssues();
-    COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mCombineArchive != nullptr)?
-                                                                    mCombineArchive->issues():
-                                                                    COMBINESupport::CombineArchiveIssues();
+    const COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mCombineArchive != nullptr)?
+                                                                          mCombineArchive->issues():
+                                                                          COMBINESupport::CombineArchiveIssues();
 
     if (!combineArchiveIssues.isEmpty()) {
         // There is one or several issues with our COMBINE archive, so list
         // it/them
 
-        for (const auto &combineArchiveIssue : qAsConst(combineArchiveIssues)) {
+        for (const auto &combineArchiveIssue : combineArchiveIssues) {
             SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
 
             switch (combineArchiveIssue.type()) {
@@ -1610,8 +1623,6 @@ void Simulation::checkIssues()
             case COMBINESupport::CombineArchiveIssue::Type::Error:
                 issueType = SimulationIssue::Type::Error;
 
-                mHasBlockingIssues = true;
-
                 break;
             case COMBINESupport::CombineArchiveIssue::Type::Warning:
                 issueType = SimulationIssue::Type::Warning;
@@ -1620,7 +1631,9 @@ void Simulation::checkIssues()
             case COMBINESupport::CombineArchiveIssue::Type::Fatal:
                 issueType = SimulationIssue::Type::Fatal;
 
-                mHasBlockingIssues = true;
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Unsupported:
+                issueType = SimulationIssue::Type::Unsupported;
 
                 break;
             }
@@ -1629,10 +1642,14 @@ void Simulation::checkIssues()
         }
     }
 
+    const SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSedmlFile != nullptr)?
+                                                              mSedmlFile->issues():
+                                                              SEDMLSupport::SedmlFileIssues();
+
     if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
-        for (const auto &sedmlFileIssue : qAsConst(sedmlFileIssues)) {
+        for (const auto &sedmlFileIssue : sedmlFileIssues) {
             SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
 
             switch (sedmlFileIssue.type()) {
@@ -1643,8 +1660,6 @@ void Simulation::checkIssues()
             case SEDMLSupport::SedmlFileIssue::Type::Error:
                 issueType = SimulationIssue::Type::Error;
 
-                mHasBlockingIssues = true;
-
                 break;
             case SEDMLSupport::SedmlFileIssue::Type::Warning:
                 issueType = SimulationIssue::Type::Warning;
@@ -1653,7 +1668,9 @@ void Simulation::checkIssues()
             case SEDMLSupport::SedmlFileIssue::Type::Fatal:
                 issueType = SimulationIssue::Type::Fatal;
 
-                mHasBlockingIssues = true;
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Unsupported:
+                issueType = SimulationIssue::Type::Unsupported;
 
                 break;
             }
@@ -1665,7 +1682,7 @@ void Simulation::checkIssues()
         }
     }
 
-    if (!mHasBlockingIssues) {
+    if (!hasBlockingIssues()) {
         bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
         CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?
                                                              mRuntime->voi():
@@ -1729,9 +1746,17 @@ bool Simulation::hasBlockingIssues()
 {
     // Return whether we have blocking issues, after having checked for them
 
-    checkIssues();
+    const SimulationIssues issues = Simulation::issues();
 
-    return mHasBlockingIssues;
+    for (const auto &issue : issues) {
+        if (   (issue.type() == SimulationIssue::Type::Error)
+            || (issue.type() == SimulationIssue::Type::Fatal)
+            || (issue.type() == SimulationIssue::Type::Unsupported)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================

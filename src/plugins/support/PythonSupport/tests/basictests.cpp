@@ -40,7 +40,10 @@ void BasicTests::tests()
     QStringList output;
 
     QVERIFY(!OpenCOR::runCli({ "-c", "PythonShell", OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.py") }, output));
-    QCOMPARE(output, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out")));
+    QVERIFY(   (output == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out"),
+                                                "models/tests/jupyter/lorenz.ipynb"))
+            || (output == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/PythonSupport/tests/data/basictests.out"),
+                                                QFileInfo(OpenCOR::fileName("models/tests/jupyter/lorenz.ipynb")).canonicalFilePath())));
 }
 
 //==============================================================================

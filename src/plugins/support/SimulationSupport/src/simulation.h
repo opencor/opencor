@@ -94,7 +94,8 @@ public:
         Information,
         Error,
         Warning,
-        Fatal
+        Fatal,
+        Unsupported
     };
 
     explicit SimulationIssue(Type pType, int pLine, int pColumn,
@@ -397,7 +398,6 @@ private:
 
     bool mNeedCheckIssues = true;
     SimulationIssues mIssues;
-    bool mHasBlockingIssues = false;
 
     CellMLSupport::CellmlFileRuntime *mRuntime = nullptr;
 

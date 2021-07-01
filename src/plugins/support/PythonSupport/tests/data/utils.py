@@ -9,9 +9,11 @@ def header(title, first=True):
     if not first:
         print()
 
-    print('---------------------------------------')
-    print(' ' * math.floor((39 - len(title)) / 2) + title)
-    print('---------------------------------------')
+    header_length = 69
+
+    print(header_length * '-')
+    print(' ' * math.floor((header_length - len(title)) / 2) + title)
+    print(header_length * '-')
 
 
 def open_simulation(file_name_or_url):
@@ -100,7 +102,7 @@ def run_simulation(simulation, step):
     values(results.algebraic(), 'Algebraic', '   ')
 
 
-def test_simulation(title, file_name_or_url, first=True):
+def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
     # Header
 
     header(title, first)
@@ -123,6 +125,9 @@ def test_simulation(title, file_name_or_url, first=True):
         print('    - Issues:\n       - %s' % '\n       - '.join(issues))
     else:
         print('    - Issues: none')
+
+    if expected_fail:
+        return
 
     # Run #1: run the simulation using the default settings, except if we are
     #         dealing with a CellML file, in which case we set a few initial

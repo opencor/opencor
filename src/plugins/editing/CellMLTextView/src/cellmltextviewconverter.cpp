@@ -648,7 +648,7 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
 {
     // Process the given comment node
 
-    QStringList commentLines = pDomNode.nodeValue().remove('\r').split('\n');
+    const QStringList commentLines = pDomNode.nodeValue().remove('\r').split('\n');
     // Note #1: we don't know which end of line string is used by the file, so
     //          the above code ensures that we can handle both "\r\n" on Windows
     //          and "\n" on Linux/macOS...
@@ -664,7 +664,7 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
         outputString();
     }
 
-    for (const auto &commentLine : qAsConst(commentLines)) {
+    for (const auto &commentLine : commentLines) {
         outputString(Output::Comment, QString("//%1").arg(processCommentString(commentLine)));
     }
 }

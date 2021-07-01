@@ -19,12 +19,12 @@
         <translation>ou</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; property must have a value of %2</source>
-        <translation>la propriété &apos;%1&apos; doit avoir une valeur de %2</translation>
+        <source>the value of &apos;%1&apos; must be %2</source>
+        <translation>la valeur de &apos;%1&apos; doit être %2</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; property must have a value of &apos;#RRGGBB&apos; or &apos;#AARRGGBB&apos;</source>
-        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;#RRGGBB&apos; ou  &apos;#AARRGGBB&apos;</translation>
+        <source>the value of &apos;%1&apos; must be &apos;#RRGGBB&apos; or &apos;#AARRGGBB&apos;</source>
+        <translation>la valeur de &apos;%1&apos; doit être &apos;#RRGGBB&apos; ou  &apos;#AARRGGBB&apos;</translation>
     </message>
     <message>
         <source>only SED-ML files with one model are supported</source>
@@ -47,12 +47,12 @@
         <translation>seulement les fichiers SED-ML avec les mêmes valeurs pour &apos;initialTime&apos; et &apos;outputStartTime&apos; sont supportés</translation>
     </message>
     <message>
-        <source>the values for &apos;outputStartTime&apos; and &apos;outputEndTime&apos; must be different</source>
-        <translation>les valeurs pour &apos;outputStartTime&apos; et &apos;outputEndTime&apos; doivent être différentes</translation>
+        <source>the values of &apos;outputStartTime&apos; and &apos;outputEndTime&apos; must be different</source>
+        <translation>les valeurs de &apos;outputStartTime&apos; et &apos;outputEndTime&apos; doivent être différentes</translation>
     </message>
     <message>
-        <source>the value for &apos;numberOfPoints&apos; must be greater than zero</source>
-        <translation>la valeur pour &apos;numberOfPoints&apos; doit être plus grande que zéro</translation>
+        <source>the value of &apos;numberOfPoints&apos; must be greater than zero</source>
+        <translation>la valeur de &apos;numberOfPoints&apos; doit être plus grande que zéro</translation>
     </message>
     <message>
         <source>%1 (%2) is an NLA solver while an ODE solver is expected</source>
@@ -87,8 +87,8 @@
         <translation>seulement les fichiers SED-ML avec une simulation un-pas pour deuxième simulation sont supportés</translation>
     </message>
     <message>
-        <source>the value for step must be greater than zero</source>
-        <translation>la valeur pour step doit être plus grande que zéro</translation>
+        <source>the value of &apos;step&apos; must be greater than zero</source>
+        <translation>la valeur de &apos;step&apos; doit être plus grande que zéro</translation>
     </message>
     <message>
         <source>only SED-ML files with two simulations with the same algorithm are supported</source>
@@ -135,16 +135,16 @@
         <translation>une courbe doit référencer des générateurs de donnée qui existent</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; property value must be a number greater than zero</source>
-        <translation>la valeur de la propriété &apos;%1&apos; doit être un nombre plus grand que zéro</translation>
+        <source>the value of &apos;%1&apos; must be a number greater than zero</source>
+        <translation>la valeur de &apos;%1&apos; doit être un nombre plus grand que zéro</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; property value must be an integer greater than zero</source>
-        <translation>la valeur de la propriété &apos;%1&apos; doit être un entier plus grand que zéro</translation>
+        <source>the value of &apos;%1&apos; must be an integer greater than zero</source>
+        <translation>la valeur de &apos;%1&apos; doit être un nombre entier plus grand que zéro</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; property must have a value of &apos;true&apos; or &apos;false&apos;</source>
-        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;true&apos; ou &apos;false&apos;</translation>
+        <source>the value of &apos;%1&apos; must be &apos;true&apos; or &apos;false&apos;</source>
+        <translation>la valeur de &apos;%1&apos; doit être &apos;true&apos; ou &apos;false&apos;</translation>
     </message>
     <message>
         <source>%1 could not be found</source>
@@ -157,6 +157,38 @@
     <message>
         <source>%1 could not be retrieved (%2)</source>
         <translation>%1 n&apos;a pas pu être retrouvé (%2)</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be &apos;true&apos; or &apos;false&apos;</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être &apos;true&apos; or &apos;false&apos;</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be an integer</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre entier</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be an integer greater or equal to zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre entier plus grand ou égal à zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be an integer greater than zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre entier plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be a number</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be a number greater or equal to zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre plus grand ou égal à zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be a number greater than zero</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être un nombre plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the value of &apos;%1&apos; (%2) must be %3</source>
+        <translation>la valeur de &apos;%1&apos; (%2) doit être %3</translation>
     </message>
 </context>
 <context>

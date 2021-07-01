@@ -764,9 +764,9 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
         informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
     }
 
-    QIntList sectionKeys = mGraphPanelSectionsExpanded.keys();
+    const QIntList sectionKeys = mGraphPanelSectionsExpanded.keys();
 
-    for (auto section : qAsConst(sectionKeys)) {
+    for (auto section : sectionKeys) {
         informationWidget->graphPanelAndGraphsWidget()->setGraphPanelSectionExpanded(section, mGraphPanelSectionsExpanded.value(section));
     }
 }

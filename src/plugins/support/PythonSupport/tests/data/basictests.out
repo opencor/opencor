@@ -1,6 +1,6 @@
----------------------------------------
-           Local CellML file
----------------------------------------
+---------------------------------------------------------------------
+                          Local CellML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -119,9 +119,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-          Remote CellML file
----------------------------------------
+---------------------------------------------------------------------
+                         Remote CellML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -240,9 +240,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-           Local SED-ML file
----------------------------------------
+---------------------------------------------------------------------
+                          Local SED-ML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -358,9 +358,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-          Remote SED-ML file
----------------------------------------
+---------------------------------------------------------------------
+                         Remote SED-ML file
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -476,9 +476,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-         Local COMBINE archive
----------------------------------------
+---------------------------------------------------------------------
+                        Local COMBINE archive
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -594,9 +594,9 @@
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
 
----------------------------------------
-        Remote COMBINE archive
----------------------------------------
+---------------------------------------------------------------------
+                       Remote COMBINE archive
+---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
     - Valid: yes
@@ -711,3 +711,113 @@
           - main/y/prime = [ 25.4, 59.6, 101.0, ..., 12.1, 19.7, 41.4 ]
           - main/z/prime = [ -28.9, -1.3, 94.3, ..., -56.0, -40.1, -18.9 ]
        - Algebraic: empty
+
+---------------------------------------------------------------------
+                         Local unknown file
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: '%1' must be a CellML file, a SED-ML file or a COMBINE archive.
+
+---------------------------------------------------------------------
+                         Remote unknown file
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: 'https://raw.githubusercontent.com/opencor/opencor/master/models/tests/jupyter/lorenz.ipynb' must be a CellML file, a SED-ML file or a COMBINE archive.
+
+---------------------------------------------------------------------
+          Unsupported local SED-ML file (output start time)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+
+---------------------------------------------------------------------
+              Unsupported local SED-ML file (algorithm)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm (KISAO:0000029).
+
+---------------------------------------------------------------------
+         Unsupported local SED-ML file (algorithm parameter)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm parameter (KISAO:0000219).
+
+---------------------------------------------------------------------
+             Invalid local SED-ML file (parameter value)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: the value of 'Absolute tolerance' (KISAO:0000211) must be a number greater or equal to zero.
+       - Error: the value of 'Integration method' (KISAO:0000475) must be 'Adams-Moulton' or 'BDF'.
+       - Error: the value of 'Interpolate solution' (KISAO:0000481) must be 'true' or 'false'.
+       - Error: the value of 'Iteration type' (KISAO:0000476) must be 'Functional' or 'Newton'.
+       - Error: the value of 'Linear solver' (KISAO:0000477) must be 'Dense', 'Banded', 'Diagonal', 'GMRES', 'BiCGStab' or 'TFQMR'.
+       - Error: the value of 'Lower half-bandwidth' (KISAO:0000480) must be an integer greater or equal to zero.
+       - Error: the value of 'Maximum number of steps' (KISAO:0000415) must be an integer greater than zero.
+       - Error: the value of 'Maximum step' (KISAO:0000467) must be a number greater or equal to zero.
+       - Error: the value of 'Preconditioner' (KISAO:0000478) must be 'None' or 'Banded'.
+       - Error: the value of 'Relative tolerance' (KISAO:0000209) must be a number greater or equal to zero.
+       - Error: the value of 'Upper half-bandwidth' (KISAO:0000479) must be an integer greater or equal to zero.
+
+---------------------------------------------------------------------
+        Unsupported local COMBINE archive (output start time)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+
+---------------------------------------------------------------------
+            Unsupported local COMBINE archive (algorithm)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm (KISAO:0000029).
+
+---------------------------------------------------------------------
+       Unsupported local COMBINE archive (algorithm parameter)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm parameter (KISAO:0000219).
+
+---------------------------------------------------------------------
+           Invalid local COMBINE archive (parameter value)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: the value of 'Absolute tolerance' (KISAO:0000211) must be a number greater or equal to zero.
+       - Error: the value of 'Integration method' (KISAO:0000475) must be 'Adams-Moulton' or 'BDF'.
+       - Error: the value of 'Interpolate solution' (KISAO:0000481) must be 'true' or 'false'.
+       - Error: the value of 'Iteration type' (KISAO:0000476) must be 'Functional' or 'Newton'.
+       - Error: the value of 'Linear solver' (KISAO:0000477) must be 'Dense', 'Banded', 'Diagonal', 'GMRES', 'BiCGStab' or 'TFQMR'.
+       - Error: the value of 'Lower half-bandwidth' (KISAO:0000480) must be an integer greater or equal to zero.
+       - Error: the value of 'Maximum number of steps' (KISAO:0000415) must be an integer greater than zero.
+       - Error: the value of 'Maximum step' (KISAO:0000467) must be a number greater or equal to zero.
+       - Error: the value of 'Preconditioner' (KISAO:0000478) must be 'None' or 'Banded'.
+       - Error: the value of 'Relative tolerance' (KISAO:0000209) must be a number greater or equal to zero.
+       - Error: the value of 'Upper half-bandwidth' (KISAO:0000479) must be an integer greater or equal to zero.

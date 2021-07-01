@@ -46,7 +46,8 @@ public:
         Information,
         Error,
         Warning,
-        Fatal
+        Fatal,
+        Unsupported
     };
 
     explicit CombineArchiveIssue(Type pType, const QString &pMessage);

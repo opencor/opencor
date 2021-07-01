@@ -126,7 +126,7 @@ enum class Type {
 
 //==============================================================================
 
-class Property
+class Q_DECL_EXPORT Property
 {
 public:
     enum class Type {

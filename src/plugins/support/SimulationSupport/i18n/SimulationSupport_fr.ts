@@ -15,12 +15,16 @@
         <source>the starting point cannot be greater than the ending point</source>
         <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
     </message>
+    <message>
+        <source>&apos;%1&apos; must be a CellML file, a SED-ML file or a COMBINE archive.</source>
+        <translation>&apos;%1&apos; doit être un fichier CellML, un fichier SED-ML ou une archive COMBINE.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
     <message>
         <source>The simulation has blocking issues and cannot therefore be run.</source>
-        <translation>La simulation a des problèmes blocants et ne peut donc pas être exécutée.</translation>
+        <translation>La simulation a des problèmes bloquants et ne peut donc pas être exécutée.</translation>
     </message>
     <message>
         <source>The simulation has an invalid runtime and cannot therefore be run.</source>

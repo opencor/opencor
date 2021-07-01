@@ -338,6 +338,10 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
                     issueType = EditorWidget::EditorListItem::Type::Fatal;
 
                     break;
+                case SEDMLSupport::SedmlFileIssue::Type::Unsupported:
+                    issueType = EditorWidget::EditorListItem::Type::Unsupported;
+
+                    break;
                 }
 
                 editorList->addItem(issueType, sedmlFileIssue.line(), sedmlFileIssue.column(),

@@ -481,7 +481,7 @@ bool CombineArchive::isSupported()
     // Make sure that we have only one master file
 
     if (masterFiles().count() != 1) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Information,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Unsupported,
                                        tr("only COMBINE archives with one master file are supported"));
 
         return false;

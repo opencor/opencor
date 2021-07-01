@@ -65,7 +65,8 @@ QString dirOrFileName(const QString &pDirOrFileName)
     // Format and return the given directory or file name, so that it can be
     // used on all our supported platforms
 
-    static const QString SourceDir = OpenCOR::fileContents(":/source_directory").first();
+    static const QStringList SourceDirs = OpenCOR::fileContents(":/source_directory");
+    static const QString SourceDir = SourceDirs.first();
 
     return QDir::toNativeSeparators(SourceDir+"/"+QString(pDirOrFileName));
 }
@@ -96,16 +97,37 @@ QByteArray rawFileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
+    QByteArray res;
     QFile file(pFileName);
-    QByteArray contents;
 
     if (file.open(QIODevice::ReadOnly)) {
-        contents = file.readAll();
+        res = file.readAll();
 
         file.close();
     }
 
-    return contents;
+    return res;
+}
+
+//==============================================================================
+
+QString textFileContents(const QString &pFileName)
+{
+    // Read and return the contents of the given file
+
+    QString res;
+    QFile file(pFileName);
+
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        // Note: QIODevice::Text ensures that end-of-line terminators are
+        //       converted to "\n", which is exactly what we want...
+
+        res = file.readAll();
+
+        file.close();
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -114,19 +136,16 @@ QStringList fileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
-    QFile file(pFileName);
-    QString contents;
+    return textFileContents(pFileName).split('\n');
+}
 
-    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        // Note: QIODevice::Text ensures that end-of-line terminators are
-        //       converted to "\n", which is exactly what we want...
+//==============================================================================
 
-        contents = file.readAll();
+QStringList fileContents(const QString &pFileName, const QString &pArg)
+{
+    // Read and return the contents of the given file
 
-        file.close();
-    }
-
-    return contents.split('\n');
+    return textFileContents(pFileName).arg(pArg).split('\n');
 }
 
 //==============================================================================
@@ -146,7 +165,8 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     // Go to the directory where our tests are located
     // Note: see main()...
 
-    static const QString BuildDir = OpenCOR::fileContents(":/build_directory").first();
+    static const QStringList BuildDirs = OpenCOR::fileContents(":/build_directory");
+    static const QString BuildDir = BuildDirs.first();
 
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
