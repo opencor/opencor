@@ -69,25 +69,25 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 42b2c91480f3b03aacf11ad8fcd044e7619c811f
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d31479f7e03503524a31d8aa243f38d7318dd194
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b754050619d3aa12765a7d4e628144037178290a
+                                  SHA1_VALUES e2085e483f2e7798c3a3364514ce9bd1f8461662
                                               8f097f18710b492395b10734e6ed666f9b5f5206)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ced90435ba2850771d58036f385686e5c2c8fedf
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} aeace81825c1853a906dffc8b9880389f373636c
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a8b6b2d2d8c78cf40779030d85c74e8131461b20
+                                  SHA1_VALUES 54f65f9559b3ec0590d7cc428d7d4218d9158e08
                                               67eb6c99fec840dbdf52515249df46b78a3425e7)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 881f640196965668d0b1a24207fec70e40bea7c3
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 677fbd7b4eff1a00703abde3e9d69f5130fc1961
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 0bf614da5c6a3a42b5b992d962b1ee00b56148fe)
+                              SHA1_VALUES 00f6c44db323702bddc36906574b27fac8a3742a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dd4496307b08854c271f5f280e0422c8f46dd343
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cdd4fc923739c833ace583c4a8db407204c23f0a
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 17a04d3c57482818beb6f512abe436bd1bf7f064)
     endif()
