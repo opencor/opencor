@@ -1262,7 +1262,7 @@ double * SimulationResults::constants(int pIndex, int pRun) const
 {
     // Return our constants at the given index and for the given run
 
-    return mConstantsVariables.isEmpty()?
+    return (mConstantsVariables.isEmpty() || (mConstantsVariables[pIndex] == nullptr))?
                 nullptr:
                 mConstantsVariables[pIndex]->values(pRun);
 }
@@ -1273,7 +1273,7 @@ double * SimulationResults::rates(int pIndex, int pRun) const
 {
     // Return our rates at the given index and for the given run
 
-    return mRatesVariables.isEmpty()?
+    return (mRatesVariables.isEmpty() || (mRatesVariables[pIndex] == nullptr))?
                 nullptr:
                 mRatesVariables[pIndex]->values(pRun);
 }
@@ -1284,7 +1284,7 @@ double * SimulationResults::states(int pIndex, int pRun) const
 {
     // Return our states at the given index and for the given run
 
-    return mStatesVariables.isEmpty()?
+    return (mStatesVariables.isEmpty() || (mStatesVariables[pIndex] == nullptr))?
                 nullptr:
                 mStatesVariables[pIndex]->values(pRun);
 }
@@ -1295,7 +1295,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 {
     // Return our algebraic at the given index and for the given run
 
-    return mAlgebraicVariables.isEmpty()?
+    return (mAlgebraicVariables.isEmpty() || (mAlgebraicVariables[pIndex] == nullptr))?
                 nullptr:
                 mAlgebraicVariables[pIndex]->values(pRun);
 }
@@ -1308,7 +1308,7 @@ double * SimulationResults::data(double *pData, int pIndex, int pRun) const
 
     DataStore::DataStoreVariables data = mData.value(pData);
 
-    return data.isEmpty()?
+    return (data.isEmpty() || (data[pIndex] == nullptr))?
                 nullptr:
                 data[pIndex]->values(pRun);
 }

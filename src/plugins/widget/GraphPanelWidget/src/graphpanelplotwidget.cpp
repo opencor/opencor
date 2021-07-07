@@ -700,6 +700,12 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
 void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, quint64 pSize,
                                   int pRun)
 {
+    // Make sure that we have some data to set
+
+    if ((pDataX == nullptr) || (pDataY == nullptr)) {
+        return;
+    }
+
     // Set our data, i.e. raw samples, to the given run, if it exists
 
     GraphPanelPlotGraphRun *run = nullptr;
