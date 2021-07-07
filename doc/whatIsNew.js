@@ -49,6 +49,7 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Basic support for the import of external data." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
+                               { "type": "fixed", "description": "Issue with reloading a file." },
                                { "type": "fixed", "description": "Issue with handling the Graph Panel properties." },
                                { "type": "fixed", "description": "Various issues with saving a file under a new name." },
                                { "type": "fixed", "description": "Potential issue with clearing simulation results on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
