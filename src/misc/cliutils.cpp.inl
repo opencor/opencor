@@ -496,6 +496,14 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
 bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
               QString *pErrorMessage)
 {
+    // Make sure that we have a file name or URL
+
+    pFileContents = QByteArray();
+
+    if (pFileNameOrUrl.isEmpty()) {
+        return false;
+    }
+
     // Determine whether we are dealing with a local or a remote file
 
     bool isLocalFile;
@@ -504,8 +512,6 @@ bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
     checkFileNameOrUrl(pFileNameOrUrl, isLocalFile, fileNameOrUrl);
 
     // Read the contents of the file, which file name or URL is given
-
-    pFileContents = QByteArray();
 
     if (isLocalFile) {
         QFile file(fileNameOrUrl);
