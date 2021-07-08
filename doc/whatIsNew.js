@@ -18,7 +18,8 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "improved", "description": "Unicode support." }
+                               { "type": "improved", "description": "Unicode support." },
+                               { "type": "improved", "description": "Support for piecewise statements." }
                              ]
                            }
                          ]

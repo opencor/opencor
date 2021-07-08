@@ -132,8 +132,8 @@ private:
 
     bool mAssignmentDone = false;
 
-    bool mOldPiecewiseStatementUsed = false;
-    bool mPiecewiseStatementUsed = false;
+    bool mOldTopPiecewiseStatementUsed = false;
+    bool mTopPiecewiseStatementUsed = false;
 
     QMap<QString, QString> mMappings;
     QMap<QString, MathmlNode> mMathmlNodes;
@@ -186,6 +186,7 @@ private:
     int childNodesCount(const QDomNode &pDomNode) const;
     QDomNode childNode(const QDomNode &pDomNode, int pChildNodeIndex) const;
     QString processMathmlNode(const QDomNode &pDomNode, bool &pHasError);
+    bool topPiecewiseNode(const QDomNode &pDomNode);
     QString processPiecewiseNode(const QDomNode &pDomNode, bool &pHasError);
     QString processPieceNode(const QDomNode &pDomNode, bool &pHasError);
     QString processOtherwiseNode(const QDomNode &pDomNode, bool &pHasError);

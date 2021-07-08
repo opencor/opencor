@@ -214,7 +214,8 @@ private:
     QDomElement parseNormalMathematicalExpression7(QDomNode &pDomNode);
     QDomElement parseNormalMathematicalExpression8(QDomNode &pDomNode);
     QDomElement parseNormalMathematicalExpression9(QDomNode &pDomNode);
-    QDomElement parsePiecewiseMathematicalExpression(QDomNode &pDomNode);
+    QDomElement parsePiecewiseMathematicalExpression(QDomNode &pDomNode,
+                                                     bool pAllowTopPiecewiseStatement = false);
 
     void moveTrailingComments(QDomNode &pFromDomNode, QDomNode &pToDomNode);
 };
