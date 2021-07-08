@@ -25,7 +25,6 @@
                 <eq/>
                 <ci>i_Stim</ci>
                 <piecewise>
-                    <!-- In between comment #9...-->
                     <!-- In between comment #10...-->
                     <piece>
                         <apply>
@@ -46,14 +45,15 @@
                             </apply>
                         </apply>
                     </piece>
-                    <!-- In between comment #11...-->
                     <!-- In between comment #12...-->
                     <otherwise>
                         <cn cellml:units="microA_per_cm2">0</cn>
                     </otherwise>
-                    <!-- In between comment #13...-->
                 </piecewise>
             </apply>
+            <!-- In between comment #9...-->
+            <!-- In between comment #11...-->
+            <!-- In between comment #13...-->
             <!-- In between comment #14...-->
             <apply>
                 <!-- In between comment #15...-->

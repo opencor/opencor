@@ -2013,7 +2013,18 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
     // At this stage, we are done when it comes to partial parsing
 
     if (!pFullParsing) {
-        mStatement = (mScanner.token() == CellmlTextViewScanner::Token::Sel)?Statement::PiecewiseSel:Statement::Normal;
+        if (mScanner.token() == CellmlTextViewScanner::Token::Sel) {
+            // We have "sel", but is that for a sel() function or a sel...endsel
+            // statement?
+
+            mScanner.getNextToken();
+
+            mStatement = isTokenType(applyElement, CellmlTextViewScanner::Token::OpeningBracket)?
+                             Statement::Normal:
+                             Statement::PiecewiseSel;
+        } else {
+            mStatement = Statement::Normal;
+        }
 
         return true;
     }
@@ -2021,7 +2032,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
     // Expect either a normal or a piecewise mathematical expression
 
     QDomElement rhsElement = isTokenType(applyElement, CellmlTextViewScanner::Token::Sel)?
-                                 parsePiecewiseMathematicalExpression(pDomNode):
+                                 parsePiecewiseMathematicalExpression(pDomNode, true):
                                  parseNormalMathematicalExpression(pDomNode);
 
     if (rhsElement.isNull()) {
@@ -3205,6 +3216,10 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
         // Try to parse a one-argument mathematical function
 
         res = parseMathematicalFunction(pDomNode, true, false, false);
+    } else if (mScanner.token() == CellmlTextViewScanner::Token::Sel) {
+        // Try to parse a piecewise statement using the sel() function
+
+        res = parsePiecewiseMathematicalExpression(pDomNode);
     } else if (oneOrTwoArgumentMathematicalFunctionTokens.contains(mScanner.token())) {
         // Try to parse a one- or two-argument mathematical function
 
@@ -3242,30 +3257,59 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode &pDomNode)
+QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode &pDomNode,
+                                                                       bool pAllowTopPiecewiseStatement)
 {
     // Create our piecewise element
 
     QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
 
-    // Loop while we have "case" or "otherwise", or leave if we get "endsel"
-
-    static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Case,
-                                                          CellmlTextViewScanner::Token::Otherwise,
-                                                          CellmlTextViewScanner::Token::EndSel };
-
-    bool hasOtherwiseClause = false;
+    // If a top piecewise statement is allowed then check whether we have "(",
+    // in which case it will mean that we are using the sel() function rather
+    // than the sel...endsel statement, or expect "(" if a top piecewise
+    // statement is not allowed
 
     mScanner.getNextToken();
 
-    while (tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("case",
-                                                                    "otherwise",
-                                                                    "endsel"),
-                     Tokens)) {
-        if (mScanner.token() == CellmlTextViewScanner::Token::EndSel) {
-            break;
-        }
+    bool selFunction = true;
 
+    if (pAllowTopPiecewiseStatement) {
+        selFunction = isTokenType(pDomNode, CellmlTextViewScanner::Token::OpeningBracket);
+    } else {
+        if (!openingBracketToken(pDomNode)) {
+            return {};
+        }
+    }
+
+    // Loop while we have "case" or "otherwise", or leave if we get ")" in the
+    // case of the sel() function or "endsel" otherwise
+
+    static const CellmlTextViewScanner::Tokens OpeningBracketCaseOtherwiseTokens = { CellmlTextViewScanner::Token::OpeningBracket,
+                                                                                     CellmlTextViewScanner::Token::Case,
+                                                                                     CellmlTextViewScanner::Token::Otherwise };
+    static const CellmlTextViewScanner::Tokens CaseOtherwiseTokens = { CellmlTextViewScanner::Token::Case,
+                                                                       CellmlTextViewScanner::Token::Otherwise };
+    static const CellmlTextViewScanner::Tokens CommaClosingBracketTokens = { CellmlTextViewScanner::Token::Comma,
+                                                                             CellmlTextViewScanner::Token::ClosingBracket };
+    static const CellmlTextViewScanner::Tokens CaseOtherwiseEndSelTokens = { CellmlTextViewScanner::Token::Case,
+                                                                             CellmlTextViewScanner::Token::Otherwise,
+                                                                             CellmlTextViewScanner::Token::EndSel };
+
+    bool hasOtherwiseClause = false;
+
+    if (selFunction) {
+        mScanner.getNextToken();
+
+        if (!tokenType(piecewiseElement, tr("'%1' or '%2'").arg("case", "otherwise"), CaseOtherwiseTokens)) {
+            return {};
+        }
+    } else {
+        if (!tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("(", "case", "otherwise"), OpeningBracketCaseOtherwiseTokens)) {
+            return {};
+        }
+    }
+
+    do {
         bool caseClause = mScanner.token() == CellmlTextViewScanner::Token::Case;
         QDomElement conditionElement;
 
@@ -3310,9 +3354,10 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
             return {};
         }
 
-        // Expect ";"
+        // Expect "," in the case of the sel() function or ";" otherwise
 
-        if (!semiColonToken(piecewiseElement)) {
+        if (   ( selFunction && !tokenType(piecewiseElement, tr("'%1' or '%2'").arg(",", ")"), CommaClosingBracketTokens))
+            || (!selFunction && !semiColonToken(piecewiseElement))) {
             return {};
         }
 
@@ -3329,20 +3374,30 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
         piecewiseElement.appendChild(pieceOrOtherwiseElement);
 
-        // Fetch the next token
+        // Fetch the next token and consider ourselves done if we have ")" in
+        // the case of the sel() function or "endsel" otherwise
 
-        mScanner.getNextToken();
-    }
+        if (    (selFunction && (mScanner.token() == CellmlTextViewScanner::Token::Comma))
+            || !selFunction) {
+            mScanner.getNextToken();
+        }
+    } while (   !(   ( selFunction && isTokenType(pDomNode, CellmlTextViewScanner::Token::ClosingBracket))
+                  || (!selFunction && isTokenType(pDomNode, CellmlTextViewScanner::Token::EndSel)))
+             &&  (   ( selFunction && tokenType(piecewiseElement, tr("'%1' or '%2'").arg("case", "otherwise"), CaseOtherwiseTokens))
+                  || (!selFunction && tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("case", "otherwise", "endsel"), CaseOtherwiseEndSelTokens))));
 
-    // Expect "endsel"
+    // Expect ")" in the case of the sel() function or "endsel" otherwise
 
-    if (!endselToken(pDomNode)) {
+    if (   ( selFunction && !closingBracketToken(pDomNode))
+        || (!selFunction && !endselToken(pDomNode))) {
         return {};
     }
 
     // Fetch the next token and return our piecewise element
 
-    mScanner.getNextToken();
+    if (pAllowTopPiecewiseStatement) {
+        mScanner.getNextToken();
+    }
 
     return piecewiseElement;
 }

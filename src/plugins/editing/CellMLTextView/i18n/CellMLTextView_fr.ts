@@ -44,14 +44,6 @@
         <translation>Un élément &apos;%1&apos; doit avoir au moins deux frères.</translation>
     </message>
     <message>
-        <source>A &apos;piecewise&apos; element cannot be used within another &apos;piecewise&apos; element.</source>
-        <translation>Un élément &apos;piecewise&apos; ne peut pas être utilisé au sein d&apos;un autre élément &apos;piecewise&apos;.</translation>
-    </message>
-    <message>
-        <source>A &apos;piecewise&apos; element can only be used within a top-level &apos;apply&apos; element that has an &apos;eq&apos; element as its first child element.</source>
-        <translation>Un élément &apos;piecewise&apos; peut seulement être utilisé au sein d&apos;un élément &apos;apply&apos; de top niveau qui a un élément &apos;eq&apos; comme premier élément enfant.</translation>
-    </message>
-    <message>
         <source>A &apos;%1&apos; element must have at least one child element.</source>
         <translation>Un élément &apos;%1&apos; doit avoir aux moins deux éléments enfants.</translation>
     </message>

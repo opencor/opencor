@@ -238,14 +238,6 @@ void ParsingTests::fileTests()
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
     QVERIFY(!parser.domDocument().isNull());
 
-    // ... and back
-
-    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
-
-    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")).join('\n')));
-    QCOMPARE(converter.output().split('\n'),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")));
-
     // Parsing of some CellML Text code (with some in between comments) and
     // converting it to raw CellML
     // Note: we can't convert it back to CellML Text code since the in between
@@ -1810,12 +1802,34 @@ void ParsingTests::componentTests06()
 
     QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parserMessages.first().message(),
-             QString("'case', 'otherwise' or 'endsel' is expected, but the end of the file was found instead."));
+             QString("'(', 'case' or 'otherwise' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("'case' or 'otherwise' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
                             "        a = sel\n"
                             "            case",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("An identifier, 'ode', a number, a mathematical function, a mathematical constant or '(' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case",
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
 
     parserMessages = parser.messages();
@@ -1838,8 +1852,30 @@ void ParsingTests::componentTests06()
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
+                            "        a = sel(case cond1",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("':' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
                             "        a = sel\n"
                             "            case cond1:",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("An identifier, 'ode', a number, a mathematical function, a mathematical constant or '(' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case cond1:",
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
 
     parserMessages = parser.messages();
@@ -1862,6 +1898,17 @@ void ParsingTests::componentTests06()
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("',' or ')' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
                             "        a = sel\n"
                             "            case cond1: id1;",
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
@@ -1871,6 +1918,17 @@ void ParsingTests::componentTests06()
     QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parserMessages.first().message(),
              QString("'case', 'otherwise' or 'endsel' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1,",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("'case' or 'otherwise' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1887,10 +1945,32 @@ void ParsingTests::componentTests06()
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2,",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("'case' or 'otherwise' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
                             "        a = sel\n"
                             "            case cond1: id1;\n"
                             "            case cond2: id2;\n"
                             "            otherwise",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("':' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2, otherwise",
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
 
     parserMessages = parser.messages();
@@ -1915,6 +1995,17 @@ void ParsingTests::componentTests06()
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2, otherwise:",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("An identifier, 'ode', a number, a mathematical function, a mathematical constant or '(' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
                             "        a = sel\n"
                             "            case cond1: id1;\n"
                             "            case cond2: id2;\n"
@@ -1926,6 +2017,17 @@ void ParsingTests::componentTests06()
     QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parserMessages.first().message(),
              QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2, otherwise: otherid",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("',' or ')' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1958,11 +2060,33 @@ void ParsingTests::componentTests06()
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2, otherwise: otherid)",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
                             "        a = sel\n"
                             "            case cond1: id1;\n"
                             "            case cond2: id2;\n"
                             "            otherwise: otherid;\n"
                             "        endsel;",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("'def', 'var', an identifier, 'ode' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2, otherwise: otherid);",
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
 
     parserMessages = parser.messages();
@@ -1982,6 +2106,13 @@ void ParsingTests::componentTests06()
                            "enddef;",
                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
 
+    QVERIFY(parser.execute("def model my_model as\n"
+                           "    def comp my_component as\n"
+                            "        a = sel(case cond1: id1, case cond2: id2, otherwise: otherid);"
+                           "    enddef;\n"
+                           "enddef;",
+                           OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
                             "        a = sel\n"
@@ -1989,6 +2120,19 @@ void ParsingTests::componentTests06()
                             "            otherwise: otherid1;\n"
                             "            otherwise: otherid2;\n"
                             "        endsel;\n"
+                            "    enddef;\n"
+                            "enddef;",
+                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
+
+    parserMessages = parser.messages();
+
+    QCOMPARE(parserMessages.first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
+    QCOMPARE(parserMessages.first().message(),
+             QString("There can only be one 'otherwise' clause."));
+
+    QVERIFY(!parser.execute("def model my_model as\n"
+                            "    def comp my_component as\n"
+                            "        a = sel(case cond1: id, otherwise: otherid1, otherwise: otherid2);"
                             "    enddef;\n"
                             "enddef;",
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));

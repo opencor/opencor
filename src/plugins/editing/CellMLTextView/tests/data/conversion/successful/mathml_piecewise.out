@@ -1,0 +1,46 @@
+def model cellml_1_0 as
+    def comp my_component as
+        a = sel
+            case Version == 0{dimensionless}:
+                123{dimensionless};
+        endsel;
+
+        a = sel
+            otherwise:
+                123{dimensionless};
+        endsel;
+
+        a = sel
+            case Version == 0{dimensionless}:
+                123{dimensionless};
+            case Version == 1{dimensionless}:
+                456{dimensionless};
+            otherwise:
+                789{dimensionless};
+        endsel;
+
+        a = sel
+            case Version == 0{dimensionless}:
+                123{dimensionless};
+            otherwise:
+                456{dimensionless};
+            case Version == 1{dimensionless}:
+                789{dimensionless};
+        endsel;
+
+        a = sel
+            otherwise:
+                123{dimensionless};
+            case Version == 0{dimensionless}:
+                456{dimensionless};
+            case Version == 1{dimensionless}:
+                789{dimensionless};
+        endsel;
+
+        a = b+sel(case Version == 0{dimensionless}: 123{dimensionless});
+        a = b+sel(otherwise: 123{dimensionless});
+        a = b+sel(case Version == 0{dimensionless}: 123{dimensionless}, case Version == 1{dimensionless}: 456{dimensionless}, otherwise: 789{dimensionless});
+        a = b+sel(case Version == 0{dimensionless}: 123{dimensionless}, otherwise: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless});
+        a = b+sel(otherwise: 123{dimensionless}, case Version == 0{dimensionless}: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless});
+    enddef;
+enddef;

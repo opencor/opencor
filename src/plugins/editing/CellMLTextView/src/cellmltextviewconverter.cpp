@@ -278,8 +278,9 @@ void CellMLTextViewConverter::reset()
     mRdfNodes = QDomDocument(QString());
 
     mAssignmentDone = false;
-    mOldPiecewiseStatementUsed = false;
-    mPiecewiseStatementUsed = false;
+
+    mOldTopPiecewiseStatementUsed = false;
+    mTopPiecewiseStatementUsed = false;
 }
 
 //==============================================================================
@@ -1013,8 +1014,8 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
         } else if (rdfNode(domNode)) {
             processRdfNode(domNode);
         } else {
-            mOldPiecewiseStatementUsed = mPiecewiseStatementUsed;
-            mAssignmentDone = mPiecewiseStatementUsed = hasError = false;
+            mOldTopPiecewiseStatementUsed = mTopPiecewiseStatementUsed;
+            mAssignmentDone = mTopPiecewiseStatementUsed = hasError = false;
             mTopMathmlNode = domNode;
             equation = processMathmlNode(domNode, hasError);
 
@@ -1031,8 +1032,9 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
                     || (mLastOutput == Output::DefBaseUnit)
                     || (mLastOutput == Output::EndDef)
                     || (mLastOutput == Output::Var)
-                    ||  mPiecewiseStatementUsed
-                    || (mPiecewiseStatementUsed != mOldPiecewiseStatementUsed)) {
+                    || (   (mLastOutput != Output::DefComp)
+                        && (   mTopPiecewiseStatementUsed
+                            || (mTopPiecewiseStatementUsed != mOldTopPiecewiseStatementUsed)))) {
                     outputString();
                 }
 
@@ -1285,25 +1287,14 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
     // Piecewise statement
 
     } else if (mathmlNode(domNode, "piecewise")) {
-        if (mPiecewiseStatementUsed) {
-            mErrorMessage = tr("A 'piecewise' element cannot be used within another 'piecewise' element.");
+        if (currentChildNodesCount == 0) {
+            mErrorMessage = tr("A '%1' element must have at least one child element.").arg(domNode.localName());
         } else {
-            static const QString Apply = "apply";
-            static const QString Eq    = "eq";
-
-            QDomNode parentNode = domNode.parentNode();
-
-            if (   (parentNode != mTopMathmlNode)
-                || (parentNode.localName() != Apply)
-                || (childNode(parentNode, 0).localName() != Eq)) {
-                mErrorMessage = tr("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element.");
-            } else if (currentChildNodesCount == 0) {
-                mErrorMessage = tr("A '%1' element must have at least one child element.").arg(domNode.localName());
-            } else {
-                mPiecewiseStatementUsed = true;
-
-                return processPiecewiseNode(pDomNode, pHasError);
+            if (topPiecewiseNode(pDomNode)) {
+                mTopPiecewiseStatementUsed = true;
             }
+
+            return processPiecewiseNode(pDomNode, pHasError);
         }
     } else if (mathmlNode(domNode, "piece")) {
         if (currentChildNodesCount != 2) {
@@ -1450,15 +1441,36 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
 //==============================================================================
 
+bool CellMLTextViewConverter::topPiecewiseNode(const QDomNode &pDomNode)
+{
+    // Return whether the given node is (part of) a top piecewise node
+
+    static const QString Apply = "apply";
+    static const QString Eq    = "eq";
+
+    QDomNode parentNode = mathmlNode(pDomNode, "piecewise")?
+                              pDomNode.parentNode():
+                              pDomNode.parentNode().parentNode();
+
+    return    (parentNode == mTopMathmlNode)
+           && (parentNode.localName() == Apply)
+           && (childNode(parentNode, 0).localName() == Eq);
+}
+
+//==============================================================================
+
 QString CellMLTextViewConverter::processPiecewiseNode(const QDomNode &pDomNode,
                                                       bool &pHasError)
 {
     // Process the piecewise node
 
-    QString res = "sel\n";
+    bool isTopPiecewiseNode = topPiecewiseNode(pDomNode);
+    QString res = isTopPiecewiseNode?"sel\n":"sel(";
     QDomNodeList childNodes = pDomNode.childNodes();
 
-    indent(false);
+    if (isTopPiecewiseNode) {
+        indent(false);
+    }
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         res += processMathmlNode(childNodes.item(i), pHasError);
@@ -1468,9 +1480,19 @@ QString CellMLTextViewConverter::processPiecewiseNode(const QDomNode &pDomNode,
         }
     }
 
-    unindent();
+    if (isTopPiecewiseNode) {
+        unindent();
+    }
 
-    return res+mIndent+"endsel";
+    res += isTopPiecewiseNode?
+               mIndent+"endsel":
+               ")";
+
+    if (!isTopPiecewiseNode) {
+        res = res.replace("(, ", "(");
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -1505,13 +1527,23 @@ QString CellMLTextViewConverter::processPieceNode(const QDomNode &pDomNode,
                     return {};
                 }
 
-                res += mIndent+"case "+condition+":\n";
+                bool isTopPiecewiseNode = topPiecewiseNode(pDomNode);
 
-                indent(false);
+                res += isTopPiecewiseNode?
+                           mIndent+"case "+condition+":\n":
+                           ", case "+condition+": ";
 
-                res += mIndent+statement+";\n";
+                if (isTopPiecewiseNode) {
+                    indent(false);
+                }
 
-                unindent();
+                res += isTopPiecewiseNode?
+                           mIndent+statement+";\n":
+                           statement;
+
+                if (isTopPiecewiseNode) {
+                    unindent();
+                }
             }
 
             ++childElementNodeNumber;
@@ -1544,13 +1576,23 @@ QString CellMLTextViewConverter::processOtherwiseNode(const QDomNode &pDomNode,
                 return {};
             }
 
-            res += mIndent+"otherwise:\n";
+            bool isTopPiecewiseNode = topPiecewiseNode(pDomNode);
 
-            indent(false);
+            res += isTopPiecewiseNode?
+                       mIndent+"otherwise:\n":
+                       ", otherwise: ";
 
-            res += mIndent+statement+";\n";
+            if (isTopPiecewiseNode) {
+                indent(false);
+            }
 
-            unindent();
+            res += isTopPiecewiseNode?
+                       mIndent+statement+";\n":
+                       statement;
+
+            if (isTopPiecewiseNode) {
+                unindent();
+            }
         }
     }
 

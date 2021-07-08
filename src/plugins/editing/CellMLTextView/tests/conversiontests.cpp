@@ -92,6 +92,14 @@ void ConversionTests::successfulConversionTests()
     QVERIFY(converter.execute(cellmlCorWithCommentsCellmlContents.join('\n')));
     QCOMPARE(converter.output().split('\n'),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor_with_comments.out")));
+
+    // Specific tests for the piecewise statement
+
+    cellmlCorCellmlContents = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/mathml_piecewise.cellml"));
+
+    QVERIFY(converter.execute(cellmlCorCellmlContents.join('\n')));
+    QCOMPARE(converter.output().split('\n'),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/mathml_piecewise.out")));
 }
 
 //==============================================================================
@@ -237,19 +245,7 @@ void ConversionTests::failingConversionTests06()
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorColumn(), 19);
 
-    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_piecewise_1.cellml")).join('\n')));
-    QCOMPARE(converter.errorMessage(),
-             QString("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element."));
-    QCOMPARE(converter.errorLine(), 5);
-    QCOMPARE(converter.errorColumn(), 20);
-
-    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_piecewise_2.cellml")).join('\n')));
-    QCOMPARE(converter.errorMessage(),
-             QString("A 'piecewise' element cannot be used within another 'piecewise' element."));
-    QCOMPARE(converter.errorLine(), 10);
-    QCOMPARE(converter.errorColumn(), 26);
-
-    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_piecewise_3.cellml")).join('\n')));
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_piecewise.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'piecewise' element must have at least one child element."));
     QCOMPARE(converter.errorLine(), 8);
