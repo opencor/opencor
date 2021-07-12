@@ -3,16 +3,16 @@ project(LLVMClangPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME LLVMClang)
-set(PACKAGE_VERSION 12.0.0)
+set(PACKAGE_VERSION 12.0.1)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 12)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
 
 # Git tag for our library
 
-set(GIT_TAG v12.0.0)
+set(GIT_TAG v12.0.1)
 
 # Specify where our local package will be installed
 
@@ -57,33 +57,33 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ed82257c05796e6d9eba1bd696d14427d40d2a87
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 78ffae4e53feb7550d999162bfb81f22d20dfd4d
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 83496be750265ec150cd130ec5abe055b542463e
-                                              799be50704e088e602bf8e2ccffeb92593132fc4)
+                                  SHA1_VALUES 9b95f14242d788b7e81b43e7629db0c82f0c303e
+                                              dfa4b0a235a9ba07d28a8f84a7a5e165d6c6b805)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 6927384d0456e8bc5e4508b81620d11ba4a4f752
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f1101cffff78483c5e8fd7c7d9f1685115f399f9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f7c6a3288d49d844b30a4f4f6d1c8cf158231004
-                                              63e71c681f8df925bfb630b08e2baac6916c36a8)
+                                  SHA1_VALUES e3051b7403498580df1479dcd04cc42671767388
+                                              4543f852f1f8e6ab73b4557e79a081ca836209a8)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f525ec8f5e0a6e09478d1ad40ff4663b4a75c76d
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 341d0a3095e1385cf242cfd3e947c130cc408a9b
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 730a63044bf0ba0734cc5fcece0229419a0d7384)
+                              SHA1_VALUES 2247d68416c0dd6d036769e330924eb9ad54082d)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e350de937fa02d80b85b49aac0df0177502efcdb
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cefee41de15625372d8fc162ab3e3713b7770fad
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 00a2579d3ca3bedb67f744d09c30910fb55e949c)
+                              SHA1_VALUES 6f1ab4f763d6c41ea3c6a107cb5e4763aff19f16)
     endif()
 else()
     # Allow for big objects and ignore some warnings
 
     if(WIN32)
-        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4251 /wd4275 /wd4307 /wd4530 /wd4996")
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4018 /wd4251 /wd4275 /wd4307 /wd4530 /wd4996")
     endif()
 
     # Build LLVM+Clang as an external project
