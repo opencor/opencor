@@ -1,4 +1,30 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 7, "year": 2021, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 10",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 20.04 LTS (Focal Fossa) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".pkg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                      { "change": "<strong>General:</strong> improved the quality of our codebase (see issue <a href=\"https://github.com/opencor/opencor/issues/2499\">#2499</a>)." },
+                      { "change": "<strong>Python support:</strong> provided a script to run <a href=\"https://ipython.org/\">IPython</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2486\">#2486</a>). Improved error handling (see issue <a href=\"https://github.com/opencor/opencor/issues/2493\">#2493</a>)." },
+                      { "change": "<strong>CellML Text view:</strong> improved support for piecewise statements (see issue <a href=\"https://github.com/opencor/opencor/issues/575\">#575</a>)." },
+                      { "change": "<strong>Simulation Experiment view:</strong> prevent a potential crash on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a> when clearing all simulation results (see issue <a href=\"https://github.com/opencor/opencor/issues/2497\">#2497</a>). Prevent random crashes when reloading a file (see issue <a href=\"https://github.com/opencor/opencor/issues/2510\">#2510</a>)." },
+                      { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.1.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/2483\">#2483</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.11 (see issue <a href=\"https://github.com/opencor/opencor/issues/2504\">#2504</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.13.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2503\">#2503</a>)." }
+                    ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 5, "year": 2021, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 10",
