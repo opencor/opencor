@@ -326,7 +326,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
         mData.insert(reinterpret_cast<void *>(pComputeSystem), data);
     } else {
-        // We are already initiliased, so simply update our user data
+        // We are already initialised, so simply update our user data
 
         data->setUserData(new KinsolSolverUserData(pComputeSystem, pUserData));
 
