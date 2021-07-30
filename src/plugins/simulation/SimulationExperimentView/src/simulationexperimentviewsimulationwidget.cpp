@@ -62,6 +62,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMainWindow>
 #include <QMenu>
 #include <QMimeData>
+#include <QPainter>
 #include <QScreen>
 #include <QScrollBar>
 #include <QTextEdit>

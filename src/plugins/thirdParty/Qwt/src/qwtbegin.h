@@ -29,8 +29,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated"
     #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+    #pragma clang diagnostic ignored "-Wdouble-promotion"
     #pragma clang diagnostic ignored "-Wfloat-conversion"
     #pragma clang diagnostic ignored "-Wfloat-equal"
+    #pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
     #pragma clang diagnostic ignored "-Wreserved-id-macro"
     #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
