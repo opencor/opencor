@@ -108,7 +108,7 @@ if(USE_PREBUILT_QWT_PACKAGE)
                                           5137adad37c0a8d6afcfd7c0bb1d07f77743525b)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a7b2a6f180ccea896232fc640308bcb7715af91b
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 204a583b3c535dca60fd5d7ca0ecb8e8e1e5282d
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 74aa9404c60a51de116b8e53b4f809285173557e
                                           a6e9225e46d99172c5df42e057d0e601c5100b5c)
