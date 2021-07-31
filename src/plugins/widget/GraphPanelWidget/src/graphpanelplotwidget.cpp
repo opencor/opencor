@@ -36,6 +36,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QGestureEvent>
 #include <QImageWriter>
 #include <QMenu>
+#include <QPainter>
 #include <QPaintEvent>
 #include <QScreen>
 #include <QTimer>
@@ -59,8 +60,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "qwt_plot_renderer.h"
     #include "qwt_point_mapper.h"
     #include "qwt_scale_engine.h"
+    #include "qwt_scale_map.h"
     #include "qwt_text_label.h"
 #include "qwtend.h"
+
+//==============================================================================
+
+#include <QtMath>
 
 //==============================================================================
 

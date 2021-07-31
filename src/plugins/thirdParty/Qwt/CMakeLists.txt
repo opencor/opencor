@@ -3,16 +3,17 @@ project(QwtPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Qwt)
-set(PACKAGE_VERSION 6.1.6)
+set(PACKAGE_VERSION 6.2.0)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 6)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.6)
+set(MINOR_LIBRARY_VERSION 2)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
-set(GIT_TAG v6.1.6)
+set(GIT_TAG v6.2.0)
 
 # Specify where our local package will be installed
 
@@ -33,8 +34,14 @@ if(WIN32)
 
     set(QWTMATHML_SHARED_LIBRARY qwtmathml${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(QWTMATHML_IMPORT_LIBRARY qwtmathml${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
-else()
+elseif(APPLE)
     set(QWT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwt${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(QWT_IMPORT_LIBRARY ${QWT_SHARED_LIBRARY})
+
+    set(QWTMATHML_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwtmathml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(QWTMATHML_IMPORT_LIBRARY ${QWTMATHML_SHARED_LIBRARY})
+else()
+    set(QWT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwt${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(QWT_IMPORT_LIBRARY ${QWT_SHARED_LIBRARY})
 
     set(QWTMATHML_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwtmathml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
@@ -78,33 +85,33 @@ if(USE_PREBUILT_QWT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5c525e04ca0597dd3ac90059b03d68f981be75a9
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c0511b71ee60db94d75f87f5045f9e17078e9026
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES c3e3bf3184cac0fe5d05f9a2bab44b6034d702da
-                                              5d4a990e21c799c10d44d0d162d2dc599fce209d
-                                              4d04ecbc6c1ea50d4fc7ae8094af9d5f97706064
-                                              ab7fc33185dd02cc9e6f39daf87b49b23b72fbaa)
+                                  SHA1_VALUES 30a5ec7e8f11a585d0d40ed77ce41cb83fd07525
+                                              8a3c3fe5390a29341d9e823002cdccee57b7cf70
+                                              97b2e13b187f05d608ea6a241a27e36013190138
+                                              685f303df9a1c8eac8b6b932c2dd31925f4445c9)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e9fee7a8e8bec8b42b24875be1cc9e18e452c7f6
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e9d7a1d68ebbe208558df0881d1944a06e8931ed
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 286c84aa5a76656345ce49474b6500719faffa7f
-                                              c95238d47fb42144251dd331d6ca71fa164533b1
-                                              58bdc94d8f1c531a3d324bf2c7e69a3b2362d0f5
-                                              d3c451f84b79b2479dc8165475e739c5653835e6)
+                                  SHA1_VALUES 5993f5f5ad9812f5f8240977ddd0303b030922ed
+                                              5bf0b39a632dda19b12066aeb423274839bd6aa9
+                                              6a930fc36490d784f66d36e6e973197d6582978e
+                                              e9007814f1ac60a04692aa0f92113b79bee5b79f)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} da96c14e1f0cb45fddafe1aede1e01b56dc98eea
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b35136ca456e4357ffaf219eb1ec3b3e5562740f
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 07877f6eef44bd668437c899923c66441288a85c
-                                          6c97bf61a498e1f54f1d9fe330e3d185b6a29c01)
+                              SHA1_VALUES dbe7d41b92df16eea6753d9ed28b43f37e312a9d
+                                          5137adad37c0a8d6afcfd7c0bb1d07f77743525b)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 3f7a69ba895b9663478180c220e7e5fb0835c486
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 204a583b3c535dca60fd5d7ca0ecb8e8e1e5282d
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 0cee985445814100cc627396276b16d3f882e4aa
-                                          d4d1f0bc0eed3009ca45f919456480fcdce43b9b)
+                              SHA1_VALUES 74aa9404c60a51de116b8e53b4f809285173557e
+                                          a6e9225e46d99172c5df42e057d0e601c5100b5c)
     endif()
 else()
     # Set platform specific configuration options

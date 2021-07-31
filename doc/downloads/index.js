@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                      { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 12.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2515\">#2515</a>)." }
+                      { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 12.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2515\">#2515</a>). Upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2517\">#2517</a>)." }
                     ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
