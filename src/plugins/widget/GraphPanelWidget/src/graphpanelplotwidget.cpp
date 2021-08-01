@@ -1204,6 +1204,14 @@ void GraphPanelPlotScaleDraw::retranslateUi()
 
 QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
+    // Check whether we can round off the given value
+
+    double roundedValue = round(pValue);
+
+    if (qFuzzyCompare(pValue, roundedValue)) {
+        pValue = roundedValue;
+    }
+
     // Return pValue as a string, keeping in mind the current locale
 
     QString label = QLocale().toString(pValue);
