@@ -64,6 +64,10 @@ void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu
     if (mPlotAgainstMenu != nullptr) {
         mPlotAgainstMenu->menuAction()->setText(tr("Plot Against"));
     }
+
+    if (mPlotAgainstLastUsedParameterMenuAction != nullptr) {
+        mPlotAgainstLastUsedParameterMenuAction->setText(tr("Plot Against Last Used Parameter"));
+    }
 }
 
 //==============================================================================
@@ -453,8 +457,11 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
     }
 
     mPlotAgainstMenu = new QMenu(mContextMenu);
+    mPlotAgainstLastUsedParameterMenuAction = mContextMenu->addAction(QString());
 
     mContextMenu->addMenu(mPlotAgainstMenu);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mPlotAgainstLastUsedParameterMenuAction);
 
     // Initialise our menu items
 
@@ -548,6 +555,18 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
         mParameterActions.insert(parameterAction, parameter);
     }
+
+    // Create a connection to handle the graph requirement against the last used
+    // variable and disable it by default
+    // Note #1: there is no parameter associated with our latest used variable,
+    //          so nothing to keep track in mParameterActions...
+    // Note #2: we disable it since no graph has been created by the user when
+    //          we start...
+
+    connect(mPlotAgainstLastUsedParameterMenuAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
+
+    mPlotAgainstLastUsedParameterMenuAction->setEnabled(false);
 }
 
 //==============================================================================
@@ -590,11 +609,24 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 
 void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 {
+    // Keep track of the last used parameter or make use of it, depending on the
+    // situation
+
+    auto action = qobject_cast<QAction *>(sender());
+    auto parameterX = mParameterActions.value(action);
+
+    if (action != mPlotAgainstLastUsedParameterMenuAction) {
+        mLastUsedParameter = parameterX;
+
+        mPlotAgainstLastUsedParameterMenuAction->setEnabled(true);
+    } else {
+        parameterX = mLastUsedParameter;
+    }
+
     // Let people know that we want to plot the current parameter against
     // another
 
-    emit graphRequired(mParameterActions.value(qobject_cast<QAction *>(sender())),
-                       mParameters.value(currentProperty()));
+    emit graphRequired(parameterX, mParameters.value(currentProperty()));
 }
 
 //==============================================================================

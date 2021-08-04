@@ -79,10 +79,12 @@ protected:
 private:
     QMenu *mContextMenu;
     QAction *mPlotAgainstVoiMenuAction = nullptr;
+    QAction *mPlotAgainstLastUsedParameterMenuAction = nullptr;
     QMenu *mPlotAgainstMenu = nullptr;
 
     QHash<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QHash<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
+    CellMLSupport::CellmlFileRuntimeParameter *mLastUsedParameter;
 
     SimulationSupport::Simulation *mSimulation = nullptr;
 

@@ -175,6 +175,10 @@
         <translation>Tracer En Fonction De</translation>
     </message>
     <message>
+        <source>Plot Against Last Used Parameter</source>
+        <translation>Tracer En Fonction Du Dernier Paramètre Utilisé</translation>
+    </message>
+    <message>
         <source>variable of integration</source>
         <translation>variable d&apos;intégration</translation>
     </message>
