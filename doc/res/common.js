@@ -4,19 +4,19 @@ if (   document.location.protocol !== "file:"
     && document.location.protocol !== "qthelp:"
     && document.location.host !== "localhost"
     && document.location.host !== "127.0.0.1") {
-    var _gaq = _gaq || [];
+    let _gaq = _gaq || [];
 
     _gaq.push(["_setAccount", "UA-39516363-1"]);
     _gaq.push(["_trackPageview"]);
 
     (function() {
-        var ga = document.createElement("script");
+        let ga = document.createElement("script");
 
         ga.type = "text/javascript";
         ga.async = true;
         ga.src = ((document.location.protocol === "https:")?"https://ssl":"http://www")+".google-analytics.com/ga.js";
 
-        var s = document.getElementsByTagName("script")[0];
+        let s = document.getElementsByTagName("script")[0];
 
         s.parentNode.insertBefore(ga, s);
     })();
@@ -26,12 +26,12 @@ if (   document.location.protocol !== "file:"
 
     $(document).ready(function() {
         $("a").click(function() {
-            var element = $(this);
-            var href = (typeof element.attr("href") !== "undefined")?element.attr("href"):"";
-            var track = true;
+            let element = $(this);
+            let href = (typeof element.attr("href") !== "undefined")?element.attr("href"):"";
+            let track = true;
 
             if (!href.match(/^javascript:/i)) {
-                var elementEvent = [];
+                let elementEvent = [];
 
                 elementEvent.label = href.replace(/%20/g, " ");
                 elementEvent.nonInter = false;
@@ -108,11 +108,13 @@ function month(month) {
 }
 
 function copyright(relativePath) {
-    var date = new Date();
+    let date = new Date();
+    let startingYear = 2011;
+    let currentYear = date.getFullYear();
 
     document.write("<div class=\"copyright\">\n");
     document.write("    <div class=\"left\">\n");
-    document.write("        Copyright 2011-"+date.getFullYear()+"\n");
+    document.write("        Copyright "+startingYear+((currentYear == startingYear)?"":"-"+currentYear)+"\n");
     document.write("    </div>\n");
     document.write("    <div class=\"center\">\n");
     document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>\n");

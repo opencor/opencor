@@ -5,7 +5,7 @@ function showContentsSubMenu(subMenuButton, showSubMenu) {
     $("ul.contentsMenu > li > ul > li.subMenuItem#"+subMenuButton.attr("id")).css("display", showSubMenu?"list-item":"none");
 }
 
-function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
+function doHeaderAndContentsMenu(pageName, relativePath, data) {
     // Header
 
     document.write("<div class=\"header\">\n");
@@ -42,7 +42,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        top: 29px;\n");
     document.write("        right: 0px;\n");
     document.write("        background: rgb(249, 249, 249);\n");
-    document.write("        border: 2px solid rgb("+r+", "+g+", "+b+");\n");
+    document.write("        border: 2px solid rgb(103, 103, 103);\n");
     document.write("        border-top-style: none;\n");
     document.write("        border-radius: 0px 0px 5px 5px;\n");
     document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);\n");
@@ -56,7 +56,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }\n");
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover {\n");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);\n");
+    document.write("        background: rgba(103, 103, 103, 0.79);\n");
     document.write("    }\n");
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover div > a {\n");
@@ -94,7 +94,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a,\n");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div.subMenuButton {\n");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.13);\n");
+    document.write("        background: rgba(103, 103, 103, 0.13);\n");
     document.write("    }\n");
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.subMenuButton {\n");
@@ -116,7 +116,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    ul.contentsMenu li ul li.separator {\n");
     document.write("        margin: 0px;\n");
     document.write("        padding: 0px;\n");
-    document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");\n");
+    document.write("        border-top: 1px solid rgb(103, 103, 103);\n");
     document.write("    }\n");
     document.write("</style>\n");
     document.write("\n");
@@ -128,12 +128,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24>\n");
     document.write("        <ul>\n");
 
-    var menuItems = data.menuItems;
-    var subMenuCounter = 0;
-    var subMenuSelected = 0;
+    let menuItems = data.menuItems;
+    let subMenuCounter = 0;
+    let subMenuSelected = 0;
 
-    for (i = 0; i < menuItems.length; ++i) {
-        var menuItem = menuItems[i];
+    for (let i = 0; i < menuItems.length; ++i) {
+        let menuItem = menuItems[i];
 
         if (menuItem.separator) {
             // We are dealing with a menu separator
@@ -142,7 +142,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         } else {
             // We are dealing with a menu item
 
-            var selectedMenuItem = false;
+            let selectedMenuItem = false;
 
             if (   (   (typeof menuItem.label !== "undefined")
                     && (menuItem.label.toLowerCase() === pageName.toLowerCase()))
@@ -151,8 +151,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 selectedMenuItem = true;
             }
 
-            var liId = "";
-            var liClass = "";
+            let liId = "";
+            let liClass = "";
 
             if (   (typeof menuItem.subMenuItem !== "undefined")
                 &&  menuItem.subMenuItem) {
@@ -160,20 +160,20 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 liClass = " class=\"subMenuItem\"";
             }
 
-            var menuItemIndent = "";
+            let menuItemIndent = "";
 
-            for (j = 0; j < menuItem.level; ++j) {
+            for (let j = 0; j < menuItem.level; ++j) {
                 menuItemIndent += "&nbsp;&nbsp;&nbsp;&nbsp;"
             }
 
-            var menuItemLink = "";
+            let menuItemLink = "";
 
             if (   (typeof menuItem.link !== "undefined")
                 &&  menuItem.link.length) {
                 menuItemLink = menuItem.directLink?menuItem.link:relativePath+"/"+menuItem.link;
             }
 
-            var tableRowClasses = "menuItemTableRow";
+            let tableRowClasses = "menuItemTableRow";
 
             if (i === menuItems.length-1) {
                 tableRowClasses += " lastMenuItem";
@@ -193,7 +193,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 }
             }
 
-            var subMenuButton = "";
+            let subMenuButton = "";
 
             if (   (typeof menuItem.subMenuHeader !== "undefined")
                 &&  menuItem.subMenuHeader) {
@@ -228,8 +228,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Show/hide our sub-menus, depending on whether one of them contains the
     // selected menu item
 
-    for (i = 1; i <= subMenuCounter; ++i) {
-        var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
+    for (let i = 1; i <= subMenuCounter; ++i) {
+        let subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
         if (i === subMenuSelected) {
             subMenuButton.css("display", "none");
@@ -248,7 +248,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         if ($("ul.contentsMenu > li > ul").css("visibility") === "visible") {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
         } else {
-            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
+            for (let i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
                 showContentsSubMenu($("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i), i === subMenuSelected);
             }
 
@@ -287,8 +287,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         if ($(this).hasClass("subMenuOpened")) {
             showContentsSubMenu($(this), false);
         } else if ($(this).hasClass("subMenuClosed")) {
-            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
-                var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
+            for (let i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
+                let subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
                 if (subMenuButton.hasClass("subMenuOpened")) {
                     showContentsSubMenu(subMenuButton, i === subMenuSelected);
@@ -303,7 +303,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 }
 
 function headerAndContentsMenu(pageName, relativePath) {
-    doHeaderAndContentsMenu(pageName, relativePath, 103, 103, 103,
+    doHeaderAndContentsMenu(pageName, relativePath,
                             { "menuItems": [
                                 { "level": 0, "label": "Home", "link": "index.html" },
                                 { "separator": true },

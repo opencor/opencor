@@ -18,11 +18,11 @@
         <script type="text/javascript">
             headerAndContentsMenu("What is new?", ".");
 
-            var versions = jsonData.versions;
-            var typeWidths = { "added": 37, "improved": 51, "fixed": 31 };
+            let versions = jsonData.versions;
+            let typeWidths = { "added": 37, "improved": 51, "fixed": 31 };
 
-            for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
-                var version = versions[versionIndex];
+            for (let versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
+                let version = versions[versionIndex];
 
                 document.write("<span class=\"anchor\" id=\""+version.anchor+"\"></span>\n");
 
@@ -46,12 +46,12 @@
                 document.write("    </table>\n");
                 document.write("</div>\n");
 
-                var categories = version.categories;
+                let categories = version.categories;
 
-                for (var categoryIndex = 0; categoryIndex < categories.length; ++categoryIndex) {
-                    var category = categories[categoryIndex];
-                    var entries = category.entries;
-                    var realCategory = typeof entries !== "undefined";
+                for (let categoryIndex = 0; categoryIndex < categories.length; ++categoryIndex) {
+                    let category = categories[categoryIndex];
+                    let entries = category.entries;
+                    let realCategory = typeof entries !== "undefined";
 
                     document.write("<ul>\n");
                     document.write("    <li>\n");
@@ -60,18 +60,18 @@
                     if (realCategory) {
                         document.write("        <ul>\n");
 
-                        for (var entryIndex = 0; entryIndex < entries.length; ++entryIndex) {
-                            var entry = entries[entryIndex];
+                        for (let entryIndex = 0; entryIndex < entries.length; ++entryIndex) {
+                            let entry = entries[entryIndex];
 
                             if (entry.type === "subCategory") {
                                 document.write("            <li>\n");
                                 document.write("                "+entry.name+":\n");
                                 document.write("                <ul>\n");
 
-                                var subEntries = entry.entries;
+                                    let subEntries = entry.entries;
 
-                                for (var subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
-                                    var subEntry = subEntries[subEntryIndex];
+                                for (let subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
+                                    let subEntry = subEntries[subEntryIndex];
 
                                     document.write("                    <li><img src=\"res/pics/"+subEntry.type+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15> "+subEntry.description+"</li>\n");
                                 }

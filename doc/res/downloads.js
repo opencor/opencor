@@ -8,8 +8,8 @@ function twoDigits(number) {
 
 function fileSize(size) {
     if (typeof size !== "undefined") {
-        var units = [ "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" ];
-        var index = Math.floor(Math.log(size)/Math.log(1024));
+        let units = [ "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" ];
+        let index = Math.floor(Math.log(size)/Math.log(1024));
 
         return Math.ceil(size/Math.pow(1024, index))+" "+units[index];
     } else {
@@ -32,18 +32,18 @@ function versions(downloads) {
     //       and we were to use opencor.ws for our request, then the request
     //       would fail because we don't use the exact same hostname...
 
-    var fileSizes = {};
+    let fileSizes = {};
 
     if (location.hostname.indexOf("opencor") !== -1) {
-        var fileSizesData;
+        let fileSizesData;
 
         $.ajax({ url: location.protocol+"//"+location.hostname+"/res/downloads.php", async: false,
                  success: function(data) { fileSizesData = data; } });
 
-        var retrievedFileSizes = fileSizesData.split("\n");
+        let retrievedFileSizes = fileSizesData.split("\n");
 
-        for (var i = 0, iMax = retrievedFileSizes.length; i < iMax; ++i) {
-            var retrievedFileSize = retrievedFileSizes[i].split(",");
+        for (let i = 0, iMax = retrievedFileSizes.length; i < iMax; ++i) {
+            let retrievedFileSize = retrievedFileSizes[i].split(",");
 
             fileSizes[retrievedFileSize[0]] = retrievedFileSize[1];
         }
@@ -52,7 +52,7 @@ function versions(downloads) {
     // Output the various requested downloadable files, using the information
     // contained in the given JSON file
 
-    var versions = jsonData.versions;
+    let versions = jsonData.versions;
 
     if (versions.length) {
         // Some CSS for our downloads menus
@@ -196,23 +196,23 @@ function versions(downloads) {
 
         // Now, output the various requested downloadable files
 
-        var idCounter = 0;
+        let idCounter = 0;
 
-        for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
-            var version = versions[versionIndex];
+        for (let versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
+            let version = versions[versionIndex];
 
             // Retrieve some information about the version
 
-            var versionMajor = version.major;
-            var versionMinor = version.minor;
-            var versionPatch = version.patch;
-            var versionDay = version.day;
-            var versionMonth = version.month;
-            var versionYear = version.year;
-            var versionType = version.type;
-            var versionLicense = version.license;
-            var versionPlatforms = version.platforms;
-            var versionChanges = version.changes;
+            let versionMajor = version.major;
+            let versionMinor = version.minor;
+            let versionPatch = version.patch;
+            let versionDay = version.day;
+            let versionMonth = version.month;
+            let versionYear = version.year;
+            let versionType = version.type;
+            let versionLicense = version.license;
+            let versionPlatforms = version.platforms;
+            let versionChanges = version.changes;
 
             if (versionMajor || versionMinor || versionPatch) {
                 versionTitle = "Version "+versionMajor+"."+versionMinor;
@@ -240,7 +240,7 @@ function versions(downloads) {
 
             // Output some general information about the version
 
-            var downloadClass = "download";
+            let downloadClass = "download";
 
             if (versionType === 1) {
                 downloadClass += " official officialDownload";
@@ -289,7 +289,7 @@ function versions(downloads) {
 
             // Output some information about the version files
 
-            var versionClass;
+            let versionClass;
 
             if (versionType === 1) {
                 versionClass = "official";
@@ -308,8 +308,8 @@ function versions(downloads) {
             // Note: for aesthetical reasons (i.e. having top/left separators all
             //       the way through), we have a total of m*n platforms...
 
-            var nbOfPlatformsPerRow = 3;
-            var nbOfPlatforms = versionPlatforms.length;
+            let nbOfPlatformsPerRow = 3;
+            let nbOfPlatforms = versionPlatforms.length;
 
             while (nbOfPlatforms % nbOfPlatformsPerRow) {
                 ++nbOfPlatforms;
@@ -317,17 +317,19 @@ function versions(downloads) {
 
             // Percentage of the total width to use for each platform
 
-            var platformWidth = 100/nbOfPlatformsPerRow+"%";
+            let platformWidth = 100/nbOfPlatformsPerRow+"%";
 
             // Go through our different platforms
 
-            for (var platformIndex = 0; platformIndex < nbOfPlatforms; ++platformIndex) {
-                var platformLocalIndex = platformIndex % nbOfPlatformsPerRow;
+            let platform = null;
+
+            for (let platformIndex = 0; platformIndex < nbOfPlatforms; ++platformIndex) {
+                let platformLocalIndex = platformIndex % nbOfPlatformsPerRow;
 
                 // 'Close' the current platform if there is a previous platform
 
                 if (platformIndex) {
-                    if (typeof platform !== "undefined") {
+                    if (platform !== null) {
                         document.write("                                    </ul>\n");
                         document.write("                                </td>\n");
                         document.write("                            </tr>\n");
@@ -349,7 +351,7 @@ function versions(downloads) {
 
                 // 'Open' the new platform
 
-                var platformClasses = "platform";
+                let platformClasses = "platform";
 
                 if (platformIndex >= nbOfPlatformsPerRow) {
                     platformClasses += " topSeparator";
@@ -361,12 +363,12 @@ function versions(downloads) {
 
                 document.write("                <td class=\""+platformClasses+"\" style=\"width: "+platformWidth+"\">\n");
 
-                var platform = versionPlatforms[platformIndex];
+                platform = versionPlatforms[platformIndex];
 
-                if (typeof platform !== "undefined") {
-                    var platformName = platform.name;
-                    var platformSupported = platform.supported;
-                    var platformFiles = platform.files;
+                if (platform !== null) {
+                    let platformName = platform.name;
+                    let platformSupported = platform.supported;
+                    let platformFiles = platform.files;
 
                     document.write("                    <table>\n");
                     document.write("                        <tbody>\n");
@@ -385,19 +387,19 @@ function versions(downloads) {
 
                     // List the files
 
-                    for (var fileIndex = 0; fileIndex < platformFiles.length; ++fileIndex) {
-                        var file = platformFiles[fileIndex];
+                    for (let fileIndex = 0; fileIndex < platformFiles.length; ++fileIndex) {
+                        let file = platformFiles[fileIndex];
 
                         // Retrieve some information about the file
 
-                        var fileExtension = file.extension;
-                        var fileBitness = file.bitness;
+                        let fileExtension = file.extension;
+                        let fileBitness = file.bitness;
 
                         // Determine the file name, type and extra info, if any
 
-                        var fileName = "OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
-                        var fullFileName = versionFolder+"/"+fileName;
-                        var fileType;
+                        let fileName = "OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
+                        let fullFileName = versionFolder+"/"+fileName;
+                        let fileType;
 
                         if (   (fileExtension === ".exe")
                             || (fileExtension === ".dmg")
@@ -462,7 +464,7 @@ function versions(downloads) {
 
             // 'Close' the last platform
 
-            if (typeof platform !== "undefined") {
+            if (platform !== null) {
                 document.write("                                    </ul>\n");
                 document.write("                                </td>\n");
                 document.write("                            </tr>\n");
@@ -485,7 +487,7 @@ function versions(downloads) {
                     document.write("                <td class=\"topSeparator\">\n");
                     document.write("                    <ul>\n");
 
-                    for (var changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex) {
+                    for (let changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex) {
                         document.write("                        <li><span class=\"changes\">"+versionChanges[changeIndex].change+"</span></li>");
                     }
 
