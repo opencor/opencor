@@ -128,12 +128,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
     document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24>\n");
     document.write("        <ul>\n");
 
-    var menuItems = data.menuItems;
-    var subMenuCounter = 0;
-    var subMenuSelected = 0;
+    let menuItems = data.menuItems;
+    let subMenuCounter = 0;
+    let subMenuSelected = 0;
 
-    for (i = 0; i < menuItems.length; ++i) {
-        var menuItem = menuItems[i];
+    for (let i = 0; i < menuItems.length; ++i) {
+        let menuItem = menuItems[i];
 
         if (menuItem.separator) {
             // We are dealing with a menu separator
@@ -142,7 +142,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
         } else {
             // We are dealing with a menu item
 
-            var selectedMenuItem = false;
+            let selectedMenuItem = false;
 
             if (   (   (typeof menuItem.label !== "undefined")
                     && (menuItem.label.toLowerCase() === pageName.toLowerCase()))
@@ -151,8 +151,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
                 selectedMenuItem = true;
             }
 
-            var liId = "";
-            var liClass = "";
+            let liId = "";
+            let liClass = "";
 
             if (   (typeof menuItem.subMenuItem !== "undefined")
                 &&  menuItem.subMenuItem) {
@@ -160,20 +160,20 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
                 liClass = " class=\"subMenuItem\"";
             }
 
-            var menuItemIndent = "";
+            let menuItemIndent = "";
 
-            for (j = 0; j < menuItem.level; ++j) {
+            for (let j = 0; j < menuItem.level; ++j) {
                 menuItemIndent += "&nbsp;&nbsp;&nbsp;&nbsp;"
             }
 
-            var menuItemLink = "";
+            let menuItemLink = "";
 
             if (   (typeof menuItem.link !== "undefined")
                 &&  menuItem.link.length) {
                 menuItemLink = menuItem.directLink?menuItem.link:relativePath+"/"+menuItem.link;
             }
 
-            var tableRowClasses = "menuItemTableRow";
+            let tableRowClasses = "menuItemTableRow";
 
             if (i === menuItems.length-1) {
                 tableRowClasses += " lastMenuItem";
@@ -193,7 +193,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
                 }
             }
 
-            var subMenuButton = "";
+            let subMenuButton = "";
 
             if (   (typeof menuItem.subMenuHeader !== "undefined")
                 &&  menuItem.subMenuHeader) {
@@ -228,8 +228,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
     // Show/hide our sub-menus, depending on whether one of them contains the
     // selected menu item
 
-    for (i = 1; i <= subMenuCounter; ++i) {
-        var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
+    for (let i = 1; i <= subMenuCounter; ++i) {
+        let subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
         if (i === subMenuSelected) {
             subMenuButton.css("display", "none");
@@ -248,7 +248,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
         if ($("ul.contentsMenu > li > ul").css("visibility") === "visible") {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
         } else {
-            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
+            for (let i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
                 showContentsSubMenu($("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i), i === subMenuSelected);
             }
 
@@ -287,8 +287,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, data) {
         if ($(this).hasClass("subMenuOpened")) {
             showContentsSubMenu($(this), false);
         } else if ($(this).hasClass("subMenuClosed")) {
-            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
-                var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
+            for (let i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
+                let subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
                 if (subMenuButton.hasClass("subMenuOpened")) {
                     showContentsSubMenu(subMenuButton, i === subMenuSelected);
