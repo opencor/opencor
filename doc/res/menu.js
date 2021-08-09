@@ -5,7 +5,7 @@ function showContentsSubMenu(subMenuButton, showSubMenu) {
     $("ul.contentsMenu > li > ul > li.subMenuItem#"+subMenuButton.attr("id")).css("display", showSubMenu?"list-item":"none");
 }
 
-function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
+function doHeaderAndContentsMenu(pageName, relativePath, data) {
     // Header
 
     document.write("<div class=\"header\">\n");
@@ -42,7 +42,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        top: 29px;\n");
     document.write("        right: 0px;\n");
     document.write("        background: rgb(249, 249, 249);\n");
-    document.write("        border: 2px solid rgb("+r+", "+g+", "+b+");\n");
+    document.write("        border: 2px solid rgb(103, 103, 103);\n");
     document.write("        border-top-style: none;\n");
     document.write("        border-radius: 0px 0px 5px 5px;\n");
     document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);\n");
@@ -56,7 +56,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }\n");
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover {\n");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);\n");
+    document.write("        background: rgba(103, 103, 103, 0.79);\n");
     document.write("    }\n");
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover div > a {\n");
@@ -94,7 +94,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a,\n");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div.subMenuButton {\n");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.13);\n");
+    document.write("        background: rgba(103, 103, 103, 0.13);\n");
     document.write("    }\n");
     document.write("\n");
     document.write("    ul.contentsMenu > li > ul > li div.subMenuButton {\n");
@@ -116,7 +116,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    ul.contentsMenu li ul li.separator {\n");
     document.write("        margin: 0px;\n");
     document.write("        padding: 0px;\n");
-    document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");\n");
+    document.write("        border-top: 1px solid rgb(103, 103, 103);\n");
     document.write("    }\n");
     document.write("</style>\n");
     document.write("\n");
@@ -303,7 +303,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 }
 
 function headerAndContentsMenu(pageName, relativePath) {
-    doHeaderAndContentsMenu(pageName, relativePath, 103, 103, 103,
+    doHeaderAndContentsMenu(pageName, relativePath,
                             { "menuItems": [
                                 { "level": 0, "label": "Home", "link": "index.html" },
                                 { "separator": true },
