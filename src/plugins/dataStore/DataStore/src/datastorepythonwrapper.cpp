@@ -104,29 +104,29 @@ static int DataStoreValuesDict_ass_subscript(PyObject *pValuesDict,
         return PyDict_DelItem(pValuesDict, pKey);
     }
 
-    PyNumber_Check(pValue);
+    if (PyNumber_Check(pValue) == 1) {
+        DataStoreValue *dataStoreValue = getDataStoreValue(pValuesDict, pKey);
 
-    DataStoreValue *dataStoreValue = getDataStoreValue(pValuesDict, pKey);
-
-    if (dataStoreValue != nullptr) {
+        if (dataStoreValue != nullptr) {
 #include "pythonbegin.h"
-        auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(pValue)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+            auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(pValue)); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
 #include "pythonend.h"
 
-        if (!qFuzzyCompare(dataStoreValue->value(), newValue)) {
-            dataStoreValue->setValue(newValue);
+            if (!qFuzzyCompare(dataStoreValue->value(), newValue)) {
+                dataStoreValue->setValue(newValue);
 
-            // Let our SimulationData object know that simulation data values
-            // have been updated
+                // Let our SimulationData object know that simulation data values
+                // have been updated
 
-            auto simulationDataUpdatedFunction = reinterpret_cast<DataStoreValuesDictObject *>(pValuesDict)->simulationDataUpdatedFunction;
+                auto simulationDataUpdatedFunction = reinterpret_cast<DataStoreValuesDictObject *>(pValuesDict)->simulationDataUpdatedFunction;
 
-            if (simulationDataUpdatedFunction != nullptr) {
-                (*simulationDataUpdatedFunction)();
+                if (simulationDataUpdatedFunction != nullptr) {
+                    (*simulationDataUpdatedFunction)();
+                }
             }
-        }
 
-        return 0;
+            return 0;
+        }
     }
 
     PyErr_SetString(PyExc_TypeError, qPrintable(QObject::tr("invalid value.")));
