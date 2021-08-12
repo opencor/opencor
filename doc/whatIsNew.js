@@ -75,6 +75,11 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
                              ]
                            },
+                           { "type": "subCategory", "name": "PMR support",
+                             "entries": [
+                               { "type": "improved", "description": "Local copy of a PMR workspace." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "<a href=\"https://sed-ml.github.io/\">SED-ML</a> support",
                              "entries": [
                                { "type": "added", "description": "Support for left and right triangle symbols." }
