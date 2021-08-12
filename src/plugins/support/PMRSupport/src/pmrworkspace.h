@@ -141,6 +141,8 @@ private:
 
     static int certificateCheckCallback(git_cert *pCertificate, int pValid,
                                         const char *pHost, void *pPayload);
+    static int initialiseSubmodule(git_submodule *pSubmodule, const char *pName,
+                                   void *pPayload);
     static int checkoutNotifyCallback(git_checkout_notify_t pNotification,
                                       const char *pPath,
                                       const git_diff_file *pBaseline,

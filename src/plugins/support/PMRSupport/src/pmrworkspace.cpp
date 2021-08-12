@@ -49,6 +49,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "git2/repository.h"
     #include "git2/signature.h"
     #include "git2/status.h"
+    #include "git2/submodule.h"
 #include "libgit2end.h"
 
 //==============================================================================
@@ -262,6 +263,14 @@ void PmrWorkspace::clone(const QString &pPath)
     }
 
     git_strarray_dispose(&authorizationStrArray);
+
+    // Initialise the submodules, should there be some, in the workspace
+
+    if (git_submodule_foreach(mGitRepository, initialiseSubmodule, this) < 0) {
+        emitGitError(tr("An error occurred while trying to clone the workspace."));
+
+        cloned = false;
+    }
 
     // Open ourselves in the given path and ask the workspace manager to keep
     // track of us, if we have been successfully cloned
@@ -1079,6 +1088,32 @@ int PmrWorkspace::certificateCheckCallback(git_cert *pCertificate, int pValid,
     // Bypass the certificate check
 
     return 1;
+}
+
+//==============================================================================
+
+int PmrWorkspace::initialiseSubmodule(git_submodule *pSubmodule,
+                                      const char *pName, void *pPayload)
+{
+    Q_UNUSED(pName)
+    Q_UNUSED(pPayload)
+
+    // Initialise the given submodule
+
+    git_submodule_update_options submoduleUpdateOptions;
+    git_strarray authorizationStrArray = { nullptr, 0 };
+
+    git_submodule_update_options_init(&submoduleUpdateOptions, GIT_SUBMODULE_UPDATE_OPTIONS_VERSION);
+
+    submoduleUpdateOptions.fetch_opts.callbacks.certificate_check = certificateCheckCallback;
+    submoduleUpdateOptions.fetch_opts.callbacks.payload = pPayload;
+    submoduleUpdateOptions.fetch_opts.custom_headers = authorizationStrArray;
+
+    int res = git_submodule_update(pSubmodule, 1, &submoduleUpdateOptions);
+
+    git_strarray_dispose(&authorizationStrArray);
+
+    return res;
 }
 
 //==============================================================================
