@@ -250,7 +250,7 @@ void PmrWorkspace::clone(const QString &pPath)
 
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
 
-    // Perform the cloning itself and let people know whether it didn't work
+    // Perform the cloning itself and let people know if it didn't work
 
     bool cloned = true;
 
@@ -1275,7 +1275,6 @@ bool PmrWorkspace::fetch()
 
     fetchOptions.callbacks.certificate_check = certificateCheckCallback;
     fetchOptions.callbacks.payload = this;
-
     fetchOptions.custom_headers = authorizationStrArray;
 
     remoteCallbacks.certificate_check = certificateCheckCallback;
@@ -1378,7 +1377,6 @@ void PmrWorkspace::push()
 
     pushOptions.callbacks.certificate_check = certificateCheckCallback;
     pushOptions.callbacks.payload = this;
-
     pushOptions.custom_headers = authorizationStrArray;
 
     remoteCallbacks.certificate_check = certificateCheckCallback;
