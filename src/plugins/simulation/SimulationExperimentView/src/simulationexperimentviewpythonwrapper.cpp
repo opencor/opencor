@@ -44,7 +44,7 @@ namespace SimulationExperimentView {
 static PyObject * simulation(const QString &pFileName,
                              SimulationExperimentViewWidget *pSimulationExperimentViewWidget)
 {
-    // Return the simualtion, should there be one, for the given file using the
+    // Return the simulation, should there be one, for the given file using the
     // given Simulation Experiment view widget
 
     SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);

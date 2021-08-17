@@ -154,7 +154,7 @@ void SimulationExperimentViewWidget::retranslateUi()
 {
     // Retranslate our simulation widgets
 
-    for (auto simulationWidget : mSimulationWidgets) {
+    for (auto simulationWidget : qAsConst(mSimulationWidgets)) {
         simulationWidget->retranslateUi();
     }
 }
@@ -318,7 +318,7 @@ void SimulationExperimentViewWidget::fileOpened(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    for (auto simulationWidget : mSimulationWidgets) {
+    for (auto simulationWidget : qAsConst(mSimulationWidgets)) {
         simulationWidget->updateGui(true);
     }
 }
@@ -375,7 +375,7 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        for (auto otherSimulationWidget : mSimulationWidgets) {
+        for (auto otherSimulationWidget : qAsConst(mSimulationWidgets)) {
             otherSimulationWidget->updateGui(true);
         }
     }
@@ -403,7 +403,7 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
 
     // Let our simulation widgets know that a file has been renamed
 
-    for (auto otherSimulationWidget : mSimulationWidgets) {
+    for (auto otherSimulationWidget : qAsConst(mSimulationWidgets)) {
         otherSimulationWidget->fileRenamed(pOldFileName, pNewFileName);
     }
 }
@@ -418,7 +418,7 @@ void SimulationExperimentViewWidget::fileClosed(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    for (auto simulationWidget : mSimulationWidgets) {
+    for (auto simulationWidget : qAsConst(mSimulationWidgets)) {
         simulationWidget->updateGui(true);
     }
 }
@@ -538,12 +538,12 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     if (   (pTask == SimulationExperimentViewSimulationWidget::Task::AddRun)
         && (simulationRunsCount > 1)) {
-        quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
+        quint64 prevSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
-        if (previousSimulationResultsSize != mSimulationResultsSizes.value(pFileName)) {
-            for (auto currentSimulationWidget : mSimulationWidgets) {
+        if (prevSimulationResultsSize != simulationResultsSize(pFileName)) {
+            for (auto currentSimulationWidget : qAsConst(mSimulationWidgets)) {
                 currentSimulationWidget->updateSimulationResults(simulationWidget,
-                                                                 previousSimulationResultsSize,
+                                                                 prevSimulationResultsSize,
                                                                  simulationRunsCount-2,
                                                                  SimulationExperimentViewSimulationWidget::Task::None);
             }
@@ -555,15 +555,15 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    quint64 simulationResultsSize = simulation->results()->size();
+    quint64 crtSimulationResultsSize = simulation->results()->size();
 
     if (   (pTask != SimulationExperimentViewSimulationWidget::Task::None)
-        || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
-        mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
+        || (crtSimulationResultsSize != simulationResultsSize(pFileName))) {
+        mSimulationResultsSizes.insert(pFileName, crtSimulationResultsSize);
 
-        for (auto currentSimulationWidget : mSimulationWidgets) {
+        for (auto currentSimulationWidget : qAsConst(mSimulationWidgets)) {
             currentSimulationWidget->updateSimulationResults(simulationWidget,
-                                                             simulationResultsSize,
+                                                             crtSimulationResultsSize,
                                                              simulationRunsCount-1,
                                                              pTask);
         }
@@ -573,7 +573,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     // simulation is still running
 
     if (   simulation->isRunning()
-        || (simulationResultsSize != simulation->results()->size())) {
+        || (crtSimulationResultsSize != simulation->results()->size())) {
         QTimer::singleShot(0, this, std::bind(&SimulationExperimentViewWidget::checkSimulationResults,
                                               this, pFileName,
                                               SimulationExperimentViewSimulationWidget::Task::None));

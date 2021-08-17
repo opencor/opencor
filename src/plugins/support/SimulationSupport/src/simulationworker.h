@@ -99,6 +99,7 @@ public slots:
     void run();
 
 private slots:
+    void emitDone(qint64 pElapsedTime);
     void emitError(const QString &pMessage);
 };
 

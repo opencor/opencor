@@ -31,6 +31,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QElapsedTimer>
 #include <QMutex>
 #include <QThread>
+#include <QTimer>
 
 //==============================================================================
 
@@ -261,8 +262,12 @@ void SimulationWorker::run()
     mSelf = nullptr;
 
     // Let people know that we are done and give them the elapsed time
+    // Note: we do this with a bit of a delay to give time to the GUI to update
+    //       itself. This is useful when running several simulations from a
+    //       Python script using the Python Console window...
 
-    emit done(mError?-1:elapsedTime);
+    QTimer::singleShot(169, this, std::bind(&SimulationWorker::emitDone,
+                                            this, mError?-1:elapsedTime));
 }
 
 //==============================================================================
@@ -311,6 +316,15 @@ void SimulationWorker::reset()
     if (isRunning() || isPaused()) {
         mReset = true;
     }
+}
+
+//==============================================================================
+
+void SimulationWorker::emitDone(qint64 pElapsedTime)
+{
+    // Let people know that we are done and give them the elapsed time
+
+    emit done(pElapsedTime);
 }
 
 //==============================================================================
