@@ -173,8 +173,9 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
 
 QString canonicalDirName(const QString &pDirName)
 {
-    // Return a canonical version of the given directory name or a native version, if the native and canonical version is empty (i.e. the
-    // directory doesn't exist (anymore?))
+    // Return a canonical version of the given directory name or a native
+    // version, if the native and canonical version is empty (i.e. the directory
+    // doesn't exist (anymore?))
 
     QString res = QDir(pDirName).canonicalPath();
 
