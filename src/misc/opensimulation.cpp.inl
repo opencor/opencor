@@ -20,7 +20,8 @@ static PyObject * openSimulation(PyObject *pSelf, PyObject *pArgs)
     bool isLocalFile;
     QString fileNameOrUrl;
 
-    Core::checkFileNameOrUrl(QString::fromUtf8(string, int(len)), isLocalFile, fileNameOrUrl);
+    Core::checkFileNameOrUrl(Core::canonicalFileName(QString::fromUtf8(string, int(len))),
+                             isLocalFile, fileNameOrUrl);
 
 #include "pythonbegin.h"
     Py_DECREF(bytes);
