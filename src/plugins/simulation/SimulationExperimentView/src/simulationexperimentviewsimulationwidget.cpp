@@ -2883,19 +2883,15 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
 
         connect(this, &SimulationExperimentViewSimulationWidget::importDone,
-                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
+                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater,
+                Qt::UniqueConnection);
         connect(this, &SimulationExperimentViewSimulationWidget::importDone,
-                this, &SimulationExperimentViewSimulationWidget::resetDataStoreImporterConnections);
-
-        QEventLoop waitLoop;
-
-        connect(this, &SimulationExperimentViewSimulationWidget::importDone, this, [&]() {
-            waitLoop.quit();
-        });
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone,
+                Qt::UniqueConnection);
 
         dataStoreImporter->importData(dataStoreImportData);
 
-        waitLoop.exec();
+        mWaitLoop.exec();
 
         return true;
     }
@@ -2911,9 +2907,11 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::resetDataStoreImporterConnections(DataStore::DataStoreImporter *pDataStoreImporter)
+void SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone(DataStore::DataStoreImporter *pDataStoreImporter)
 {
-    // Reset our connections for the given data store importer
+    // Reset our connections for the given data store importer and ask our wait
+    // loop to quit with a delay (so that mWaitLoop.exec() has time to be called
+    // in case the import was very quick)
     // Note: we reset our data store importer connections once the import is
     //       done otherwise if we were to import data from another file then
     //       our "local" dataStoreImportProgress() and dataStoreImportDone()
@@ -2927,6 +2925,17 @@ void SimulationExperimentViewSimulationWidget::resetDataStoreImporterConnections
 
     disconnect(pDataStoreImporter, &DataStore::DataStoreImporter::done,
                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
+
+    QTimer::singleShot(169, this, &SimulationExperimentViewSimulationWidget::quitWaitLoop);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::quitWaitLoop()
+{
+    // Quit our wait loop
+
+    mWaitLoop.quit();
 }
 
 //==============================================================================
@@ -2991,9 +3000,11 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
 
         connect(this, &SimulationExperimentViewSimulationWidget::exportDone,
-                dataStoreExportData, &DataStore::DataStoreExportData::deleteLater);
+                dataStoreExportData, &DataStore::DataStoreExportData::deleteLater,
+                Qt::UniqueConnection);
         connect(this, &SimulationExperimentViewSimulationWidget::exportDone,
-                this, &SimulationExperimentViewSimulationWidget::resetDataStoreExporterConnections);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportReallyDone,
+                Qt::UniqueConnection);
 
         dataStoreExporter->exportData(dataStoreExportData);
     }
@@ -3001,7 +3012,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::resetDataStoreExporterConnections(DataStore::DataStoreExporter *pDataStoreExporter)
+void SimulationExperimentViewSimulationWidget::dataStoreExportReallyDone(DataStore::DataStoreExporter *pDataStoreExporter)
 {
     // Reset our connections for the given data store exporter
     // Note: we reset our data store exporter connections once the export is
@@ -3193,7 +3204,7 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
     //          widget would show a message rather than us...
     // Note #2: we want a short delay before resetting our progress bar or tab
     //          icon, so that the user can really see when our simulation has
-    //          completed, but this is only is we don't need to reload
+    //          completed, but this is only if we don't need to reload
     //          ourselves. Indeed, if we need to reload ourselves (see
     //          fileReloaded()), we want things to be done as quickly as
     //          possible. Not only that, but we don't want to risk problems with
