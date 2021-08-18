@@ -35,6 +35,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QApplication>
 #include <QFileInfo>
+#include <QTimer>
 #include <QWidget>
 
 //==============================================================================
@@ -294,15 +295,9 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         // Run our simulation and wait for it to complete
 
-        QEventLoop waitLoop;
-
-        connect(pSimulation, &Simulation::done, this, [&]() {
-            waitLoop.quit();
-        });
-
         pSimulation->run();
 
-        waitLoop.exec();
+        mWaitLoop.exec();
 
         // Throw any error message that has been generated
 
@@ -644,9 +639,22 @@ void SimulationSupportPythonWrapper::simulationError(const QString &pErrorMessag
 
 void SimulationSupportPythonWrapper::simulationDone(qint64 pElapsedTime)
 {
-    // Save the given elapsed time and let people know that we have got it
+    // The simulation is done, so keep track of the given elapsed time and ask
+    // our wait loop to quit with a delay (so that mWaitLoop.exec() has time to
+    // be called in case the simulation was very quick to run)
 
     mElapsedTime = pElapsedTime;
+
+    QTimer::singleShot(169, this, &SimulationSupportPythonWrapper::quitWaitLoop);
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::quitWaitLoop()
+{
+    // Quit our wait loop
+
+    mWaitLoop.quit();
 }
 
 //==============================================================================
