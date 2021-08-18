@@ -2883,9 +2883,11 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
 
         connect(this, &SimulationExperimentViewSimulationWidget::importDone,
-                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
+                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater,
+                Qt::UniqueConnection);
         connect(this, &SimulationExperimentViewSimulationWidget::importDone,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone,
+                Qt::UniqueConnection);
 
         QEventLoop waitLoop;
 
@@ -2991,9 +2993,11 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
 
         connect(this, &SimulationExperimentViewSimulationWidget::exportDone,
-                dataStoreExportData, &DataStore::DataStoreExportData::deleteLater);
+                dataStoreExportData, &DataStore::DataStoreExportData::deleteLater,
+                Qt::UniqueConnection);
         connect(this, &SimulationExperimentViewSimulationWidget::exportDone,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportReallyDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportReallyDone,
+                Qt::UniqueConnection);
 
         dataStoreExporter->exportData(dataStoreExportData);
     }
