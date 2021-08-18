@@ -290,6 +290,8 @@ private:
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
+    QEventLoop mWaitLoop;
+
     QString styledOutput();
     void output(const QString &pMessage);
 
@@ -462,6 +464,8 @@ private slots:
 
     void dataStoreImportReallyDone(DataStore::DataStoreImporter *pDataStoreImporter);
     void dataStoreExportReallyDone(DataStore::DataStoreExporter *pDataStoreExporter);
+
+    void quitWaitLoop();
 };
 
 //==============================================================================

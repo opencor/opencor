@@ -2889,15 +2889,9 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone,
                 Qt::UniqueConnection);
 
-        QEventLoop waitLoop;
-
-        connect(this, &SimulationExperimentViewSimulationWidget::importDone, this, [&]() {
-            waitLoop.quit();
-        });
-
         dataStoreImporter->importData(dataStoreImportData);
 
-        waitLoop.exec();
+        mWaitLoop.exec();
 
         return true;
     }
@@ -2915,7 +2909,9 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
 
 void SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone(DataStore::DataStoreImporter *pDataStoreImporter)
 {
-    // Reset our connections for the given data store importer
+    // Reset our connections for the given data store importer and ask our wait
+    // loop to quit with a delay (so that mWaitLoop.exec() has time to be called
+    // in case the import was very quick)
     // Note: we reset our data store importer connections once the import is
     //       done otherwise if we were to import data from another file then
     //       our "local" dataStoreImportProgress() and dataStoreImportDone()
@@ -2929,6 +2925,17 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportReallyDone(DataSto
 
     disconnect(pDataStoreImporter, &DataStore::DataStoreImporter::done,
                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
+
+    QTimer::singleShot(169, this, &SimulationExperimentViewSimulationWidget::quitWaitLoop);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::quitWaitLoop()
+{
+    // Quit our wait loop
+
+    mWaitLoop.quit();
 }
 
 //==============================================================================
