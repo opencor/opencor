@@ -460,8 +460,8 @@ private slots:
 
     void finalFurtherInitialize();
 
-    void resetDataStoreImporterConnections(DataStore::DataStoreImporter *pDataStoreImporter);
-    void resetDataStoreExporterConnections(DataStore::DataStoreExporter *pDataStoreExporter);
+    void dataStoreImportReallyDone(DataStore::DataStoreImporter *pDataStoreImporter);
+    void dataStoreExportReallyDone(DataStore::DataStoreExporter *pDataStoreExporter);
 };
 
 //==============================================================================
