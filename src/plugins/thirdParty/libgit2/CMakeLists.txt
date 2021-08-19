@@ -3,21 +3,21 @@ project(libgit2Plugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 1.1.0)
+set(PACKAGE_VERSION 1.1.1)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 1)
 set(MINOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
 
 # Git tag for our library
 
-set(GIT_TAG v1.1.0-opencor)
+set(GIT_TAG v1.1.1-opencor)
 
 # Release tag
 
-set(RELEASE_TAG v1.1.0-opencor)
+set(RELEASE_TAG v1.1.1-opencor)
 
 # Specify where our local package will be installed
 
