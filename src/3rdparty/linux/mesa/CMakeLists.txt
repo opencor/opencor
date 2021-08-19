@@ -3,11 +3,11 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 21.0.3)
+set(PACKAGE_VERSION 21.2.0)
 
 # Git tag for our library
 
-set(GIT_TAG v21.0.3)
+set(GIT_TAG v21.2.0)
 
 # Specify where our local package will be installed
 
@@ -30,9 +30,9 @@ if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1cc9b433a174488e99a72c57d66451588424c733
+                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 46434ce655ca42c35f9ec29cec0e38fd25105ffb
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 4b65001b31d58a47d8bae87d50d6b2d1a363b446)
+                          SHA1_VALUES 6051e80dd4860291e0683704a9daecc456cba51f)
 else()
     # Build Mesa as an external project
 
@@ -53,11 +53,11 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ""
+            meson build -Dbuildtype=release -Ddri-drivers= -Ddri3=disabled -Dgallium-drivers=swrast -Dglx=gallium-xlib -Dllvm=disabled -Doptimization=3 -Dplatforms=x11 -Dvulkan-drivers=
         BUILD_COMMAND
-            scons force_scons=1 build=release libgl-xlib
+            cd build && ninja
         INSTALL_COMMAND
-            cp ${PACKAGE_BUILD_DIR}/build/linux-x86_64/gallium/targets/libgl-xlib/${SHARED_LIBRARY} <INSTALL_DIR>/lib
+            cp build/src/gallium/targets/libgl-xlib/${SHARED_LIBRARY} <INSTALL_DIR>/lib
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${SHARED_LIBRARY}
     )
