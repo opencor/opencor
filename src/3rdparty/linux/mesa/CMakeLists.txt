@@ -53,11 +53,11 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ""
+            meson build -Dbuildtype=release -Ddri-drivers= -Ddri3=disabled -Dgallium-drivers=swrast -Dglx=gallium-xlib -Dllvm=disabled -Doptimization=3 -Dplatforms=x11 -Dvulkan-drivers=
         BUILD_COMMAND
-            scons force_scons=1 build=release libgl-xlib
+            cd build && ninja
         INSTALL_COMMAND
-            cp ${PACKAGE_BUILD_DIR}/build/linux-x86_64/gallium/targets/libgl-xlib/${SHARED_LIBRARY} <INSTALL_DIR>/lib
+            cp build/src/gallium/targets/libgl-xlib/${SHARED_LIBRARY} <INSTALL_DIR>/lib
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${SHARED_LIBRARY}
     )
