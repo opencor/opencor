@@ -242,14 +242,23 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(void *pModule,
 
 //==============================================================================
 
+bool SimulationSupportPythonWrapper::doValid(Simulation *pSimulation)
+{
+    // Return whether the given simulation is valid
+
+    CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
+
+    return (runtime != nullptr) && runtime->isValid();
+}
+
+//==============================================================================
+
 bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
 {
     // Return whether the given simulation is valid
 
     if (!pSimulation->hasBlockingIssues()) {
-        CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
-
-        return (runtime != nullptr) && runtime->isValid();
+        return doValid(pSimulation);
     }
 
     return false;
@@ -266,7 +275,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         throw std::runtime_error(tr("The simulation has blocking issues and cannot therefore be run.").toStdString());
     }
 
-    if (!valid(pSimulation)) {
+    if (!doValid(pSimulation)) {
         throw std::runtime_error(tr("The simulation has an invalid runtime and cannot therefore be run.").toStdString());
     }
 

@@ -71,6 +71,8 @@ private:
 
     QEventLoop mWaitLoop;
 
+    bool doValid(Simulation *pSimulation);
+
 public slots:
     bool valid(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
