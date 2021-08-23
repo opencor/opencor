@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Windows"
+            os: windows-latest
+          - name: "Linux"
+            os: ubuntu-latest
+          - name: "macOS"
+            os: macos-latest
+    steps:
+      - name: Environment
+        run: |
+          echo "Name: ${{ matrix.name }}"
+          echo "OS:   ${{ matrix.os }}"
+      - name: Check out OpenCOR
+        uses: actions/checkout@v2
