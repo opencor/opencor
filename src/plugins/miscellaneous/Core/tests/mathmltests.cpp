@@ -62,7 +62,7 @@ void MathmlTests::initTestCase()
 
     // Retrieve our query
 
-    mQuery = OpenCOR::rawFileContents(":/Core/web-xslt/ctopff.xsl");
+    mQuery = OpenCOR::textFileContents(":/Core/web-xslt/ctopff.xsl");
 }
 
 //==============================================================================
@@ -75,6 +75,7 @@ void MathmlTests::tests(const QString &pCategory)
     const QStringList fileNames = QDir(dirName).entryList({ "*.in" });
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
     OpenCOR::Core::DummyMessageHandler dummyMessageHandler;
+    QString focus;
     QString actualOutput;
     QString expectedOutput;
     QString failMessage;
@@ -82,14 +83,14 @@ void MathmlTests::tests(const QString &pCategory)
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
     for (const auto &fileName : fileNames) {
-        QString focus = OpenCOR::rawFileContents(dirName+fileName);
+        focus = OpenCOR::textFileContents(dirName+fileName);
 
         xmlQuery.setFocus(focus);
         xmlQuery.setQuery(mQuery);
 
         if (xmlQuery.evaluateTo(&actualOutput)) {
             actualOutput = OpenCOR::Core::formatXml(OpenCOR::Core::cleanPresentationMathml(actualOutput));
-            expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
+            expectedOutput = OpenCOR::textFileContents(QString(dirName+fileName).replace(".in", ".out"));
 
             if (actualOutput != expectedOutput) {
                 if (!failMessage.isEmpty()) {

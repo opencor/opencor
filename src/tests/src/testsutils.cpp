@@ -190,12 +190,9 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
     process.setProcessChannelMode(QProcess::MergedChannels);
 
     process.start(program, QStringList() << pArguments);
+    process.waitForFinished(-1);
 
-    QString output;
-
-    while (process.waitForReadyRead(-1)) {
-        output += process.readAll();
-    }
+    QString output = process.readAll();
 
     // Clean up our output by:
     //  - Replacing escaped backslashes with a non-escaped one;

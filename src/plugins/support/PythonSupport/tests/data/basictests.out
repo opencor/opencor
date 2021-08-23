@@ -740,6 +740,15 @@
        - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
 
 ---------------------------------------------------------------------
+         Unsupported remote SED-ML file (output start time)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+
+---------------------------------------------------------------------
               Unsupported local SED-ML file (algorithm)
 ---------------------------------------------------------------------
  - Open simulation
@@ -749,7 +758,25 @@
        - Information: unsupported algorithm (KISAO:0000029).
 
 ---------------------------------------------------------------------
+             Unsupported remote SED-ML file (algorithm)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm (KISAO:0000029).
+
+---------------------------------------------------------------------
          Unsupported local SED-ML file (algorithm parameter)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm parameter (KISAO:0000219).
+
+---------------------------------------------------------------------
+        Unsupported remote SED-ML file (algorithm parameter)
 ---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
@@ -777,7 +804,35 @@
        - Error: the value of 'Upper half-bandwidth' (KISAO:0000479) must be an integer greater or equal to zero.
 
 ---------------------------------------------------------------------
+            Invalid remote SED-ML file (parameter value)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: the value of 'Absolute tolerance' (KISAO:0000211) must be a number greater or equal to zero.
+       - Error: the value of 'Integration method' (KISAO:0000475) must be 'Adams-Moulton' or 'BDF'.
+       - Error: the value of 'Interpolate solution' (KISAO:0000481) must be 'true' or 'false'.
+       - Error: the value of 'Iteration type' (KISAO:0000476) must be 'Functional' or 'Newton'.
+       - Error: the value of 'Linear solver' (KISAO:0000477) must be 'Dense', 'Banded', 'Diagonal', 'GMRES', 'BiCGStab' or 'TFQMR'.
+       - Error: the value of 'Lower half-bandwidth' (KISAO:0000480) must be an integer greater or equal to zero.
+       - Error: the value of 'Maximum number of steps' (KISAO:0000415) must be an integer greater than zero.
+       - Error: the value of 'Maximum step' (KISAO:0000467) must be a number greater or equal to zero.
+       - Error: the value of 'Preconditioner' (KISAO:0000478) must be 'None' or 'Banded'.
+       - Error: the value of 'Relative tolerance' (KISAO:0000209) must be a number greater or equal to zero.
+       - Error: the value of 'Upper half-bandwidth' (KISAO:0000479) must be an integer greater or equal to zero.
+
+---------------------------------------------------------------------
         Unsupported local COMBINE archive (output start time)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported.
+
+---------------------------------------------------------------------
+       Unsupported remote COMBINE archive (output start time)
 ---------------------------------------------------------------------
  - Open simulation
  - Check simulation:
@@ -795,6 +850,15 @@
        - Information: unsupported algorithm (KISAO:0000029).
 
 ---------------------------------------------------------------------
+           Unsupported remote COMBINE archive (algorithm)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm (KISAO:0000029).
+
+---------------------------------------------------------------------
        Unsupported local COMBINE archive (algorithm parameter)
 ---------------------------------------------------------------------
  - Open simulation
@@ -804,7 +868,35 @@
        - Information: unsupported algorithm parameter (KISAO:0000219).
 
 ---------------------------------------------------------------------
+      Unsupported remote COMBINE archive (algorithm parameter)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Information: unsupported algorithm parameter (KISAO:0000219).
+
+---------------------------------------------------------------------
            Invalid local COMBINE archive (parameter value)
+---------------------------------------------------------------------
+ - Open simulation
+ - Check simulation:
+    - Valid: no
+    - Issues:
+       - Error: the value of 'Absolute tolerance' (KISAO:0000211) must be a number greater or equal to zero.
+       - Error: the value of 'Integration method' (KISAO:0000475) must be 'Adams-Moulton' or 'BDF'.
+       - Error: the value of 'Interpolate solution' (KISAO:0000481) must be 'true' or 'false'.
+       - Error: the value of 'Iteration type' (KISAO:0000476) must be 'Functional' or 'Newton'.
+       - Error: the value of 'Linear solver' (KISAO:0000477) must be 'Dense', 'Banded', 'Diagonal', 'GMRES', 'BiCGStab' or 'TFQMR'.
+       - Error: the value of 'Lower half-bandwidth' (KISAO:0000480) must be an integer greater or equal to zero.
+       - Error: the value of 'Maximum number of steps' (KISAO:0000415) must be an integer greater than zero.
+       - Error: the value of 'Maximum step' (KISAO:0000467) must be a number greater or equal to zero.
+       - Error: the value of 'Preconditioner' (KISAO:0000478) must be 'None' or 'Banded'.
+       - Error: the value of 'Relative tolerance' (KISAO:0000209) must be a number greater or equal to zero.
+       - Error: the value of 'Upper half-bandwidth' (KISAO:0000479) must be an integer greater or equal to zero.
+
+---------------------------------------------------------------------
+          Invalid remote COMBINE archive (parameter value)
 ---------------------------------------------------------------------
  - Open simulation
  - Check simulation:

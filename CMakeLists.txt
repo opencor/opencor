@@ -1232,11 +1232,17 @@ else()
         # Note #2: the second set of additional files is needed in case OpenCOR
         #          is to be run on a non-up-to-date copy of Windows 7...
 
+        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community")
+            set(MSVC_EDITION Community)
+        else()
+            set(MSVC_EDITION Enterprise)
+        endif()
+
         if(RELEASE_MODE)
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT")
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT")
             set(DEBUG_TAG)
         else()
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/debug_nonredist/x64/Microsoft.VC141.DebugCRT")
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/VC/Redist/MSVC/14.16.27012/debug_nonredist/x64/Microsoft.VC141.DebugCRT")
             set(DEBUG_TAG d)
         endif()
 
@@ -1245,7 +1251,7 @@ else()
             ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
         )
 
-        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/Remote Debugger/x64")
+        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
             ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l1-2-0.dll

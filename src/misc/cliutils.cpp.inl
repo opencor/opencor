@@ -28,7 +28,11 @@ QString locale()
     QString res = rawLocale();
 
     if (res.isEmpty()) {
-        return QLocale::system().name().left(2);
+        res = QLocale::system().name().left(2);
+
+        if (res == "C") {
+            res = "en";
+        }
     }
 
     return res;

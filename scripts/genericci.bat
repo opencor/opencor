@@ -6,13 +6,11 @@ SET AppDir=%~dp0..\
 
 IF EXIST !AppDir!build (
     IF "%1" == "Release" (
-        SET CMakeBuildType=Release
-        SET EnableTests=OFF
-    ) ELSE IF "%1" == "Tests" (
-        SET CMakeBuildType=Debug
-        SET EnableTests=ON
+        SET Version=release
+    ) ELSE IF "%1" == "Debug" (
+        SET Version=debug
     ) ELSE (
-        ECHO Only the Release and Tests options are supported.
+        ECHO Only the Release and Debug options are supported.
 
         EXIT /B 1
     )
@@ -29,13 +27,11 @@ IF EXIST !AppDir!build (
         SET CMakeGenerator=NMake Makefiles JOM
     )
 
-    IF "%1" == "Release" (
-        SET TitleTests=
-    ) ELSE (
-        SET TitleTests= and its tests
-    )
+    SET OrigDir=!CD!
 
-    TITLE Building OpenCOR!TitleTests! using !Generator!...
+    CALL !AppDir!clean
+
+    TITLE Building and testing the !version! version of OpenCOR using !Generator!...
 
     IF EXIST "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat" (
         CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
@@ -43,11 +39,9 @@ IF EXIST !AppDir!build (
         CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
     )
 
-    SET OrigDir=!CD!
-
     CD !AppDir!build
 
-    cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! ..
+    cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=%1 -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
 
     SET ExitCode=!ERRORLEVEL!
 
@@ -73,7 +67,13 @@ IF EXIST !AppDir!build (
 
     CD !OrigDir!
 
-    EXIT /B !ExitCode!
+    IF NOT !ExitCode! EQU 0 (
+        EXIT /B !ExitCode!
+    )
+
+    !AppDir!build\bin\runtests.exe
+
+    EXIT /B !ERRORLEVEL!
 ) ELSE (
     ECHO OpenCOR's build directory is missing.
 

@@ -88,7 +88,7 @@ void Tests::runtimeTests()
     //       file...
 
     QString fileName = OpenCOR::Core::temporaryFileName();
-    QByteArray fileContents = OpenCOR::rawFileContents(OpenCOR::fileName("models/noble_model_1962.cellml"));
+    QString fileContents = OpenCOR::textFileContents(OpenCOR::fileName("models/noble_model_1962.cellml"));
 
     fileContents.replace("cellml/1.0#", "cellml/1.1#");
 
