@@ -1294,8 +1294,8 @@ endif()
 if(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
-    if(   EXISTS "C:/Program\ Files/NSIS/makensis.exe"
-       OR EXISTS "C:/Program\ Files\ (x86)/NSIS/makensis.exe")
+    if(   EXISTS "C:/Program Files/NSIS/makensis.exe"
+       OR EXISTS "C:/Program Files (x86)/NSIS/makensis.exe")
         set(NSIS_FOUND TRUE)
         set(NSIS_GENERATOR NSIS)
     else()
