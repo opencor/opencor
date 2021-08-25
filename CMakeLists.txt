@@ -210,28 +210,38 @@ Checks: >-
     endif()
 endif()
 
-# Make sure that clcache/ccache gets used, if available
+# Use buildcache as a launcher or clcache/ccache as a backup
 
-if(WIN32)
-    find_program(CLCACHE clcache)
+find_program(BUILDCACHE buildcache)
 
-    if(CLCACHE)
-        set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
-
-        execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
-                        RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
-
-        if(RESULT EQUAL 0)
-            set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
-            set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
-        endif()
-    endif()
+if(BUILDCACHE)
+    set(CMAKE_C_COMPILER_LAUNCHER ${BUILDCACHE})
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${BUILDCACHE})
+    set(COMPILER_LAUNCHER_NAME buildcache)
 else()
-    find_program(CCACHE ccache)
+    if(WIN32)
+        find_program(CLCACHE clcache)
 
-    if(CCACHE)
-        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
-        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+        if(CLCACHE)
+            set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
+
+            execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+                            RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+            if(RESULT EQUAL 0)
+                set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+                set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+                set(COMPILER_LAUNCHER_NAME clcache)
+            endif()
+        endif()
+    else()
+        find_program(CCACHE ccache)
+
+        if(CCACHE)
+            set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+            set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+            set(COMPILER_LAUNCHER_NAME ccache)
+        endif()
     endif()
 endif()
 
@@ -606,7 +616,11 @@ endif()
 
 # Show what we are about to build
 
-message("${BUILD_INFORMATION} using Qt ${QT_VERSION} LTS...")
+if(COMPILER_LAUNCHER_NAME)
+    set(LAUNCHER_INFORMATION " (and ${COMPILER_LAUNCHER_NAME})")
+endif()
+
+message("${BUILD_INFORMATION} using Qt ${QT_VERSION} LTS${LAUNCHER_INFORMATION}...")
 
 # Keep track of our source and build directories (needed to run our tests)
 
