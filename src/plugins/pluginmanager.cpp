@@ -49,14 +49,16 @@ PluginManager::PluginManager(bool pGuiMode) :
     //          directory use / (and not a mixture of / and \), which is
     //          critical on Windows...
 
-    mPluginsDir = QDir(QCoreApplication::libraryPaths().first()).canonicalPath()+"/"+qAppName();
+    QStringList libraryPaths = QCoreApplication::libraryPaths();
+
+    mPluginsDir = QDir(libraryPaths.first()).canonicalPath()+"/"+qAppName();
 
     // Retrieve the list of plugins available for loading
 
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList fileNames;
 
-    for (const auto &fileInfo : fileInfoList) {
+    for (const auto &fileInfo : qAsConst(fileInfoList)) {
         fileNames << fileInfo.canonicalFilePath();
     }
 
@@ -65,7 +67,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     QMap<QString, PluginInfo *> pluginsInfo;
     QMap<QString, QString> pluginsError;
 
-    for (const auto &fileName : fileNames) {
+    for (const auto &fileName : qAsConst(fileNames)) {
         QString pluginName = Plugin::name(fileName);
         QString pluginError;
         PluginInfo *pluginInfo = (Plugin::pluginInfoVersion(fileName) == pluginInfoVersion())?
@@ -90,13 +92,14 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     QStringList sortedFileNames;
 
-    for (const auto &fileName : fileNames) {
+    for (const auto &fileName : qAsConst(fileNames)) {
         PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
 
         if (pluginInfo != nullptr) {
+            const QStringList loadBefores = pluginInfo->loadBefore();
             int index = sortedFileNames.count();
 
-            for (const auto &loadBefore : pluginInfo->loadBefore()) {
+            for (const auto &loadBefore : loadBefores) {
                 int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
 
                 if (loadBeforeIndex < index) {
@@ -150,7 +153,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     //       wantedPlugins) might be (wrongly) needed by another plugin (i.e.
     //       listed in neededPlugins)...
 
-    for (const auto &plugin : plugins) {
+    for (const auto &plugin : qAsConst(plugins)) {
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
     }
 
@@ -166,7 +169,7 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     // Deal with all the plugins we need and want
 
-    for (const auto &pluginFileName : pluginFileNames) {
+    for (const auto &pluginFileName : qAsConst(pluginFileNames)) {
         QString pluginName = Plugin::name(pluginFileName);
         auto plugin = new Plugin(pluginFileName,
                                  pluginsInfo.value(pluginName),
@@ -195,7 +198,7 @@ PluginManager::~PluginManager()
 {
     // Delete some internal objects
 
-    for (auto plugin : mPlugins) {
+    for (auto plugin : qAsConst(mPlugins)) {
         delete plugin;
     }
 }
