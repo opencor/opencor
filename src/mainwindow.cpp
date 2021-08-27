@@ -120,7 +120,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Retrieve some categories of plugins
 
-    for (auto plugin : mPluginManager->loadedPlugins()) {
+    const Plugins loadedPlugins = mPluginManager->loadedPlugins();
+
+    for (auto plugin : loadedPlugins) {
         if (qobject_cast<PluginInterface *>(plugin->instance()) != nullptr) {
             mLoadedPluginPlugins << plugin;
         }
@@ -257,14 +259,14 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Initialise the plugins themselves
 
-    for (auto plugin : mLoadedPluginPlugins) {
+    for (auto plugin : qAsConst(mLoadedPluginPlugins)) {
         qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
     }
 
     // Initialise the plugin further by doing things that can only be done by
     // OpenCOR itself (e.g. set the central widget, create some menus)
 
-    for (auto plugin : mPluginManager->loadedPlugins()) {
+    for (auto plugin : loadedPlugins) {
         initializeGuiPlugin(plugin);
     }
 
@@ -277,13 +279,13 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       (e.g. the SimulationExperimentView plugin needs to know which
     //       solvers, if any, are available to it)...
 
-    for (auto plugin : mLoadedPluginPlugins) {
-        qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
+    for (auto plugin : qAsConst(mLoadedPluginPlugins)) {
+        qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(loadedPlugins);
     }
 
     // Keep track of the showing/hiding of the different window widgets
 
-    for (auto plugin : mLoadedWindowPlugins) {
+    for (auto plugin : qAsConst(mLoadedWindowPlugins)) {
         connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
                 this, &MainWindow::updateDockWidgetsVisibility);
     }
@@ -325,7 +327,7 @@ MainWindow::~MainWindow()
     //       (e.g. as a result of selecting Tools | Reset All) doesn't make
     //       sense and will, in fact, crash OpenCOR...
 
-    for (auto plugin : mLoadedWindowPlugins) {
+    for (auto plugin : qAsConst(mLoadedWindowPlugins)) {
         disconnect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
                    this, &MainWindow::updateDockWidgetsVisibility);
     }
@@ -559,9 +561,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
             }
 
             if (menu != nullptr) {
+                QList<QAction *> menuActions = menu->actions();
+
                 menu->insertAction((menu == mGui->menuTools)?
-                                       menu->actions()[2]:
-                                       menu->actions().first(),
+                                       menuActions[2]:
+                                       menuActions.first(),
                                    guiMenuActions[i].action());
             }
         }
@@ -571,7 +575,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         QMenu *menuFile = mGui->menuFile;
 
         if (menuFile != nullptr) {
-            for (const auto &guiMenu : guiMenus) {
+            for (const auto &guiMenu : qAsConst(guiMenus)) {
                 if ((guiMenu.action() != nullptr) && (guiMenu.type() == Gui::Menu::Type::File)) {
                     menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
                 }
@@ -582,7 +586,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         static QString pluginForFileNewMenu = {};
 
-        for (const auto &guiMenuAction : guiMenuActions) {
+        for (const auto &guiMenuAction : qAsConst(guiMenuActions)) {
             if (guiMenuAction.type() == Gui::MenuAction::Type::FileNew) {
                 // Check whether the File|New menu has been created and if not,
                 // then create it
@@ -597,9 +601,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                     // Add the New menu to our File menu and add a separator
                     // after it
 
-                    mGui->menuFile->insertMenu(mGui->menuFile->actions().first(),
-                                               mFileNewMenu);
-                    mGui->menuFile->insertSeparator(mGui->menuFile->actions()[1]);
+                    const QList<QAction *> menuFileActions = mGui->menuFile->actions();
+
+                    mGui->menuFile->insertMenu(menuFileActions.first(), mFileNewMenu);
+                    mGui->menuFile->insertSeparator(menuFileActions[1]);
 
                     pluginForFileNewMenu = pPlugin->name();
                 } else if (pluginForFileNewMenu != pPlugin->name()) {
@@ -685,7 +690,7 @@ void MainWindow::loadSettings()
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
-        for (auto plugin : mLoadedPluginPlugins) {
+        for (auto plugin : qAsConst(mLoadedPluginPlugins)) {
             settings.beginGroup(plugin->name());
                 qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
             settings.endGroup();
@@ -842,14 +847,14 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
         //       safely retranslate them since a plugin may require another
         //       plugin to work properly...
 
-        for (auto plugin : mLoadedI18nPlugins) {
+        for (auto plugin : qAsConst(mLoadedI18nPlugins)) {
             qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name(),
                                                                                                        newLocale));
         }
 
         // Retranslate our various plugins
 
-        for (auto plugin : mLoadedI18nPlugins) {
+        for (auto plugin : qAsConst(mLoadedI18nPlugins)) {
             qobject_cast<I18nInterface *>(plugin->instance())->retranslateUi();
         }
 
@@ -880,9 +885,10 @@ void MainWindow::reorderViewWindowsMenu()
         // Retrieve the title of the menu items and keep track of their actions
 
         QStringList menuItemTitles;
-        QMap<QString, QAction *> menuItemActions;
+        QMap<QString, QAction *> menuItemTitleActions;
+        const QList<QAction *> menuItemActions = mViewWindowsMenu->actions();
 
-        for (auto menuItemAction : mViewWindowsMenu->actions()) {
+        for (auto menuItemAction : menuItemActions) {
             // Remove any "&" present in the menu item title, as well as replace
             // accentuated characters by non-accentuated ones, making the
             // sorting sensible
@@ -899,7 +905,7 @@ void MainWindow::reorderViewWindowsMenu()
             // associated
 
             menuItemTitles << menuItemTitle;
-            menuItemActions.insert(menuItemTitle, menuItemAction);
+            menuItemTitleActions.insert(menuItemTitle, menuItemAction);
         }
 
         // Sort the menu items
@@ -911,8 +917,8 @@ void MainWindow::reorderViewWindowsMenu()
         //       end of the menu, so since we do it in the right order, we end
         //       up with the menu items being properly ordered...
 
-        for (const auto &menuItemTitle : menuItemTitles) {
-            mViewWindowsMenu->addAction(menuItemActions.value(menuItemTitle));
+        for (const auto &menuItemTitle : qAsConst(menuItemTitles)) {
+            mViewWindowsMenu->addAction(menuItemTitleActions.value(menuItemTitle));
         }
     }
 }
@@ -1031,7 +1037,7 @@ void MainWindow::handleArguments(const QStringList &pArguments)
     }
 
     if ((mCoreInterface != nullptr) && !arguments.isEmpty()) {
-        for (const auto &argument : arguments) {
+        for (const auto &argument : qAsConst(arguments)) {
             mCoreInterface->openFile(argument);
         }
     }
@@ -1113,7 +1119,9 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
         //       like opencor://importFiles//home/user/file1|/home/user/file2...
 
         if (mFileHandlingInterface != nullptr) {
-            for (const auto &fileName : urlArguments(pUrl).split('|')) {
+            const QStringList fileNames = urlArguments(pUrl).split('|');
+
+            for (const auto &fileName : fileNames) {
                 mFileHandlingInterface->importFile(fileName);
             }
         }
@@ -1123,7 +1131,7 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
 
         QString pluginName = actionName.split('.').first();
 
-        for (auto plugin : mLoadedPluginPlugins) {
+        for (auto plugin : qAsConst(mLoadedPluginPlugins)) {
             if (plugin->name().compare(pluginName, Qt::CaseInsensitive) == 0) {
                 // This is an action for the current plugin, so forward the
                 // action to it, should it support the Plugin interface
@@ -1250,7 +1258,9 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
     if (    (preferencesDialog.result() == QMessageBox::Ok)
         && !preferencesDialog.pluginNames().isEmpty()) {
-        for (auto plugin : mPluginManager->loadedPlugins()) {
+        const Plugins loadedPllugins = mPluginManager->loadedPlugins();
+
+        for (auto plugin : loadedPllugins) {
             PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
             if (preferencesInterface != nullptr) {
@@ -1329,7 +1339,7 @@ void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
             mDockedWindowsState = saveState();
         }
 
-        for (auto plugin : mLoadedWindowPlugins) {
+        for (auto plugin : qAsConst(mLoadedWindowPlugins)) {
             WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
 
             if (!windowInterface->windowWidget()->isFloating()) {
@@ -1377,7 +1387,7 @@ void MainWindow::updateDockWidgetsVisibility()
 
     mDockedWindowsVisible = false;
 
-    for (auto plugin : mLoadedWindowPlugins) {
+    for (auto plugin : qAsConst(mLoadedWindowPlugins)) {
         QDockWidget *dockWidget = qobject_cast<WindowInterface *>(plugin->instance())->windowWidget();
 
         if (!dockWidget->isFloating() && dockWidget->isVisible()) {
