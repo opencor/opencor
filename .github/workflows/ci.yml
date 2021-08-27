@@ -13,16 +13,61 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "Windows"
-            os: windows-latest
-          - name: "Linux"
-            os: ubuntu-latest
-          - name: "macOS"
-            os: macos-latest
+          - name: 'Windows Release'
+            os: windows-2016
+            mode: Release
+          - name: 'Windows Debug'
+            os: windows-2016
+            mode: Debug
+          - name: 'Linux Release'
+            os: ubuntu-20.04
+            mode: Release
+          - name: 'Linux Debug'
+            os: ubuntu-20.04
+            mode: Debug
+          - name: 'macOS Release'
+            os: macos-11
+            mode: Release
+          - name: 'macOS Debug'
+            os: macos-11
+            mode: Debug
     steps:
-      - name: Environment
-        run: |
-          echo "Name: ${{ matrix.name }}"
-          echo "OS:   ${{ matrix.os }}"
       - name: Check out OpenCOR
         uses: actions/checkout@v2
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '5.12.11'
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          setup-python: 'false'
+      - name: Install packages (Linux only)
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt install libglu1-mesa
+      - name: Install buildcache
+        uses: mikehardy/buildcache-action@v1
+      - name: Configure buildcache
+        shell: bash
+        run: |
+          mkdir -p ${{ github.workspace }}/../.buildcache
+          cp .github/workflows/config.json ${{ github.workspace }}/../.buildcache/config.json
+      - name: Cache external dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/ext
+          key: ${{ runner.os }}-${{ matrix.mode }}-ExternalDependencies-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-${{ matrix.mode }}-ExternalDependencies
+      - name: Build and test OpenCOR (Windows only)
+        if: ${{ runner.os == 'Windows' }}
+        shell: cmd
+        run: scripts/genericci ${{ matrix.mode }}
+      - name: Build and test OpenCOR (Linux and macOS only)
+        if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+        run: scripts/genericci ${{ matrix.mode }}

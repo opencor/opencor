@@ -1,0 +1,81 @@
+#!/bin/sh
+
+appDir=$(cd $(dirname $0); pwd)/..
+
+if [ -d $appDir/build ]; then
+    if [ "$1" = "Release" ]; then
+        version=release
+    elif [ "$1" = "Debug" ]; then
+        version=debug
+    else
+        echo "Only the Release and Debug options are supported."
+
+        exit 1
+    fi
+
+    if [ "`hash ninja 2>&1`" = "" ]; then
+        ninjaFound=true
+        generator="Ninja"
+        cmakeGenerator="Ninja"
+    else
+        ninjaFound=false
+        generator="Make"
+        cmakeGenerator="Unix Makefiles"
+    fi
+
+    origDir=`pwd`
+
+    $appDir/clean
+
+    echo "\033[44;37;1mBuilding and testing the $version version of OpenCOR using $generator...\033[0m"
+
+    cd $appDir/build
+
+    cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$1 -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+
+    exitCode=$?
+
+    if [ $exitCode -ne 0 ]; then
+        cd $origDir
+
+        exit $exitCode
+    fi
+
+    shift
+
+    if [ $ninjaFound = true ]; then
+        ninja $@
+
+        exitCode=$?
+    else
+        make $@
+
+        exitCode=$?
+    fi
+
+    cd $origDir
+
+    if [ $exitCode -ne 0 ]; then
+        exit $exitCode
+    fi
+
+    if [ "`uname -s`" = "Linux" ]; then
+        $appDir/build/bin/runtests
+    else
+        $appDir/build/OpenCOR.app/Contents/MacOS/runtests
+    fi
+
+    exitCode=$?
+
+    cd $origDir
+
+    if [ $exitCode -eq 0 ]; then
+        echo "\033[42;37;1mAll done!\033[0m"
+    fi
+
+    exit $exitCode
+else
+    echo "OpenCOR's build directory is missing."
+
+    exit 1
+fi

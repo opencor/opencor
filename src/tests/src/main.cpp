@@ -99,8 +99,11 @@ int main(int pArgC, char *pArgV[])
 
     // Run the different tests
 
-    QStringList failedTests;
     int res = 0;
+    QProcess process;
+    QStringList failedTests;
+
+    process.setProcessChannelMode(QProcess::MergedChannels);
 
     auto testBegin = testsGroups.constBegin();
     auto testEnd = testsGroups.constEnd();
@@ -119,16 +122,20 @@ int main(int pArgC, char *pArgV[])
             // Execute the test itself
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-            int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, {});
+            process.start(buildDir+"/bin/"+testsGroup.key()+"_"+testName, QStringList());
 #else
-            int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, {});
+            process.start(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, QStringList());
 #endif
 
-            if (testRes != 0) {
+            process.waitForFinished(-1);
+
+            std::cout << qPrintable(process.readAll()) << std::endl;
+
+            if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
             }
 
-            res = (res != 0)?res:testRes;
+            res = (res != 0)?res:process.exitCode();
 
             std::cout << std::endl;
         }

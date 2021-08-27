@@ -210,28 +210,38 @@ Checks: >-
     endif()
 endif()
 
-# Make sure that clcache/ccache gets used, if available
+# Use buildcache as a launcher or clcache/ccache as a backup
 
-if(WIN32)
-    find_program(CLCACHE clcache)
+find_program(BUILDCACHE buildcache)
 
-    if(CLCACHE)
-        set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
-
-        execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
-                        RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
-
-        if(RESULT EQUAL 0)
-            set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
-            set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
-        endif()
-    endif()
+if(BUILDCACHE)
+    set(CMAKE_C_COMPILER_LAUNCHER ${BUILDCACHE})
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${BUILDCACHE})
+    set(COMPILER_LAUNCHER_NAME buildcache)
 else()
-    find_program(CCACHE ccache)
+    if(WIN32)
+        find_program(CLCACHE clcache)
 
-    if(CCACHE)
-        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
-        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+        if(CLCACHE)
+            set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
+
+            execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+                            RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+            if(RESULT EQUAL 0)
+                set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+                set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+                set(COMPILER_LAUNCHER_NAME clcache)
+            endif()
+        endif()
+    else()
+        find_program(CCACHE ccache)
+
+        if(CCACHE)
+            set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+            set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+            set(COMPILER_LAUNCHER_NAME ccache)
+        endif()
     endif()
 endif()
 
@@ -356,10 +366,10 @@ set(CMAKE_ARGS
     -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
 )
 
-if(CCACHE)
+if(CMAKE_C_COMPILER_LAUNCHER AND CMAKE_CXX_COMPILER_LAUNCHER)
     list(APPEND CMAKE_ARGS
-        -DCMAKE_C_COMPILER_LAUNCHER=${CCACHE}
-        -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE}
+        -DCMAKE_C_COMPILER_LAUNCHER=${CMAKE_C_COMPILER_LAUNCHER}
+        -DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER}
     )
 endif()
 
@@ -606,7 +616,11 @@ endif()
 
 # Show what we are about to build
 
-message("${BUILD_INFORMATION} using Qt ${QT_VERSION} LTS...")
+if(COMPILER_LAUNCHER_NAME)
+    set(LAUNCHER_INFORMATION " (and ${COMPILER_LAUNCHER_NAME})")
+endif()
+
+message("${BUILD_INFORMATION} using Qt ${QT_VERSION} LTS${LAUNCHER_INFORMATION}...")
 
 # Keep track of our source and build directories (needed to run our tests)
 
@@ -1218,11 +1232,17 @@ else()
         # Note #2: the second set of additional files is needed in case OpenCOR
         #          is to be run on a non-up-to-date copy of Windows 7...
 
+        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community")
+            set(MSVC_EDITION Community)
+        else()
+            set(MSVC_EDITION Enterprise)
+        endif()
+
         if(RELEASE_MODE)
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT")
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT")
             set(DEBUG_TAG)
         else()
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/debug_nonredist/x64/Microsoft.VC141.DebugCRT")
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/VC/Redist/MSVC/14.16.27012/debug_nonredist/x64/Microsoft.VC141.DebugCRT")
             set(DEBUG_TAG d)
         endif()
 
@@ -1231,7 +1251,7 @@ else()
             ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
         )
 
-        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/Remote Debugger/x64")
+        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
             ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
@@ -1294,8 +1314,8 @@ endif()
 if(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
-    if(   EXISTS "C:/Program\ Files/NSIS/makensis.exe"
-       OR EXISTS "C:/Program\ Files\ (x86)/NSIS/makensis.exe")
+    if(   EXISTS "C:/Program Files/NSIS/makensis.exe"
+       OR EXISTS "C:/Program Files (x86)/NSIS/makensis.exe")
         set(NSIS_FOUND TRUE)
         set(NSIS_GENERATOR NSIS)
     else()

@@ -39,6 +39,7 @@ QString dirName(const QString &pDirName = {});
 QString fileName(const QString &pFileName);
 
 QByteArray rawFileContents(const QString &pFileName);
+QString textFileContents(const QString &pFileName);
 QStringList fileContents(const QString &pFileName);
 QStringList fileContents(const QString &pFileName, const QString &pArg);
 
