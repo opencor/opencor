@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                      { "change": "<strong>Python support:</strong> improved the way we check whether a simulation is valid before running it (see issue <a href=\"https://github.com/opencor/opencor/issues/2542\">#2542</a>)." }
+                      { "change": "<strong>Python support:</strong> improved the way we check whether a simulation is valid before running it (see issue <a href=\"https://github.com/opencor/opencor/issues/2542\">#2542</a>)." },
+                      { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://openssl.org/\">OpenSSL</a> to version 1.1.1l (see issue <a href=\"https://github.com/opencor/opencor/issues/2532\">#2532</a>)." }
                     ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
