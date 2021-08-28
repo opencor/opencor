@@ -31,6 +31,9 @@ jobs:
           - name: 'macOS Debug'
             os: macos-11
             mode: Debug
+    env:
+      BUILDCACHE_COMPRESS_FORMAT: ZSTD
+      BUILDCACHE_DIRECT_MODE: true
     steps:
       - name: Check out OpenCOR
         uses: actions/checkout@v2
@@ -53,11 +56,6 @@ jobs:
         run: sudo apt install libglu1-mesa
       - name: Install buildcache
         uses: mikehardy/buildcache-action@v1
-      - name: Configure buildcache
-        shell: bash
-        run: |
-          mkdir -p ${{ github.workspace }}/../.buildcache
-          cp .github/workflows/config.json ${{ github.workspace }}/../.buildcache/config.json
       - name: Cache external dependencies
         uses: actions/cache@v2
         with:
