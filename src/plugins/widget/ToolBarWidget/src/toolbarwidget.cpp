@@ -29,14 +29,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-//#include <QApplication>
-//#include <QLabel>
-//#include <QLineEdit>
-//#include <QScreen>
-//#include <QTimer>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace ToolBarWidget {
 
