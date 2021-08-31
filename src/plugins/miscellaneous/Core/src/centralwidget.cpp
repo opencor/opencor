@@ -1796,9 +1796,9 @@ void CentralWidget::updateGui()
     updateModifiedSettings();
 
     // Force the hiding of our busy widget (useful in some cases, e.g. when we
-    // open/reload a remote file)
+    // open/reload a remote SED-ML file)
 
-    hideBusyWidget();
+    hideBusyWidget(true);
 
     // Let our different plugins know that the GUI has been updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
