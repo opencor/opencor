@@ -38,6 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                       { "change": "<strong>Python support:</strong> improved the way we check whether a simulation is valid before running it (see issue <a href=\"https://github.com/opencor/opencor/issues/2542\">#2542</a>)." },
+                      { "change": "<strong>Simulation Experiment view:</strong> can now fully reload a remote SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2550\">#2550</a>)." },
                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://openssl.org/\">OpenSSL</a> to version 1.1.1l (see issue <a href=\"https://github.com/opencor/opencor/issues/2532\">#2532</a>)." }
                     ]
                    },
