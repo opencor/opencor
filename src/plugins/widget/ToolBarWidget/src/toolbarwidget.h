@@ -59,6 +59,12 @@ public:
     ToolBarWidgetLabelWidgetAction * addLabelWidgetAction();
     ToolBarWidgetLineEditWidgetAction * addLineEditWidgetAction();
     ToolBarWidgetWheelWidgetAction * addWheelWidgetAction();
+
+protected:
+    void changeEvent(QEvent *pEvent) override;
+
+private:
+    void updateStyleSheet();
 };
 
 //==============================================================================
