@@ -53,7 +53,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QDragEnterEvent>
@@ -63,7 +62,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMenu>
 #include <QMimeData>
 #include <QPainter>
-#include <QScreen>
 #include <QScrollBar>
 #include <QTextEdit>
 #include <QTimer>
@@ -3038,10 +3036,6 @@ void SimulationExperimentViewSimulationWidget::delayWheelCreated(QwtWheel *pWhee
         return;
     }
 
-    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
-
-    pWheel->setFixedSize(int(0.07*availableGeometry.width()),
-                         mToolBarWidget->height()/2);
     pWheel->setRange(0.0, 55.0);
     pWheel->setValue(mDelayWheelValue);
 
