@@ -119,7 +119,7 @@ void CommonWidget::showBusyWidget(double pProgress)
         // Make sure that our busy widget is shown straightaway
         // Note: indeed, depending on the operating system (e.g. macOS) and on
         //       what we do next (e.g. retrieving a remote file), our busy
-        //       widget may or not show straightaway...
+        //       widget may or may not show straightaway...
 
         QCoreApplication::sendPostedEvents();
         QCoreApplication::processEvents();

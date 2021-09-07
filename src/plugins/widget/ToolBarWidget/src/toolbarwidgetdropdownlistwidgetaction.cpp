@@ -25,6 +25,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include <QMenu>
 #include <QTimer>
 #include <QToolButton>
 
@@ -42,6 +43,10 @@ ToolBarWidgetDropDownListWidgetAction::ToolBarWidgetDropDownListWidgetAction(QAc
       mDefaultAction(pDefaultAction),
       mDropDownMenu(pDropDownMenu)
 {
+    // Unhover our drop-down lists when about to hide our drop-down menu
+
+    connect(mDropDownMenu, &QMenu::aboutToHide,
+            this, &ToolBarWidgetDropDownListWidgetAction::unhoverDropDownLists);
 }
 
 //==============================================================================
@@ -101,6 +106,23 @@ void ToolBarWidgetDropDownListWidgetAction::emitCreated(QToolButton *pDropDownLi
     // Let people know that a drop-down list widget has been created
 
     emit created(pDropDownList);
+}
+
+//==============================================================================
+
+void ToolBarWidgetDropDownListWidgetAction::unhoverDropDownLists()
+{
+    // Unhover all our drop-down lists
+    // Note: indeed, say that you show the drop-down menu but then decide not to
+    //       click on any of the menu items then, on macOS (and this because of
+    //       our custom styling), the drop-down list will still look hovered,
+    //       something that we don't want...
+
+    const QList<QToolButton *> dropDownLists = ToolBarWidgetDropDownListWidgetAction::dropDownLists();
+
+    for (const auto &dropDownList : dropDownLists) {
+        dropDownList->setAttribute(Qt::WA_UnderMouse, false);
+    }
 }
 
 //==============================================================================

@@ -56,6 +56,8 @@ jobs:
         run: sudo apt install libglu1-mesa
       - name: Install buildcache
         uses: mikehardy/buildcache-action@v1
+        with:
+          cache_key: ${{ matrix.name }}
       - name: Cache external dependencies
         uses: actions/cache@v2
         with:

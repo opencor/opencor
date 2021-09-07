@@ -65,6 +65,9 @@ private:
 
 signals:
     void created(QToolButton *pDropDownList);
+
+private slots:
+    void unhoverDropDownLists();
 };
 
 //==============================================================================
