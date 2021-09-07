@@ -34,6 +34,7 @@ jobs:
     env:
       BUILDCACHE_COMPRESS_FORMAT: ZSTD
       BUILDCACHE_DIRECT_MODE: true
+      BUILDCACHE_LOG_FILE: ""
     steps:
       - name: Check out OpenCOR
         uses: actions/checkout@v2
