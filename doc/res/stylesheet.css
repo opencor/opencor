@@ -29,6 +29,10 @@ div.contents {
     border-radius: 0 0 13px 13px;
 }
 
+div.contents.latest {
+    border-radius: 0;
+}
+
 div.copyright {
     position: fixed;
     bottom: 0;
@@ -80,6 +84,49 @@ div.copyright div img.vpr {
     border: 0;
 }
 
+div.download,
+div.section {
+    color: rgb(103, 103, 103);
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+div.download {
+    border-radius: 13px 13px 0 0;
+    margin: 1.5em 0 0 0;
+    padding: 3px 7px 3px 7px;
+}
+
+div.download table,
+div.section table {
+    table-layout: fixed;
+    border-spacing: 0;
+    width: 100%;
+}
+
+div.download table td,
+div.section table td {
+    padding: 0;
+}
+
+div.download table td.date,
+div.section table td.date {
+    text-align: right;
+    font-size: 9pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
+div.download table td.whatIsNew {
+    text-align: center;
+}
+
+div.download table td.whatIsNew span.whatIsNew {
+    font-size: 7pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
 div.header {
     z-index: 999;
     padding: 3px;
@@ -110,6 +157,13 @@ div.main {
     margin-left: 330px;
 }
 
+div.note {
+    padding: 3px 7px 3px 7px;
+    border: 1px solid rgb(237, 163, 100);
+    border-top: none;
+    border-radius: 0 0 13px 13px;
+}
+
 div.official {
     border: 1px solid rgb(170, 187, 133);
     background: rgba(118, 146, 60, 0.13);
@@ -136,9 +190,6 @@ div.section {
     /*        necessary if we want to use a section at the beginning of */
     /*        a page (because of our fixed header at the top)...        */
     border-bottom: 1px solid rgba(103, 103, 103, 0.39);
-    color: rgb(103, 103, 103);
-    font-size: 13pt;
-    font-weight: bold;
 }
 
 img.center {
@@ -179,6 +230,28 @@ span.changes {
     color: rgb(103, 103, 103);
 }
 
+span.fakeLink {
+    color: rgb(103, 103, 103);
+    cursor: pointer;
+}
+
+span.fakeLink:hover {
+    margin: -1px;
+    border: 1px solid rgba(103, 103, 103, 0.13);
+    background: rgba(103, 103, 103, 0.05);
+    color: rgb(103, 103, 103);
+}
+
+span.license {
+    font-size: 7pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
+span.note {
+    font-weight: bold;
+}
+
 table.team {
     margin-left: 2.5em;
 }
@@ -191,8 +264,17 @@ table.team td div {
     font-weight: bold;
 }
 
+table ul.downloadsMenu {
+    border-spacing: 0;
+}
+
+table.note {
+    color: rgb(103, 103, 103);
+}
+
 table.version,
-table.changes {
+table.changes,
+table.note {
     width: 100%;
 }
 
@@ -239,4 +321,73 @@ ul > li {
 
 ul > li > ul {
     margin: 0;
+}
+
+ul.downloadsMenu {
+    z-index: 999;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    position: absolute;
+    padding: 0;
+    visibility: hidden;
+    background: rgb(249, 249, 249);
+    border: 1px solid rgb(103, 103, 103);
+    border-radius: 5px;
+    box-shadow: 0 5px 5px -5px rgb(103, 103, 103);
+}
+
+ul.downloadsMenu > li {
+    list-style: none;
+}
+
+ul.downloadsMenu > li {
+    cursor: default;
+    margin: 1px;
+    font-size: 8pt;
+    font-weight: normal;
+}
+
+ul.downloadsMenu > li > div > div > div:hover {
+    background: rgba(103, 103, 103, 0.79);
+}
+
+ul.downloadsMenu > li div:hover a {
+    color: rgb(255, 255, 255);
+}
+
+ul.downloadsMenu > li div.firstMenuItem > div:hover {
+    border-radius: 3px 3px 0 0;
+}
+
+ul.downloadsMenu > li div.lastMenuItem > div:hover {
+    border-radius: 0 0 3px 3px;
+}
+
+ul.downloadsMenu > li div.menuItemLabel {
+    display: table-cell;
+    font-style: normal;
+}
+
+ul.downloadsMenu > li div.menuItemTable {
+    display: table;
+    width: 100%;
+}
+
+ul.downloadsMenu > li div.menuItemTableRow {
+    display: table-row;
+    vertical-align: middle;
+}
+
+ul.downloadsMenu li a {
+    display: block;
+    padding: 1px;
+}
+
+ul.downloadsMenu li a:hover {
+    margin: 0;
+    border: 0;
 }
