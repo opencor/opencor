@@ -20,5 +20,9 @@
         <file>unitNode.png</file>
         <file>variableNode.png</file>
         <file>voi.png</file>
+        <file>C.xml</file>
+        <file>FORTRAN77.xml</file>
+        <file>MATLAB.xml</file>
+        <file>Python.xml</file>
     </qresource>
 </RCC>

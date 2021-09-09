@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<language
+  xmlns="http://www.cellml.org/CeLEDS/1.0#"
+  xmlns:mal="http://www.cellml.org/CeLEDS/MaLaES/1.0#"
+  xmlns:ccgs="http://www.cellml.org/CeLEDS/CCGS/1.0#">
+
+<title>F77</title>
+
+<mal:dictionary>
+  <mal:mapping keyname="opengroup">(</mal:mapping>
+  <mal:mapping keyname="closegroup">)</mal:mapping>
+  <mal:mapping keyname="abs" precedence="H">ABS(#expr1)</mal:mapping>
+  <mal:mapping keyname="and" precedence="20">#exprs[.AND.]</mal:mapping>
+  <mal:mapping keyname="arccos" precedence="H">acos(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccosh" precedence="H">acosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccot" precedence="1000(900)">atan(1.0/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccoth" precedence="1000(900)">atanh(1.0/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsc" precedence="1000(900)">asin(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsch" precedence="1000(900)">asinh(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsec" precedence="1000(900)">acos(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsech" precedence="1000(900)">acosh(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsin" precedence="H">asin(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsinh" precedence="H">asinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctan" precedence="H">atan(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctanh" precedence="H">atanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="ceiling" precedence="H">ceil(#expr1)</mal:mapping>
+  <mal:mapping keyname="cos" precedence="H">cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="cosh" precedence="H">cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="cot" precedence="900(0)">1.0/tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="coth" precedence="900(0)">1.0/tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="csc" precedence="900(0)">1.0/sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="csch" precedence="900(0)">1.0/sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="diff">#lookupDiffVariable</mal:mapping>
+  <mal:mapping keyname="divide" precedence="900">#expr1/#expr2</mal:mapping>
+  <mal:mapping keyname="eq" precedence="30">#exprs[.EQ.]</mal:mapping>
+  <mal:mapping keyname="exp" precedence="H">EXP(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorial" precedence="H">factorial(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorof" precedence="30(20)">MOD(#expr1, #expr2) .EQ. 0</mal:mapping>
+  <mal:mapping keyname="floor" precedence="H">INT(#expr1)</mal:mapping>
+  <mal:mapping keyname="gcd" precedence="H">gcd_multi(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="geq" precedence="30">#exprs[.GE.]</mal:mapping>
+  <mal:mapping keyname="gt" precedence="30">#exprs[.GT.]</mal:mapping>
+  <mal:mapping keyname="implies" precedence="10(950)"> (.NOT.#expr1 .OR. #expr2)</mal:mapping>
+  <mal:mapping keyname="int" precedence="H">defint(func#unique1, BOUND, CONSTS, RATES, VARIABLES, #bvarIndex)
+#supplement      REAL function func#unique1(BOUND,CONSTS, RATES, VARIABLES)
+      func#unique1 = #expr1
+      RETURN
+      END
+</mal:mapping>
+  <mal:mapping keyname="lcm" precedence="H">lcm_multi(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="leq" precedence="30">#exprs[.LE.]</mal:mapping>
+  <mal:mapping keyname="ln" precedence="H">log(#expr1)</mal:mapping>
+  <mal:mapping keyname="log" precedence="H">arbitrary_log(#expr1, #logbase)</mal:mapping>
+  <mal:mapping keyname="lt" precedence="30">#exprs[.LT.]</mal:mapping>
+  <mal:mapping keyname="max" precedence="H">MAX(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="min" precedence="H">MIN(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="minus" precedence="500">#expr1 - #expr2</mal:mapping>
+  <mal:mapping keyname="neq" precedence="30">#expr1 .NE. #expr2</mal:mapping>
+  <mal:mapping keyname="not" precedence="950">.NOT.#expr1</mal:mapping>
+  <mal:mapping keyname="or" precedence="10">#exprs[.OR.]</mal:mapping>
+  <mal:mapping keyname="plus" precedence="500">#exprs[+]</mal:mapping>
+  <mal:mapping keyname="power" precedence="H">#expr1 ** #expr2</mal:mapping>
+  <mal:mapping keyname="quotient" precedence="900(0)"> (INT(#expr1) / INT(#expr2))</mal:mapping>
+  <mal:mapping keyname="rem" precedence="900(0)"> INT(MOD(#expr1, #expr2))</mal:mapping>
+  <mal:mapping keyname="root" precedence="1000(900)"> #expr1 ** (1.0 / #degree)</mal:mapping>
+  <mal:mapping keyname="sec" precedence="900(0)">1.0 / cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="sech" precedence="900(0)">1.0 / cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="sin" precedence="H"> sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="sinh" precedence="H"> sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="tan" precedence="H"> tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="tanh" precedence="H"> tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="times" precedence="900"> #exprs[*]</mal:mapping>
+  <mal:mapping keyname="unary_minus" precedence="950">- #expr1</mal:mapping>
+  <mal:mapping keyname="units_conversion" precedence="500(900)">#expr1*#expr2 + #expr3</mal:mapping>
+  <mal:mapping keyname="units_conversion_factor" precedence="900">#expr1*#expr2</mal:mapping>
+  <mal:mapping keyname="units_conversion_offset" precedence="500">#expr1+#expr2</mal:mapping>
+  <mal:mapping keyname="xor" precedence="25(30)"> #expr1 .XOR. #expr2</mal:mapping>
+  <mal:mapping keyname="piecewise_first_case" precedence="5">TERNRY(#expr1, #expr2, </mal:mapping>
+  <mal:mapping keyname="piecewise_extra_case" precedence="5">TERNRY(#expr1, #expr2, </mal:mapping>
+  <mal:mapping keyname="piecewise_otherwise" precedence="5">#expr1)</mal:mapping>
+  <mal:mapping keyname="piecewise_no_otherwise" precedence="5">0.0/0.0)</mal:mapping>
+  <mal:mapping keyname="pi" precedence="999"> 3.14159265358979</mal:mapping>
+  <mal:mapping keyname="eulergamma" precedence="999">0.577215664901533</mal:mapping>
+  <mal:mapping keyname="infinity" precedence="900">1.0/0.0</mal:mapping>
+</mal:dictionary>
+
+<ccgs:dictionary>
+  <ccgs:mapping keyname="constantPattern">CONSTS(%)</ccgs:mapping>
+  <ccgs:mapping keyname="stateVariableNamePattern">STATES(%)</ccgs:mapping>
+  <ccgs:mapping keyname="algebraicVariableNamePattern">ALGBRC(%)</ccgs:mapping>
+  <ccgs:mapping keyname="rateNamePattern">RATES(%)</ccgs:mapping>
+  <ccgs:mapping keyname="voiPattern">VOI</ccgs:mapping>
+  <ccgs:mapping keyname="arrayOffset">1</ccgs:mapping>
+  <ccgs:mapping keyname="assignPattern">      &lt;LHS&gt; = &lt;RHS&gt;
+</ccgs:mapping>
+  <ccgs:mapping keyname="assignConstantPattern">      &lt;LHS&gt; = &lt;RHS&gt;
+</ccgs:mapping>
+  <ccgs:mapping keyname="solvePattern"><![CDATA[CALL minimize(minfunc_<ID>, CONSTS, VARIABLES, <VAR>)
+<SUP>REAL FUNCTION minfunc_<ID>(CONSTS, VARIABLES)
+            REAL CONSTS(*), VARIABLES(*)
+      minfunc_<ID> = abs(<LHS> - <RHS>)
+      RETURN
+      END
+]]></ccgs:mapping>
+  <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[CALL minimize(minfunc_<ID>, CONSTS, VARIABLES, <VAR>)
+<SUP>REAL FUNCTION minfunc_<ID>(CONSTS, VARIABLES)
+            REAL CONSTS(*), VARIABLES(*)
+      <EQUATIONS>minfunc_<ID>[<INDEX>] = abs(<EXPR>)<JOIN>
+      </EQUATIONS>
+      RETURN
+      END
+]]></ccgs:mapping>
+</ccgs:dictionary>
+
+<dictionary>
+  <mapping keyname="preAlgebraicCount">C
+C There are a total of </mapping>
+  <mapping keyname="postAlgebraicCount"> entries in the algebraic variable array.
+</mapping>
+  <mapping keyname="preStateCount">C There are a total of </mapping>
+  <mapping keyname="postStateCount"> entries in each of the rate and state variable arrays.
+</mapping>
+  <mapping keyname="preConstantCount">C There are a total of </mapping>
+  <mapping keyname="postConstantCount"> entries in the constant variable array.
+C
+</mapping>
+  <mapping keyname="preInitConsts">      SUBROUTINE initConsts(CONSTS, RATES, STATES)
+      REAL CONSTS(*), RATES(*), STATES(*)
+</mapping>
+  <mapping keyname="postInitConsts">      RETURN
+      END
+</mapping>
+  <mapping keyname="preRates">      SUBROUTINE computeRates(VOI, CONSTS,  RATES, STATES, ALGBRC)
+      REAL VOI, CONSTS(*), RATES(*), STATES(*), ALGBRC(*)
+</mapping>
+  <mapping keyname="postRates">      RETURN
+      END
+</mapping>
+  <mapping keyname="preVariables">      SUBROUTINE computeVariables(VOI, CONSTS, RATES, STATES, ALGBRC)
+      REAL VOI, CONSTS(*), RATES(*), STATES(*), ALGBRC(*)
+</mapping>
+  <mapping keyname="postVariables">      RETURN
+      END
+</mapping>
+  <mapping keyname="topSection"></mapping>
+  <mapping keyname="endSection"></mapping>
+  <mapping keyname="preVarList">C
+</mapping>
+  <mapping keyname="postVarList">C
+</mapping>
+  <mapping keyname="varListA">C </mapping>
+  <mapping keyname="varListB"> is </mapping>
+  <mapping keyname="varListC">.</mapping>
+</dictionary>
+
+<extrafunctions>
+  <function searchname="TERNRY">      REAL FUNCTION TERNRY(TEST, VALA, VALB)
+      LOGICAL TEST
+      REAL VALA, VALB
+      IF (TEST) THEN
+        TERNRY = VALA
+      ELSE
+        TERNRY = VALB
+      ENDIF
+      RETURN
+      END
+</function>
+</extrafunctions>
+
+</language>

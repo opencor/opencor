@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<language
+  xmlns="http://www.cellml.org/CeLEDS/1.0#"
+  xmlns:mal="http://www.cellml.org/CeLEDS/MaLaES/1.0#"
+  xmlns:ccgs="http://www.cellml.org/CeLEDS/CCGS/1.0#">
+
+<title>Python</title>
+
+<mal:dictionary>
+  <mal:mapping keyname="opengroup">(</mal:mapping>
+  <mal:mapping keyname="closegroup">)</mal:mapping>
+  <mal:mapping keyname="abs" precedence="H">fabs(#expr1)</mal:mapping>
+  <mal:mapping keyname="and" precedence="20">#exprs[ &amp; ]</mal:mapping>
+  <mal:mapping keyname="arccos" precedence="H">arccos(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccosh" precedence="H">arccosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccot" precedence="1000(900)">arctan(1.0/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccoth" precedence="1000(900)">arctanh(1.0/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsc" precedence="1000(900)">arcsin(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsch" precedence="1000(900)">arcsinh(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsec" precedence="1000(900)">arccos(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsech" precedence="1000(900)">arccosh(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsin" precedence="H">arcsin(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsinh" precedence="H">arcsinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctan" precedence="H">arctan(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctanh" precedence="H">arctanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="ceiling" precedence="H">ceil(#expr1)</mal:mapping>
+  <mal:mapping keyname="cos" precedence="H">cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="cosh" precedence="H">cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="cot" precedence="900(0)">1.0/tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="coth" precedence="900(0)">1.0/tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="csc" precedence="900(0)">1.0/sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="csch" precedence="900(0)">1.0/sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="diff">#lookupDiffVariable</mal:mapping>
+  <mal:mapping keyname="divide" precedence="900">#expr1/#expr2</mal:mapping>
+  <mal:mapping keyname="eq" precedence="30">equal(#exprs[ , ])</mal:mapping>
+  <mal:mapping keyname="exp" precedence="H">exp(#expr1)</mal:mapping>
+  <mal:mapping keyname="exponentiale" precedence="999">2.71828182846</mal:mapping>
+  <mal:mapping keyname="factorial" precedence="H">factorial(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorof" precedence="30(900)">#expr1 % #expr2 == 0</mal:mapping>
+  <mal:mapping keyname="false" precedence="999">False</mal:mapping>
+  <mal:mapping keyname="floor" precedence="H">floor(#expr1)</mal:mapping>
+  <mal:mapping keyname="gcd" precedence="H">gcd_multi([#exprs[, ]])</mal:mapping>
+  <mal:mapping keyname="geq" precedence="30">greater_equal(#exprs[ , ])</mal:mapping>
+  <mal:mapping keyname="gt" precedence="30">greater(#exprs[ , ])</mal:mapping>
+  <mal:mapping keyname="implies" precedence="10(950)"> (not #expr1) or #expr2</mal:mapping>
+  <mal:mapping keyname="int" precedence="H">defint(func#unique1, BOUND, CONSTANTS, RATES, VARIABLES, #bvarIndex)#supplement double func#unique1(double* BOUND, double* CONSTANTS, double* RATES, double* VARIABLES) { return #expr1; }</mal:mapping>
+  <mal:mapping keyname="lcm" precedence="H">lcm_multi([#exprs[, ]])</mal:mapping>
+  <mal:mapping keyname="leq" precedence="30">less_equal(#exprs[ , ])</mal:mapping>
+  <mal:mapping keyname="ln" precedence="H">log(#expr1)</mal:mapping>
+  <mal:mapping keyname="log" precedence="H">log(#expr1, #logbase)</mal:mapping>
+  <mal:mapping keyname="lt" precedence="30">less(#exprs[ , ])</mal:mapping>
+  <mal:mapping keyname="max" precedence="H">amax(vstack(#exprs[, ]),0)</mal:mapping>
+  <mal:mapping keyname="min" precedence="H">amin(vstack(#exprs[, ]),0)</mal:mapping>
+  <mal:mapping keyname="minus" precedence="500">#expr1-#expr2</mal:mapping>
+  <mal:mapping keyname="neq" precedence="30">#expr1 != #expr2</mal:mapping>
+  <mal:mapping keyname="not" precedence="950">!#expr1</mal:mapping>
+  <mal:mapping keyname="or" precedence="10">#exprs[ | ]</mal:mapping>
+  <mal:mapping keyname="pi" precedence="999"> pi</mal:mapping>
+  <mal:mapping keyname="piecewise_first_case" precedence="5">custom_piecewise([#expr1, #expr2 </mal:mapping>
+  <mal:mapping keyname="piecewise_extra_case" precedence="5">, #expr1, #expr2 </mal:mapping>
+  <mal:mapping keyname="piecewise_otherwise" precedence="5">, True, #expr1])</mal:mapping>
+  <mal:mapping keyname="piecewise_no_otherwise" precedence="5">, True, float('nan')])</mal:mapping>
+  <mal:mapping keyname="plus" precedence="500">#exprs[+]</mal:mapping>
+  <mal:mapping keyname="power" precedence="900(0)">power(#expr1, #expr2)</mal:mapping>
+  <mal:mapping keyname="quotient" precedence="900(0)"> floor(float(#expr1) / (#expr2))</mal:mapping>
+  <mal:mapping keyname="rem" precedence="900(0)"> #expr1 % #expr2</mal:mapping>
+  <mal:mapping keyname="root" precedence="900(0)">power(#expr1, 1.0/#degree)</mal:mapping>
+  <mal:mapping keyname="sec" precedence="900(0)">1.0/cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="sech" precedence="900(0)">1.0/cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="sin" precedence="H">sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="sinh" precedence="H">sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="tan" precedence="H">tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="tanh" precedence="H">tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="times" precedence="900">#exprs[*]</mal:mapping>
+  <mal:mapping keyname="true" precedence="999">True</mal:mapping>
+  <mal:mapping keyname="unary_minus" precedence="950">-#expr1</mal:mapping>
+  <mal:mapping keyname="units_conversion" precedence="500(900)">#expr1*#expr2 + #expr3</mal:mapping>
+  <mal:mapping keyname="units_conversion_factor" precedence="900">#expr1*#expr2</mal:mapping>
+  <mal:mapping keyname="units_conversion_offset" precedence="500">#expr1+#expr2</mal:mapping>
+  <mal:mapping keyname="xor" precedence="25(30)">(#expr1 != 0) ^ (#expr2 != 0)</mal:mapping>
+  <mal:mapping keyname="eulergamma" precedence="999">0.577215664901533</mal:mapping>
+  <mal:mapping keyname="infinity" precedence="900"> float('inf')</mal:mapping>
+</mal:dictionary>
+
+<ccgs:dictionary>
+  <ccgs:mapping keyname="constantPattern">constants[%]</ccgs:mapping>
+  <ccgs:mapping keyname="stateVariableNamePattern">states[%]</ccgs:mapping>
+  <ccgs:mapping keyname="algebraicVariableNamePattern">algebraic[%]</ccgs:mapping>
+  <ccgs:mapping keyname="rateNamePattern">rates[%]</ccgs:mapping>
+  <ccgs:mapping keyname="voiPattern">voi</ccgs:mapping>
+  <ccgs:mapping keyname="arrayOffset">0</ccgs:mapping>
+  <ccgs:mapping keyname="assignPattern">    &lt;LHS&gt; = &lt;RHS&gt;
+</ccgs:mapping>
+  <ccgs:mapping keyname="assignConstantPattern">    &lt;LHS&gt; = &lt;RHS&gt;
+</ccgs:mapping>
+  <ccgs:mapping keyname="solvePattern"><![CDATA[    rootfind_<ID>(voi, constants, rates, states, algebraic)
+<SUP>initialGuess<ID> = None
+def rootfind_<ID>(voi, constants, states, algebraic):
+    """Calculate value of algebraic variable for DAE"""
+    from scipy.optimize import fsolve
+    global initialGuess<ID>
+    if initialGuess<ID> is None: initialGuess<ID> = 0.1
+    if not iterable(voi):
+        <VAR> = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic, voi, constants, rates, states), xtol=1E-6)
+        initialGuess<ID> = <VAR>
+    else:
+        for (i,t) in enumerate(voi):
+            <VAR>[i] = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic[:,i], voi[i], constants, rates, states[:,i]), xtol=1E-6)
+            initialGuess<ID> = <VAR>[i]
+
+def residualSN_<ID>(algebraicCandidate, algebraic, voi, constants, rates, states):
+    <VAR> = algebraicCandidate
+    return (<LHS>) - (<RHS>)
+
+]]></ccgs:mapping>
+  <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[    rootfind_<ID>(voi, constants, rates, states, algebraic)
+<SUP>initialGuess<ID> = None
+def rootfind_<ID>(voi, constants, rates, states, algebraic):
+    """Calculate values of algebraic variables for DAE"""
+    from scipy.optimize import fsolve
+    global initialGuess<ID>
+    if initialGuess<ID> is None: initialGuess<ID> = ones(<COUNT>)*0.1
+    if not iterable(voi):
+        soln = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic, voi, constants, rates, states), xtol=1E-6)
+        initialGuess<ID> = soln
+        <EQUATIONS><VAR> = soln[<INDEX>]<JOIN>
+        </EQUATIONS>
+    else:
+        for (i,t) in enumerate(voi):
+            soln = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic[:,i], voi[i], constants, rates[:i], states[:,i]), xtol=1E-6)
+            initialGuess<ID> = soln
+            <EQUATIONS><VAR>[i] = soln[<INDEX>]<JOIN>
+            </EQUATIONS>
+
+def residualSN_<ID>(algebraicCandidate, algebraic, voi, constants, rates, states):
+    resid = array([0.0] * <COUNT>)
+    <EQUATIONS><VAR> = algebraicCandidate[<INDEX>]<JOIN>
+    </EQUATIONS>
+    <EQUATIONS>resid[<INDEX>] = (<EXPR>)<JOIN>
+    </EQUATIONS>
+    return resid
+
+]]></ccgs:mapping>
+</ccgs:dictionary>
+
+<dictionary>
+  <mapping keyname="preAlgebraicCount"># Size of variable arrays:
+sizeAlgebraic = </mapping>
+  <mapping keyname="postAlgebraicCount">
+</mapping>
+  <mapping keyname="preStateCount">sizeStates = </mapping>
+  <mapping keyname="postStateCount">
+</mapping>
+  <mapping keyname="preConstantCount">sizeConstants = </mapping>
+  <mapping keyname="postConstantCount">
+</mapping>
+  <mapping keyname="topSection">from math import *
+from numpy import *
+
+</mapping>
+  <mapping keyname="preInitConsts">def initConsts():
+    constants = [0.0] * sizeConstants; states = [0.0] * sizeStates;
+</mapping>
+  <mapping keyname="postInitConsts">    return (states, constants)
+
+</mapping>
+  <mapping keyname="preRates">def computeRates(voi, states, constants):
+    rates = [0.0] * sizeStates; algebraic = [0.0] * sizeAlgebraic
+</mapping>
+  <mapping keyname="postRates">    return(rates)
+
+</mapping>
+  <mapping keyname="preVariables">def computeAlgebraic(constants, states, voi):
+    algebraic = array([[0.0] * len(voi)] * sizeAlgebraic)
+    states = array(states)
+    voi = array(voi)
+</mapping>
+  <mapping keyname="postVariables">    return algebraic
+
+</mapping>
+  <mapping keyname="endSection" solverparameters="true"><![CDATA[def solve_model():
+    """Solve model with ODE solver"""
+    from scipy.integrate import ode
+    # Initialise constants and state variables
+    (init_states, constants) = initConsts()
+
+    # Set timespan to solve over
+    voi = linspace(<RANGESTART>, <RANGEEND>, 500)
+
+    # Construct ODE object to solve
+    r = ode(computeRates)
+    r.set_integrator('vode', method='bdf', atol=<ABSTOL>, rtol=<RELTOL>, max_step=<MAXSTEP>)
+    r.set_initial_value(init_states, voi[0])
+    r.set_f_params(constants)
+
+    # Solve model
+    states = array([[0.0] * len(voi)] * sizeStates)
+    states[:,0] = init_states
+    for (i,t) in enumerate(voi[1:]):
+        if r.successful():
+            r.integrate(t)
+            states[:,i+1] = r.y
+        else:
+            break
+
+    # Compute algebraic variables
+    algebraic = computeAlgebraic(constants, states, voi)
+    return (voi, states, algebraic)
+
+def plot_model(voi, states, algebraic):
+    """Plot variables against variable of integration"""
+    import pylab
+    (legend_states, legend_algebraic, legend_voi, legend_constants) = createLegends()
+    pylab.figure(1)
+    pylab.plot(voi,vstack((states,algebraic)).T)
+    pylab.xlabel(legend_voi)
+    pylab.legend(legend_states + legend_algebraic, loc='best')
+    pylab.show()
+
+if __name__ == "__main__":
+    (voi, states, algebraic) = solve_model()
+    plot_model(voi, states, algebraic)
+]]></mapping>
+  <mapping keyname="preVarList">def createLegends():
+    legend_states = [""] * sizeStates
+    legend_rates = [""] * sizeStates
+    legend_algebraic = [""] * sizeAlgebraic
+    legend_voi = ""
+    legend_constants = [""] * sizeConstants
+</mapping>
+  <mapping keyname="postVarList">    return (legend_states, legend_algebraic, legend_voi, legend_constants)
+
+</mapping>
+  <mapping keyname="varListA">    legend_</mapping>
+  <mapping keyname="varListB"> = "</mapping>
+  <mapping keyname="varListC">"</mapping>
+</dictionary>
+
+<extrafunctions>
+  <function searchname="custom_piecewise"><![CDATA[def custom_piecewise(cases):
+    """Compute result of a piecewise function"""
+    return select(cases[0::2],cases[1::2])
+
+]]></function>
+  <function searchname="_multi"><![CDATA[def gcd(A, B):
+    """Greatest common divisor"""
+    if (iterable(A) and iterable(B)):
+        x = [];
+        for (a,b) in zip(A,B):
+            assert (int(a) == a) and (int(b) == b)
+            a = int(a); b = int(b)
+            while a:
+                a,b = b % a, a
+            x.append(b)
+        return x
+    else:
+        while A:
+            A,B = B % A, A
+        return b
+
+]]></function>
+  <function searchname="lcm_multi"><![CDATA[def lcm_multi(X):
+    """Least common multiple in a list"""
+    m = X[0];
+    for x in X:
+        m = m/gcd(m,x)*x
+    return m
+
+]]></function>
+  <function searchname="gcd_multi"><![CDATA[def gcd_multi(X):
+    """Greatest common divisor in a list"""
+    d = int(X[0] * 0)
+    for x in X:
+        d = gcd(d,x)
+    return d
+
+]]></function>
+</extrafunctions>
+
+</language>
+
