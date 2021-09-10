@@ -340,9 +340,9 @@ void CellMLToolsPlugin::runHelpCommand()
     std::cout << "Commands supported by the CellMLTools plugin:" << std::endl;
     std::cout << " * Display the commands supported by the CellMLTools plugin:" << std::endl;
     std::cout << "      help" << std::endl;
-    std::cout << " * Export <file> to a <predefined_format> or a given <language>:" << std::endl;
-    std::cout << "      export <file> <predefined_format>|<language>" << std::endl;
-    std::cout << "   <predefined_format> can take one of the following values:" << std::endl;
+    std::cout << " * Export <file> to a given <cellml_version> or a given <language>:" << std::endl;
+    std::cout << "      export <file> <cellml_version>|<language>" << std::endl;
+    std::cout << "   <cellml_version> can take one of the following values:" << std::endl;
     std::cout << "      cellml_1_0: to export a CellML 1.1 file to CellML 1.0" << std::endl;
     std::cout << "   <language> can take one of the following values:" << std::endl;
     std::cout << "      c: to export a CellML file to C" << std::endl;

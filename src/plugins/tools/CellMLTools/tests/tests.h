@@ -38,8 +38,12 @@ private:
 
 private slots:
     void helpTests();
-    void exportToUserDefinedFormatTests();
+    void exportToUnknownFormatOrLanguage();
     void exportToCellml10Tests();
+    void exportToCTests();
+    void exportToFortran77Tests();
+    void exportToMatlabTests();
+    void exportToPythonTests();
     void validateCellmlFiles();
 };
 

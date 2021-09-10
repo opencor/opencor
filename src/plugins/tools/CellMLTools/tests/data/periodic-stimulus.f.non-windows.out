@@ -1,0 +1,112 @@
+C
+C There are a total of 13 entries in the algebraic variable array.
+C There are a total of 4 entries in each of the rate and state variable arrays.
+C There are a total of 14 entries in the constant variable array.
+C
+C
+C CONSTS(1) is stimPeriod in component stimulus_protocol_params (ms).
+C CONSTS(2) is stimDuration in component stimulus_protocol_params (ms).
+C CONSTS(3) is stimCurrent in component stimulus_protocol_params (uA_per_cmsq).
+C VOI is time in component time (ms).
+C ALGBRC(10) is INa in component INa (uA_per_cmsq).
+C ALGBRC(12) is IK in component IK (uA_per_cmsq).
+C ALGBRC(13) is Ileak in component Ileak (uA_per_cmsq).
+C STATES(1) is V in component action_potential (mV).
+C ALGBRC(1) is minus_V in component action_potential (mV).
+C STATES(2) is X in component hh_gating_variable (dimensionless).
+C STATES(3) is X in component hh_gating_variable (dimensionless).
+C STATES(4) is X in component hh_gating_variable (dimensionless).
+C CONSTS(4) is V_initial in component initial_conditions (mV).
+C CONSTS(5) is n_initial in component initial_conditions (dimensionless).
+C CONSTS(6) is m_initial in component initial_conditions (dimensionless).
+C CONSTS(7) is h_initial in component initial_conditions (dimensionless).
+C ALGBRC(2) is IStim in component stimulus_protocol (uA_per_cmsq).
+C CONSTS(8) is VNa in component parameters (mV).
+C CONSTS(9) is VK in component parameters (mV).
+C CONSTS(10) is Vleak in component parameters (mV).
+C CONSTS(11) is gNa_max in component parameters (mS_per_cmsq).
+C CONSTS(12) is gK_max in component parameters (mS_per_cmsq).
+C CONSTS(13) is gleak_max in component parameters (mS_per_cmsq).
+C CONSTS(14) is Cm in component parameters (uF_per_cmsq).
+C ALGBRC(6) is gNa in component INa (mS_per_cmsq).
+C ALGBRC(11) is gK in component IK (mS_per_cmsq).
+C ALGBRC(3) is alpha in component alpha_m (per_ms).
+C ALGBRC(7) is beta in component beta_m (per_ms).
+C ALGBRC(4) is alpha in component alpha_h (per_ms).
+C ALGBRC(8) is beta in component beta_h (per_ms).
+C ALGBRC(5) is alpha in component alpha_n (per_ms).
+C ALGBRC(9) is beta in component beta_n (per_ms).
+C RATES(1) is d/dt V in component action_potential (mV).
+C RATES(3) is d/dt X in component hh_gating_variable (dimensionless).
+C RATES(2) is d/dt X in component hh_gating_variable (dimensionless).
+C RATES(4) is d/dt X in component hh_gating_variable (dimensionless).
+C
+      SUBROUTINE initConsts(CONSTS, RATES, STATES)
+      REAL CONSTS(*), RATES(*), STATES(*)
+      CONSTS(1) = 50
+      CONSTS(2) = 0.5
+      CONSTS(3) = -10
+      CONSTS(4) = 0
+      CONSTS(5) = 0.315
+      CONSTS(6) = 0.042
+      CONSTS(7) = 0.608
+      CONSTS(8) = -115
+      CONSTS(9) = 12
+      CONSTS(10) = -10.613
+      CONSTS(11) = 120
+      CONSTS(12) = 36
+      CONSTS(13) = 0.3
+      CONSTS(14) = 1
+      STATES(1) = CONSTS(4)
+      STATES(2) = CONSTS(7)
+      STATES(3) = CONSTS(6)
+      STATES(4) = CONSTS(5)
+      RETURN
+      END
+      SUBROUTINE computeRates(VOI, CONSTS,  RATES, STATES, ALGBRC)
+      REAL VOI, CONSTS(*), RATES(*), STATES(*), ALGBRC(*)
+      ALGBRC(3) = ( 0.100000*(STATES(1)+25.0000))/(EXP((STATES(1)+25.0000)/10.0000) - 1.00000)
+      ALGBRC(7) =  4.00000*EXP(STATES(1)/18.0000)
+      RATES(3) =  ALGBRC(3)*(1.00000 - STATES(3)) -  ALGBRC(7)*STATES(3)
+      ALGBRC(4) =  0.0700000*EXP(STATES(1)/20.0000)
+      ALGBRC(8) = 1.00000/(EXP((STATES(1)+30.0000)/10.0000)+1.00000)
+      RATES(2) =  ALGBRC(4)*(1.00000 - STATES(2)) -  ALGBRC(8)*STATES(2)
+      ALGBRC(5) = ( 0.0100000*(STATES(1)+10.0000))/(EXP((STATES(1)+10.0000)/10.0000) - 1.00000)
+      ALGBRC(9) =  0.125000*EXP(STATES(1)/80.0000)
+      RATES(4) =  ALGBRC(5)*(1.00000 - STATES(4)) -  ALGBRC(9)*STATES(4)
+      ALGBRC(6) =  CONSTS(11)*STATES(3) ** 3.00000*STATES(2)
+      ALGBRC(10) =  ALGBRC(6)*(STATES(1) - CONSTS(8))
+      ALGBRC(11) =  CONSTS(12)*STATES(4) ** 4.00000
+      ALGBRC(12) =  ALGBRC(11)*(STATES(1) - CONSTS(9))
+      ALGBRC(13) =  CONSTS(13)*(STATES(1) - CONSTS(10))
+      ALGBRC(2) = TERNRY( INT(MOD(VOI, CONSTS(1))).LT.CONSTS(2), CONSTS(3), 0.00000)
+      RATES(1) = (ALGBRC(2) - (ALGBRC(10)+ALGBRC(12)+ALGBRC(13)))/CONSTS(14)
+      RETURN
+      END
+      SUBROUTINE computeVariables(VOI, CONSTS, RATES, STATES, ALGBRC)
+      REAL VOI, CONSTS(*), RATES(*), STATES(*), ALGBRC(*)
+      ALGBRC(3) = ( 0.100000*(STATES(1)+25.0000))/(EXP((STATES(1)+25.0000)/10.0000) - 1.00000)
+      ALGBRC(7) =  4.00000*EXP(STATES(1)/18.0000)
+      ALGBRC(4) =  0.0700000*EXP(STATES(1)/20.0000)
+      ALGBRC(8) = 1.00000/(EXP((STATES(1)+30.0000)/10.0000)+1.00000)
+      ALGBRC(5) = ( 0.0100000*(STATES(1)+10.0000))/(EXP((STATES(1)+10.0000)/10.0000) - 1.00000)
+      ALGBRC(9) =  0.125000*EXP(STATES(1)/80.0000)
+      ALGBRC(6) =  CONSTS(11)*STATES(3) ** 3.00000*STATES(2)
+      ALGBRC(10) =  ALGBRC(6)*(STATES(1) - CONSTS(8))
+      ALGBRC(11) =  CONSTS(12)*STATES(4) ** 4.00000
+      ALGBRC(12) =  ALGBRC(11)*(STATES(1) - CONSTS(9))
+      ALGBRC(13) =  CONSTS(13)*(STATES(1) - CONSTS(10))
+      ALGBRC(2) = TERNRY( INT(MOD(VOI, CONSTS(1))).LT.CONSTS(2), CONSTS(3), 0.00000)
+      ALGBRC(1) = - STATES(1)
+      RETURN
+      END
+      REAL FUNCTION TERNRY(TEST, VALA, VALB)
+      LOGICAL TEST
+      REAL VALA, VALB
+      IF (TEST) THEN
+        TERNRY = VALA
+      ELSE
+        TERNRY = VALB
+      ENDIF
+      RETURN
+      END
