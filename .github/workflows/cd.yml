@@ -19,15 +19,8 @@ jobs:
         run: sudo apt install python3-sphinx
       - name: Generate OpenCOR's user documentation
         run: ./cd
-      # - name: Deploy OpenCOR's user documentation
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: build/user-documentation/build/html
       - name: Deploy OpenCOR's user documentation
-        uses: crazy-max/ghaction-github-pages@v2
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          build_dir: build/user-documentation/build/html
-          jekyll: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: build/user-documentation/build/html
