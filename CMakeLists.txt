@@ -1652,20 +1652,4 @@ foreach(MODEL_FILE ${MODEL_FILES})
             PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 endforeach()
 
-# Some user-defined format files
-
-set(FORMAT_FILES
-    C.xml
-    F77.xml
-    MATLAB.xml
-    Python.xml
-    README.txt
-)
-
-foreach(FORMAT_FILE ${FORMAT_FILES})
-    install(FILES ${CMAKE_SOURCE_DIR}/formats/${FORMAT_FILE}
-            DESTINATION formats
-            PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
-endforeach()
-
 include(CPack)

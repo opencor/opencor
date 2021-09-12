@@ -60,29 +60,12 @@ void Tests::helpTests()
 
 //==============================================================================
 
-void Tests::exportToUserDefinedFormatTests()
+void Tests::exportToUnknownFormatOrLanguage()
 {
-    // Try to export to a user-defined format, which file description doesn't
-    // exist
+    // Try to export a local file to an unknown format/language
 
-    QString fileName = OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
-
-    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, "non_existing_user_defined_format_file" }, mOutput));
-    QCOMPARE(mOutput, QStringList() << "The user-defined format file could not be found." << QString());
-
-    // Try to export a local file to a user-defined (MATLAB) format, which file
-    // description exists
-
-    QString matlabFormatFileName = OpenCOR::fileName("formats/MATLAB.xml");
-
-#ifdef Q_OS_WIN
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, matlabFormatFileName }, mOutput));
-    QVERIFY(   (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_windows.out")))
-            || (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_windows_ci.out"))));
-#else
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", fileName, matlabFormatFileName }, mOutput ));
-    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_non_windows.out")));
-#endif
+    QVERIFY(OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "unknown" }, mOutput ));
+    QCOMPARE(mOutput, QStringList() << "The format or language is not valid." << QString());
 }
 
 //==============================================================================
@@ -114,6 +97,74 @@ void Tests::exportToCellml10Tests()
 
     QVERIFY(OpenCOR::runCli({ "-c", "CellMLTools::export", "non_existing_file", "cellml_1_0" }, mOutput));
     QCOMPARE(mOutput, QStringList() << "The file could not be found." << QString());
+}
+
+//==============================================================================
+
+void Tests::exportToCTests()
+{
+    // Try to export a local file to C
+
+#ifdef Q_OS_WIN
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "c" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.c.windows.out")));
+#else
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "c" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.c.non-windows.out")));
+#endif
+}
+
+//==============================================================================
+
+void Tests::exportToFortran77Tests()
+{
+    // Try to export a local file to FORTRAN 77
+
+#ifdef Q_OS_WIN
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "fortran_77" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.f.windows.out")));
+#else
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "fortran_77" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.f.non-windows.out")));
+#endif
+}
+
+//==============================================================================
+
+void Tests::exportToMatlabTests()
+{
+    // Try to export a local file to MATLAB
+
+#ifdef Q_OS_WIN
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "matlab" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.m.windows.out")));
+#else
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "matlab" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.m.non-windows.out")));
+#endif
+}
+
+//==============================================================================
+
+void Tests::exportToPythonTests()
+{
+    // Try to export a local file to Python
+
+#ifdef Q_OS_WIN
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "python" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.py.windows.out")));
+#else
+    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "python" }, mOutput ));
+    QCOMPARE(mOutput,
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.py.non-windows.out")));
+#endif
 }
 
 //==============================================================================

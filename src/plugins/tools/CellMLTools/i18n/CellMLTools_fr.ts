@@ -16,12 +16,36 @@
         <translation>Exporter le fichier CellML vers CellML 1.0</translation>
     </message>
     <message>
-        <source>User-Defined Format...</source>
-        <translation>Format Défini Par Utilisateur...</translation>
+        <source>C...</source>
+        <translation></translation>
     </message>
     <message>
-        <source>Export the CellML file to some user-defined format</source>
-        <translation>Exporter le fichier CellML vers un format défini par l&apos;utilisateur</translation>
+        <source>Export the CellML file to C</source>
+        <translation>Exporter le fichier CellML vers C</translation>
+    </message>
+    <message>
+        <source>FORTRAN 77...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Export the CellML file to FORTRAN 77</source>
+        <translation>Exporter le fichier CellML vers FORTRAN 77</translation>
+    </message>
+    <message>
+        <source>MATLAB...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Export the CellML file to MATLAB</source>
+        <translation>Exporter le fichier CellML vers MATLAB</translation>
+    </message>
+    <message>
+        <source>Python...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Export the CellML file to Python</source>
+        <translation>Exporter le fichier CellML vers Python</translation>
     </message>
     <message>
         <source>Export CellML File To %1</source>
@@ -34,22 +58,6 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
-    </message>
-    <message>
-        <source>User-Defined Format File</source>
-        <translation>Fichier Format Défini Par Utilisateur</translation>
-    </message>
-    <message>
-        <source>Select User-Defined Format File</source>
-        <translation>Sélectionner Fichier Format Défini Par Utilisateur</translation>
-    </message>
-    <message>
-        <source>Export CellML File To User-Defined Format</source>
-        <translation>Exporter Fichier CellML Vers Fichier Format Défini Par Utilisateur</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to the user-defined format described in &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers le format défini par l&apos;utilisateur décrit dans &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
     </message>
 </context>
 </TS>

@@ -1,0 +1,102 @@
+/*
+   There are a total of 13 entries in the algebraic variable array.
+   There are a total of 4 entries in each of the rate and state variable arrays.
+   There are a total of 14 entries in the constant variable array.
+ */
+/*
+ * CONSTANTS[0] is stimPeriod in component stimulus_protocol_params (ms).
+ * CONSTANTS[1] is stimDuration in component stimulus_protocol_params (ms).
+ * CONSTANTS[2] is stimCurrent in component stimulus_protocol_params (uA_per_cmsq).
+ * VOI is time in component time (ms).
+ * ALGEBRAIC[9] is INa in component INa (uA_per_cmsq).
+ * ALGEBRAIC[11] is IK in component IK (uA_per_cmsq).
+ * ALGEBRAIC[12] is Ileak in component Ileak (uA_per_cmsq).
+ * STATES[0] is V in component action_potential (mV).
+ * ALGEBRAIC[0] is minus_V in component action_potential (mV).
+ * STATES[1] is X in component hh_gating_variable (dimensionless).
+ * STATES[2] is X in component hh_gating_variable (dimensionless).
+ * STATES[3] is X in component hh_gating_variable (dimensionless).
+ * CONSTANTS[3] is V_initial in component initial_conditions (mV).
+ * CONSTANTS[4] is n_initial in component initial_conditions (dimensionless).
+ * CONSTANTS[5] is m_initial in component initial_conditions (dimensionless).
+ * CONSTANTS[6] is h_initial in component initial_conditions (dimensionless).
+ * ALGEBRAIC[1] is IStim in component stimulus_protocol (uA_per_cmsq).
+ * CONSTANTS[7] is VNa in component parameters (mV).
+ * CONSTANTS[8] is VK in component parameters (mV).
+ * CONSTANTS[9] is Vleak in component parameters (mV).
+ * CONSTANTS[10] is gNa_max in component parameters (mS_per_cmsq).
+ * CONSTANTS[11] is gK_max in component parameters (mS_per_cmsq).
+ * CONSTANTS[12] is gleak_max in component parameters (mS_per_cmsq).
+ * CONSTANTS[13] is Cm in component parameters (uF_per_cmsq).
+ * ALGEBRAIC[5] is gNa in component INa (mS_per_cmsq).
+ * ALGEBRAIC[10] is gK in component IK (mS_per_cmsq).
+ * ALGEBRAIC[2] is alpha in component alpha_m (per_ms).
+ * ALGEBRAIC[6] is beta in component beta_m (per_ms).
+ * ALGEBRAIC[3] is alpha in component alpha_h (per_ms).
+ * ALGEBRAIC[7] is beta in component beta_h (per_ms).
+ * ALGEBRAIC[4] is alpha in component alpha_n (per_ms).
+ * ALGEBRAIC[8] is beta in component beta_n (per_ms).
+ * RATES[0] is d/dt V in component action_potential (mV).
+ * RATES[2] is d/dt X in component hh_gating_variable (dimensionless).
+ * RATES[1] is d/dt X in component hh_gating_variable (dimensionless).
+ * RATES[3] is d/dt X in component hh_gating_variable (dimensionless).
+ */
+void
+initConsts(double* CONSTANTS, double* RATES, double *STATES)
+{
+CONSTANTS[0] = 50;
+CONSTANTS[1] = 0.5;
+CONSTANTS[2] = -10;
+CONSTANTS[3] = 0;
+CONSTANTS[4] = 0.315;
+CONSTANTS[5] = 0.042;
+CONSTANTS[6] = 0.608;
+CONSTANTS[7] = -115;
+CONSTANTS[8] = 12;
+CONSTANTS[9] = -10.613;
+CONSTANTS[10] = 120;
+CONSTANTS[11] = 36;
+CONSTANTS[12] = 0.3;
+CONSTANTS[13] = 1;
+STATES[0] = CONSTANTS[3];
+STATES[1] = CONSTANTS[6];
+STATES[2] = CONSTANTS[5];
+STATES[3] = CONSTANTS[4];
+}
+void
+computeRates(double VOI, double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC)
+{
+ALGEBRAIC[2] = ( 0.100000*(STATES[0]+25.0000))/(exp((STATES[0]+25.0000)/10.0000) - 1.00000);
+ALGEBRAIC[6] =  4.00000*exp(STATES[0]/18.0000);
+RATES[2] =  ALGEBRAIC[2]*(1.00000 - STATES[2]) -  ALGEBRAIC[6]*STATES[2];
+ALGEBRAIC[3] =  0.0700000*exp(STATES[0]/20.0000);
+ALGEBRAIC[7] = 1.00000/(exp((STATES[0]+30.0000)/10.0000)+1.00000);
+RATES[1] =  ALGEBRAIC[3]*(1.00000 - STATES[1]) -  ALGEBRAIC[7]*STATES[1];
+ALGEBRAIC[4] = ( 0.0100000*(STATES[0]+10.0000))/(exp((STATES[0]+10.0000)/10.0000) - 1.00000);
+ALGEBRAIC[8] =  0.125000*exp(STATES[0]/80.0000);
+RATES[3] =  ALGEBRAIC[4]*(1.00000 - STATES[3]) -  ALGEBRAIC[8]*STATES[3];
+ALGEBRAIC[5] =  CONSTANTS[10]*pow(STATES[2], 3.00000)*STATES[1];
+ALGEBRAIC[9] =  ALGEBRAIC[5]*(STATES[0] - CONSTANTS[7]);
+ALGEBRAIC[10] =  CONSTANTS[11]*pow(STATES[3], 4.00000);
+ALGEBRAIC[11] =  ALGEBRAIC[10]*(STATES[0] - CONSTANTS[8]);
+ALGEBRAIC[12] =  CONSTANTS[12]*(STATES[0] - CONSTANTS[9]);
+ALGEBRAIC[1] = ( (int)(VOI) % (int)(CONSTANTS[0])<CONSTANTS[1] ? CONSTANTS[2] : 0.00000);
+RATES[0] = (ALGEBRAIC[1] - (ALGEBRAIC[9]+ALGEBRAIC[11]+ALGEBRAIC[12]))/CONSTANTS[13];
+}
+void
+computeVariables(double VOI, double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC)
+{
+ALGEBRAIC[2] = ( 0.100000*(STATES[0]+25.0000))/(exp((STATES[0]+25.0000)/10.0000) - 1.00000);
+ALGEBRAIC[6] =  4.00000*exp(STATES[0]/18.0000);
+ALGEBRAIC[3] =  0.0700000*exp(STATES[0]/20.0000);
+ALGEBRAIC[7] = 1.00000/(exp((STATES[0]+30.0000)/10.0000)+1.00000);
+ALGEBRAIC[4] = ( 0.0100000*(STATES[0]+10.0000))/(exp((STATES[0]+10.0000)/10.0000) - 1.00000);
+ALGEBRAIC[8] =  0.125000*exp(STATES[0]/80.0000);
+ALGEBRAIC[5] =  CONSTANTS[10]*pow(STATES[2], 3.00000)*STATES[1];
+ALGEBRAIC[9] =  ALGEBRAIC[5]*(STATES[0] - CONSTANTS[7]);
+ALGEBRAIC[10] =  CONSTANTS[11]*pow(STATES[3], 4.00000);
+ALGEBRAIC[11] =  ALGEBRAIC[10]*(STATES[0] - CONSTANTS[8]);
+ALGEBRAIC[12] =  CONSTANTS[12]*(STATES[0] - CONSTANTS[9]);
+ALGEBRAIC[1] = ( (int)(VOI) % (int)(CONSTANTS[0])<CONSTANTS[1] ? CONSTANTS[2] : 0.00000);
+ALGEBRAIC[0] = - STATES[0];
+}

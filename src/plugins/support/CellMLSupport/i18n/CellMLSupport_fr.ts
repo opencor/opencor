@@ -23,18 +23,6 @@
         <translation>le modèle n&apos;a pas pu être créé (%1)</translation>
     </message>
     <message>
-        <source>the user-defined format file does not exist</source>
-        <translation>le fichier du format défini par l&apos;utilisateur n&apos;existe pas</translation>
-    </message>
-    <message>
-        <source>the user-defined format file could not be read</source>
-        <translation>le fichier du format défini par l&apos;utilisateur n&apos;a pas pu être lu</translation>
-    </message>
-    <message>
-        <source>the user-defined format file is not a valid XML file</source>
-        <translation>le fichier du format défini par l&apos;utilisateur n&apos;est pas un fichier XML valide</translation>
-    </message>
-    <message>
         <source>the user-defined format file could not be loaded</source>
         <translation>le fichier du format défini par l&apos;utilisateur n&apos;a pas pu être lu</translation>
     </message>

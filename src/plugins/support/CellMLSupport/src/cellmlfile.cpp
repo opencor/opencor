@@ -1050,41 +1050,33 @@ bool CellmlFile::exportTo(const QString &pFileName, Version pVersion)
 
 //==============================================================================
 
-bool CellmlFile::exportTo(const QString &pFileName,
-                          const QString &pUserDefinedFormatFileName)
+bool CellmlFile::exportTo(const QString &pFileName, Language pLanguage)
 {
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
-        // Check that the user-defined format file actually exists
+        // Retrieve the XML file describing the language to which we want to
+        // export
 
-        if (!QFile::exists(pUserDefinedFormatFileName)) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
-                                       tr("the user-defined format file does not exist"));
+        QString fileContents;
 
-            return false;
-        }
+        switch (pLanguage) {
+        case Language::C:
+            Core::readFile(":/CellMLSupport/C.xml", fileContents);
 
-        // Make sure that the user-defined format file is valid XML
-        // Note: you would normally expect CeLEDSExporter to check this, but all
-        //       it does in case of an invalid XML file is crash...
+            break;
+        case Language::Fortran77:
+            Core::readFile(":/CellMLSupport/FORTRAN77.xml", fileContents);
 
-        QByteArray fileContents;
+            break;
+        case Language::Matlab:
+            Core::readFile(":/CellMLSupport/MATLAB.xml", fileContents);
 
-        if (!Core::readFile(pUserDefinedFormatFileName, fileContents)) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
-                                       tr("the user-defined format file could not be read"));
+            break;
+        case Language::Python:
+            Core::readFile(":/CellMLSupport/Python.xml", fileContents);
 
-            return false;
-        }
-
-        QDomDocument domDocument;
-
-        if (!domDocument.setContent(fileContents)) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
-                                       tr("the user-defined format file is not a valid XML file"));
-
-            return false;
+            break;
         }
 
         // Fully instantiate all the imports
@@ -1096,7 +1088,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
-        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(fileContents).toStdWString());
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(fileContents.toStdWString());
 
         if (!celedsExporterBootstrap->loadError().empty()) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,

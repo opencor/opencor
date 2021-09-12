@@ -98,6 +98,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML tools",
                              "entries": [
                                { "type": "added", "description": "Validation of a <a href=\"https://cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                               { "type": "added", "description": "Direct way to export to <a href=\"https://en.wikipedia.org/wiki/C_(programming_language)\">C</a>, <a href=\"https://en.wikipedia.org/wiki/Fortran#FORTRAN_77\">FORTRAN 77</a>, <a href=\"https://en.wikipedia.org/wiki/MATLAB\">MATLAB</a>, and <a href=\"https://en.wikipedia.org/wiki/Python_(programming_language)\">Python</a>." },
                                { "type": "fixed", "description": "Export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model with e-notation based numbers to <a href=\"https://cellml.org/\">CellML</a> 1.0." }
                              ]
                            }
@@ -184,7 +185,7 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Ability to customise a graph panel." },
                                { "type": "added", "description": "Ability to show the legend of a graph panel." },
                                { "type": "added", "description": "Support for pinch gestures to zoom in/out a graph panel." },
-                               { "type": "added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
+                               { "type": "added", "description": "Export a graph panel to various formats (e.g., PDF, PNG, SVG)." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
                                { "type": "improved", "description": "Colour for a new graph." },

@@ -74,7 +74,10 @@ private:
 
     QAction *mExportToCellml10Action = nullptr;
 
-    QAction *mExportToUserDefinedFormatAction = nullptr;
+    QAction *mExportToCAction = nullptr;
+    QAction *mExportToFortran77Action = nullptr;
+    QAction *mExportToMatlabAction = nullptr;
+    QAction *mExportToPythonAction = nullptr;
 
     void exportTo(CellMLSupport::CellmlFile::Version pVersion);
 
@@ -86,8 +89,7 @@ private:
 
 private slots:
     void exportToCellml10();
-
-    void exportToUserDefinedFormat();
+    void exportToLanguage();
 };
 
 //==============================================================================

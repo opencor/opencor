@@ -115,8 +115,13 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     mExportToCellml10Action->setEnabled(cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1);
 
-    mExportToUserDefinedFormatAction->setEnabled(   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
-                                                 || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1));
+    bool exportToLanguageEnabled =    (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+                                   || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1);
+
+    mExportToCAction->setEnabled(exportToLanguageEnabled);
+    mExportToFortran77Action->setEnabled(exportToLanguageEnabled);
+    mExportToMatlabAction->setEnabled(exportToLanguageEnabled);
+    mExportToPythonAction->setEnabled(exportToLanguageEnabled);
 
     // Keep track of the file name
 
@@ -155,8 +160,14 @@ void CellMLToolsPlugin::retranslateUi()
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."),
                       tr("Export the CellML file to CellML 1.0"));
 
-    retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."),
-                      tr("Export the CellML file to some user-defined format"));
+    retranslateAction(mExportToCAction, tr("C..."),
+                      tr("Export the CellML file to C"));
+    retranslateAction(mExportToFortran77Action, tr("FORTRAN 77..."),
+                      tr("Export the CellML file to FORTRAN 77"));
+    retranslateAction(mExportToMatlabAction, tr("MATLAB..."),
+                      tr("Export the CellML file to MATLAB"));
+    retranslateAction(mExportToPythonAction, tr("Python..."),
+                      tr("Export the CellML file to Python"));
 }
 
 //==============================================================================
@@ -203,19 +214,31 @@ void CellMLToolsPlugin::initializePlugin()
 
     mExportToCellml10Action = Core::newAction(Core::mainWindow());
 
-    mExportToUserDefinedFormatAction = Core::newAction(Core::mainWindow());
+    mExportToCAction = Core::newAction(Core::mainWindow());
+    mExportToFortran77Action = Core::newAction(Core::mainWindow());
+    mExportToMatlabAction = Core::newAction(Core::mainWindow());
+    mExportToPythonAction = Core::newAction(Core::mainWindow());
 
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
     mCellmlFileExportToMenu->addSeparator();
-    mCellmlFileExportToMenu->addAction(mExportToUserDefinedFormatAction);
+    mCellmlFileExportToMenu->addAction(mExportToCAction);
+    mCellmlFileExportToMenu->addAction(mExportToFortran77Action);
+    mCellmlFileExportToMenu->addAction(mExportToMatlabAction);
+    mCellmlFileExportToMenu->addAction(mExportToPythonAction);
 
     // Some connections to handle our different Tools | Export To actions
 
     connect(mExportToCellml10Action, &QAction::triggered,
             this, &CellMLToolsPlugin::exportToCellml10);
 
-    connect(mExportToUserDefinedFormatAction, &QAction::triggered,
-            this, &CellMLToolsPlugin::exportToUserDefinedFormat);
+    connect(mExportToCAction, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToLanguage);
+    connect(mExportToFortran77Action, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToLanguage);
+    connect(mExportToMatlabAction, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToLanguage);
+    connect(mExportToPythonAction, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToLanguage);
 }
 
 //==============================================================================
@@ -317,10 +340,15 @@ void CellMLToolsPlugin::runHelpCommand()
     std::cout << "Commands supported by the CellMLTools plugin:" << std::endl;
     std::cout << " * Display the commands supported by the CellMLTools plugin:" << std::endl;
     std::cout << "      help" << std::endl;
-    std::cout << " * Export <file> to a <predefined_format> or a <user_defined_format_file>:" << std::endl;
-    std::cout << "      export <file> <predefined_format>|<user_defined_format_file>" << std::endl;
-    std::cout << "   <predefined_format> can take one of the following values:" << std::endl;
+    std::cout << " * Export <file> to a given <format> or a given <language>:" << std::endl;
+    std::cout << "      export <file> <format>|<language>" << std::endl;
+    std::cout << "   <format> can take one of the following values:" << std::endl;
     std::cout << "      cellml_1_0: to export a CellML 1.1 file to CellML 1.0" << std::endl;
+    std::cout << "   <language> can take one of the following values:" << std::endl;
+    std::cout << "      c: to export a CellML file to C" << std::endl;
+    std::cout << "      fortran_77: to export a CellML file to FORTRAN 77" << std::endl;
+    std::cout << "      matlab: to export a CellML file to MATLAB" << std::endl;
+    std::cout << "      python: to export a CellML file to Python" << std::endl;
     std::cout << " * Validate <file>:" << std::endl;
     std::cout << "      validate <file>" << std::endl;
 }
@@ -405,25 +433,40 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
                         // Check the type of export the user wants and that it
                         // is compatible with the CellML version of our file
 
-                        static const QString Cellml10Export = "cellml_1_0";
+                        static const QString Cellml10 = "cellml_1_0";
+                        static const QString C = "c";
+                        static const QString Fortran77 = "fortran_77";
+                        static const QString Matlab = "matlab";
+                        static const QString Python = "python";
+                        static const QStringList formatsAndLanguages = { Cellml10, C, Fortran77, Matlab, Python };
 
-                        QString formatOrFileName = pArguments[1];
-                        bool isCellml10Format = formatOrFileName == Cellml10Export;
-                        bool isFileName = !isCellml10Format;
+                        QString formatOrLanguage = pArguments[1];
                         CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
-                        if (    isFileName
-                            && !QFile::exists(formatOrFileName)) {
-                            output = "The user-defined format file could not be found.";
-                        } else if (   isCellml10Format
+                        if (!formatsAndLanguages.contains(formatOrLanguage)) {
+                            output = "The format or language is not valid.";
+                        } else if (   (formatOrLanguage == Cellml10)
                                    && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
                             output = "The file must be a CellML 1.1 file.";
                         } else {
                             // Everything seems to be fine, so attempt the
                             // export itself
 
-                            if (   (isFileName && !cellmlFile->exportTo({}, formatOrFileName))
-                                || (isCellml10Format && !cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
+                            bool exportOk;
+
+                            if (formatOrLanguage == Cellml10) {
+                                exportOk = cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Version::Cellml_1_0);
+                            } else if (formatOrLanguage == C) {
+                                exportOk = cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Language::C);
+                            } else if (formatOrLanguage == Fortran77) {
+                                exportOk = cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Language::Fortran77);
+                            } else if (formatOrLanguage == Matlab) {
+                                exportOk = cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Language::Matlab);
+                            } else {
+                                exportOk = cellmlFile->exportTo({}, CellMLSupport::CellmlFile::Language::Python);
+                            }
+
+                            if (!exportOk) {
                                 output = "The file could not be exported";
 
                                 CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
@@ -510,30 +553,66 @@ bool CellMLToolsPlugin::runValidateCommand(const QStringList &pArguments)
 
 void CellMLToolsPlugin::exportToCellml10()
 {
-    // Export the current file to CellML 1.0
+    // Ask for the name of the file that will contain the export
 
-    exportTo(CellMLSupport::CellmlFile::Version::Cellml_1_0);
+    static const QString Cellml_1_0 = "CellML 1.0";
+
+    QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << CellMLSupport::fileTypeInterface());
+    QString firstCellmlFilter = cellmlFilters.first();
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(Cellml_1_0),
+                                             Core::newFileName(QFileInfo(mFileName).baseName(), tr("Exported"), false),
+                                             cellmlFilters, &firstCellmlFilter);
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    // Now that we have a file name, we can do the export itself
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+
+    if (!cellmlFile->exportTo(fileName, CellMLSupport::CellmlFile::Version::Cellml_1_0)) {
+        QString errorMessage;
+
+        if (!cellmlFile->issues().isEmpty()) {
+            CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
+
+            errorMessage = " ("+cellmlFileIssues.first().message()+")";
+            // Note: if there are 'cellmlFile->issues()', then there can be only
+            //       one of them following a CellML export...
+        }
+
+        Core::warningMessageBox(tr("Export CellML File To %1").arg(Cellml_1_0),
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
+                                                                                                              Cellml_1_0,
+                                                                                                              errorMessage));
+    }
 }
 
 //==============================================================================
 
-void CellMLToolsPlugin::exportToUserDefinedFormat()
+void CellMLToolsPlugin::exportToLanguage()
 {
-    // Ask for the name of the file that contains the user-defined format
-
-    QString xmlFilter = tr("User-Defined Format File")+" (*.xml)";
-    QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"),
-                                                              { xmlFilter },
-                                                              &xmlFilter);
-
-    if (userDefinedFormatFileName.isEmpty()) {
-        return;
-    }
-
     // Ask for the name of the file that will contain the export
 
-    QString fileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"),
-                                             Core::newFileName(mFileName, tr("Exported"), false));
+    auto action = qobject_cast<QAction *>(sender());
+    QString languageString = (action == mExportToCAction)?
+                                 "C":
+                                 (action == mExportToFortran77Action)?
+                                     "FORTRAN 77":
+                                     (action == mExportToMatlabAction)?
+                                         "MATLAB":
+                                         "Python";
+    QString fileExtension = (action == mExportToCAction)?
+                                "c":
+                                (action == mExportToFortran77Action)?
+                                    "f":
+                                    (action == mExportToMatlabAction)?
+                                        "m":
+                                        "py";
+
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(languageString),
+                                             Core::newFileName(mFileName, fileExtension));
 
     if (fileName.isEmpty()) {
         return;
@@ -543,8 +622,15 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
     // do the export itself
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+    CellMLSupport::CellmlFile::Language language = (action == mExportToCAction)?
+                                                   CellMLSupport::CellmlFile::Language::C:
+                                                   (action == mExportToFortran77Action)?
+                                                       CellMLSupport::CellmlFile::Language::Fortran77:
+                                                       (action == mExportToMatlabAction)?
+                                                           CellMLSupport::CellmlFile::Language::Matlab:
+                                                           CellMLSupport::CellmlFile::Language::Python;
 
-    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
+    if (!cellmlFile->exportTo(fileName, language)) {
         CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
         QString errorMessage;
 
@@ -554,10 +640,10 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             //       of them following a CellML export...
         }
 
-        Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),
-                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
-                                                                                                                                                   QDir::toNativeSeparators(userDefinedFormatFileName),
-                                                                                                                                                   errorMessage));
+        Core::warningMessageBox(tr("Export CellML File To %1").arg(languageString),
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
+                                                                                                              languageString,
+                                                                                                              errorMessage));
     }
 }
 
