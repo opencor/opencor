@@ -184,7 +184,7 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Ability to customise a graph panel." },
                                { "type": "added", "description": "Ability to show the legend of a graph panel." },
                                { "type": "added", "description": "Support for pinch gestures to zoom in/out a graph panel." },
-                               { "type": "added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
+                               { "type": "added", "description": "Export a graph panel to various formats (e.g., PDF, PNG, SVG)." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
                                { "type": "improved", "description": "Colour for a new graph." },
