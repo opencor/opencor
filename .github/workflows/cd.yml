@@ -1,0 +1,28 @@
+name: cd
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  cd:
+    name: Generate and deploy OpenCOR's user documentation
+    if: ${{ github.head_ref == 'new-snapshot' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out OpenCOR's user documentation
+        uses: actions/checkout@v2
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+      - name: Install packages
+        run: sudo apt install python3-sphinx
+      - name: Generate OpenCOR's user documentation
+        run: ./cd
+      - name: Deploy OpenCOR's user documentation
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: build/user-documentation/build/html
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
