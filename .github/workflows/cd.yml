@@ -7,7 +7,7 @@ on:
 
 jobs:
   cd:
-    name: Generate and deploy OpenCOR's user documentation
+    name: Update OpenCOR's GitHub Pages
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +33,7 @@ jobs:
           touch .nojekyll
           cp -fr ../user-documentation/build/html/* .
           git add -A
-      - name: Deploy OpenCOR's GitHub Pages
+      - name: Publish OpenCOR's GitHub Pages
         run: |
           pwd
           cd opencor.github.io
