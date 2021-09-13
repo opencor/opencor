@@ -48,8 +48,10 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           # git config user.name "Alan Garny"
           # git config user.email "agarny@hellix.com"
+          echo "---------------------------------------"
           cat .git/config
           git commit -m "OpenCOR's user documentation"
+          echo ">>> secrets.GH_TOKEN: >${{ secrets.GH_TOKEN }}<"
           git push -f https://${{ secrets.GH_TOKEN }}@github.com/opencor/opencor.github.io.git
           # git push -f git@github.com:opencor/opencor.github.io.git master:gh-pages
       - name: Push changes
