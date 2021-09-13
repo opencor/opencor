@@ -22,6 +22,7 @@ jobs:
       - name: Build OpenCOR's user documentation
         run: |
           pwd
+          ls -alR
           cd user-documentation
           ./opencor
       - name: Retrieve OpenCOR's GitHub Pages
