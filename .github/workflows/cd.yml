@@ -56,6 +56,7 @@ jobs:
         shell: bash
         run: |
           pwd
+          cd opencor.github.io
           git push -f origin `git subtree split -P ./opencor.github.io`:refs/heads/gh-pages
       # - name: Update OpenCOR's GitHub Pages
       #   uses: rayluo/github-pages-overwriter@v1.2
