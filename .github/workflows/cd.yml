@@ -1,39 +1,16 @@
 name: cd
 
 on:
-  pull_request:
-    branches: [ master ]
+  push:
+    # branches: [ master ]
   workflow_dispatch:
 
 jobs:
   cd:
     name: OpenCOR's user documentation
-    if: ${{ github.head_ref == 'new-snapshot' }}
+    if: ${{ github.event.head_commit.message == 'New snapshot.' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out OpenCOR
-        uses: actions/checkout@v2
-        with:
-          path: opencor
-      - name: Get commit message
-        id: get_commit_message
-        run: |
-          cd opencor
-          pwd
-          echo "---------------------------------------"
-          echo "${{ github.event.head_commit.message }}"
-          echo "---------------------------------------"
-          git log
-          echo "---------------------------------------"
-          git log --format=%B -n 1 HEAD
-          echo "---------------------------------------"
-          git log --format=%B -n 1 HEAD~2
-          echo "---------------------------------------"
-          # if   [[ '${{ github.event_name }}' == 'push' ]]; then
-          #   echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD)
-          # elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
-          #   echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD~2)
-          # fi
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install packages
