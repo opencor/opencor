@@ -22,8 +22,8 @@ jobs:
         run: |
           cd user-documentation
           ./opencor
-      # - name: Retrieve OpenCOR's GitHub Pages
-      #   run: git clone --depth 1 https://github.com/opencor/opencor.github.io.git
+      - name: Retrieve OpenCOR's GitHub Pages
+        run: git clone --depth 1 https://github.com/opencor/opencor.github.io.git
       # - name: Update OpenCOR's GitHub Pages
       #   run: |
       #     cd opencor.github.io
@@ -41,9 +41,12 @@ jobs:
           ls -alR user-documentation
       - shell: bash
         run: |
-          pwd
-          git branch -f gh-pages HEAD
-          git checkout gh-pages
+          cd opencor.github.io
+          git rm -fr *
+          touch .nojekyll
+          cp -fr ../user-documentation/build/html/* .
+          # git branch -f gh-pages HEAD
+          # git checkout gh-pages
           date > ./user-documentation/build/html/publish_date.txt
           git config user.name "Github Pages Overwriter"
           git config user.email "GithubPagesOverwriter@users.noreply.github.com"
