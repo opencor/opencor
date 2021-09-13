@@ -30,7 +30,5 @@ jobs:
           touch .nojekyll
           cp -fr ../user-documentation/build/html/* .
           git add -A
-          git config --global user.name "Alan Garny"
-          git config --global user.email "agarny@hellix.com"
-          git commit -m "OpenCOR's user documentation"
+          git commit --author="Alan Garny <agarny@hellix.com>" -m "OpenCOR's user documentation"
           git push -f
