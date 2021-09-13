@@ -47,14 +47,16 @@ jobs:
           cp -fr ../user-documentation/build/html/* .
           # git branch -f gh-pages HEAD
           # git checkout gh-pages
-          date > ./user-documentation/build/html/publish_date.txt
+          # date > ./user-documentation/build/html/publish_date.txt
           git config user.name "Github Pages Overwriter"
           git config user.email "GithubPagesOverwriter@users.noreply.github.com"
           git add -A
           git commit -m "Automated publish"
       - name: Push the build output to github pages
         shell: bash
-        run: git push -f origin `git subtree split -P ./user-documentation/build/html`:refs/heads/gh-pages
+        run: |
+          pwd
+          git push -f origin `git subtree split -P ./opencor.github.io`:refs/heads/gh-pages
       # - name: Update OpenCOR's GitHub Pages
       #   uses: rayluo/github-pages-overwriter@v1.2
       #   with:
