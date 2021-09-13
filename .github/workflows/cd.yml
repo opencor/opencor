@@ -20,8 +20,13 @@ jobs:
         run: |
           cd opencor
           pwd
+          echo "---------------------------------------"
+          git log
+          echo "---------------------------------------"
           git log --format=%B -n 1 HEAD
+          echo "---------------------------------------"
           git log --format=%B -n 1 HEAD~2
+          echo "---------------------------------------"
           # if   [[ '${{ github.event_name }}' == 'push' ]]; then
           #   echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD)
           # elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
