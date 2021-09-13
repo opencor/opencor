@@ -41,6 +41,7 @@ jobs:
           cd opencor.github.io
           cat .git/config
           git config --remove-section "http.https://github.com/"
+          git config remote.origin.url "https://github.com/opencor/opencor.github.io.git"
           git config user.name "Alan Garny"
           git config user.email "agarny@hellix.com"
           cat .git/config
