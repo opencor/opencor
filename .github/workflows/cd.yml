@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: opencor/user-documentation
+          path: user-documentation
       - name: Build OpenCOR's user documentation
         run: |
           pwd
@@ -29,6 +30,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: opencor/opencor.github.io
+          path: opencor.github.io
       - name: Update OpenCOR's GitHub Pages
         run: |
           pwd
