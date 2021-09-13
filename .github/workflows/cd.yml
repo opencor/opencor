@@ -7,7 +7,7 @@ on:
 
 jobs:
   cd:
-    name: Update OpenCOR's GitHub Pages
+    name: OpenCOR's user documentation
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
@@ -16,15 +16,18 @@ jobs:
       - name: Install packages
         run: sudo apt install python3-sphinx
       - name: Retrieve OpenCOR's user documentation
-        run: git clone --depth 1 https://github.com/opencor/user-documentation
-        # run: git clone https://github.com/opencor/user-documentation
+        uses: actions/checkout@v2
+        with:
+          repository: opencor/user-documentation
       - name: Build OpenCOR's user documentation
         run: |
           pwd
           cd user-documentation
           ./opencor
       - name: Retrieve OpenCOR's GitHub Pages
-        run: git clone --depth 1 https://github.com/opencor/opencor.github.io.git
+        uses: actions/checkout@v2
+        with:
+          repository: opencor/opencor.github.io
       - name: Update OpenCOR's GitHub Pages
         run: |
           pwd
