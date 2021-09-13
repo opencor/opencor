@@ -22,8 +22,6 @@ jobs:
           path: user-documentation
       - name: Build OpenCOR's user documentation
         run: |
-          pwd
-          ls -alR
           cd user-documentation
           ./opencor
       - name: Retrieve OpenCOR's GitHub Pages
@@ -33,7 +31,6 @@ jobs:
           path: opencor.github.io
       - name: Update OpenCOR's GitHub Pages
         run: |
-          pwd
           cd opencor.github.io
           git rm -fr *
           touch .nojekyll
@@ -41,10 +38,8 @@ jobs:
           git add -A
       - name: Publish OpenCOR's GitHub Pages
         run: |
-          pwd
-          cd opencor.github.io
-          pwd
           cat .git/config
+          git config --remove-section http
           git config user.name "Alan Garny"
           git config user.email "agarny@hellix.com"
           cat .git/config
