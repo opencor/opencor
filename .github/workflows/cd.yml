@@ -38,6 +38,7 @@ jobs:
           git add -A
       - name: Publish OpenCOR's GitHub Pages
         run: |
+          cd opencor.github.io
           cat .git/config
           git config --remove-section http
           git config user.name "Alan Garny"
