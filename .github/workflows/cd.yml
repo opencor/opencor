@@ -53,7 +53,7 @@ jobs:
           git add -A
           git commit -m "Automated publish"
           pwd
-          git push -f origin `git subtree split -P .`:refs/heads/gh-pages
+          git push -f origin `git subtree split -P /home/runner/work/opencor/opencor/opencor.github.io`:refs/heads/gh-pages
       # - name: Update OpenCOR's GitHub Pages
       #   uses: rayluo/github-pages-overwriter@v1.2
       #   with:
