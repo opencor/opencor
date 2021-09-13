@@ -58,7 +58,7 @@ jobs:
           git commit -m "OpenCOR's user documentation"
           echo ">>> secrets.GITHUB_TOKEN:          >${{ secrets.GITHUB_TOKEN }}<"
           echo ">>> secrets.PERSONAL_ACCESS_TOKEN: >${{ secrets.PERSONAL_ACCESS_TOKEN }}<"
-          echo ">>> PERSONAL_ACCESS_TOKEN:         >$env:PERSONAL_ACCESS_TOKEN<"
+          echo ">>> PERSONAL_ACCESS_TOKEN:         >$PERSONAL_ACCESS_TOKEN<"
           git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/opencor/opencor.github.io.git
           # git push -f https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/opencor/opencor.github.io.git
           # git push -f git@github.com:opencor/opencor.github.io.git master:gh-pages
