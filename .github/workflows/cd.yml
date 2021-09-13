@@ -16,21 +16,35 @@ jobs:
       - name: Install packages
         run: sudo apt install python3-sphinx
       - name: Retrieve OpenCOR's user documentation
-        run: git clone https://github.com/opencor/user-documentation
+        run: git clone --depth 1 https://github.com/opencor/user-documentation
       - name: Build OpenCOR's user documentation
         run: |
           cd user-documentation
           ./opencor
       - name: Retrieve OpenCOR's GitHub Pages
-        run: git clone https://github.com/opencor/opencor.github.io.git
+        run: git clone --depth 1 https://github.com/opencor/opencor.github.io.git
+      # - name: Update OpenCOR's GitHub Pages
+      #   run: |
+      #     cd opencor.github.io
+      #     git rm -fr *
+      #     touch .nojekyll
+      #     cp -fr ../user-documentation/build/html/* .
+      #     git add -A
+      #     git config user.name "Alan Garny"
+      #     git config user.email "agarny@hellix.com"
+      #     git commit -m "OpenCOR's user documentation"
+      #     git push -f
+      # - shell: bash
+      #   run: |
+      #     date > ${{ inputs.source-directory}}/publish_date.txt
+      #     # The commit and push happen to work without authentication
+      #     # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
+      #     git config user.name "Github Pages Overwriter"
+      #     git config user.email "GithubPagesOverwriter@users.noreply.github.com"
+      #     git add -A
+      #     git commit -m "Automated publish"
       - name: Update OpenCOR's GitHub Pages
-        run: |
-          cd opencor.github.io
-          git rm -fr *
-          touch .nojekyll
-          cp -fr ../user-documentation/build/html/* .
-          git add -A
-          git config user.name "Alan Garny"
-          git config user.email "agarny@hellix.com"
-          git commit -m "OpenCOR's user documentation"
-          git push -f
+        uses: rayluo/github-pages-overwriter@v1.2
+        with:
+          source-directory: user-documentation/build/html
+          target-branch: gh-pages
