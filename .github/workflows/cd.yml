@@ -8,7 +8,7 @@ on:
 jobs:
   cd:
     name: Generate and deploy OpenCOR's user documentation
-    if: ${{ github.head_ref == 'new-snapshot' }}
+    if: ${{ github.head_ref == 'new-snapshotx' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out OpenCOR's user documentation
