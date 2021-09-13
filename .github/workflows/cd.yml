@@ -11,21 +11,24 @@ jobs:
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out OpenCOR
-        uses: actions/checkout@v2
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install packages
         run: sudo apt install python3-sphinx
-      - name: Generate OpenCOR's user documentation
-        run: ./cd
-      - name: Deploy OpenCOR's user documentation
-        # uses: peaceiris/actions-gh-pages@v3
-        # with:
-        #   personal_token: ${{ secrets.PERSONAL_TOKEN }}
-        #   external_repository: opencor/opencor.github.io
-        #   publish_branch: master
-        #   publish_dir: build/user-documentation/build/html
-        uses: rayluo/github-pages-overwriter@v1.2
-        with:
-          source-directory: build/user-documentation/build/html
+      - name: Retrieve OpenCOR's user documentation
+        run: git clone https://github.com/opencor/user-documentation
+      - name: Build OpenCOR's user documentation
+        run: |
+          cd ~/user-documentation
+          ./opencor
+      - name: Retrieve OpenCOR's GitHub Pages
+        run: git clone https://github.com/opencor/opencor.github.io.git
+      - name: Update OpenCOR's GitHub Pages
+        run: |
+          cd ~/opencor.github.io
+          git rm -fr *
+          touch .nojekyll
+          cp -fr ~/user-documentation/build/html/* .
+          git add -A
+          git commit -m "OpenCOR's user documentation"
+          git push -f
