@@ -40,7 +40,7 @@ jobs:
         run: |
           cd opencor.github.io
           cat .git/config
-          git config --remove-section "http \"https://github.com/\""
+          git config --remove-section "http.https://github.com/"
           git config user.name "Alan Garny"
           git config user.email "agarny@hellix.com"
           cat .git/config
