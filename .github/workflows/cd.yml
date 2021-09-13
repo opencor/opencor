@@ -48,7 +48,7 @@ jobs:
           git config user.email "agarny@hellix.com"
           cat .git/config
           git commit -m "OpenCOR's user documentation"
-          git push -f
+          git push -f git@github.com:opencor/opencor.github.io.git master:gh-pages
       # - name: Check things
       #   run: |
       #     pwd
