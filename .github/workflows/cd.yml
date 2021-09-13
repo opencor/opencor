@@ -22,6 +22,7 @@ jobs:
       - name: Deploy OpenCOR's user documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./build/user-documentation/build/html
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          external_repository: opencor/opencor.github.io
+          publish_branch: master
+          publish_dir: build/user-documentation/build/html
