@@ -42,6 +42,7 @@ jobs:
           cat .git/config
           git config --remove-section "http.https://github.com/"
           git remote set-url origin git@github.com:opencor/opencor.github.io.git
+          git push --set-upstream origin master
           # git config remote.origin.url "https://github.com/opencor/opencor.github.io.git"
           git config user.name "Alan Garny"
           git config user.email "agarny@hellix.com"
