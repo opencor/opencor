@@ -35,20 +35,33 @@ jobs:
       #     git config user.email "agarny@hellix.com"
       #     git commit -m "OpenCOR's user documentation"
       #     git push -f
-      # - shell: bash
-      #   run: |
-      #     date > ${{ inputs.source-directory}}/publish_date.txt
-      #     # The commit and push happen to work without authentication
-      #     # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
-      #     git config user.name "Github Pages Overwriter"
-      #     git config user.email "GithubPagesOverwriter@users.noreply.github.com"
-      #     git add -A
-      #     git commit -m "Automated publish"
       - name: Check things
         run: |
           pwd
           ls -alR user-documentation
-      - name: Update OpenCOR's GitHub Pages
-        uses: rayluo/github-pages-overwriter@v1.2
-        with:
-          source-directory: ./user-documentation/build/html
+      - shell: bash
+        run: |
+          # The following 2 lines are not really necessary,
+          # because we do not intend to push current branch.
+          # But we choose to use target branch name as a temporary local work branch,
+          # thus avoid a potential error of committing to the trigger branch.
+          git branch -f gh-pages HEAD
+          git checkout gh-pages
+          # Generate such a new file to make sure the subsequent commit would succeed
+          # Such a file WITHOUT leading dot (.) is also visible in outcome website.
+          # FYI: filename with leading dot (.) or underscore (_) would be ignored by Jekyll,
+          # which Github Pages depends on. So we use a normal filename here.
+          date > ./user-documentation/build/html/publish_date.txt
+          # The commit and push happen to work without authentication
+          # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
+          git config user.name "Github Pages Overwriter"
+          git config user.email "GithubPagesOverwriter@users.noreply.github.com"
+          git add -A
+          git commit -m "Automated publish"
+      - name: Push the build output to github pages
+        shell: bash
+        run: git push -f origin `git subtree split -P ./user-documentation/build/html`:refs/heads/gh-pages
+      # - name: Update OpenCOR's GitHub Pages
+      #   uses: rayluo/github-pages-overwriter@v1.2
+      #   with:
+      #     source-directory: ./user-documentation/build/html
