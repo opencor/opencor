@@ -11,8 +11,14 @@ jobs:
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check commit message
-        run: echo "${{ toJSON(github.event) }}"
+      - name: Get commit message
+        id: get_commit_message
+        run: |
+          if   [[ '${{ github.event_name }}' == 'push' ]]; then
+            echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD)
+          elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
+            echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD^2)
+          fi
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install packages
