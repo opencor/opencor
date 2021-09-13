@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check commit message
-        run: echo ">>> github.event.head_commit.message: >${{ github.event.head_commit.message }}<"
+        run: echo "${{ toJSON(github.event) }}"
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install packages
