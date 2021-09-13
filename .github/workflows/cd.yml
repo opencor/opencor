@@ -46,7 +46,7 @@ jobs:
       - name: Check things
         run: |
           pwd
-          ls -al
+          ls -alR user-documentation
       - name: Update OpenCOR's GitHub Pages
         uses: rayluo/github-pages-overwriter@v1.2
         with:
