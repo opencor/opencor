@@ -11,6 +11,11 @@ jobs:
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check tokens
+        run: |
+          echo ">>> secrets.GITHUB_TOKEN:       >${{ secrets.GITHUB_TOKEN }}<"
+          echo ">>> secrets.PERSONAL_TOKEN:     >${{ secrets.PERSONAL_TOKEN }}<"
+          echo ">>> secrets.ACTIONS_DEPLOY_KEY: >${{ secrets.ACTIONS_DEPLOY_KEY }}<"
       - name: Check out OpenCOR's user documentation
         uses: actions/checkout@v2
       - name: Install CMake and Ninja
