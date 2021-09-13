@@ -11,20 +11,16 @@ jobs:
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check out OpenCOR's user documentation
+        uses: actions/checkout@v2
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install packages
         run: sudo apt install python3-sphinx
-      - name: Retrieve OpenCOR's user documentation
-        run: git clone https://github.com/opencor/user-documentation
-      - name: Buld OpenCOR's user documentation
-        run: |
-          mkdir build
-          cd build
-          cmake -G Ninja ../user-documentation
-          ninja
+      - name: Generate OpenCOR's user documentation
+        run: ./cd
       - name: Deploy OpenCOR's user documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/html
+          publish_dir: build/user-documentation/build/html
