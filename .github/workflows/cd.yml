@@ -11,9 +11,14 @@ jobs:
     if: ${{ github.head_ref == 'new-snapshot' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check out OpenCOR
+        uses: actions/checkout@v2
+        with:
+          path: opencor
       - name: Get commit message
         id: get_commit_message
         run: |
+          cd opencor
           if   [[ '${{ github.event_name }}' == 'push' ]]; then
             echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD)
           elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
