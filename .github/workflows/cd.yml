@@ -37,8 +37,11 @@ jobs:
         run: |
           pwd
           cd opencor.github.io
+          pwd
+          cat .git/config
           git config user.name "Alan Garny"
           git config user.email "agarny@hellix.com"
+          cat .git/config
           git commit -m "OpenCOR's user documentation"
           git push -f
       # - name: Check things
