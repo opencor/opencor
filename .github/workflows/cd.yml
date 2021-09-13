@@ -19,16 +19,16 @@ jobs:
         run: git clone https://github.com/opencor/user-documentation
       - name: Build OpenCOR's user documentation
         run: |
-          cd ~/user-documentation
+          cd user-documentation
           ./opencor
       - name: Retrieve OpenCOR's GitHub Pages
         run: git clone https://github.com/opencor/opencor.github.io.git
       - name: Update OpenCOR's GitHub Pages
         run: |
-          cd ~/opencor.github.io
+          cd opencor.github.io
           git rm -fr *
           touch .nojekyll
-          cp -fr ~/user-documentation/build/html/* .
+          cp -fr ../user-documentation/build/html/* .
           git add -A
           git commit -m "OpenCOR's user documentation"
           git push -f
