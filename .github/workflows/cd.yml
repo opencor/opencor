@@ -16,13 +16,14 @@ jobs:
       - name: Install packages
         run: sudo apt install python3-sphinx
       - name: Retrieve OpenCOR's user documentation
-        run: git clone --depth 1 https://github.com/opencor/user-documentation
+        # run: git clone --depth 1 https://github.com/opencor/user-documentation
+        run: git clone https://github.com/opencor/user-documentation
       - name: Build OpenCOR's user documentation
         run: |
           cd user-documentation
           ./opencor
-      - name: Retrieve OpenCOR's GitHub Pages
-        run: git clone --depth 1 https://github.com/opencor/opencor.github.io.git
+      # - name: Retrieve OpenCOR's GitHub Pages
+      #   run: git clone --depth 1 https://github.com/opencor/opencor.github.io.git
       # - name: Update OpenCOR's GitHub Pages
       #   run: |
       #     cd opencor.github.io
@@ -51,4 +52,3 @@ jobs:
         uses: rayluo/github-pages-overwriter@v1.2
         with:
           source-directory: ./user-documentation/build/html
-          target-branch: gh-pages
