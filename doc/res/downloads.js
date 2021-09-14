@@ -370,7 +370,7 @@ function versions(downloads) {
                 document.write("        <tbody>\n");
                 document.write("            <tr>\n");
                 document.write("                <td>\n");
-                document.write("                    <span class=\"note\">Note:</span> the user documentation for the latest snapshot can be found <a href=\"https://opencor.readthedocs.io/en/latest/\">here</a>.\n");
+                document.write("                    <span class=\"note\">Note:</span> the user documentation for the latest snapshot can be found <a href=\"https://opencor.github.io/\">here</a>.\n");
                 document.write("                </td>\n");
                 document.write("            </tr>\n");
                 document.write("        </tbody>\n");

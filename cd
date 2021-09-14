@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd build
+
+git clone --depth=1 https://github.com/opencor/user-documentation
+
+cd user-documentation
+
+./opencor
