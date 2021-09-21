@@ -2,8 +2,8 @@
 
 cd build
 
-git clone --depth=1 https://github.com/opencor/user-documentation
+git clone --depth=1 https://github.com/opencor/opencor-user-documentation
 
-cd user-documentation
+cd opencor-user-documentation
 
 ./opencor
