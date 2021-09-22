@@ -2,7 +2,7 @@
 <model name="e_notation" xmlns="http://www.cellml.org/cellml/1.0#">
     <component name="main">
         <variable name="x" units="dimensionless"/>
-        <math cellml:xmlns="http://www.w3.org/1998/Math/MathML" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
             <apply>
                 <eq/>
                 <ci>x</ci>
