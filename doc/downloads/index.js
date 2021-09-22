@@ -38,7 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                       { "change": "<strong>General:</strong> improved the <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a> installer (see issue <a href=\"https://github.com/opencor/opencor/issues/2561\">#2561</a>)." },
-                      { "change": "<strong>CellML tools:</strong> fixed an issue with namespaces in a <code>math</code> element following the export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to <a href=\"https://cellml.org/\">CellML</a> 1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2564\">#2564</a>)." },
+                      { "change": "<strong>CellML tools:</strong> fixed an issue with namespaces in a <code>math</code> element following the export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to <a href=\"https://cellml.org/\">CellML</a> 1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2564\">#2564</a>). Fixed an issue with duplicate ids following the export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to <a href=\"https://cellml.org/\">CellML</a> 1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2565\">#2565</a>)." },
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

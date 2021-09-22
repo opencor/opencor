@@ -3,10 +3,10 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "General",
                          "entries": [
+                           { "type": "added", "description": "Support for <a href=\"https://python.org/\">Python</a>." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
-                           { "type": "improved", "description": "Plugin framework." },
-                           { "type": "added", "description": "Support for <a href=\"https://python.org/\">Python</a>." }
+                           { "type": "improved", "description": "Plugin framework." }
                          ]
                        },
                        { "name": "Editing",
@@ -99,6 +99,7 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "added", "description": "Validation of a <a href=\"https://cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                                { "type": "added", "description": "Direct way to export to <a href=\"https://en.wikipedia.org/wiki/C_(programming_language)\">C</a>, <a href=\"https://en.wikipedia.org/wiki/Fortran#FORTRAN_77\">FORTRAN 77</a>, <a href=\"https://en.wikipedia.org/wiki/MATLAB\">MATLAB</a>, and <a href=\"https://en.wikipedia.org/wiki/Python_(programming_language)\">Python</a>." },
+                               { "type": "fixed", "description": "Duplicate ids following the export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to <a href=\"https://cellml.org/\">CellML</a> 1.0." },
                                { "type": "fixed", "description": "Export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model with e-notation based numbers to <a href=\"https://cellml.org/\">CellML</a> 1.0." },
                                { "type": "fixed", "description": "Namespaces in a <code>math</code> element following the export of a <a href=\"https://cellml.org/\">CellML</a> 1.1 model to <a href=\"https://cellml.org/\">CellML</a> 1.0." }
                              ]

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="real_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">
+    <component name="component" cmeta:id="qwe" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable name="output" public_interface="out" units="metre" cmeta:id="qwe1" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="input" public_interface="in" units="dimensionless" cmeta:id="qwe2" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>output</ci>
+                <apply>
+                    <times/>
+                    <ci>input</ci>
+                    <cn cellml:units="metre">1</cn>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="unused" cmeta:id="asd" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable initial_value="1" name="one" units="dimensionless" cmeta:id="asd" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+    </component>
+</model>

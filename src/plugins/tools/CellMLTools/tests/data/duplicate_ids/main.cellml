@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="test_1_1_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" cmeta:id="test_1_1_model" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <import xlink:href="sub_model.cellml">
+        <component component_ref="main" name="sub_model_main"/>
+    </import>
+    <import xlink:href="other_model.cellml">
+        <component component_ref="main" name="other"/>
+    </import>
+    <component name="main" cmeta:id="qwe" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable name="result" units="metre" cmeta:id="qwe1" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="in1" public_interface="in" units="metre" cmeta:id="qwe2" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="in2" public_interface="in" units="metre" cmeta:id="qwe3" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>result</ci>
+                <apply>
+                    <plus/>
+                    <ci>in1</ci>
+                    <ci>in2</ci>
+                    <cn cellml:units="metre">1</cn>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <connection>
+        <map_components component_1="main" component_2="sub_model_main"/>
+        <map_variables variable_1="in1" variable_2="output"/>
+    </connection>
+    <connection>
+        <map_components component_1="main" component_2="other"/>
+        <map_variables variable_1="in2" variable_2="output"/>
+    </connection>
+    <connection>
+        <map_components component_1="other" component_2="sub_model_main"/>
+        <map_variables variable_1="input" variable_2="side_out"/>
+    </connection>
+</model>
