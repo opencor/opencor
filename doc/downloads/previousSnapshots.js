@@ -23,7 +23,7 @@ var jsonData = { "versions": [
                       { "change": "<strong>CellML tools:</strong> can now directly export to <a href=\"https://en.wikipedia.org/wiki/C_(programming_language)\">C</a>, <a href=\"https://en.wikipedia.org/wiki/Fortran#FORTRAN_77\">FORTRAN 77</a>, <a href=\"https://en.wikipedia.org/wiki/MATLAB\">MATLAB</a>, and <a href=\"https://en.wikipedia.org/wiki/Python_(programming_language)\">Python</a> (see issues <a href=\"https://github.com/opencor/opencor/issues/129\">#129</a>, <a href=\"https://github.com/opencor/opencor/issues/131\">#131</a>, <a href=\"https://github.com/opencor/opencor/issues/128\">#128</a>, and <a href=\"https://github.com/opencor/opencor/issues/132\">#132</a> respectively)." },
                       { "change": "<strong>Simulation Experiment view:</strong> can now fully reload a remote SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2550\">#2550</a>)." },
                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://openssl.org/\">OpenSSL</a> to version 1.1.1l (see issue <a href=\"https://github.com/opencor/opencor/issues/2532\">#2532</a>)." }
-                    ]
+                     ]
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 8, "year": 2021, "type": 2, "license": 2,
                      "platforms": [
@@ -50,7 +50,7 @@ var jsonData = { "versions": [
                       { "change": "<strong>Simulation support:</strong> prevent <a href=\"https://python.org/\">Python</a> scripts from hanging up the Simulation Experiment view and crashing OpenCOR upon exiting (see issue <a href=\"https://github.com/opencor/opencor/issues/2528\">#2528</a>)." },
                       { "change": "<strong>Simulation Experiment view:</strong> added a way to plot a parameter against the last used parameter (see issue <a href=\"https://github.com/opencor/opencor/issues/2521\">#2521</a>)." },
                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://llvm.org/\">LLVM</a>+<a href=\"https://clang.llvm.org/\">Clang</a> to version 12.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2515\">#2515</a>). Upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2517\">#2517</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.13 (see issue <a href=\"https://github.com/opencor/opencor/issues/2524\">#2524</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 1.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2534\">#2534</a>). Upgraded <a href=\"https://mesa3d.org/\">Mesa</a> to version 21.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2536\">#2536</a>). Upgraded <a href=\"https://packages.ubuntu.com/impish/oxygen-icon-theme\">Oxygen</a> to version 5.85.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2537\">#2537</a>)." }
-                    ]
+                     ]
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 7, "year": 2021, "type": 2, "license": 2,
                      "platforms": [
@@ -76,7 +76,7 @@ var jsonData = { "versions": [
                       { "change": "<strong>CellML Text view:</strong> improved support for piecewise statements (see issue <a href=\"https://github.com/opencor/opencor/issues/575\">#575</a>)." },
                       { "change": "<strong>Simulation Experiment view:</strong> prevent a potential crash on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a> when clearing all simulation results (see issue <a href=\"https://github.com/opencor/opencor/issues/2497\">#2497</a>). Prevent random crashes when reloading a file (see issue <a href=\"https://github.com/opencor/opencor/issues/2510\">#2510</a>)." },
                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://qwt.sourceforge.net/\">Qwt</a> to version 6.1.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/2483\">#2483</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.13.11 (see issue <a href=\"https://github.com/opencor/opencor/issues/2504\">#2504</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.13.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2503\">#2503</a>)." }
-                    ]
+                     ]
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 5, "year": 2021, "type": 2, "license": 2,
                      "platforms": [

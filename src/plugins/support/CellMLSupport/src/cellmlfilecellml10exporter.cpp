@@ -716,6 +716,7 @@ bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
 
     QByteArray serialisedDomDocument = Core::serialiseDomDocument(domDocument);
 
+    serialisedDomDocument.replace(" cellml:xmlns=\"http://www.w3.org/1998/Math/MathML\"", "");
     serialisedDomDocument.replace("cellml:type=\"e-notation\"", "type=\"e-notation\"");
 
     if (pFileName.isEmpty()) {
