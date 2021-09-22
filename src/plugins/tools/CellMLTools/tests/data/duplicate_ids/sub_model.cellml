@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="sub_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="sub_sub_model.cellml">
+        <component component_ref="main" name="sub_sub_model"/>
+    </import>
+    <component name="main" cmeta:id="qwe" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable name="output" public_interface="out" units="metre" cmeta:id="qwe1" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" />
+        <variable name="side_out" private_interface="in" public_interface="out" units="dimensionless" cmeta:id="qwe2" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" />
+        <variable name="input" private_interface="in" units="metre" cmeta:id="qwe3" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>output</ci>
+                <apply>
+                    <times/>
+                    <ci>input</ci>
+                    <cn cellml:units="dimensionless">2</cn>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="side" cmeta:id="asd" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable name="output" public_interface="out" units="dimensionless" cmeta:id="asd1" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="input" private_interface="in" units="dimensionless" cmeta:id="asd2" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>output</ci>
+                <apply>
+                    <plus/>
+                    <ci>input</ci>
+                    <cn cellml:units="dimensionless">5</cn>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="inside" cmeta:id="zxc" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable name="output" public_interface="out" units="dimensionless" cmeta:id="zxc1" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>output</ci>
+                <apply>
+                    <plus/>
+                    <cn cellml:units="dimensionless">1</cn>
+                    <cn cellml:units="dimensionless">2</cn>
+                    <cn cellml:units="dimensionless">3</cn>
+                    <cn cellml:units="dimensionless">4</cn>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <group>
+        <relationship_ref relationship="encapsulation"/>
+        <component_ref component="main">
+            <component_ref component="sub_sub_model"/>
+            <component_ref component="side">
+                <component_ref component="inside"/>
+            </component_ref>
+        </component_ref>
+    </group>
+    <connection>
+        <map_components component_1="main" component_2="sub_sub_model"/>
+        <map_variables variable_1="input" variable_2="output"/>
+    </connection>
+    <connection>
+        <map_components component_1="main" component_2="side"/>
+        <map_variables variable_1="side_out" variable_2="output"/>
+    </connection>
+    <connection>
+        <map_components component_1="inside" component_2="side"/>
+        <map_variables variable_1="output" variable_2="input"/>
+    </connection>
+</model>

@@ -69,6 +69,11 @@ private:
 
     ObjRef<iface::cellml_api::Group> mRootGroup = nullptr;
 
+    int mCmetaIdCounter = 0xb4da55;
+    QStringList mCmetaIds;
+
+    std::wstring validCmetaId(const std::wstring pCmetaId);
+
     void copyUnitsSet(iface::cellml_api::UnitsSet *pUnitsSet,
                       iface::cellml_api::CellMLElement *pElement);
 

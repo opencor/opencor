@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="other_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="real_model.cellml">
+        <component component_ref="component" name="main"/>
+    </import>
+    <import xlink:href="real_model.cellml">
+        <component component_ref="component" name="second_comp"/>
+        <component component_ref="component" name="third_comp"/>
+    </import>
+    <component name="local" cmeta:id="qwe" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+        <variable name="in1" public_interface="in" units="metre" cmeta:id="qwe1" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="in2" public_interface="in" units="metre" cmeta:id="qwe2" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="in3" public_interface="in" units="metre" cmeta:id="qwe3" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable initial_value="1" name="out1" public_interface="out" units="dimensionless" cmeta:id="qwe4" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable initial_value="2" name="out2" public_interface="out" units="dimensionless" cmeta:id="qwe5" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable initial_value="3" name="out3" public_interface="out" units="dimensionless" cmeta:id="qwe6" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
+        <variable name="result" units="metre"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>result</ci>
+                <apply>
+                    <plus/>
+                    <ci>in1</ci>
+                    <ci>in2</ci>
+                    <ci>in3</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <connection>
+        <map_components component_1="local" component_2="main"/>
+        <map_variables variable_1="in1" variable_2="output"/>
+        <map_variables variable_1="out1" variable_2="input"/>
+    </connection>
+    <connection>
+        <map_components component_1="local" component_2="second_comp"/>
+        <map_variables variable_1="in2" variable_2="output"/>
+        <map_variables variable_1="out2" variable_2="input"/>
+    </connection>
+    <connection>
+        <map_components component_1="local" component_2="third_comp"/>
+        <map_variables variable_1="in3" variable_2="output"/>
+        <map_variables variable_1="out3" variable_2="input"/>
+    </connection>
+</model>

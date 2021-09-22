@@ -66,7 +66,7 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
     std::wstring cmetaId = pModel->cmetaId();
 
     if (!cmetaId.empty()) {
-        mExportedModel->cmetaId(cmetaId);
+        mExportedModel->cmetaId(validCmetaId(cmetaId));
     }
 
     // Create an annotation set to manage annotations
@@ -114,6 +114,27 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
     // Save our exported model
 
     mResult = saveModel(mExportedModel, pFileName);
+}
+
+//==============================================================================
+
+std::wstring CellmlFileCellml10Exporter::validCmetaId(const std::wstring pCmetaId)
+{
+    // Check whether the given id already exists and make it unique if needed
+
+    QString res = QString::fromStdWString(pCmetaId);
+
+    if (mCmetaIds.contains(res)) {
+        do {
+            res = QString("%1").arg(QString::number(mCmetaIdCounter, 16));
+
+            ++mCmetaIdCounter;
+        } while (mCmetaIds.contains(res));
+    }
+
+    mCmetaIds << res;
+
+    return res.toStdWString();
 }
 
 //==============================================================================
@@ -417,7 +438,7 @@ void CellmlFileCellml10Exporter::copyComponent(iface::cellml_api::CellMLComponen
     std::wstring newComponentCmetaId = pComponent->cmetaId();
 
     if (!newComponentCmetaId.empty()) {
-        newComponent->cmetaId(newComponentCmetaId);
+        newComponent->cmetaId(validCmetaId(newComponentCmetaId));
     }
 
     // Copy the units to our new component
@@ -440,7 +461,7 @@ void CellmlFileCellml10Exporter::copyComponent(iface::cellml_api::CellMLComponen
         std::wstring componentVariableCmetaId = componentVariable->cmetaId();
 
         if (!componentVariableCmetaId.empty()) {
-            newComponentVariable->cmetaId(componentVariableCmetaId);
+            newComponentVariable->cmetaId(validCmetaId(componentVariableCmetaId));
         }
 
         newComponentVariable->initialValue(componentVariable->initialValue());
