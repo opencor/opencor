@@ -3,10 +3,10 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "General",
                          "entries": [
+                           { "type": "added", "description": "Support for <a href=\"https://python.org/\">Python</a>." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
-                           { "type": "improved", "description": "Plugin framework." },
-                           { "type": "added", "description": "Support for <a href=\"https://python.org/\">Python</a>." }
+                           { "type": "improved", "description": "Plugin framework." }
                          ]
                        },
                        { "name": "Editing",
