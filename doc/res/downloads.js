@@ -136,7 +136,7 @@ function versions(downloads) {
 
             if (downloads) {
                 if (versionDay && versionMonth && versionYear) {
-                    document.write("                    ("+versionDay+" "+month(versionMonth)+" "+versionYear+")\n");
+                    document.write("                    "+versionDay+" "+month(versionMonth)+" "+versionYear+"\n");
                 } else {
                     document.write("                    (???)\n");
                 }
