@@ -904,9 +904,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 {
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
-    // SimulationExperimentViewSimulationWidget::furtherInitialize()), so we
-    // ask our central widget to show its busy widget (which will get hidden
-    // in CentralWidget::updateGui())
+    // furtherInitialize()), so we ask our central widget to show its busy
+    // widget (which will get hidden in CentralWidget::updateGui())
 
     bool isSedmlFile = mSimulation->fileType() == SimulationSupport::Simulation::FileType::SedmlFile;
     bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive;
