@@ -269,15 +269,17 @@ private:
 
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
 
+    int mNbOfGraphPanels = 0;
+
     QVariantList mSimulationProperties;
     QVariantList mSolversProperties;
-    QHash<Core::PropertyEditorWidget *, QVariantList> mGraphPanelProperties;
-    QHash<Core::PropertyEditorWidget *, QVariantList> mGraphsProperties;
+    QList<QVariantList> mGraphPanelProperties;
+    QList<QVariantList> mGraphsProperties;
 
     bool mSimulationPropertiesModified = false;
     bool mSolversPropertiesModified = false;
-    QHash<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
-    QHash<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
+    QBoolList mGraphPanelPropertiesModified;
+    QBoolList mGraphsPropertiesModified;
 
     QIntList mGraphPanelsWidgetSizes;
     bool mGraphPanelsWidgetSizesModified = false;
