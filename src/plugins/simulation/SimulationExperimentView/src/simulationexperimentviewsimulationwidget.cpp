@@ -904,9 +904,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 {
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
-    // SimulationExperimentViewSimulationWidget::furtherInitialize()), so we
-    // ask our central widget to show its busy widget (which will get hidden
-    // in CentralWidget::updateGui())
+    // furtherInitialize()), so we ask our central widget to show its busy
+    // widget (which will get hidden in CentralWidget::updateGui())
 
     bool isSedmlFile = mSimulation->fileType() == SimulationSupport::Simulation::FileType::SedmlFile;
     bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive;
@@ -1520,6 +1519,8 @@ void SimulationExperimentViewSimulationWidget::addGraphPanel()
 {
     // Ask our graph panels widget to add a new graph panel
 
+    ++mNbOfGraphPanels;
+
     mContentsWidget->graphPanelsWidget()->addGraphPanel(defaultGraphPanelProperties());
 }
 
@@ -1538,6 +1539,8 @@ void SimulationExperimentViewSimulationWidget::removeGraphPanel()
 void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
 {
     // Ask our graph panels widget to remove the current graph panel
+
+    mNbOfGraphPanels = qMax(1, mNbOfGraphPanels-1);
 
     if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel(defaultGraphPanelProperties())) {
         processEvents();
@@ -1598,8 +1601,8 @@ void SimulationExperimentViewSimulationWidget::initializeTrackers(bool pInitialz
         Core::PropertyEditorWidget *graphPanelPropertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
         Core::PropertyEditorWidget *graphsPropertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
 
-        mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
-        mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
+        mGraphPanelProperties << allPropertyValues(graphPanelPropertyEditor);
+        mGraphsProperties << allPropertyValues(graphsPropertyEditor);
 
         connect(graphPanelPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
                 this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs,
@@ -3353,8 +3356,11 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(GraphPanelWidge
     mPlots.removeOne(plot);
 
     // Check our graph panels and their graphs
+    // Note: we use a single shot to give the GUI time to update, especially if
+    //       we removed the last graph panel in which case a new graph panel
+    //       will be added...
 
-    checkGraphPanelsAndGraphs();
+    QTimer::singleShot(0, this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs);
 }
 
 //==============================================================================
@@ -4080,45 +4086,43 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
         return;
     }
 
-    // Check whether any of our graph panels' height has changed
+    // Make sure that we have the expected number of graph panels
+    // Note: when adding/removing graph panels, we will come here when the graph
+    //       panel hasn't yet been added/removed. So, we want to make sure that
+    //       it has been. This is particularly important when the user deletes
+    //       the last graph panel (i.e. resets it) since
+    //       GraphPanelsWidget::removeCurrentGraphPanel() will first add a graph
+    //       panel and then delete the "last" one, which if we were not to test
+    //       things would result in the file to be considered modified for a
+    //       split second...
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    const GraphPanelWidget::GraphPanelWidgets graphPanels = graphPanelsWidget->graphPanels();
+
+    if (mNbOfGraphPanels != graphPanels.count()) {
+        return;
+    }
+
+    // Check whether any of our graph panels' height has changed
 
     mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
 
     // Check whether any of our graph panel / graphs properties has changed
-    // Note: we check that allPropertyValues is not empty since it may be when
-    //       reloading...
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
     mGraphPanelPropertiesModified.clear();
     mGraphsPropertiesModified.clear();
 
-    const GraphPanelWidget::GraphPanelWidgets graphPanels = graphPanelsWidget->graphPanels();
+    int i = -1;
 
     for (auto graphPanel : graphPanels) {
-        Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
+        ++i;
 
-        if (mGraphPanelProperties.contains(propertyEditor)) {
-            QVariantList allPropertyValues = this->allPropertyValues(propertyEditor);
-
-            if (!allPropertyValues.isEmpty()) {
-                mGraphPanelPropertiesModified.insert(propertyEditor,
-                                                     allPropertyValues != mGraphPanelProperties.value(propertyEditor));
-            }
-        }
-
-        propertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
-
-        if (mGraphsProperties.contains(propertyEditor)) {
-            QVariantList allPropertyValues = this->allPropertyValues(propertyEditor);
-
-            if (!allPropertyValues.isEmpty()) {
-                mGraphsPropertiesModified.insert(propertyEditor,
-                                                 allPropertyValues != mGraphsProperties.value(propertyEditor));
-            }
-        }
+        mGraphPanelPropertiesModified << (   (i < mGraphPanelProperties.count())
+                                          && (allPropertyValues(graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)) != mGraphPanelProperties[i]));
+        mGraphsPropertiesModified << (   (i < mGraphsProperties.count())
+                                      && (allPropertyValues(graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel)) != mGraphsProperties[i]));
     }
 
     // Update our file's modified status
@@ -4158,9 +4162,7 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
     // simulation, solvers, graph panel or graphs properties have changed, and
     // keeping in mind that we may have added/removed graph panels
 
-    auto graphPanelPropertiesKeys = mGraphPanelProperties.keys();
-    auto graphPanelPropertiesModifiedKeys = mGraphPanelPropertiesModified.keys();
-    bool graphPanelPropertiesModified = graphPanelPropertiesKeys != graphPanelPropertiesModifiedKeys;
+    bool graphPanelPropertiesModified = mGraphPanelProperties.count() != mGraphPanelProperties.count();
 
     if (!graphPanelPropertiesModified) {
         for (auto someGraphPanelPropertiesModified : qAsConst(mGraphPanelPropertiesModified)) {
@@ -4168,9 +4170,7 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
         }
     }
 
-    auto graphsPropertiesKeys = mGraphsProperties.keys();
-    auto graphsPropertiesModifiedKeys = mGraphsPropertiesModified.keys();
-    bool graphsPropertiesModified = graphsPropertiesKeys != graphsPropertiesModifiedKeys;
+    bool graphsPropertiesModified = mGraphsProperties.count() != mGraphsPropertiesModified.count();
 
     if (!graphsPropertiesModified) {
         for (auto someGraphsPropertiesModified : qAsConst(mGraphsPropertiesModified)) {

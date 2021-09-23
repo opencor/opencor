@@ -158,14 +158,15 @@ QString Simulation::furtherInitialize() const
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
-    int newNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
 
-    if (oldNbOfGraphPanels < newNbOfGraphPanels) {
-        for (int i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i) {
+    mNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
+
+    if (oldNbOfGraphPanels < mNbOfGraphPanels) {
+        for (int i = 0, iMax = mNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i) {
             graphPanelsWidget->addGraphPanel();
         }
-    } else if (oldNbOfGraphPanels > newNbOfGraphPanels) {
-        for (int i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i) {
+    } else if (oldNbOfGraphPanels > mNbOfGraphPanels) {
+        for (int i = 0, iMax = oldNbOfGraphPanels-mNbOfGraphPanels; i < iMax; ++i) {
             graphPanelsWidget->removeCurrentGraphPanel();
         }
     }
@@ -174,7 +175,7 @@ QString Simulation::furtherInitialize() const
 
     QIntList graphPanelsWidgetSizes;
 
-    for (int i = 0; i < newNbOfGraphPanels; ++i) {
+    for (int i = 0; i < mNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
         auto sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(uint(i)));
