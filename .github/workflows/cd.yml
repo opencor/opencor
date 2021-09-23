@@ -25,4 +25,4 @@ jobs:
           personal_token: ${{ secrets.GH_PAT }}
           external_repository: opencor/opencor.github.io
           publish_branch: master
-          publish_dir: build/user-documentation/build/html
+          publish_dir: build/opencor-user-documentation/build/html
