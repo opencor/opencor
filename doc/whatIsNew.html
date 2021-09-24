@@ -35,10 +35,11 @@
                 document.write("                </td>\n");
                 document.write("                <td class=\"date\">\n");
 
-                if (version.day && version.month && version.year)
+                if (version.day && version.month && version.year) {
                     document.write("                    "+version.day+" "+month(version.month)+" "+version.year+"\n");
-                else
-                    document.write("                    (???)\n");
+                } else {
+                    document.write("                    ???\n");
+                }
 
                 document.write("                </td>\n");
                 document.write("            </tr>\n");
@@ -68,7 +69,7 @@
                                 document.write("                "+entry.name+":\n");
                                 document.write("                <ul>\n");
 
-                                    let subEntries = entry.entries;
+                                let subEntries = entry.entries;
 
                                 for (let subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
                                     let subEntry = subEntries[subEntryIndex];

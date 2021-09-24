@@ -120,7 +120,7 @@ function copyright(relativePath) {
     document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>\n");
     document.write("    </div>\n");
     document.write("    <div class=\"right\">\n");
-    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vpr.png\" width=60 height=18></a>\n");
+    document.write("        <a class=\"copyright\" href=\"https://virtualrat.org//\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vpr.png\" width=60 height=18></a>\n");
     document.write("    </div>\n");
     document.write("</div>\n");
 }
