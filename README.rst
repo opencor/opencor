@@ -1,4 +1,4 @@
-`OpenCOR <https://opencor.ws/>`__ is an `open source <https://opencor.ws/user/licensing.html>`__ cross-platform modelling environment.
+`OpenCOR <https://opencor.ws/>`__ is an `open source <https://opencor.ws/user/licensing.html>`__ `cross-platform <https://opencor.ws/user/supportedPlatforms.html>`__ modelling environment.
 Here are a few links, which you might find useful:
 
 - `What is new? <https://opencor.ws/whatIsNew.html>`__
