@@ -393,7 +393,7 @@ function versions(downloads) {
         });
     } else {
         document.write("<p>\n");
-        document.write("    No "+(downloads?"downloads":"previous snapshots")+" are available.\n");
+        document.write("    No "+(downloads?"downloads":"previous snapshots")+" available.\n");
         document.write("</p>\n");
     }
 }

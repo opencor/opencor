@@ -701,7 +701,7 @@ var jsonData = { "versions": [
                    },
                    { "anchor": "0.1", "description": "Version 0.1", "day": 1, "month": 4, "year": 2013,
                      "categories": [
-                       { "name": "Original version of OpenCOR" }
+                       { "name": "Initial version of OpenCOR" }
                      ]
                    }
                  ]
