@@ -1057,11 +1057,26 @@ endif()
 # Note: we need Python because we rely on Sphinx to build our documentation...
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
+    # General documentation
+
+    include(FetchContent)
+
+    set(GENERAL_DOCUMENTATION_DIR ${PROJECT_BUILD_DIR}/doc)
+
+    FetchContent_Declare(general-documentation
+        GIT_REPOSITORY https://github.com/opencor/general-documentation
+        SOURCE_DIR ${GENERAL_DOCUMENTATION_DIR}
+    )
+
+    FetchContent_Populate(general-documentation)
+
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
                                                                ${PROJECT_BUILD_DIR}/doc)
 
     configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
                    ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+    # User and developer documentations
 
     build_documentation(user)
     build_documentation(developer)
