@@ -873,8 +873,8 @@ set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
 
 add_custom_target(${PROJECT_BUILD_TARGET} ALL)
 
-# Specify a target to help us take advantage of our documentation (e.g. by Help
-# window plugin)
+# Specify a target to help us take advantage of our documentation (e.g. by the
+# Help window plugin)
 
 set(DOCUMENTATION_BUILD_TARGET DocumentationBuild)
 
