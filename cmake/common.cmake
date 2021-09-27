@@ -148,7 +148,7 @@ macro(build_documentation DOCUMENTATION_NAME)
             LIST_SEPARATOR
                 |
             INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
+                ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${DOCUMENTATION_BUILD}/html
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 

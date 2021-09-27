@@ -1065,7 +1065,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         GIT_REPOSITORY
             https://github.com/opencor/general-documentation
         INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/GeneralDocumentationBuild/html
+            ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/GeneralDocumentationBuild/html
                                                ${PROJECT_BUILD_DIR}/doc
     )
 
