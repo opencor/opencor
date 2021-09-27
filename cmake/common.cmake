@@ -149,7 +149,7 @@ macro(build_documentation DOCUMENTATION_NAME)
                 |
             INSTALL_COMMAND
                 ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${DOCUMENTATION_BUILD}/html
-                                                   ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
+                                                   ${PROJECT_BUILD_DIR}/doc/html/${DOCUMENTATION_NAME}
         )
 
         # Make our local target depend on having Python fully installed

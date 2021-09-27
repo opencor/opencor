@@ -1066,14 +1066,17 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
             https://github.com/opencor/general-documentation
         INSTALL_COMMAND
             ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/GeneralDocumentationBuild/html
-                                               ${PROJECT_BUILD_DIR}/doc
+                                               ${PROJECT_BUILD_DIR}/doc/html
     )
 
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
-                                                               ${PROJECT_BUILD_DIR}/doc)
+    file(COPY ${PROJECT_SOURCE_DIR}/doc/cor/res/pics/logo.png DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor/res/pics)
+    file(COPY ${PROJECT_SOURCE_DIR}/doc/cor/res/stylesheet.css DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor/res)
+    file(COPY ${PROJECT_SOURCE_DIR}/doc/cor/index.html DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor)
 
-    configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+    configure_file(${PROJECT_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
                    ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+    file(COPY ${PROJECT_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhp DESTINATION ${PROJECT_BUILD_DIR}/doc)
 
     # User and developer documentations
 
