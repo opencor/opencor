@@ -1059,16 +1059,15 @@ endif()
 if(USE_PREBUILT_PYTHON_PACKAGE)
     # General documentation
 
-    include(FetchContent)
-
-    set(GENERAL_DOCUMENTATION_DIR ${PROJECT_BUILD_DIR}/doc)
-
-    FetchContent_Declare(general-documentation
-        GIT_REPOSITORY https://github.com/opencor/general-documentation
-        SOURCE_DIR ${GENERAL_DOCUMENTATION_DIR}
+    ExternalProject_Add(GeneralDocumentationBuild
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/doc/general
+        GIT_REPOSITORY
+            https://github.com/opencor/general-documentation
+        INSTALL_COMMAND
+            ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/GeneralDocumentationBuild/html
+                                               ${PROJECT_BUILD_DIR}/doc
     )
-
-    FetchContent_Populate(general-documentation)
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
                                                                ${PROJECT_BUILD_DIR}/doc)
