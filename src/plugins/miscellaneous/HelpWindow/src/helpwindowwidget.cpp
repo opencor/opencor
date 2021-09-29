@@ -168,7 +168,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     //       page is wrong and OpenCOR is in a non-English locale then our
     //       contents will be empty upon starting OpenCOR)...
 
-    setHomePage("qthelp://opencor/doc/user/index.html");
+    setHomePage("qthelp://opencor/doc/html/user/index.html");
 
     webView()->setUrl(homePage());
 }

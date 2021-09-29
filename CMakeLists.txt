@@ -157,14 +157,14 @@ endif()
 set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
 
 if(WIN32)
-    execute_process(COMMAND ${C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} /O2 /Fe${SILENTRUN} ${CMAKE_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 else()
     if(APPLE)
         set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
     endif()
 
-    execute_process(COMMAND ${C_COMPILER} -std=c99 -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    execute_process(COMMAND ${C_COMPILER} -std=c99 -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${CMAKE_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 endif()
 
@@ -177,7 +177,7 @@ endif()
 if(NOT WIN32 AND NOT APPLE)
     set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
-    execute_process(COMMAND ${C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
+    execute_process(COMMAND ${C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${CMAKE_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
     if(NOT RESULT EQUAL 0)
@@ -225,7 +225,7 @@ else()
         if(CLCACHE)
             set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
-            execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+            execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${CMAKE_SOURCE_DIR}/cmake/clcachewrapper.c
                             RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
             if(RESULT EQUAL 0)
@@ -333,16 +333,9 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
-# Make sure that we can use the ExternalProject module, and let it know where we
-# want to build our external packages
-# Note: indeed, otherwise on Windows we may end up with path names that are too
-#       long...
+# Configure external projects
 
-include(ExternalProject)
-
-set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
-
-set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
+configure_external_projects()
 
 # On macOS, make sure that we support version 10.14 and later, unless a specific
 # deployment target has been specified
@@ -873,8 +866,8 @@ set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
 
 add_custom_target(${PROJECT_BUILD_TARGET} ALL)
 
-# Specify a target to help us take advantage of our documentation (e.g. by Help
-# window plugin)
+# Specify a target to help us take advantage of our documentation (e.g. by the
+# Help window plugin)
 
 set(DOCUMENTATION_BUILD_TARGET DocumentationBuild)
 
@@ -1053,18 +1046,11 @@ if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
            RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
 endif()
 
-# Fetch parts of our documentation and build it, if we are not building Python
-# Note: we need Python because we rely on Sphinx to build our documentation...
+# Generate our documentation, if we are not building Python
+# Note: we need Python because we rely on Sphinx to generate our documentation...
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
-                                                               ${PROJECT_BUILD_DIR}/doc)
-
-    configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-                   ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
-
-    build_documentation(user)
-    build_documentation(developer)
+    generate_documentation(TRUE)
 endif()
 
 # Build the GUI version of OpenCOR

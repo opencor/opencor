@@ -4,25 +4,25 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
-            <file>user/*.*</file>
+            <file>html/user/*.*</file>
 
-            <file>user/_images/*.*</file>
+            <file>html/user/_images/*.*</file>
 
-            <file>user/_static/*.*</file>
-            <file>user/_static/katex/*.*</file>
-            <file>user/_static/katex/contrib/*.*</file>
-            <file>user/_static/katex/fonts/*.*</file>
+            <file>html/user/_static/*.*</file>
+            <file>html/user/_static/katex/*.*</file>
+            <file>html/user/_static/katex/contrib/*.*</file>
+            <file>html/user/_static/katex/fonts/*.*</file>
 
-            <file>user/plugins/*.*</file>
-            <file>user/plugins/dataStore/*.*</file>
-            <file>user/plugins/editing/*.*</file>
-            <file>user/plugins/miscellaneous/*.*</file>
-            <file>user/plugins/organisation/*.*</file>
-            <file>user/plugins/simulation/*.*</file>
-            <file>user/plugins/solver/*.*</file>
-            <file>user/plugins/tools/*.*</file>
+            <file>html/user/plugins/*.*</file>
+            <file>html/user/plugins/dataStore/*.*</file>
+            <file>html/user/plugins/editing/*.*</file>
+            <file>html/user/plugins/miscellaneous/*.*</file>
+            <file>html/user/plugins/organisation/*.*</file>
+            <file>html/user/plugins/simulation/*.*</file>
+            <file>html/user/plugins/solver/*.*</file>
+            <file>html/user/plugins/tools/*.*</file>
 
-            <file>user/userInterfaces/*.*</file>
+            <file>html/user/userInterfaces/*.*</file>
         </files>
     </filterSection>
 </QtHelpProject>
