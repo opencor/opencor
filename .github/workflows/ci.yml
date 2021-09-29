@@ -13,22 +13,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: 'Windows Release'
+          - name: 'Build and test (Windows release)'
             os: windows-2016
             mode: Release
-          - name: 'Windows Debug'
+          - name: 'Build and test (Windows debug)'
             os: windows-2016
             mode: Debug
-          - name: 'Linux Release'
+          - name: 'Build and test (Linux release)'
             os: ubuntu-20.04
             mode: Release
-          - name: 'Linux Debug'
+          - name: 'Build and test (Linux debug)'
             os: ubuntu-20.04
             mode: Debug
-          - name: 'macOS Release'
+          - name: 'Build and test (macOS release)'
             os: macos-11
             mode: Release
-          - name: 'macOS Debug'
+          - name: 'Build and test (macOS debug)'
             os: macos-11
             mode: Debug
     env:
