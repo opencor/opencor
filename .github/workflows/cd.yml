@@ -7,7 +7,7 @@ on:
 
 jobs:
   cd:
-    name: OpenCOR's user documentation
+    name: OpenCOR's documentation
     if: ${{ github.event.head_commit.message == 'New snapshot.' }}
     runs-on: ubuntu-latest
     steps:
@@ -17,12 +17,12 @@ jobs:
         uses: lukka/get-cmake@latest
       - name: Install packages
         run: sudo apt install python3-sphinx
-      - name: Generate OpenCOR's user documentation
+      - name: Generate OpenCOR's documentation
         run: ./cd
-      - name: Deploy OpenCOR's user documentation
+      - name: Deploy OpenCOR's documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GH_PAT }}
           external_repository: opencor/opencor.github.io
           publish_branch: master
-          publish_dir: build/opencor-user-documentation/build/html
+          publish_dir: build/doc/html

@@ -39,16 +39,12 @@ IF EXIST !AppDir!build (
         EXIT /B !ExitCode!
     )
 
-    FOR /F "TOKENS=1,* DELIMS= " %%X IN ("%*") DO (
-        SET Args=%%Y
-    )
-
     IF DEFINED NinjaFound (
-        ninja !Args!
+        ninja
 
         SET ExitCode=!ERRORLEVEL!
     ) ELSE (
-        jom !Args!
+        jom
 
         SET ExitCode=!ERRORLEVEL!
     )

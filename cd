@@ -29,12 +29,10 @@ if [ -d $appDir/build ]; then
         exit $exitCode
     fi
 
-    shift
-
     if [ $ninjaFound = true ]; then
-        ninja $@
+        ninja
     else
-        make $@
+        make
     fi
 
     exitCode=$?
