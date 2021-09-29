@@ -80,17 +80,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: 'Windows'
+          - name: 'Documentation (Windows)'
             os: windows-2016
-          - name: 'Linux'
+          - name: 'Documentation (Linux)'
             os: ubuntu-20.04
-          - name: 'macOS'
+          - name: 'Documentation (macOS)'
             os: macos-11
     steps:
       - name: Check out OpenCOR
         uses: actions/checkout@v2
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
+      - name: Install Sphinx
+        run: pip3 install Sphinx
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
