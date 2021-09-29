@@ -73,3 +73,28 @@ jobs:
       - name: Build and test OpenCOR (Linux and macOS only)
         if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
         run: scripts/genericci ${{ matrix.mode }}
+  doc:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'Windows'
+            os: windows-2016
+          - name: 'Linux'
+            os: ubuntu-20.04
+          - name: 'macOS'
+            os: macos-11
+    steps:
+      - name: Check out OpenCOR
+        uses: actions/checkout@v2
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+      - name: Generate the documentation (Windows only)
+        if: ${{ runner.os == 'Windows' }}
+        shell: cmd
+        run: .\cd
+      - name: Generate the documentation (Linux and macOS only)
+        if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+        run: ./cd
