@@ -333,16 +333,9 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
-# Make sure that we can use the ExternalProject module, and let it know where we
-# want to build our external packages
-# Note: indeed, otherwise on Windows we may end up with path names that are too
-#       long...
+# Configure external projects
 
-include(ExternalProject)
-
-set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
-
-set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
+configure_external_projects()
 
 # On macOS, make sure that we support version 10.14 and later, unless a specific
 # deployment target has been specified
@@ -1053,35 +1046,11 @@ if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
            RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
 endif()
 
-# Fetch parts of our documentation and build it, if we are not building Python
-# Note: we need Python because we rely on Sphinx to build our documentation...
+# Generate our documentation, if we are not building Python
+# Note: we need Python because we rely on Sphinx to generate our documentation...
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
-    # General documentation
-
-    ExternalProject_Add(GeneralDocumentationBuild
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/doc/general
-        GIT_REPOSITORY
-            https://github.com/opencor/general-documentation
-        INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/GeneralDocumentationBuild/html
-                                               ${PROJECT_BUILD_DIR}/doc/html
-    )
-
-    file(COPY ${PROJECT_SOURCE_DIR}/doc/cor/res/pics/logo.png DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor/res/pics)
-    file(COPY ${PROJECT_SOURCE_DIR}/doc/cor/res/stylesheet.css DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor/res)
-    file(COPY ${PROJECT_SOURCE_DIR}/doc/cor/index.html DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor)
-
-    configure_file(${PROJECT_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-                   ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
-
-    file(COPY ${PROJECT_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhp DESTINATION ${PROJECT_BUILD_DIR}/doc)
-
-    # User and developer documentations
-
-    build_documentation(user)
-    build_documentation(developer)
+    generate_documentation(TRUE)
 endif()
 
 # Build the GUI version of OpenCOR
