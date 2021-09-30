@@ -515,7 +515,7 @@ void CellMLToolsPlugin::exportToCellml10()
     QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << CellMLSupport::fileTypeInterface());
     QString firstCellmlFilter = cellmlFilters.first();
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(Cellml_1_0),
-                                             Core::newFileName(QFileInfo(mFileName).baseName(), tr("Exported"), false),
+                                             Core::newFileName(mFileName, tr("Exported"), false),
                                              cellmlFilters, &firstCellmlFilter);
 
     if (fileName.isEmpty()) {
