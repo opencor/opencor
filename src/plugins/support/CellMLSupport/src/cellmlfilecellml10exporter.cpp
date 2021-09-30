@@ -739,6 +739,7 @@ bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
 
     serialisedDomDocument.replace(" cellml:xmlns=\"http://www.w3.org/1998/Math/MathML\"", "");
     serialisedDomDocument.replace("cellml:type=\"e-notation\"", "type=\"e-notation\"");
+    serialisedDomDocument.replace("cellml:id", "id");
 
     if (pFileName.isEmpty()) {
         std::cout << QString(serialisedDomDocument).toStdString() << std::endl;
