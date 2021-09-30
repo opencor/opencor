@@ -10,7 +10,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="alpha_m_calculation">
+            <apply id="alpha_m_calculation">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -48,7 +48,7 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="beta_m_calculation">
+            <apply id="beta_m_calculation">
                 <eq/>
                 <ci>beta</ci>
                 <apply>
@@ -70,7 +70,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="alpha_h_calculation">
+            <apply id="alpha_h_calculation">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -92,7 +92,7 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="beta_h_calculation">
+            <apply id="beta_h_calculation">
                 <eq/>
                 <ci>beta</ci>
                 <apply>

@@ -32,7 +32,7 @@
         <variable name="gNa" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable name="gNa_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="INa_calculation">
+            <apply id="INa_calculation">
                 <eq/>
                 <ci>INa</ci>
                 <apply>
@@ -47,7 +47,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="gNa_calculation">
+            <apply id="gNa_calculation">
                 <eq/>
                 <ci>gNa</ci>
                 <apply>

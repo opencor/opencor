@@ -11,7 +11,7 @@
         <variable name="stimDuration" public_interface="in" units="ms"/>
         <variable name="stimCurrent" public_interface="in" units="uA_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="stimulus_calculation">
+            <apply id="stimulus_calculation">
                 <eq/>
                 <ci>IStim</ci>
                 <piecewise>

@@ -11,7 +11,7 @@
         <variable name="Vleak" private_interface="out" public_interface="in" units="mV"/>
         <variable name="gleak_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="Ileak_calculation">
+            <apply id="Ileak_calculation">
                 <eq/>
                 <ci>Ileak</ci>
                 <apply>

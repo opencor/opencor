@@ -39,7 +39,7 @@
         <variable name="Cm" private_interface="out" public_interface="in" units="uF_per_cmsq"/>
         <variable name="time" private_interface="out" public_interface="in" units="ms"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="V_calculation">
+            <apply id="V_calculation">
                 <eq/>
                 <apply>
                     <diff/>
@@ -65,7 +65,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="minus_V_calculation">
+            <apply id="minus_V_calculation">
                 <eq/>
                 <ci>minus_V</ci>
                 <apply>
