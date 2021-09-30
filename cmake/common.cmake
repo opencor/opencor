@@ -156,10 +156,6 @@ macro(generate_documentation BUILD_OPENCOR)
                                                ${PROJECT_BUILD_DIR}/doc/html
     )
 
-    file(COPY ${CMAKE_SOURCE_DIR}/doc/cor/res/pics/logo.png DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor/res/pics)
-    file(COPY ${CMAKE_SOURCE_DIR}/doc/cor/res/stylesheet.css DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor/res)
-    file(COPY ${CMAKE_SOURCE_DIR}/doc/cor/index.html DESTINATION ${PROJECT_BUILD_DIR}/doc/html/cor)
-
     if(${BUILD_OPENCOR})
         configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
                        ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
