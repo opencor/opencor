@@ -288,51 +288,6 @@ void CellMLToolsPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
-{
-    // Make sure that we want to export either to CellML 1.0
-
-    if (pVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0) {
-        return;
-    }
-
-    // Ask for the name of the file that will contain the export
-
-    QString format = "CellML 1.0";
-    QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << CellMLSupport::fileTypeInterface());
-    QString firstCellmlFilter = cellmlFilters.first();
-    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
-                                             Core::newFileName(mFileName, tr("Exported"), false),
-                                             cellmlFilters, &firstCellmlFilter);
-
-    if (fileName.isEmpty()) {
-        return;
-    }
-
-    // Now that we have a file name, we can do the export itself
-
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-
-    if (!cellmlFile->exportTo(fileName, pVersion)) {
-        QString errorMessage;
-
-        if (!cellmlFile->issues().isEmpty()) {
-            CellMLSupport::CellmlFileIssues cellmlFileIssues = cellmlFile->issues();
-
-            errorMessage = " ("+cellmlFileIssues.first().message()+")";
-            // Note: if there are 'cellmlFile->issues()', then there can be only
-            //       one of them following a CellML export...
-        }
-
-        Core::warningMessageBox(tr("Export CellML File To %1").arg(format),
-                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
-                                                                                                              format,
-                                                                                                              errorMessage));
-    }
-}
-
-//==============================================================================
-
 void CellMLToolsPlugin::runHelpCommand()
 {
     // Output the commands we support
@@ -610,7 +565,6 @@ void CellMLToolsPlugin::exportToLanguage()
                                     (action == mExportToMatlabAction)?
                                         "m":
                                         "py";
-
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(languageString),
                                              Core::newFileName(mFileName, fileExtension));
 

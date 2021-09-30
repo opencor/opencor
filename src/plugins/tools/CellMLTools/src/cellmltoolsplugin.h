@@ -79,8 +79,6 @@ private:
     QAction *mExportToMatlabAction = nullptr;
     QAction *mExportToPythonAction = nullptr;
 
-    void exportTo(CellMLSupport::CellmlFile::Version pVersion);
-
     void runHelpCommand();
     bool runExportCommand(const QStringList &pArguments);
     bool runValidateCommand(const QStringList &pArguments);

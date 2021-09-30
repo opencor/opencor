@@ -757,7 +757,8 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
                     bool pBefore, const QString &pFileExtension)
 {
     // Return the name of a 'new' file
-    // Note: see Tests::newFileNameTests() for what we want to be able to get...
+    // Note: see GeneralTests::newFileNameTests() for what we want to be able to
+    //       get...
 
     static const QString Dot = ".";
 
