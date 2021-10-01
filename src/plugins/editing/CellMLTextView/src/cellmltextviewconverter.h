@@ -127,7 +127,6 @@ private:
     QDomNode mDocumentationNode;
     QDomNode mTopMathmlNode;
 
-    QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
 
     bool mAssignmentDone = false;
@@ -150,7 +149,7 @@ private:
     bool cellmlNode(const QDomNode &pDomNode, const QString &pName) const;
     bool mathmlNode(const QDomNode &pDomNode, const QString &pName) const;
 
-    QString cmetaId(const QDomNode &pDomNode) const;
+    QString id(const QDomNode &pDomNode) const;
 
     MathmlNode mathmlNode(const QDomNode &pDomNode) const;
 
