@@ -103,7 +103,7 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
 
         // In between comment #18...
 
-        a ={my_equation2_cmeta_id} 12.3e5{dimensionless};
+        a = 12.3e5{dimensionless};
 
         // In between comment #19...
 
@@ -145,7 +145,7 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
 
         // In between comment #37...
 
-        a ={my_equation4_cmeta_id} nan;
+        a = nan;
 
         // In between comment #38...
 
@@ -177,7 +177,7 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
 
         // In between comment #51...
 
-        a ={my_equation6_cmeta_id} rem(b, c);
+        a = rem(b, c);
 
         // In between comment #52...
 

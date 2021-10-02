@@ -112,7 +112,7 @@
                 <!-- In between comment #13...-->
             </apply>
             <!-- In between comment #14...-->
-            <apply id="my_equation2_cmeta_id">
+            <apply cellml:id="my_invalid_equation2_cmeta_id">
                 <!-- In between comment #15...-->
                 <eq/>
                 <!-- In between comment #16...-->
@@ -150,7 +150,7 @@
                 <!-- In between comment #32...-->
             </apply>
             <!-- In between comment #33...-->
-            <apply id="my_equation4_cmeta_id">
+            <apply cmeta:id="my_invalid_equation4_cmeta_id">
                 <!-- In between comment #34...-->
                 <eq/>
                 <!-- In between comment #35...-->
@@ -170,7 +170,7 @@
                 <!-- In between comment #42...-->
             </apply>
             <!-- In between comment #43...-->
-            <apply id="my_equation6_cmeta_id">
+            <apply xxx:id="my_invalid_equation6_cmeta_id">
                 <!-- In between comment #44...-->
                 <eq/>
                 <!-- In between comment #45...-->

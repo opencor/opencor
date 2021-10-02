@@ -60,11 +60,20 @@ void ConversionTests::successfulConversionTests()
     QCOMPARE(QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).split('\n'),
              cellmlCorCellmlContents);
 
-    // Test the conversion of a CellML file that only works with OpenCOR
+    // Test the conversion of a CellML file that only works with OpenCOR and
+    // where the cmeta namespace is defined in the top element
 
-    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor.cellml")).join('\n')));
+    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor_global_namespace.cellml")).join('\n')));
     QCOMPARE(converter.output().split('\n'),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor.out")));
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor_global_namespace.out")));
+
+    // Test the conversion of a CellML file that only works with OpenCOR and
+    // where the cmeta namespace is defined in leaf elements only and after the
+    // cmeta:id attribute
+
+    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor_local_namespaces.cellml")).join('\n')));
+    QCOMPARE(converter.output().split('\n'),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor_local_namespaces.out")));
 
     // Retest the conversion of a CellML file that works with COR, except that
     // we insert comments everywhere
