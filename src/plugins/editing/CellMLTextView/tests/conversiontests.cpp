@@ -138,7 +138,7 @@ void ConversionTests::failingConversionTests02()
     QCOMPARE(converter.errorMessage(),
              QString("A 'reaction' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
     QCOMPARE(converter.errorLine(), 4);
-    QCOMPARE(converter.errorColumn(), 15);
+    QCOMPARE(converter.errorColumn(), 18);
 }
 
 //==============================================================================
@@ -258,7 +258,7 @@ void ConversionTests::failingConversionTests06()
     QCOMPARE(converter.errorMessage(),
              QString("A 'piecewise' element must have at least one child element."));
     QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorColumn(), 21);
+    QCOMPARE(converter.errorColumn(), 27);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_piece.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -285,37 +285,37 @@ void ConversionTests::failingConversionTests07()
     QCOMPARE(converter.errorMessage(),
              QString("An 'eq' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 17);
+    QCOMPARE(converter.errorColumn(), 20);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_neq.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("An 'neq' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_gt.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'gt' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 17);
+    QCOMPARE(converter.errorColumn(), 20);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_lt.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("An 'lt' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 17);
+    QCOMPARE(converter.errorColumn(), 20);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_geq.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'geq' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_leq.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("An 'leq' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 }
 
 //==============================================================================
@@ -330,43 +330,43 @@ void ConversionTests::failingConversionTests08()
     QCOMPARE(converter.errorMessage(),
              QString("A 'plus' element must have at least one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 19);
+    QCOMPARE(converter.errorColumn(), 22);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_minus.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'minus' element must have at least one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 20);
+    QCOMPARE(converter.errorColumn(), 23);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_times.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'times' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 20);
+    QCOMPARE(converter.errorColumn(), 23);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_divide.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'divide' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 21);
+    QCOMPARE(converter.errorColumn(), 24);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_power.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'power' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 20);
+    QCOMPARE(converter.errorColumn(), 23);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_rem.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'rem' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_root_1.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'root' element must have either one or two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 19);
+    QCOMPARE(converter.errorColumn(), 22);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_root_2.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -378,43 +378,43 @@ void ConversionTests::failingConversionTests08()
     QCOMPARE(converter.errorMessage(),
              QString("An 'abs' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_exp.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("An 'exp' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_ln.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("An 'ln' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 17);
+    QCOMPARE(converter.errorColumn(), 20);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_log.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'log' element must have either one or two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_ceiling.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'ceiling' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 22);
+    QCOMPARE(converter.errorColumn(), 25);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_floor.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'floor' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 20);
+    QCOMPARE(converter.errorColumn(), 23);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_factorial.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'factorial' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 24);
+    QCOMPARE(converter.errorColumn(), 27);
 }
 
 //==============================================================================
@@ -429,25 +429,25 @@ void ConversionTests::failingConversionTests09()
     QCOMPARE(converter.errorMessage(),
              QString("An 'and' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_or.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("An 'or' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 17);
+    QCOMPARE(converter.errorColumn(), 20);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_xor.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'xor' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_not.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'not' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 }
 
 //==============================================================================
@@ -462,7 +462,7 @@ void ConversionTests::failingConversionTests10()
     QCOMPARE(converter.errorMessage(),
              QString("A 'diff' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
-    QCOMPARE(converter.errorColumn(), 19);
+    QCOMPARE(converter.errorColumn(), 22);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_diff_2.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -483,19 +483,19 @@ void ConversionTests::failingConversionTests11()
     QCOMPARE(converter.errorMessage(),
              QString("A 'degree' element must have one child element."));
     QCOMPARE(converter.errorLine(), 5);
-    QCOMPARE(converter.errorColumn(), 17);
+    QCOMPARE(converter.errorColumn(), 20);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_logbase.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'logbase' element must have one child element."));
     QCOMPARE(converter.errorLine(), 5);
-    QCOMPARE(converter.errorColumn(), 18);
+    QCOMPARE(converter.errorColumn(), 21);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_bvar_1.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'bvar' element must have one or two child elements."));
     QCOMPARE(converter.errorLine(), 5);
-    QCOMPARE(converter.errorColumn(), 15);
+    QCOMPARE(converter.errorColumn(), 18);
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_bvar_2.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),

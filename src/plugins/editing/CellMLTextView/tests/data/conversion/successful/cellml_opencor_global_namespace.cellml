@@ -13,11 +13,11 @@
     <!-- A comment can also fit
  on one, two or even
  more lines...-->
-	<rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-		<rdf:Description rdf:about="#cellml_1_1_cmeta_id">
-			<bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
-		</rdf:Description>
-	</rdf:RDF>
+    <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="#cellml_1_1_cmeta_id">
+            <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+        </rdf:Description>
+    </rdf:RDF>
     <!-- In between comment #1...-->
     <import cmeta:id="my_import_cmeta_id" xlink:href="imported_model.cellml">
         <!-- Comments can be within an import definition...-->
