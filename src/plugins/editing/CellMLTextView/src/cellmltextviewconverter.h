@@ -137,7 +137,12 @@ private:
     QMap<QString, QString> mMappings;
     QMap<QString, MathmlNode> mMathmlNodes;
 
+    QMap<QPair<int, int>, QMap<QString, QString>> mNamespaces;
+
     void reset();
+
+    void trackNamespaceDefinitions(const QDomNode &pDomNode);
+    void trackNamespaceDefinitions(const QString &pRawCellml);
 
     void indent(bool pForceTracking = true);
     void unindent();
@@ -152,6 +157,9 @@ private:
     QString id(const QDomNode &pDomNode) const;
 
     MathmlNode mathmlNode(const QDomNode &pDomNode) const;
+
+    bool defineNamespace(const QDomNode &pDomNode, const QString &pPrefix,
+                         const QString &pNamespace) const;
 
     QString attributeNodeValue(const QDomNode &pDomNode,
                                const QString &pNamespace,

@@ -133,19 +133,88 @@ CellMLTextViewConverter::CellMLTextViewConverter()
 
 //==============================================================================
 
+void CellMLTextViewConverter::trackNamespaceDefinitions(const QDomNode &pDomNode)
+{
+    // Track the various namespace definitions in the given node
+
+    static const QString XmlNs = "xmlns";
+    static const QChar Colon = ':';
+
+    QDomNamedNodeMap attributes = pDomNode.attributes();
+    QMap<QString, QString> namespaces;
+
+    for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
+        QDomNode item = attributes.item(i);
+        QString name = item.nodeName();
+        int pos = name.indexOf(Colon);
+
+        if (pos == -1)
+            pos = name.size();
+
+        QString prefix = name.left(pos);
+        QString localName = name.mid(pos+1);
+
+        if ((prefix == XmlNs) && !localName.isEmpty()) {
+            namespaces.insert(localName, item.nodeValue());
+        }
+    }
+
+    if (!namespaces.isEmpty()) {
+        mNamespaces.insert(QPair<int, int>(pDomNode.lineNumber(), pDomNode.columnNumber()), namespaces);
+    }
+
+    // Track the vqrious namespace definitions in the children of the given node
+
+    QDomNodeList childNodes = pDomNode.childNodes();
+
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        trackNamespaceDefinitions(childNodes.item(i));
+    }
+}
+
+//==============================================================================
+
+void CellMLTextViewConverter::trackNamespaceDefinitions(const QString &pRawCellml)
+{
+    // Track the various namespace definitions in the given raw CellML
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(pRawCellml, false);
+
+    for (QDomNode domNode = domDocument.firstChild(); !domNode.isNull(); domNode = domNode.nextSibling()) {
+        trackNamespaceDefinitions(domNode );
+    }
+}
+
+//==============================================================================
+
 bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 {
     // Reset our internals
 
     reset();
 
-    // Convert the raw CellML to CellML Text by first getting a DOM
+    // Convert the given raw CellML to CellML Text by first getting a DOM
     // representation of it
+    // Note: because of a bug in QDomNamedNodeMap::namedItemNS(), we need to
+    //       keep track of the various namespace definitions in the CellML
+    //       document. For this, we have to use a second DOM document (!!) where
+    //       namespaces are not processed. Indeed, when namespaces are
+    //       processed then we can't retrieve their definition (as attributes)
+    //       while we can if they are not processed. The various namespace
+    //       definitions are used in attributeNodeValue() to go around the bug
+    //       that exists in QDomNamedNodeMap::namedItemNS()...
 
     QDomDocument domDocument;
 
     if (domDocument.setContent(pRawCellml, true,
                                &mErrorMessage, &mErrorLine, &mErrorColumn)) {
+        // Keep track of the various namespace definitions in the different
+        // nodes
+
+        trackNamespaceDefinitions(pRawCellml);
+
         // Process the DOM document's children, skipping the first node if it is
         // an XML processing instruction
 
@@ -281,6 +350,8 @@ void CellMLTextViewConverter::reset()
 
     mOldTopPiecewiseStatementUsed = false;
     mTopPiecewiseStatementUsed = false;
+
+    mNamespaces.clear();
 }
 
 //==============================================================================
@@ -406,6 +477,25 @@ QString CellMLTextViewConverter::id(const QDomNode &pDomNode) const
 
 //==============================================================================
 
+bool CellMLTextViewConverter::defineNamespace(const QDomNode &pDomNode,
+                                              const QString &pPrefix,
+                                              const QString &pNamespace) const
+{
+    // Check whether the given node defines the given namespace
+
+    static const QMap<QString, QString> NoNamespaces;
+
+    QMap<QString, QString> namespaces = mNamespaces.value(QPair<int, int>(pDomNode.lineNumber(), pDomNode.columnNumber()));
+
+    if (namespaces != NoNamespaces) {
+        return namespaces.value(pPrefix) == pNamespace;
+    }
+
+    return false;
+}
+
+//==============================================================================
+
 QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
                                                     const QString &pNamespace,
                                                     const QString &pName,
@@ -414,7 +504,25 @@ QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
     // Return the trimmed value of the requested attribute in the given
     // namespace
 
-    QString res = pDomNode.attributes().namedItemNS(pNamespace, pName).nodeValue().trimmed();
+    QString res;
+    QString nodeNamespace = pDomNode.namespaceURI();
+    QDomNamedNodeMap attributes = pDomNode.attributes();
+
+    for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
+        QDomNode item = attributes.item(i);
+        QString attributePrefix = item.prefix();
+        QString attributeNamespace = item.namespaceURI();
+
+        if (   (item.localName() == pName)
+            && (   (attributePrefix.isEmpty() && (   pNamespace.isEmpty()
+                                                  || (nodeNamespace == pNamespace)))
+                || (   (!attributePrefix.isEmpty() && !pNamespace.isEmpty())
+                    && (   (nodeNamespace == pNamespace)
+                        || (attributeNamespace == pNamespace)
+                        || defineNamespace(pDomNode, attributePrefix, pNamespace))))) {
+            return item.nodeValue().trimmed();
+        }
+    }
 
     if (res.isEmpty()) {
         return pMustBePresent?"???":res;
