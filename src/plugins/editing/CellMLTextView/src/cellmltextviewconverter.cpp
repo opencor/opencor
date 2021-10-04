@@ -377,9 +377,25 @@ bool CellMLTextViewConverter::mathmlNode(const QDomNode &pDomNode,
 
 QString CellMLTextViewConverter::id(const QDomNode &pDomNode) const
 {
-    // Return the converted cmeta:id, if any, of the given node
+    // Return the converted id, if any, of the given node
+    // Note: if the node is in the cellml namespace then we want the id
+    //       attribute to be in the cmeta namespace. On the other hand, if it is
+    //       in the math namespace then we want the id attribute to be in the
+    //       null namespace...
 
-    QString idValue = attributeNodeValue(pDomNode, CellMLSupport::CmetaIdNamespace, "id", false);
+    QString idNamespace;
+
+    if (   (pDomNode.namespaceURI() == CellMLSupport::Cellml_1_0_Namespace)
+        || (pDomNode.namespaceURI() == CellMLSupport::Cellml_1_1_Namespace)) {
+        idNamespace = CellMLSupport::CmetaIdNamespace;
+    } else if (pDomNode.namespaceURI() != CellMLSupport::MathmlNamespace) {
+        // Not one of the two namespaces which we support, so return an empty
+        // string
+
+        return {};
+    }
+
+    QString idValue = attributeNodeValue(pDomNode, idNamespace, "id", false);
 
     if (!idValue.isEmpty()) {
         return QString("{%1}").arg(idValue);
@@ -395,21 +411,10 @@ QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
                                                     const QString &pName,
                                                     bool pMustBePresent) const
 {
-    // Return the trimmed value of the requested attribute using the given
+    // Return the trimmed value of the requested attribute in the given
     // namespace
-    // Note: there is an issue with QDomNamedNodeMap::namedItemNS(). Indeed, if
-    //       the attribute that defines the namespace is after the attribute
-    //       itself, then the attribute will only be accessible without using a
-    //       namespace (see https://bugreports.qt.io/browse/QTBUG-59932)...
 
-    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
-    QDomNode attributeNode = domNodeAttributes.namedItemNS(pNamespace, pName);
-
-    if (attributeNode.isNull()) {
-        attributeNode = domNodeAttributes.namedItem(pName);
-    }
-
-    QString res = attributeNode.nodeValue().trimmed();
+    QString res = pDomNode.attributes().namedItemNS(pNamespace, pName).nodeValue().trimmed();
 
     if (res.isEmpty()) {
         return pMustBePresent?"???":res;
