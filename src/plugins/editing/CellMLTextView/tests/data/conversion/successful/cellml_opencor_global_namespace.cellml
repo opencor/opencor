@@ -1,0 +1,505 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- -->
+<!--- -->
+<!--&#45;&#45;-->
+<!--&#45;&#45;- -->
+<!-- Some comments before the model definition itself...-->
+<!--&#45;&#45;- -->
+<!--&#45;&#45;-->
+<!--- -->
+<!-- -->
+<model cmeta:id="cellml_1_1_cmeta_id" name="cellml_1_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- A comment can fit on one line...-->
+    <!-- A comment can also fit
+ on one, two or even
+ more lines...-->
+    <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="#cellml_1_1_cmeta_id">
+            <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+        </rdf:Description>
+    </rdf:RDF>
+    <!-- In between comment #1...-->
+    <import cmeta:id="my_import_cmeta_id" xlink:href="imported_model.cellml">
+        <!-- Comments can be within an import definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#my_import_cmeta_id">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF>
+        <!-- In between comment #2...-->
+        <units cmeta:id="my_imported_unit_cmeta_id" name="my_imported_unit" units_ref="my_reference_unit">
+            <!-- Comments can be within a unit import,
+ but if kept it will be serialised back in the
+ corresponding import definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_imported_unit_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </units>
+        <!-- In between comment #3...-->
+        <component cmeta:id="my_imported_component_cmeta_id" component_ref="my_reference_component" name="my_imported_component">
+            <!-- Comments can be within a component import,
+ but if kept it will be serialised back in the
+ corresponding import definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_imported_component_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </component>
+    </import>
+    <!-- In between comment #4...-->
+    <units base_units="yes" cmeta:id="my_base_unit_cmeta_id" name="my_base_unit">
+        <!-- Comments can be within a base unit definition,
+ but if kept it will be serialised back in the
+ corresponding model definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#my_base_unit_cmeta_id">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF>
+    </units>
+    <!-- In between comment #5...-->
+    <units cmeta:id="my_unit_cmeta_id" name="my_unit">
+        <!-- Comments can be within a unit definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#my_unit_cmeta_id">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF>
+        <!-- In between comment #6...-->
+        <unit cmeta:id="some_unit_cmeta_id" units="some_unit">
+            <!-- Comments can be within a unit statement,
+ but if kept it will be serialised back in the
+ corresponding unit definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#some_unit_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </unit>
+    </units>
+    <!-- In between comment #7...-->
+    <component cmeta:id="my_component_cmeta_id" name="my_component">
+        <!-- Comments can be within a component definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#my_component_cmeta_id">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF>
+        <!-- In between comment #8...-->
+        <variable cmeta:id="my_variable1_cmeta_id" name="my_variable1" units="my_unit">
+            <!-- Comments can be within a variable declaration,
+ but if kept it will be serialised back in the
+ corresponding component definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_variable1_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </variable>
+        <variable cmeta:id="my_variable2_cmeta_id" initial_value="my_variable1" name="my_variable2" units="my_unit"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <!-- In between comment #9...-->
+            <apply id="my_equation1_cmeta_id">
+                <!-- In between comment #10...-->
+                <eq/>
+                <!-- In between comment #11...-->
+                <ci>a</ci>
+                <!-- In between comment #12...-->
+                <cn>5</cn>
+                <!-- In between comment #13...-->
+            </apply>
+            <!-- In between comment #14...-->
+            <apply cellml:id="my_invalid_equation2_cmeta_id">
+                <!-- In between comment #15...-->
+                <eq/>
+                <!-- In between comment #16...-->
+                <ci>a</ci>
+                <!-- In between comment #17...-->
+                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
+                <!-- In between comment #18...-->
+            </apply>
+            <!-- In between comment #19...-->
+            <apply id="my_equation3_cmeta_id">
+                <!-- In between comment #20...-->
+                <eq/>
+                <!-- In between comment #21...-->
+                <ci>a</ci>
+                <!-- In between comment #22...-->
+                <apply>
+                    <!-- In between comment #23...-->
+                    <diff/>
+                    <!-- In between comment #24...-->
+                    <bvar>
+                        <!-- In between comment #25...-->
+                        <ci>t</ci>
+                        <!-- In between comment #26...-->
+                        <degree>
+                            <!-- In between comment #27...-->
+                            <cn cellml:units="dimensionless">2</cn>
+                            <!-- In between comment #28...-->
+                        </degree>
+                        <!-- In between comment #29...-->
+                    </bvar>
+                    <!-- In between comment #30...-->
+                    <ci>f</ci>
+                    <!-- In between comment #31...-->
+                </apply>
+                <!-- In between comment #32...-->
+            </apply>
+            <!-- In between comment #33...-->
+            <apply cmeta:id="my_invalid_equation4_cmeta_id">
+                <!-- In between comment #34...-->
+                <eq/>
+                <!-- In between comment #35...-->
+                <ci>a</ci>
+                <!-- In between comment #36...-->
+                <notanumber/>
+                <!-- In between comment #37...-->
+            </apply>
+            <!-- In between comment #38...-->
+            <apply id="my_equation5_cmeta_id">
+                <!-- In between comment #39...-->
+                <eq/>
+                <!-- In between comment #40...-->
+                <ci>a</ci>
+                <!-- In between comment #41...-->
+                <infinity/>
+                <!-- In between comment #42...-->
+            </apply>
+            <!-- In between comment #43...-->
+            <apply xxx:id="my_invalid_equation6_cmeta_id">
+                <!-- In between comment #44...-->
+                <eq/>
+                <!-- In between comment #45...-->
+                <ci>a</ci>
+                <!-- In between comment #46...-->
+                <apply>
+                    <!-- In between comment #47...-->
+                    <rem/>
+                    <!-- In between comment #48...-->
+                    <ci>b</ci>
+                    <!-- In between comment #49...-->
+                    <ci>c</ci>
+                    <!-- In between comment #50...-->
+                </apply>
+                <!-- In between comment #51...-->
+            </apply>
+            <!-- In between comment #52...-->
+            <apply id="my_equation7_cmeta_id">
+                <!-- In between comment #53...-->
+                <eq/>
+                <!-- In between comment #54...-->
+                <ci>a</ci>
+                <!-- In between comment #55...-->
+                <apply>
+                    <!-- In between comment #56...-->
+                    <min/>
+                    <!-- In between comment #57...-->
+                    <ci>b</ci>
+                    <!-- In between comment #58...-->
+                    <ci>c</ci>
+                    <!-- In between comment #59...-->
+                </apply>
+                <!-- In between comment #60...-->
+            </apply>
+            <!-- In between comment #61...-->
+            <apply id="my_equation8_cmeta_id">
+                <!-- In between comment #62...-->
+                <eq/>
+                <!-- In between comment #63...-->
+                <ci>a</ci>
+                <!-- In between comment #64...-->
+                <apply>
+                    <!-- In between comment #65...-->
+                    <min/>
+                    <!-- In between comment #66...-->
+                    <ci>b</ci>
+                    <!-- In between comment #67...-->
+                    <ci>c</ci>
+                    <!-- In between comment #68...-->
+                    <ci>d</ci>
+                    <!-- In between comment #69...-->
+                </apply>
+                <!-- In between comment #70...-->
+            </apply>
+            <!-- In between comment #71...-->
+            <apply id="my_equation9_cmeta_id">
+                <!-- In between comment #72...-->
+                <eq/>
+                <!-- In between comment #73...-->
+                <ci>a</ci>
+                <!-- In between comment #74...-->
+                <apply>
+                    <!-- In between comment #75...-->
+                    <max/>
+                    <!-- In between comment #76...-->
+                    <ci>b</ci>
+                    <!-- In between comment #77...-->
+                    <ci>c</ci>
+                    <!-- In between comment #78...-->
+                </apply>
+                <!-- In between comment #79...-->
+            </apply>
+            <!-- In between comment #80...-->
+            <apply id="my_equation10_cmeta_id">
+                <!-- In between comment #81...-->
+                <eq/>
+                <!-- In between comment #82...-->
+                <ci>a</ci>
+                <!-- In between comment #83...-->
+                <apply>
+                    <!-- In between comment #84...-->
+                    <max/>
+                    <!-- In between comment #85...-->
+                    <ci>b</ci>
+                    <!-- In between comment #86...-->
+                    <ci>c</ci>
+                    <!-- In between comment #87...-->
+                    <ci>d</ci>
+                    <!-- In between comment #88...-->
+                </apply>
+                <!-- In between comment #89...-->
+            </apply>
+            <!-- In between comment #90...-->
+            <apply id="my_equation11_cmeta_id">
+                <!-- In between comment #91...-->
+                <eq/>
+                <!-- In between comment #92...-->
+                <ci>a</ci>
+                <!-- In between comment #93...-->
+                <apply>
+                    <!-- In between comment #94...-->
+                    <gcd/>
+                    <!-- In between comment #95...-->
+                    <ci>b</ci>
+                    <!-- In between comment #96...-->
+                    <ci>c</ci>
+                    <!-- In between comment #97...-->
+                </apply>
+                <!-- In between comment #98...-->
+            </apply>
+            <!-- In between comment #99...-->
+            <apply id="my_equation12_cmeta_id">
+                <!-- In between comment #100...-->
+                <eq/>
+                <!-- In between comment #101...-->
+                <ci>a</ci>
+                <!-- In between comment #102...-->
+                <apply>
+                    <!-- In between comment #103...-->
+                    <gcd/>
+                    <!-- In between comment #104...-->
+                    <ci>b</ci>
+                    <!-- In between comment #105...-->
+                    <ci>c</ci>
+                    <!-- In between comment #106...-->
+                    <ci>d</ci>
+                    <!-- In between comment #107...-->
+                </apply>
+                <!-- In between comment #108...-->
+            </apply>
+            <!-- In between comment #109...-->
+            <apply id="my_equation13_cmeta_id">
+                <!-- In between comment #110...-->
+                <eq/>
+                <!-- In between comment #111...-->
+                <ci>a</ci>
+                <!-- In between comment #112...-->
+                <apply>
+                    <!-- In between comment #113...-->
+                    <lcm/>
+                    <!-- In between comment #114...-->
+                    <ci>b</ci>
+                    <!-- In between comment #115...-->
+                    <ci>c</ci>
+                    <!-- In between comment #116...-->
+                </apply>
+                <!-- In between comment #117...-->
+            </apply>
+            <!-- In between comment #118...-->
+            <apply id="my_equation14_cmeta_id">
+                <!-- In between comment #119...-->
+                <eq/>
+                <!-- In between comment #120...-->
+                <ci>a</ci>
+                <!-- In between comment #121...-->
+                <apply>
+                    <!-- In between comment #122...-->
+                    <lcm/>
+                    <!-- In between comment #123...-->
+                    <ci>b</ci>
+                    <!-- In between comment #124...-->
+                    <ci>c</ci>
+                    <!-- In between comment #125...-->
+                    <ci>d</ci>
+                    <!-- In between comment #126...-->
+                </apply>
+                <!-- In between comment #127...-->
+            </apply>
+            <!-- In between comment #128...-->
+        </math>
+    </component>
+    <!-- In between comment #129...-->
+    <group cmeta:id="my_group_cmeta_id">
+        <!-- Comments can be within a group definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#my_group_cmeta_id">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF>
+        <!-- In between comment #130...-->
+        <relationship_ref cmeta:id="my_containment1_cmeta_id" name="my_containment1" relationship="containment">
+            <!-- Comments can be within a relationship reference,
+ but if kept it will be serialised back in the
+ corresponding group definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_containment1_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </relationship_ref>
+        <!-- In between comment #131...-->
+        <relationship_ref cmeta:id="my_containment2_cmeta_id" name="my_containment2" relationship="containment">
+            <!-- Comments can be within a relationship reference,
+ but if kept it will be serialised back in the
+ corresponding group definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_containment2_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </relationship_ref>
+        <!-- In between comment #132...-->
+        <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation">
+            <!-- Comments can be within a relationship reference,
+ but if kept it will be serialised back in the
+ corresponding group definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_encapsulation_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </relationship_ref>
+        <!-- In between comment #133...-->
+        <component_ref cmeta:id="my_component1_cmeta_id" component="my_component1">
+            <!-- Comments can be within a component reference
+ with component reference children...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_component1_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+            <!-- In between comment #134...-->
+            <component_ref cmeta:id="my_component11_cmeta_id" component="my_component11">
+                <!-- Comments can be within a component reference
+ without component reference children, but
+ if kept it will be serialised back in the
+ corresponding group definition...-->
+                <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="#my_component11_cmeta_id">
+                        <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </component_ref>
+            <!-- In between comment #135...-->
+            <component_ref cmeta:id="my_component12_cmeta_id" component="my_component12">
+                <!-- Comments can be within a component reference
+ without component reference children, but
+ if kept it will be serialised back in the
+ corresponding group definition...-->
+                <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="#my_component12_cmeta_id">
+                        <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </component_ref>
+            <component_ref component="my_component13"/>
+        </component_ref>
+        <!-- In between comment #136...-->
+        <component_ref cmeta:id="my_component2_cmeta_id" component="my_component2">
+            <!-- Comments can be within a component reference
+ with component reference children...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_component2_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+            <!-- In between comment #137...-->
+            <component_ref cmeta:id="my_component21_cmeta_id" component="my_component21">
+                <!-- Comments can be within a component reference
+ without component reference children, but
+ if kept it will be serialised back in the
+ corresponding group definition...-->
+                <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="#my_component21_cmeta_id">
+                        <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </component_ref>
+            <!-- In between comment #138...-->
+            <component_ref cmeta:id="my_component22_cmeta_id" component="my_component22">
+                <!-- Comments can be within a component reference
+ without component reference children, but
+ if kept it will be serialised back in the
+ corresponding group definition...-->
+                <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="#my_component22_cmeta_id">
+                        <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </component_ref>
+            <component_ref component="my_component23"/>
+        </component_ref>
+    </group>
+    <!-- In between comment #139...-->
+    <connection cmeta:id="my_connection_cmeta_id">
+        <!-- Comments can be within a connection definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#my_connection_cmeta_id">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF>
+        <!-- In between comment #140...-->
+        <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2">
+            <!-- Comments can be within a component mapping,
+ but if kept it will be serialised back in the
+ corresponding connection definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_map_components_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </map_components>
+        <!-- In between comment #141...-->
+        <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable12">
+            <!-- Comments can be within a variable mapping,
+ but if kept it will be serialised back in the
+ corresponding connection definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_map_variables1_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </map_variables>
+        <!-- In between comment #142...-->
+        <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable21" variable_2="my_variable22">
+            <!-- Comments can be within a variable mapping,
+ but if kept it will be serialised back in the
+ corresponding connection definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#my_map_variables2_cmeta_id">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF>
+        </map_variables>
+        <map_variables variable_1="my_variable31" variable_2="my_variable32"/>
+        <!-- In between comment #143...-->
+    </connection>
+    <!-- In between comment #144...-->
+    <component cmeta:id="" name="my_component_with_an_empty_cmeta_id">
+    </component>
+    <!-- In between comment #145...-->
+</model>

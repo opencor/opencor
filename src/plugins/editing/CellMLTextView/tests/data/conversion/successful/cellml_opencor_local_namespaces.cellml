@@ -8,16 +8,16 @@
 <!--&#45;&#45;-->
 <!--- -->
 <!-- -->
-<model cmeta:id="cellml_1_1_cmeta_id" name="cellml_1_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<model cmeta:id="cellml_1_1_cmeta_id" name="cellml_1_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- A comment can fit on one line...-->
     <!-- A comment can also fit
  on one, two or even
  more lines...-->
-	<rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-		<rdf:Description rdf:about="#cellml_1_1_cmeta_id">
-			<bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
-		</rdf:Description>
-	</rdf:RDF>
+    <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="#cellml_1_1_cmeta_id">
+            <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+        </rdf:Description>
+    </rdf:RDF>
     <!-- In between comment #1...-->
     <import cmeta:id="my_import_cmeta_id" xlink:href="imported_model.cellml">
         <!-- Comments can be within an import definition...-->
@@ -27,7 +27,7 @@
             </rdf:Description>
         </rdf:RDF>
         <!-- In between comment #2...-->
-        <units cmeta:id="my_imported_unit_cmeta_id" name="my_imported_unit" units_ref="my_reference_unit">
+        <units cmeta:id="my_imported_unit_cmeta_id" name="my_imported_unit" units_ref="my_reference_unit" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a unit import,
  but if kept it will be serialised back in the
  corresponding import definition...-->
@@ -38,7 +38,7 @@
             </rdf:RDF>
         </units>
         <!-- In between comment #3...-->
-        <component cmeta:id="my_imported_component_cmeta_id" component_ref="my_reference_component" name="my_imported_component">
+        <component cmeta:id="my_imported_component_cmeta_id" component_ref="my_reference_component" name="my_imported_component" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a component import,
  but if kept it will be serialised back in the
  corresponding import definition...-->
@@ -50,7 +50,7 @@
         </component>
     </import>
     <!-- In between comment #4...-->
-    <units base_units="yes" cmeta:id="my_base_unit_cmeta_id" name="my_base_unit">
+    <units base_units="yes" cmeta:id="my_base_unit_cmeta_id" name="my_base_unit" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
         <!-- Comments can be within a base unit definition,
  but if kept it will be serialised back in the
  corresponding model definition...-->
@@ -69,7 +69,7 @@
             </rdf:Description>
         </rdf:RDF>
         <!-- In between comment #6...-->
-        <unit cmeta:id="some_unit_cmeta_id" units="some_unit">
+        <unit cmeta:id="some_unit_cmeta_id" units="some_unit" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a unit statement,
  but if kept it will be serialised back in the
  corresponding unit definition...-->
@@ -89,7 +89,7 @@
             </rdf:Description>
         </rdf:RDF>
         <!-- In between comment #8...-->
-        <variable cmeta:id="my_variable1_cmeta_id" name="my_variable1" units="my_unit">
+        <variable cmeta:id="my_variable1_cmeta_id" name="my_variable1" units="my_unit" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a variable declaration,
  but if kept it will be serialised back in the
  corresponding component definition...-->
@@ -99,7 +99,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </variable>
-        <variable cmeta:id="my_variable2_cmeta_id" initial_value="my_variable1" name="my_variable2" units="my_unit"/>
+        <variable cmeta:id="my_variable2_cmeta_id" initial_value="my_variable1" name="my_variable2" units="my_unit" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <!-- In between comment #9...-->
             <apply id="my_equation1_cmeta_id">
@@ -112,7 +112,7 @@
                 <!-- In between comment #13...-->
             </apply>
             <!-- In between comment #14...-->
-            <apply id="my_equation2_cmeta_id">
+            <apply cellml:id="my_invalid_equation2_cmeta_id" xmlns:cellml="http://www.cellml.org/cellml/1.1#">
                 <!-- In between comment #15...-->
                 <eq/>
                 <!-- In between comment #16...-->
@@ -150,7 +150,7 @@
                 <!-- In between comment #32...-->
             </apply>
             <!-- In between comment #33...-->
-            <apply id="my_equation4_cmeta_id">
+            <apply cmeta:id="my_invalid_equation4_cmeta_id" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
                 <!-- In between comment #34...-->
                 <eq/>
                 <!-- In between comment #35...-->
@@ -170,7 +170,7 @@
                 <!-- In between comment #42...-->
             </apply>
             <!-- In between comment #43...-->
-            <apply id="my_equation6_cmeta_id">
+            <apply xxx:id="my_invalid_equation6_cmeta_id">
                 <!-- In between comment #44...-->
                 <eq/>
                 <!-- In between comment #45...-->
@@ -351,7 +351,7 @@
             </rdf:Description>
         </rdf:RDF>
         <!-- In between comment #130...-->
-        <relationship_ref cmeta:id="my_containment1_cmeta_id" name="my_containment1" relationship="containment">
+        <relationship_ref cmeta:id="my_containment1_cmeta_id" name="my_containment1" relationship="containment" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
  corresponding group definition...-->
@@ -362,7 +362,7 @@
             </rdf:RDF>
         </relationship_ref>
         <!-- In between comment #131...-->
-        <relationship_ref cmeta:id="my_containment2_cmeta_id" name="my_containment2" relationship="containment">
+        <relationship_ref cmeta:id="my_containment2_cmeta_id" name="my_containment2" relationship="containment" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
  corresponding group definition...-->
@@ -373,7 +373,7 @@
             </rdf:RDF>
         </relationship_ref>
         <!-- In between comment #132...-->
-        <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation">
+        <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
  corresponding group definition...-->
@@ -393,7 +393,7 @@
                 </rdf:Description>
             </rdf:RDF>
             <!-- In between comment #134...-->
-            <component_ref cmeta:id="my_component11_cmeta_id" component="my_component11">
+            <component_ref cmeta:id="my_component11_cmeta_id" component="my_component11" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
                 <!-- Comments can be within a component reference
  without component reference children, but
  if kept it will be serialised back in the
@@ -405,7 +405,7 @@
                 </rdf:RDF>
             </component_ref>
             <!-- In between comment #135...-->
-            <component_ref cmeta:id="my_component12_cmeta_id" component="my_component12">
+            <component_ref cmeta:id="my_component12_cmeta_id" component="my_component12" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
                 <!-- Comments can be within a component reference
  without component reference children, but
  if kept it will be serialised back in the
@@ -428,7 +428,7 @@
                 </rdf:Description>
             </rdf:RDF>
             <!-- In between comment #137...-->
-            <component_ref cmeta:id="my_component21_cmeta_id" component="my_component21">
+            <component_ref cmeta:id="my_component21_cmeta_id" component="my_component21" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
                 <!-- Comments can be within a component reference
  without component reference children, but
  if kept it will be serialised back in the
@@ -440,7 +440,7 @@
                 </rdf:RDF>
             </component_ref>
             <!-- In between comment #138...-->
-            <component_ref cmeta:id="my_component22_cmeta_id" component="my_component22">
+            <component_ref cmeta:id="my_component22_cmeta_id" component="my_component22" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
                 <!-- Comments can be within a component reference
  without component reference children, but
  if kept it will be serialised back in the
@@ -463,7 +463,7 @@
             </rdf:Description>
         </rdf:RDF>
         <!-- In between comment #140...-->
-        <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2">
+        <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a component mapping,
  but if kept it will be serialised back in the
  corresponding connection definition...-->
@@ -474,7 +474,7 @@
             </rdf:RDF>
         </map_components>
         <!-- In between comment #141...-->
-        <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable12">
+        <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable12" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a variable mapping,
  but if kept it will be serialised back in the
  corresponding connection definition...-->
@@ -485,7 +485,7 @@
             </rdf:RDF>
         </map_variables>
         <!-- In between comment #142...-->
-        <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable21" variable_2="my_variable22">
+        <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable21" variable_2="my_variable22" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
             <!-- Comments can be within a variable mapping,
  but if kept it will be serialised back in the
  corresponding connection definition...-->
@@ -499,7 +499,7 @@
         <!-- In between comment #143...-->
     </connection>
     <!-- In between comment #144...-->
-    <component cmeta:id="" name="my_component_with_an_empty_cmeta_id">
+    <component cmeta:id="" name="my_component_with_an_empty_cmeta_id" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     </component>
     <!-- In between comment #145...-->
 </model>

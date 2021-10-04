@@ -3,7 +3,7 @@
     <component name="component">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
-            	<exp/>
+                <exp/>
             </apply>
         </math>
     </component>

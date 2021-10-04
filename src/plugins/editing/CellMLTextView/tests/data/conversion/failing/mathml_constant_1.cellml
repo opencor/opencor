@@ -3,8 +3,8 @@
     <component name="component">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <pi>
-            	<pi/>
-        	</pi>
+                <pi/>
+            </pi>
         </math>
     </component>
 </model>

@@ -82,7 +82,7 @@
         <variable name="Cm" private_interface="out" public_interface="in" units="uF_per_cmsq"/>
         <variable name="time" private_interface="out" public_interface="in" units="ms"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="V_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="V_calculation">
                 <eq/>
                 <apply>
                     <diff/>
@@ -108,7 +108,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="minus_V_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="minus_V_calculation">
                 <eq/>
                 <ci>minus_V</ci>
                 <apply>
@@ -125,7 +125,7 @@
         <variable name="stimDuration" public_interface="in" units="ms"/>
         <variable name="stimCurrent" public_interface="in" units="uA_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="stimulus_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="stimulus_calculation">
                 <eq/>
                 <ci>IStim</ci>
                 <piecewise>
@@ -178,7 +178,7 @@
         <variable name="gNa" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable name="gNa_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="INa_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="INa_calculation">
                 <eq/>
                 <ci>INa</ci>
                 <apply>
@@ -193,7 +193,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="gNa_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="gNa_calculation">
                 <eq/>
                 <ci>gNa</ci>
                 <apply>
@@ -219,7 +219,7 @@
         <variable name="gK" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable name="gK_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="IK_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="IK_calculation">
                 <eq/>
                 <ci>IK</ci>
                 <apply>
@@ -234,7 +234,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="gK_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="gK_calculation">
                 <eq/>
                 <ci>gK</ci>
                 <apply>
@@ -255,7 +255,7 @@
         <variable name="Vleak" private_interface="out" public_interface="in" units="mV"/>
         <variable name="gleak_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="Ileak_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="Ileak_calculation">
                 <eq/>
                 <ci>Ileak</ci>
                 <apply>
@@ -274,7 +274,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="alpha_m_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="alpha_m_calculation">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -312,7 +312,7 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="beta_m_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="beta_m_calculation">
                 <eq/>
                 <ci>beta</ci>
                 <apply>
@@ -334,7 +334,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="alpha_h_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="alpha_h_calculation">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -356,7 +356,7 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="beta_h_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="beta_h_calculation">
                 <eq/>
                 <ci>beta</ci>
                 <apply>
@@ -458,7 +458,7 @@
         <variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="alpha_n_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="alpha_n_calculation">
                 <eq/>
                 <ci>alpha</ci>
                 <apply>
@@ -496,7 +496,7 @@
         <variable name="beta" private_interface="out" public_interface="out" units="per_ms"/>
         <variable name="V" private_interface="out" public_interface="in" units="mV"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
-            <apply cmeta:id="beta_n_calculation" xmlns:cmeta="http://www.cellml.org/cellml/1.0#">
+            <apply id="beta_n_calculation">
                 <eq/>
                 <ci>beta</ci>
                 <apply>

@@ -25,7 +25,7 @@
         <variable name="gK" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
         <variable name="gK_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="IK_calculation">
+            <apply id="IK_calculation">
                 <eq/>
                 <ci>IK</ci>
                 <apply>
@@ -40,7 +40,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply cmeta:id="gK_calculation">
+            <apply id="gK_calculation">
                 <eq/>
                 <ci>gK</ci>
                 <apply>
