@@ -151,6 +151,7 @@ macro(generate_documentation BUILD_OPENCOR)
             https://github.com/opencor/general-documentation
         CMAKE_ARGS
             -DMODE=${CMAKE_PROJECT_NAME}
+            -DENABLE_DOWNLOADS=${BUILD_OPENCOR}
         INSTALL_COMMAND
             ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/GeneralDocumentationBuild/html
                                                ${PROJECT_BUILD_DIR}/doc/html
