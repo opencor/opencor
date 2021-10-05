@@ -1,14 +1,14 @@
 name: cd
 
 on:
-  push:
-    branches: [ master ]
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 jobs:
   cd:
     name: OpenCOR's documentation
-    if: ${{ github.event.head_commit.message == 'New snapshot.' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out OpenCOR
