@@ -46,7 +46,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ../Qt
-          key: ${{ matrix.name }}-Qt
+          key: ${{ matrix.os }}-${{ matrix.mode }}-Qt-${{ github.sha }}
+          restore-keys: ${{ matrix.os }}-${{ matrix.mode }}-Qt
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
@@ -59,13 +60,13 @@ jobs:
       - name: Install buildcache
         uses: mikehardy/buildcache-action@v1
         with:
-          cache_key: ${{ matrix.name }}
+          cache_key: ${{ matrix.os }}-${{ matrix.mode }}
       - name: Cache external dependencies
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/ext
-          key: ${{ matrix.name }}-ExternalDependencies-${{ github.sha }}
-          restore-keys: ${{ matrix.name }}-ExternalDependencies
+          key: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies-${{ github.sha }}
+          restore-keys: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies
       - name: Build and test OpenCOR (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
