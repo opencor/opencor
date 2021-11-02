@@ -439,20 +439,6 @@ else()
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
 
-# Allow other packages to use our scripts
-
-if(WIN32)
-    set(SPHINX_EXECUTABLE sphinx-build.exe)
-else()
-    set(SPHINX_EXECUTABLE sphinx-build)
-endif()
-
-set(SPHINX_EXECUTABLE
-    ${CMAKE_COMMAND} -E env PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}
-                        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_EXECUTABLE}
-    PARENT_SCOPE
-)
-
 # Add the plugin
 
 add_plugin(PythonPackages

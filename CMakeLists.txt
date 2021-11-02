@@ -873,6 +873,19 @@ set(DOCUMENTATION_BUILD_TARGET DocumentationBuild)
 
 add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
 
+# Check whether we have everything to build our documentation
+
+find_package(Python COMPONENTS Interpreter)
+
+find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
+
+check_python_package(sphinx-copybutton PYTHON_SPHINX_COPY_BUTTON_AVAILABLE)
+check_python_package(sphinx-inline-tabs PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
+
+if(SPHINX_EXECUTABLE AND PYTHON_SPHINX_COPY_BUTTON_AVAILABLE AND PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
+    set(CAN_GENERATE_DOCUMENTATION TRUE)
+endif()
+
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
@@ -902,6 +915,10 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         #       it in that case (see
         #       https://github.com/opencor/opencor/issues/1255#issuecomment-550605710)...
 
+        if(CAN_GENERATE_DOCUMENTATION)
+            set(MISCELLANEOUS_HELPWINDOW miscellaneous/HelpWindow)
+        endif()
+
         if(RELEASE_MODE OR NOT WIN32)
             set(MISCELLANEOUS_PYTHONCONSOLEWINDOW miscellaneous/PythonConsoleWindow)
         endif()
@@ -926,7 +943,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
             miscellaneous/Compiler
             miscellaneous/Core
-            miscellaneous/HelpWindow
+            ${MISCELLANEOUS_HELPWINDOW}
             miscellaneous/JupyterKernel
             ${MISCELLANEOUS_PYTHONCONSOLEWINDOW}
             miscellaneous/PythonShell
@@ -1046,10 +1063,9 @@ if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
            RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
 endif()
 
-# Generate our documentation, if we are not building Python
-# Note: we need Python because we rely on Sphinx to generate our documentation...
+# Generate our documentation
 
-if(USE_PREBUILT_PYTHON_PACKAGE)
+if(CAN_GENERATE_DOCUMENTATION)
     generate_documentation(TRUE)
 endif()
 
