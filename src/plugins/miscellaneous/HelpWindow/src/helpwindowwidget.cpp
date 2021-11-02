@@ -116,6 +116,10 @@ HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHel
 
 //==============================================================================
 
+static const char *HelpRoot = "qthelp://opencor/doc/html/user/";
+
+//==============================================================================
+
 QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperation,
                                                               const QNetworkRequest &pRequest,
                                                               QIODevice *pOutgoingData)
@@ -129,7 +133,7 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
                           mErrorMessageTemplate.arg(tr("Error"),
-                                                    tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
+                                                    tr("The following help file could not be found:")+" <strong>"+url.toString().remove(HelpRoot)+"</strong>.",
                                                     tr(R"(Please <a href="contactUs.html">contact us</a> about this error.)"),
                                                     Core::copyright()).toUtf8();
 
@@ -168,7 +172,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     //       page is wrong and OpenCOR is in a non-English locale then our
     //       contents will be empty upon starting OpenCOR)...
 
-    setHomePage("qthelp://opencor/doc/html/user/index.html");
+    setHomePage(QString("%1index.html").arg(HelpRoot));
 
     webView()->setUrl(homePage());
 }
