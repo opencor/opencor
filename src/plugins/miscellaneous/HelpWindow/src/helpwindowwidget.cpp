@@ -78,7 +78,7 @@ qint64 HelpWindowNetworkReply::bytesAvailable() const
 
 qint64 HelpWindowNetworkReply::readData(char *pData, qint64 pMaxlen)
 {
-    // Determine the lenght of the data to be read
+    // Determine the length of the data to be read
 
     qint64 len = qMin(qint64(mData.length()), pMaxlen);
 
