@@ -83,8 +83,8 @@
         <translation>La page d&apos;aide suivante n&apos;a pas pu être trouvée :</translation>
     </message>
     <message>
-        <source>Please &lt;a href=&quot;contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
-        <translation>Veuillez &lt;a href=&quot;contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+        <source>Please &lt;a href=&quot;https://opencor.ws/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;https://opencor.ws/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
     </message>
 </context>
 <context>
