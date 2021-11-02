@@ -174,6 +174,7 @@ macro(generate_documentation BUILD_OPENCOR)
             ${CMAKE_SOURCE_DIR}/ext/doc/general
         GIT_REPOSITORY
             https://github.com/opencor/general-documentation
+        GIT_SHALLOW
         CMAKE_ARGS
             -DMODE=${CMAKE_PROJECT_NAME}
             -DENABLE_DOWNLOADS=${BUILD_OPENCOR}
@@ -215,6 +216,7 @@ macro(build_documentation DOCUMENTATION_NAME BUILD_OPENCOR)
             ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
         GIT_REPOSITORY
             https://github.com/opencor/opencor-${DOCUMENTATION_NAME}-documentation
+        GIT_SHALLOW
         CMAKE_ARGS
             ${DOCUMENTATION_CMAKE_ARGS}
         LIST_SEPARATOR

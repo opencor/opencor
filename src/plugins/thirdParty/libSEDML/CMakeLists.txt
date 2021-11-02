@@ -111,6 +111,7 @@ else()
             https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS

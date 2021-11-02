@@ -173,6 +173,7 @@ else()
                 https://github.com/pypa/setuptools.git
             GIT_TAG
                 ${SETUPTOOLS_GIT_TAG}
+            GIT_SHALLOW
             CONFIGURE_COMMAND
                 ${PYTHON_EXECUTABLE} bootstrap.py
             BUILD_COMMAND
@@ -197,6 +198,7 @@ else()
                 https://github.com/opencor/pip.git
             GIT_TAG
                 opencor_v${PIP_GIT_TAG}
+            GIT_SHALLOW
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND

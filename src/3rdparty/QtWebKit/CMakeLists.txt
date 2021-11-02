@@ -155,6 +155,7 @@ else()
                 https://github.com/opencor/libjpeg-turbo
             GIT_TAG
                 ${GIT_TAG_LIBJPEG}
+            GIT_SHALLOW
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
@@ -179,6 +180,7 @@ else()
                 https://github.com/opencor/libpng
             GIT_TAG
                 ${GIT_TAG_LIBPNG}
+            GIT_SHALLOW
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
@@ -204,6 +206,7 @@ else()
                 https://github.com/opencor/zlib
             GIT_TAG
                 ${GIT_TAG_ZLIB}
+            GIT_SHALLOW
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
@@ -258,6 +261,7 @@ else()
             https://github.com/opencor/qtwebkit
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS

@@ -123,6 +123,7 @@ else()
             https://github.com/opencor/typedobject
         GIT_TAG
             ${GIT_TAG_TYPEDOBJECT}
+        GIT_SHALLOW
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
@@ -146,6 +147,7 @@ else()
             https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG_BIOSIGNALML}
+        GIT_SHALLOW
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS

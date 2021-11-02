@@ -60,6 +60,7 @@ else()
             https://github.com/opencor/icu
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CONFIGURE_COMMAND
             <SOURCE_DIR>/source/runConfigureICU Linux --prefix=<INSTALL_DIR>
         BUILD_BYPRODUCTS
