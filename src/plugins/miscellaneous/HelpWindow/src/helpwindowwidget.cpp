@@ -88,6 +88,8 @@ qint64 HelpWindowNetworkReply::readData(char *pData, qint64 pMaxlen)
         memcpy(pData, mData.constData(), size_t(len));
 
         mData.remove(0, int(len));
+    } else {
+        pData = nullptr;
     }
 
     // Should there be no data left to read, then let ourselves know immediately
