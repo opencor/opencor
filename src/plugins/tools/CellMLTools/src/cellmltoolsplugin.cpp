@@ -451,7 +451,7 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
                                                                    (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?"Error":"Warning")
                                                               .arg(cellmlFileIssue.line())
                                                               .arg(cellmlFileIssue.column())
-                                                              .arg(Core::plainString(cellmlFileIssue.formattedMessage()));
+                                                              .arg(cellmlFileIssue.formattedMessage());
                     }
 
                     break;
