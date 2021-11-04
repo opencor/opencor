@@ -22,6 +22,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "cellmlfileissue.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -132,7 +133,9 @@ QString CellmlFileIssue::formattedMessage() const
     // Return the issue's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
 
-    return mMessage[0].toUpper()+mMessage.right(mMessage.size()-1)+".";
+    QString plainMessage = Core::plainString(mMessage);
+
+    return plainMessage[0].toUpper()+plainMessage.right(plainMessage.size()-1)+".";
 }
 
 //==============================================================================
