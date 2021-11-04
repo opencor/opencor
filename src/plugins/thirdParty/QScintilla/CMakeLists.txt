@@ -117,6 +117,7 @@ else()
             https://github.com/opencor/qscintilla
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CONFIGURE_COMMAND
             ${QMAKE_COMMAND} <SOURCE_DIR>/src OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND

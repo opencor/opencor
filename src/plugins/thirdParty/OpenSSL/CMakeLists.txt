@@ -169,6 +169,7 @@ else()
             https://github.com/opencor/openssl
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CONFIGURE_COMMAND
             ${PERL_EXECUTABLE} Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND

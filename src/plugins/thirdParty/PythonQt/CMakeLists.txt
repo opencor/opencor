@@ -150,6 +150,7 @@ else()
             https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CONFIGURE_COMMAND
             ${QMAKE_COMMAND} ${QMAKE_DEBUG_OPTION} ${QMAKE_INCLUDE_PATH} ${QMAKE_LFLAGS_OPTION} PythonQtOpenCOR.pro
         BUILD_COMMAND

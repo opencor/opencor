@@ -259,6 +259,7 @@ else()
             https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
             -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}

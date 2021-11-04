@@ -141,6 +141,31 @@ endmacro()
 
 #===============================================================================
 
+macro(check_python_package PACKAGE AVAILABLE)
+    set(PACKAGE_VARIABLE "HAS_PYTHON_${PACKAGE}")
+
+    string(TOUPPER "${PACKAGE_VARIABLE}" PACKAGE_VARIABLE)
+    string(REPLACE "-" "_" PACKAGE_VARIABLE "${PACKAGE_VARIABLE}")
+
+    message(STATUS "Performing Test ${PACKAGE_VARIABLE}")
+
+    if(Python_EXECUTABLE)
+        execute_process(COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/check_python_package.py ${PACKAGE}
+                        RESULT_VARIABLE RESULT
+                        OUTPUT_QUIET ERROR_QUIET)
+    endif()
+
+    if(Python_EXECUTABLE AND RESULT EQUAL 0)
+        set(${AVAILABLE} TRUE)
+
+        message(STATUS "Performing Test ${PACKAGE_VARIABLE} - Success")
+    else()
+        message(STATUS "Performing Test ${PACKAGE_VARIABLE} - Failed")
+    endif()
+endmacro()
+
+#===============================================================================
+
 macro(generate_documentation BUILD_OPENCOR)
     # General documentation
 
@@ -149,6 +174,7 @@ macro(generate_documentation BUILD_OPENCOR)
             ${CMAKE_SOURCE_DIR}/ext/doc/general
         GIT_REPOSITORY
             https://github.com/opencor/general-documentation
+        GIT_SHALLOW
         CMAKE_ARGS
             -DMODE=${CMAKE_PROJECT_NAME}
             -DENABLE_DOWNLOADS=${BUILD_OPENCOR}
@@ -174,49 +200,37 @@ endmacro()
 
 macro(build_documentation DOCUMENTATION_NAME BUILD_OPENCOR)
     # Build the given documentation as an external project and have it copied to
-    # our final documentation directory, but only if we have a target for our
-    # Python and PythonPackages plugins (since we need both Python and Sphinx)
+    # our final documentation directory
 
-    if((TARGET PythonPlugin AND TARGET PythonPackagesPlugin) OR NOT ${BUILD_OPENCOR})
-        set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
+    set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
 
-        if(${BUILD_OPENCOR})
-            string(REPLACE ";" "|"
-                   DOCUMENTATION_SPHINX_EXECUTABLE "${SPHINX_EXECUTABLE}")
-
-            set(DOCUMENTATION_CMAKE_ARGS
-                -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
-                -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
-            )
-        endif()
-
-        ExternalProject_Add(${DOCUMENTATION_BUILD}
-            SOURCE_DIR
-                ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
-            GIT_REPOSITORY
-                https://github.com/opencor/opencor-${DOCUMENTATION_NAME}-documentation
-            CMAKE_ARGS
-                ${DOCUMENTATION_CMAKE_ARGS}
-            LIST_SEPARATOR
-                |
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${DOCUMENTATION_BUILD}/html
-                                                   ${PROJECT_BUILD_DIR}/doc/html/${DOCUMENTATION_NAME}
+    if(${BUILD_OPENCOR})
+        set(DOCUMENTATION_CMAKE_ARGS
+            -DPYTHON_EXECUTABLE=${Python_EXECUTABLE}
+            -DSPHINX_EXECUTABLE=${SPHINX_EXECUTABLE}
         )
+    endif()
 
-        # Add some dependencies if we are building OpencOR
+    ExternalProject_Add(${DOCUMENTATION_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
+        GIT_REPOSITORY
+            https://github.com/opencor/opencor-${DOCUMENTATION_NAME}-documentation
+        GIT_SHALLOW
+        CMAKE_ARGS
+            ${DOCUMENTATION_CMAKE_ARGS}
+        LIST_SEPARATOR
+            |
+        INSTALL_COMMAND
+            ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${DOCUMENTATION_BUILD}/html
+                                                ${PROJECT_BUILD_DIR}/doc/html/${DOCUMENTATION_NAME}
+    )
 
-        if(${BUILD_OPENCOR})
-            # Make our local target depend on having Python fully installed
+    # Make our documentation build target depend on our local target, if we are
+    # building OpencOR
 
-            add_dependencies(${DOCUMENTATION_BUILD} ${PYTHON_DEPENDENCIES})
-
-            # Make our local target depend on our project build target and make
-            # our documentation build target depend on our local target
-
-            add_dependencies(${DOCUMENTATION_BUILD} ${PROJECT_BUILD_TARGET})
-            add_dependencies(${DOCUMENTATION_BUILD_TARGET} ${DOCUMENTATION_BUILD})
-        endif()
+    if(${BUILD_OPENCOR})
+        add_dependencies(${DOCUMENTATION_BUILD_TARGET} ${DOCUMENTATION_BUILD})
     endif()
 endmacro()
 

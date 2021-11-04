@@ -44,18 +44,17 @@ namespace HelpWindow {
 
 //==============================================================================
 
-HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
-                                               const QByteArray &pData) :
+HelpWindowNetworkReply::HelpWindowNetworkReply(const QByteArray &pData) :
     mData(pData)
 {
     // Set a few things for the network reply
 
-    setRequest(pRequest);
     setOpenMode(QIODevice::ReadOnly);
 
     // Let ourselves know immediately that data is available for reading
 
     QTimer::singleShot(0, this, &HelpWindowNetworkReply::readyRead);
+    QTimer::singleShot(0, this, &HelpWindowNetworkReply::finished);
 }
 
 //==============================================================================
@@ -71,35 +70,33 @@ qint64 HelpWindowNetworkReply::bytesAvailable() const
 {
     // Return the size of the data which is available for reading
 
-    return mData.length()+QNetworkReply::bytesAvailable();
+    return mData.length()-mOffset+QNetworkReply::bytesAvailable();
 }
 
 //==============================================================================
 
 qint64 HelpWindowNetworkReply::readData(char *pData, qint64 pMaxlen)
 {
-    // Determine the lenght of the data to be read
+    // Make sure that we still have some data to read
 
-    qint64 len = qMin(qint64(mData.length()), pMaxlen);
+    qint64 dataLength = qint64(mData.length());
 
-    // Read the data, should there be some to read
+    if (mOffset >= dataLength) {
+        pData = nullptr;
 
-    if (len != 0) {
-        memcpy(pData, mData.constData(), size_t(len));
-
-        mData.remove(0, int(len));
+        return -1;
     }
 
-    // Should there be no data left to read, then let ourselves know immediately
-    // that we are done
+    // Determine the length of the data to read, read it and return how much of
+    // it we read
 
-    if (mData.isEmpty()) {
-        QTimer::singleShot(0, this, &HelpWindowNetworkReply::finished);
-    }
+    qint64 res = qMin(dataLength-mOffset, pMaxlen);
 
-    // Return the size of the data which was read
+    memcpy(pData, mData.constData()+mOffset, size_t(res));
 
-    return len;
+    mOffset += res;
+
+    return res;
 }
 
 //==============================================================================
@@ -116,6 +113,10 @@ HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHel
 
 //==============================================================================
 
+static const char *HelpRoot = "qthelp://opencor/doc/html/user/";
+
+//==============================================================================
+
 QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperation,
                                                               const QNetworkRequest &pRequest,
                                                               QIODevice *pOutgoingData)
@@ -123,19 +124,17 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
     Q_UNUSED(pOperation)
     Q_UNUSED(pOutgoingData)
 
-    // Retrieve, if possible, the requested document
+    // Retrieve and return, if possible, the requested document
 
     QUrl url = pRequest.url();
-    QByteArray data = mHelpEngine->findFile(url).isValid()?
-                          mHelpEngine->fileData(url):
-                          mErrorMessageTemplate.arg(tr("Error"),
-                                                    tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
-                                                    tr(R"(Please <a href="contactUs.html">contact us</a> about this error.)"),
-                                                    Core::copyright()).toUtf8();
+    QByteArray data = mHelpEngine->fileData(url);
 
-    // Return the requested document or an error message
-
-    return new HelpWindowNetworkReply(pRequest, data);
+    return new HelpWindowNetworkReply(data.isEmpty()?
+                                          mErrorMessageTemplate.arg(tr("Error"),
+                                                                    tr("The following help file could not be found:")+" <strong>"+url.toString().remove(HelpRoot)+"</strong>.",
+                                                                    tr(R"(Please <a href="https://opencor.ws/contactUs.html">contact us</a> about this error.)"),
+                                                                    Core::copyright()).toUtf8():
+                                          data);
 }
 
 //==============================================================================
@@ -168,7 +167,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     //       page is wrong and OpenCOR is in a non-English locale then our
     //       contents will be empty upon starting OpenCOR)...
 
-    setHomePage("qthelp://opencor/doc/html/user/index.html");
+    setHomePage(QString("%1index.html").arg(HelpRoot));
 
     webView()->setUrl(homePage());
 }

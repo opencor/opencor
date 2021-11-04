@@ -173,6 +173,7 @@ else()
                 https://github.com/pypa/setuptools.git
             GIT_TAG
                 ${SETUPTOOLS_GIT_TAG}
+            GIT_SHALLOW
             CONFIGURE_COMMAND
                 ${PYTHON_EXECUTABLE} bootstrap.py
             BUILD_COMMAND
@@ -197,6 +198,7 @@ else()
                 https://github.com/opencor/pip.git
             GIT_TAG
                 opencor_v${PIP_GIT_TAG}
+            GIT_SHALLOW
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND
@@ -438,20 +440,6 @@ else()
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
-
-# Allow other packages to use our scripts
-
-if(WIN32)
-    set(SPHINX_EXECUTABLE sphinx-build.exe)
-else()
-    set(SPHINX_EXECUTABLE sphinx-build)
-endif()
-
-set(SPHINX_EXECUTABLE
-    ${CMAKE_COMMAND} -E env PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}
-                        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_EXECUTABLE}
-    PARENT_SCOPE
-)
 
 # Add the plugin
 

@@ -52,6 +52,7 @@ else()
             https://github.com/opencor/mesa
         GIT_TAG
             ${GIT_TAG}
+        GIT_SHALLOW
         CONFIGURE_COMMAND
             meson build -Dbuildtype=release -Ddri-drivers= -Ddri3=disabled -Dgallium-drivers=swrast -Dglx=gallium-xlib -Dllvm=disabled -Doptimization=3 -Dplatforms=x11 -Dvulkan-drivers=
         BUILD_COMMAND
