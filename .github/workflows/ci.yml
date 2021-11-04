@@ -93,7 +93,7 @@ jobs:
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install Sphinx
-        run: pip3 install Sphinx
+        run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
