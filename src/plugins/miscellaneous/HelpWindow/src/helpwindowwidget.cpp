@@ -130,13 +130,14 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
     // Retrieve and return, if possible, the requested document
 
     QUrl url = pRequest.url();
+    QByteArray data = mHelpEngine->fileData(url);
 
-    return new HelpWindowNetworkReply(mHelpEngine->findFile(url).isValid()?
-                                          mHelpEngine->fileData(url):
+    return new HelpWindowNetworkReply(data.isEmpty()?
                                           mErrorMessageTemplate.arg(tr("Error"),
                                                                     tr("The following help file could not be found:")+" <strong>"+url.toString().remove(HelpRoot)+"</strong>.",
                                                                     tr(R"(Please <a href="https://opencor.ws/contactUs.html">contact us</a> about this error.)"),
-                                                                    Core::copyright()).toUtf8());
+                                                                    Core::copyright()).toUtf8():
+                                          data);
 }
 
 //==============================================================================
