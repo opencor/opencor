@@ -70,36 +70,33 @@ qint64 HelpWindowNetworkReply::bytesAvailable() const
 {
     // Return the size of the data which is available for reading
 
-    return mData.length()+QNetworkReply::bytesAvailable();
+    return mData.length()-mOffset+QNetworkReply::bytesAvailable();
 }
 
 //==============================================================================
 
 qint64 HelpWindowNetworkReply::readData(char *pData, qint64 pMaxlen)
 {
-    // Determine the length of the data to be read
+    // Make sure that we still have some data to read
 
-    qint64 len = qMin(qint64(mData.length()), pMaxlen);
+    qint64 dataLength = qint64(mData.length());
 
-    // Read the data, should there be some to read
-
-    if (len != 0) {
-        memcpy(pData, mData.constData(), size_t(len));
-
-        mData.remove(0, int(len));
-    } else {
+    if (mOffset >= dataLength) {
         pData = nullptr;
+
+        return -1;
     }
 
-    // Should there be no data left to read, then let ourselves know immediately
-    // that we are done
+    // Determine the length of the data to read, read it and return how much of
+    // it we read
 
-    if (mData.isEmpty()) {
-    }
+    qint64 res = qMin(dataLength-mOffset, pMaxlen);
 
-    // Return the size of the data which was read
+    memcpy(pData, mData.constData()+mOffset, size_t(res));
 
-    return len;
+    mOffset += res;
+
+    return res;
 }
 
 //==============================================================================
