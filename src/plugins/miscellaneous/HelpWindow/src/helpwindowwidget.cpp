@@ -44,13 +44,11 @@ namespace HelpWindow {
 
 //==============================================================================
 
-HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
-                                               const QByteArray &pData) :
+HelpWindowNetworkReply::HelpWindowNetworkReply(const QByteArray &pData) :
     mData(pData)
 {
     // Set a few things for the network reply
 
-    setRequest(pRequest);
     setOpenMode(QIODevice::ReadOnly);
 
     // Let ourselves know immediately that data is available for reading
@@ -141,7 +139,7 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
 
     // Return the requested document or an error message
 
-    return new HelpWindowNetworkReply(pRequest, data);
+    return new HelpWindowNetworkReply(data);
 }
 
 //==============================================================================
