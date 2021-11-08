@@ -296,8 +296,6 @@ else()
     set(TARGET_PLATFORM ${PLATFORM})
 endif()
 
-set(PLATFORM_DIR ${PLATFORM})
-
 # Location of our distribution files
 
 set(DISTRIB_DIR ${CMAKE_SOURCE_DIR}/distrib)
