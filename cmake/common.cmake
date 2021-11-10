@@ -918,7 +918,6 @@ macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
     set(ONE_VALUE_KEYWORDS
         PACKAGE_REPOSITORY
         RELEASE_TAG
-        TARGET_PLATFORM
         TARGET
     )
     set(MULTI_VALUE_KEYWORDS
@@ -944,13 +943,7 @@ macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
 
     # Remove any historical package archive
 
-    if(NOT "${ARG_TARGET_PLATFORM}" STREQUAL "")
-        set(REAL_TARGET_PLATFORM ${ARG_TARGET_PLATFORM})
-    else()
-        set(REAL_TARGET_PLATFORM ${TARGET_PLATFORM})
-    endif()
-
-    set(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${REAL_TARGET_PLATFORM}.tar.gz)
+    set(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
 
     file(REMOVE ${COMPRESSED_FILENAME})
 
@@ -1030,10 +1023,6 @@ retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
 
     if(NOT "${ARG_RELEASE_TAG}" STREQUAL "")
         set(CMAKE_CODE "${CMAKE_CODE}\n                      RELEASE_TAG \\$\\{RELEASE_TAG\\}")
-    endif()
-
-    if(NOT "${ARG_TARGET_PLATFORM}" STREQUAL "")
-        set(CMAKE_CODE "${CMAKE_CODE}\n                      TARGET_PLATFORM \\$\\{TARGET_PLATFORM\\}")
     endif()
 
     set(CMAKE_CODE "${CMAKE_CODE}\n                      SHA1_FILES \\$\\{SHA1_FILES\\}
@@ -1136,7 +1125,6 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     set(ONE_VALUE_KEYWORDS
         PACKAGE_REPOSITORY
         RELEASE_TAG
-        TARGET_PLATFORM
     )
     set(MULTI_VALUE_KEYWORDS
         SHA1_FILES
@@ -1171,13 +1159,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
         message("Retrieving the '${PACKAGE_NAME}' package...")
 
-        if(NOT "${ARG_TARGET_PLATFORM}" STREQUAL "")
-            set(REAL_TARGET_PLATFORM ${ARG_TARGET_PLATFORM})
-        else()
-            set(REAL_TARGET_PLATFORM ${TARGET_PLATFORM})
-        endif()
-
-        set(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${REAL_TARGET_PLATFORM}.tar.gz)
+        set(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
         set(FULL_COMPRESSED_FILENAME ${DIRNAME}/${COMPRESSED_FILENAME})
 
         if("${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
@@ -1192,13 +1174,13 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             set(RELEASE_TAG ${ARG_RELEASE_TAG})
         endif()
 
-        set (PACKAGE_URL "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}")
+        set(PACKAGE_URL "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}")
 
         file(DOWNLOAD ${PACKAGE_URL} ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have
-        # managed to retrieve it
+        # managed to retrieve it and should its SHA-1 value be as expected
 
         list(GET STATUS 0 STATUS_CODE)
 
@@ -1211,7 +1193,8 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${DIRNAME}
-                            OUTPUT_QUIET)
+                            RESULT_VARIABLE RESULT
+                            OUTPUT_QUIET ERROR_QUIET)
 
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
         else()
@@ -1225,9 +1208,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
         # Check that the package's files, if we managed to uncompress the
         # package, have the expected SHA-1 values
 
-        list(GET STATUS 0 STATUS_CODE)
-
-        if(${STATUS_CODE} EQUAL 0)
+        if(RESULT EQUAL 0)
             check_files(${DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
             if(NOT CHECK_FILES_OK)
