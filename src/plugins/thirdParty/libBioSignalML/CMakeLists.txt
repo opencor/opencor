@@ -129,7 +129,7 @@ else()
         CMAKE_ARGS
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
     )
@@ -153,7 +153,7 @@ else()
         CMAKE_ARGS
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
             -Dtypedobject_DIR=<INSTALL_DIR>/lib/cmake/typedobject
             -Dtypedobject_INCLUDE_DIR=<INSTALL_DIR>/include
             -Dtypedobject_LIBRARY=<INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
