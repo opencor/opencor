@@ -388,9 +388,9 @@ else()
     endif()
 endif()
 
-# A couple of variables that make it easier to specify library file names with a
-# version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
-# simply use libz${PRE}.1${POST})
+# A couple of variables to make it easier to specify library names with a
+# version (e.g., to be able to reference libz.so.1 and libz.1.dylib, we would
+# use libz${PRE}.1${POST})
 
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
