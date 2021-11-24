@@ -35,8 +35,8 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin that uses <a href="https://computation.llnl.gov/projects/sundials/cvode">CVODE</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computation.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that uses <a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           { "SUNDIALS" },
