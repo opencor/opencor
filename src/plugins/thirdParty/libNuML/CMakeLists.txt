@@ -119,7 +119,7 @@ else()
             ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
                              ${CMAKE_ARGS}
                              -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-                             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
                              -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
                              -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
                              -DWITH_CPP_NAMESPACE=ON

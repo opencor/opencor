@@ -157,14 +157,8 @@ else()
     set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        DOWNLOAD_DIR
-            ${PACKAGE_BUILD_DIR}
         SOURCE_DIR
             ${PACKAGE_BUILD_DIR}
-        BINARY_DIR
-            ${PACKAGE_BUILD_DIR}
-        INSTALL_DIR
-            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
             https://github.com/opencor/openssl
         GIT_TAG

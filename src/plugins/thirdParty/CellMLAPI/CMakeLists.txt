@@ -269,7 +269,7 @@ else()
             -DBUILD_TESTING=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
             -DENABLE_ANNOTOOLS=ON
             -DENABLE_CCGS=ON
             -DENABLE_CELEDS=ON

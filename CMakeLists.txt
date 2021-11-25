@@ -63,19 +63,28 @@ endif()
 
 if(WIN32)
     string(REPLACE "." ";"
+           CMAKE_C_COMPILER_VERSION_LIST "${CMAKE_C_COMPILER_VERSION}")
+    string(REPLACE "." ";"
            CMAKE_CXX_COMPILER_VERSION_LIST "${CMAKE_CXX_COMPILER_VERSION}")
 
+    list(GET CMAKE_C_COMPILER_VERSION_LIST 0 CMAKE_C_COMPILER_VERSION_MAJOR)
+    list(GET CMAKE_C_COMPILER_VERSION_LIST 1 CMAKE_C_COMPILER_VERSION_MINOR)
     list(GET CMAKE_CXX_COMPILER_VERSION_LIST 0 CMAKE_CXX_COMPILER_VERSION_MAJOR)
     list(GET CMAKE_CXX_COMPILER_VERSION_LIST 1 CMAKE_CXX_COMPILER_VERSION_MINOR)
 
-    if(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-       OR NOT "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"
-       OR NOT "${CMAKE_CXX_COMPILER_VERSION_MINOR}" STREQUAL "16")
+    if(   NOT(    "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC"
+              AND "${CMAKE_C_COMPILER_VERSION_MAJOR}" STREQUAL "19"
+              AND "${CMAKE_C_COMPILER_VERSION_MINOR}" STREQUAL "16")
+       OR NOT(    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
+              AND "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"
+              AND "${CMAKE_CXX_COMPILER_VERSION_MINOR}" STREQUAL "16"))
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2017 on Windows...")
     endif()
 elseif(APPLE)
-    if(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
-       AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    if(    NOT(   "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang"
+               OR "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
+       AND NOT(   "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
+               OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang"))
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
     endif()
 else()
@@ -388,9 +397,9 @@ else()
     endif()
 endif()
 
-# A couple of variables that make it easier to specify library file names with a
-# version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
-# simply use libz${PRE}.1${POST})
+# A couple of variables to make it easier to specify library names with a
+# version (e.g., to be able to reference libz.so.1 and libz.1.dylib, we would
+# use libz${PRE}.1${POST})
 
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
