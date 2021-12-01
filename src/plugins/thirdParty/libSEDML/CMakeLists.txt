@@ -94,14 +94,6 @@ else()
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
-    if(WIN32)
-        if(RELEASE_MODE)
-            set(MODE release)
-        else()
-            set(MODE debug)
-        endif()
-    endif()
-
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
             ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
