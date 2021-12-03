@@ -189,6 +189,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 #else
     compilationArguments.push_back("-O3");
 #endif
+    compilationArguments.push_back("-fno-math-errno");
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(dummyFileName.data());
 
