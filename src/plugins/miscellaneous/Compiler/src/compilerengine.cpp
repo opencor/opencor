@@ -188,7 +188,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     compilationArguments.push_back("-O0");
 #else
     compilationArguments.push_back("-O3");
-    compilationArguments.push_back("-ffast-math");
 #endif
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(dummyFileName.data());
