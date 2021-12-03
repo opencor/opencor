@@ -181,17 +181,17 @@ bool CompilerEngine::compileCode(const QString &pCode)
     llvm::StringRef dummyFileName("dummyFile.c");
     llvm::SmallVector<const char *, 16> compilationArguments;
 
-    compilationArguments.emplace_back("clang");
-    compilationArguments.emplace_back("-fsyntax-only");
+    compilationArguments.push_back("clang");
+    compilationArguments.push_back("-fsyntax-only");
 #ifdef QT_DEBUG
-    compilationArguments.emplace_back("-g");
-    compilationArguments.emplace_back("-O0");
+    compilationArguments.push_back("-g");
+    compilationArguments.push_back("-O0");
 #else
-    compilationArguments.emplace_back("-O3");
-    compilationArguments.emplace_back("-ffast-math");
+    compilationArguments.push_back("-O3");
+    compilationArguments.push_back("-ffast-math");
 #endif
-    compilationArguments.emplace_back("-Werror");
-    compilationArguments.emplace_back(dummyFileName.data());
+    compilationArguments.push_back("-Werror");
+    compilationArguments.push_back(dummyFileName.data());
 
     std::unique_ptr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
