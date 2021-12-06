@@ -241,9 +241,11 @@ double compiler_acot(double pNb)
 
 double compiler_acoth(double pNb)
 {
+    static const double HALF = 0.5;
+
     double oneOverNb = 1.0/pNb;
 
-    return 0.5*log((1.0+oneOverNb)/(1.0-oneOverNb));
+    return HALF*log((1.0+oneOverNb)/(1.0-oneOverNb));
 }
 
 //==============================================================================
@@ -323,8 +325,8 @@ constexpr bool isEven(uint pNb)
 
 double compiler_gcd_pair(double pNb1, double pNb2)
 {
-    uint nb1 = uint(std::fabs(pNb1));
-    uint nb2 = uint(std::fabs(pNb2));
+    auto nb1 = static_cast<unsigned int>(std::fabs(pNb1));
+    auto nb2 = static_cast<unsigned int>(std::fabs(pNb2));
 
     if (nb1 == 0) {
         return nb2;
@@ -334,7 +336,7 @@ double compiler_gcd_pair(double pNb1, double pNb2)
         return nb1;
     }
 
-    uint mult = 1;
+    auto mult = 1U;
 
     while (isEven(nb1) && isEven(nb2)) {
         mult *= 2;
