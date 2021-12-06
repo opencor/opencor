@@ -9,4 +9,4 @@ export PATH="${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS":$PATH
 "${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python"                        \
 -s
 
-"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter" $*
+"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter" "$@"

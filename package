@@ -3,7 +3,7 @@
 appDir=$(cd $(dirname $0); pwd)
 
 $appDir/clean
-$appDir/make $*
+$appDir/make "$@"
 
 exitCode=$?
 
