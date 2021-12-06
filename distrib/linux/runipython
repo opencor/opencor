@@ -6,4 +6,4 @@ export PATH="${appDir}/bin":$PATH
 
 "${appDir}/python/bin/python" "${appDir}/python/bin/set_python_path.py" "${appDir}/python" -s
 
-"${appDir}/python/bin/ipython" $*
+"${appDir}/python/bin/ipython" "$@"
