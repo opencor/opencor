@@ -603,11 +603,11 @@ else()
 
     # Package Python's include files and libraries
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                        PACKAGED_FILES ${PACKAGED_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                   PACKAGED_FILES ${PACKAGED_FILES}
+                   SHA1_FILES ${SHA1_FILES}
+                   TARGET ${PACKAGE_BUILD})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

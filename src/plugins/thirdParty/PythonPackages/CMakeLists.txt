@@ -431,12 +431,12 @@ else()
 
     # Package the newly installed Python packages
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                        RELEASE_TAG ${RELEASE_TAG}
-                        PACKAGED_FILES ${PACKAGED_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                   RELEASE_TAG ${RELEASE_TAG}
+                   PACKAGED_FILES ${PACKAGED_FILES}
+                   SHA1_FILES ${SHA1_FILES}
+                   TARGET ${PACKAGE_BUILD})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

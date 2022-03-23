@@ -289,15 +289,15 @@ else()
         )
     endif()
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        RELEASE_TAG ${RELEASE_TAG}
-                        PACKAGED_FILES
-                            include
-                            ${IMPORT_LIBRARIES_DIR}/cmake
-                            ${SHA1_FILES}
-                            ${SYMBOLIC_LINKS}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   RELEASE_TAG ${RELEASE_TAG}
+                   PACKAGED_FILES
+                       include
+                       ${IMPORT_LIBRARIES_DIR}/cmake
+                       ${SHA1_FILES}
+                       ${SYMBOLIC_LINKS}
+                   SHA1_FILES ${SHA1_FILES}
+                   TARGET ${PACKAGE_BUILD})
 endif()
 
 # Allow other external projects to find our QtWebKit package

@@ -201,11 +201,11 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGED_FILES include ${SHA1_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD}
-                        ${NO_STRIP})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   PACKAGED_FILES include ${SHA1_FILES}
+                   SHA1_FILES ${SHA1_FILES}
+                   TARGET ${PACKAGE_BUILD}
+                   ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

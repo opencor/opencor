@@ -909,7 +909,7 @@ endmacro()
 
 #===============================================================================
 
-macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
+macro(create_package PACKAGE_NAME PACKAGE_VERSION)
     # Various initialisations
 
     set(OPTIONS
