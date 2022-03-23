@@ -56,28 +56,28 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 78ffae4e53feb7550d999162bfb81f22d20dfd4d
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9b95f14242d788b7e81b43e7629db0c82f0c303e
-                                              dfa4b0a235a9ba07d28a8f84a7a5e165d6c6b805)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 78ffae4e53feb7550d999162bfb81f22d20dfd4d
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 9b95f14242d788b7e81b43e7629db0c82f0c303e
+                                         dfa4b0a235a9ba07d28a8f84a7a5e165d6c6b805)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f1101cffff78483c5e8fd7c7d9f1685115f399f9
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES e3051b7403498580df1479dcd04cc42671767388
-                                              4543f852f1f8e6ab73b4557e79a081ca836209a8)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f1101cffff78483c5e8fd7c7d9f1685115f399f9
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES e3051b7403498580df1479dcd04cc42671767388
+                                         4543f852f1f8e6ab73b4557e79a081ca836209a8)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 341d0a3095e1385cf242cfd3e947c130cc408a9b
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2247d68416c0dd6d036769e330924eb9ad54082d)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 341d0a3095e1385cf242cfd3e947c130cc408a9b
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 2247d68416c0dd6d036769e330924eb9ad54082d)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cefee41de15625372d8fc162ab3e3713b7770fad
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6f1ab4f763d6c41ea3c6a107cb5e4763aff19f16)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cefee41de15625372d8fc162ab3e3713b7770fad
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 6f1ab4f763d6c41ea3c6a107cb5e4763aff19f16)
     endif()
 else()
     # Allow for big objects and ignore some warnings

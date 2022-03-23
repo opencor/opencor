@@ -97,44 +97,44 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 88c2375d8f90c3c6e731a52002bcb4695163c489
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6eeb3b514038fba691bdcf94183c35bc04b1029a
-                                              154194a3dfe1723716da77a2938b0757ec1bb326
-                                              874175a6db51afe0902882f0b00f7855ab498c79
-                                              47cb72ba7c899ca218be75dd89a0c0f900b968b8
-                                              a386658900a742f31f1f08d55c0915d577af2d7e
-                                              9ec4fe53b4189db4d2b3791a4f994384ab910641
-                                              0753c0147fc75d617612088e745f17b3107d1ada)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 88c2375d8f90c3c6e731a52002bcb4695163c489
+                             RELEASE_TAG ${RELEASE_TAG}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 6eeb3b514038fba691bdcf94183c35bc04b1029a
+                                         154194a3dfe1723716da77a2938b0757ec1bb326
+                                         874175a6db51afe0902882f0b00f7855ab498c79
+                                         47cb72ba7c899ca218be75dd89a0c0f900b968b8
+                                         a386658900a742f31f1f08d55c0915d577af2d7e
+                                         9ec4fe53b4189db4d2b3791a4f994384ab910641
+                                         0753c0147fc75d617612088e745f17b3107d1ada)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 56b08867163478535787e0014b65c93b4487873c
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f89689041007123e2f87f425c153ad236d490f2c
-                                              6bfec618a49e104b1dde9547f48b5ded382ec39b
-                                              43497bf1a89173badccc0b945b43473cf5d5f12a
-                                              2ef114df767c6fe4184ef458545ff8d71f4f4917
-                                              5eeaf7c066cca05413a35bba5efc71526c46f478
-                                              c1f07535c93d5d51cc211813f48d0ca827cda1f5
-                                              a89cf300bea576d849ee66a2b33832a65c0db9ff)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 56b08867163478535787e0014b65c93b4487873c
+                             RELEASE_TAG ${RELEASE_TAG}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES f89689041007123e2f87f425c153ad236d490f2c
+                                         6bfec618a49e104b1dde9547f48b5ded382ec39b
+                                         43497bf1a89173badccc0b945b43473cf5d5f12a
+                                         2ef114df767c6fe4184ef458545ff8d71f4f4917
+                                         5eeaf7c066cca05413a35bba5efc71526c46f478
+                                         c1f07535c93d5d51cc211813f48d0ca827cda1f5
+                                         a89cf300bea576d849ee66a2b33832a65c0db9ff)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 907aa8f0572de663a1d10386c71a79afb7acbba6
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 024104337ec2a92f2ae63bdd592cb9ac7c426b35
-                                          cbace54abac7c6df21d1c0f8a2e00fc9a0c9a696)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 907aa8f0572de663a1d10386c71a79afb7acbba6
+                         RELEASE_TAG ${RELEASE_TAG}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 024104337ec2a92f2ae63bdd592cb9ac7c426b35
+                                     cbace54abac7c6df21d1c0f8a2e00fc9a0c9a696)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bba1e82441095e952716b247ce280dd51721bb22
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 687d5b9d508ed450315cc8b93dfb269696921ebe
-                                          91fd09d27e4e80cf6ac6e60a6263abb09e690989)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bba1e82441095e952716b247ce280dd51721bb22
+                         RELEASE_TAG ${RELEASE_TAG}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 687d5b9d508ed450315cc8b93dfb269696921ebe
+                                     91fd09d27e4e80cf6ac6e60a6263abb09e690989)
     endif()
 else()
     # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS

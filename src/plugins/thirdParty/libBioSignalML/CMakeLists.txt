@@ -74,42 +74,42 @@ if(USE_PREBUILT_BIOSIGNALML_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e2ca2a020750760c611b72b35edfa956bc55c593
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 379e38afc9eb015b54cd327aac0d725f25fb95fc
-                                              c18a129f49429083c40c3621f61256ddcbe83c05
-                                              c4bf89a74703d73220e7b8be29944c409fca1a06
-                                              a10d81c681fae3efc41d7855c4250f7333821256)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e2ca2a020750760c611b72b35edfa956bc55c593
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             RELEASE_TAG ${RELEASE_TAG}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 379e38afc9eb015b54cd327aac0d725f25fb95fc
+                                         c18a129f49429083c40c3621f61256ddcbe83c05
+                                         c4bf89a74703d73220e7b8be29944c409fca1a06
+                                         a10d81c681fae3efc41d7855c4250f7333821256)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f01b5c1219ab792476ae6eaadf3be0329784c948
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6ffeea24b14d9769e5b50aed663ce5091cd43101
-                                              136f63617ad96a272d56b0e13f3d0b090f096d75
-                                              0dcde52f7037472d6d642e71f9e616f0fac18095
-                                              556aa50cf56cd0e934a5cd7c392cef4be1d01d1c)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f01b5c1219ab792476ae6eaadf3be0329784c948
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             RELEASE_TAG ${RELEASE_TAG}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 6ffeea24b14d9769e5b50aed663ce5091cd43101
+                                         136f63617ad96a272d56b0e13f3d0b090f096d75
+                                         0dcde52f7037472d6d642e71f9e616f0fac18095
+                                         556aa50cf56cd0e934a5cd7c392cef4be1d01d1c)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a9842f187002c5b9bae273bc2cd3224592f87ef2
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7141316b23d7cace02e72466808f6710ad40a4b8
-                                          8e6ca96135ae670a53422a44827579740108d559)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a9842f187002c5b9bae273bc2cd3224592f87ef2
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         RELEASE_TAG ${RELEASE_TAG}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 7141316b23d7cace02e72466808f6710ad40a4b8
+                                     8e6ca96135ae670a53422a44827579740108d559)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b4f90f5dba99f87687b09685955e2fb4457892da
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fac5d6e21d05f08ec614610aca6ef967d8e53fb6
-                                          cbe820dd0e2c5a79a1bb6adddd8cd00c11accb38)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b4f90f5dba99f87687b09685955e2fb4457892da
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         RELEASE_TAG ${RELEASE_TAG}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES fac5d6e21d05f08ec614610aca6ef967d8e53fb6
+                                     cbe820dd0e2c5a79a1bb6adddd8cd00c11accb38)
     endif()
 else()
     # Build typedobject as an external project

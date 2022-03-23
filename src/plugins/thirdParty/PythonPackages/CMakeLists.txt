@@ -96,30 +96,30 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e1fd63b7ffb61de6bef75471d838bffeb4c7773c
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 360dfb74ccaca4d0152f5184c9adfeb4a65fd5d3)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e1fd63b7ffb61de6bef75471d838bffeb4c7773c
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 360dfb74ccaca4d0152f5184c9adfeb4a65fd5d3)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 4b30113cdbfa654daeacb925fe334cb6ef22e39d
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6d4bef2a551cb92102f934636dcbc200986a18b0)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 4b30113cdbfa654daeacb925fe334cb6ef22e39d
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 6d4bef2a551cb92102f934636dcbc200986a18b0)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c946300c0203995243752dbd71db739a733e3556
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 4443d8cb01dcc0edc148f9d095201b13fd09f923)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c946300c0203995243752dbd71db739a733e3556
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 4443d8cb01dcc0edc148f9d095201b13fd09f923)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c1635192f1e69e60eb99e39763962a8410c5ed8a
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ab335a162a99ac36a751f58308b9674ba1844bae)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c1635192f1e69e60eb99e39763962a8410c5ed8a
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES ab335a162a99ac36a751f58308b9674ba1844bae)
     endif()
 else()
     # Install Python packages using pip

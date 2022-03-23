@@ -60,32 +60,32 @@ if(USE_PREBUILT_LIBSBML_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} eb16c13181c35d7c9c5ff2a8b848127359668fda
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ef9e855dc79fb68b928a9dfd00f74951de72d373
-                                              b08b8199d823fe81d74bd3b45a7c675922f96b75)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} eb16c13181c35d7c9c5ff2a8b848127359668fda
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES ef9e855dc79fb68b928a9dfd00f74951de72d373
+                                         b08b8199d823fe81d74bd3b45a7c675922f96b75)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0402549c9be74541589007232ef974c2d59808a3
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a54d3719338cda1b26c92f4012feafae43bf7280
-                                              8308ae418e7436ff77bc05460ca5637977908e6b)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0402549c9be74541589007232ef974c2d59808a3
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES a54d3719338cda1b26c92f4012feafae43bf7280
+                                         8308ae418e7436ff77bc05460ca5637977908e6b)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bb62c94856fc7294dab3a9ffd39e670428a90306
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c917dd10671822b851c73fa34c3ece15dfd24ab6)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bb62c94856fc7294dab3a9ffd39e670428a90306
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES c917dd10671822b851c73fa34c3ece15dfd24ab6)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e27ea428b40a2e5187264e4cd131af7b3b5c3346
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES df5d322aaf83965ae599a2d7aefca5ca33f027d4)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e27ea428b40a2e5187264e4cd131af7b3b5c3346
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES df5d322aaf83965ae599a2d7aefca5ca33f027d4)
     endif()
 else()
     # Download some dependencies for Windows, if needed

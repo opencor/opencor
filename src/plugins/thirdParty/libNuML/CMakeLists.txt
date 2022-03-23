@@ -60,32 +60,32 @@ if(USE_PREBUILT_LIBNUML_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a1436d4733db8b8a1a94128381ff478afa75c806
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 86c867c697eb933f7814a72c337605a485347d27
-                                              be2037223df8c76fe3a76a55a2c52e2696b41019)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} a1436d4733db8b8a1a94128381ff478afa75c806
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 86c867c697eb933f7814a72c337605a485347d27
+                                         be2037223df8c76fe3a76a55a2c52e2696b41019)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 09bbe60176aba305468e57621a9960b12f3c716b
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 4185b44003c97134ba30d35466a90f5500f51f10
-                                              be2037223df8c76fe3a76a55a2c52e2696b41019)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 09bbe60176aba305468e57621a9960b12f3c716b
+                             PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                             SHA1_FILES ${SHA1_FILES}
+                             SHA1_VALUES 4185b44003c97134ba30d35466a90f5500f51f10
+                                         be2037223df8c76fe3a76a55a2c52e2696b41019)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b71d6595e6ccd9de246a248a6cce12ab67f578e1
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f39b6a01e5cf3dba2f679507577357cfcf1707fb)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b71d6595e6ccd9de246a248a6cce12ab67f578e1
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES f39b6a01e5cf3dba2f679507577357cfcf1707fb)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6e144496043bd9916a85d998bbf3f97d4b95991
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 92b1e91be089a379b08b3df683bc965604450dd4)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d6e144496043bd9916a85d998bbf3f97d4b95991
+                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                         SHA1_FILES ${SHA1_FILES}
+                         SHA1_VALUES 92b1e91be089a379b08b3df683bc965604450dd4)
     endif()
 else()
     # Build libNuML as an external project

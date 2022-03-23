@@ -29,10 +29,10 @@ set(SHA1_FILES
 if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
-    retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0205e25366e04bae4aa53fe80c462398e73c8f6e
-                          SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES a3c2cb7cff4df0f3c5bf0dbeff2cf78b3e5516b5)
+    retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0205e25366e04bae4aa53fe80c462398e73c8f6e
+                     SHA1_FILES ${SHA1_FILES}
+                     SHA1_VALUES a3c2cb7cff4df0f3c5bf0dbeff2cf78b3e5516b5)
 else()
     # Build Mesa as an external project
 

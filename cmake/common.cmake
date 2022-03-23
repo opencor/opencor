@@ -1006,7 +1006,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{
 
 if(RESULT EQUAL 0 AND EXISTS ${COMPRESSED_FILENAME})
     # The compressed version of our package exists, so calculate its SHA-1 value
-    # and let people know how we should call the retrieve_package_file() macro
+    # and let people know how we should call the retrieve_package() macro
 
     file(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
@@ -1014,8 +1014,8 @@ if(RESULT EQUAL 0 AND EXISTS ${COMPRESSED_FILENAME})
            SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
-retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
-                      \\$\\{FULL_LOCAL_EXTERNAL_PACKAGE_DIR\\} \$\{SHA1_VALUE\}")
+retrieve_package(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
+                 \\$\\{FULL_LOCAL_EXTERNAL_PACKAGE_DIR\\} \$\{SHA1_VALUE\}")
 
     if(NOT "${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
         set(CMAKE_CODE "${CMAKE_CODE}\n                      PACKAGE_REPOSITORY \\$\\{PACKAGE_REPOSITORY\\}")
@@ -1118,7 +1118,7 @@ endmacro()
 
 #===============================================================================
 
-macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
+macro(retrieve_package PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     # Various initialisations
 
     set(OPTIONS)
