@@ -138,8 +138,6 @@ int main(int pArgC, char *pArgV[])
             }
 
             res = (res != 0)?res:process.exitCode();
-
-            std::cout << std::endl;
         }
 
         std::cout << QString("*").repeated(9+1+testsGroup.key().count()+1+9).toStdString() << std::endl;

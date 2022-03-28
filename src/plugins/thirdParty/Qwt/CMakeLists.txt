@@ -1,24 +1,20 @@
 project(QwtPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME Qwt)
 set(PACKAGE_VERSION 6.2.0)
+set(PACKAGE_REPOSITORY qwt)
+set(GIT_TAG v6.2.0)
+set(RELEASE_TAG v6.2.0)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 6)
 set(MINOR_LIBRARY_VERSION 2)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
-
-# Git tag for our library
-
-set(GIT_TAG v6.2.0)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -57,15 +53,15 @@ set(EXTERNAL_BINARIES
     ${QWTMATHML_SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${QWT_SHARED_LIBRARY}
     lib/${QWTMATHML_SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${QWT_IMPORT_LIBRARY}
         lib/${QWTMATHML_IMPORT_LIBRARY}
     )
@@ -85,33 +81,21 @@ if(USE_PREBUILT_QWT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c0511b71ee60db94d75f87f5045f9e17078e9026
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES 30a5ec7e8f11a585d0d40ed77ce41cb83fd07525
-                                         8a3c3fe5390a29341d9e823002cdccee57b7cf70
-                                         97b2e13b187f05d608ea6a241a27e36013190138
-                                         685f303df9a1c8eac8b6b932c2dd31925f4445c9)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             c0511b71ee60db94d75f87f5045f9e17078e9026)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e9d7a1d68ebbe208558df0881d1944a06e8931ed
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES 5993f5f5ad9812f5f8240977ddd0303b030922ed
-                                         5bf0b39a632dda19b12066aeb423274839bd6aa9
-                                         6a930fc36490d784f66d36e6e973197d6582978e
-                                         e9007814f1ac60a04692aa0f92113b79bee5b79f)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             e9d7a1d68ebbe208558df0881d1944a06e8931ed)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b35136ca456e4357ffaf219eb1ec3b3e5562740f
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES dbe7d41b92df16eea6753d9ed28b43f37e312a9d
-                                     5137adad37c0a8d6afcfd7c0bb1d07f77743525b)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         b35136ca456e4357ffaf219eb1ec3b3e5562740f)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 204a583b3c535dca60fd5d7ca0ecb8e8e1e5282d
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES 74aa9404c60a51de116b8e53b4f809285173557e
-                                     a6e9225e46d99172c5df42e057d0e601c5100b5c)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         204a583b3c535dca60fd5d7ca0ecb8e8e1e5282d)
     endif()
 else()
     # Set platform specific configuration options
@@ -129,17 +113,15 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/qwt
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
         CONFIGURE_COMMAND
-            ${QMAKE_COMMAND} <SOURCE_DIR> CONFIG+=qt_no_framework OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
+            ${QMAKE_COMMAND} <SOURCE_DIR> CONFIG+=qt_no_framework INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
             ${MAKE_JOM_COMMAND} ${MAKEFILE_TARGET}
         INSTALL_COMMAND
@@ -202,9 +184,8 @@ else()
     # Package our external project
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   PACKAGED_FILES include ${SHA1_FILES}
-                   SHA1_FILES ${SHA1_FILES}
-                   TARGET ${PACKAGE_BUILD}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES}
                    ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
