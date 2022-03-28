@@ -1,23 +1,19 @@
 project(ZincPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME Zinc)
 set(PACKAGE_VERSION 3.1.2)
+set(PACKAGE_REPOSITORY zinc)
+set(GIT_TAG v3.1.2)
+set(RELEASE_TAG v3.1.2)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 3)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.2)
-
-# Git tag for our library
-
-set(GIT_TAG v3.1.2)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -43,14 +39,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -63,27 +59,21 @@ if(USE_PREBUILT_ZINC_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d7e08929a968a661bf8e9f00132929a4f3e244fb
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES 351e90a846ad08149c8799dc0888f4083a6f7ccc
-                                         7a8d19846bbc3fd281ec7f98581ea34174ce278a)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             d7e08929a968a661bf8e9f00132929a4f3e244fb)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dfe1440281818d30e0c38893b3824a5493f00222
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES 56c8d7c66b402561310b67e3e84f0efdac4b2bdf
-                                         04691b8f3b0f1fdb89d12e29ceb75bd23e7d60f3)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             dfe1440281818d30e0c38893b3824a5493f00222)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fe7eec086dab717648db9de40aba27c884391ba6
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES 92e2830c0aca29686c32485e168e8ce79e12b81e)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         fe7eec086dab717648db9de40aba27c884391ba6)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5823b182beffc0f62d6847685f8d2a0643adf692
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES c2fce021cdecd03e24b43d0ae2a1c8ead65e1a3a)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         5823b182beffc0f62d6847685f8d2a0643adf692)
     endif()
 else()
     # Set platform specific configuration options
@@ -103,14 +93,10 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/setup
-        BINARY_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/setup-build
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/zinc
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -129,9 +115,8 @@ else()
     # Package our external project
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   PACKAGED_FILES include ${SHA1_FILES}
-                   SHA1_FILES ${SHA1_FILES}
-                   TARGET ${PACKAGE_BUILD})
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

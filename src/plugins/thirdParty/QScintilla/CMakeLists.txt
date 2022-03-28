@@ -1,23 +1,19 @@
 project(QScintillaPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME QScintilla)
 set(PACKAGE_VERSION 2.13.0)
+set(PACKAGE_REPOSITORY qscintilla)
+set(GIT_TAG v2.13.0)
+set(RELEASE_TAG v2.13.0)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 15)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.0)
-
-# Git tag for our library
-
-set(GIT_TAG v2.13.0)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -43,14 +39,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -69,27 +65,21 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d31479f7e03503524a31d8aa243f38d7318dd194
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES e2085e483f2e7798c3a3364514ce9bd1f8461662
-                                         8f097f18710b492395b10734e6ed666f9b5f5206)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             d31479f7e03503524a31d8aa243f38d7318dd194)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} aeace81825c1853a906dffc8b9880389f373636c
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES 54f65f9559b3ec0590d7cc428d7d4218d9158e08
-                                         67eb6c99fec840dbdf52515249df46b78a3425e7)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             aeace81825c1853a906dffc8b9880389f373636c)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 677fbd7b4eff1a00703abde3e9d69f5130fc1961
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES 00f6c44db323702bddc36906574b27fac8a3742a)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         677fbd7b4eff1a00703abde3e9d69f5130fc1961)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cdd4fc923739c833ace583c4a8db407204c23f0a
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES 17a04d3c57482818beb6f512abe436bd1bf7f064)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         cdd4fc923739c833ace583c4a8db407204c23f0a)
     endif()
 else()
     # Set platform specific configuration options
@@ -109,17 +99,15 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/qscintilla
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
         CONFIGURE_COMMAND
-            ${QMAKE_COMMAND} <SOURCE_DIR>/src OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
+            ${QMAKE_COMMAND} <SOURCE_DIR>/src INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
             ${MAKE_JOM_COMMAND} ${MAKEFILE}
         INSTALL_COMMAND
@@ -167,10 +155,8 @@ else()
     # Package our external project
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   PACKAGED_FILES include ${SHA1_FILES}
-                   SHA1_FILES ${SHA1_FILES}
-                   TARGET ${PACKAGE_BUILD}
-                   ${NO_STRIP})
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
