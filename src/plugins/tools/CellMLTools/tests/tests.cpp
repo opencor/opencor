@@ -112,15 +112,9 @@ void Tests::exportToCTests()
 {
     // Try to export a local file to C
 
-#ifdef Q_OS_WIN
     QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "c" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.c.windows.out")));
-#else
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "c" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.c.non-windows.out")));
-#endif
+    QVERIFY(   (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.c.out")))
+            || (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.c.alternative.out"))));
 }
 
 //==============================================================================
@@ -129,15 +123,9 @@ void Tests::exportToFortran77Tests()
 {
     // Try to export a local file to FORTRAN 77
 
-#ifdef Q_OS_WIN
     QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "fortran_77" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.f.windows.out")));
-#else
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "fortran_77" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.f.non-windows.out")));
-#endif
+    QVERIFY(   (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.f.out")))
+            || (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.f.alternative.out"))));
 }
 
 //==============================================================================
@@ -146,15 +134,9 @@ void Tests::exportToMatlabTests()
 {
     // Try to export a local file to MATLAB
 
-#ifdef Q_OS_WIN
     QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "matlab" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.m.windows.out")));
-#else
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "matlab" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.m.non-windows.out")));
-#endif
+    QVERIFY(   (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.m.out")))
+            || (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.m.alternative.out"))));
 }
 
 //==============================================================================
@@ -163,15 +145,9 @@ void Tests::exportToPythonTests()
 {
     // Try to export a local file to Python
 
-#ifdef Q_OS_WIN
     QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "python" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.py.windows.out")));
-#else
-    QVERIFY(!OpenCOR::runCli({ "-c", "CellMLTools::export", OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"), "python" }, mOutput ));
-    QCOMPARE(mOutput,
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.py.non-windows.out")));
-#endif
+    QVERIFY(   (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.py.out")))
+            || (mOutput == OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/periodic-stimulus.py.alternative.out"))));
 }
 
 //==============================================================================

@@ -1,28 +1,20 @@
 project(libgit2Plugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME libgit2)
 set(PACKAGE_VERSION 1.3.0)
+set(PACKAGE_REPOSITORY libgit2)
+set(GIT_TAG v1.3.0-opencor)
+set(RELEASE_TAG v1.3.0-opencor)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 1)
 set(MINOR_LIBRARY_VERSION 3)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
-
-# Git tag for our library
-
-set(GIT_TAG v1.3.0-opencor)
-
-# Release tag
-
-set(RELEASE_TAG v1.3.0-opencor)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -45,14 +37,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -65,31 +57,21 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 46159c49e10e7652240bcde1b84ed2c68d601e94
-                             RELEASE_TAG ${RELEASE_TAG}
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES adbbfd9a2e441e97fcbbcfa656ef58af6afc276a
-                                         a9caac225f74decfd327a95f27e86d1579c1d2b0)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             46159c49e10e7652240bcde1b84ed2c68d601e94)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} af94acf18c0a891b60de1b15a9a38212422d9b4d
-                             RELEASE_TAG ${RELEASE_TAG}
-                             SHA1_FILES ${SHA1_FILES}
-                             SHA1_VALUES 9dad74785f82437c55109480d2cee25b6a52b0b1
-                                         452ae3fbe2680c87c104e6f8e0430001ed15dc36)
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             af94acf18c0a891b60de1b15a9a38212422d9b4d)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} d690fc3b7c19f00da1d27da03d788169c5e52063
-                         RELEASE_TAG ${RELEASE_TAG}
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES d11643bdac1d72387ae7f8f37f760e6f6e791ffc)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         d690fc3b7c19f00da1d27da03d788169c5e52063)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 34a64017a1d4ede8f46ca109a608b7dd6eef86c5
-                         RELEASE_TAG ${RELEASE_TAG}
-                         SHA1_FILES ${SHA1_FILES}
-                         SHA1_VALUES 4835896484df08cb3fd1bab154dfa78f612ed59f)
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         34a64017a1d4ede8f46ca109a608b7dd6eef86c5)
     endif()
 else()
     # Ignore some warnings
@@ -111,12 +93,10 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/libgit2
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -169,10 +149,8 @@ else()
     # Package our external project
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   RELEASE_TAG ${RELEASE_TAG}
-                   PACKAGED_FILES include ${SHA1_FILES}
-                   SHA1_FILES ${SHA1_FILES}
-                   TARGET ${PACKAGE_BUILD})
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

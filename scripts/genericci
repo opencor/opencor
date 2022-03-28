@@ -67,8 +67,6 @@ if [ -d $appDir/build ]; then
 
     exitCode=$?
 
-    cd $origDir
-
     if [ $exitCode -eq 0 ]; then
         echo "\033[42;37;1mAll done!\033[0m"
     fi
