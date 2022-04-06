@@ -60,18 +60,14 @@ if [ -d $appDir/build ]; then
     fi
 
     if [ "`uname -s`" = "Linux" ]; then
-        $appDir/build/bin/runtests -l
+        $appDir/build/bin/runtests
     else
-        $appDir/build/OpenCOR.app/Contents/MacOS/runtests -l
+        $appDir/build/OpenCOR.app/Contents/MacOS/runtests
     fi
 
     exitCode=$?
 
-    if [ "`uname -s`" = "Linux" ]; then
-        cat $appDir/build/bin/runtests.log
-    else
-        cat $appDir/build/OpenCOR.app/Contents/MacOS/runtests.log
-    fi
+    cd $origDir
 
     if [ $exitCode -eq 0 ]; then
         echo "\033[42;37;1mAll done!\033[0m"

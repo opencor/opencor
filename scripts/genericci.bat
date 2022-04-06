@@ -71,13 +71,9 @@ IF EXIST !AppDir!build (
         EXIT /B !ExitCode!
     )
 
-    !AppDir!build\bin\runtests.exe -l
+    !AppDir!build\bin\runtests.exe
 
-    SET ExitCode=!ERRORLEVEL!
-
-    TYPE !AppDir!build\bin\runtests.exe.log
-
-    EXIT /B !ExitCode!
+    EXIT /B !ERRORLEVEL!
 ) ELSE (
     ECHO OpenCOR's build directory is missing.
 
