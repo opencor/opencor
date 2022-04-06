@@ -131,15 +131,13 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
-           std::cout << process.readAll().toStdString() << std::endl;
+            std::cout << qPrintable(QString(process.readAll())) << std::endl;
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
             }
 
             res = (res != 0)?res:process.exitCode();
-
-            std::cout << std::endl;
         }
 
         std::cout << QString("*").repeated(9+1+testsGroup.key().count()+1+9).toStdString() << std::endl;
