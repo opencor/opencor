@@ -131,7 +131,7 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
-            std::cout << qPrintable(process.readAll()) << std::endl;
+            std::cout << process.readAll().constData() << std::endl;
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
