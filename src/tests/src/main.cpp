@@ -129,9 +129,15 @@ int main(int pArgC, char *pArgV[])
             process.start(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, QStringList());
 #endif
 
-            process.waitForFinished(-1);
+            QString output;
 
-            QString output = process.readAll();
+            if (process.waitForStarted(-1)) {
+                while(process.waitForReadyRead(-1)) {
+                    output += process.readAll();
+                }
+            }
+
+            process.waitForFinished(-1);
 
             std::cout << "---[BEGIN]---[" << output.size() << "]" << std::endl;
             std::cout << qPrintable(output) << std::endl;
