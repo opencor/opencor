@@ -63,6 +63,10 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
         run: scripts\genericci ${{ matrix.mode }}
+      - name: Tests log (Windows only)
+        if: ${{ runner.os == 'Windows' }}
+        shell: cmd
+        run: type log.txt
       - name: Build and test OpenCOR (Linux and macOS only)
         if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
         run: scripts/genericci ${{ matrix.mode }}

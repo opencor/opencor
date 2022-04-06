@@ -110,6 +110,10 @@ int main(int pArgC, char *pArgV[])
     auto testBegin = testsGroups.constBegin();
     auto testEnd = testsGroups.constEnd();
 
+    QFile file("log.txt");
+
+    file.open(QIODevice::WriteOnly);
+
     for (auto testsGroup = testBegin; testsGroup != testEnd; ++testsGroup) {
         if (testsGroup != testBegin) {
             std::cout << std::endl;
@@ -131,7 +135,11 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
-            std::cout << process.readAll().constData() << std::endl;
+            QByteArray data = process.readAll();
+
+            std::cout << data.constData() << std::endl;
+
+            file.write(data);
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
@@ -144,6 +152,8 @@ int main(int pArgC, char *pArgV[])
 
         std::cout << QString("*").repeated(9+1+testsGroup.key().count()+1+9).toStdString() << std::endl;
     }
+
+    file.close();
 
     // Reporting
 
