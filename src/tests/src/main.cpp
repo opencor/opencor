@@ -105,7 +105,7 @@ int main(int pArgC, char *pArgV[])
     QProcess process;
     QStringList failedTests;
 
-//    process.setProcessChannelMode(QProcess::MergedChannels);
+    process.setProcessChannelMode(QProcess::MergedChannels);
 
     auto testBegin = testsGroups.constBegin();
     auto testEnd = testsGroups.constEnd();
@@ -129,23 +129,9 @@ int main(int pArgC, char *pArgV[])
             process.start(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, QStringList());
 #endif
 
-//            QString output;
+            process.waitForFinished(-1);
 
-//            if (process.waitForStarted(-1)) {
-//                while(process.waitForReadyRead(-1)) {
-//                    output += process.readAll();
-//                }
-//            }
-
-//            process.waitForFinished(-1);
-
-            process.waitForReadyRead();
-
-            QString output = process.readAllStandardOutput();
-
-            std::cout << "---[BEGIN]---[" << output.size() << "]" << std::endl;
-            std::cout << qPrintable(output) << std::endl;
-            std::cout << "----[END]----" << std::endl;
+            std::cout << qPrintable(process.readAll()) << std::endl;
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
