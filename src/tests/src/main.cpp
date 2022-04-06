@@ -38,11 +38,15 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 int main(int pArgC, char *pArgV[])
 {
+    // Check whether we want our output in a file
+
+    bool logMode = (pArgC > 1) && (strcmp(pArgV[1], "-l") == 0);
+
     // Retrieve the requested tests, if any
 
     QStringList requestedTests;
 
-    for (int i = 1; i < pArgC; ++i) {
+    for (int i = 1+(logMode?1:0); i < pArgC; ++i) {
         requestedTests << pArgV[i];
     }
 
@@ -62,7 +66,7 @@ int main(int pArgC, char *pArgV[])
         testGroup = testItems[i];
         testTest = testItems[i+1];
 
-        if (pArgC == 1) {
+        if (pArgC == 1+(logMode?1:0)) {
             addTest = true;
         } else {
             addTest = false;
@@ -105,20 +109,30 @@ int main(int pArgC, char *pArgV[])
     QProcess process;
     QStringList failedTests;
 
-    process.setProcessChannelMode(QProcess::ForwardedChannels);
+    process.setProcessChannelMode(QProcess::MergedChannels);
 
     auto testBegin = testsGroups.constBegin();
     auto testEnd = testsGroups.constEnd();
 
+    QFile logFile(QFileInfo(pArgV[0]).canonicalFilePath()+".log");
+    QFile stdoutFile;
+    QFile &file = logMode?logFile:stdoutFile;
+
+    if (logMode) {
+        file.open(QIODevice::WriteOnly);
+    } else {
+        file.open(stdout, QIODevice::WriteOnly);
+    }
+
     for (auto testsGroup = testBegin; testsGroup != testEnd; ++testsGroup) {
         if (testsGroup != testBegin) {
-            std::cout << std::endl;
-            std::cout << std::endl;
-            std::cout << std::endl;
+            file.write("\n");
+            file.write("\n");
+            file.write("\n");
         }
 
-        std::cout << "********* " << testsGroup.key().toStdString() << " *********" << std::endl;
-        std::cout << std::endl;
+        file.write(QString("********* %1 *********\n").arg(testsGroup.key()).toUtf8());
+        file.write("\n");
 
         for (const auto &testName : testsGroup.value()) {
             // Execute the test itself
@@ -131,55 +145,53 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
-//            QByteArray data = process.readAll();
-
-//            std::cout << data.constData() << std::endl;
+            file.write(process.readAll()+"\n");
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
             }
 
             res = (res != 0)?res:process.exitCode();
-
-            std::cout << std::endl;
         }
 
-        std::cout << QString("*").repeated(9+1+testsGroup.key().count()+1+9).toStdString() << std::endl;
+        file.write((QString("*").repeated(9+1+testsGroup.key().count()+1+9)+"\n").toUtf8());
     }
 
     // Reporting
 
     if (nbOfTests != 0) {
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
+        file.write("\n");
+        file.write("\n");
+        file.write("\n");
     }
 
-    std::cout << "********* Reporting *********" << std::endl;
-    std::cout << std::endl;
+    file.write("********* Reporting *********\n");
+    file.write("\n");
 
     if (failedTests.isEmpty()) {
         if (nbOfTests == 0) {
-            std::cout << "No tests were run!" << std::endl;
+            file.write("No tests were run!\n");
         } else if (nbOfTests == 1) {
-            std::cout << "The test passed!" << std::endl;
+            file.write("The test passed!\n");
         } else {
-            std::cout << "All the tests passed!" << std::endl;
+            file.write("All the tests passed!\n");
         }
     } else {
         if (failedTests.count() == 1) {
-            std::cout << "The following test failed:" << std::endl;
+            file.write("The following test failed:\n");
         } else {
-            std::cout << "The following tests failed:" << std::endl;
+            file.write("The following tests failed:\n");
         }
 
         for (const auto &failedTest : qAsConst(failedTests)) {
-            std::cout << " - " << failedTest.toStdString() << std::endl;
+            file.write(QString(" - %s\n").arg(failedTest).toUtf8());
         }
     }
 
-    std::cout << std::endl;
-    std::cout << "*****************************" << std::endl;
+    file.write("\n");
+    file.write("*****************************\n");
+
+    file.close();
 
     // Return the overall outcome of the tests
 
