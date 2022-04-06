@@ -105,7 +105,7 @@ int main(int pArgC, char *pArgV[])
     QProcess process;
     QStringList failedTests;
 
-    process.setProcessChannelMode(QProcess::ForwardedChannels);
+    process.setProcessChannelMode(QProcess::MergedChannels);
 
     auto testBegin = testsGroups.constBegin();
     auto testEnd = testsGroups.constEnd();
@@ -131,9 +131,7 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
-//            QByteArray data = process.readAll();
-
-//            std::cout << data.constData() << std::endl;
+           std::cout << process.readAll().toStdString() << std::endl;
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
