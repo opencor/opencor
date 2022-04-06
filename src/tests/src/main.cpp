@@ -131,7 +131,9 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
+            std::cout << "---[BEGIN]---" << std::endl;
             std::cout << QString(process.readAll()).toUtf8().constData() << std::endl;
+            std::cout << "----[END]----" << std::endl;
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
