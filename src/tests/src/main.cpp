@@ -105,14 +105,10 @@ int main(int pArgC, char *pArgV[])
     QProcess process;
     QStringList failedTests;
 
-    process.setProcessChannelMode(QProcess::MergedChannels);
+    process.setProcessChannelMode(QProcess::ForwardedChannels);
 
     auto testBegin = testsGroups.constBegin();
     auto testEnd = testsGroups.constEnd();
-
-    QFile file("log.txt");
-
-    file.open(QIODevice::WriteOnly);
 
     for (auto testsGroup = testBegin; testsGroup != testEnd; ++testsGroup) {
         if (testsGroup != testBegin) {
@@ -135,11 +131,9 @@ int main(int pArgC, char *pArgV[])
 
             process.waitForFinished(-1);
 
-            QByteArray data = process.readAll();
+//            QByteArray data = process.readAll();
 
-            std::cout << data.constData() << std::endl;
-
-            file.write(data);
+//            std::cout << data.constData() << std::endl;
 
             if (process.exitCode() != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
@@ -152,8 +146,6 @@ int main(int pArgC, char *pArgV[])
 
         std::cout << QString("*").repeated(9+1+testsGroup.key().count()+1+9).toStdString() << std::endl;
     }
-
-    file.close();
 
     // Reporting
 
