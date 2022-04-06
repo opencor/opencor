@@ -133,7 +133,7 @@ int main(int pArgC, char *pArgV[])
 
             QString output = process.readAll();
 
-            std::cout << "---[BEGIN]---" << std::endl;
+            std::cout << "---[BEGIN]---[" << output.size() << "]" << std::endl;
             std::cout << qPrintable(output) << std::endl;
             std::cout << "----[END]----" << std::endl;
 
