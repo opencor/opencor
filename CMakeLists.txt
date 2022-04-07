@@ -74,11 +74,11 @@ if(WIN32)
 
     if(   NOT(    "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC"
               AND "${CMAKE_C_COMPILER_VERSION_MAJOR}" STREQUAL "19"
-              AND "${CMAKE_C_COMPILER_VERSION_MINOR}" STREQUAL "29")
+              AND "${CMAKE_C_COMPILER_VERSION_MINOR}" STREQUAL "16")
        OR NOT(    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
               AND "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"
-              AND "${CMAKE_CXX_COMPILER_VERSION_MINOR}" STREQUAL "29"))
-        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2019 on Windows...")
+              AND "${CMAKE_CXX_COMPILER_VERSION_MINOR}" STREQUAL "16"))
+        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2017 on Windows...")
     endif()
 elseif(APPLE)
     if(    NOT(   "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang"
@@ -340,9 +340,9 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
-# Add support for external projects
+# Configure external projects
 
-include(ExternalProject)
+configure_external_projects()
 
 # On macOS, make sure that we support version 10.14 and later, unless a specific
 # deployment target has been specified
@@ -1042,14 +1042,13 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     # Include different directories needed by our various plugins
 
     foreach(PLUGIN ${PLUGINS})
-        if("${PLUGIN}" MATCHES "^thirdParty/.*$")
-            string(REPLACE "thirdParty/" ""
-                   PLUGIN_NAME "${PLUGIN}")
+        set(PLUGIN_DIR src/plugins/${PLUGIN})
 
-            include_directories(${CMAKE_SOURCE_DIR}/ext/${EXTERNAL_PACKAGE_DIR}/${PLUGIN_NAME}/include)
+        if("${PLUGIN}" MATCHES "^thirdParty/.*$")
+            include_directories(${CMAKE_SOURCE_DIR}/ext/${PLUGIN_DIR}/${EXTERNAL_PACKAGE_DIR}/include)
         endif()
 
-        include_directories(${CMAKE_SOURCE_DIR}/src/plugins/${PLUGIN}/src)
+        include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
     endforeach()
 
     # Build our various plugins
@@ -1181,8 +1180,8 @@ if(APPLE)
     )
 
     # Note: ideally, what follows would be done using macdeployqt, but it has
-    #       regularly been causing us problems, so instead we do everything
-    #       ourselves...
+    #       regularly been causing us problems, so instead we have decided to do
+    #       everything ourselves...
 
     # Clean up the OpenCOR executable
 
@@ -1242,17 +1241,17 @@ else()
         # Note #2: the second set of additional files is needed in case OpenCOR
         #          is to be run on a non-up-to-date copy of Windows 7...
 
-        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community")
+        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community")
             set(MSVC_EDITION Community)
         else()
             set(MSVC_EDITION Enterprise)
         endif()
 
         if(RELEASE_MODE)
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT")
             set(DEBUG_TAG)
         else()
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/VC/Redist/MSVC/14.16.27012/debug_nonredist/x64/Microsoft.VC141.DebugCRT")
             set(DEBUG_TAG d)
         endif()
 
@@ -1261,7 +1260,7 @@ else()
             ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
         )
 
-        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
+        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
             ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
@@ -1667,5 +1666,3 @@ foreach(MODEL_FILE ${MODEL_FILES})
 endforeach()
 
 include(CPack)
-
-cpack_add_component(${CMAKE_PROJECT_NAME})

@@ -21,9 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Python end
 //==============================================================================
 
-#if defined(Q_OS_WIN)
-    #pragma warning(pop)
-#elif defined(Q_OS_MAC)
+#ifdef Q_OS_MAC
     #pragma GCC diagnostic pop
 #endif
 

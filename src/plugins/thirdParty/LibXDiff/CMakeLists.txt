@@ -1,19 +1,23 @@
 project(LibXDiffPlugin)
 
-# Our package characteristics
+# Name and version of our package
 
 set(PACKAGE_NAME LibXDiff)
 set(PACKAGE_VERSION 0.23)
-set(PACKAGE_REPOSITORY libxdiff)
-set(GIT_TAG v0.23)
-set(RELEASE_TAG v0.23)
 
-get_full_local_external_package_dir()
-
-# Version of our package's library
+# Version of our library
 
 set(MAJOR_LIBRARY_VERSION 0)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.23)
+
+# Git tag for our library
+
+set(GIT_TAG v0.23)
+
+# Specify where our local package will be installed
+
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -33,14 +37,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that can be stripped
+# Specify the files that need to have their SHA-1 value checked
 
-set(STRIPPABLE_FILES
+set(SHA1_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND STRIPPABLE_FILES
+    list(APPEND SHA1_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -52,22 +56,28 @@ if(USE_PREBUILT_LIBXDIFF_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             17edf6ae6a3c96e631d018a8c321311e1ac50b0b)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 17edf6ae6a3c96e631d018a8c321311e1ac50b0b
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES bc05933f0452fe10b681003684bcb991ee4f46d3
+                                              dedc7b05e884f1f67fbf45b54ec205d6bf1d660b)
         else()
-            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             304e5eae0818c73465bfd4fddeef8254a175d7a4)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 304e5eae0818c73465bfd4fddeef8254a175d7a4
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES bacfee23d762a3f0e87ee1166fd992187d835c73
+                                              2b2783937c6e01fc246c9776ee511da3ecdd997e)
         endif()
     elseif(APPLE)
-        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         0fed25c6f3fc4d329e0d05a90d912008cd4f2593)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0fed25c6f3fc4d329e0d05a90d912008cd4f2593
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES d74f9864f2a173f076740486482f753e5604ab90)
     else()
-        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         5ddc9aebee50d09abfb1f5b1f486050cce6abcfe)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5ddc9aebee50d09abfb1f5b1f486050cce6abcfe
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 0f402c516a226632106cceeda8f0c7fbf8cccd8d)
     endif()
 else()
     # Ignore some warnings
@@ -81,10 +91,12 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
+            https://github.com/opencor/libxdiff
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -123,9 +135,10 @@ else()
 
     # Package our external project
 
-    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                   include ${STRIPPABLE_FILES})
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
