@@ -1,26 +1,22 @@
 project(Mesa)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME Mesa)
 set(PACKAGE_VERSION 21.2.3)
-
-# Git tag for our library
-
+set(PACKAGE_REPOSITORY mesa)
 set(GIT_TAG v21.2.3)
+set(RELEASE_TAG v21.2.3)
 
-# Specify where our local package will be installed
-
-string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
+get_full_local_external_package_dir()
 
 # Name of our package's shared library
 
 set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.1)
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
@@ -29,27 +25,23 @@ set(SHA1_FILES
 if(USE_PREBUILT_MESA_PACKAGE)
     # Retrieve the library's package
 
-    retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0205e25366e04bae4aa53fe80c462398e73c8f6e
-                          SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES a3c2cb7cff4df0f3c5bf0dbeff2cf78b3e5516b5)
+    retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                     ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                     0205e25366e04bae4aa53fe80c462398e73c8f6e)
 else()
     # Build Mesa as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        DOWNLOAD_DIR
-            ${PACKAGE_BUILD_DIR}
         SOURCE_DIR
-            ${PACKAGE_BUILD_DIR}
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         BINARY_DIR
-            ${PACKAGE_BUILD_DIR}
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/mesa
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -65,10 +57,9 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGED_FILES ${SHA1_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   ${STRIPPABLE_FILES})
 endif()
 
 # Allow our main CMake project to find our Mesa package
