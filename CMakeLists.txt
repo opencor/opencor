@@ -1667,5 +1667,3 @@ foreach(MODEL_FILE ${MODEL_FILES})
 endforeach()
 
 include(CPack)
-
-cpack_add_component(${CMAKE_PROJECT_NAME})
