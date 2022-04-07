@@ -1,30 +1,22 @@
 project(OpenSSLPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME OpenSSL)
 set(PACKAGE_VERSION 1.1.1l)
+set(PACKAGE_REPOSITORY openssl)
+set(GIT_TAG OpenSSL_1_1_1l)
+set(RELEASE_TAG OpenSSL_1_1_1l)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 if(WIN32)
     set(LIBRARY_VERSION 1_1)
 else()
     set(LIBRARY_VERSION 1.1)
 endif()
-
-# Git tag for our library
-
-set(GIT_TAG OpenSSL_1_1_1l)
-
-# Release tag
-
-set(RELEASE_TAG OpenSSL_1_1_1l)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -54,15 +46,15 @@ set(EXTERNAL_BINARIES
     ${SSL_SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${CRYPTO_SHARED_LIBRARY}
     lib/${SSL_SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${CRYPTO_IMPORT_LIBRARY}
         lib/${SSL_IMPORT_LIBRARY}
     )
@@ -75,23 +67,13 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f21977a5a463831374fce5292e7ff0fa5b24b1db
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 52f30f06af9827f01bfd25e325b65e5d35147310
-                                              34fb63a92a0a6088a933a20fdf9f5532d683e835
-                                              69b4ea21b5163b7eca0e6762d5b8bec614d30901
-                                              22ce184b36f43fed99e099fc57cf53a31d3db5a0)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             f21977a5a463831374fce5292e7ff0fa5b24b1db)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cf939bcdc75e9632aeb53baa253e1828ccfbcf86
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7857d24e6aeb6ef5902b6ce4c298b13bb9179451
-                                              4f28ac43bde5bb10ff028add0cec412d7856a1e7
-                                              69b4ea21b5163b7eca0e6762d5b8bec614d30901
-                                              22ce184b36f43fed99e099fc57cf53a31d3db5a0)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             cf939bcdc75e9632aeb53baa253e1828ccfbcf86)
         endif()
 
         # Make a copy of our import libraries
@@ -106,19 +88,13 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                         COMMAND ${CMAKE_COMMAND} -E copy lib/${SSL_IMPORT_LIBRARY} lib/${REAL_SSL_IMPORT_LIBRARY}
                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 75aa411beb8efb8104bdf8624dfa239ec568f771
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3869353fd878fd8d65ddc05f9289febdf14b8647
-                                          e7a32a82b8938f2944ce68f2987aae92768cb8f5)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         75aa411beb8efb8104bdf8624dfa239ec568f771)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fdca6416dbe20628782b75f0c3a75811428e845d
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3cd5e15d869c25087bd50c3b9c3246a47202d10b
-                                          516da4ce25504290e8b1476632263cfbf679a46b)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         fdca6416dbe20628782b75f0c3a75811428e845d)
     endif()
 else()
     # We require Perl to build OpenSSL
@@ -154,18 +130,15 @@ else()
     # Build OpenSSL as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${PACKAGE_BUILD_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/openssl
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
         CONFIGURE_COMMAND
-            ${PERL_EXECUTABLE} Configure ${PLATFORM} ${CONFIG_OPTIONS}
+            ${PERL_EXECUTABLE} <SOURCE_DIR>/Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND
             ${MAKE_NMAKE_COMMAND}
         INSTALL_COMMAND
@@ -213,11 +186,9 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        RELEASE_TAG ${RELEASE_TAG}
-                        PACKAGED_FILES include ${SHA1_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

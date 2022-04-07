@@ -1,23 +1,19 @@
 project(LLVMClangPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME LLVMClang)
 set(PACKAGE_VERSION 12.0.1)
+set(PACKAGE_REPOSITORY llvmclang)
+set(GIT_TAG v12.0.1)
+set(RELEASE_TAG v12.0.1)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 12)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
-
-# Git tag for our library
-
-set(GIT_TAG v12.0.1)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -37,14 +33,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -56,28 +52,22 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 78ffae4e53feb7550d999162bfb81f22d20dfd4d
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9b95f14242d788b7e81b43e7629db0c82f0c303e
-                                              dfa4b0a235a9ba07d28a8f84a7a5e165d6c6b805)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             78ffae4e53feb7550d999162bfb81f22d20dfd4d)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} f1101cffff78483c5e8fd7c7d9f1685115f399f9
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES e3051b7403498580df1479dcd04cc42671767388
-                                              4543f852f1f8e6ab73b4557e79a081ca836209a8)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             f1101cffff78483c5e8fd7c7d9f1685115f399f9)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 341d0a3095e1385cf242cfd3e947c130cc408a9b
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2247d68416c0dd6d036769e330924eb9ad54082d)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         341d0a3095e1385cf242cfd3e947c130cc408a9b)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} cefee41de15625372d8fc162ab3e3713b7770fad
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6f1ab4f763d6c41ea3c6a107cb5e4763aff19f16)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         cefee41de15625372d8fc162ab3e3713b7770fad)
     endif()
 else()
     # Allow for big objects and ignore some warnings
@@ -91,12 +81,10 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/llvmclang
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -147,10 +135,9 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGED_FILES include ${SHA1_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

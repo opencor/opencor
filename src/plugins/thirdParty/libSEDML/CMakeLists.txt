@@ -1,27 +1,19 @@
 project(libSEDMLPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME libSEDML)
 set(PACKAGE_VERSION 0.4.4)
+set(PACKAGE_REPOSITORY libSEDML)
+set(GIT_TAG v0.4.4)
+set(RELEASE_TAG v0.4.4)
+
+get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 0)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.4)
-
-# Git tag for our library
-
-set(GIT_TAG 0.4.4)
-
-# Package repository
-
-set(PACKAGE_REPOSITORY libSEDML)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -41,14 +33,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -60,32 +52,22 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} aa58e6f1c4599ee30fcf77f8767082094f01aeb7
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f63f7f2d03ed05561b7316ce3863678f26ae9eb9
-                                              fa9de78adbf4a9a74ed871d150f65477f6138ebe)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             aa58e6f1c4599ee30fcf77f8767082094f01aeb7)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} c2558bd77ed366ca6109bcddb9e22dc2af72ecf4
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 72654f38292667fc2e9450fca544c02bcd666415
-                                              fa9de78adbf4a9a74ed871d150f65477f6138ebe)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             c2558bd77ed366ca6109bcddb9e22dc2af72ecf4)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 1f8e85082d57ba2820373d7652c53ac16d362e00
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES cbac855943b834817a33c0f619afb9379098e777)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         1f8e85082d57ba2820373d7652c53ac16d362e00)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e7eee27dd9797404650e9fa7efd060db1ca81c0f
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 81fd13a50eab84d6acaf1562bb515aa055638a5d)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         e7eee27dd9797404650e9fa7efd060db1ca81c0f)
     endif()
 else()
     # Build libSEDML as an external project
@@ -95,8 +77,6 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -149,11 +129,9 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                        PACKAGED_FILES include ${SHA1_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

@@ -12,11 +12,9 @@ set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/..)
 
 include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
-# Configure external projects
+# Add support for external projects
 
-set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-configure_external_projects()
+include(ExternalProject)
 
 # Generate our documentation
 

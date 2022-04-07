@@ -1,27 +1,19 @@
 project(OAuthPlugin)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME o2)
 set(PACKAGE_VERSION 1.0.1)
+set(PACKAGE_REPOSITORY o2)
+set(GIT_TAG 1.0.1b)
+set(RELEASE_TAG 1.0.1b)
 
-# Version of our library
+get_full_local_external_package_dir()
+
+# Version of our package's library
 
 set(REAL_LIBRARY_VERSION 1.0.1)
 set(USED_LIBRARY_VERSION 1.0.0)
-
-# Git tag for our library
-
-set(GIT_TAG 1.0.1b)
-
-# Release tag
-
-set(RELEASE_TAG 1.0.1b)
-
-# Specify where our local package will be installed
-
-string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -41,14 +33,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND SHA1_FILES
+    list(APPEND STRIPPABLE_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -60,32 +52,22 @@ if(USE_PREBUILT_OAUTH_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 5c19937bca96738ae10cb86c2f51f1ab55965a06
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 800d744753f2699eaefc82644e536dbd08164b56
-                                              15dc1bf03871c1a437b18361a2f7860ef1fe9384)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             5c19937bca96738ae10cb86c2f51f1ab55965a06)
         else()
-            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} dc1fce6bd7c9ec138efbdd57e8360cd3976b0511
-                                  RELEASE_TAG ${RELEASE_TAG}
-                                  SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 21a23b33faafd582efa41dcff291db7c578700fa
-                                              b248168d0cda7466ee9174ea69ac5a1cf6eaad1a)
+            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                             dc1fce6bd7c9ec138efbdd57e8360cd3976b0511)
         endif()
     elseif(APPLE)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} fff78b1215f4a5b499687fdf0c260e08bbd86e1e
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 922108ebdaf0411e18aa4c388e68ec52439b2ee4)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         fff78b1215f4a5b499687fdf0c260e08bbd86e1e)
     else()
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 306865920c09701db8b6d6ba68d5506c85d27588
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES da4be265eb87ee21f2164c03cf79e834d11f5350)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         306865920c09701db8b6d6ba68d5506c85d27588)
     endif()
 else()
     # Ignore some warnings
@@ -99,12 +81,10 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/o2
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -145,11 +125,9 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        RELEASE_TAG ${RELEASE_TAG}
-                        PACKAGED_FILES include ${SHA1_FILES}
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

@@ -1,23 +1,19 @@
 project(ICU)
 
-# Name and version of our package
+# Our package characteristics
 
 set(PACKAGE_NAME ICU)
 set(PACKAGE_VERSION 56.1)
+set(PACKAGE_REPOSITORY icu)
+set(GIT_TAG v56.1)
+set(RELEASE_TAG v56.1)
+
+get_full_local_external_package_dir()
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 56)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1)
-
-# Git tag for our library
-
-set(GIT_TAG v56.1)
-
-# Specify where our local package will be installed
-
-string(REGEX REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
-       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library
 
@@ -25,9 +21,9 @@ set(ICUDATA_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}icudata${CMAKE_SHARED_L
 set(ICUI18N_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}icui18n${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
 set(ICUUC_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}icuuc${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
-set(SHA1_FILES
+set(STRIPPABLE_FILES
     lib/${ICUDATA_SHARED_LIBRARY}
     lib/${ICUI18N_SHARED_LIBRARY}
     lib/${ICUUC_SHARED_LIBRARY}
@@ -38,26 +34,19 @@ set(SHA1_FILES
 if(USE_PREBUILT_ICU_PACKAGE)
     # Retrieve the library's package
 
-    retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 37cf2e70a0e2aa3f3814360e182a45269c7001f6
-                          SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 09c48c1e7ecaee2ce66d2214eb791bf14a58ed9c
-                                      8ce5cb893e638bc02060271c0fc2f7cbf0156590
-                                      34be5958abf7a7af5f624893925b60cf069f7c43)
+    retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                     ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                     37cf2e70a0e2aa3f3814360e182a45269c7001f6)
 else()
     # Build ICU as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
-        BINARY_DIR
-            ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/icu
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -71,10 +60,9 @@ else()
 
     # Package our external project
 
-    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        PACKAGED_FILES include lib
-                        SHA1_FILES ${SHA1_FILES}
-                        TARGET ${PACKAGE_BUILD})
+    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                   include ${STRIPPABLE_FILES})
 endif()
 
 # Allow our main CMake project to find our ICU package
