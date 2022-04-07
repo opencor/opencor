@@ -1,0 +1,158 @@
+# Size of variable arrays:
+sizeAlgebraic = 13
+sizeStates = 4
+sizeConstants = 14
+from math import *
+from numpy import *
+
+def createLegends():
+    legend_states = [""] * sizeStates
+    legend_rates = [""] * sizeStates
+    legend_algebraic = [""] * sizeAlgebraic
+    legend_voi = ""
+    legend_constants = [""] * sizeConstants
+    legend_constants[0] = "stimPeriod in component stimulus_protocol_params (ms)"
+    legend_constants[1] = "stimDuration in component stimulus_protocol_params (ms)"
+    legend_constants[2] = "stimCurrent in component stimulus_protocol_params (uA_per_cmsq)"
+    legend_voi = "time in component time (ms)"
+    legend_algebraic[9] = "INa in component INa (uA_per_cmsq)"
+    legend_algebraic[11] = "IK in component IK (uA_per_cmsq)"
+    legend_algebraic[12] = "Ileak in component Ileak (uA_per_cmsq)"
+    legend_states[0] = "V in component action_potential (mV)"
+    legend_algebraic[0] = "minus_V in component action_potential (mV)"
+    legend_states[1] = "X in component hh_gating_variable (dimensionless)"
+    legend_states[2] = "X in component hh_gating_variable (dimensionless)"
+    legend_states[3] = "X in component hh_gating_variable (dimensionless)"
+    legend_constants[3] = "V_initial in component initial_conditions (mV)"
+    legend_constants[4] = "n_initial in component initial_conditions (dimensionless)"
+    legend_constants[5] = "m_initial in component initial_conditions (dimensionless)"
+    legend_constants[6] = "h_initial in component initial_conditions (dimensionless)"
+    legend_algebraic[1] = "IStim in component stimulus_protocol (uA_per_cmsq)"
+    legend_constants[7] = "VNa in component parameters (mV)"
+    legend_constants[8] = "VK in component parameters (mV)"
+    legend_constants[9] = "Vleak in component parameters (mV)"
+    legend_constants[10] = "gNa_max in component parameters (mS_per_cmsq)"
+    legend_constants[11] = "gK_max in component parameters (mS_per_cmsq)"
+    legend_constants[12] = "gleak_max in component parameters (mS_per_cmsq)"
+    legend_constants[13] = "Cm in component parameters (uF_per_cmsq)"
+    legend_algebraic[5] = "gNa in component INa (mS_per_cmsq)"
+    legend_algebraic[10] = "gK in component IK (mS_per_cmsq)"
+    legend_algebraic[2] = "alpha in component alpha_m (per_ms)"
+    legend_algebraic[6] = "beta in component beta_m (per_ms)"
+    legend_algebraic[3] = "alpha in component alpha_h (per_ms)"
+    legend_algebraic[7] = "beta in component beta_h (per_ms)"
+    legend_algebraic[4] = "alpha in component alpha_n (per_ms)"
+    legend_algebraic[8] = "beta in component beta_n (per_ms)"
+    legend_rates[0] = "d/dt V in component action_potential (mV)"
+    legend_rates[2] = "d/dt X in component hh_gating_variable (dimensionless)"
+    legend_rates[1] = "d/dt X in component hh_gating_variable (dimensionless)"
+    legend_rates[3] = "d/dt X in component hh_gating_variable (dimensionless)"
+    return (legend_states, legend_algebraic, legend_voi, legend_constants)
+
+def initConsts():
+    constants = [0.0] * sizeConstants; states = [0.0] * sizeStates;
+    constants[0] = 50
+    constants[1] = 0.5
+    constants[2] = -10
+    constants[3] = 0
+    constants[4] = 0.315
+    constants[5] = 0.042
+    constants[6] = 0.608
+    constants[7] = -115
+    constants[8] = 12
+    constants[9] = -10.613
+    constants[10] = 120
+    constants[11] = 36
+    constants[12] = 0.3
+    constants[13] = 1
+    states[0] = constants[3]
+    states[1] = constants[6]
+    states[2] = constants[5]
+    states[3] = constants[4]
+    return (states, constants)
+
+def computeRates(voi, states, constants):
+    rates = [0.0] * sizeStates; algebraic = [0.0] * sizeAlgebraic
+    algebraic[2] = (0.100000*(states[0]+25.0000))/(exp((states[0]+25.0000)/10.0000)-1.00000)
+    algebraic[6] = 4.00000*exp(states[0]/18.0000)
+    rates[2] = algebraic[2]*(1.00000-states[2])-algebraic[6]*states[2]
+    algebraic[3] = 0.0700000*exp(states[0]/20.0000)
+    algebraic[7] = 1.00000/(exp((states[0]+30.0000)/10.0000)+1.00000)
+    rates[1] = algebraic[3]*(1.00000-states[1])-algebraic[7]*states[1]
+    algebraic[4] = (0.0100000*(states[0]+10.0000))/(exp((states[0]+10.0000)/10.0000)-1.00000)
+    algebraic[8] = 0.125000*exp(states[0]/80.0000)
+    rates[3] = algebraic[4]*(1.00000-states[3])-algebraic[8]*states[3]
+    algebraic[5] = constants[10]*(power(states[2], 3.00000))*states[1]
+    algebraic[9] = algebraic[5]*(states[0]-constants[7])
+    algebraic[10] = constants[11]*(power(states[3], 4.00000))
+    algebraic[11] = algebraic[10]*(states[0]-constants[8])
+    algebraic[12] = constants[12]*(states[0]-constants[9])
+    algebraic[1] = custom_piecewise([less( voi % constants[0] , constants[1]), constants[2] , True, 0.000000])
+    rates[0] = (algebraic[1]-(algebraic[9]+algebraic[11]+algebraic[12]))/constants[13]
+    return(rates)
+
+def computeAlgebraic(constants, states, voi):
+    algebraic = array([[0.0] * len(voi)] * sizeAlgebraic)
+    states = array(states)
+    voi = array(voi)
+    algebraic[2] = (0.100000*(states[0]+25.0000))/(exp((states[0]+25.0000)/10.0000)-1.00000)
+    algebraic[6] = 4.00000*exp(states[0]/18.0000)
+    algebraic[3] = 0.0700000*exp(states[0]/20.0000)
+    algebraic[7] = 1.00000/(exp((states[0]+30.0000)/10.0000)+1.00000)
+    algebraic[4] = (0.0100000*(states[0]+10.0000))/(exp((states[0]+10.0000)/10.0000)-1.00000)
+    algebraic[8] = 0.125000*exp(states[0]/80.0000)
+    algebraic[5] = constants[10]*(power(states[2], 3.00000))*states[1]
+    algebraic[9] = algebraic[5]*(states[0]-constants[7])
+    algebraic[10] = constants[11]*(power(states[3], 4.00000))
+    algebraic[11] = algebraic[10]*(states[0]-constants[8])
+    algebraic[12] = constants[12]*(states[0]-constants[9])
+    algebraic[1] = custom_piecewise([less( voi % constants[0] , constants[1]), constants[2] , True, 0.000000])
+    algebraic[0] = -states[0]
+    return algebraic
+
+def custom_piecewise(cases):
+    """Compute result of a piecewise function"""
+    return select(cases[0::2],cases[1::2])
+
+def solve_model():
+    """Solve model with ODE solver"""
+    from scipy.integrate import ode
+    # Initialise constants and state variables
+    (init_states, constants) = initConsts()
+
+    # Set timespan to solve over
+    voi = linspace(0, 10, 500)
+
+    # Construct ODE object to solve
+    r = ode(computeRates)
+    r.set_integrator('vode', method='bdf', atol=1e-06, rtol=1e-06, max_step=1)
+    r.set_initial_value(init_states, voi[0])
+    r.set_f_params(constants)
+
+    # Solve model
+    states = array([[0.0] * len(voi)] * sizeStates)
+    states[:,0] = init_states
+    for (i,t) in enumerate(voi[1:]):
+        if r.successful():
+            r.integrate(t)
+            states[:,i+1] = r.y
+        else:
+            break
+
+    # Compute algebraic variables
+    algebraic = computeAlgebraic(constants, states, voi)
+    return (voi, states, algebraic)
+
+def plot_model(voi, states, algebraic):
+    """Plot variables against variable of integration"""
+    import pylab
+    (legend_states, legend_algebraic, legend_voi, legend_constants) = createLegends()
+    pylab.figure(1)
+    pylab.plot(voi,vstack((states,algebraic)).T)
+    pylab.xlabel(legend_voi)
+    pylab.legend(legend_states + legend_algebraic, loc='best')
+    pylab.show()
+
+if __name__ == "__main__":
+    (voi, states, algebraic) = solve_model()
+    plot_model(voi, states, algebraic)
