@@ -19,6 +19,12 @@ IF EXIST !AppDir!build (
 
     TITLE Generating OpenCOR's documentation using !Generator!...
 
+    IF EXIST "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat" (
+        CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+    ) ELSE (
+        CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    )
+
     SET OrigDir=!CD!
 
     CD !AppDir!build

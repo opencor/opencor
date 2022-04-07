@@ -1,14 +1,9 @@
 project(CellMLAPIPlugin)
 
-# Our package characteristics
+# Name and version of our package
 
 set(PACKAGE_NAME CellMLAPI)
 set(PACKAGE_VERSION 1.12)
-set(PACKAGE_REPOSITORY cellml-api)
-set(GIT_TAG 1.12)
-set(RELEASE_TAG 1.12)
-
-get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
@@ -38,6 +33,20 @@ set(MALAES_LIBRARY_VERSION 1.13)
 
 set(MAJOR_VACSS_LIBRARY_VERSION 1)
 set(VACSS_LIBRARY_VERSION 1.13)
+
+# Git tag for our library
+
+set(GIT_TAG 1.12)
+
+# Package repository and release tag
+
+set(PACKAGE_REPOSITORY cellml-api)
+set(RELEASE_TAG 1.12)
+
+# Specify where our local package will be installed
+
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -113,9 +122,9 @@ set(EXTERNAL_BINARIES
     ${VACSS_SHARED_LIBRARY}
 )
 
-# Specify the files that can be stripped
+# Specify the files that need to have their SHA-1 value checked
 
-set(STRIPPABLE_FILES
+set(SHA1_FILES
     lib/${ANNOTOOLS_SHARED_LIBRARY}
     lib/${CCGS_SHARED_LIBRARY}
     lib/${CELEDS_SHARED_LIBRARY}
@@ -128,7 +137,7 @@ set(STRIPPABLE_FILES
 )
 
 if(WIN32)
-    list(APPEND STRIPPABLE_FILES
+    list(APPEND SHA1_FILES
         lib/${ANNOTOOLS_IMPORT_LIBRARY}
         lib/${CCGS_IMPORT_LIBRARY}
         lib/${CELEDS_IMPORT_LIBRARY}
@@ -148,22 +157,84 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             b8f7766f3ba7d3ac5b8f8c87bc9e8ae57dc9312c)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} b8f7766f3ba7d3ac5b8f8c87bc9e8ae57dc9312c
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 1f1852678ea292832a79c8efc9f55d1cb8ea0ec8
+                                              1b6aca37d31572a69dac43dd5789aeab5020d3b2
+                                              231b40a80ea2404fd189b8a68a8d4760affcc801
+                                              26e0398be1d1d935ad89b7601eeb7d649ef8b3be
+                                              b8e97f1f740abc24349c4aff8b8f4041cd20eac4
+                                              78715fa21806b1bfd9c6ee1014b8192733824e01
+                                              5a0d21c0a0897b005c02221ae653075d5d11f4a5
+                                              4d87163c2d6b75f06815eede8a185f10fc158980
+                                              aa1fe801106f8408517021a1d959b4c0a80c3d49
+                                              c6771b692f0b9b478700995a97e53773f01eef7c
+                                              60ff6c2054053bd25bff9aa2e082ee594bbb16a6
+                                              6a221eed1d076c8b03b7c2bc3fb47f806a45c440
+                                              c1878b8c332ea3f1eac320c850c800e46c4e0ef3
+                                              31dc601c4c0a928ddaa07c2b626bcd748f69c57e
+                                              3547f3ca362aad907f96c25947cb4ab850377321
+                                              88bdc009b40547fdb1469289758453b438084f1c
+                                              d7eb189be16494898dbf0a3900198664eb41b578
+                                              a0cf161095d238e2579d3e6d2190fd6c3bf662ef)
         else()
-            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             ecfdeee15b981c0a044656210b09a66e32891647)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} ecfdeee15b981c0a044656210b09a66e32891647
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 39cda2ec74199626b13a32a09bafc31e790d997f
+                                              a23745991a62ffedfdf95eb8f474f1488f4437a8
+                                              6cf713242ed49b37fc5cf8afa884dbe228221789
+                                              43ea731a55b50de58592ffc53bebddccadcbb0c5
+                                              2017e69d36fec476471cc0c0f2d3d1fdf874e48d
+                                              ec70b5368e5a8402d507560e4c54ef0ecc964396
+                                              45dc4277bb416b2cee079bb8656e4f1a5a55aa94
+                                              98555492f15bfcd60e01ba6976b1aeb93e0f55f6
+                                              e43c49ccce3ada78770bf0d291a5b88a9f87e00c
+                                              c6771b692f0b9b478700995a97e53773f01eef7c
+                                              60ff6c2054053bd25bff9aa2e082ee594bbb16a6
+                                              6a221eed1d076c8b03b7c2bc3fb47f806a45c440
+                                              c1878b8c332ea3f1eac320c850c800e46c4e0ef3
+                                              7dad0b59661d16fdf006592dcb0b531ea6f08963
+                                              3547f3ca362aad907f96c25947cb4ab850377321
+                                              88bdc009b40547fdb1469289758453b438084f1c
+                                              d7eb189be16494898dbf0a3900198664eb41b578
+                                              a0cf161095d238e2579d3e6d2190fd6c3bf662ef)
         endif()
     elseif(APPLE)
-        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         acdaab6b2b9216bfe43f3ff9a4767f2f70e266da)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} acdaab6b2b9216bfe43f3ff9a4767f2f70e266da
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES d7365baa4fcebea79a1653647782dc702a31f0fe
+                                          41de1c586e50ee14bf2544db3cd82347f3b03c50
+                                          4b69558d97db9de1445bcb8114fe3b995e2396ba
+                                          be8cae5c983531f9bc51bc45cfa2b91eff4d7aa2
+                                          5e63d2d31469cfef4cc36029356cef51f266a21d
+                                          2ba11bc26c71d2314cd17fafd718d63781f1c6d5
+                                          58b50c14785109e6fbe4e728104cb1163eceb0d5
+                                          86b7a8211936161c0d47c7727218b1aa165ec5a9
+                                          6436271e06982312e90ed9967d381318b9ab31f3)
     else()
-        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         62f4f9e61fe1c9dfadbfbeb324f81eb618d1e104)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 62f4f9e61fe1c9dfadbfbeb324f81eb618d1e104
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES bba7a197e467e2d0f456b689ba4ac61d0d691ba9
+                                          a63ccaa2653827c48ae2f0dd09cb1cc68367c98d
+                                          c374ec9d91e7a3ca58ada73d91302bb77c5b1f1c
+                                          22b6e5ed021ae004712c3f8cd06f9f3a01b2d6b5
+                                          d79e131d044122c70d284416fdcdb310bc3c748a
+                                          2c883f78053574d23f3717d0349baa7a8f3f0d17
+                                          6242794b4069e6072275455619244eeccd4c2c7a
+                                          f078565570e72e36feea1b26258ccf3582c95cf4
+                                          9ca52e05bb6772b8e01d650648c4c09045a21946)
     endif()
 else()
     # Set some compilation flags and/or ignore some warnings
@@ -180,6 +251,8 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -291,9 +364,12 @@ else()
 
     # Package our external project
 
-    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                   include ${STRIPPABLE_FILES})
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        RELEASE_TAG ${RELEASE_TAG}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

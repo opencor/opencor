@@ -2,6 +2,21 @@ set(LANGUAGES fr)
 
 #===============================================================================
 
+macro(configure_external_projects)
+    # Make sure that we can use the ExternalProject module, and let it know
+    # where we want to build our external packages
+    # Note: indeed, otherwise on Windows we may end up with path names that are
+    #       too long...
+
+    include(ExternalProject)
+
+    set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
+
+    set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
+endmacro()
+
+#===============================================================================
+
 macro(configure_clang_and_clang_tidy TARGET_NAME)
     # Configure Clang and Clang-Tidy for the given target
 
@@ -155,6 +170,8 @@ macro(generate_documentation BUILD_OPENCOR)
     # General documentation
 
     ExternalProject_Add(GeneralDocumentationBuild
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/doc/general
         GIT_REPOSITORY
             https://github.com/opencor/general-documentation
         GIT_SHALLOW
@@ -162,8 +179,8 @@ macro(generate_documentation BUILD_OPENCOR)
             -DMODE=${CMAKE_PROJECT_NAME}
             -DENABLE_DOWNLOADS=${BUILD_OPENCOR}
         INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/GeneralDocumentationBuild-prefix/src/GeneralDocumentationBuild-build/html
-                                               ${CMAKE_BINARY_DIR}/doc/html
+            ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/GeneralDocumentationBuild/html
+                                               ${PROJECT_BUILD_DIR}/doc/html
     )
 
     if(${BUILD_OPENCOR})
@@ -195,6 +212,8 @@ macro(build_documentation DOCUMENTATION_NAME BUILD_OPENCOR)
     endif()
 
     ExternalProject_Add(${DOCUMENTATION_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
         GIT_REPOSITORY
             https://github.com/opencor/opencor-${DOCUMENTATION_NAME}-documentation
         GIT_SHALLOW
@@ -203,8 +222,8 @@ macro(build_documentation DOCUMENTATION_NAME BUILD_OPENCOR)
         LIST_SEPARATOR
             |
         INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/${DOCUMENTATION_BUILD}-prefix/src/${DOCUMENTATION_BUILD}-build/html
-                                               ${CMAKE_BINARY_DIR}/doc/html/${DOCUMENTATION_NAME}
+            ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${DOCUMENTATION_BUILD}/html
+                                                ${PROJECT_BUILD_DIR}/doc/html/${DOCUMENTATION_NAME}
     )
 
     # Make our documentation build target depend on our local target, if we are
@@ -890,136 +909,323 @@ endmacro()
 
 #===============================================================================
 
-macro(create_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_REPOSITORY RELEASE_TAG)
+macro(create_package_file PACKAGE_NAME PACKAGE_VERSION)
     # Various initialisations
 
     set(OPTIONS
         NO_STRIP
     )
+    set(ONE_VALUE_KEYWORDS
+        PACKAGE_REPOSITORY
+        RELEASE_TAG
+        TARGET
+    )
+    set(MULTI_VALUE_KEYWORDS
+        PACKAGED_FILES
+        SHA1_FILES
+    )
 
-    cmake_parse_arguments(ARG "${OPTIONS}" "" "" ${ARGN})
+    cmake_parse_arguments(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    set(PACKAGED_FILES ${ARGN})
-    list(REMOVE_ITEM PACKAGED_FILES NO_STRIP)
-    string(REPLACE ";" " "
-           PACKAGED_FILES "${PACKAGED_FILES}")
+    # Make sure that we have at least one file for which we want to check the
+    # SHA-1 value
+
+    list(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
+
+    if(ARG_SHA1_FILES_COUNT EQUAL 0)
+        message(FATAL_ERROR "At least one file must have its SHA-1 value calculated in order to create the '${PACKAGE_NAME}' package...")
+    endif()
+
+    # The full path to the package's files
+
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+           DIRNAME "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
+
+    # Remove any historical package archive
+
+    set(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+
+    file(REMOVE ${COMPRESSED_FILENAME})
 
     # The actual packaging code goes into a separate CMake script file that is
     # run as a POST_BUILD step
 
-    set(PACKAGE_FILE ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
-    set(PACKAGING_SCRIPT ${PROJECT_BINARY_DIR}/package${PACKAGE_NAME}.cmake)
-    set(CMAKE_CODE "cmake_minimum_required(VERSION 3.14)")
+    set(CMAKE_CODE "cmake_minimum_required(VERSION 3.3)
+
+# Files and directories to package
+
+set(PACKAGED_FILES")
+
+    foreach(FILENAME IN LISTS ARG_PACKAGED_FILES)
+        set(CMAKE_CODE "${CMAKE_CODE}\n    ${FILENAME}")
+    endforeach()
+
+    set(CMAKE_CODE "${CMAKE_CODE}\n)
+
+# Files to have their SHA-1 value checked
+
+set(SHA1_FILES")
+
+    foreach(FILENAME IN LISTS ARG_SHA1_FILES)
+        set(CMAKE_CODE "${CMAKE_CODE}\n    ${FILENAME}")
+    endforeach()
+
+    set(CMAKE_CODE "${CMAKE_CODE}\n)
+
+# Calculate the SHA-1 value of our different files, after having stripped them,
+# if needed
+
+set(SHA1_VALUES)
+
+foreach(SHA1_FILE IN LISTS SHA1_FILES)
+    set(REAL_SHA1_FILENAME \"${DIRNAME}/\$\{SHA1_FILE\}\")
+
+    if(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
+        message(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
+    endif()
+")
 
     if(NOT WIN32 AND RELEASE_MODE AND NOT ARG_NO_STRIP)
-        set(CMAKE_CODE "${CMAKE_CODE}\n
-# Strip our files
-
-foreach(PACKAGED_FILENAME ${PACKAGED_FILES})
-    execute_process(COMMAND strip -x \$\{PACKAGED_FILENAME\}
-                    WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                    OUTPUT_QUIET ERROR_QUIET)
-endforeach()")
+        set(CMAKE_CODE "${CMAKE_CODE}\n    execute_process(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
+")
     endif()
 
-    set(CMAKE_CODE "${CMAKE_CODE}\n
+    set(CMAKE_CODE "${CMAKE_CODE}\n    file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
+
+    list(APPEND SHA1_VALUES \$\{SHA1_VALUE\})
+endforeach()
+
 # Compress our package
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${PACKAGE_FILE} ${PACKAGED_FILES}
-                WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
+                WORKING_DIRECTORY ${DIRNAME}
                 RESULT_VARIABLE RESULT
                 OUTPUT_QUIET)
 
-# Make sure that the package file exists
+# Make sure that the compressed version of our package exists
 
-if(RESULT EQUAL 0 AND EXISTS ${PACKAGE_FILE})
-    # The package file, so calculate its SHA-1 value and let people know how we
-    # should call the retrieve_package() macro
+if(RESULT EQUAL 0 AND EXISTS ${COMPRESSED_FILENAME})
+    # The compressed version of our package exists, so calculate its SHA-1 value
+    # and let people know how we should call the retrieve_package_file() macro
 
-    file(SHA1 ${PACKAGE_FILE} SHA1_VALUE)
+    file(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
+
+    string(REPLACE \"\;\" \"\\n                                  \"
+           SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
-retrieve_package(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
-                 \\$\\{PACKAGE_REPOSITORY\\} \\$\\{RELEASE_TAG\\}
-                 \$\{SHA1_VALUE\})\")
-else()
-    if(EXISTS ${PACKAGE_FILE})
-        file(REMOVE ${PACKAGE_FILE})
+retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
+                      \\$\\{FULL_LOCAL_EXTERNAL_PACKAGE_DIR\\} \$\{SHA1_VALUE\}")
+
+    if(NOT "${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
+        set(CMAKE_CODE "${CMAKE_CODE}\n                      PACKAGE_REPOSITORY \\$\\{PACKAGE_REPOSITORY\\}")
     endif()
 
-    message(FATAL_ERROR \"The '${PACKAGE_NAME}' package could not be created...\")
+    if(NOT "${ARG_RELEASE_TAG}" STREQUAL "")
+        set(CMAKE_CODE "${CMAKE_CODE}\n                      RELEASE_TAG \\$\\{RELEASE_TAG\\}")
+    endif()
+
+    set(CMAKE_CODE "${CMAKE_CODE}\n                      SHA1_FILES \\$\\{SHA1_FILES\\}
+                      SHA1_VALUES \$\{SHA1_VALUES\})\")
+else()
+    if(EXISTS ${COMPRESSED_FILENAME})
+        file(REMOVE ${COMPRESSED_FILENAME})
+    endif()
+
+    message(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
 endif()
 ")
+
+    set(PACKAGING_SCRIPT ${PROJECT_BINARY_DIR}/package${PACKAGE_NAME}.cmake)
 
     file(WRITE ${PACKAGING_SCRIPT} ${CMAKE_CODE})
 
     # Run the packaging script once the dependency target has been satisfied
 
-    add_custom_command(TARGET ${PACKAGE_NAME}Build POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -P ${PACKAGING_SCRIPT}
+    add_custom_command(TARGET ${ARG_TARGET} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -D RELEASE_MODE=${RELEASE_MODE} -P ${PACKAGING_SCRIPT}
                        VERBATIM)
 endmacro()
 
 #===============================================================================
 
-macro(get_full_local_external_package_dir)
-    set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/ext/${EXTERNAL_PACKAGE_DIR}/${PROJECT_NAME})
+macro(check_files DIRNAME FILENAMES SHA1_VALUES)
+    # By default, everything is OK
 
-    if("${PLUGIN}" MATCHES "^thirdParty/.*$")
-        string(REPLACE "Plugin" ""
-               FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
+    set(CHECK_FILES_OK TRUE)
+    set(INVALID_SHA1_FILES)
+    set(MISSING_FILES)
+
+    # See our parameters as lists
+
+    set(FILENAMES_LIST ${FILENAMES})
+    set(SHA1_VALUES_LIST ${SHA1_VALUES})
+
+    # Retrieve the number of SHA-1 files and values we have
+
+    list(LENGTH FILENAMES_LIST FILENAMES_COUNT)
+
+    # Make sure that we have some files
+
+    if(FILENAMES_COUNT)
+        # Determine our range
+
+        math(EXPR RANGE "${FILENAMES_COUNT}-1")
+
+        # Make sure that our files, if they exist, have the expected SHA-1 value
+
+        foreach(I RANGE ${RANGE})
+            list(GET FILENAMES_LIST ${I} FILENAME)
+            list(GET SHA1_VALUES_LIST ${I} SHA1_VALUE)
+
+            set(REAL_FILENAME ${DIRNAME}/${FILENAME})
+
+            if(EXISTS ${REAL_FILENAME})
+                file(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
+
+                if(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
+                    # The file doesn't have the expected SHA-1 value, so remove
+                    # it and fail the checks
+
+                    file(REMOVE ${REAL_FILENAME})
+
+                    set(CHECK_FILES_OK FALSE)
+
+                    list(APPEND INVALID_SHA1_FILES ${FILENAME})
+                endif()
+            else()
+                # The file is missing, so fail the checks
+
+                set(CHECK_FILES_OK FALSE)
+
+                list(APPEND MISSING_FILES ${FILENAME})
+            endif()
+        endforeach()
     endif()
 endmacro()
 
 #===============================================================================
 
-macro(retrieve_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_REPOSITORY RELEASE_TAG SHA1_VALUE)
-    # Check whether the package has already been retrieved by simply checking
-    # whether its installation directory exists
+macro(check_file DIRNAME FILENAME SHA1_VALUE)
+    # Convenience macro
 
-    get_full_local_external_package_dir()
+    check_files(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
-    message("Retrieving the '${PACKAGE_NAME}' package...")
+    set(CHECK_FILE_OK ${CHECK_FILES_OK})
+    set(INVALID_SHA1_FILE ${INVALID_SHA1_FILES})
+    set(MISSING_FILE ${MISSING_FILES})
+endmacro()
 
-    if(NOT EXISTS ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
-        # Retrieve the package
+#===============================================================================
 
-        set(PACKAGE_FILE ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
-        set(REAL_PACKAGE_FILE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PACKAGE_FILE})
-        set(PACKAGE_URL "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${PACKAGE_FILE}")
+macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
+    # Various initialisations
 
-        file(DOWNLOAD ${PACKAGE_URL} ${REAL_PACKAGE_FILE}
+    set(OPTIONS)
+    set(ONE_VALUE_KEYWORDS
+        PACKAGE_REPOSITORY
+        RELEASE_TAG
+    )
+    set(MULTI_VALUE_KEYWORDS
+        SHA1_FILES
+        SHA1_VALUES
+    )
+
+    cmake_parse_arguments(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
+
+    # Make sure that we have at least one file for which we need to check the
+    # SHA-1 value
+
+    list(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
+    list(LENGTH ARG_SHA1_VALUES ARG_SHA1_VALUES_COUNT)
+
+    if(       ARG_SHA1_FILES_COUNT EQUAL 0
+       OR NOT ARG_SHA1_FILES_COUNT EQUAL ARG_SHA1_VALUES_COUNT)
+        message(FATAL_ERROR "At least one file must have its SHA-1 value checked in order to retrieve the '${PACKAGE_NAME}' package...")
+    endif()
+
+    # Create our destination folder, if needed
+
+    if(NOT EXISTS ${DIRNAME})
+        file(MAKE_DIRECTORY ${DIRNAME})
+    endif()
+
+    # Make sure that we have the expected package's files
+
+    check_files(${DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+
+    if(NOT CHECK_FILES_OK)
+        # Something went wrong with the package's files, so retrieve the package
+
+        message("Retrieving the '${PACKAGE_NAME}' package...")
+
+        set(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+        set(FULL_COMPRESSED_FILENAME ${DIRNAME}/${COMPRESSED_FILENAME})
+
+        if("${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
+            string(TOLOWER ${PACKAGE_NAME} PACKAGE_REPOSITORY)
+        else()
+            set(PACKAGE_REPOSITORY ${ARG_PACKAGE_REPOSITORY})
+        endif()
+
+        if("${ARG_RELEASE_TAG}" STREQUAL "")
+            set(RELEASE_TAG v${PACKAGE_VERSION})
+        else()
+            set(RELEASE_TAG ${ARG_RELEASE_TAG})
+        endif()
+
+        set(PACKAGE_URL "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}")
+
+        file(DOWNLOAD ${PACKAGE_URL} ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
-        # Uncompress the package, should we have managed to retrieve it
+        # Uncompress the compressed version of the package, should we have
+        # managed to retrieve it and should its SHA-1 value be as expected
 
         list(GET STATUS 0 STATUS_CODE)
 
         if(${STATUS_CODE} EQUAL 0)
-            file(SHA1 ${REAL_PACKAGE_FILE} REAL_SHA1_VALUE)
+            check_file(${DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
 
-            if(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-                file(REMOVE_RECURSE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
-
-                message(FATAL_ERROR "The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') does not have the expected SHA-1 value...")
+            if(NOT CHECK_FILE_OK)
+                message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') does not have the expected SHA-1 value...")
             endif()
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${REAL_PACKAGE_FILE}
-                            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
+                            WORKING_DIRECTORY ${DIRNAME}
                             RESULT_VARIABLE RESULT
                             OUTPUT_QUIET ERROR_QUIET)
 
-            if(NOT RESULT EQUAL 0)
-                file(REMOVE_RECURSE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
-
-                message(FATAL_ERROR "The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') could not be uncompressed...")
-            endif()
-
-            file(REMOVE ${REAL_PACKAGE_FILE})
+            file(REMOVE ${FULL_COMPRESSED_FILENAME})
         else()
-            file(REMOVE_RECURSE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+            file(REMOVE ${FULL_COMPRESSED_FILENAME})
+            # Note: this is in case we had an HTTP/S error of sorts, in which
+            #       case we would end up with an empty file...
 
-            message(FATAL_ERROR "The '${PACKAGE_NAME}' package could not be retrieved from '${PACKAGE_URL}'...")
+            message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved from '${PACKAGE_URL}'...")
+        endif()
+
+        # Check that the package's files, if we managed to uncompress the
+        # package, have the expected SHA-1 values
+
+        if(RESULT EQUAL 0)
+            check_files(${DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+
+            if(NOT CHECK_FILES_OK)
+                message("The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') is invalid:")
+
+                foreach(SHA1_FILE ${ARG_SHA1_FILES})
+                    if("${SHA1_FILE}" IN_LIST INVALID_SHA1_FILES)
+                        message(" - '${SHA1_FILE}' does not have the expected SHA-1 value...")
+                    elseif("${SHA1_FILE}" IN_LIST MISSING_FILES)
+                        message(" - '${SHA1_FILE}' is missing...")
+                    endif()
+                endforeach()
+
+                message(FATAL_ERROR)
+            endif()
+        else()
+            message(FATAL_ERROR "The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') could not be uncompressed...")
         endif()
     endif()
 endmacro()

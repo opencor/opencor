@@ -1,19 +1,27 @@
 project(libSBMLPlugin)
 
-# Our package characteristics
+# Name and version of our package
 
 set(PACKAGE_NAME libSBML)
 set(PACKAGE_VERSION 5.19.0)
-set(PACKAGE_REPOSITORY libsbml)
-set(GIT_TAG v5.19.0)
-set(RELEASE_TAG v5.19.0)
-
-get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 5)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.19.0)
+
+# Git tag for our library
+
+set(GIT_TAG v5.19.0)
+
+# Package repository
+
+set(PACKAGE_REPOSITORY libsbml)
+
+# Specify where our local package will be installed
+
+string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ext"
+       FULL_LOCAL_EXTERNAL_PACKAGE_DIR "${PROJECT_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}")
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -33,14 +41,14 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that can be stripped
+# Specify the files that need to have their SHA-1 value checked
 
-set(STRIPPABLE_FILES
+set(SHA1_FILES
     lib/${SHARED_LIBRARY}
 )
 
 if(WIN32)
-    list(APPEND STRIPPABLE_FILES
+    list(APPEND SHA1_FILES
         lib/${IMPORT_LIBRARY}
     )
 endif()
@@ -52,22 +60,32 @@ if(USE_PREBUILT_LIBSBML_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             eb16c13181c35d7c9c5ff2a8b848127359668fda)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} eb16c13181c35d7c9c5ff2a8b848127359668fda
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES ef9e855dc79fb68b928a9dfd00f74951de72d373
+                                              b08b8199d823fe81d74bd3b45a7c675922f96b75)
         else()
-            retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                             ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             0402549c9be74541589007232ef974c2d59808a3)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} 0402549c9be74541589007232ef974c2d59808a3
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES a54d3719338cda1b26c92f4012feafae43bf7280
+                                              8308ae418e7436ff77bc05460ca5637977908e6b)
         endif()
     elseif(APPLE)
-        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         bb62c94856fc7294dab3a9ffd39e670428a90306)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} bb62c94856fc7294dab3a9ffd39e670428a90306
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES c917dd10671822b851c73fa34c3ece15dfd24ab6)
     else()
-        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         e27ea428b40a2e5187264e4cd131af7b3b5c3346)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} e27ea428b40a2e5187264e4cd131af7b3b5c3346
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES df5d322aaf83965ae599a2d7aefca5ca33f027d4)
     endif()
 else()
     # Download some dependencies for Windows, if needed
@@ -82,7 +100,7 @@ else()
         endif()
 
         set(DEPENDENCIES_FILENAME libSBML_dependencies_vs15_${MODE}_x64.zip)
-        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/prebuilt/dependencies)
+        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext/dependencies)
         set(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
 
         if(NOT EXISTS ${DEPENDENCIES_MODE_DIR})
@@ -125,10 +143,12 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
+            https://github.com/opencor/libsbml
         GIT_TAG
             ${GIT_TAG}
         GIT_SHALLOW
@@ -172,9 +192,11 @@ else()
 
     # Package our external project
 
-    create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                   ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                   include ${STRIPPABLE_FILES})
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
