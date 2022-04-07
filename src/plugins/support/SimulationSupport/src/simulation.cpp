@@ -858,12 +858,11 @@ SimulationResults::~SimulationResults()
 
 //==============================================================================
 
-QString SimulationResults::uri(const QStringList &pComponentHierarchy,
-                               const QString &pName)
+QString SimulationResults::uri(const CellMLSupport::CellmlFileRuntimeParameter *pParameter)
 {
     // Generate an URI using the given component hierarchy and name
 
-    QString res = pComponentHierarchy.join('/')+"/"+pName;
+    QString res = pParameter->componentHierarchy().last()+"/"+pParameter->formattedName();
 
     return res.replace('\'', "/prime");
 }
@@ -909,7 +908,7 @@ void SimulationResults::createDataStore()
 
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
             mPointsVariable->setType(int(parameterType));
-            mPointsVariable->setUri(uri(runtime->voi()->componentHierarchy(), runtime->voi()->name()));
+            mPointsVariable->setUri(uri(runtime->voi()));
             mPointsVariable->setName(runtime->voi()->name());
             mPointsVariable->setUnit(runtime->voi()->unit());
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
@@ -929,13 +928,13 @@ void SimulationResults::createDataStore()
 
         if (variable != nullptr) {
             variable->setType(int(parameterType));
-            variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
+            variable->setUri(uri(parameter));
             variable->setName(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
 
         if (value != nullptr) {
-            value->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
+            value->setUri(uri(parameter));
         }
     }
 
@@ -1044,7 +1043,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
         DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
 
         variable->setType(int(parameter->type()));
-        variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
+        variable->setUri(uri(parameter));
         variable->setName(parameter->formattedName());
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
     }
