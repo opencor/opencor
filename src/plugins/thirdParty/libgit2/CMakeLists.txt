@@ -14,7 +14,7 @@ get_full_local_external_package_dir()
 
 set(MAJOR_LIBRARY_VERSION 1)
 set(MINOR_LIBRARY_VERSION 4)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.2)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Name of our package's shared library (and of its import library, if any)
 
