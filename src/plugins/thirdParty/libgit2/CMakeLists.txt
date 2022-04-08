@@ -105,7 +105,7 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            -DBUILD_CLAR=OFF
+            -DBUILD_TESTS=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
@@ -115,7 +115,7 @@ else()
             -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
             -DUSE_HTTPS=OpenSSL
             -DUSE_SSH=OFF
-            -DWINHTTP=OFF
+            -DUSE_WINHTTP=OFF
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
