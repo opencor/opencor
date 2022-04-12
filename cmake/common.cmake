@@ -252,7 +252,6 @@ macro(add_plugin PLUGIN_NAME)
     set(MULTI_VALUE_KEYWORDS
         SOURCES
         UIS
-        DEFINITIONS
         PLUGINS
         QT_MODULES
         EXTERNAL_BINARIES
@@ -297,12 +296,6 @@ macro(add_plugin PLUGIN_NAME)
     # Definition to make sure that the plugin can be used by other plugins
 
     add_compile_definitions(${PLUGIN_NAME}_PLUGIN)
-
-    # Some plugin-specific definitions
-
-    foreach(ARG_DEFINITION ${ARG_DEFINITIONS})
-        add_compile_definitions(${ARG_DEFINITION})
-    endforeach()
 
     # On Linux, set the RPATH value to use by the plugin
 
