@@ -3,10 +3,10 @@ project(OAuthPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME o2)
-set(PACKAGE_VERSION 1.0.1)
+set(PACKAGE_VERSION 1.0.2)
 set(PACKAGE_REPOSITORY o2)
-set(GIT_TAG 1.0.1b)
-set(RELEASE_TAG 1.0.1b)
+set(GIT_TAG 1.0.2)
+set(RELEASE_TAG 1.0.2)
 
 get_full_local_external_package_dir()
 
@@ -54,26 +54,26 @@ if(USE_PREBUILT_OAUTH_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             5c19937bca96738ae10cb86c2f51f1ab55965a06)
+                             beda70f0fe3719b67f296985ae0e53bac1532c78)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             dc1fce6bd7c9ec138efbdd57e8360cd3976b0511)
+                             8a5af57d7d7158b1f3e429473e95204023c9d49d)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         fff78b1215f4a5b499687fdf0c260e08bbd86e1e)
+                         7da41d39274427da6f34498129c002f768a80ba0)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         306865920c09701db8b6d6ba68d5506c85d27588)
+                         b1d42fce922e205c548dea0661e75ac96a56828c)
     endif()
 else()
     # Ignore some warnings
 
     if(WIN32)
-        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4061 /wd4127 /wd4242 /wd4365 /wd4464 /wd4548 /wd4571 /wd4619 /wd4625 /wd4626 /wd4710 /wd4711 /wd4820 /wd5026 /wd5027")
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4061 /wd4242 /wd4365 /wd4464 /wd4619 /wd4625 /wd4626 /wd4710 /wd4711 /wd4820 /wd4946 /wd5026 /wd5027 /wd5045 /wd5219 /wd5243")
     endif()
 
     # Build OAuth as an external project
@@ -97,6 +97,7 @@ else()
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+            -Do2_WITH_KEYCHAIN=OFF
             -Do2_WITH_OAUTH1=ON
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
