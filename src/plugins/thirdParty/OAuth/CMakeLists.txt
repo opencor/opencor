@@ -54,20 +54,20 @@ if(USE_PREBUILT_OAUTH_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             5c19937bca96738ae10cb86c2f51f1ab55965a06)
+                             beda70f0fe3719b67f296985ae0e53bac1532c78)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             dc1fce6bd7c9ec138efbdd57e8360cd3976b0511)
+                             8a5af57d7d7158b1f3e429473e95204023c9d49d)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         fff78b1215f4a5b499687fdf0c260e08bbd86e1e)
+                         7da41d39274427da6f34498129c002f768a80ba0)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         306865920c09701db8b6d6ba68d5506c85d27588)
+                         b1d42fce922e205c548dea0661e75ac96a56828c)
     endif()
 else()
     # Ignore some warnings
