@@ -3,10 +3,10 @@ project(Mesa)
 # Our package characteristics
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 21.2.3)
+set(PACKAGE_VERSION 21.3.8)
 set(PACKAGE_REPOSITORY mesa)
-set(GIT_TAG v21.2.3)
-set(RELEASE_TAG v21.2.3)
+set(GIT_TAG v21.3.8)
+set(RELEASE_TAG v21.3.8)
 
 get_full_local_external_package_dir()
 
