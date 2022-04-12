@@ -560,7 +560,7 @@ if(RELEASE_MODE)
 
     # Make sure that debugging is disabled in Qt
 
-    add_definitions(-DQT_NO_DEBUG)
+    add_compile_definitions(QT_NO_DEBUG)
 else()
     # Default debug compiler and linker settings
 
@@ -573,17 +573,17 @@ else()
 
     # Make sure that debugging is enabled in Qt
 
-    add_definitions(-DQT_DEBUG)
+    add_compile_definitions(QT_DEBUG)
 endif()
 
 # Ask for Qt deprecated uses to be reported
 
-add_definitions(-DQT_DEPRECATED_WARNINGS)
+add_compile_definitions(QT_DEPRECATED_WARNINGS)
 
 # Make sure that Unicode is defined
 # Note: at least needed for QtSingleApplication on Windows...
 
-add_definitions(-DUNICODE)
+add_compile_definitions(UNICODE)
 
 # Destination of our plugins so that we don't have to deploy OpenCOR on Windows
 # and Linux before being able to test it
@@ -1014,7 +1014,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
             # Let OpenCOR know about the sample plugins being enabled
 
-            add_definitions(-DENABLE_SAMPLE_PLUGINS)
+            add_compile_definitions(ENABLE_SAMPLE_PLUGINS)
         endif()
 
         # Build our test plugins, if required
@@ -1030,13 +1030,13 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
             # Let OpenCOR know about the test plugins being enabled
 
-            add_definitions(-DENABLE_TEST_PLUGINS)
+            add_compile_definitions(ENABLE_TEST_PLUGINS)
         endif()
 
         # Let OpenCOR know about the prebuilt version of our QtWebKit package
         # being used
 
-        add_definitions(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
+        add_compile_definitions(USE_PREBUILT_QTWEBKIT_PACKAGE)
     endif()
 
     # Include different directories needed by our various plugins
@@ -1065,7 +1065,7 @@ endif()
 if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
     set(PYTHON_SUPPORT TRUE)
 
-    add_definitions(-DPYTHON_SUPPORT)
+    add_compile_definitions(PYTHON_SUPPORT)
 
     string(REPLACE "${PROJECT_BUILD_DIR}/" ""
            RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
@@ -1088,7 +1088,7 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${RESOURCES}
 )
 
-add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
+add_compile_definitions(${CMAKE_PROJECT_NAME}_MAIN)
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GUI_SUPPORT)
 
