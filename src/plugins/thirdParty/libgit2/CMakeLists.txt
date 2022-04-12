@@ -3,17 +3,17 @@ project(libgit2Plugin)
 # Our package characteristics
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 1.3.0)
+set(PACKAGE_VERSION 1.4.2)
 set(PACKAGE_REPOSITORY libgit2)
-set(GIT_TAG v1.3.0-opencor)
-set(RELEASE_TAG v1.3.0-opencor)
+set(GIT_TAG v1.4.2-opencor)
+set(RELEASE_TAG v1.4.2-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(MINOR_LIBRARY_VERSION 3)
+set(MINOR_LIBRARY_VERSION 4)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Name of our package's shared library (and of its import library, if any)
@@ -58,20 +58,20 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             46159c49e10e7652240bcde1b84ed2c68d601e94)
+                             b235e7a67f219432d2b18412ac0e77def03b238f)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             af94acf18c0a891b60de1b15a9a38212422d9b4d)
+                             6d9cab002f991caecbd3b95b4792323263943ddc)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         d690fc3b7c19f00da1d27da03d788169c5e52063)
+                         9b9e01a0b66cce6ea2de4474cd1633f143525bae)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         34a64017a1d4ede8f46ca109a608b7dd6eef86c5)
+                         3ae1c249a584272fd8062a1835f134b990063235)
     endif()
 else()
     # Ignore some warnings
@@ -105,7 +105,7 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            -DBUILD_CLAR=OFF
+            -DBUILD_TESTS=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
@@ -115,7 +115,7 @@ else()
             -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
             -DUSE_HTTPS=OpenSSL
             -DUSE_SSH=OFF
-            -DWINHTTP=OFF
+            -DUSE_WINHTTP=OFF
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS

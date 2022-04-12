@@ -42,13 +42,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "git2/commit.h"
     #include "git2/errors.h"
     #include "git2/graph.h"
-    #include "git2/index.h"
     #include "git2/merge.h"
     #include "git2/message.h"
-    #include "git2/remote.h"
-    #include "git2/repository.h"
     #include "git2/signature.h"
-    #include "git2/status.h"
     #include "git2/submodule.h"
 #include "libgit2end.h"
 
@@ -351,11 +347,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
     // Get an empty buffer to hold the cleaned message
 
-    git_buf message;
-
-    message.ptr = nullptr;
-
-    git_buf_set(&message, nullptr, 0);
+    git_buf message = GIT_BUF_INIT;
 
     // Clean up the message and remove comments (which start with ";")
 
