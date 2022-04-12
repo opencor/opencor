@@ -87,11 +87,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "libsedmlbegin.h"
     #include "sedml/SedAlgorithm.h"
+    #include "sedml/SedCurve.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
     #include "sedml/SedPlot2D.h"
     #include "sedml/SedRepeatedTask.h"
-    #include "sedml/SedSimulation.h"
+    #include "sedml/SedTask.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
 #include "libsedmlend.h"

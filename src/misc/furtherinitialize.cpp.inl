@@ -411,7 +411,7 @@ QString Simulation::furtherInitialize() const
         graphPanel->removeAllGraphs();
 
         for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
-            libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
+            libsedml::SedCurve *sedmlCurve = static_cast<libsedml::SedCurve *>(sedmlPlot2d->getCurve(j));
 
             libsedml::SedVariable *xVariable = sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0);
             libsedml::SedVariable *yVariable = sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0);

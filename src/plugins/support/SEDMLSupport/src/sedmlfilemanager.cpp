@@ -28,13 +28,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "libsedmlbegin.h"
-    #include "sedml/SedDocument.h"
-    #include "sedml/SedReader.h"
-#include "libsedmlend.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SEDMLSupport {
 
