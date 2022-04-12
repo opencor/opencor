@@ -54,20 +54,20 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             aa58e6f1c4599ee30fcf77f8767082094f01aeb7)
+                             a82f4d9c410cc08a5848ce42ae3c096e5b46af6f)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             c2558bd77ed366ca6109bcddb9e22dc2af72ecf4)
+                             921f97546836bbad5ab1fc7cdaf2a3b72f87538b)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         1f8e85082d57ba2820373d7652c53ac16d362e00)
+                         fb0ce5a004a8bb45925adb8a547100fe4c9a2bda)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         e7eee27dd9797404650e9fa7efd060db1ca81c0f)
+                         5d7e65e0090d8802f94b60ab7754ad9adcbfda53)
     endif()
 else()
     # Build libSEDML as an external project

@@ -54,20 +54,20 @@ if(USE_PREBUILT_LIBNUML_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             a1436d4733db8b8a1a94128381ff478afa75c806)
+                             102c1409fbf14f7a198c2d4c1ba8338e9fecddc8)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             09bbe60176aba305468e57621a9960b12f3c716b)
+                             a68ef581b6bec4056b54ae118469886ee0ca6761)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         b71d6595e6ccd9de246a248a6cce12ab67f578e1)
+                         c577dbe8058b2ec1f31f740db082f27f96ed429c)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         d6e144496043bd9916a85d998bbf3f97d4b95991)
+                         299f51f4485a6bbc436279b2190219e453644fc0)
     endif()
 else()
     # Build libNuML as an external project
