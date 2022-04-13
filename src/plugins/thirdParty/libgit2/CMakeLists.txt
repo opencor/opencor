@@ -67,7 +67,7 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         9b9e01a0b66cce6ea2de4474cd1633f143525bae)
+                         b50cdf6cb04fa10eeeb0144d6699173eb2138d4a)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}

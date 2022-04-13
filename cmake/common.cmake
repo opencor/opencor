@@ -956,7 +956,7 @@ endmacro()
 #===============================================================================
 
 macro(get_full_local_external_package_dir)
-    set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/ext/${EXTERNAL_PACKAGE_DIR}/${PROJECT_NAME})
+    set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}/${PROJECT_NAME})
 
     if("${PLUGIN}" MATCHES "^thirdParty/.*$")
         string(REPLACE "Plugin" ""
