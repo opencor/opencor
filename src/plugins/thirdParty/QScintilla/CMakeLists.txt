@@ -66,20 +66,20 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             d31479f7e03503524a31d8aa243f38d7318dd194)
+                             66bb2026cfdaf504d42a824cb1232698974faa99)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             aeace81825c1853a906dffc8b9880389f373636c)
+                             a61cbbdf99a45638a649db4b3a35f5fc13c6e4c3)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         677fbd7b4eff1a00703abde3e9d69f5130fc1961)
+                         cdd2e3e38de96a8a4334d7c48d2cb68013435738)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cdd4fc923739c833ace583c4a8db407204c23f0a)
+                         e529c9c1e0c25aab97ce98baf8dc78b7f02662f2)
     endif()
 else()
     # Set platform specific configuration options
