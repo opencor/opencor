@@ -314,14 +314,14 @@ set(PLATFORM_DISTRIB_DIR ${DISTRIB_DIR}/${PLATFORM})
 
 if(WIN32)
     if(RELEASE_MODE)
-        set(EXTERNAL_PACKAGE_DIR release)
+        set(EXTERNAL_PACKAGE_DIR ext/release)
     else()
-        set(EXTERNAL_PACKAGE_DIR debug)
+        set(EXTERNAL_PACKAGE_DIR ext/debug)
     endif()
 
     set(DEST_EXTERNAL_LIBRARIES_DIR bin)
 else()
-    set(EXTERNAL_PACKAGE_DIR .)
+    set(EXTERNAL_PACKAGE_DIR ext)
 
     if(APPLE)
         set(DEST_EXTERNAL_LIBRARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
@@ -1046,7 +1046,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             string(REPLACE "thirdParty/" ""
                    PLUGIN_NAME "${PLUGIN}")
 
-            include_directories(${CMAKE_SOURCE_DIR}/ext/${EXTERNAL_PACKAGE_DIR}/${PLUGIN_NAME}/include)
+            include_directories(${CMAKE_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}/${PLUGIN_NAME}/include)
         endif()
 
         include_directories(${CMAKE_SOURCE_DIR}/src/plugins/${PLUGIN}/src)
