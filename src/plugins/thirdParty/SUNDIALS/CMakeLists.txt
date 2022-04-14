@@ -219,20 +219,20 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             56109dfb801553df44413347e08b3b5b9cd276ea)
+                             9aafe8358a5209b0cb8dd5b0cbf04c7a6b3da8b1)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             f3c55d075550905c441f6c1a3215b5e370a53bc7)
+                             9be96d3593a55e90c687e31f9e0ce78230e8b568)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         297f4fd4af897559e786422deafbe1944ea4e374)
+                         bd5e82d21ae0f40913940d4b04736c0cc0efad24)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         bb0f6aa9c3ebaac3fe92ccdce3db725109c327de)
+                         9c2a1fd323566e95d679c3d25f95fc24f56be55c)
     endif()
 else()
     # Ignore some warnings
