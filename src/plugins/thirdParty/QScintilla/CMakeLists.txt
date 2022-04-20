@@ -156,7 +156,8 @@ else()
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                    ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                   include ${STRIPPABLE_FILES})
+                   include ${STRIPPABLE_FILES}
+                   ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
