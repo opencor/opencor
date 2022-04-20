@@ -262,20 +262,20 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
         // Create our SUNDIALS context
 
-        SUNContext mContext;
+        SUNContext context;
 
-        SUNContext_Create(nullptr, &mContext);
+        SUNContext_Create(nullptr, &context);
 
         // Create some vectors
 
-        N_Vector parametersVector = N_VMake_Serial(pSize, pParameters, mContext);
-        N_Vector onesVector = N_VNew_Serial(pSize, mContext);
+        N_Vector parametersVector = N_VMake_Serial(pSize, pParameters, context);
+        N_Vector onesVector = N_VNew_Serial(pSize, context);
 
         N_VConst(1.0, onesVector);
 
         // Create our KINSOL solver
 
-        void *solver = KINCreate(mContext);
+        void *solver = KINCreate(context);
 
         // Use our own error handler
 
@@ -301,26 +301,26 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         SUNLinearSolver linearSolver;
 
         if (linearSolverValue == DenseLinearSolver) {
-            matrix = SUNDenseMatrix(pSize, pSize, mContext);
-            linearSolver = SUNLinSol_Dense(parametersVector, matrix, mContext);
+            matrix = SUNDenseMatrix(pSize, pSize, context);
+            linearSolver = SUNLinSol_Dense(parametersVector, matrix, context);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (linearSolverValue == BandedLinearSolver) {
             matrix = SUNBandMatrix(pSize, upperHalfBandwidthValue,
-                                          lowerHalfBandwidthValue, mContext);
-            linearSolver = SUNLinSol_Band(parametersVector, matrix, mContext);
+                                          lowerHalfBandwidthValue, context);
+            linearSolver = SUNLinSol_Band(parametersVector, matrix, context);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (linearSolverValue == GmresLinearSolver) {
-            linearSolver = SUNLinSol_SPGMR(parametersVector, PREC_NONE, 0, mContext);
+            linearSolver = SUNLinSol_SPGMR(parametersVector, PREC_NONE, 0, context);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (linearSolverValue == BiCgStabLinearSolver) {
-            linearSolver = SUNLinSol_SPBCGS(parametersVector, PREC_NONE, 0, mContext);
+            linearSolver = SUNLinSol_SPBCGS(parametersVector, PREC_NONE, 0, context);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         } else {
-            linearSolver = SUNLinSol_SPTFQMR(parametersVector, PREC_NONE, 0, mContext);
+            linearSolver = SUNLinSol_SPTFQMR(parametersVector, PREC_NONE, 0, context);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
         }
