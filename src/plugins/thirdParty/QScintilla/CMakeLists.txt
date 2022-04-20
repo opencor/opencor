@@ -79,7 +79,7 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         e529c9c1e0c25aab97ce98baf8dc78b7f02662f2)
+                         3f2f8b57f91d7e9fa424f113c46d5547af78afc4)
     endif()
 else()
     # Set platform specific configuration options
