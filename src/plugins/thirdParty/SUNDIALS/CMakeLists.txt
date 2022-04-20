@@ -228,7 +228,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         bd5e82d21ae0f40913940d4b04736c0cc0efad24)
+                         b49b1a166df532c01147822b0c30ad0f7d73ac00)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
@@ -330,17 +330,23 @@ else()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolbandLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyAndFixSunlinsolbandLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLBAND_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolband${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLBAND_SHARED_LIBRARY}
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SUNMATRIXBAND_SHARED_LIBRARY}
+                                                                   @rpath/${SUNMATRIXBAND_SHARED_LIBRARY}
+                                                                   ${SUNLINSOLBAND_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsoldenseLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyAndFixSunlinsoldenseLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLDENSE_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsoldense${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLDENSE_SHARED_LIBRARY}
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SUNMATRIXDENSE_SHARED_LIBRARY}
+                                                                   @rpath/${SUNMATRIXDENSE_SHARED_LIBRARY}
+                                                                   ${SUNLINSOLDENSE_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
