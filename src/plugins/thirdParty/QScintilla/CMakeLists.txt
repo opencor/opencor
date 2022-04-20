@@ -3,17 +3,17 @@ project(QScintillaPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.13.0)
+set(PACKAGE_VERSION 2.13.2)
 set(PACKAGE_REPOSITORY qscintilla)
-set(GIT_TAG v2.13.0)
-set(RELEASE_TAG v2.13.0)
+set(GIT_TAG v2.13.2)
+set(RELEASE_TAG v2.13.2)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 15)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
 
 # Name of our package's shared library (and of its import library, if any)
 
