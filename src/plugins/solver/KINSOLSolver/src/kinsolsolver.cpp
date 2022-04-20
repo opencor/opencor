@@ -29,7 +29,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "kinsol/kinsol.h"
     #include "kinsol/kinsol_direct.h"
     #include "kinsol/kinsol_spils.h"
-    #include "sundials/sundials_context.h"
     #include "sunlinsol/sunlinsol_band.h"
     #include "sunlinsol/sunlinsol_dense.h"
     #include "sunlinsol/sunlinsol_spbcgs.h"

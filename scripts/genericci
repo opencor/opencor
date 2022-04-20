@@ -53,8 +53,6 @@ if [ -d $appDir/build ]; then
         exitCode=$?
     fi
 
-    ls -al $appDir
-
     cd $origDir
 
     if [ $exitCode -ne 0 ]; then
