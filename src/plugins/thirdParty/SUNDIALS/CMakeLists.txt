@@ -3,38 +3,38 @@ project(SUNDIALSPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME SUNDIALS)
-set(PACKAGE_VERSION 5.8.0)
+set(PACKAGE_VERSION 6.1.1)
 set(PACKAGE_REPOSITORY sundials)
-set(GIT_TAG v5.8.0)
-set(RELEASE_TAG v5.8.0)
+set(GIT_TAG v6.1.1-opencor)
+set(RELEASE_TAG v6.1.1-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
-set(MAJOR_ARKODE_LIBRARY_VERSION 4)
-set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.8.0)
+set(MAJOR_ARKODE_LIBRARY_VERSION 5)
+set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_CVODES_LIBRARY_VERSION 5)
-set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.8.0)
+set(MAJOR_CVODES_LIBRARY_VERSION 6)
+set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_IDAS_LIBRARY_VERSION 4)
-set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.8.0)
+set(MAJOR_IDAS_LIBRARY_VERSION 5)
+set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_KINSOL_LIBRARY_VERSION 5)
-set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.8.0)
+set(MAJOR_KINSOL_LIBRARY_VERSION 6)
+set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_NVEC_LIBRARY_VERSION 5)
-set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.8.0)
+set(MAJOR_NVEC_LIBRARY_VERSION 6)
+set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_SUNLINSOL_LIBRARY_VERSION 3)
-set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.8.0)
+set(MAJOR_SUNLINSOL_LIBRARY_VERSION 4)
+set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_SUNNONLINSOL_LIBRARY_VERSION 2)
-set(SUNNONLINSOL_LIBRARY_VERSION ${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}.8.0)
+set(MAJOR_SUNNONLINSOL_LIBRARY_VERSION 3)
+set(SUNNONLINSOL_LIBRARY_VERSION ${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}.1.1)
 
-set(MAJOR_SUNMATRIX_LIBRARY_VERSION 3)
-set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.8.0)
+set(MAJOR_SUNMATRIX_LIBRARY_VERSION 4)
+set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.1.1)
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -219,20 +219,20 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             56109dfb801553df44413347e08b3b5b9cd276ea)
+                             9aafe8358a5209b0cb8dd5b0cbf04c7a6b3da8b1)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             f3c55d075550905c441f6c1a3215b5e370a53bc7)
+                             9be96d3593a55e90c687e31f9e0ce78230e8b568)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         297f4fd4af897559e786422deafbe1944ea4e374)
+                         b49b1a166df532c01147822b0c30ad0f7d73ac00)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         bb0f6aa9c3ebaac3fe92ccdce3db725109c327de)
+                         9c2a1fd323566e95d679c3d25f95fc24f56be55c)
     endif()
 else()
     # Ignore some warnings
@@ -330,17 +330,23 @@ else()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolbandLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyAndFixSunlinsolbandLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLBAND_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolband${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLBAND_SHARED_LIBRARY}
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SUNMATRIXBAND_SHARED_LIBRARY}
+                                                                   @rpath/${SUNMATRIXBAND_SHARED_LIBRARY}
+                                                                   ${SUNLINSOLBAND_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsoldenseLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyAndFixSunlinsoldenseLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLDENSE_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsoldense${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLDENSE_SHARED_LIBRARY}
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SUNMATRIXDENSE_SHARED_LIBRARY}
+                                                                   @rpath/${SUNMATRIXDENSE_SHARED_LIBRARY}
+                                                                   ${SUNLINSOLDENSE_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
