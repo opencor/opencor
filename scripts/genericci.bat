@@ -65,6 +65,8 @@ IF EXIST !AppDir!build (
         SET ExitCode=!ERRORLEVEL!
     )
 
+    DIR /S !AppDir!
+
     CD !OrigDir!
 
     IF NOT !ExitCode! EQU 0 (
