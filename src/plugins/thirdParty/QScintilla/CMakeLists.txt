@@ -3,17 +3,17 @@ project(QScintillaPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.13.0)
+set(PACKAGE_VERSION 2.13.2)
 set(PACKAGE_REPOSITORY qscintilla)
-set(GIT_TAG v2.13.0)
-set(RELEASE_TAG v2.13.0)
+set(GIT_TAG v2.13.2)
+set(RELEASE_TAG v2.13.2)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 15)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -66,20 +66,20 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             d31479f7e03503524a31d8aa243f38d7318dd194)
+                             66bb2026cfdaf504d42a824cb1232698974faa99)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             aeace81825c1853a906dffc8b9880389f373636c)
+                             a61cbbdf99a45638a649db4b3a35f5fc13c6e4c3)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         677fbd7b4eff1a00703abde3e9d69f5130fc1961)
+                         cdd2e3e38de96a8a4334d7c48d2cb68013435738)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cdd4fc923739c833ace583c4a8db407204c23f0a)
+                         3f2f8b57f91d7e9fa424f113c46d5547af78afc4)
     endif()
 else()
     # Set platform specific configuration options
@@ -156,7 +156,8 @@ else()
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                    ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                   include ${STRIPPABLE_FILES})
+                   include ${STRIPPABLE_FILES}
+                   ${NO_STRIP})
 
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()

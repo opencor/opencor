@@ -252,7 +252,6 @@ macro(add_plugin PLUGIN_NAME)
     set(MULTI_VALUE_KEYWORDS
         SOURCES
         UIS
-        DEFINITIONS
         PLUGINS
         QT_MODULES
         EXTERNAL_BINARIES
@@ -296,13 +295,7 @@ macro(add_plugin PLUGIN_NAME)
 
     # Definition to make sure that the plugin can be used by other plugins
 
-    add_definitions(-D${PLUGIN_NAME}_PLUGIN)
-
-    # Some plugin-specific definitions
-
-    foreach(ARG_DEFINITION ${ARG_DEFINITIONS})
-        add_definitions(-D${ARG_DEFINITION})
-    endforeach()
+    add_compile_definitions(${PLUGIN_NAME}_PLUGIN)
 
     # On Linux, set the RPATH value to use by the plugin
 
@@ -963,7 +956,7 @@ endmacro()
 #===============================================================================
 
 macro(get_full_local_external_package_dir)
-    set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/ext/${EXTERNAL_PACKAGE_DIR}/${PROJECT_NAME})
+    set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/${EXTERNAL_PACKAGE_DIR}/${PROJECT_NAME})
 
     if("${PLUGIN}" MATCHES "^thirdParty/.*$")
         string(REPLACE "Plugin" ""

@@ -21,10 +21,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // OAuth begin
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN)
+    #define O2_SHARED_LIB
+#elif defined(Q_OS_MAC)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wextra-semi"
     #pragma clang diagnostic ignored "-Wnewline-eof"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 //==============================================================================

@@ -3,10 +3,10 @@ project(Mesa)
 # Our package characteristics
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 21.2.3)
+set(PACKAGE_VERSION 21.3.8)
 set(PACKAGE_REPOSITORY mesa)
-set(GIT_TAG v21.2.3)
-set(RELEASE_TAG v21.2.3)
+set(GIT_TAG v21.3.8)
+set(RELEASE_TAG v21.3.8)
 
 get_full_local_external_package_dir()
 
@@ -27,7 +27,7 @@ if(USE_PREBUILT_MESA_PACKAGE)
 
     retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                      ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                     0205e25366e04bae4aa53fe80c462398e73c8f6e)
+                     bc7aded3c4eb2f92f58d5478d41af1dd509a7214)
 else()
     # Build Mesa as an external project
 
