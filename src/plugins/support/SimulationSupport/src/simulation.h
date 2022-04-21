@@ -48,6 +48,7 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
+    class CellmlFileRuntimeParameter;
 } // namespace CellMLSupport
 
 //==============================================================================
@@ -304,7 +305,7 @@ private:
     void createDataStore();
     void deleteDataStore();
 
-    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+    QString uri(const CellMLSupport::CellmlFileRuntimeParameter *pParameter);
 
     double realPoint(double pPoint, int pRun = -1) const;
 
