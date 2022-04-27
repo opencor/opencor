@@ -63,11 +63,11 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         341d0a3095e1385cf242cfd3e947c130cc408a9b)
+                         102d5eeb9a20361bb72beeb6d5a7fcfc6f33b1fd)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cefee41de15625372d8fc162ab3e3713b7770fad)
+                         32265233173e19230475edbb0ad6b9c81b8da15e)
     endif()
 else()
     # Allow for big objects and ignore some warnings
