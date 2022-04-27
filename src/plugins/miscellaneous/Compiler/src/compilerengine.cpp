@@ -210,14 +210,14 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    // Retrieve the command job
+    // Retrieve the command job and make sure that it is "clang"
 
-    static const QString Clang = "clang";
+    constexpr char const *Clang = "clang";
 
     auto &command = llvm::cast<clang::driver::Command>(*jobs.begin());
-    QString commandName = command.getCreator().getName();
+    auto commandName = command.getCreator().getName();
 
-    if (commandName != Clang) {
+    if (strcmp(command.getCreator().getName(), Clang) != 0) {
         mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
 
         return false;
