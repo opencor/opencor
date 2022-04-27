@@ -227,8 +227,16 @@ bool CompilerEngine::compileCode(const QString &pCode)
     }
 
     // Create a compiler invocation using our command's arguments
+    // Note: we prevent the Clang driver from asking CC1 to leak memory, this by
+    //       removing -disable-free from the command arguments...
 
-    const llvm::opt::ArgStringList &commandArguments = command.getArguments();
+    auto commandArguments = command.getArguments();
+    auto *commandArgument = find(commandArguments, llvm::StringRef("-disable-free"));
+
+    if (commandArgument != commandArguments.end()) {
+        commandArguments.erase(commandArgument);
+    }
+
     std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
