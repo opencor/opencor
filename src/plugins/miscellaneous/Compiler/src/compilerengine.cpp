@@ -240,12 +240,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
                                               commandArguments,
                                               diagnosticsEngine);
 
-    // Map our dummy file to a memory buffer
-
-    QByteArray codeByteArray = code.toUtf8();
-
-    compilerInvocation->getPreprocessorOpts().addRemappedFile(DummyFileName, llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
-
     // Create a compiler instance to handle the actual work
 
     clang::CompilerInstance compilerInstance;
@@ -262,11 +256,18 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    // Create and execute the frontend to generate an LLVM bitcode module
+    // Map our code to a memory buffer
 
-    std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(llvm::unwrap(LLVMGetGlobalContext())));
+    QByteArray codeByteArray = code.toUtf8();
 
-    if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
+    compilerInstance.getInvocation().getPreprocessorOpts().addRemappedFile(DummyFileName,
+                                                                           llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
+
+    // Compile the given code, resulting in an LLVM bitcode module
+
+    std::unique_ptr<clang::CodeGenAction> codeGenAction(new clang::EmitLLVMOnlyAction(llvm::unwrap(LLVMGetGlobalContext())));
+
+    if (!compilerInstance.ExecuteAction(*codeGenAction)) {
         mError = tr("the code could not be compiled");
 
         return false;
@@ -274,7 +275,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the LLVM bitcode module
 
-    std::unique_ptr<llvm::Module> module = codeGenerationAction->takeModule();
+    auto module = codeGenAction->takeModule();
 
     if (!module) {
         mError = tr("the bitcode module could not be retrieved");
