@@ -3,16 +3,16 @@ project(LLVMClangPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME LLVMClang)
-set(PACKAGE_VERSION 12.0.1)
+set(PACKAGE_VERSION 14.0.1)
 set(PACKAGE_REPOSITORY llvmclang)
-set(GIT_TAG v12.0.1)
-set(RELEASE_TAG v12.0.1)
+set(GIT_TAG v14.0.1)
+set(RELEASE_TAG v14.0.1)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
-set(MAJOR_LIBRARY_VERSION 12)
+set(MAJOR_LIBRARY_VERSION 14)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
 
 # Name of our package's shared libraries (and of their import libraries, if any)
