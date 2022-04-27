@@ -178,20 +178,17 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Get a compilation object to which we pass some arguments
 
-    llvm::StringRef dummyFileName("dummyFile.c");
-    llvm::SmallVector<const char *, 16> compilationArguments;
+    constexpr char const *DummyFileName = "dummy.c";
 
-    compilationArguments.push_back("clang");
-    compilationArguments.push_back("-fsyntax-only");
+    std::vector<const char *> compilationArguments = {"clang", "-fsyntax-only",
 #ifdef QT_DEBUG
-    compilationArguments.push_back("-g");
-    compilationArguments.push_back("-O0");
+                                                      "-g",
+                                                      "-O0",
 #else
-    compilationArguments.push_back("-O3");
+                                                      "-O3",
 #endif
-    compilationArguments.push_back("-fno-math-errno");
-    compilationArguments.push_back("-Werror");
-    compilationArguments.push_back(dummyFileName.data());
+                                                      "-fno-math-errno",
+                                                      DummyFileName};
 
     std::unique_ptr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
@@ -247,7 +244,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     QByteArray codeByteArray = code.toUtf8();
 
-    compilerInvocation->getPreprocessorOpts().addRemappedFile(dummyFileName, llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
+    compilerInvocation->getPreprocessorOpts().addRemappedFile(DummyFileName, llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
 
     // Create a compiler instance to handle the actual work
 
