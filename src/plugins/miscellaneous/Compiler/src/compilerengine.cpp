@@ -46,6 +46,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "clang/Driver/Driver.h"
     #include "clang/Driver/Tool.h"
     #include "clang/Frontend/CompilerInstance.h"
+    #include "clang/Frontend/TextDiagnosticPrinter.h"
     #include "clang/Lex/PreprocessorOptions.h"
 #include "llvmclangend.h"
 
@@ -167,12 +168,18 @@ bool CompilerEngine::compileCode(const QString &pCode)
                     "\n"
                    +pCode;
 
-    // Get a driver to compile our code
+    // Create a diagnostics engine
 
-    auto diagnosticOptions = new clang::DiagnosticOptions();
-    clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
-                                               &*diagnosticOptions);
-    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), diagnosticsEngine);
+    auto diagnosticOptions = llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions>(new clang::DiagnosticOptions());
+    auto diagnosticsEngine = llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine>(new clang::DiagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
+                                                                                                             &*diagnosticOptions,
+                                                                                                             new clang::TextDiagnosticPrinter(llvm::nulls(), &*diagnosticOptions)));
+
+    diagnosticsEngine->setWarningsAsErrors(true);
+
+    // Get a driver object and ask it not to check that input files exist
+
+    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), *diagnosticsEngine);
 
     driver.setCheckInputsExist(false);
 
@@ -223,9 +230,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    // Create a compiler invocation using our command's arguments
-    // Note: we prevent the Clang driver from asking CC1 to leak memory, this by
-    //       removing -disable-free from the command arguments...
+    // Prevent the Clang driver from asking CC1 to leak memory, this by removing
+    // -disable-free from the command arguments
 
     auto commandArguments = command.getArguments();
     auto *commandArgument = find(commandArguments, llvm::StringRef("-disable-free"));
@@ -234,24 +240,19 @@ bool CompilerEngine::compileCode(const QString &pCode)
         commandArguments.erase(commandArgument);
     }
 
-    std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
-
-    clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
-                                              commandArguments,
-                                              diagnosticsEngine);
-
-    // Create a compiler instance to handle the actual work
+    // Create a compiler instance
 
     clang::CompilerInstance compilerInstance;
 
-    compilerInstance.setInvocation(std::move(compilerInvocation));
+    compilerInstance.setDiagnostics(diagnosticsEngine.get());
+    compilerInstance.setVerboseOutputStream(llvm::nulls());
 
-    // Create the compiler instance's diagnostics engine
+    // Create a compiler invocation object
 
-    compilerInstance.createDiagnostics();
-
-    if (!compilerInstance.hasDiagnostics()) {
-        mError = tr("the diagnostics engine could not be created");
+    if (!clang::CompilerInvocation::CreateFromArgs(compilerInstance.getInvocation(),
+                                                   commandArguments,
+                                                   *diagnosticsEngine)) {
+        mError = tr("the compiler invocation object could not be created");
 
         return false;
     }

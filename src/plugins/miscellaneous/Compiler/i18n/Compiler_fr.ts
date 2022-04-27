@@ -16,8 +16,8 @@
         <translation>une commande &lt;strong&gt;clang&lt;/strong&gt; était espérée, mais une commande &lt;strong&gt;%1&lt;/strong&gt; a été trouvée à la place</translation>
     </message>
     <message>
-        <source>the diagnostics engine could not be created</source>
-        <translation>le moteur de diagnostiques n&apos;a pas pu être créé</translation>
+        <source>the compiler invocation object could not be created</source>
+        <translation>l&apos;objet d&apos;invocation du compilateur n&apos;a pas pu être créé</translation>
     </message>
     <message>
         <source>the code could not be compiled</source>
