@@ -29,55 +29,30 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-extern "C" double compiler_fabs(double pNb);
+extern "C" double factorial(double pNb);
 
-extern "C" double compiler_log(double pNb);
-extern "C" double compiler_exp(double pNb);
+extern "C" double sec(double pNb);
+extern "C" double sech(double pNb);
+extern "C" double asec(double pNb);
+extern "C" double asech(double pNb);
 
-extern "C" double compiler_floor(double pNb);
-extern "C" double compiler_ceil(double pNb);
+extern "C" double csc(double pNb);
+extern "C" double csch(double pNb);
+extern "C" double acsc(double pNb);
+extern "C" double acsch(double pNb);
 
-extern "C" double compiler_factorial(double pNb);
+extern "C" double cot(double pNb);
+extern "C" double coth(double pNb);
+extern "C" double acot(double pNb);
+extern "C" double acoth(double pNb);
 
-extern "C" double compiler_sin(double pNb);
-extern "C" double compiler_sinh(double pNb);
-extern "C" double compiler_asin(double pNb);
-extern "C" double compiler_asinh(double pNb);
+extern "C" double arbitrary_log(double pNb, double pBase);
 
-extern "C" double compiler_cos(double pNb);
-extern "C" double compiler_cosh(double pNb);
-extern "C" double compiler_acos(double pNb);
-extern "C" double compiler_acosh(double pNb);
+extern "C" double multi_min(int pCount, ...);
+extern "C" double multi_max(int pCount, ...);
 
-extern "C" double compiler_tan(double pNb);
-extern "C" double compiler_tanh(double pNb);
-extern "C" double compiler_atan(double pNb);
-extern "C" double compiler_atanh(double pNb);
-
-extern "C" double compiler_sec(double pNb);
-extern "C" double compiler_sech(double pNb);
-extern "C" double compiler_asec(double pNb);
-extern "C" double compiler_asech(double pNb);
-
-extern "C" double compiler_csc(double pNb);
-extern "C" double compiler_csch(double pNb);
-extern "C" double compiler_acsc(double pNb);
-extern "C" double compiler_acsch(double pNb);
-
-extern "C" double compiler_cot(double pNb);
-extern "C" double compiler_coth(double pNb);
-extern "C" double compiler_acot(double pNb);
-extern "C" double compiler_acoth(double pNb);
-
-extern "C" double compiler_arbitrary_log(double pNb, double pBase);
-
-extern "C" double compiler_pow(double pNb1, double pNb2);
-
-extern "C" double compiler_multi_min(int pCount, ...);
-extern "C" double compiler_multi_max(int pCount, ...);
-
-extern "C" double compiler_gcd_multi(int pCount, ...);
-extern "C" double compiler_lcm_multi(int pCount, ...);
+extern "C" double gcd_multi(int pCount, ...);
+extern "C" double lcm_multi(int pCount, ...);
 
 //==============================================================================
 // End of file

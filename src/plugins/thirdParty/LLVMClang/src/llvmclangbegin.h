@@ -21,19 +21,24 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // LLVMClang begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#undef emit
+
+//==============================================================================
+
+#if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
     #pragma warning(disable: 4141)
     #pragma warning(disable: 4146)
     #pragma warning(disable: 4267)
     #pragma warning(disable: 4291)
     #pragma warning(disable: 4624)
-#elif defined(Q_OS_LINUX)
+#elif defined(__GNUC__) && !defined(__clang__)
     #pragma GCC diagnostic push
     #if defined(__GNUC__) && (__GNUC__ >= 8)
         #pragma GCC diagnostic ignored "-Wclass-memaccess"
     #endif
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    #pragma GCC diagnostic ignored "-Wredundant-move"
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #else
@@ -53,6 +58,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma clang diagnostic ignored "-Wshadow"
     #pragma clang diagnostic ignored "-Wshadow-field"
     #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+    #pragma clang diagnostic ignored "-Wshift-sign-overflow"
     #pragma clang diagnostic ignored "-Wshorten-64-to-32"
     #pragma clang diagnostic ignored "-Wsigned-enum-bitfield"
     #pragma clang diagnostic ignored "-Wswitch-enum"

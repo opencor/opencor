@@ -21,17 +21,17 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Python begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
     #pragma warning(disable: 5208)
-#elif defined(Q_OS_MAC)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wcast-qual"
-    #pragma GCC diagnostic ignored "-Wduplicate-enum"
-    #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
-    #pragma GCC diagnostic ignored "-Wreserved-id-macro"
-    #pragma GCC diagnostic ignored "-Wshift-sign-overflow"
+#elif defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wcast-qual"
+    #pragma clang diagnostic ignored "-Wduplicate-enum"
+    #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wshift-sign-overflow"
 #endif
 
 //==============================================================================

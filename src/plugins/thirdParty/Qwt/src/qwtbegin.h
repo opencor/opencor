@@ -23,9 +23,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #define MML_TEST
 
-#if defined(Q_OS_WIN)
+//==============================================================================
+
+#if defined(_MSC_VER) && !defined(__clang__)
     #define QWT_DLL
-#elif defined(Q_OS_MAC)
+#elif defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated"
     #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"

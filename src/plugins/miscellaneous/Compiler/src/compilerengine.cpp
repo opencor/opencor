@@ -28,19 +28,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "compilerengine.h"
-#include "compilermath.h"
-#include "corecliutils.h"
 
 //==============================================================================
 
 #include "llvmclangbegin.h"
-    #include "llvm/ExecutionEngine/ExecutionEngine.h"
-    #include "llvm/Support/Host.h"
-    #include "llvm/Support/TargetSelect.h"
-
-    #include "llvm-c/Core.h"
-
-    #include "clang/Basic/Diagnostic.h"
     #include "clang/CodeGen/CodeGenAction.h"
     #include "clang/Driver/Compilation.h"
     #include "clang/Driver/Driver.h"
@@ -48,25 +39,17 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #include "clang/Frontend/CompilerInstance.h"
     #include "clang/Frontend/TextDiagnosticPrinter.h"
     #include "clang/Lex/PreprocessorOptions.h"
+
+    #include "llvm/Support/Host.h"
+    #include "llvm/Support/TargetSelect.h"
+
+    #include "llvm-c/Core.h"
 #include "llvmclangend.h"
-
-//==============================================================================
-
-#include <string>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace Compiler {
-
-//==============================================================================
-
-CompilerEngine::~CompilerEngine()
-{
-    // Delete some internal objects
-
-    delete mExecutionEngine;
-}
 
 //==============================================================================
 
@@ -88,85 +71,66 @@ QString CompilerEngine::error() const
 
 //==============================================================================
 
-inline std::string functionName(const char *pFunctionName)
-{
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    return pFunctionName;
-#else
-    return std::string("_")+pFunctionName;
-#endif
-}
-
-//==============================================================================
-
 bool CompilerEngine::compileCode(const QString &pCode)
 {
     // Reset ourselves
-
-    delete mExecutionEngine;
-
-    mExecutionEngine = nullptr;
 
     mError = QString();
 
     // Prepend all the external functions that may, or not, be needed by the
     // given code
-    // Note: indeed, we cannot include header files since we don't (and don't
-    //       want in order to avoid complications) deploy them with OpenCOR. So,
-    //       instead, we must declare as external functions all the functions
-    //       that we would normally use through header files...
 
-    QString code =  "extern double fabs(double);\n"
-                    "\n"
-                    "extern double log(double);\n"
-                    "extern double exp(double);\n"
-                    "\n"
-                    "extern double floor(double);\n"
-                    "extern double ceil(double);\n"
-                    "\n"
-                    "extern double factorial(double);\n"
-                    "\n"
-                    "extern double sin(double);\n"
-                    "extern double sinh(double);\n"
-                    "extern double asin(double);\n"
-                    "extern double asinh(double);\n"
-                    "\n"
-                    "extern double cos(double);\n"
-                    "extern double cosh(double);\n"
-                    "extern double acos(double);\n"
-                    "extern double acosh(double);\n"
-                    "\n"
-                    "extern double tan(double);\n"
-                    "extern double tanh(double);\n"
-                    "extern double atan(double);\n"
-                    "extern double atanh(double);\n"
-                    "\n"
-                    "extern double sec(double);\n"
-                    "extern double sech(double);\n"
-                    "extern double asec(double);\n"
-                    "extern double asech(double);\n"
-                    "\n"
-                    "extern double csc(double);\n"
-                    "extern double csch(double);\n"
-                    "extern double acsc(double);\n"
-                    "extern double acsch(double);\n"
-                    "\n"
-                    "extern double cot(double);\n"
-                    "extern double coth(double);\n"
-                    "extern double acot(double);\n"
-                    "extern double acoth(double);\n"
-                    "\n"
-                    "extern double arbitrary_log(double, double);\n"
-                    "\n"
-                    "extern double pow(double, double);\n"
-                    "\n"
-                    "extern double multi_min(int, ...);\n"
-                    "extern double multi_max(int, ...);\n"
-                    "\n"
-                    "extern double gcd_multi(int, ...);\n"
-                    "extern double lcm_multi(int, ...);\n"
-                    "\n"
-                   +pCode;
+    QString code =  R"(
+extern double fabs(double);
+
+extern double log(double);
+extern double exp(double);
+
+extern double floor(double);
+extern double ceil(double);
+
+extern double factorial(double);
+
+extern double sin(double);
+extern double sinh(double);
+extern double asin(double);
+extern double asinh(double);
+
+extern double cos(double);
+extern double cosh(double);
+extern double acos(double);
+extern double acosh(double);
+
+extern double tan(double);
+extern double tanh(double);
+extern double atan(double);
+extern double atanh(double);
+
+extern double sec(double);
+extern double sech(double);
+extern double asec(double);
+extern double asech(double);
+
+extern double csc(double);
+extern double csch(double);
+extern double acsc(double);
+extern double acsch(double);
+
+extern double cot(double);
+extern double coth(double);
+extern double acot(double);
+extern double acoth(double);
+
+extern double arbitrary_log(double, double);
+
+extern double pow(double, double);
+
+extern double multi_min(int, ...);
+extern double multi_max(int, ...);
+
+extern double gcd_multi(int, ...);
+extern double lcm_multi(int, ...);
+)"+pCode;
 
     // Create a diagnostics engine
 
@@ -291,82 +255,58 @@ bool CompilerEngine::compileCode(const QString &pCode)
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
 
-    // Create and keep track of an execution engine
+    // Create an ORC-based JIT and keep track of it (so that we can use it in
+    // function()
 
-    mExecutionEngine = llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create();
+    auto lljit = llvm::orc::LLJITBuilder().create();
 
-    if (mExecutionEngine == nullptr) {
-        mError = tr("the execution engine could not be created");
-
-        module.reset();
+    if (!lljit) {
+        mError = tr("the ORC-based JIT could not be created");
 
         return false;
     }
 
-    // Map all the external functions that may, or not, be needed by the given
-    // code
+    mLljit = std::move(*lljit);
 
-    mExecutionEngine->addGlobalMapping(functionName("fabs"), reinterpret_cast<quint64>(compiler_fabs));
+    // Make sure that we can find various mathematical functions in the standard
+    // C library
 
-    mExecutionEngine->addGlobalMapping(functionName("log"), reinterpret_cast<quint64>(compiler_log));
-    mExecutionEngine->addGlobalMapping(functionName("exp"), reinterpret_cast<quint64>(compiler_exp));
+    auto dynamicLibrarySearchGenerator = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(mLljit->getDataLayout().getGlobalPrefix());
 
-    mExecutionEngine->addGlobalMapping(functionName("floor"), reinterpret_cast<quint64>(compiler_floor));
-    mExecutionEngine->addGlobalMapping(functionName("ceil"), reinterpret_cast<quint64>(compiler_ceil));
+    if (!dynamicLibrarySearchGenerator) {
+        mError = tr("the dynamic library search generator could not be created");
 
-    mExecutionEngine->addGlobalMapping(functionName("factorial"), reinterpret_cast<quint64>(compiler_factorial));
+        return false;
+    }
 
-    mExecutionEngine->addGlobalMapping(functionName("sin"), reinterpret_cast<quint64>(compiler_sin));
-    mExecutionEngine->addGlobalMapping(functionName("sinh"), reinterpret_cast<quint64>(compiler_sinh));
-    mExecutionEngine->addGlobalMapping(functionName("asin"), reinterpret_cast<quint64>(compiler_asin));
-    mExecutionEngine->addGlobalMapping(functionName("asinh"), reinterpret_cast<quint64>(compiler_asinh));
+    mLljit->getMainJITDylib().addGenerator(std::move(*dynamicLibrarySearchGenerator));
 
-    mExecutionEngine->addGlobalMapping(functionName("cos"), reinterpret_cast<quint64>(compiler_cos));
-    mExecutionEngine->addGlobalMapping(functionName("cosh"), reinterpret_cast<quint64>(compiler_cosh));
-    mExecutionEngine->addGlobalMapping(functionName("acos"), reinterpret_cast<quint64>(compiler_acos));
-    mExecutionEngine->addGlobalMapping(functionName("acosh"), reinterpret_cast<quint64>(compiler_acosh));
+    // Add our LLVM bitcode module to our ORC-based JIT
 
-    mExecutionEngine->addGlobalMapping(functionName("tan"), reinterpret_cast<quint64>(compiler_tan));
-    mExecutionEngine->addGlobalMapping(functionName("tanh"), reinterpret_cast<quint64>(compiler_tanh));
-    mExecutionEngine->addGlobalMapping(functionName("atan"), reinterpret_cast<quint64>(compiler_atan));
-    mExecutionEngine->addGlobalMapping(functionName("atanh"), reinterpret_cast<quint64>(compiler_atanh));
+    auto llvmContext = std::make_unique<llvm::LLVMContext>();
+    auto threadSafeModule = llvm::orc::ThreadSafeModule(std::move(module), std::move(llvmContext));
 
-    mExecutionEngine->addGlobalMapping(functionName("sec"), reinterpret_cast<quint64>(compiler_sec));
-    mExecutionEngine->addGlobalMapping(functionName("sech"), reinterpret_cast<quint64>(compiler_sech));
-    mExecutionEngine->addGlobalMapping(functionName("asec"), reinterpret_cast<quint64>(compiler_asec));
-    mExecutionEngine->addGlobalMapping(functionName("asech"), reinterpret_cast<quint64>(compiler_asech));
+    if (mLljit->addIRModule(std::move(threadSafeModule))) {
+        mError = tr("the IR module could not be added to the ORC-based JIT");
 
-    mExecutionEngine->addGlobalMapping(functionName("csc"), reinterpret_cast<quint64>(compiler_csc));
-    mExecutionEngine->addGlobalMapping(functionName("csch"), reinterpret_cast<quint64>(compiler_csch));
-    mExecutionEngine->addGlobalMapping(functionName("acsc"), reinterpret_cast<quint64>(compiler_acsc));
-    mExecutionEngine->addGlobalMapping(functionName("acsch"), reinterpret_cast<quint64>(compiler_acsch));
-
-    mExecutionEngine->addGlobalMapping(functionName("cot"), reinterpret_cast<quint64>(compiler_cot));
-    mExecutionEngine->addGlobalMapping(functionName("coth"), reinterpret_cast<quint64>(compiler_coth));
-    mExecutionEngine->addGlobalMapping(functionName("acot"), reinterpret_cast<quint64>(compiler_acot));
-    mExecutionEngine->addGlobalMapping(functionName("acoth"), reinterpret_cast<quint64>(compiler_acoth));
-
-    mExecutionEngine->addGlobalMapping(functionName("arbitrary_log"), reinterpret_cast<quint64>(compiler_arbitrary_log));
-
-    mExecutionEngine->addGlobalMapping(functionName("pow"), reinterpret_cast<quint64>(compiler_pow));
-
-    mExecutionEngine->addGlobalMapping(functionName("multi_min"), reinterpret_cast<quint64>(compiler_multi_min));
-    mExecutionEngine->addGlobalMapping(functionName("multi_max"), reinterpret_cast<quint64>(compiler_multi_max));
-
-    mExecutionEngine->addGlobalMapping(functionName("gcd_multi"), reinterpret_cast<quint64>(compiler_gcd_multi));
-    mExecutionEngine->addGlobalMapping(functionName("lcm_multi"), reinterpret_cast<quint64>(compiler_lcm_multi));
+        return false;
+    }
 
     return true;
 }
 
 //==============================================================================
 
-void * CompilerEngine::getFunction(const QString &pFunctionName)
+void * CompilerEngine::function(const QString &pName)
 {
     // Return the address of the requested function
 
-    if (mExecutionEngine != nullptr) {
-        return reinterpret_cast<void *>(mExecutionEngine->getFunctionAddress(qPrintable(pFunctionName)));
+    if ((mLljit != nullptr) && !pName.isEmpty()) {
+        auto symbol = mLljit->lookup(qPrintable(pName));
+
+        if (symbol) {
+            return reinterpret_cast<void *>(symbol->getAddress());
+        }
     }
 
     return nullptr;

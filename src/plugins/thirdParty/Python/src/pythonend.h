@@ -21,10 +21,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Python end
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(pop)
-#elif defined(Q_OS_MAC)
-    #pragma GCC diagnostic pop
+#elif defined(__clang__)
+    #pragma clang diagnostic pop
 #endif
 
 //==============================================================================
