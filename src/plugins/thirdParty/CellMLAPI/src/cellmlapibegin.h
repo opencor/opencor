@@ -21,11 +21,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // CellML API begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
     #pragma warning(disable: 4091)
     #pragma warning(disable: 4290)
-#elif defined(Q_OS_LINUX)
+#elif defined(__GNUC__) && !defined(__clang__)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wdeprecated"
 #else

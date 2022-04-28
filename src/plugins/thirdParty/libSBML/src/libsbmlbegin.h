@@ -21,10 +21,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // libSBML begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
     #pragma warning(disable: 4005)
-#elif defined(Q_OS_MAC)
+#elif defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
     #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"

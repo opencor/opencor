@@ -21,7 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // libgit2 begin
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#ifdef __clang__
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wreserved-id-macro"
 #endif
