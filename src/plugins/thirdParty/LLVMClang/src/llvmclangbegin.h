@@ -27,8 +27,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
-    #pragma warning(disable: 4141)
+    #pragma warning(disable: 4005)
     #pragma warning(disable: 4146)
+    #pragma warning(disable: 4244)
+    #pragma warning(disable: 4251)
     #pragma warning(disable: 4267)
     #pragma warning(disable: 4291)
     #pragma warning(disable: 4624)
