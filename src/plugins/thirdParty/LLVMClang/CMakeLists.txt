@@ -5,8 +5,8 @@ project(LLVMClangPlugin)
 set(PACKAGE_NAME LLVMClang)
 set(PACKAGE_VERSION 12.0.1)
 set(PACKAGE_REPOSITORY llvmclang)
-set(GIT_TAG v12.0.1)
-set(RELEASE_TAG v12.0.1)
+set(GIT_TAG v12.0.1b)
+set(RELEASE_TAG v12.0.1b)
 
 get_full_local_external_package_dir()
 
