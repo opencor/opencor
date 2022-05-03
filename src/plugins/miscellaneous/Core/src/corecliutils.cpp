@@ -50,6 +50,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QStringList>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
+#include <QTextCodec>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 #include <QXmlStreamReader>
@@ -341,6 +342,18 @@ QString sha1(const QString &pString)
 QString fileSha1(const QString &pFileName)
 {
     // Return the SHA-1 value of the given file
+    // Note: if we can determine the codec of the file then we convert it to
+    //       UTF-8 without BOM, which is the type we use internally...
+
+    QByteArray fileContents;
+
+    readFile(pFileName, fileContents);
+
+    auto codec = QTextCodec::codecForUtfText(fileContents, nullptr);
+
+    if (codec != nullptr) {
+        return sha1(QString(fileContents));
+    }
 
     QString res;
     QFile file(pFileName);
