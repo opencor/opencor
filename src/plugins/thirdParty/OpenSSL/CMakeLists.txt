@@ -3,10 +3,10 @@ project(OpenSSLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 3.0.2)
+set(PACKAGE_VERSION 3.0.3)
 set(PACKAGE_REPOSITORY openssl)
-set(GIT_TAG openssl-3.0.2-opencor)
-set(RELEASE_TAG openssl-3.0.2-opencor)
+set(GIT_TAG openssl-3.0.3-opencor)
+set(RELEASE_TAG openssl-3.0.3-opencor)
 
 get_full_local_external_package_dir()
 
