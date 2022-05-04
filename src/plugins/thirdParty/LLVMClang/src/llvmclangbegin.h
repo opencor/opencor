@@ -32,6 +32,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma warning(disable: 4244)
     #pragma warning(disable: 4251)
     #pragma warning(disable: 4267)
+    #pragma warning(disable: 4275)
     #pragma warning(disable: 4291)
     #pragma warning(disable: 4624)
 #elif defined(__GNUC__) && !defined(__clang__)
