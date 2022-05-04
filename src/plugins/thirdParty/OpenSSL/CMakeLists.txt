@@ -71,11 +71,11 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             2607f08777326b010bbc832065e8cd47630b3def)
+                             f5a847ad39bb62f3b1873b195196bd1f7ab002b8)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             40780df991c1d9245abdf041cb5a5ddff71034ca)
+                             2f590a720bf5168745b98fee506cbd7e8f8b6b19)
         endif()
 
         # Make a copy of our import libraries
@@ -92,11 +92,11 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         0dae1ef20ad1ffb0dc5009fc561a53dd01de27cf)
+                         0fe20e7cf898ed81cb19b3dd6e9c88c493a38ec6)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         26c9160647813592480559cd1e08fcf2f85d88df)
+                         0b04edb55c1afbba96732e6f8f0274b713a13731)
     endif()
 else()
     # We require Perl to build OpenSSL
