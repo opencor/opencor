@@ -862,7 +862,7 @@ QString SimulationResults::uri(const CellMLSupport::CellmlFileRuntimeParameter *
 {
     // Generate an URI using the given component hierarchy and name
 
-    QString res = pParameter->componentHierarchy().last()+"/"+pParameter->formattedName();
+    QString res = pParameter->componentHierarchy().constLast()+"/"+pParameter->formattedName();
 
     return res.replace('\'', "/prime");
 }
