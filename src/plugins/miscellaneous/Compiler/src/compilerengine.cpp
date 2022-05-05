@@ -28,6 +28,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "compilerengine.h"
+#include "compilermath.h"
 
 //==============================================================================
 
@@ -269,7 +270,8 @@ extern double lcm_multi(int, ...);
     mLljit = std::move(*lljit);
 
     // Make sure that we can find various mathematical functions in the standard
-    // C library
+    // C library and the additional ones that we want to support (see
+    // compilermath.[cpp|h])
 
     auto dynamicLibrarySearchGenerator = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(mLljit->getDataLayout().getGlobalPrefix());
 
@@ -279,7 +281,40 @@ extern double lcm_multi(int, ...);
         return false;
     }
 
-    mLljit->getMainJITDylib().addGenerator(std::move(*dynamicLibrarySearchGenerator));
+    auto &jitDylib = mLljit->getMainJITDylib();
+
+    jitDylib.addGenerator(std::move(*dynamicLibrarySearchGenerator));
+
+    if (jitDylib.define(llvm::orc::absoluteSymbols({
+                                                       { mLljit->mangleAndIntern("factorial"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&factorial), llvm::JITSymbolFlags::Exported) },
+
+                                                       { mLljit->mangleAndIntern("sec"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&sec), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("sech"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&sech), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("asec"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&asec), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("asech"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&asech), llvm::JITSymbolFlags::Exported) },
+
+                                                       { mLljit->mangleAndIntern("csc"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&csc), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("csch"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&csch), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("acsc"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acsc), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("acsch"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acsch), llvm::JITSymbolFlags::Exported) },
+
+                                                       { mLljit->mangleAndIntern("cot"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&cot), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("coth"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&coth), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("acot"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acot), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("acoth"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acoth), llvm::JITSymbolFlags::Exported) },
+
+                                                       { mLljit->mangleAndIntern("arbitrary_log"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&arbitrary_log), llvm::JITSymbolFlags::Exported) },
+
+                                                       { mLljit->mangleAndIntern("multi_min"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&multi_min), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("multi_max"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&multi_max), llvm::JITSymbolFlags::Exported) },
+
+                                                       { mLljit->mangleAndIntern("gcd_multi"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&gcd_multi), llvm::JITSymbolFlags::Exported) },
+                                                       { mLljit->mangleAndIntern("lcm_multi"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&lcm_multi), llvm::JITSymbolFlags::Exported) },
+                                                   }))) {
+        mError = tr("the additional mathematical methods could not be added");
+
+        return false;
+    }
 
     // Add our LLVM bitcode module to our ORC-based JIT
 
