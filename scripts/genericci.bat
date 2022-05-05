@@ -29,7 +29,7 @@ IF EXIST !AppDir!build (
 
     SET OrigDir=!CD!
 
-    CALL !AppDir!clean
+    CALL !AppDir!cleanall
 
     TITLE Building and testing the !version! version of OpenCOR using !Generator!...
 
