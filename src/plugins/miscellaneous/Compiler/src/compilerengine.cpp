@@ -72,6 +72,23 @@ QString CompilerEngine::error() const
 
 //==============================================================================
 
+bool CompilerEngine::addFunction(const QString &pName, void *pFunction)
+{
+    // Add the given function.
+
+    if ((mLljit != nullptr) && !pName.isEmpty() && (pFunction != nullptr)) {
+        auto &jitDylib = mLljit->getMainJITDylib();
+
+        return !jitDylib.define(llvm::orc::absoluteSymbols({
+                                                               { mLljit->mangleAndIntern(pName.toStdString()), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(pFunction), llvm::JITSymbolFlags::Exported) },
+                                                           }));
+    }
+
+    return false;
+}
+
+//==============================================================================
+
 bool CompilerEngine::compileCode(const QString &pCode)
 {
     // Reset ourselves
@@ -281,36 +298,32 @@ extern double lcm_multi(int, ...);
         return false;
     }
 
-    auto &jitDylib = mLljit->getMainJITDylib();
+    mLljit->getMainJITDylib().addGenerator(std::move(*dynamicLibrarySearchGenerator));
 
-    jitDylib.addGenerator(std::move(*dynamicLibrarySearchGenerator));
+    if (   !addFunction("factorial", reinterpret_cast<void *>(factorial))
 
-    if (jitDylib.define(llvm::orc::absoluteSymbols({
-                                                       { mLljit->mangleAndIntern("factorial"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&factorial), llvm::JITSymbolFlags::Exported) },
+        || !addFunction("sec", reinterpret_cast<void *>(sec))
+        || !addFunction("sech", reinterpret_cast<void *>(sech))
+        || !addFunction("asec", reinterpret_cast<void *>(asec))
+        || !addFunction("asech", reinterpret_cast<void *>(asech))
 
-                                                       { mLljit->mangleAndIntern("sec"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&sec), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("sech"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&sech), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("asec"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&asec), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("asech"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&asech), llvm::JITSymbolFlags::Exported) },
+        || !addFunction("csc", reinterpret_cast<void *>(csc))
+        || !addFunction("csch", reinterpret_cast<void *>(csch))
+        || !addFunction("acsc", reinterpret_cast<void *>(acsc))
+        || !addFunction("acsch", reinterpret_cast<void *>(acsch))
 
-                                                       { mLljit->mangleAndIntern("csc"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&csc), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("csch"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&csch), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("acsc"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acsc), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("acsch"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acsch), llvm::JITSymbolFlags::Exported) },
+        || !addFunction("cot", reinterpret_cast<void *>(cot))
+        || !addFunction("coth", reinterpret_cast<void *>(coth))
+        || !addFunction("acot", reinterpret_cast<void *>(acot))
+        || !addFunction("acoth", reinterpret_cast<void *>(acoth))
 
-                                                       { mLljit->mangleAndIntern("cot"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&cot), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("coth"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&coth), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("acot"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acot), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("acoth"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&acoth), llvm::JITSymbolFlags::Exported) },
+        || !addFunction("arbitrary_log", reinterpret_cast<void *>(arbitrary_log))
 
-                                                       { mLljit->mangleAndIntern("arbitrary_log"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&arbitrary_log), llvm::JITSymbolFlags::Exported) },
+        || !addFunction("multi_min", reinterpret_cast<void *>(multi_min))
+        || !addFunction("multi_max", reinterpret_cast<void *>(multi_max))
 
-                                                       { mLljit->mangleAndIntern("multi_min"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&multi_min), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("multi_max"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&multi_max), llvm::JITSymbolFlags::Exported) },
-
-                                                       { mLljit->mangleAndIntern("gcd_multi"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&gcd_multi), llvm::JITSymbolFlags::Exported) },
-                                                       { mLljit->mangleAndIntern("lcm_multi"), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(&lcm_multi), llvm::JITSymbolFlags::Exported) },
-                                                   }))) {
+        || !addFunction("gcd_multi", reinterpret_cast<void *>(gcd_multi))
+        || !addFunction("lcm_multi", reinterpret_cast<void *>(lcm_multi))) {
         mError = tr("the additional mathematical methods could not be added");
 
         return false;

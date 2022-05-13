@@ -53,6 +53,8 @@ public:
     bool hasError() const;
     QString error() const;
 
+    bool addFunction(const QString &pName, void *pFunction);
+
     bool compileCode(const QString &pCode);
 
     void * function(const QString &pName);
