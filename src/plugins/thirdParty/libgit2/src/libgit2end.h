@@ -21,7 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // libgit2 end
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#ifdef __clang__
     #pragma clang diagnostic pop
 #endif
 

@@ -561,16 +561,15 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // Add the symbol of any required external function, if any
 
         if (mAtLeastOneNlaSystem) {
-            llvm::sys::DynamicLibrary::AddSymbol("doNonLinearSolve",
-                                                 reinterpret_cast<void *>(doNonLinearSolve));
+            mCompilerEngine->addFunction("doNonLinearSolve", reinterpret_cast<void *>(doNonLinearSolve));
         }
 
         // Retrieve the ODE functions
 
-        mInitializeConstants = reinterpret_cast<InitializeConstantsFunction>(mCompilerEngine->getFunction("initializeConstants"));
-        mComputeComputedConstants = reinterpret_cast<ComputeComputedConstantsFunction>(mCompilerEngine->getFunction("computeComputedConstants"));
-        mComputeVariables = reinterpret_cast<ComputeVariablesFunction>(mCompilerEngine->getFunction("computeVariables"));
-        mComputeRates = reinterpret_cast<ComputeRatesFunction>(mCompilerEngine->getFunction("computeRates"));
+        mInitializeConstants = reinterpret_cast<InitializeConstantsFunction>(mCompilerEngine->function("initializeConstants"));
+        mComputeComputedConstants = reinterpret_cast<ComputeComputedConstantsFunction>(mCompilerEngine->function("computeComputedConstants"));
+        mComputeVariables = reinterpret_cast<ComputeVariablesFunction>(mCompilerEngine->function("computeVariables"));
+        mComputeRates = reinterpret_cast<ComputeRatesFunction>(mCompilerEngine->function("computeRates"));
 
         // Make sure that we managed to retrieve all the ODE functions
 

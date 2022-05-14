@@ -16,8 +16,8 @@
         <translation>une commande &lt;strong&gt;clang&lt;/strong&gt; était espérée, mais une commande &lt;strong&gt;%1&lt;/strong&gt; a été trouvée à la place</translation>
     </message>
     <message>
-        <source>the diagnostics engine could not be created</source>
-        <translation>le moteur de diagnostiques n&apos;a pas pu être créé</translation>
+        <source>the compiler invocation object could not be created</source>
+        <translation>l&apos;objet d&apos;invocation du compilateur n&apos;a pas pu être créé</translation>
     </message>
     <message>
         <source>the code could not be compiled</source>
@@ -28,8 +28,20 @@
         <translation>le module de code de bits n&apos;a pas pu être récupéré</translation>
     </message>
     <message>
-        <source>the execution engine could not be created</source>
-        <translation>le moteur d&apos;exécution n&apos;a pas pu être créé</translation>
+        <source>the ORC-based JIT could not be created</source>
+        <translation>le JIT basé sur ORC n&apos;a pas pu être créé</translation>
+    </message>
+    <message>
+        <source>the dynamic library search generator could not be created</source>
+        <translation>le générateur de recherche de bibliothèque dynamique n&apos;a pas pu être créé</translation>
+    </message>
+    <message>
+        <source>the additional mathematical methods could not be added</source>
+        <translation>les méthodes mathématiques supplémentaires n&apos;ont pas pu être ajoutées</translation>
+    </message>
+    <message>
+        <source>the IR module could not be added to the ORC-based JIT</source>
+        <translation>le module IR n&apos;a pas pu être ajouté au JIT basé sur ORC</translation>
     </message>
 </context>
 </TS>

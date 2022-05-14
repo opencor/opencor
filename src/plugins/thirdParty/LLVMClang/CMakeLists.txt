@@ -5,8 +5,8 @@ project(LLVMClangPlugin)
 set(PACKAGE_NAME LLVMClang)
 set(PACKAGE_VERSION 12.0.1)
 set(PACKAGE_REPOSITORY llvmclang)
-set(GIT_TAG v12.0.1)
-set(RELEASE_TAG v12.0.1)
+set(GIT_TAG v12.0.1b)
+set(RELEASE_TAG v12.0.1b)
 
 get_full_local_external_package_dir()
 
@@ -54,20 +54,20 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             78ffae4e53feb7550d999162bfb81f22d20dfd4d)
+                             d9228d3a58706a0b964a8b2cb4d5c8ee0c8f3e83)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             f1101cffff78483c5e8fd7c7d9f1685115f399f9)
+                             1acce22446fc0f68dda67828e2c98f6e17e80221)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         341d0a3095e1385cf242cfd3e947c130cc408a9b)
+                         5dd42a1388d98e0b8c2aa9193a64bb6655653624)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cefee41de15625372d8fc162ab3e3713b7770fad)
+                         30ec6376375b13032704a613c38d3c212381638a)
     endif()
 else()
     # Allow for big objects and ignore some warnings

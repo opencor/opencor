@@ -21,9 +21,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // LLVMClang end
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(pop)
-#elif defined(Q_OS_LINUX)
+#elif defined(__GNUC__) && !defined(__clang__)
     #pragma GCC diagnostic pop
 #else
     #pragma clang diagnostic pop

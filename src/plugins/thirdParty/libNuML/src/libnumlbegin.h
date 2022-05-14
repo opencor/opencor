@@ -21,7 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // libNuML begin
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#ifdef __clang__
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
     #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"

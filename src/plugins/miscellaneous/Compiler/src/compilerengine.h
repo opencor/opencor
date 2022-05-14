@@ -29,14 +29,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QObject>
-#include <QString>
+#include "llvmclangbegin.h"
+    #include "llvm/ExecutionEngine/Orc/LLJIT.h"
+#include "llvmclangend.h"
 
 //==============================================================================
 
-namespace llvm {
-    class ExecutionEngine;
-} // namespace llvm
+#include <QObject>
+#include <QString>
 
 //==============================================================================
 
@@ -50,17 +50,17 @@ class COMPILER_EXPORT CompilerEngine : public QObject
     Q_OBJECT
 
 public:
-    ~CompilerEngine() override;
-
     bool hasError() const;
     QString error() const;
 
+    bool addFunction(const QString &pName, void *pFunction);
+
     bool compileCode(const QString &pCode);
 
-    void * getFunction(const QString &pFunctionName);
+    void * function(const QString &pName);
 
 private:
-    llvm::ExecutionEngine *mExecutionEngine = nullptr;
+    std::unique_ptr<llvm::orc::LLJIT> mLljit;
 
     QString mError;
 };

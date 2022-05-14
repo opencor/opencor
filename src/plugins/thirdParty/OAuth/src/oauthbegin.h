@@ -21,9 +21,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // OAuth begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#if defined(_MSC_VER) && !defined(__clang__)
     #define O2_SHARED_LIB
-#elif defined(Q_OS_MAC)
+#elif defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wextra-semi"
     #pragma clang diagnostic ignored "-Wnewline-eof"
