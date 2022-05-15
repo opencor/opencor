@@ -3,10 +3,10 @@ project(QScintillaPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.13.2)
+set(PACKAGE_VERSION 2.13.3)
 set(PACKAGE_REPOSITORY qscintilla)
-set(GIT_TAG v2.13.2)
-set(RELEASE_TAG v2.13.2)
+set(GIT_TAG v2.13.3)
+set(RELEASE_TAG v2.13.3)
 
 get_full_local_external_package_dir()
 
