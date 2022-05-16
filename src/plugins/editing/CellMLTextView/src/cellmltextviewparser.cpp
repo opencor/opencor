@@ -3260,10 +3260,6 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode &pDomNode,
                                                                        bool pAllowTopPiecewiseStatement)
 {
-    // Create our piecewise element
-
-    QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
-
     // If a top piecewise statement is allowed then check whether we have "(",
     // in which case it will mean that we are using the sel() function rather
     // than the sel...endsel statement, or expect "(" if a top piecewise
@@ -3275,10 +3271,8 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
     if (pAllowTopPiecewiseStatement) {
         selFunction = isTokenType(pDomNode, CellmlTextViewScanner::Token::OpeningBracket);
-    } else {
-        if (!openingBracketToken(pDomNode)) {
-            return {};
-        }
+    } else if (!openingBracketToken(pDomNode)) {
+        return {};
     }
 
     // Loop while we have "case" or "otherwise", or leave if we get ")" in the
@@ -3295,6 +3289,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
                                                                              CellmlTextViewScanner::Token::Otherwise,
                                                                              CellmlTextViewScanner::Token::EndSel };
 
+    QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
     bool hasOtherwiseClause = false;
 
     if (selFunction) {
@@ -3303,10 +3298,8 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
         if (!tokenType(piecewiseElement, tr("'%1' or '%2'").arg("case", "otherwise"), CaseOtherwiseTokens)) {
             return {};
         }
-    } else {
-        if (!tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("(", "case", "otherwise"), OpeningBracketCaseOtherwiseTokens)) {
-            return {};
-        }
+    } else if (!tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("(", "case", "otherwise"), OpeningBracketCaseOtherwiseTokens)) {
+        return {};
     }
 
     do {

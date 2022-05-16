@@ -44,10 +44,10 @@ namespace CSVDataStore {
 
 PLUGININFO_FUNC CSVDataStorePluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a CSV specific data store plugin."));
-    descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à CSV."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a CSV specific data store plugin.") },
+                                                 { "fr", QString::fromUtf8("une extension de magasin de données spécifique à CSV.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::DataStore, true, false,
                           { "DataStore" },

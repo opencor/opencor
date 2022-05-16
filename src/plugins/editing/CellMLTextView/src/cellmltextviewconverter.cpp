@@ -80,55 +80,6 @@ CellMLTextViewConverter::CellMLTextViewConverter()
     // Reset our internals
 
     reset();
-
-    // Mappings for relational operators
-
-                                           mMathmlNodes.insert("eq", MathmlNode::Eq);
-    mMappings.insert("neq", " <> ");       mMathmlNodes.insert("neq", MathmlNode::Neq);
-    mMappings.insert("lt", " < ");         mMathmlNodes.insert("lt", MathmlNode::Lt);
-    mMappings.insert("leq", " <= ");       mMathmlNodes.insert("leq", MathmlNode::Leq);
-    mMappings.insert("geq", " >= ");       mMathmlNodes.insert("geq", MathmlNode::Geq);
-    mMappings.insert("gt", " > ");         mMathmlNodes.insert("gt", MathmlNode::Gt);
-
-    // Mappings for arithmetic operators
-
-    mMappings.insert("plus", "+");         mMathmlNodes.insert("plus", MathmlNode::Plus);
-    mMappings.insert("minus", "-");        mMathmlNodes.insert("minus", MathmlNode::Minus);
-    mMappings.insert("times", "*");        mMathmlNodes.insert("times", MathmlNode::Times);
-    mMappings.insert("divide", "/");       mMathmlNodes.insert("divide", MathmlNode::Divide);
-    mMappings.insert("ceiling", "ceil");
-    mMappings.insert("floor", "floor");
-    mMappings.insert("factorial", "fact");
-
-    // Mappings for arithmetic operators
-
-    mMappings.insert("and", " and ");      mMathmlNodes.insert("and", MathmlNode::And);
-    mMappings.insert("or", " or ");        mMathmlNodes.insert("or", MathmlNode::Or);
-    mMappings.insert("xor", " xor ");      mMathmlNodes.insert("xor", MathmlNode::Xor);
-
-    // Mappings for constants
-
-    mMappings.insert("true", "true");
-    mMappings.insert("false", "false");
-    mMappings.insert("notanumber", "nan");
-    mMappings.insert("pi", "pi");
-    mMappings.insert("infinity", "inf");
-    mMappings.insert("exponentiale", "e");
-
-    // Mappings for trigonometric operators
-
-    mMappings.insert("arcsin", "asin");
-    mMappings.insert("arccos", "acos");
-    mMappings.insert("arctan", "atan");
-    mMappings.insert("arcsec", "asec");
-    mMappings.insert("arccsc", "acsc");
-    mMappings.insert("arccot", "acot");
-    mMappings.insert("arcsinh", "asinh");
-    mMappings.insert("arccosh", "acosh");
-    mMappings.insert("arctanh", "atanh");
-    mMappings.insert("arcsech", "asech");
-    mMappings.insert("arccsch", "acsch");
-    mMappings.insert("arccoth", "acoth");
 }
 
 //==============================================================================

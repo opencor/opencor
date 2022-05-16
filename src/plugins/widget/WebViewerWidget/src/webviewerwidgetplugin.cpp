@@ -37,10 +37,10 @@ namespace WebViewerWidget {
 
 PLUGININFO_FUNC WebViewerWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to visualise Web documents."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to visualise Web documents.") },
+                                                 { "fr", QString::fromUtf8("une extension pour visualiser des documents Web.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "ToolBarWidget" },

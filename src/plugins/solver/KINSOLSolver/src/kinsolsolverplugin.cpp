@@ -33,10 +33,10 @@ namespace KINSOLSolver {
 
 PLUGININFO_FUNC KINSOLSolverPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin that uses <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> to solve <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">non-linear algebraic systems</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">systèmes algébriques non-linéaires</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin that uses <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> to solve <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">non-linear algebraic systems</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">systèmes algébriques non-linéaires</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           { "SUNDIALS" },
@@ -154,28 +154,29 @@ Solver::Properties KINSOLSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Descriptions MaximumNumberOfIterationsDescriptions;
-    Descriptions LinearSolverDescriptions;
-    Descriptions UpperHalfBandwidthDescriptions;
-    Descriptions LowerHalfBandwidthDescriptions;
-
-    MaximumNumberOfIterationsDescriptions.insert("en", QString::fromUtf8("Maximum number of iterations"));
-    MaximumNumberOfIterationsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum d'itérations"));
-
-    LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
-    LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
-
-    UpperHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Upper half-bandwidth"));
-    UpperHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande supérieure"));
-
-    LowerHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Lower half-bandwidth"));
-    LowerHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande inférieure"));
-
-    QStringList LinearSolverListValues = { DenseLinearSolver,
-                                           BandedLinearSolver,
-                                           GmresLinearSolver,
-                                           BiCgStabLinearSolver,
-                                           TfqmrLinearSolver };
+    static const Descriptions MaximumNumberOfIterationsDescriptions = {
+                                                                          { "en", QString::fromUtf8("Maximum number of iterations") },
+                                                                          { "fr", QString::fromUtf8("Nombre maximum d'itérations") }
+                                                                      };
+    static const Descriptions LinearSolverDescriptions = {
+                                                             { "en", QString::fromUtf8("Linear solver") },
+                                                             { "fr", QString::fromUtf8("Solveur linéaire") }
+                                                         };
+    static const Descriptions UpperHalfBandwidthDescriptions = {
+                                                                   { "en", QString::fromUtf8("Upper half-bandwidth") },
+                                                                   { "fr", QString::fromUtf8("Demi largeur de bande supérieure") }
+                                                               };
+    static const Descriptions LowerHalfBandwidthDescriptions = {
+                                                                   { "en", QString::fromUtf8("Lower half-bandwidth") },
+                                                                   { "fr", QString::fromUtf8("Demi largeur de bande inférieure") }
+                                                               };
+    static const QStringList LinearSolverListValues = {
+                                                          DenseLinearSolver,
+                                                          BandedLinearSolver,
+                                                          GmresLinearSolver,
+                                                          BiCgStabLinearSolver,
+                                                          TfqmrLinearSolver
+                                                      };
 
     return { Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, {}, MaximumNumberOfIterationsDefaultValue, false),
              Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false),

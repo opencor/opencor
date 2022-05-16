@@ -86,7 +86,57 @@ protected:
     void paintEvent(QPaintEvent *pEvent) override;
 
 private:
-    QMap<QString, QString> mGreekSymbols;
+    QMap<QString, QString> mGreekSymbols = {
+                                               { "ALPHA", "Α" },
+                                               { "BETA", "Β" },
+                                               { "GAMMA", "Γ" },
+                                               { "DELTA", "Δ" },
+                                               { "EPSILON", "Ε" },
+                                               { "ZETA", "Ζ" },
+                                               { "ETA", "Η" },
+                                               { "THETA", "Θ" },
+                                               { "IOTA", "Ι" },
+                                               { "KAPPA", "Κ" },
+                                               { "LAMBDA", "Λ" },
+                                               { "MU", "Μ" },
+                                               { "NU", "Ν" },
+                                               { "XI", "Ξ" },
+                                               { "OMICRON", "Ο" },
+                                               { "PI", "Π" },
+                                               { "RHO", "Ρ" },
+                                               { "SIGMA", "Σ" },
+                                               { "TAU", "Τ" },
+                                               { "UPSILON", "Υ" },
+                                               { "PHI", "Φ" },
+                                               { "CHI", "Χ" },
+                                               { "PSI", "Ψ" },
+                                               { "OMEGA", "Ω" },
+
+                                               { "alpha", "α" },
+                                               { "beta", "β" },
+                                               { "gamma", "γ" },
+                                               { "delta", "δ" },
+                                               { "epsilon", "ε" },
+                                               { "zeta", "ζ" },
+                                               { "eta", "η" },
+                                               { "theta", "θ" },
+                                               { "iota", "ι" },
+                                               { "kappa", "κ" },
+                                               { "lambda", "λ" },
+                                               { "mu", "μ" },
+                                               { "nu", "ν" },
+                                               { "xi", "ξ" },
+                                               { "omicron", "ο" },
+                                               { "pi", "π" },
+                                               { "rho", "ρ" },
+                                               { "sigma", "σ" },
+                                               { "tau", "τ" },
+                                               { "upsilon", "υ" },
+                                               { "phi", "φ" },
+                                               { "chi", "χ" },
+                                               { "psi", "ψ" },
+                                               { "omega", "ω" }
+                                           };
 
     QwtMathMLDocument mMathmlDocument;
 

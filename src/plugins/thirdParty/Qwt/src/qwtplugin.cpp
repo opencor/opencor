@@ -32,10 +32,10 @@ namespace Qwt {
 
 PLUGININFO_FUNC QwtPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://qwt.sourceforge.net/">Qwt</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://qwt.sourceforge.net/">Qwt</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="http://qwt.sourceforge.net/">Qwt</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://qwt.sourceforge.net/">Qwt</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           {},

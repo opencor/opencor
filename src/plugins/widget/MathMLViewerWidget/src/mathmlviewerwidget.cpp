@@ -58,58 +58,6 @@ namespace MathMLViewerWidget {
 MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     Widget(pParent)
 {
-    // Populate our table of Greek symbols, if needed
-
-    mGreekSymbols.insert("ALPHA", "Α");
-    mGreekSymbols.insert("BETA", "Β");
-    mGreekSymbols.insert("GAMMA", "Γ");
-    mGreekSymbols.insert("DELTA", "Δ");
-    mGreekSymbols.insert("EPSILON", "Ε");
-    mGreekSymbols.insert("ZETA", "Ζ");
-    mGreekSymbols.insert("ETA", "Η");
-    mGreekSymbols.insert("THETA", "Θ");
-    mGreekSymbols.insert("IOTA", "Ι");
-    mGreekSymbols.insert("KAPPA", "Κ");
-    mGreekSymbols.insert("LAMBDA", "Λ");
-    mGreekSymbols.insert("MU", "Μ");
-    mGreekSymbols.insert("NU", "Ν");
-    mGreekSymbols.insert("XI", "Ξ");
-    mGreekSymbols.insert("OMICRON", "Ο");
-    mGreekSymbols.insert("PI", "Π");
-    mGreekSymbols.insert("RHO", "Ρ");
-    mGreekSymbols.insert("SIGMA", "Σ");
-    mGreekSymbols.insert("TAU", "Τ");
-    mGreekSymbols.insert("UPSILON", "Υ");
-    mGreekSymbols.insert("PHI", "Φ");
-    mGreekSymbols.insert("CHI", "Χ");
-    mGreekSymbols.insert("PSI", "Ψ");
-    mGreekSymbols.insert("OMEGA", "Ω");
-
-    mGreekSymbols.insert("alpha", "α");
-    mGreekSymbols.insert("beta", "β");
-    mGreekSymbols.insert("gamma", "γ");
-    mGreekSymbols.insert("delta", "δ");
-    mGreekSymbols.insert("epsilon", "ε");
-    mGreekSymbols.insert("zeta", "ζ");
-    mGreekSymbols.insert("eta", "η");
-    mGreekSymbols.insert("theta", "θ");
-    mGreekSymbols.insert("iota", "ι");
-    mGreekSymbols.insert("kappa", "κ");
-    mGreekSymbols.insert("lambda", "λ");
-    mGreekSymbols.insert("mu", "μ");
-    mGreekSymbols.insert("nu", "ν");
-    mGreekSymbols.insert("xi", "ξ");
-    mGreekSymbols.insert("omicron", "ο");
-    mGreekSymbols.insert("pi", "π");
-    mGreekSymbols.insert("rho", "ρ");
-    mGreekSymbols.insert("sigma", "σ");
-    mGreekSymbols.insert("tau", "τ");
-    mGreekSymbols.insert("upsilon", "υ");
-    mGreekSymbols.insert("phi", "φ");
-    mGreekSymbols.insert("chi", "χ");
-    mGreekSymbols.insert("psi", "ψ");
-    mGreekSymbols.insert("omega", "ω");
-
     // Create our context menu
 
     mContextMenu = new QMenu(this);

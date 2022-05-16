@@ -34,10 +34,10 @@ namespace PythonShell {
 
 PLUGININFO_FUNC PythonShellPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("the <a href=\"https://python.org/\">Python</a> shell plugin."));
-    descriptions.insert("fr", QString::fromUtf8("le plugin shell <a href=\"https://python.org/\">Python</a>."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("the <a href=\"https://python.org/\">Python</a> shell plugin.") },
+                                                 { "fr", QString::fromUtf8("le plugin shell <a href=\"https://python.org/\">Python</a>.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, true,
                           { "Core", "PythonQtSupport", "SimulationSupport" },

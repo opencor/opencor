@@ -43,10 +43,10 @@ namespace RawSEDMLView {
 
 PLUGININFO_FUNC RawSEDMLViewPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to edit <a href="https://sed-ml.org/">SED-ML</a> files using an <a href="https://w3.org/XML">XML</a> editor.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://sed-ml.org/">SED-ML</a> à l'aide d'un éditeur <a href="https://w3.org/XML">XML</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to edit <a href="https://sed-ml.org/">SED-ML</a> files using an <a href="https://w3.org/XML">XML</a> editor.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://sed-ml.org/">SED-ML</a> à l'aide d'un éditeur <a href="https://w3.org/XML">XML</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           { "SEDMLEditingView" },

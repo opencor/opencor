@@ -33,10 +33,10 @@ namespace CVODESolver {
 
 PLUGININFO_FUNC CVODESolverPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin that uses <a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin that uses <a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension qui utilise <a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           { "SUNDIALS" },
@@ -217,65 +217,70 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Descriptions MaximumStepDescriptions;
-    Descriptions MaximumNumberOfStepsDescriptions;
-    Descriptions IntegrationMethodDescriptions;
-    Descriptions IterationTypeDescriptions;
-    Descriptions LinearSolverDescriptions;
-    Descriptions PreconditionerDescriptions;
-    Descriptions UpperHalfBandwidthDescriptions;
-    Descriptions LowerHalfBandwidthDescriptions;
-    Descriptions RelativeToleranceDescriptions;
-    Descriptions AbsoluteToleranceDescriptions;
-    Descriptions InterpolateSolutionDescriptions;
-
-    MaximumStepDescriptions.insert("en", QString::fromUtf8("Maximum step"));
-    MaximumStepDescriptions.insert("fr", QString::fromUtf8("Pas maximum"));
-
-    MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
-    MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
-
-    IntegrationMethodDescriptions.insert("en", QString::fromUtf8("Integration method"));
-    IntegrationMethodDescriptions.insert("fr", QString::fromUtf8("Méthode d'intégration"));
-
-    IterationTypeDescriptions.insert("en", QString::fromUtf8("Iteration type"));
-    IterationTypeDescriptions.insert("fr", QString::fromUtf8("Type d'itération"));
-
-    LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
-    LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
-
-    PreconditionerDescriptions.insert("en", QString::fromUtf8("Preconditioner"));
-    PreconditionerDescriptions.insert("fr", QString::fromUtf8("Préconditionneur"));
-
-    UpperHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Upper half-bandwidth"));
-    UpperHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande supérieure"));
-
-    LowerHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Lower half-bandwidth"));
-    LowerHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande inférieure"));
-
-    RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
-    RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
-
-    AbsoluteToleranceDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
-    AbsoluteToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
-
-    InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
-    InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
-
-    QStringList IntegrationMethodListValues = { AdamsMoultonMethod, BdfMethod };
-
-    QStringList IterationTypeListValues = { FunctionalIteration,
-                                            NewtonIteration };
-
-    QStringList LinearSolverListValues = { DenseLinearSolver,
-                                           BandedLinearSolver,
-                                           DiagonalLinearSolver,
-                                           GmresLinearSolver,
-                                           BiCgStabLinearSolver,
-                                           TfqmrLinearSolver };
-
-    QStringList PreconditionerListValues = { NoPreconditioner,
-                                             BandedPreconditioner };
+    static const Descriptions MaximumStepDescriptions = {
+                                                            { "en", QString::fromUtf8("Maximum step") },
+                                                            { "fr", QString::fromUtf8("Pas maximum") }
+                                                        };
+    static const Descriptions MaximumNumberOfStepsDescriptions = {
+                                                                     { "en", QString::fromUtf8("Maximum number of steps") },
+                                                                     { "fr", QString::fromUtf8("Nombre maximum de pas") }
+                                                                 };
+    static const Descriptions IntegrationMethodDescriptions = {
+                                                                  { "en", QString::fromUtf8("Integration method") },
+                                                                  { "fr", QString::fromUtf8("Méthode d'intégration") }
+                                                              };
+    static const Descriptions IterationTypeDescriptions = {
+                                                              { "en", QString::fromUtf8("Iteration type") },
+                                                              { "fr", QString::fromUtf8("Type d'itération") }
+                                                          };
+    static const Descriptions LinearSolverDescriptions = {
+                                                             { "en", QString::fromUtf8("Linear solver") },
+                                                             { "fr", QString::fromUtf8("Solveur linéaire") }
+                                                         };
+    static const Descriptions PreconditionerDescriptions = {
+                                                               { "en", QString::fromUtf8("Preconditioner") },
+                                                               { "fr", QString::fromUtf8("Préconditionneur") }
+                                                           };
+    static const Descriptions UpperHalfBandwidthDescriptions = {
+                                                                   { "en", QString::fromUtf8("Upper half-bandwidth") },
+                                                                   { "fr", QString::fromUtf8("Demi largeur de bande supérieure") }
+                                                               };
+    static const Descriptions LowerHalfBandwidthDescriptions = {
+                                                                   { "en", QString::fromUtf8("Lower half-bandwidth") },
+                                                                   { "fr", QString::fromUtf8("Demi largeur de bande inférieure") }
+                                                               };
+    static const Descriptions RelativeToleranceDescriptions = {
+                                                                  { "en", QString::fromUtf8("Relative tolerance") },
+                                                                  { "fr", QString::fromUtf8("Tolérance relative") }
+                                                              };
+    static const Descriptions AbsoluteToleranceDescriptions = {
+                                                                  { "en", QString::fromUtf8("Absolute tolerance") },
+                                                                  { "fr", QString::fromUtf8("Tolérance absolue") }
+                                                              };
+    static const Descriptions InterpolateSolutionDescriptions = {
+                                                                    { "en", QString::fromUtf8("Interpolate solution") },
+                                                                    { "fr", QString::fromUtf8("Interpoler solution") }
+                                                                };
+    static const QStringList IntegrationMethodListValues = {
+                                                               AdamsMoultonMethod,
+                                                               BdfMethod
+                                                           };
+    static const QStringList IterationTypeListValues = {
+                                                           FunctionalIteration,
+                                                           NewtonIteration
+                                                       };
+    static const QStringList LinearSolverListValues = {
+                                                          DenseLinearSolver,
+                                                          BandedLinearSolver,
+                                                          DiagonalLinearSolver,
+                                                          GmresLinearSolver,
+                                                          BiCgStabLinearSolver,
+                                                          TfqmrLinearSolver
+                                                      };
+    static const QStringList PreconditionerListValues = {
+                                                            NoPreconditioner,
+                                                            BandedPreconditioner
+                                                        };
 
     return { Solver::Property(Solver::Property::Type::DoubleGe0, MaximumStepId, MaximumStepDescriptions, {}, MaximumStepDefaultValue, true),
              Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, {}, MaximumNumberOfStepsDefaultValue, false),

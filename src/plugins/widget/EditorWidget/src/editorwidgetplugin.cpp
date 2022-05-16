@@ -32,10 +32,10 @@ namespace EditorWidget {
 
 PLUGININFO_FUNC EditorWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit and display text."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et afficher du texte."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to edit and display text.") },
+                                                 { "fr", QString::fromUtf8("une extension pour éditer et afficher du texte.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "QScintillaWidget" },

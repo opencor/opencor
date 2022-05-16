@@ -36,10 +36,10 @@ namespace PythonQt {
 
 PLUGININFO_FUNC PythonQtPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to use <a href=\"https://qt.io/\">Qt</a> with <a href=\"https://python.org/\">Python</a>."));
-    descriptions.insert("fr", QString::fromUtf8("un plugin pour utiliser <a href=\"https://qt.io/\">Qt</a> avec <a href=\"https://python.org/\">Python</a>"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to use <a href=\"https://qt.io/\">Qt</a> with <a href=\"https://python.org/\">Python</a>.") },
+                                                 { "fr", QString::fromUtf8("un plugin pour utiliser <a href=\"https://qt.io/\">Qt</a> avec <a href=\"https://python.org/\">Python</a>") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           { "Python" },

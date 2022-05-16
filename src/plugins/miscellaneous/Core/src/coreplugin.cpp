@@ -52,10 +52,10 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("the core plugin."));
-    descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("the core plugin.") },
+                                                 { "fr", QString::fromUtf8("l'extension de base.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, false,
                           {},

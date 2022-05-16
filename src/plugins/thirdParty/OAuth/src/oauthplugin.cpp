@@ -32,10 +32,10 @@ namespace OAuth {
 
 PLUGININFO_FUNC OAuthPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           {},

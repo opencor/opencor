@@ -32,10 +32,10 @@ namespace libSBML {
 
 PLUGININFO_FUNC libSBMLPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           {},

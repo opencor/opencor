@@ -37,10 +37,10 @@ namespace JupyterKernel {
 
 PLUGININFO_FUNC JupyterKernelPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(the <a href="https://jupyter.org/">Jupyter</a> kernel plugin.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(le plugin du noyau <a href="https://jupyter.org/">Jupyter</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(the <a href="https://jupyter.org/">Jupyter</a> kernel plugin.)") },
+                                                 { "fr", QString::fromUtf8(R"(le plugin du noyau <a href="https://jupyter.org/">Jupyter</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, true,
                           { "Core", "SimulationSupport" },

@@ -32,10 +32,10 @@ namespace Compiler {
 
 PLUGININFO_FUNC CompilerPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to support code compilation."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter la compilation de code."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to support code compilation.") },
+                                                 { "fr", QString::fromUtf8("une extension pour supporter la compilation de code.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, false, false,
                           { "Core", "LLVMClang" },
