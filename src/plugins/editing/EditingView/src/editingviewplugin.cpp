@@ -44,10 +44,10 @@ namespace EditingView {
 
 PLUGININFO_FUNC EditingViewPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides core editing view facilities."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin that provides core editing view facilities.") },
+                                                 { "fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           { "EditorWidget" },

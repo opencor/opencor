@@ -106,49 +106,48 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <piecewise>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
-                </piecewise>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
             </apply>
             <!-- In between comment #34...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <piecewise>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
-                </piecewise>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
             </apply>
             <!-- In between comment #35...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <apply>
-                    <plus/>
-                    <ci>b</ci>
-                    <piecewise>
-                        <otherwise>
-                            <ci>other_expression</ci>
-                        </otherwise>
-                    </piecewise>
-                </apply>
+                <piecewise>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
+                </piecewise>
             </apply>
             <!-- In between comment #36...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
                 <piecewise>
-                    <piece>
-                        <ci>expression1</ci>
-                        <ci>condition1</ci>
-                    </piece>
-                    <piece>
-                        <ci>expression2</ci>
-                        <ci>condition2</ci>
-                    </piece>
                     <otherwise>
                         <ci>other_expression</ci>
                     </otherwise>
@@ -158,19 +157,15 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <piecewise>
-                    <piece>
-                        <ci>expression1</ci>
-                        <ci>condition1</ci>
-                    </piece>
-                    <piece>
-                        <ci>expression2</ci>
-                        <ci>condition2</ci>
-                    </piece>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
-                </piecewise>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                    </piecewise>
+                </apply>
             </apply>
             <!-- In between comment #38...-->
             <apply>
@@ -180,37 +175,26 @@
                     <plus/>
                     <ci>b</ci>
                     <piecewise>
-                        <piece>
-                            <ci>expression1</ci>
-                            <ci>condition1</ci>
-                        </piece>
-                        <piece>
-                            <ci>expression2</ci>
-                            <ci>condition2</ci>
-                        </piece>
                         <otherwise>
                             <ci>other_expression</ci>
                         </otherwise>
                     </piecewise>
+                    <ci>b</ci>
                 </apply>
             </apply>
             <!-- In between comment #39...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <piecewise>
-                    <piece>
-                        <ci>expression1</ci>
-                        <ci>condition1</ci>
-                    </piece>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
-                    <piece>
-                        <ci>expression2</ci>
-                        <ci>condition2</ci>
-                    </piece>
-                </piecewise>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
             </apply>
             <!-- In between comment #40...-->
             <apply>
@@ -221,16 +205,34 @@
                         <ci>expression1</ci>
                         <ci>condition1</ci>
                     </piece>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
                     <piece>
                         <ci>expression2</ci>
                         <ci>condition2</ci>
                     </piece>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
                 </piecewise>
             </apply>
             <!-- In between comment #41...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <piece>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
+                    </piece>
+                    <piece>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
+                    </piece>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <!-- In between comment #42...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -242,51 +244,38 @@
                             <ci>expression1</ci>
                             <ci>condition1</ci>
                         </piece>
-                        <otherwise>
-                            <ci>other_expression</ci>
-                        </otherwise>
                         <piece>
                             <ci>expression2</ci>
                             <ci>condition2</ci>
                         </piece>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
                     </piecewise>
                 </apply>
-            </apply>
-            <!-- In between comment #42...-->
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <piecewise>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
-                    <piece>
-                        <ci>expression1</ci>
-                        <ci>condition1</ci>
-                    </piece>
-                    <piece>
-                        <ci>expression2</ci>
-                        <ci>condition2</ci>
-                    </piece>
-                </piecewise>
             </apply>
             <!-- In between comment #43...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <piecewise>
-                    <otherwise>
-                        <ci>other_expression</ci>
-                    </otherwise>
-                    <piece>
-                        <ci>expression1</ci>
-                        <ci>condition1</ci>
-                    </piece>
-                    <piece>
-                        <ci>expression2</ci>
-                        <ci>condition2</ci>
-                    </piece>
-                </piecewise>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
             </apply>
             <!-- In between comment #44...-->
             <apply>
@@ -294,6 +283,167 @@
                 <ci>a</ci>
                 <apply>
                     <plus/>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <!-- In between comment #45...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <piece>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
+                    </piece>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
+                    <piece>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- In between comment #46...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <piece>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
+                    </piece>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
+                    <piece>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- In between comment #47...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                    </piecewise>
+                </apply>
+            </apply>
+            <!-- In between comment #48...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <!-- In between comment #49...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <!-- In between comment #50...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
+                    <piece>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
+                    </piece>
+                    <piece>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- In between comment #51...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <otherwise>
+                        <ci>other_expression</ci>
+                    </otherwise>
+                    <piece>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
+                    </piece>
+                    <piece>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- In between comment #52...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
                     <ci>b</ci>
                     <piecewise>
                         <otherwise>
@@ -310,13 +460,58 @@
                     </piecewise>
                 </apply>
             </apply>
-            <!-- In between comment #45...-->
+            <!-- In between comment #53...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <!-- In between comment #54...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <otherwise>
+                            <ci>other_expression</ci>
+                        </otherwise>
+                        <piece>
+                            <ci>expression1</ci>
+                            <ci>condition1</ci>
+                        </piece>
+                        <piece>
+                            <ci>expression2</ci>
+                            <ci>condition2</ci>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <!-- In between comment #55...-->
             <apply id="my_equation_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <ci>b</ci>
             </apply>
-            <!-- In between comment #46...-->
+            <!-- In between comment #56...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -342,13 +537,13 @@
                     <ci>b</ci>
                 </apply>
             </apply>
-            <!-- In between comment #47...-->
+            <!-- In between comment #57...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
                 <cn cellml:units="second">3.5</cn>
             </apply>
-            <!-- In between comment #48...-->
+            <!-- In between comment #58...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -1001,26 +1196,26 @@
                 </apply>
             </apply>
         </math>
-        <!-- In between comment #49...-->
+        <!-- In between comment #59...-->
     </component>
-    <!-- In between comment #50...-->
+    <!-- In between comment #60...-->
     <group>
         <relationship_ref relationship="containment"/>
-        <!-- In between comment #51...-->
+        <!-- In between comment #61...-->
         <component_ref component="my_component1">
-            <!-- In between comment #52...-->
+            <!-- In between comment #62...-->
             <component_ref component="my_component11">
-                <!-- In between comment #53...-->
+                <!-- In between comment #63...-->
                 <component_ref component="my_component111"/>
-                <!-- In between comment #54...-->
+                <!-- In between comment #64...-->
                 <component_ref component="my_component112"/>
-                <!-- In between comment #55...-->
+                <!-- In between comment #65...-->
             </component_ref>
-            <!-- In between comment #56...-->
+            <!-- In between comment #66...-->
         </component_ref>
-        <!-- In between comment #57...-->
+        <!-- In between comment #67...-->
     </group>
-    <!-- In between comment #58...-->
+    <!-- In between comment #68...-->
     <group>
         <relationship_ref name="my_containment" relationship="containment"/>
         <component_ref component="my_component1">
@@ -1030,7 +1225,7 @@
             <component_ref component="my_component13"/>
         </component_ref>
     </group>
-    <!-- In between comment #59...-->
+    <!-- In between comment #69...-->
     <group>
         <relationship_ref relationship="encapsulation"/>
         <component_ref component="my_component11">
@@ -1041,22 +1236,22 @@
             <component_ref component="my_component121"/>
         </component_ref>
     </group>
-    <!-- In between comment #60...-->
+    <!-- In between comment #70...-->
     <group cmeta:id="my_group_cmeta_id">
         <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation"/>
         <relationship_ref cmeta:id="my_containment_cmeta_id" name="my_containment" relationship="containment"/>
         <component_ref cmeta:id="my_component_cmeta_id" component="my_component"/>
     </group>
-    <!-- In between comment #61...-->
+    <!-- In between comment #71...-->
     <connection cmeta:id="my_connection_cmeta_id">
         <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2"/>
-        <!-- In between comment #62...-->
+        <!-- In between comment #72...-->
         <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable21"/>
-        <!-- In between comment #63...-->
+        <!-- In between comment #73...-->
         <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable12" variable_2="my_variable22"/>
-        <!-- In between comment #64...-->
+        <!-- In between comment #74...-->
         <map_variables cmeta:id="my_map_variables3_cmeta_id" variable_1="my_variable13" variable_2="my_variable23"/>
-        <!-- In between comment #65...-->
+        <!-- In between comment #75...-->
     </connection>
-    <!-- In between comment #66...-->
+    <!-- In between comment #76...-->
 </model>

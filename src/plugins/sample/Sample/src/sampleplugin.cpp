@@ -32,10 +32,10 @@ namespace Sample {
 
 PLUGININFO_FUNC SamplePluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides an addition function."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une fonction d'addition."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin that provides an addition function.") },
+                                                 { "fr", QString::fromUtf8("une extension qui fournit une fonction d'addition.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Sample, false, false,
                           {},

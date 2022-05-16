@@ -32,10 +32,10 @@ namespace GraphPanelWidget {
 
 PLUGININFO_FUNC GraphPanelWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to plot graphs."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour afficher des graphes."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to plot graphs.") },
+                                                 { "fr", QString::fromUtf8("une extension pour afficher des graphes.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "Core", "Qwt" },

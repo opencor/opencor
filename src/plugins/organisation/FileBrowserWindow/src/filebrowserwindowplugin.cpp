@@ -39,10 +39,10 @@ namespace FileBrowserWindow {
 
 PLUGININFO_FUNC FileBrowserWindowPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to access local files."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder aux fichiers locaux."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to access local files.") },
+                                                 { "fr", QString::fromUtf8("une extension pour accéder aux fichiers locaux.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           { "ToolBarWidget" },

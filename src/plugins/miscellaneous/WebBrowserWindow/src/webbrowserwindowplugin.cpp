@@ -39,10 +39,10 @@ namespace WebBrowserWindow {
 
 PLUGININFO_FUNC WebBrowserWindowPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to browse the Web."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour naviguer sur le Web."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to browse the Web.") },
+                                                 { "fr", QString::fromUtf8("une extension pour naviguer sur le Web.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           { "Core", "WebViewerWidget" },

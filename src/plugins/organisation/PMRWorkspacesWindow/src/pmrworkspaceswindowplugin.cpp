@@ -45,10 +45,10 @@ namespace PMRWorkspacesWindow {
 
 PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to manage a user's <a href="https://models.physiomeproject.org/">PMR</a> workspaces.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les espaces de travail <a href="https://models.physiomeproject.org/">PMR</a> d'un utilisateur.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to manage a user's <a href="https://models.physiomeproject.org/">PMR</a> workspaces.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder les espaces de travail <a href="https://models.physiomeproject.org/">PMR</a> d'un utilisateur.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           { "CellMLSupport", "LibXDiff", "PMRSupport" },

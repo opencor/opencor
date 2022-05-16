@@ -39,10 +39,10 @@ namespace FileOrganiserWindow {
 
 PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to virtually organise files."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour organiser virtuellement des fichiers."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to virtually organise files.") },
+                                                 { "fr", QString::fromUtf8("une extension pour organiser virtuellement des fichiers.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           { "ToolBarWidget" },

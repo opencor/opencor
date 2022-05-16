@@ -134,8 +134,78 @@ private:
     bool mOldTopPiecewiseStatementUsed = false;
     bool mTopPiecewiseStatementUsed = false;
 
-    QMap<QString, QString> mMappings;
-    QMap<QString, MathmlNode> mMathmlNodes;
+    QMap<QString, QString> mMappings = {
+                                           // Mappings for relational operators
+
+                                           { "neq", " <> " },
+                                           { "lt", " < " },
+                                           { "leq", " <= " },
+                                           { "geq", " >= " },
+                                           { "gt", " > " },
+
+                                           // Mappings for arithmetic operators
+
+                                           { "plus", "+" },
+                                           { "minus", "-" },
+                                           { "times", "*" },
+                                           { "divide", "/" },
+                                           { "ceiling", "ceil" },
+                                           { "floor", "floor" },
+                                           { "factorial", "fact" },
+
+                                           // Mappings for arithmetic operators
+
+                                           { "and", " and " },
+                                           { "or", " or " },
+                                           { "xor", " xor " },
+
+                                           // Mappings for constants
+
+                                           { "true", "true" },
+                                           { "false", "false" },
+                                           { "notanumber", "nan" },
+                                           { "pi", "pi" },
+                                           { "infinity", "inf" },
+                                           { "exponentiale", "e" },
+
+                                           // Mappings for trigonometric operators
+
+                                           { "arcsin", "asin" },
+                                           { "arccos", "acos" },
+                                           { "arctan", "atan" },
+                                           { "arcsec", "asec" },
+                                           { "arccsc", "acsc" },
+                                           { "arccot", "acot" },
+                                           { "arcsinh", "asinh" },
+                                           { "arccosh", "acosh" },
+                                           { "arctanh", "atanh" },
+                                           { "arcsech", "asech" },
+                                           { "arccsch", "acsch" },
+                                           { "arccoth", "acoth" }
+                                       };
+    QMap<QString, MathmlNode> mMathmlNodes = {
+                                                 // Mappings for relational operators
+
+                                                 { "eq", MathmlNode::Eq },
+                                                 { "neq", MathmlNode::Neq },
+                                                 { "lt", MathmlNode::Lt },
+                                                 { "leq", MathmlNode::Leq },
+                                                 { "geq", MathmlNode::Geq },
+                                                 { "gt", MathmlNode::Gt },
+
+                                                 // Mappings for arithmetic operators
+
+                                                 { "plus", MathmlNode::Plus },
+                                                 { "minus", MathmlNode::Minus },
+                                                 { "times", MathmlNode::Times },
+                                                 { "divide", MathmlNode::Divide },
+
+                                                 // Mappings for arithmetic operators
+
+                                                 { "and", MathmlNode::And },
+                                                 { "or", MathmlNode::Or },
+                                                 { "xor", MathmlNode::Xor }
+                                             };
 
     QMap<QPair<int, int>, QMap<QString, QString>> mNamespaces;
 

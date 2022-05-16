@@ -37,164 +37,39 @@ namespace CellMLTextView {
 
 CellmlTextViewScanner::CellmlTextViewScanner()
 {
-    // Our various CellML Text keywords
+}
 
-    mKeywords.insert("and", Token::And);
-    mKeywords.insert("as", Token::As);
-    mKeywords.insert("between", Token::Between);
-    mKeywords.insert("case", Token::Case);
-    mKeywords.insert("comp", Token::Comp);
-    mKeywords.insert("def", Token::Def);
-    mKeywords.insert("endcomp", Token::EndComp);
-    mKeywords.insert("enddef", Token::EndDef);
-    mKeywords.insert("endsel", Token::EndSel);
-    mKeywords.insert("for", Token::For);
-    mKeywords.insert("group", Token::Group);
-    mKeywords.insert("import", Token::Import);
-    mKeywords.insert("incl", Token::Incl);
-    mKeywords.insert("map", Token::Map);
-    mKeywords.insert("model", Token::Model);
-    mKeywords.insert("otherwise", Token::Otherwise);
-    mKeywords.insert("sel", Token::Sel);
-    mKeywords.insert("unit", Token::Unit);
-    mKeywords.insert("using", Token::Using);
-    mKeywords.insert("var", Token::Var);
-    mKeywords.insert("vars", Token::Vars);
+//==============================================================================
 
-    mKeywords.insert("abs", Token::Abs);
-    mKeywords.insert("ceil", Token::Ceil);
-    mKeywords.insert("exp", Token::Exp);
-    mKeywords.insert("fact", Token::Fact);
-    mKeywords.insert("floor", Token::Floor);
-    mKeywords.insert("ln", Token::Ln);
-    mKeywords.insert("log", Token::Log);
-    mKeywords.insert("pow", Token::Pow);
-    mKeywords.insert("rem", Token::Rem);
-    mKeywords.insert("root", Token::Root);
-    mKeywords.insert("sqr", Token::Sqr);
-    mKeywords.insert("sqrt", Token::Sqrt);
+CellmlTextViewScanner::CellmlTextViewScanner(const CellmlTextViewScanner &pScanner) :
+    QObject()
+{
+    // Initialise ourselves using the given scanner
 
-//    mKeywords.insert("and", TokenType::And);
-    mKeywords.insert("or", Token::Or);
-    mKeywords.insert("xor", Token::Xor);
-    mKeywords.insert("not", Token::Not);
+    *this = pScanner;
+}
 
-    mKeywords.insert("ode", Token::Ode);
+//==============================================================================
 
-    mKeywords.insert("min", Token::Min);
-    mKeywords.insert("max", Token::Max);
+void CellmlTextViewScanner::operator=(const CellmlTextViewScanner &pScanner)
+{
+    // Initialise ourselves using the given scanner
 
-    mKeywords.insert("gcd", Token::Gcd);
-    mKeywords.insert("lcm", Token::Lcm);
+    mText = pScanner.mText;
 
-    mKeywords.insert("sin", Token::Sin);
-    mKeywords.insert("cos", Token::Cos);
-    mKeywords.insert("tan", Token::Tan);
-    mKeywords.insert("sec", Token::Sec);
-    mKeywords.insert("csc", Token::Csc);
-    mKeywords.insert("cot", Token::Cot);
-    mKeywords.insert("sinh", Token::Sinh);
-    mKeywords.insert("cosh", Token::Cosh);
-    mKeywords.insert("tanh", Token::Tanh);
-    mKeywords.insert("sech", Token::Sech);
-    mKeywords.insert("csch", Token::Csch);
-    mKeywords.insert("coth", Token::Coth);
-    mKeywords.insert("asin", Token::Asin);
-    mKeywords.insert("acos", Token::Acos);
-    mKeywords.insert("atan", Token::Atan);
-    mKeywords.insert("asec", Token::Asec);
-    mKeywords.insert("acsc", Token::Acsc);
-    mKeywords.insert("acot", Token::Acot);
-    mKeywords.insert("asinh", Token::Asinh);
-    mKeywords.insert("acosh", Token::Acosh);
-    mKeywords.insert("atanh", Token::Atanh);
-    mKeywords.insert("asech", Token::Asech);
-    mKeywords.insert("acsch", Token::Acsch);
-    mKeywords.insert("acoth", Token::Acoth);
+    mChar = pScanner.mChar;
 
-    mKeywords.insert("true", Token::True);
-    mKeywords.insert("false", Token::False);
-    mKeywords.insert("nan", Token::Nan);
-    mKeywords.insert("pi", Token::Pi);
-    mKeywords.insert("inf", Token::Inf);
-    mKeywords.insert("e", Token::E);
+    mCharType = pScanner.mCharType;
+    mCharLine = pScanner.mCharLine;
+    mCharColumn = pScanner.mCharColumn;
 
-    mKeywords.insert("base", Token::Base);
-    mKeywords.insert("encapsulation", Token::Encapsulation);
-    mKeywords.insert("containment", Token::Containment);
+    mToken = pScanner.mToken;
+    mLine = pScanner.mLine;
+    mColumn = pScanner.mColumn;
+    mString = pScanner.mString;
+    mComment = pScanner.mComment;
 
-    // Our various CellML Text SI unit keywords
-
-    mSiUnitKeywords.insert("ampere", Token::Ampere);
-    mSiUnitKeywords.insert("becquerel", Token::Becquerel);
-    mSiUnitKeywords.insert("candela", Token::Candela);
-    mSiUnitKeywords.insert("celsius", Token::Celsius);
-    mSiUnitKeywords.insert("coulomb", Token::Coulomb);
-    mSiUnitKeywords.insert("dimensionless", Token::Dimensionless);
-    mSiUnitKeywords.insert("farad", Token::Farad);
-    mSiUnitKeywords.insert("gram", Token::Gram);
-    mSiUnitKeywords.insert("gray", Token::Gray);
-    mSiUnitKeywords.insert("henry", Token::Henry);
-    mSiUnitKeywords.insert("hertz", Token::Hertz);
-    mSiUnitKeywords.insert("joule", Token::Joule);
-    mSiUnitKeywords.insert("katal", Token::Katal);
-    mSiUnitKeywords.insert("kelvin", Token::Kelvin);
-    mSiUnitKeywords.insert("kilogram", Token::Kilogram);
-    mSiUnitKeywords.insert("liter", Token::Liter);
-    mSiUnitKeywords.insert("litre", Token::Litre);
-    mSiUnitKeywords.insert("lumen", Token::Lumen);
-    mSiUnitKeywords.insert("lux", Token::Lux);
-    mSiUnitKeywords.insert("meter", Token::Meter);
-    mSiUnitKeywords.insert("metre", Token::Metre);
-    mSiUnitKeywords.insert("mole", Token::Mole);
-    mSiUnitKeywords.insert("newton", Token::Newton);
-    mSiUnitKeywords.insert("ohm", Token::Ohm);
-    mSiUnitKeywords.insert("pascal", Token::Pascal);
-    mSiUnitKeywords.insert("radian", Token::Radian);
-    mSiUnitKeywords.insert("second", Token::Second);
-    mSiUnitKeywords.insert("siemens", Token::Siemens);
-    mSiUnitKeywords.insert("sievert", Token::Sievert);
-    mSiUnitKeywords.insert("steradian", Token::Steradian);
-    mSiUnitKeywords.insert("tesla", Token::Tesla);
-    mSiUnitKeywords.insert("volt", Token::Volt);
-    mSiUnitKeywords.insert("watt", Token::Watt);
-    mSiUnitKeywords.insert("weber", Token::Weber);
-
-    // Our various CellML Text parameter keywords
-
-    mParameterKeywords.insert("pref", Token::Pref);
-    mParameterKeywords.insert("expo", Token::Expo);
-    mParameterKeywords.insert("mult", Token::Mult);
-    mParameterKeywords.insert("off", Token::Off);
-
-    mParameterKeywords.insert("init", Token::Init);
-    mParameterKeywords.insert("pub", Token::Pub);
-    mParameterKeywords.insert("priv", Token::Priv);
-
-    mParameterKeywords.insert("yotta", Token::Yotta);
-    mParameterKeywords.insert("zetta", Token::Zetta);
-    mParameterKeywords.insert("exa", Token::Exa);
-    mParameterKeywords.insert("peta", Token::Peta);
-    mParameterKeywords.insert("tera", Token::Tera);
-    mParameterKeywords.insert("giga", Token::Giga);
-    mParameterKeywords.insert("mega", Token::Mega);
-    mParameterKeywords.insert("kilo", Token::Kilo);
-    mParameterKeywords.insert("hecto", Token::Hecto);
-    mParameterKeywords.insert("deka", Token::Deka);
-    mParameterKeywords.insert("deci", Token::Deci);
-    mParameterKeywords.insert("centi", Token::Centi);
-    mParameterKeywords.insert("milli", Token::Milli);
-    mParameterKeywords.insert("micro", Token::Micro);
-    mParameterKeywords.insert("nano", Token::Nano);
-    mParameterKeywords.insert("pico", Token::Pico);
-    mParameterKeywords.insert("femto", Token::Femto);
-    mParameterKeywords.insert("atto", Token::Atto);
-    mParameterKeywords.insert("zepto", Token::Zepto);
-    mParameterKeywords.insert("yocto", Token::Yocto);
-
-    mParameterKeywords.insert("in", Token::In);
-    mParameterKeywords.insert("out", Token::Out);
-    mParameterKeywords.insert("none", Token::None);
+    mWithinParameterBlock = pScanner.mWithinParameterBlock;
 }
 
 //==============================================================================

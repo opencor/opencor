@@ -32,10 +32,10 @@ namespace MathMLViewerWidget {
 
 PLUGININFO_FUNC MathMLViewerWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to visualise <a href="https://w3.org/Math">MathML</a> documents.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour visualiser des documents <a href="https://w3.org/Math">MathML</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to visualise <a href="https://w3.org/Math">MathML</a> documents.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour visualiser des documents <a href="https://w3.org/Math">MathML</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "Core", "Qwt" },
