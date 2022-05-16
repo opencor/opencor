@@ -218,6 +218,247 @@
                     </piecewise>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <cn cellml:units="dimensionless">123</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">123</cn>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <cn cellml:units="dimensionless">123</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                        <piece>
+                            <cn cellml:units="dimensionless">456</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </piece>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">789</cn>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <piece>
+                            <cn cellml:units="dimensionless">123</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">456</cn>
+                        </otherwise>
+                        <piece>
+                            <cn cellml:units="dimensionless">789</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <piecewise>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">123</cn>
+                        </otherwise>
+                        <piece>
+                            <cn cellml:units="dimensionless">456</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                        <piece>
+                            <cn cellml:units="dimensionless">789</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <piece>
+                            <cn cellml:units="dimensionless">123</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">123</cn>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <piece>
+                            <cn cellml:units="dimensionless">123</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                        <piece>
+                            <cn cellml:units="dimensionless">456</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </piece>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">789</cn>
+                        </otherwise>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <piece>
+                            <cn cellml:units="dimensionless">123</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">456</cn>
+                        </otherwise>
+                        <piece>
+                            <cn cellml:units="dimensionless">789</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <piecewise>
+                        <otherwise>
+                            <cn cellml:units="dimensionless">123</cn>
+                        </otherwise>
+                        <piece>
+                            <cn cellml:units="dimensionless">456</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </piece>
+                        <piece>
+                            <cn cellml:units="dimensionless">789</cn>
+                            <apply>
+                                <eq/>
+                                <ci>Version</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </piece>
+                    </piecewise>
+                    <ci>b</ci>
+                </apply>
+            </apply>
         </math>
     </component>
 </model>

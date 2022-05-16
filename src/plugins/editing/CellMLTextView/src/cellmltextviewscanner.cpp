@@ -41,6 +41,39 @@ CellmlTextViewScanner::CellmlTextViewScanner()
 
 //==============================================================================
 
+CellmlTextViewScanner::CellmlTextViewScanner(const CellmlTextViewScanner &pScanner) :
+    QObject()
+{
+    // Initialise ourselves using the given scanner
+
+    *this = pScanner;
+}
+
+//==============================================================================
+
+void CellmlTextViewScanner::operator=(const CellmlTextViewScanner &pScanner)
+{
+    // Initialise ourselves using the given scanner
+
+    mText = pScanner.mText;
+
+    mChar = pScanner.mChar;
+
+    mCharType = pScanner.mCharType;
+    mCharLine = pScanner.mCharLine;
+    mCharColumn = pScanner.mCharColumn;
+
+    mToken = pScanner.mToken;
+    mLine = pScanner.mLine;
+    mColumn = pScanner.mColumn;
+    mString = pScanner.mString;
+    mComment = pScanner.mComment;
+
+    mWithinParameterBlock = pScanner.mWithinParameterBlock;
+}
+
+//==============================================================================
+
 void CellmlTextViewScanner::setText(const QString &pText)
 {
     // Initialise ourselves with the text to scan

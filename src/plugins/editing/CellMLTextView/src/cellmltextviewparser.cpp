@@ -2017,9 +2017,11 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
             // We have "sel", but is that for a sel() function or a sel...endsel
             // statement?
 
+            QDomNode dummyNode;
+
             mScanner.getNextToken();
 
-            mStatement = isTokenType(applyElement, CellmlTextViewScanner::Token::OpeningBracket)?
+            mStatement = isTokenType(dummyNode, CellmlTextViewScanner::Token::OpeningBracket)?
                              Statement::Normal:
                              Statement::PiecewiseSel;
         } else {
@@ -2031,9 +2033,27 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
 
     // Expect either a normal or a piecewise mathematical expression
 
-    QDomElement rhsElement = isTokenType(applyElement, CellmlTextViewScanner::Token::Sel)?
-                                 parsePiecewiseMathematicalExpression(pDomNode, true):
-                                 parseNormalMathematicalExpression(pDomNode);
+    QDomElement rhsElement;
+
+    if (mScanner.token() == CellmlTextViewScanner::Token::Sel) {
+        // We have "sel", but is that for a sel() function or a sel...endsel
+        // statement?
+
+        QDomNode dummyNode;
+        CellmlTextViewScanner origScanner(mScanner);
+
+        mScanner.getNextToken();
+
+        bool selFunction = isTokenType(dummyNode, CellmlTextViewScanner::Token::OpeningBracket);
+
+        mScanner = origScanner;
+
+        rhsElement = selFunction?
+                         parseNormalMathematicalExpression(pDomNode):
+                         parsePiecewiseMathematicalExpression(pDomNode, true);
+    } else {
+        rhsElement = parseNormalMathematicalExpression(pDomNode);
+    }
 
     if (rhsElement.isNull()) {
         return false;

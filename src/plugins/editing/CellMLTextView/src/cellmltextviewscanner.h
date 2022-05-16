@@ -128,6 +128,9 @@ public:
     using Tokens = QList<Token>;
 
     explicit CellmlTextViewScanner();
+    explicit CellmlTextViewScanner(const CellmlTextViewScanner &pScanner);
+
+    void operator=(const CellmlTextViewScanner &pScanner);
 
     void setText(const QString &pText);
 

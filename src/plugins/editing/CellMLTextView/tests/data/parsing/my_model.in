@@ -139,58 +139,90 @@ def model{my_model_cmeta_id_with-hyphens-and.periods.} my_model as
 
         // In between comment #33...
 
-        a = sel
-            otherwise:
-                other_expression;
-        endsel;
+        a = b+sel(case condition1: expression1)+b;
 
         // In between comment #34...
 
-        a = sel(otherwise: other_expression);
+        a = sel(case condition1: expression1)+b;
 
         // In between comment #35...
 
-        a = b+sel(otherwise: other_expression);
+        a = sel
+            otherwise:
+                other_expression;
+        endsel;
 
         // In between comment #36...
 
-        a = sel
-            case condition1:
-                expression1;
-            case condition2:
-                expression2;
-            otherwise:
-                other_expression;
-        endsel;
+        a = sel(otherwise: other_expression);
 
         // In between comment #37...
 
-        a = sel(case condition1: expression1, case condition2: expression2, otherwise: other_expression);
+        a = b+sel(otherwise: other_expression);
 
         // In between comment #38...
 
-        a = b+sel(case condition1: expression1, case condition2: expression2, otherwise: other_expression);
+        a = b+sel(otherwise: other_expression)+b;
 
         // In between comment #39...
 
-        a = sel
-            case condition1:
-                expression1;
-            otherwise:
-                other_expression;
-            case condition2:
-                expression2;
-        endsel;
+        a = sel(otherwise: other_expression)+b;
 
         // In between comment #40...
 
-        a = sel(case condition1: expression1, otherwise: other_expression, case condition2: expression2);
+        a = sel
+            case condition1:
+                expression1;
+            case condition2:
+                expression2;
+            otherwise:
+                other_expression;
+        endsel;
 
         // In between comment #41...
 
-        a = b+sel(case condition1: expression1, otherwise: other_expression, case condition2: expression2);
+        a = sel(case condition1: expression1, case condition2: expression2, otherwise: other_expression);
 
         // In between comment #42...
+
+        a = b+sel(case condition1: expression1, case condition2: expression2, otherwise: other_expression);
+
+        // In between comment #43...
+
+        a = b+sel(case condition1: expression1, case condition2: expression2, otherwise: other_expression)+b;
+
+        // In between comment #44...
+
+        a = sel(case condition1: expression1, case condition2: expression2, otherwise: other_expression)+b;
+
+        // In between comment #45...
+
+        a = sel
+            case condition1:
+                expression1;
+            otherwise:
+                other_expression;
+            case condition2:
+                expression2;
+        endsel;
+
+        // In between comment #46...
+
+        a = sel(case condition1: expression1, otherwise: other_expression, case condition2: expression2);
+
+        // In between comment #47...
+
+        a = b+sel(case condition1: expression1, otherwise: other_expression, case condition2: expression2);
+
+        // In between comment #48...
+
+        a = b+sel(case condition1: expression1, otherwise: other_expression, case condition2: expression2)+b;
+
+        // In between comment #49...
+
+        a = sel(case condition1: expression1, otherwise: other_expression, case condition2: expression2)+b;
+
+        // In between comment #50...
 
         a = sel
             otherwise:
@@ -201,28 +233,36 @@ def model{my_model_cmeta_id_with-hyphens-and.periods.} my_model as
                 expression2;
         endsel;
 
-        // In between comment #43...
+        // In between comment #51...
 
         a = sel(otherwise: other_expression, case condition1: expression1, case condition2: expression2);
 
-        // In between comment #44...
+        // In between comment #52...
 
         a = b+sel(otherwise: other_expression, case condition1: expression1, case condition2: expression2);
 
-        // In between comment #45...
+        // In between comment #53...
+
+        a = b+sel(otherwise: other_expression, case condition1: expression1, case condition2: expression2)+b;
+
+        // In between comment #54...
+
+        a = sel(otherwise: other_expression, case condition1: expression1, case condition2: expression2)+b;
+
+        // In between comment #55...
 
         a ={my_equation_cmeta_id} b;
 
-        // In between comment #46...
+        // In between comment #56...
 
         a = ode(b, t);
         a = ode(b, t, 2{dimensionless});
 
-        // In between comment #47...
+        // In between comment #57...
 
         a = 3.5{second};
 
-        // In between comment #48...
+        // In between comment #58...
 
         a = b or c;
         a = b and c;
@@ -301,36 +341,36 @@ def model{my_model_cmeta_id_with-hyphens-and.periods.} my_model as
         a = rem(b, 3{dimensionless});
         a = rem(b, c);
 
-        // In between comment #49...
+        // In between comment #59...
     enddef;
 
-    // In between comment #50...
+    // In between comment #60...
 
     def group as containment for
-        // In between comment #51...
+        // In between comment #61...
 
         comp my_component1 incl
-            // In between comment #52...
+            // In between comment #62...
 
             comp my_component11 incl
-                // In between comment #53...
+                // In between comment #63...
 
                 comp my_component111;
 
-                // In between comment #54...
+                // In between comment #64...
 
                 comp my_component112;
 
-                // In between comment #55...
+                // In between comment #65...
             endcomp;
 
-            // In between comment #56...
+            // In between comment #66...
         endcomp;
 
-        // In between comment #57...
+        // In between comment #67...
     enddef;
 
-    // In between comment #58...
+    // In between comment #68...
 
     def group as containment my_containment for
         comp my_component1 incl
@@ -342,7 +382,7 @@ def model{my_model_cmeta_id_with-hyphens-and.periods.} my_model as
         endcomp;
     enddef;
 
-    // In between comment #59...
+    // In between comment #69...
 
     def group as encapsulation for
         comp my_component11 incl
@@ -355,29 +395,29 @@ def model{my_model_cmeta_id_with-hyphens-and.periods.} my_model as
         endcomp;
     enddef;
 
-    // In between comment #60...
+    // In between comment #70...
 
     def group{my_group_cmeta_id} as encapsulation{my_encapsulation_cmeta_id} and containment{my_containment_cmeta_id} my_containment for
         comp{my_component_cmeta_id} my_component;
     enddef;
 
-    // In between comment #61...
+    // In between comment #71...
 
     def map{my_connection_cmeta_id} between{my_map_components_cmeta_id} my_component1 and my_component2 for
-        // In between comment #62...
+        // In between comment #72...
 
         vars{my_map_variables1_cmeta_id} my_variable11 and my_variable21;
 
-        // In between comment #63...
+        // In between comment #73...
 
         vars{my_map_variables2_cmeta_id} my_variable12 and my_variable22;
 
-        // In between comment #64...
+        // In between comment #74...
 
         vars{my_map_variables3_cmeta_id} my_variable13 and my_variable23;
 
-        // In between comment #65...
+        // In between comment #75...
     enddef;
 
-    // In between comment #66...
+    // In between comment #76...
 enddef;
