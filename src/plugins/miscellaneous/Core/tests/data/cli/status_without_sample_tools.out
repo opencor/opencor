@@ -35,6 +35,5 @@ The following plugins are available:
  - SimulationSupport: the plugin is loaded and fully functional.
  - StandardSupport: the plugin is loaded and fully functional.
  - SUNDIALS: the plugin is loaded and fully functional.
- - ToolBarWidget: the plugin is loaded and fully functional.
  - ZIPSupport: the plugin is loaded and fully functional.
  - zlib: the plugin is loaded and fully functional.

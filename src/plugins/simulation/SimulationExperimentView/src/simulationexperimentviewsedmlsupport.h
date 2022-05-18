@@ -18,14 +18,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML support
+// Simulation Experiment view SED-ML support
 //==============================================================================
 
 #pragma once
-
-//==============================================================================
-
-#include "sedmlsupportglobal.h"
 
 //==============================================================================
 
@@ -33,28 +29,32 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+#include "qwtbegin.h"
+    #include "qwt_symbol.h"
+#include "qwtend.h"
+
+//==============================================================================
+
 namespace OpenCOR {
-namespace SEDMLSupport {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-QStringList SEDMLSUPPORT_EXPORT lineStyles();
-QStringList SEDMLSUPPORT_EXPORT formattedLineStyles();
+QString stringLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle,
+                                      bool pFormatted = false);
+Qt::PenStyle qtPenStyleFromIndex(int pIndexLineStyle);
+Qt::PenStyle qtPenStyleFromString(const QString &pStringLineStyle);
+int indexLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle);
 
-int SEDMLSUPPORT_EXPORT indexLineStyleFromString(const QString &pStringLineStyle);
-QString SEDMLSUPPORT_EXPORT stringLineStyleFromIndex(int pIndexLineStyle,
-                                                     bool pFormatted = false);
-
-QStringList SEDMLSUPPORT_EXPORT symbolStyles();
-QStringList SEDMLSUPPORT_EXPORT formattedSymbolStyles();
-
-int SEDMLSUPPORT_EXPORT indexSymbolStyleFromString(const QString &pStringSymbolStyle);
-QString SEDMLSUPPORT_EXPORT stringSymbolStyleFromIndex(int pIndexSymbolStyle,
-                                                       bool pFormatted = false);
+QString stringSymbolStyleFromQwtSymbolStyle(QwtSymbol::Style pQwtSymbolStyle,
+                                            bool pFormatted = false);
+QwtSymbol::Style qwtSymbolStyleFromIndex(int pIndexSymbolStyle);
+QwtSymbol::Style qwtSymbolStyleFromString(const QString &pStringSymbolStyle);
+int indexSymbolStyleFromQwtSymbolStyle(QwtSymbol::Style pQwtSymbolStyle);
 
 //==============================================================================
 
-} // namespace SEDMLSupport
+} // namespace SimulationExperimentView
 } // namespace OpenCOR
 
 //==============================================================================

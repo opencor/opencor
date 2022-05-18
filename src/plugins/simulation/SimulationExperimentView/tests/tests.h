@@ -18,44 +18,25 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML support
+// Simulation Experiment view tests
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "sedmlsupportglobal.h"
+#include <QObject>
 
 //==============================================================================
 
-#include <QString>
+class Tests : public QObject
+{
+    Q_OBJECT
 
-//==============================================================================
-
-namespace OpenCOR {
-namespace SEDMLSupport {
-
-//==============================================================================
-
-QStringList SEDMLSUPPORT_EXPORT lineStyles();
-QStringList SEDMLSUPPORT_EXPORT formattedLineStyles();
-
-int SEDMLSUPPORT_EXPORT indexLineStyleFromString(const QString &pStringLineStyle);
-QString SEDMLSUPPORT_EXPORT stringLineStyleFromIndex(int pIndexLineStyle,
-                                                     bool pFormatted = false);
-
-QStringList SEDMLSUPPORT_EXPORT symbolStyles();
-QStringList SEDMLSUPPORT_EXPORT formattedSymbolStyles();
-
-int SEDMLSUPPORT_EXPORT indexSymbolStyleFromString(const QString &pStringSymbolStyle);
-QString SEDMLSUPPORT_EXPORT stringSymbolStyleFromIndex(int pIndexSymbolStyle,
-                                                       bool pFormatted = false);
-
-//==============================================================================
-
-} // namespace SEDMLSupport
-} // namespace OpenCOR
+private slots:
+    void lineStyleTests();
+    void symbolStyleTests();
+};
 
 //==============================================================================
 // End of file

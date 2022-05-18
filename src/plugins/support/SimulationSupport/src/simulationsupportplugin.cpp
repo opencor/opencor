@@ -41,7 +41,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
                                              };
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          { "COMBINESupport", "DataStore", "PythonQtSupport", "ToolBarWidget" },
+                          { "COMBINESupport", "DataStore", "PythonQtSupport" },
                           descriptions);
 }
 

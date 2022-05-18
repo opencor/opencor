@@ -55,7 +55,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
                                              };
 
     return new PluginInfo(PluginInfo::Category::Simulation, true, false,
-                          { "GraphPanelWidget", "PythonQtSupport", "SimulationSupport" },
+                          { "GraphPanelWidget", "PythonQtSupport", "SimulationSupport", "ToolBarWidget" },
                           descriptions);
 }
 
