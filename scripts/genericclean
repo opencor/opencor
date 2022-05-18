@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$1" = "all" ]; then
     echo -e "\033[44;37;1mCleaning all of OpenCOR...\033[0m"
