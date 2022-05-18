@@ -180,7 +180,7 @@ QStringList formattedSymbolStyles()
 
 //==============================================================================
 
-int indexSymbolStyle(const QString &pStringSymbolStyle)
+int indexSymbolStyleFromString(const QString &pStringSymbolStyle)
 {
     // Return the given string symbol style as an index symbol style
     // Note: if the given string symbol style is invalid then we return the
@@ -195,16 +195,7 @@ int indexSymbolStyle(const QString &pStringSymbolStyle)
 
 //==============================================================================
 
-int indexSymbolStyle(QwtSymbol::Style pSymbolStyle)
-{
-    // Return the given symbol style as an index symbol style
-
-    return indexSymbolStyle(stringSymbolStyle(pSymbolStyle));
-}
-
-//==============================================================================
-
-QString stringSymbolStyle(int pIndexSymbolStyle, bool pFormatted)
+QString stringSymbolStyleFromIndex(int pIndexSymbolStyle, bool pFormatted)
 {
     // Return the given index symbol style as a string symbol style
     // Note: if the given index symbol style is invalid then we return the
@@ -216,50 +207,6 @@ QString stringSymbolStyle(int pIndexSymbolStyle, bool pFormatted)
                 && (pIndexSymbolStyle < res.count()))?
                    pIndexSymbolStyle:
                    0];
-}
-
-//==============================================================================
-
-QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle, bool pFormatted)
-{
-    // Return the given symbol style as a string symbol style
-    // Note: if the given symbol style is invalid then we return the string
-    //       symbol style for a "none" symbol...
-
-    QStringList res = pFormatted?formattedSymbolStyles():symbolStyles();
-
-    return res[int((pSymbolStyle <= QwtSymbol::DTriangle)?
-                   pSymbolStyle+1:
-                   ((pSymbolStyle >= QwtSymbol::LTriangle) && (pSymbolStyle <= QwtSymbol::Star1))?
-                       pSymbolStyle:
-                       QwtSymbol::NoSymbol)];
-}
-
-//==============================================================================
-
-QwtSymbol::Style symbolStyle(int pIndexSymbolStyle)
-{
-    // Return the given index symbol style as a string symbol style
-    // Note #1: if the given index symbol style is invalid then we return the
-    //          string symbol style for a "none" symbol...
-    // Note #2: the shifting is because indices in our list of symbols don't
-    //          match those of QwtSymbol::Style...
-
-    return QwtSymbol::Style(   (   (pIndexSymbolStyle >= 0)
-                            && (pIndexSymbolStyle < symbolStyles().count()))?
-                                (pIndexSymbolStyle <= 5)?
-                                    pIndexSymbolStyle-1:
-                                    pIndexSymbolStyle:
-                                -1);
-}
-
-//==============================================================================
-
-QwtSymbol::Style symbolStyle(const QString &pStringSymbolStyle)
-{
-    // Return the given string symbol style as a symbol style
-
-    return symbolStyle(indexSymbolStyle(pStringSymbolStyle));
 }
 
 //==============================================================================

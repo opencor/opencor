@@ -29,6 +29,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
+#include "simulationexperimentviewsedmlsupport.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -39,12 +40,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMenu>
 #include <QScrollBar>
 #include <QSettings>
-
-//==============================================================================
-
-#include "qwtbegin.h"
-    #include "qwt_symbol.h"
-#include "qwtend.h"
 
 //==============================================================================
 
@@ -573,7 +568,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *symbolProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
-                                          SEDMLSupport::stringSymbolStyle(pGraphProperties.symbolStyle()),
+                                          stringSymbolStyleFromQwtSymbolStyle(pGraphProperties.symbolStyle()),
                                           symbolProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);
@@ -1429,7 +1424,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     const QwtSymbol *oldGraphSymbol = graph->symbol();
     bool graphSymbolUpdated = oldGraphSymbol == nullptr;
     Core::Properties symbolProperties = properties[5]->properties();
-    QwtSymbol::Style symbolStyle = SEDMLSupport::symbolStyle(symbolProperties[0]->listValueIndex());
+    QwtSymbol::Style symbolStyle = qwtSymbolStyleFromIndex(symbolProperties[0]->listValueIndex());
     int symbolSizeValue = symbolProperties[1]->integerValue();
     QSize symbolSize = QSize(symbolSizeValue, symbolSizeValue);
     QPen symbolColor = QPen(symbolProperties[2]->colorValue());

@@ -42,6 +42,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewinformationwidget.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpreferenceswidget.h"
+#include "simulationexperimentviewsedmlsupport.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 #include "simulationmanager.h"
@@ -2133,7 +2134,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                                                      lineProperties[2]->stringValue()))
                                                                +SedmlProperty.arg(SEDMLSupport::Symbol,
                                                                                    SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                     SEDMLSupport::stringSymbolStyle(symbolProperties[0]->listValueIndex()))
+                                                                                                     SEDMLSupport::stringSymbolStyleFromIndex(symbolProperties[0]->listValueIndex()))
                                                                                   +SedmlProperty.arg(SEDMLSupport::Size,
                                                                                                      symbolProperties[1]->stringValue())
                                                                                   +SedmlProperty.arg(SEDMLSupport::Color,
@@ -2697,9 +2698,9 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
                                                                                             SettingsPreferencesGraphLineWidth,
                                                                                             SettingsPreferencesGraphLineWidthDefault).toInt(),
                                                            pColor,
-                                                           SEDMLSupport::symbolStyle(PreferencesInterface::preference(PluginName,
-                                                                                                                      SettingsPreferencesGraphSymbolStyle,
-                                                                                                                      SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString()),
+                                                           qwtSymbolStyleFromString(PreferencesInterface::preference(PluginName,
+                                                                                                                     SettingsPreferencesGraphSymbolStyle,
+                                                                                                                     stringSymbolStyleFromQwtSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString()),
                                                            PreferencesInterface::preference(PluginName,
                                                                                             SettingsPreferencesGraphSymbolSize,
                                                                                             SettingsPreferencesGraphSymbolSizeDefault).toInt(),

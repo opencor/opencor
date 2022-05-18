@@ -513,7 +513,7 @@ QString Simulation::furtherInitialize() const
                                         QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
                                         if (symbolPropertyNodeName == SEDMLSupport::Style) {
-                                            symbolStyle = SEDMLSupport::symbolStyle(symbolPropertyNodeValue);
+                                            symbolStyle = qwtSymbolStyleFromString(symbolPropertyNodeValue);
                                         } else if (symbolPropertyNodeName == SEDMLSupport::Size) {
                                             symbolSize = symbolPropertyNodeValue.toInt();
                                         } else if (symbolPropertyNodeName == SEDMLSupport::Color) {

@@ -48,7 +48,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
                                              };
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          { "CellMLSupport", "libSEDML", "Qwt" },
+                          { "CellMLSupport", "libSEDML" },
                           descriptions);
 }
 
