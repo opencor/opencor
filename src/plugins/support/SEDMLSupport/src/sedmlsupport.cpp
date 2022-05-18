@@ -51,9 +51,14 @@ QStringList formattedLineStyles()
 {
     // Return our list of formatted line styles
 
-    return { QObject::tr("None"), QObject::tr("Solid"), QObject::tr("Dash"),
-             QObject::tr("Dot"), QObject::tr("DashDot"),
-             QObject::tr("DashDotDot") };
+    static const QStringList FormattedLineStyles = { QObject::tr("None"),
+                                                     QObject::tr("Solid"),
+                                                     QObject::tr("Dash"),
+                                                     QObject::tr("Dot"),
+                                                     QObject::tr("DashDot"),
+                                                     QObject::tr("DashDotDot") };
+
+    return FormattedLineStyles;
 }
 
 //==============================================================================
@@ -156,12 +161,21 @@ QStringList formattedSymbolStyles()
 {
     // Return our list of formatted symbol styles
 
-    return { QObject::tr("None"), QObject::tr("Circle"), QObject::tr("Square"),
-             QObject::tr("Diamond"), QObject::tr("Triangle"),
-             QObject::tr("Down Triangle"), QObject::tr("Left Triangle"),
-             QObject::tr("Right Triangle"), QObject::tr("Cross"),
-             QObject::tr("X Cross"), QObject::tr("Horizontal Line"),
-             QObject::tr("Vertical Line"), QObject::tr("Star") };
+    static const QStringList FormattedSymbolStyles = { QObject::tr("None"),
+                                                       QObject::tr("Circle"),
+                                                       QObject::tr("Square"),
+                                                       QObject::tr("Diamond"),
+                                                       QObject::tr("Triangle"),
+                                                       QObject::tr("Down Triangle"),
+                                                       QObject::tr("Left Triangle"),
+                                                       QObject::tr("Right Triangle"),
+                                                       QObject::tr("Cross"),
+                                                       QObject::tr("X Cross"),
+                                                       QObject::tr("Horizontal Line"),
+                                                       QObject::tr("Vertical Line"),
+                                                       QObject::tr("Star") };
+
+    return FormattedSymbolStyles;
 }
 
 //==============================================================================
