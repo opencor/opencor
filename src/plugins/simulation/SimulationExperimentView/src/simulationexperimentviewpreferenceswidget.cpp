@@ -87,7 +87,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     mGraphPanelForegroundColor = mSettings.value(SettingsPreferencesGraphPanelForegroundColor, SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>();
     mGraphPanelLegend = mSettings.value(SettingsPreferencesGraphPanelLegend, SettingsPreferencesGraphPanelLegendDefault).toBool();
 
-    mGraphLineStyle = SEDMLSupport::lineStyle(mSettings.value(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
+    mGraphLineStyle = qtPenStyleFromString(mSettings.value(SettingsPreferencesGraphLineStyle, stringLineStyleFromQtPenStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
     mGraphLineWidth = mSettings.value(SettingsPreferencesGraphLineWidth, SettingsPreferencesGraphLineWidthDefault).toInt();
     mGraphSymbolStyle = qwtSymbolStyleFromString(mSettings.value(SettingsPreferencesGraphSymbolStyle, stringSymbolStyleFromQwtSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString());
     mGraphSymbolSize = mSettings.value(SettingsPreferencesGraphSymbolSize, SettingsPreferencesGraphSymbolSizeDefault).toInt();
@@ -116,7 +116,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     Core::Property *lineProperty = mGraphProperties->addSectionProperty(tr("Line"));
 
     mGraphProperties->addListProperty(SEDMLSupport::formattedLineStyles(),
-                                      SEDMLSupport::stringLineStyle(mGraphLineStyle, true),
+                                      stringLineStyleFromQtPenStyle(mGraphLineStyle, true),
                                       lineProperty)->setName(tr("Style"));
     mGraphProperties->addIntegerGt0Property(mGraphLineWidth, lineProperty)->setName(tr("Width"));
 
@@ -196,7 +196,7 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
            || (graphPanelProperties[1]->colorValue() != mGraphPanelForegroundColor)
            || (graphPanelProperties[2]->booleanValue() != mGraphPanelLegend)
               // Graph line preferences
-           ||  (graphLineProperties[0]->listValueIndex() != SEDMLSupport::indexLineStyle(mGraphLineStyle))
+           ||  (graphLineProperties[0]->listValueIndex() != indexLineStyleFromQtPenStyle(mGraphLineStyle))
            ||  (graphLineProperties[1]->integerValue() != mGraphLineWidth)
               // Graph line preferences
            ||  (graphSymbolProperties[0]->listValueIndex() != indexSymbolStyleFromQwtSymbolStyle(mGraphSymbolStyle))
@@ -220,7 +220,7 @@ void SimulationExperimentViewPreferencesWidget::resetPreferences()
     Core::Properties graphProperties = mGraphProperties->properties();
     Core::Properties graphLineProperties = graphProperties[0]->properties();
 
-    graphLineProperties[0]->setValue(SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault, true));
+    graphLineProperties[0]->setValue(stringLineStyleFromQtPenStyle(SettingsPreferencesGraphLineStyleDefault, true));
     graphLineProperties[1]->setIntegerValue(SettingsPreferencesGraphLineWidthDefault);
 
     Core::Properties graphSymbolProperties = graphProperties[1]->properties();
@@ -246,7 +246,7 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
     Core::Properties graphProperties = mGraphProperties->properties();
     Core::Properties graphLineProperties = graphProperties[0]->properties();
 
-    mSettings.setValue(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(graphLineProperties[0]->listValueIndex()));
+    mSettings.setValue(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyleFromIndex(graphLineProperties[0]->listValueIndex()));
     mSettings.setValue(SettingsPreferencesGraphLineWidth, graphLineProperties[1]->integerValue());
 
     Core::Properties graphSymbolProperties = graphProperties[1]->properties();

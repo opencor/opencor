@@ -63,7 +63,7 @@ QStringList formattedLineStyles()
 
 //==============================================================================
 
-int indexLineStyle(const QString &pStringLineStyle)
+int indexLineStyleFromString(const QString &pStringLineStyle)
 {
     // Return the given string line style as an index line style
     // Note: if the given string line style is invalid then we return the index
@@ -78,16 +78,7 @@ int indexLineStyle(const QString &pStringLineStyle)
 
 //==============================================================================
 
-int indexLineStyle(Qt::PenStyle pLineStyle)
-{
-    // Return the given line style as an index line style
-
-    return indexLineStyle(stringLineStyle(pLineStyle));
-}
-
-//==============================================================================
-
-QString stringLineStyle(int pIndexLineStyle, bool pFormatted)
+QString stringLineStyleFromIndex(int pIndexLineStyle, bool pFormatted)
 {
     // Return the given index line style as a string line style
     // Note: if the given index line style is invalid then we return the string
@@ -99,44 +90,6 @@ QString stringLineStyle(int pIndexLineStyle, bool pFormatted)
                 && (pIndexLineStyle < res.count()))?
                    pIndexLineStyle:
                    1];
-}
-
-//==============================================================================
-
-QString stringLineStyle(Qt::PenStyle pLineStyle, bool pFormatted)
-{
-    // Return the given line style as a string line style
-    // Note: if the given line style is invalid then we return the string line
-    //       style for a solid line...
-
-    QStringList res = pFormatted?formattedLineStyles():lineStyles();
-
-    return res[int((pLineStyle > Qt::DashDotDotLine)?
-                       Qt::SolidLine:
-                       pLineStyle)];
-}
-
-//==============================================================================
-
-Qt::PenStyle lineStyle(int pIndexLineStyle)
-{
-    // Return the given index line style as a line style
-    // Note: if the given index line style is invalid then we return the line
-    //       style for a solid line...
-
-    return Qt::PenStyle((   (pIndexLineStyle >= 0)
-                         && (pIndexLineStyle < lineStyles().count()))?
-                            pIndexLineStyle:
-                            1);
-}
-
-//==============================================================================
-
-Qt::PenStyle lineStyle(const QString &pStringLineStyle)
-{
-    // Return the given string line style as a line style
-
-    return lineStyle(indexLineStyle(pStringLineStyle));
 }
 
 //==============================================================================

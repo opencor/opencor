@@ -40,6 +40,12 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
+QString stringLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle,
+                                      bool pFormatted = false);
+Qt::PenStyle qtPenStyleFromIndex(int pIndexLineStyle);
+Qt::PenStyle qtPenStyleFromString(const QString &pStringLineStyle);
+int indexLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle);
+
 QString stringSymbolStyleFromQwtSymbolStyle(QwtSymbol::Style pQwtSymbolStyle,
                                             bool pFormatted = false);
 QwtSymbol::Style qwtSymbolStyleFromIndex(int pIndexSymbolStyle);

@@ -30,6 +30,60 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
+void Tests::lineStyleTests()
+{
+    // Convert a Qt pen style to a string line style
+
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::NoPen), "none");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::SolidLine), "solid");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DashLine), "dash");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DotLine), "dot");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DashDotLine), "dashdot");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DashDotDotLine), "dashdotdot");
+
+    // Convert a Qt pen style to a formatted string line style
+
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::NoPen, true), "None");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::SolidLine, true), "Solid");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DashLine, true), "Dash");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DotLine, true), "Dot");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DashDotLine, true), "DashDot");
+    QCOMPARE(OpenCOR::SimulationExperimentView::stringLineStyleFromQtPenStyle(Qt::DashDotDotLine, true), "DashDotDot");
+
+    // Convert an index line style to a Qt pen style
+
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(-1), Qt::SolidLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(0), Qt::NoPen);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(1), Qt::SolidLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(2), Qt::DashLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(3), Qt::DotLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(4), Qt::DashDotLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(5), Qt::DashDotDotLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromIndex(6), Qt::SolidLine);
+
+    // Convert a string line style to a Qt pen style
+
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("none"), Qt::NoPen);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("solid"), Qt::SolidLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("dash"), Qt::DashLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("dot"), Qt::DotLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("dashdot"), Qt::DashDotLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("dashdotdot"), Qt::DashDotDotLine);
+    QCOMPARE(OpenCOR::SimulationExperimentView::qtPenStyleFromString("unknown"), Qt::SolidLine);
+
+    // Convert a Qt pen style to an index line style
+
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::NoPen), 0);
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::SolidLine), 1);
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::DashLine), 2);
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::DotLine), 3);
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::DashDotLine), 4);
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::DashDotDotLine), 5);
+    QCOMPARE(OpenCOR::SimulationExperimentView::indexLineStyleFromQtPenStyle(Qt::CustomDashLine), 1);
+}
+
+//==============================================================================
+
 void Tests::symbolStyleTests()
 {
     // Convert a Qwt symbol style to a string symbol style

@@ -31,6 +31,54 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
+QString stringLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle, bool pFormatted)
+{
+    // Return the given Qt pen style as a string line style
+    // Note: if the given Qt pen style is invalid then we return the string line
+    //       style for a solid line...
+
+    return SEDMLSupport::stringLineStyleFromIndex(indexLineStyleFromQtPenStyle(pQtPenStyle),
+                                                  pFormatted);
+}
+
+//==============================================================================
+
+Qt::PenStyle qtPenStyleFromIndex(int pIndexLineStyle)
+{
+    // Return the given index line style as a line style
+    // Note: if the given index line style is invalid then we return the line
+    //       style for a solid line...
+
+    static const int LineStylesCount = SEDMLSupport::lineStyles().count();
+
+    return Qt::PenStyle((   (pIndexLineStyle >= 0)
+                         && (pIndexLineStyle < LineStylesCount))?
+                            pIndexLineStyle:
+                            1);
+}
+
+//==============================================================================
+
+Qt::PenStyle qtPenStyleFromString(const QString &pStringLineStyle)
+{
+    // Return the given string line style as a line style
+
+    return qtPenStyleFromIndex(SEDMLSupport::indexLineStyleFromString(pStringLineStyle));
+}
+
+//==============================================================================
+
+int indexLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle)
+{
+    // Return the given line style as an index line style
+
+    return int((pQtPenStyle > Qt::DashDotDotLine)?
+                   Qt::SolidLine:
+                   pQtPenStyle);
+}
+
+//==============================================================================
+
 QString stringSymbolStyleFromQwtSymbolStyle(QwtSymbol::Style pQwtSymbolStyle,
                                             bool pFormatted)
 {

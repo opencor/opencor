@@ -34,6 +34,7 @@ class Tests : public QObject
     Q_OBJECT
 
 private slots:
+    void lineStyleTests();
     void symbolStyleTests();
 };
 

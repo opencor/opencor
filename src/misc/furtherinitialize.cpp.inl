@@ -496,7 +496,7 @@ QString Simulation::furtherInitialize() const
                                         QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                         if (linePropertyNodeName == SEDMLSupport::Style) {
-                                            lineStyle = SEDMLSupport::lineStyle(linePropertyNodeValue);
+                                            lineStyle = qtPenStyleFromString(linePropertyNodeValue);
                                         } else if (linePropertyNodeName == SEDMLSupport::Width) {
                                             lineWidth = linePropertyNodeValue.toInt();
                                         } else if (linePropertyNodeName == SEDMLSupport::Color) {
