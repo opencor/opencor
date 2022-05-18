@@ -34,6 +34,7 @@ add_plugin(SimulationExperimentView
         GraphPanelWidget
         PythonQtSupport
         SimulationSupport
+        ToolBarWidget
     TESTS
         tests
 )
