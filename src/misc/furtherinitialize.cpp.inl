@@ -496,7 +496,7 @@ QString Simulation::furtherInitialize() const
                                         QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                         if (linePropertyNodeName == SEDMLSupport::Style) {
-                                            lineStyle = SEDMLSupport::lineStyle(linePropertyNodeValue);
+                                            lineStyle = qtPenStyleFromString(linePropertyNodeValue);
                                         } else if (linePropertyNodeName == SEDMLSupport::Width) {
                                             lineWidth = linePropertyNodeValue.toInt();
                                         } else if (linePropertyNodeName == SEDMLSupport::Color) {
@@ -513,7 +513,7 @@ QString Simulation::furtherInitialize() const
                                         QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
                                         if (symbolPropertyNodeName == SEDMLSupport::Style) {
-                                            symbolStyle = SEDMLSupport::symbolStyle(symbolPropertyNodeValue);
+                                            symbolStyle = qwtSymbolStyleFromString(symbolPropertyNodeValue);
                                         } else if (symbolPropertyNodeName == SEDMLSupport::Size) {
                                             symbolSize = symbolPropertyNodeValue.toInt();
                                         } else if (symbolPropertyNodeName == SEDMLSupport::Color) {

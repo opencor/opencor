@@ -25,6 +25,7 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewplugin.cpp
         src/simulationexperimentviewpreferenceswidget.cpp
         src/simulationexperimentviewpythonwrapper.cpp
+        src/simulationexperimentviewsedmlsupport.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
     UIS
@@ -33,4 +34,7 @@ add_plugin(SimulationExperimentView
         GraphPanelWidget
         PythonQtSupport
         SimulationSupport
+        ToolBarWidget
+    TESTS
+        tests
 )

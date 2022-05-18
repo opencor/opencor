@@ -42,6 +42,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "simulationexperimentviewinformationwidget.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpreferenceswidget.h"
+#include "simulationexperimentviewsedmlsupport.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 #include "simulationmanager.h"
@@ -1920,7 +1921,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::GridLines,
                                          SedmlProperty.arg(SEDMLSupport::Style,
-                                                           SEDMLSupport::stringLineStyle(gridLinesProperties[0]->listValueIndex()))
+                                                           SEDMLSupport::stringLineStyleFromIndex(gridLinesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width,
                                                            gridLinesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color,
@@ -1942,7 +1943,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::PointCoordinates,
                                          SedmlProperty.arg(SEDMLSupport::Style,
-                                                           SEDMLSupport::stringLineStyle(pointCoordinatesProperties[0]->listValueIndex()))
+                                                           SEDMLSupport::stringLineStyleFromIndex(pointCoordinatesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width,
                                                            pointCoordinatesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color,
@@ -1997,7 +1998,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::ZoomRegion,
                                          SedmlProperty.arg(SEDMLSupport::Style,
-                                                           SEDMLSupport::stringLineStyle(zoomRegionProperties[0]->listValueIndex()))
+                                                           SEDMLSupport::stringLineStyleFromIndex(zoomRegionProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width,
                                                            zoomRegionProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color,
@@ -2126,14 +2127,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                                   properties[1]->stringValue())
                                                                +SedmlProperty.arg(SEDMLSupport::Line,
                                                                                    SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                     SEDMLSupport::stringLineStyle(lineProperties[0]->listValueIndex()))
+                                                                                                     SEDMLSupport::stringLineStyleFromIndex(lineProperties[0]->listValueIndex()))
                                                                                   +SedmlProperty.arg(SEDMLSupport::Width,
                                                                                                      lineProperties[1]->stringValue())
                                                                                   +SedmlProperty.arg(SEDMLSupport::Color,
                                                                                                      lineProperties[2]->stringValue()))
                                                                +SedmlProperty.arg(SEDMLSupport::Symbol,
                                                                                    SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                     SEDMLSupport::stringSymbolStyle(symbolProperties[0]->listValueIndex()))
+                                                                                                     SEDMLSupport::stringSymbolStyleFromIndex(symbolProperties[0]->listValueIndex()))
                                                                                   +SedmlProperty.arg(SEDMLSupport::Size,
                                                                                                      symbolProperties[1]->stringValue())
                                                                                   +SedmlProperty.arg(SEDMLSupport::Color,
@@ -2690,16 +2691,16 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
 
     return GraphPanelWidget::GraphPanelPlotGraphProperties(true,
                                                            pTitle,
-                                                           SEDMLSupport::lineStyle(PreferencesInterface::preference(PluginName,
-                                                                                                                    SettingsPreferencesGraphLineStyle,
-                                                                                                                    SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString()),
+                                                           qtPenStyleFromString(PreferencesInterface::preference(PluginName,
+                                                                                                                 SettingsPreferencesGraphLineStyle,
+                                                                                                                 stringLineStyleFromQtPenStyle(SettingsPreferencesGraphLineStyleDefault)).toString()),
                                                            PreferencesInterface::preference(PluginName,
                                                                                             SettingsPreferencesGraphLineWidth,
                                                                                             SettingsPreferencesGraphLineWidthDefault).toInt(),
                                                            pColor,
-                                                           SEDMLSupport::symbolStyle(PreferencesInterface::preference(PluginName,
-                                                                                                                      SettingsPreferencesGraphSymbolStyle,
-                                                                                                                      SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString()),
+                                                           qwtSymbolStyleFromString(PreferencesInterface::preference(PluginName,
+                                                                                                                     SettingsPreferencesGraphSymbolStyle,
+                                                                                                                     stringSymbolStyleFromQwtSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString()),
                                                            PreferencesInterface::preference(PluginName,
                                                                                             SettingsPreferencesGraphSymbolSize,
                                                                                             SettingsPreferencesGraphSymbolSizeDefault).toInt(),
