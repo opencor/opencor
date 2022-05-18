@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo -e "\033[44;37;1mRunning OpenCOR...\033[0m"
 
