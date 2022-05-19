@@ -30,12 +30,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "qwtbegin.h"
-    #include "qwt_symbol.h"
-#include "qwtend.h"
-
-//==============================================================================
-
 void Tests::lineStyleTests()
 {
     // Convert a string line style to an index line style
