@@ -30,12 +30,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "qwtbegin.h"
-    #include "qwt_symbol.h"
-#include "qwtend.h"
-
-//==============================================================================
-
 namespace Ui {
     class SimulationExperimentViewPreferencesWidget;
 } // namespace Ui
