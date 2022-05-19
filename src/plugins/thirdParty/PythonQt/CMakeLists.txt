@@ -119,7 +119,7 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
             ${PYTHON_DEPENDENCIES}
-        INSTALL_DIR
+        SOURCE_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
             https://github.com/opencor/${PACKAGE_REPOSITORY}
@@ -131,7 +131,7 @@ else()
         BUILD_COMMAND
             ${MAKE_COMMAND}
         INSTALL_COMMAND
-            ${MAKE_COMMAND} ${MAKE_QUIET} install
+            ${MAKE_COMMAND} install
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
