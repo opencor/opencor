@@ -28,6 +28,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "compilerengine.h"
+#include "compilermath.h"
 
 //==============================================================================
 
@@ -67,6 +68,23 @@ QString CompilerEngine::error() const
     // Return the compiler engine's error
 
     return mError;
+}
+
+//==============================================================================
+
+bool CompilerEngine::addFunction(const QString &pName, void *pFunction)
+{
+    // Add the given function.
+
+    if ((mLljit != nullptr) && !pName.isEmpty() && (pFunction != nullptr)) {
+        auto &jitDylib = mLljit->getMainJITDylib();
+
+        return !jitDylib.define(llvm::orc::absoluteSymbols({
+                                                               { mLljit->mangleAndIntern(pName.toStdString()), llvm::JITEvaluatedSymbol(llvm::pointerToJITTargetAddress(pFunction), llvm::JITSymbolFlags::Exported) },
+                                                           }));
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -269,7 +287,8 @@ extern double lcm_multi(int, ...);
     mLljit = std::move(*lljit);
 
     // Make sure that we can find various mathematical functions in the standard
-    // C library
+    // C library and the additional ones that we want to support (see
+    // compilermath.[cpp|h])
 
     auto dynamicLibrarySearchGenerator = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(mLljit->getDataLayout().getGlobalPrefix());
 
@@ -280,6 +299,35 @@ extern double lcm_multi(int, ...);
     }
 
     mLljit->getMainJITDylib().addGenerator(std::move(*dynamicLibrarySearchGenerator));
+
+    if (   !addFunction("factorial", reinterpret_cast<void *>(factorial))
+
+        || !addFunction("sec", reinterpret_cast<void *>(sec))
+        || !addFunction("sech", reinterpret_cast<void *>(sech))
+        || !addFunction("asec", reinterpret_cast<void *>(asec))
+        || !addFunction("asech", reinterpret_cast<void *>(asech))
+
+        || !addFunction("csc", reinterpret_cast<void *>(csc))
+        || !addFunction("csch", reinterpret_cast<void *>(csch))
+        || !addFunction("acsc", reinterpret_cast<void *>(acsc))
+        || !addFunction("acsch", reinterpret_cast<void *>(acsch))
+
+        || !addFunction("cot", reinterpret_cast<void *>(cot))
+        || !addFunction("coth", reinterpret_cast<void *>(coth))
+        || !addFunction("acot", reinterpret_cast<void *>(acot))
+        || !addFunction("acoth", reinterpret_cast<void *>(acoth))
+
+        || !addFunction("arbitrary_log", reinterpret_cast<void *>(arbitrary_log))
+
+        || !addFunction("multi_min", reinterpret_cast<void *>(multi_min))
+        || !addFunction("multi_max", reinterpret_cast<void *>(multi_max))
+
+        || !addFunction("gcd_multi", reinterpret_cast<void *>(gcd_multi))
+        || !addFunction("lcm_multi", reinterpret_cast<void *>(lcm_multi))) {
+        mError = tr("the additional mathematical methods could not be added");
+
+        return false;
+    }
 
     // Add our LLVM bitcode module to our ORC-based JIT
 

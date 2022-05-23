@@ -39,10 +39,10 @@ namespace HelpWindow {
 
 PLUGININFO_FUNC HelpWindowPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to provide help."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour fournir de l'aide."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to provide help.") },
+                                                 { "fr", QString::fromUtf8("une extension pour fournir de l'aide.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           { "Core", "WebViewerWidget" },

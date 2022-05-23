@@ -578,7 +578,7 @@ SEDMLSupport::SedmlFile * CombineArchive::sedmlFile()
     // Return our SED-ML file, after having created it, if necessary
 
     if ((mSedmlFile == nullptr) && isSupported()) {
-        mSedmlFile = new SEDMLSupport::SedmlFile(masterFiles().first().fileName(),
+        mSedmlFile = new SEDMLSupport::SedmlFile(masterFiles().constFirst().fileName(),
                                                  mFileName);
     }
 

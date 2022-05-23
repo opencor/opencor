@@ -32,10 +32,10 @@ namespace ZIPSupport {
 
 PLUGININFO_FUNC ZIPSupportPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"|(a plugin to support the <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">ZIP</a> format.)|"));
-    descriptions.insert("fr", QString::fromUtf8(R"|(une extension pour supporter le format <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">ZIP</a>.)|"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"|(a plugin to support the <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">ZIP</a> format.)|") },
+                                                 { "fr", QString::fromUtf8(R"|(une extension pour supporter le format <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">ZIP</a>.)|") }
+                                             };
     // Note: normally, we wouldn't use a delimiter ("|" in our case) for our raw
     //       string literal, but if we didn't then we would have problems with
     //       the ZIP file format link (since it ends with a closing bracket)...

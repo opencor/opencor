@@ -54,11 +54,11 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             78ffae4e53feb7550d999162bfb81f22d20dfd4d)
+                             d9228d3a58706a0b964a8b2cb4d5c8ee0c8f3e83)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             f1101cffff78483c5e8fd7c7d9f1685115f399f9)
+                             1acce22446fc0f68dda67828e2c98f6e17e80221)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}

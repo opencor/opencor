@@ -35,13 +35,13 @@ namespace SimulationSupport {
 
 PLUGININFO_FUNC SimulationSupportPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to support simulations."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter des simulations."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to support simulations.") },
+                                                 { "fr", QString::fromUtf8("une extension pour supporter des simulations.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          { "COMBINESupport", "DataStore", "PythonQtSupport", "ToolBarWidget" },
+                          { "COMBINESupport", "DataStore", "PythonQtSupport" },
                           descriptions);
 }
 

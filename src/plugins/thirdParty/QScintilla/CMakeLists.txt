@@ -3,10 +3,10 @@ project(QScintillaPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME QScintilla)
-set(PACKAGE_VERSION 2.13.2)
+set(PACKAGE_VERSION 2.13.3)
 set(PACKAGE_REPOSITORY qscintilla)
-set(GIT_TAG v2.13.2)
-set(RELEASE_TAG v2.13.2)
+set(GIT_TAG v2.13.3)
+set(RELEASE_TAG v2.13.3)
 
 get_full_local_external_package_dir()
 
@@ -66,20 +66,20 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             66bb2026cfdaf504d42a824cb1232698974faa99)
+                             f079229ea5d36cb9a89f9ee884a596738b2d30fa)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             a61cbbdf99a45638a649db4b3a35f5fc13c6e4c3)
+                             9b0ad1651e01addf3d8245d2f0454109e600fa56)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cdd2e3e38de96a8a4334d7c48d2cb68013435738)
+                         0d5d6c61fc12cba23de646bc2ade4615723f1d6d)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         3f2f8b57f91d7e9fa424f113c46d5547af78afc4)
+                         38a64c0f5b3b0d0762f743805ddb925d28277346)
     endif()
 else()
     # Set platform specific configuration options

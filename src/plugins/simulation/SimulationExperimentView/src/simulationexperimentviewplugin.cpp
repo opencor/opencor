@@ -49,13 +49,13 @@ namespace SimulationExperimentView {
 
 PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit and run a simulation experiment."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to edit and run a simulation experiment.") },
+                                                 { "fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Simulation, true, false,
-                          { "GraphPanelWidget", "PythonQtSupport", "SimulationSupport" },
+                          { "GraphPanelWidget", "PythonQtSupport", "SimulationSupport", "ToolBarWidget" },
                           descriptions);
 }
 

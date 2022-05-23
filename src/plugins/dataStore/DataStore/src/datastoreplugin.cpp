@@ -33,10 +33,10 @@ namespace DataStore {
 
 PLUGININFO_FUNC DataStorePluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides core data store facilities."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'un magasin de données."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin that provides core data store facilities.") },
+                                                 { "fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'un magasin de données.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::DataStore, false, false,
                           { "Core", "PythonQtSupport" },

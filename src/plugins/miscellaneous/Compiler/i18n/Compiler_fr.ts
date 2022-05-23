@@ -36,6 +36,10 @@
         <translation>le générateur de recherche de bibliothèque dynamique n&apos;a pas pu être créé</translation>
     </message>
     <message>
+        <source>the additional mathematical methods could not be added</source>
+        <translation>les méthodes mathématiques supplémentaires n&apos;ont pas pu être ajoutées</translation>
+    </message>
+    <message>
         <source>the IR module could not be added to the ORC-based JIT</source>
         <translation>le module IR n&apos;a pas pu être ajouté au JIT basé sur ORC</translation>
     </message>

@@ -32,10 +32,10 @@ namespace OpenSSL {
 
 PLUGININFO_FUNC OpenSSLPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="https://openssl.org/">OpenSSL</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://openssl.org/">OpenSSL</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="https://openssl.org/">OpenSSL</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://openssl.org/">OpenSSL</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           {},

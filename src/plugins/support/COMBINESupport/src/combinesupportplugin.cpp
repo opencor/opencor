@@ -35,10 +35,10 @@ namespace COMBINESupport {
 
 PLUGININFO_FUNC COMBINESupportPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://co.mbine.org/">COMBINE</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://co.mbine.org/">COMBINE</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to support <a href="https://co.mbine.org/">COMBINE</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://co.mbine.org/">COMBINE</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           { "Core", "SEDMLSupport", "ZIPSupport" },

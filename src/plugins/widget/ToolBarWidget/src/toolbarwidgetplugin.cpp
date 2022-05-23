@@ -32,10 +32,10 @@ namespace ToolBarWidget {
 
 PLUGININFO_FUNC ToolBarWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to display a tool bar."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour afficher une barre d'outils."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to display a tool bar.") },
+                                                 { "fr", QString::fromUtf8("une extension pour afficher une barre d'outils.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "Qwt" },

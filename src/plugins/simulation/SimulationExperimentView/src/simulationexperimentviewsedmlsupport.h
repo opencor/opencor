@@ -18,33 +18,43 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// OAuth plugin
+// Simulation Experiment view SED-ML support
 //==============================================================================
 
-#include "oauthplugin.h"
+#pragma once
+
+//==============================================================================
+
+#include <QString>
+
+//==============================================================================
+
+#include "qwtbegin.h"
+    #include "qwt_symbol.h"
+#include "qwtend.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace OAuth {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-PLUGININFO_FUNC OAuthPluginInfo()
-{
-    static const Descriptions descriptions = {
-                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)") },
-                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)") }
-                                             };
+QString stringLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle,
+                                      bool pFormatted = false);
+Qt::PenStyle qtPenStyleFromIndex(int pIndexLineStyle);
+Qt::PenStyle qtPenStyleFromString(const QString &pStringLineStyle);
+int indexLineStyleFromQtPenStyle(Qt::PenStyle pQtPenStyle);
 
-    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          {},
-                          descriptions);
-}
+QString stringSymbolStyleFromQwtSymbolStyle(QwtSymbol::Style pQwtSymbolStyle,
+                                            bool pFormatted = false);
+QwtSymbol::Style qwtSymbolStyleFromIndex(int pIndexSymbolStyle);
+QwtSymbol::Style qwtSymbolStyleFromString(const QString &pStringSymbolStyle);
+int indexSymbolStyleFromQwtSymbolStyle(QwtSymbol::Style pQwtSymbolStyle);
 
 //==============================================================================
 
-} // namespace OAuth
+} // namespace SimulationExperimentView
 } // namespace OpenCOR
 
 //==============================================================================

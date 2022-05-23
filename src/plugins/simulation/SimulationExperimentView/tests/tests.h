@@ -18,34 +18,25 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 
 //==============================================================================
-// OAuth plugin
+// Simulation Experiment view tests
 //==============================================================================
 
-#include "oauthplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace OAuth {
+#pragma once
 
 //==============================================================================
 
-PLUGININFO_FUNC OAuthPluginInfo()
+#include <QObject>
+
+//==============================================================================
+
+class Tests : public QObject
 {
-    static const Descriptions descriptions = {
-                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)") },
-                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://github.com/pipacs/o2">OAuth for Qt</a>.)") }
-                                             };
+    Q_OBJECT
 
-    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
-                          {},
-                          descriptions);
-}
-
-//==============================================================================
-
-} // namespace OAuth
-} // namespace OpenCOR
+private slots:
+    void lineStyleTests();
+    void symbolStyleTests();
+};
 
 //==============================================================================
 // End of file

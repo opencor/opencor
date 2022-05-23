@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-echo "\033[44;37;1mRunning OpenCOR...\033[0m"
+echo -e "\033[44;37;1mRunning OpenCOR...\033[0m"
 
 appDir=$(cd $(dirname $0); pwd)
 
@@ -16,4 +16,4 @@ else
     echo "OpenCOR must first be built before being run."
 fi
 
-echo "\033[42;37;1mAll done!\033[0m"
+echo -e "\033[42;37;1mAll done!\033[0m"

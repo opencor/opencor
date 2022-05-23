@@ -82,7 +82,7 @@ else()
         endif()
 
         set(DEPENDENCIES_FILENAME libSBML_dependencies_vs15_${MODE}_x64.zip)
-        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/prebuilt/dependencies)
+        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext/dependencies)
         set(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
 
         if(NOT EXISTS ${DEPENDENCIES_MODE_DIR})

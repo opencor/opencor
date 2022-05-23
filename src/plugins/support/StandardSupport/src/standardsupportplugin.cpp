@@ -36,10 +36,10 @@ namespace StandardSupport {
 
 PLUGININFO_FUNC StandardSupportPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to support various standards."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter différents standards."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to support various standards.") },
+                                                 { "fr", QString::fromUtf8("une extension pour supporter différents standards.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           { "Core" },

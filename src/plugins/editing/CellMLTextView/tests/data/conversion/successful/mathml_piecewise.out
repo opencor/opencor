@@ -42,5 +42,15 @@ def model cellml_1_0 as
         a = b+sel(case Version == 0{dimensionless}: 123{dimensionless}, case Version == 1{dimensionless}: 456{dimensionless}, otherwise: 789{dimensionless});
         a = b+sel(case Version == 0{dimensionless}: 123{dimensionless}, otherwise: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless});
         a = b+sel(otherwise: 123{dimensionless}, case Version == 0{dimensionless}: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless});
+        a = b+sel(case Version == 0{dimensionless}: 123{dimensionless})+b;
+        a = b+sel(otherwise: 123{dimensionless})+b;
+        a = b+sel(case Version == 0{dimensionless}: 123{dimensionless}, case Version == 1{dimensionless}: 456{dimensionless}, otherwise: 789{dimensionless})+b;
+        a = b+sel(case Version == 0{dimensionless}: 123{dimensionless}, otherwise: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless})+b;
+        a = b+sel(otherwise: 123{dimensionless}, case Version == 0{dimensionless}: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless})+b;
+        a = sel(case Version == 0{dimensionless}: 123{dimensionless})+b;
+        a = sel(otherwise: 123{dimensionless})+b;
+        a = sel(case Version == 0{dimensionless}: 123{dimensionless}, case Version == 1{dimensionless}: 456{dimensionless}, otherwise: 789{dimensionless})+b;
+        a = sel(case Version == 0{dimensionless}: 123{dimensionless}, otherwise: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless})+b;
+        a = sel(otherwise: 123{dimensionless}, case Version == 0{dimensionless}: 456{dimensionless}, case Version == 1{dimensionless}: 789{dimensionless})+b;
     enddef;
 enddef;

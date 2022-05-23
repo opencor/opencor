@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 appDir=$(cd $(dirname $0); pwd)
 
 if [ -d $appDir/src ]; then
-    echo "\033[44;37;1mFormatting OpenCOR...\033[0m"
+    echo -e "\033[44;37;1mFormatting OpenCOR...\033[0m"
 
     if [ "`hash clang-format 2>&1`" = "" ]; then
         for i in `find $appDir/src -name "*.cpp" -o -name "*.h" | sort | egrep -v "(3rdparty|\/ext\/|\/qzip)"`; do
@@ -15,7 +15,7 @@ if [ -d $appDir/src ]; then
         echo "Clang-Format is not installed."
     fi
 
-    echo "\033[42;37;1mAll done!\033[0m"
+    echo -e "\033[42;37;1mAll done!\033[0m"
 else
     echo "OpenCOR's source directory is missing."
 fi

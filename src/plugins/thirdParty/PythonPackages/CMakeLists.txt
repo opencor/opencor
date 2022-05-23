@@ -126,12 +126,12 @@ else()
     #       that they can then be updated to reference OpenCOR's Python
     #       executable...
 
-    set(PIP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/prebuilt/pip)
+    set(PIP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/pip)
 
     if(WIN32)
         # Install the Python setuptools package
 
-        set(SETUPTOOLS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/prebuilt/setuptools)
+        set(SETUPTOOLS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/setuptools)
 
         ExternalProject_Add(installSetuptools
             INSTALL_DIR
@@ -158,7 +158,7 @@ else()
             GIT_REPOSITORY
                 https://github.com/opencor/pip
             GIT_TAG
-                opencor_v${PIP_GIT_TAG}
+                ${PIP_GIT_TAG}
             GIT_SHALLOW
             CONFIGURE_COMMAND
                 ""
@@ -175,6 +175,8 @@ else()
         # Install the Python package installer
 
         ExternalProject_Add(installPip
+            DOWNLOAD_DIR
+                ${PIP_SOURCE_DIR}
             INSTALL_DIR
                 ${PIP_SOURCE_DIR}
             URL
@@ -211,7 +213,7 @@ else()
         # Note: this is a minimal build since we don't provide linear algebra
         #       libraries nor a Fortran compiler...
 
-        set(NUMPY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/prebuilt/numpy)
+        set(NUMPY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/numpy)
 
         ExternalProject_Add(installNumpy
             INSTALL_DIR

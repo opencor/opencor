@@ -32,10 +32,10 @@ namespace Zinc {
 
 PLUGININFO_FUNC ZincPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access the <a href="https://github.com/OpenCMISS/zinc">Zinc</a> library.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder la librairie <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access the <a href="https://github.com/OpenCMISS/zinc">Zinc</a> library.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder la librairie <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           {},

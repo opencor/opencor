@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 appDir=$(cd $(dirname $0); pwd)/..
 
@@ -29,7 +29,7 @@ if [ -d $appDir/build ]; then
         extraTitleInfo=" for testing"
     fi
 
-    echo "\033[44;37;1mBuilding OpenCOR$extraTitleInfo using $generator...\033[0m"
+    echo -e "\033[44;37;1mBuilding OpenCOR$extraTitleInfo using $generator...\033[0m"
 
     origDir=`pwd`
 
@@ -58,7 +58,7 @@ if [ -d $appDir/build ]; then
     cd $origDir
 
     if [ $exitCode -eq 0 ]; then
-        echo "\033[42;37;1mAll done!\033[0m"
+        echo -e "\033[42;37;1mAll done!\033[0m"
     fi
 
     exit $exitCode

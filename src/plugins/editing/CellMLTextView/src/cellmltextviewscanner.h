@@ -128,6 +128,9 @@ public:
     using Tokens = QList<Token>;
 
     explicit CellmlTextViewScanner();
+    explicit CellmlTextViewScanner(const CellmlTextViewScanner &pScanner);
+
+    void operator=(const CellmlTextViewScanner &pScanner);
 
     void setText(const QString &pText);
 
@@ -166,9 +169,162 @@ private:
     QString mString;
     QString mComment;
 
-    QMap<QString, Token> mKeywords;
-    QMap<QString, Token> mSiUnitKeywords;
-    QMap<QString, Token> mParameterKeywords;
+    QMap<QString, Token> mKeywords = {
+                                         { "and", Token::And },
+                                         { "as", Token::As },
+                                         { "between", Token::Between },
+                                         { "case", Token::Case },
+                                         { "comp", Token::Comp },
+                                         { "def", Token::Def },
+                                         { "endcomp", Token::EndComp },
+                                         { "enddef", Token::EndDef },
+                                         { "endsel", Token::EndSel },
+                                         { "for", Token::For },
+                                         { "group", Token::Group },
+                                         { "import", Token::Import },
+                                         { "incl", Token::Incl },
+                                         { "map", Token::Map },
+                                         { "model", Token::Model },
+                                         { "otherwise", Token::Otherwise },
+                                         { "sel", Token::Sel },
+                                         { "unit", Token::Unit },
+                                         { "using", Token::Using },
+                                         { "var", Token::Var },
+                                         { "vars", Token::Vars },
+
+                                         { "abs", Token::Abs },
+                                         { "ceil", Token::Ceil },
+                                         { "exp", Token::Exp },
+                                         { "fact", Token::Fact },
+                                         { "floor", Token::Floor },
+                                         { "ln", Token::Ln },
+                                         { "log", Token::Log },
+                                         { "pow", Token::Pow },
+                                         { "rem", Token::Rem },
+                                         { "root", Token::Root },
+                                         { "sqr", Token::Sqr },
+                                         { "sqrt", Token::Sqrt },
+
+//                                         { "and", Token::And },
+                                         { "or", Token::Or },
+                                         { "xor", Token::Xor },
+                                         { "not", Token::Not },
+
+                                         { "ode", Token::Ode },
+
+                                         { "min", Token::Min },
+                                         { "max", Token::Max },
+
+                                         { "gcd", Token::Gcd },
+                                         { "lcm", Token::Lcm },
+
+                                         { "sin", Token::Sin },
+                                         { "cos", Token::Cos },
+                                         { "tan", Token::Tan },
+                                         { "sec", Token::Sec },
+                                         { "csc", Token::Csc },
+                                         { "cot", Token::Cot },
+                                         { "sinh", Token::Sinh },
+                                         { "cosh", Token::Cosh },
+                                         { "tanh", Token::Tanh },
+                                         { "sech", Token::Sech },
+                                         { "csch", Token::Csch },
+                                         { "coth", Token::Coth },
+                                         { "asin", Token::Asin },
+                                         { "acos", Token::Acos },
+                                         { "atan", Token::Atan },
+                                         { "asec", Token::Asec },
+                                         { "acsc", Token::Acsc },
+                                         { "acot", Token::Acot },
+                                         { "asinh", Token::Asinh },
+                                         { "acosh", Token::Acosh },
+                                         { "atanh", Token::Atanh },
+                                         { "asech", Token::Asech },
+                                         { "acsch", Token::Acsch },
+                                         { "acoth", Token::Acoth },
+
+                                         { "true", Token::True },
+                                         { "false", Token::False },
+                                         { "nan", Token::Nan },
+                                         { "pi", Token::Pi },
+                                         { "inf", Token::Inf },
+                                         { "e", Token::E },
+
+                                         { "base", Token::Base },
+                                         { "encapsulation", Token::Encapsulation },
+                                         { "containment", Token::Containment }
+                                     };
+    QMap<QString, Token> mSiUnitKeywords = {
+                                               { "ampere", Token::Ampere },
+                                               { "becquerel", Token::Becquerel },
+                                               { "candela", Token::Candela },
+                                               { "celsius", Token::Celsius },
+                                               { "coulomb", Token::Coulomb },
+                                               { "dimensionless", Token::Dimensionless },
+                                               { "farad", Token::Farad },
+                                               { "gram", Token::Gram },
+                                               { "gray", Token::Gray },
+                                               { "henry", Token::Henry },
+                                               { "hertz", Token::Hertz },
+                                               { "joule", Token::Joule },
+                                               { "katal", Token::Katal },
+                                               { "kelvin", Token::Kelvin },
+                                               { "kilogram", Token::Kilogram },
+                                               { "liter", Token::Liter },
+                                               { "litre", Token::Litre },
+                                               { "lumen", Token::Lumen },
+                                               { "lux", Token::Lux },
+                                               { "meter", Token::Meter },
+                                               { "metre", Token::Metre },
+                                               { "mole", Token::Mole },
+                                               { "newton", Token::Newton },
+                                               { "ohm", Token::Ohm },
+                                               { "pascal", Token::Pascal },
+                                               { "radian", Token::Radian },
+                                               { "second", Token::Second },
+                                               { "siemens", Token::Siemens },
+                                               { "sievert", Token::Sievert },
+                                               { "steradian", Token::Steradian },
+                                               { "tesla", Token::Tesla },
+                                               { "volt", Token::Volt },
+                                               { "watt", Token::Watt },
+                                               { "weber", Token::Weber }
+                                            };
+    QMap<QString, Token> mParameterKeywords = {
+                                                  { "pref", Token::Pref },
+                                                  { "expo", Token::Expo },
+                                                  { "mult", Token::Mult },
+                                                  { "off", Token::Off },
+
+                                                  { "init", Token::Init },
+                                                  { "pub", Token::Pub },
+                                                  { "priv", Token::Priv },
+
+                                                  { "yotta", Token::Yotta },
+                                                  { "zetta", Token::Zetta },
+                                                  { "exa", Token::Exa },
+                                                  { "peta", Token::Peta },
+                                                  { "tera", Token::Tera },
+                                                  { "giga", Token::Giga },
+                                                  { "mega", Token::Mega },
+                                                  { "kilo", Token::Kilo },
+                                                  { "hecto", Token::Hecto },
+                                                  { "deka", Token::Deka },
+                                                  { "deci", Token::Deci },
+                                                  { "centi", Token::Centi },
+                                                  { "milli", Token::Milli },
+                                                  { "micro", Token::Micro },
+                                                  { "nano", Token::Nano },
+                                                  { "pico", Token::Pico },
+                                                  { "femto", Token::Femto },
+                                                  { "atto", Token::Atto },
+                                                  { "zepto", Token::Zepto },
+                                                  { "yocto", Token::Yocto },
+
+                                                  { "in", Token::In },
+                                                  { "out", Token::Out },
+                                                  { "none", Token::None }
+                                              };
 
     bool mWithinParameterBlock = false;
 

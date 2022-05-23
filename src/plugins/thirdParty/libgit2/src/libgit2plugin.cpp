@@ -32,10 +32,10 @@ namespace libgit2 {
 
 PLUGININFO_FUNC libgit2PluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="https://libgit2.github.com/">libgit2</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://libgit2.github.com/">libgit2</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="https://libgit2.github.com/">libgit2</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://libgit2.github.com/">libgit2</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           { "OpenSSL", "zlib" },

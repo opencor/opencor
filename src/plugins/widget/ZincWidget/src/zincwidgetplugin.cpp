@@ -32,10 +32,10 @@ namespace ZincWidget {
 
 PLUGININFO_FUNC ZincWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to visualise a <a href="https://github.com/OpenCMISS/zinc">Zinc</a> scene.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour visualiser une scène <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to visualise a <a href="https://github.com/OpenCMISS/zinc">Zinc</a> scene.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour visualiser une scène <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "Core", "Zinc" },

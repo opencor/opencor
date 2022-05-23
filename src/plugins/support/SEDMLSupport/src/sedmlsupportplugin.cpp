@@ -42,13 +42,13 @@ namespace SEDMLSupport {
 
 PLUGININFO_FUNC SEDMLSupportPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://sed-ml.org/">SED-ML</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://sed-ml.org/">SED-ML</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to support <a href="https://sed-ml.org/">SED-ML</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://sed-ml.org/">SED-ML</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          { "CellMLSupport", "libSEDML", "Qwt" },
+                          { "CellMLSupport", "libSEDML" },
                           descriptions);
 }
 

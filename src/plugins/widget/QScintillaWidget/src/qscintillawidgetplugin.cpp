@@ -32,10 +32,10 @@ namespace QScintillaWidget {
 
 PLUGININFO_FUNC QScintillaWidgetPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://www.riverbankcomputing.com/software/qscintilla/intro">QScintilla</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://www.riverbankcomputing.com/software/qscintilla/intro">QScintilla</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to support <a href="https://www.riverbankcomputing.com/software/qscintilla/intro">QScintilla</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://www.riverbankcomputing.com/software/qscintilla/intro">QScintilla</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           { "Core", "QScintilla" },

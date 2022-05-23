@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 appDir=$(cd $(dirname $0); pwd)
 
@@ -11,7 +11,7 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
-echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
+echo -e "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 origDir=`pwd`
 
@@ -24,7 +24,7 @@ exitCode=$?
 cd $origDir
 
 if [ $exitCode -eq 0 ]; then
-    echo "\033[42;37;1mAll done!\033[0m"
+    echo -e "\033[42;37;1mAll done!\033[0m"
 fi
 
 exit $exitCode

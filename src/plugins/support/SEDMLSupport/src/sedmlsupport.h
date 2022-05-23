@@ -33,12 +33,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "qwtbegin.h"
-    #include "qwt_symbol.h"
-#include "qwtend.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SEDMLSupport {
 
@@ -47,26 +41,16 @@ namespace SEDMLSupport {
 QStringList SEDMLSUPPORT_EXPORT lineStyles();
 QStringList SEDMLSUPPORT_EXPORT formattedLineStyles();
 
-int SEDMLSUPPORT_EXPORT indexLineStyle(const QString &pStringLineStyle);
-int SEDMLSUPPORT_EXPORT indexLineStyle(Qt::PenStyle pLineStyle);
-QString SEDMLSUPPORT_EXPORT stringLineStyle(int pIndexLineStyle,
-                                            bool pFormatted = false);
-QString SEDMLSUPPORT_EXPORT stringLineStyle(Qt::PenStyle pLineStyle,
-                                            bool pFormatted = false);
-Qt::PenStyle SEDMLSUPPORT_EXPORT lineStyle(int pIndexLineStyle);
-Qt::PenStyle SEDMLSUPPORT_EXPORT lineStyle(const QString &pStringLineStyle);
+int SEDMLSUPPORT_EXPORT indexLineStyleFromString(const QString &pStringLineStyle);
+QString SEDMLSUPPORT_EXPORT stringLineStyleFromIndex(int pIndexLineStyle,
+                                                     bool pFormatted = false);
 
 QStringList SEDMLSUPPORT_EXPORT symbolStyles();
 QStringList SEDMLSUPPORT_EXPORT formattedSymbolStyles();
 
-int SEDMLSUPPORT_EXPORT indexSymbolStyle(const QString &pStringSymbolStyle);
-int SEDMLSUPPORT_EXPORT indexSymbolStyle(QwtSymbol::Style pSymbolStyle);
-QString SEDMLSUPPORT_EXPORT stringSymbolStyle(int pIndexSymbolStyle,
-                                              bool pFormatted = false);
-QString SEDMLSUPPORT_EXPORT stringSymbolStyle(QwtSymbol::Style pSymbolStyle,
-                                              bool pFormatted = false);
-QwtSymbol::Style SEDMLSUPPORT_EXPORT symbolStyle(int pIndexSymbolStyle);
-QwtSymbol::Style SEDMLSUPPORT_EXPORT symbolStyle(const QString &pStringSymbolStyle);
+int SEDMLSUPPORT_EXPORT indexSymbolStyleFromString(const QString &pStringSymbolStyle);
+QString SEDMLSUPPORT_EXPORT stringSymbolStyleFromIndex(int pIndexSymbolStyle,
+                                                       bool pFormatted = false);
 
 //==============================================================================
 

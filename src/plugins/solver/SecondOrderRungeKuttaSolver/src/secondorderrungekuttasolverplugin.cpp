@@ -33,10 +33,10 @@ namespace SecondOrderRungeKuttaSolver {
 
 PLUGININFO_FUNC SecondOrderRungeKuttaSolverPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin that implements the second-order <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui implémente la <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">méthode Runge-Kutta</a> du deuxième ordre pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin that implements the second-order <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension qui implémente la <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">méthode Runge-Kutta</a> du deuxième ordre pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           {},
@@ -129,10 +129,10 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Descriptions stepDescriptions;
-
-    stepDescriptions.insert("en", QString::fromUtf8("Step"));
-    stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
+    static const Descriptions stepDescriptions = {
+                                                     { "en", QString::fromUtf8("Step") },
+                                                     { "fr", QString::fromUtf8("Pas") }
+                                                 };
 
     return { Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, {}, StepDefaultValue, true) };
 }

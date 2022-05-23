@@ -32,10 +32,10 @@ namespace SUNDIALS {
 
 PLUGININFO_FUNC SUNDIALSPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access the <a href="https://computing.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computing.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computing.llnl.gov/projects/sundials/idas">IDAS</a> and <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> solvers from <a href="https://computing.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
-    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les solveurs <a href="https://computing.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computing.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computing.llnl.gov/projects/sundials/idas">IDAS</a> et <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> de <a href="https://computing.llnl.gov/projects/sundials">SUNDIALS</a>.)"));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8(R"(a plugin to access the <a href="https://computing.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computing.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computing.llnl.gov/projects/sundials/idas">IDAS</a> and <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> solvers from <a href="https://computing.llnl.gov/projects/sundials">SUNDIALS</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder les solveurs <a href="https://computing.llnl.gov/projects/sundials/arkode">ARKode</a>, <a href="https://computing.llnl.gov/projects/sundials/cvodes">CVODES</a>, <a href="https://computing.llnl.gov/projects/sundials/idas">IDAS</a> et <a href="https://computing.llnl.gov/projects/sundials/kinsol">KINSOL</a> de <a href="https://computing.llnl.gov/projects/sundials">SUNDIALS</a>.)") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           {},

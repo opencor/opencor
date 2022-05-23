@@ -42,10 +42,10 @@ namespace RawTextView {
 
 PLUGININFO_FUNC RawTextViewPluginInfo()
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit text-based files using a text editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte."));
+    static const Descriptions descriptions = {
+                                                 { "en", QString::fromUtf8("a plugin to edit text-based files using a text editor.") },
+                                                 { "fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte.") }
+                                             };
 
     return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           { "EditingView" },
