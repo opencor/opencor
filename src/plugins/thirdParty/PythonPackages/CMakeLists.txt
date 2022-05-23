@@ -158,7 +158,7 @@ else()
             GIT_REPOSITORY
                 https://github.com/opencor/pip
             GIT_TAG
-                opencor_v${PIP_GIT_TAG}
+                ${PIP_GIT_TAG}
             GIT_SHALLOW
             CONFIGURE_COMMAND
                 ""
@@ -175,6 +175,8 @@ else()
         # Install the Python package installer
 
         ExternalProject_Add(installPip
+            DOWNLOAD_DIR
+                ${PIP_SOURCE_DIR}
             INSTALL_DIR
                 ${PIP_SOURCE_DIR}
             URL
