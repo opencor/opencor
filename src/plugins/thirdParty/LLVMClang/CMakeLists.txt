@@ -54,20 +54,20 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             d9228d3a58706a0b964a8b2cb4d5c8ee0c8f3e83)
+                             7bedd536e8c1c9f2f77da7be5eb49734ce21abbc)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             1acce22446fc0f68dda67828e2c98f6e17e80221)
+                             ac0e93c75dcd8d32a944ad8cc579042dde976be4)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         102d5eeb9a20361bb72beeb6d5a7fcfc6f33b1fd)
+                         ff1e626de9764e6fbea519d6ae226ebbb29c3ca7)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         32265233173e19230475edbb0ad6b9c81b8da15e)
+                         2851a9340bdc2f0e4c146976c5b1c1115e66b498)
     endif()
 else()
     # Allow for big objects and ignore some warnings
