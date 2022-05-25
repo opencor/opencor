@@ -3,17 +3,17 @@ project(LLVMClangPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME LLVMClang)
-set(PACKAGE_VERSION 12.0.1)
+set(PACKAGE_VERSION 14.0.3)
 set(PACKAGE_REPOSITORY llvmclang)
-set(GIT_TAG v12.0.1b)
-set(RELEASE_TAG v12.0.1b)
+set(GIT_TAG v14.0.3-opencor)
+set(RELEASE_TAG v14.0.3-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
-set(MAJOR_LIBRARY_VERSION 12)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
+set(MAJOR_LIBRARY_VERSION 14)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.3)
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -54,20 +54,20 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             d9228d3a58706a0b964a8b2cb4d5c8ee0c8f3e83)
+                             7bedd536e8c1c9f2f77da7be5eb49734ce21abbc)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             1acce22446fc0f68dda67828e2c98f6e17e80221)
+                             ac0e93c75dcd8d32a944ad8cc579042dde976be4)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         5dd42a1388d98e0b8c2aa9193a64bb6655653624)
+                         ff1e626de9764e6fbea519d6ae226ebbb29c3ca7)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         30ec6376375b13032704a613c38d3c212381638a)
+                         2851a9340bdc2f0e4c146976c5b1c1115e66b498)
     endif()
 else()
     # Allow for big objects and ignore some warnings
