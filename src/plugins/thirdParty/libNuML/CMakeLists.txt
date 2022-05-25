@@ -3,17 +3,17 @@ project(libNuMLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME libNuML)
-set(PACKAGE_VERSION 1.1.5)
+set(PACKAGE_VERSION 1.1.6)
 set(PACKAGE_REPOSITORY NuML)
-set(GIT_TAG v1.1.5-opencor)
-set(RELEASE_TAG v1.1.5-opencor)
+set(GIT_TAG v1.1.6-opencor)
+set(RELEASE_TAG v1.1.6-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.5)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.6)
 
 # Name of our package's shared library (and of its import library, if any)
 
