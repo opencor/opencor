@@ -60,20 +60,20 @@ if(USE_PREBUILT_ZLIB_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             40fb8671f71f4ecd30c497da77a056deff27e68e)
+                             8ad62be90dc4c9f7391f06ce87e06bef84f80d65)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             c453bb28a886e000af2351093ca0a883906955e5)
+                             bab5056a685c83258794b4ed42eb6f92a3f274a7)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         22ddaed08e3d9216c8d2fe5d1644da46e61ecc99)
+                         b0cdfe79d9f0386264be3c882ff684258995e7ad)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         31a17a86ec78a19bae8df80a1a1a69dae990a710)
+                         cd4f97fa9a9035f02be3f02d0c76ad6c9b565823)
     endif()
 else()
     # Ignore some warnings
