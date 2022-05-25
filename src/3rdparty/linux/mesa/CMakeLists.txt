@@ -3,10 +3,10 @@ project(Mesa)
 # Our package characteristics
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 21.3.8)
+set(PACKAGE_VERSION 22.1.0)
 set(PACKAGE_REPOSITORY mesa)
-set(GIT_TAG v21.3.8)
-set(RELEASE_TAG v21.3.8)
+set(GIT_TAG v22.1.0)
+set(RELEASE_TAG v22.1.0)
 
 get_full_local_external_package_dir()
 
@@ -27,7 +27,7 @@ if(USE_PREBUILT_MESA_PACKAGE)
 
     retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                      ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                     bc7aded3c4eb2f92f58d5478d41af1dd509a7214)
+                     b3264307939fd0c244fa41a536b0ba7be5b5ba99)
 else()
     # Build Mesa as an external project
 
@@ -46,7 +46,7 @@ else()
             ${GIT_TAG}
         GIT_SHALLOW
         CONFIGURE_COMMAND
-            meson build -Dbuildtype=release -Ddri-drivers= -Ddri3=disabled -Dgallium-drivers=swrast -Dglx=gallium-xlib -Dllvm=disabled -Doptimization=3 -Dplatforms=x11 -Dvulkan-drivers=
+            meson build -Dbuildtype=release -Ddri-drivers= -Ddri3=disabled -Dgallium-drivers=swrast -Dglx=auto -Dllvm=disabled -Doptimization=3 -Dplatforms=x11 -Dvulkan-drivers=
         BUILD_COMMAND
             cd build && ninja
         INSTALL_COMMAND
