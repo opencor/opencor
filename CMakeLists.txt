@@ -1445,7 +1445,7 @@ if(WIN32)
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
     #       file icons (so that it is clear to the user that an extension has
-    #       been (un)registered...
+    #       been (un)registered)...
 
     if(NSIS_FOUND)
         set(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
