@@ -905,6 +905,24 @@ endif()
 #          be listed in any order...
 
 if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # Determine the location of the MSVC runtime libraries
+
+    if(WIN32)
+        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community")
+            set(MSVC_EDITION Community)
+        else()
+            set(MSVC_EDITION Enterprise)
+        endif()
+
+        if(RELEASE_MODE)
+            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
+            set(MSVC_DEBUG_TAG)
+        else()
+            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
+            set(MSVC_DEBUG_TAG d)
+        endif()
+    endif()
+
     # We are using the prebuilt version of our QtWebKit package, so build
     # whatever we can depending on whether we are using the prebuilt version of
     # our Python package
@@ -1242,24 +1260,10 @@ else()
         # Note #2: the second set of additional files is needed in case OpenCOR
         #          is to be run on a non-up-to-date copy of Windows 7...
 
-        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community")
-            set(MSVC_EDITION Community)
-        else()
-            set(MSVC_EDITION Enterprise)
-        endif()
-
-        if(RELEASE_MODE)
-            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
-            set(DEBUG_TAG)
-        else()
-            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
-            set(DEBUG_TAG d)
-        endif()
-
         set(ADDITIONAL_FILES
-            ${MSVC_DIR}/msvcp140${DEBUG_TAG}.dll
-            ${MSVC_DIR}/vcruntime140${DEBUG_TAG}.dll
-            ${MSVC_DIR}/vcruntime140_1${DEBUG_TAG}.dll
+            ${MSVC_DIR}/msvcp140${MSVC_DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140${MSVC_DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140_1${MSVC_DEBUG_TAG}.dll
         )
 
         set(REMOTE_DEBUGGER_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")

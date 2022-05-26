@@ -515,6 +515,14 @@ else()
     endif()
 
     if(WIN32)
+        # We need to ship the VC runtime with our copy of Python
+
+        set(VCRUNTIME_DLL vcruntime140${MSVC_DEBUG_TAG}.dll)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyVCRuntime
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${MSVC_DIR}/${VCRUNTIME_DLL} <BINARY_DIR>/${VCRUNTIME_DLL}
+                                 DEPENDEES install)
+
         # _freeze_importlib.exe, which is run as part of the Python build, needs
         # our zlib DLL
 
