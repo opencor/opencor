@@ -209,11 +209,11 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             10d28302ba9a75544c0c65704ab9dd192ba6fb8d)
+                             66e870b2892d5854ca65e1bb794321b087f1b3e0)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             31cedabe85a1f28e435f64bc5842e52b1055b3d6)
+                             3291133813343f958c0f527688e7bfb368c5f9ef)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
