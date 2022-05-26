@@ -1249,41 +1249,41 @@ else()
         endif()
 
         if(RELEASE_MODE)
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
+            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
             set(DEBUG_TAG)
         else()
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
+            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
             set(DEBUG_TAG d)
         endif()
 
         set(ADDITIONAL_FILES
-            ${MSVC_DIRNAME}/msvcp140${DEBUG_TAG}.dll
-            ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
-            ${MSVC_DIRNAME}/vcruntime140_1${DEBUG_TAG}.dll
+            ${MSVC_DIR}/msvcp140${DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140${DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140_1${DEBUG_TAG}.dll
         )
 
-        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
+        set(REMOTE_DEBUGGER_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l2-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-localization-l1-2-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-processthreads-l1-1-1.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-synch-l1-2-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-timezone-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-conio-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-convert-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-environment-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-filesystem-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-heap-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-locale-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-math-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-runtime-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-stdio-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-string-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-time-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-utility-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/ucrtbase.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-file-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-file-l2-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-localization-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-processthreads-l1-1-1.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-synch-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-timezone-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-conio-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-convert-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-environment-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-filesystem-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-heap-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-locale-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-math-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-runtime-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-stdio-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-string-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-time-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-utility-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/ucrtbase.dll
         )
 
         foreach(ADDITIONAL_FILE ${ADDITIONAL_FILES})
