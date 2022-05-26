@@ -1451,13 +1451,13 @@ if(WIN32)
     #       been (un)registered)...
 
     if(NSIS_FOUND)
-        set(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
-
         set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+            !include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh
             \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\\\" \\\".cellml\\\" \\\"CellML File\\\"
             System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
         ")
         set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+            !include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh
             \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
             System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
         ")
