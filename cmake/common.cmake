@@ -645,7 +645,7 @@ endmacro()
 
 #===============================================================================
 
-macro(copy_file_to_build_dir PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
+macro(copy_file_to_build_dir PROJECT_TARGET ORIG_DIR DEST_DIR FILENAME)
     # Copy the file (renaming it, if needed) to the destination folder
     # Note: DIRECT is used to copy a file that doesn't first need to be built.
     #       This means that we can then use execute_process() rather than
@@ -655,20 +655,20 @@ macro(copy_file_to_build_dir PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     #       to handle...
 
     if("${ARGN}" STREQUAL "")
-        set(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+        set(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIR}/${FILENAME})
     else()
         # An argument was passed so use it to rename the file, which is to be
         # copied
 
-        set(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
+        set(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIR}/${ARGN})
     endif()
 
     if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIR}/${FILENAME}
                                                          ${FULL_DEST_FILENAME})
     else()
         add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIR}/${FILENAME}
                                                             ${FULL_DEST_FILENAME}
                            BYPRODUCTS ${FULL_DEST_FILENAME})
     endif()
@@ -719,16 +719,16 @@ macro(windows_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
-        set(PLUGIN_ORIG_DIRNAME ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
-        set(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
+        set(PLUGIN_ORIG_DIR ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
+        set(PLUGIN_DEST_DIR plugins/${PLUGIN_CATEGORY})
         set(PLUGIN_FILENAME ${PLUGIN_NAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIR} ${PLUGIN_DEST_DIR} ${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
-        install(FILES ${PLUGIN_ORIG_DIRNAME}/${PLUGIN_FILENAME}
-                DESTINATION ${PLUGIN_DEST_DIRNAME})
+        install(FILES ${PLUGIN_ORIG_DIR}/${PLUGIN_FILENAME}
+                DESTINATION ${PLUGIN_DEST_DIR})
     endforeach()
 endmacro()
 
@@ -752,26 +752,26 @@ endmacro()
 
 #===============================================================================
 
-macro(linux_deploy_binary_file PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
+macro(linux_deploy_binary_file PROJECT_TARGET ORIG_DIR DEST_DIR FILENAME)
     # Copy the binary file to the build/lib folder, so we can test things
     # without first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    copy_file_to_build_dir(${PROJECT_TARGET} ${ORIG_DIRNAME} ${DEST_DIRNAME} ${FILENAME})
+    copy_file_to_build_dir(${PROJECT_TARGET} ${ORIG_DIR} ${DEST_DIR} ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to an RPATH value
 
-    runpath2rpath(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+    runpath2rpath(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/${DEST_DIR}/${FILENAME})
 
     # Strip the binary file of all its local symbols
 
-    strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+    strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/${DEST_DIR}/${FILENAME})
 
     # Deploy the binary file
 
-    install(FILES ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME}
-            DESTINATION ${DEST_DIRNAME}
+    install(FILES ${PROJECT_BUILD_DIR}/${DEST_DIR}/${FILENAME}
+            DESTINATION ${DEST_DIR}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endmacro()
 
@@ -782,12 +782,12 @@ macro(linux_deploy_qt_library LIBRARY_NAME)
 
     if(   "${LIBRARY_NAME}" STREQUAL "${WEBKIT}"
        OR "${LIBRARY_NAME}" STREQUAL "${WEBKITWIDGETS}")
-        set(ORIG_DIRNAME ${QTWEBKIT_LIBRARIES_DIR})
+        set(ORIG_DIR ${QTWEBKIT_LIBRARIES_DIR})
     else()
-        set(ORIG_DIRNAME ${QT_LIBRARIES_DIR})
+        set(ORIG_DIR ${QT_LIBRARIES_DIR})
     endif()
 
-    linux_deploy_binary_file(DIRECT ${ORIG_DIRNAME} lib ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    linux_deploy_binary_file(DIRECT ${ORIG_DIR} lib ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
 endmacro()
 
 #===============================================================================
@@ -796,24 +796,24 @@ macro(linux_deploy_qt_plugins PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
-        set(PLUGIN_ORIG_DIRNAME ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
-        set(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
+        set(PLUGIN_ORIG_DIR ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
+        set(PLUGIN_DEST_DIR plugins/${PLUGIN_CATEGORY})
         set(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIR} ${PLUGIN_DEST_DIR} ${PLUGIN_FILENAME})
 
         # Make sure that the RUNPATH value is converted to an RPATH value
 
-        runpath2rpath(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        runpath2rpath(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIR}/${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
-        strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIR}/${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
-        install(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
-                DESTINATION ${PLUGIN_DEST_DIRNAME})
+        install(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIR}/${PLUGIN_FILENAME}
+                DESTINATION ${PLUGIN_DEST_DIR})
     endforeach()
 endmacro()
 
@@ -824,10 +824,10 @@ macro(linux_deploy_system_library FILENAME NEW_FILENAME)
     # without first having to deploy OpenCOR
 
     get_filename_component(REAL_FULL_FILENAME ${FILENAME} REALPATH)
-    get_filename_component(REAL_DIRNAME ${REAL_FULL_FILENAME} DIRECTORY)
+    get_filename_component(REAL_DIR ${REAL_FULL_FILENAME} DIRECTORY)
     get_filename_component(REAL_FILENAME ${REAL_FULL_FILENAME} NAME)
 
-    copy_file_to_build_dir(DIRECT ${REAL_DIRNAME} lib ${REAL_FILENAME} ${NEW_FILENAME})
+    copy_file_to_build_dir(DIRECT ${REAL_DIR} lib ${REAL_FILENAME} ${NEW_FILENAME})
 
     # Deploy the system library
 
@@ -838,15 +838,15 @@ endmacro()
 
 #===============================================================================
 
-macro(macos_deploy_qt_file ORIG_DIRNAME DEST_DIRNAME FILENAME)
+macro(macos_deploy_qt_file ORIG_DIR DEST_DIR FILENAME)
     # Copy the Qt file
 
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                     ${DEST_DIRNAME}/${FILENAME})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIR}/${FILENAME}
+                                                     ${DEST_DIR}/${FILENAME})
 
     # Clean up the Qt file
 
-    strip_file(DIRECT ${DEST_DIRNAME}/${FILENAME})
+    strip_file(DIRECT ${DEST_DIR}/${FILENAME})
 endmacro()
 
 #===============================================================================

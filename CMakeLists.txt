@@ -892,7 +892,7 @@ check_python_package(sphinx-inline-tabs PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
 if(SPHINX_EXECUTABLE AND PYTHON_SPHINX_COPY_BUTTON_AVAILABLE AND PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
     set(CAN_GENERATE_DOCUMENTATION TRUE)
 else()
-    message(WARNING "No documentation will be generated...")
+    message(WARNING "No documentation is to be generated...")
 endif()
 
 # Build our plugins
@@ -905,6 +905,24 @@ endif()
 #          be listed in any order...
 
 if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # Determine the location of the MSVC runtime libraries
+
+    if(WIN32)
+        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community")
+            set(MSVC_EDITION Community)
+        else()
+            set(MSVC_EDITION Enterprise)
+        endif()
+
+        if(RELEASE_MODE)
+            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
+            set(MSVC_DEBUG_TAG)
+        else()
+            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
+            set(MSVC_DEBUG_TAG d)
+        endif()
+    endif()
+
     # We are using the prebuilt version of our QtWebKit package, so build
     # whatever we can depending on whether we are using the prebuilt version of
     # our Python package
@@ -1064,13 +1082,13 @@ endif()
 # Keep track of whether we are building OpenCOR with Python support and, if so,
 # let OpenCOR know about it
 
-if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
+if(NOT "${PYTHON_SCRIPTS_DIR}" STREQUAL "")
     set(PYTHON_SUPPORT TRUE)
 
     add_compile_definitions(PYTHON_SUPPORT)
 
     string(REPLACE "${PROJECT_BUILD_DIR}/" ""
-           RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
+           RELATIVE_PYTHON_SCRIPTS_DIR "${PYTHON_SCRIPTS_DIR}")
 endif()
 
 # Generate our documentation
@@ -1242,48 +1260,34 @@ else()
         # Note #2: the second set of additional files is needed in case OpenCOR
         #          is to be run on a non-up-to-date copy of Windows 7...
 
-        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community")
-            set(MSVC_EDITION Community)
-        else()
-            set(MSVC_EDITION Enterprise)
-        endif()
-
-        if(RELEASE_MODE)
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
-            set(DEBUG_TAG)
-        else()
-            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
-            set(DEBUG_TAG d)
-        endif()
-
         set(ADDITIONAL_FILES
-            ${MSVC_DIRNAME}/msvcp140${DEBUG_TAG}.dll
-            ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
-            ${MSVC_DIRNAME}/vcruntime140_1${DEBUG_TAG}.dll
+            ${MSVC_DIR}/msvcp140${MSVC_DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140${MSVC_DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140_1${MSVC_DEBUG_TAG}.dll
         )
 
-        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
+        set(REMOTE_DEBUGGER_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l2-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-localization-l1-2-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-processthreads-l1-1-1.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-synch-l1-2-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-timezone-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-conio-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-convert-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-environment-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-filesystem-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-heap-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-locale-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-math-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-runtime-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-stdio-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-string-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-time-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-utility-l1-1-0.dll
-            ${REMOTE_DEBUGGER_DIRNAME}/ucrtbase.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-file-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-file-l2-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-localization-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-processthreads-l1-1-1.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-synch-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-timezone-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-conio-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-convert-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-environment-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-filesystem-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-heap-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-locale-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-math-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-runtime-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-stdio-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-string-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-time-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/api-ms-win-crt-utility-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIR}/ucrtbase.dll
         )
 
         foreach(ADDITIONAL_FILE ${ADDITIONAL_FILES})
@@ -1406,16 +1410,16 @@ if(WIN32)
 
     if(PYTHON_SUPPORT)
         if(RELEASE_MODE)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runipython.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_ipython.py)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runipython.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runjupyter.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} start_ipython.py)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} start_jupyter.py)
 
             install(FILES ${PLATFORM_DISTRIB_DIR}/runipython.bat
                           ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
                           ${PLATFORM_DISTRIB_DIR}/start_ipython.py
                           ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
-                    DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
+                    DESTINATION ${RELATIVE_PYTHON_SCRIPTS_DIR})
 
             set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
 
@@ -1501,8 +1505,8 @@ elseif(APPLE)
     # Shell scripts to setup and run Python, IPython and Jupyter
 
     if(PYTHON_SUPPORT)
-        set(RUN_IPYTHON_FILENAME ${PYTHON_SCRIPT_DIR}/runipython)
-        set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
+        set(RUN_IPYTHON_FILENAME ${PYTHON_SCRIPTS_DIR}/runipython)
+        set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPTS_DIR}/runjupyter)
 
         configure_file(${PLATFORM_DISTRIB_DIR}/runipython.in ${RUN_IPYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
@@ -1592,12 +1596,12 @@ else()
     # Shell scripts to setup and run Python, IPython and Jupyter
 
     if(PYTHON_SUPPORT)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runipython)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runipython)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runjupyter)
 
         install(FILES ${PLATFORM_DISTRIB_DIR}/runipython
                       ${PLATFORM_DISTRIB_DIR}/runjupyter
-                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
+                DESTINATION ${RELATIVE_PYTHON_SCRIPTS_DIR}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)

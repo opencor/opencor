@@ -31,7 +31,7 @@ endif()
 # Name of our Python executable and shared library (and import library, if any)
 
 if(WIN32)
-    set(PYTHON_EXECUTABLE bin/python.exe)
+    set(PYTHON_EXECUTABLE python.exe)
 
     if(RELEASE_MODE)
         set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -41,7 +41,7 @@ if(WIN32)
         set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}_d${CMAKE_IMPORT_LIBRARY_SUFFIX})
     endif()
 else()
-    set(PYTHON_EXECUTABLE bin/python3)
+    set(PYTHON_EXECUTABLE python3)
 
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
@@ -52,9 +52,10 @@ endif()
 if(WIN32)
     set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
 
+    set(BINARY_DIR bin)
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
-    set(SCRIPT_DIR Scripts)
+    set(SCRIPTS_DIR Scripts)
 else()
     if (APPLE)
         set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/Python)
@@ -62,9 +63,10 @@ else()
         set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../python)
     endif()
 
+    set(BINARY_DIR bin)
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
-    set(SCRIPT_DIR bin)
+    set(SCRIPTS_DIR bin)
 endif()
 
 # Retrieve our package's binaries
@@ -85,10 +87,10 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
 set(STRIPPABLE_FILES
-    ${PYTHON_EXECUTABLE}
+    ${BINARY_DIR}/${PYTHON_EXECUTABLE}
     ${LIBRARY_DIR}/${SHARED_LIBRARY}
 )
 
@@ -190,7 +192,7 @@ set(PACKAGED_FILES
 
 if(WIN32)
     list(APPEND PACKAGED_FILES
-        ${SCRIPT_DIR}
+        ${SCRIPTS_DIR}
     )
 elseif()
     list(APPEND PACKAGED_FILES
@@ -207,11 +209,11 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             10d28302ba9a75544c0c65704ab9dd192ba6fb8d)
+                             66e870b2892d5854ca65e1bb794321b087f1b3e0)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             31cedabe85a1f28e435f64bc5842e52b1055b3d6)
+                             3291133813343f958c0f527688e7bfb368c5f9ef)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -513,6 +515,14 @@ else()
     endif()
 
     if(WIN32)
+        # We need to ship the VC runtime with our copy of Python
+
+        set(VCRUNTIME_DLL vcruntime140${MSVC_DEBUG_TAG}.dll)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyVCRuntime
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${MSVC_DIR}/${VCRUNTIME_DLL} <BINARY_DIR>/${VCRUNTIME_DLL}
+                                 DEPENDEES install)
+
         # _freeze_importlib.exe, which is run as part of the Python build, needs
         # our zlib DLL
 
@@ -534,7 +544,7 @@ else()
                OPENSSL_SSL_DLL "${OPENSSL_SSL_LIBRARY}")
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} Libs
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${BINARY_DIR}/${SHARED_LIBRARY} Libs
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
@@ -555,14 +565,14 @@ else()
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
-                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_LIBRARIES_DIR} ${PYTHON_EXECUTABLE}
-                                 COMMAND install_name_tool -add_rpath @executable_path/.. ${PYTHON_EXECUTABLE}
-                                 COMMAND install_name_tool -add_rpath @executable_path/../.. ${PYTHON_EXECUTABLE}
-                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
-                                                                   @rpath/lib/${SHARED_LIBRARY}
-                                                                   ${PYTHON_EXECUTABLE}
-                                 COMMAND chmod 755 lib/${SHARED_LIBRARY}
-                                 COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
+                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_LIBRARIES_DIR} ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/.. ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/../.. ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR}/${SHARED_LIBRARY}
+                                                                   @rpath/${LIBRARY_DIR}/${SHARED_LIBRARY}
+                                                                   ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND chmod 755 ${LIBRARY_DIR}/${SHARED_LIBRARY}
+                                 COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} ${LIBRARY_DIR}/${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     endif()
@@ -583,10 +593,10 @@ set(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
 set(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
-set(PYTHON_EXECUTABLE ${ROOT_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
+set(PYTHON_EXECUTABLE ${ROOT_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
-set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
-set(PYTHON_SCRIPT_DIR ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_RELATIVE_SCRIPTS_DIR ${SCRIPTS_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPTS_DIR ${ROOT_DIR}/${SCRIPTS_DIR} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
 
@@ -626,15 +636,15 @@ endif()
 # Copy a script to update the Python path in copied scripts
 
 file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}
      FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # And run it
 
 add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
-                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
-                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
+                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
 
 # Keep a list of Python specific dependencies
