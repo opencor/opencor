@@ -31,7 +31,7 @@ endif()
 # Name of our Python executable and shared library (and import library, if any)
 
 if(WIN32)
-    set(PYTHON_EXECUTABLE bin/python.exe)
+    set(PYTHON_EXECUTABLE python.exe)
 
     if(RELEASE_MODE)
         set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -41,7 +41,7 @@ if(WIN32)
         set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}_d${CMAKE_IMPORT_LIBRARY_SUFFIX})
     endif()
 else()
-    set(PYTHON_EXECUTABLE bin/python3)
+    set(PYTHON_EXECUTABLE python3)
 
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
@@ -52,6 +52,7 @@ endif()
 if(WIN32)
     set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
 
+    set(BINARY_DIR bin)
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
     set(SCRIPT_DIR Scripts)
@@ -62,6 +63,7 @@ else()
         set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../python)
     endif()
 
+    set(BINARY_DIR bin)
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
     set(SCRIPT_DIR bin)
@@ -85,10 +87,10 @@ set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
-# Specify the files that need to have their SHA-1 value checked
+# Specify the files that can be stripped
 
 set(STRIPPABLE_FILES
-    ${PYTHON_EXECUTABLE}
+    ${BINARY_DIR}/${PYTHON_EXECUTABLE}
     ${LIBRARY_DIR}/${SHARED_LIBRARY}
 )
 
@@ -534,7 +536,7 @@ else()
                OPENSSL_SSL_DLL "${OPENSSL_SSL_LIBRARY}")
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} Libs
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${BINARY_DIR}/${SHARED_LIBRARY} Libs
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
@@ -555,14 +557,14 @@ else()
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
-                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_LIBRARIES_DIR} ${PYTHON_EXECUTABLE}
-                                 COMMAND install_name_tool -add_rpath @executable_path/.. ${PYTHON_EXECUTABLE}
-                                 COMMAND install_name_tool -add_rpath @executable_path/../.. ${PYTHON_EXECUTABLE}
-                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
-                                                                   @rpath/lib/${SHARED_LIBRARY}
-                                                                   ${PYTHON_EXECUTABLE}
-                                 COMMAND chmod 755 lib/${SHARED_LIBRARY}
-                                 COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
+                                 COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_LIBRARIES_DIR} ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/.. ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -add_rpath @executable_path/../.. ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR}/${SHARED_LIBRARY}
+                                                                   @rpath/${LIBRARY_DIR}/${SHARED_LIBRARY}
+                                                                   ${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                                 COMMAND chmod 755 ${LIBRARY_DIR}/${SHARED_LIBRARY}
+                                 COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} ${LIBRARY_DIR}/${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     endif()
@@ -583,7 +585,7 @@ set(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
 set(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
-set(PYTHON_EXECUTABLE ${ROOT_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
+set(PYTHON_EXECUTABLE ${ROOT_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
 set(PYTHON_SCRIPT_DIR ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
@@ -633,7 +635,7 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 
 add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
-                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
+                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
 
