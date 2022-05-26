@@ -56,7 +56,7 @@ set(FULL_LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LOCAL_SITE
 set(PACKAGED_FILES
     include
     ${LOCAL_SITE_PACKAGES_DIR}
-    ${PYTHON_RELATIVE_SCRIPT_DIR}
+    ${PYTHON_RELATIVE_SCRIPTS_DIR}
 )
 
 # These directories only exist in release mode
@@ -416,8 +416,8 @@ endif()
 
 add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
-                   COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py --scripts-dir ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
-                                                                                                      ${PYTHON_ROOT_DIR}
+                   COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPTS_DIR}/set_python_path.py --scripts-dir ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR}
+                                                                                                       ${PYTHON_ROOT_DIR}
                                                 -s)
 
 # Update our list of Python specific dependencies

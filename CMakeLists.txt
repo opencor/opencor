@@ -1064,13 +1064,13 @@ endif()
 # Keep track of whether we are building OpenCOR with Python support and, if so,
 # let OpenCOR know about it
 
-if(NOT "${PYTHON_SCRIPT_DIR}" STREQUAL "")
+if(NOT "${PYTHON_SCRIPTS_DIR}" STREQUAL "")
     set(PYTHON_SUPPORT TRUE)
 
     add_compile_definitions(PYTHON_SUPPORT)
 
     string(REPLACE "${PROJECT_BUILD_DIR}/" ""
-           RELATIVE_PYTHON_SCRIPT_DIR "${PYTHON_SCRIPT_DIR}")
+           RELATIVE_PYTHON_SCRIPTS_DIR "${PYTHON_SCRIPTS_DIR}")
 endif()
 
 # Generate our documentation
@@ -1406,16 +1406,16 @@ if(WIN32)
 
     if(PYTHON_SUPPORT)
         if(RELEASE_MODE)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runipython.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter.bat)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_ipython.py)
-            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} start_jupyter.py)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runipython.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runjupyter.bat)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} start_ipython.py)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} start_jupyter.py)
 
             install(FILES ${PLATFORM_DISTRIB_DIR}/runipython.bat
                           ${PLATFORM_DISTRIB_DIR}/runjupyter.bat
                           ${PLATFORM_DISTRIB_DIR}/start_ipython.py
                           ${PLATFORM_DISTRIB_DIR}/start_jupyter.py
-                    DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR})
+                    DESTINATION ${RELATIVE_PYTHON_SCRIPTS_DIR})
 
             set(JUPYTER_CONSOLE_FILENAME "${PROJECT_BUILD_DIR}/jupyterconsole.bat")
 
@@ -1501,8 +1501,8 @@ elseif(APPLE)
     # Shell scripts to setup and run Python, IPython and Jupyter
 
     if(PYTHON_SUPPORT)
-        set(RUN_IPYTHON_FILENAME ${PYTHON_SCRIPT_DIR}/runipython)
-        set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPT_DIR}/runjupyter)
+        set(RUN_IPYTHON_FILENAME ${PYTHON_SCRIPTS_DIR}/runipython)
+        set(RUN_JUPYTER_FILENAME ${PYTHON_SCRIPTS_DIR}/runjupyter)
 
         configure_file(${PLATFORM_DISTRIB_DIR}/runipython.in ${RUN_IPYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/runjupyter.in ${RUN_JUPYTER_FILENAME} @ONLY)
@@ -1592,12 +1592,12 @@ else()
     # Shell scripts to setup and run Python, IPython and Jupyter
 
     if(PYTHON_SUPPORT)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runipython)
-        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPT_DIR} runjupyter)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runipython)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} ${RELATIVE_PYTHON_SCRIPTS_DIR} runjupyter)
 
         install(FILES ${PLATFORM_DISTRIB_DIR}/runipython
                       ${PLATFORM_DISTRIB_DIR}/runjupyter
-                DESTINATION ${RELATIVE_PYTHON_SCRIPT_DIR}
+                DESTINATION ${RELATIVE_PYTHON_SCRIPTS_DIR}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)

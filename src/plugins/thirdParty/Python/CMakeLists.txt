@@ -55,7 +55,7 @@ if(WIN32)
     set(BINARY_DIR bin)
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
-    set(SCRIPT_DIR Scripts)
+    set(SCRIPTS_DIR Scripts)
 else()
     if (APPLE)
         set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/Python)
@@ -66,7 +66,7 @@ else()
     set(BINARY_DIR bin)
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
-    set(SCRIPT_DIR bin)
+    set(SCRIPTS_DIR bin)
 endif()
 
 # Retrieve our package's binaries
@@ -192,7 +192,7 @@ set(PACKAGED_FILES
 
 if(WIN32)
     list(APPEND PACKAGED_FILES
-        ${SCRIPT_DIR}
+        ${SCRIPTS_DIR}
     )
 elseif()
     list(APPEND PACKAGED_FILES
@@ -587,8 +587,8 @@ set(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 set(PYTHON_EXECUTABLE ${ROOT_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
-set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
-set(PYTHON_SCRIPT_DIR ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_RELATIVE_SCRIPTS_DIR ${SCRIPTS_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPTS_DIR ${ROOT_DIR}/${SCRIPTS_DIR} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
 
@@ -628,7 +628,7 @@ endif()
 # Copy a script to update the Python path in copied scripts
 
 file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}
      FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # And run it
@@ -636,7 +636,7 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
-                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
 
 # Keep a list of Python specific dependencies
