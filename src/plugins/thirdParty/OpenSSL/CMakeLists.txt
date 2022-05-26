@@ -3,16 +3,20 @@ project(OpenSSLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 3.0.3)
+set(PACKAGE_VERSION 1.1.1o)
 set(PACKAGE_REPOSITORY openssl)
-set(GIT_TAG openssl-3.0.3-opencor)
-set(RELEASE_TAG openssl-3.0.3-opencor)
+set(GIT_TAG OpenSSL_1_1_1o)
+set(RELEASE_TAG OpenSSL_1_1_1o)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
-set(LIBRARY_VERSION 3)
+if(WIN32)
+    set(LIBRARY_VERSION 1_1)
+else()
+    set(LIBRARY_VERSION 1.1)
+endif()
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
@@ -35,13 +39,7 @@ endif()
 
 # Retrieve our package's binaries
 
-if(WIN32 OR APPLE)
-    set(LIBRARY_DIR lib)
-else()
-    set(LIBRARY_DIR lib64)
-endif()
-
-set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
 set(EXTERNAL_BINARIES
     ${CRYPTO_SHARED_LIBRARY}
@@ -51,14 +49,14 @@ set(EXTERNAL_BINARIES
 # Specify the files that can be stripped
 
 set(STRIPPABLE_FILES
-    ${LIBRARY_DIR}/${CRYPTO_SHARED_LIBRARY}
-    ${LIBRARY_DIR}/${SSL_SHARED_LIBRARY}
+    lib/${CRYPTO_SHARED_LIBRARY}
+    lib/${SSL_SHARED_LIBRARY}
 )
 
 if(WIN32)
     list(APPEND STRIPPABLE_FILES
-        ${LIBRARY_DIR}/${CRYPTO_IMPORT_LIBRARY}
-        ${LIBRARY_DIR}/${SSL_IMPORT_LIBRARY}
+        lib/${CRYPTO_IMPORT_LIBRARY}
+        lib/${SSL_IMPORT_LIBRARY}
     )
 endif()
 
@@ -86,8 +84,8 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
         #       for the import libraries that were originally built, hence we
         #       must have both versions...
 
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBRARY_DIR}/${CRYPTO_IMPORT_LIBRARY} ${LIBRARY_DIR}/${REAL_CRYPTO_IMPORT_LIBRARY}
-                        COMMAND ${CMAKE_COMMAND} -E copy ${LIBRARY_DIR}/${SSL_IMPORT_LIBRARY} ${LIBRARY_DIR}/${REAL_SSL_IMPORT_LIBRARY}
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy lib/${CRYPTO_IMPORT_LIBRARY} lib/${REAL_CRYPTO_IMPORT_LIBRARY}
+                        COMMAND ${CMAKE_COMMAND} -E copy lib/${SSL_IMPORT_LIBRARY} lib/${REAL_SSL_IMPORT_LIBRARY}
                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -148,8 +146,8 @@ else()
         INSTALL_COMMAND
             ${MAKE_NMAKE_COMMAND} install_sw
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/${LIBRARY_DIR}/${CRYPTO_IMPORT_LIBRARY}
-            <INSTALL_DIR>/${LIBRARY_DIR}/${SSL_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${CRYPTO_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${SSL_IMPORT_LIBRARY}
     )
 
     # Do some post-processing that is specific to each platform
@@ -158,10 +156,10 @@ else()
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndDuplicateLibs
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} ${LIBRARY_DIR}
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} ${LIBRARY_DIR}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${LIBRARY_DIR}/${REAL_CRYPTO_IMPORT_LIBRARY} ${LIBRARY_DIR}/${CRYPTO_IMPORT_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${LIBRARY_DIR}/${REAL_SSL_IMPORT_LIBRARY} ${LIBRARY_DIR}/${SSL_IMPORT_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy lib/${REAL_CRYPTO_IMPORT_LIBRARY} lib/${CRYPTO_IMPORT_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy lib/${REAL_SSL_IMPORT_LIBRARY} lib/${SSL_IMPORT_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     else()
