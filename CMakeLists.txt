@@ -1259,6 +1259,7 @@ else()
         set(ADDITIONAL_FILES
             ${MSVC_DIRNAME}/msvcp140${DEBUG_TAG}.dll
             ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
+            ${MSVC_DIRNAME}/vcruntime140_1${DEBUG_TAG}.dll
         )
 
         set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
