@@ -891,6 +891,8 @@ check_python_package(sphinx-inline-tabs PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
 
 if(SPHINX_EXECUTABLE AND PYTHON_SPHINX_COPY_BUTTON_AVAILABLE AND PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
     set(CAN_GENERATE_DOCUMENTATION TRUE)
+else()
+    message(WARNING "No documentation will be generated...")
 endif()
 
 # Build our plugins
