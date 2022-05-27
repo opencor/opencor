@@ -58,20 +58,20 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             f06240a7e494193ac46207ee9ae792596cb92708)
+                             1e4172fef28b91317908cd352084f40866eb45bd)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             d6490ccca02f1b9eaea282fc2f7208bd416281e3)
+                             dbdb1fabd18b4a855b7d07a97f426e338807d549)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         667f31499aeb3d3bec8da6539a92a921f6f4fe94)
+                         1c8e2587ffd4178a0f866020b3b1a827092f3725)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         03e2330d6cdea6e40bff28c9fe3e3c6cca1730b3)
+                         ed405d099d92b49c1afbb751d49a540cae75d8c2)
     endif()
 else()
     # Ignore some warnings
