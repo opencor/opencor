@@ -5,7 +5,7 @@ project(QtWebKit)
 set(PACKAGE_NAME QtWebKit)
 set(PACKAGE_VERSION 5.212.0)
 set(PACKAGE_REPOSITORY qtwebkit)
-set(GIT_TAG 0f85ce57ba143616099efb5337a56eb4450f5f4f)
+set(GIT_TAG v5.12.0)
 set(RELEASE_TAG v5.12.0)
 
 get_full_local_external_package_dir()
@@ -25,12 +25,6 @@ set(GIT_TAG_ZLIB v1.2.11)
 # Name of our package's shared library (and of its import library, if any)
 
 if(WIN32)
-    if(RELEASE_MODE)
-        set(DEBUG_TAG)
-    else()
-        set(DEBUG_TAG d)
-    endif()
-
     set(QTWEBKIT_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKit${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(QTWEBKIT_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKit${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 

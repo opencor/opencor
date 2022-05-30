@@ -407,6 +407,12 @@ elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
 endif()
 
+# Debug tag for a Windows debug build
+
+if(WIN32 AND NOT RELEASE_MODE)
+    set(DEBUG_TAG d)
+endif()
+
 # On Windows, specify the version of ICU that we are using while on Linux, add
 # our copy of the ICU and Mesa libraries
 # Note #1: on Linux, ICU is needed so that our external projects that need ICU
@@ -916,10 +922,8 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
         if(RELEASE_MODE)
             set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
-            set(MSVC_DEBUG_TAG)
         else()
             set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
-            set(MSVC_DEBUG_TAG d)
         endif()
     endif()
 
@@ -1261,9 +1265,9 @@ else()
         #          is to be run on a non-up-to-date copy of Windows 7...
 
         set(ADDITIONAL_FILES
-            ${MSVC_DIR}/msvcp140${MSVC_DEBUG_TAG}.dll
-            ${MSVC_DIR}/vcruntime140${MSVC_DEBUG_TAG}.dll
-            ${MSVC_DIR}/vcruntime140_1${MSVC_DEBUG_TAG}.dll
+            ${MSVC_DIR}/msvcp140${DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140${DEBUG_TAG}.dll
+            ${MSVC_DIR}/vcruntime140_1${DEBUG_TAG}.dll
         )
 
         set(REMOTE_DEBUGGER_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")

@@ -18,12 +18,6 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.12)
 # Name of our package's shared library (and of its import library, if any)
 
 if(WIN32)
-    if(RELEASE_MODE)
-        set(DEBUG_TAG)
-    else()
-        set(DEBUG_TAG d)
-    endif()
-
     set(SHARED_LIBRARY zlib${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY zlib${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
