@@ -218,7 +218,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         dda86a9806c06587a00a363811f110659ce6ebe9)
+                         a04fc155b424621f5776eb98db76f8d19d380290)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
@@ -517,7 +517,7 @@ else()
     if(WIN32)
         # We need to ship the VC runtime with our copy of Python
 
-        set(VCRUNTIME_DLL vcruntime140${MSVC_DEBUG_TAG}.dll)
+        set(VCRUNTIME_DLL vcruntime140${DEBUG_TAG}.dll)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyVCRuntime
                                  COMMAND ${CMAKE_COMMAND} -E copy ${MSVC_DIR}/${VCRUNTIME_DLL} <BINARY_DIR>/${VCRUNTIME_DLL}

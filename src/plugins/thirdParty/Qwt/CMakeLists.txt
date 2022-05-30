@@ -19,12 +19,6 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 if(WIN32)
-    if(RELEASE_MODE)
-        set(DEBUG_TAG)
-    else()
-        set(DEBUG_TAG d)
-    endif()
-
     set(QWT_SHARED_LIBRARY qwt${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(QWT_IMPORT_LIBRARY qwt${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
