@@ -67,7 +67,7 @@ if(USE_PREBUILT_LIBNUML_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         e432572f602f910e44ad277fc89fcc7f6fc14ba7)
+                         b3166c360d51b89835deaaa7a1c168c18be16eb7)
     endif()
 else()
     # Build libNuML as an external project
