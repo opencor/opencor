@@ -979,6 +979,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             ${MISCELLANEOUS_PYTHONCONSOLEWINDOW}
             miscellaneous/PythonShell
             miscellaneous/WebBrowserWindow
+            miscellaneous/BondGraphEditorWindow
 
             organisation/FileBrowserWindow
             organisation/FileOrganiserWindow
@@ -1015,6 +1016,8 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             thirdParty/QScintilla
             thirdParty/Qwt
             thirdParty/SUNDIALS
+            thirdParty/BondGraphAPI
+            thirdParty/BondGraphUIWidgets
 
             tools/CellMLTools
 
