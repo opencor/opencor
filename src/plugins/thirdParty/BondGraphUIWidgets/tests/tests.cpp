@@ -45,25 +45,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 void Tests::basicTests()
 {
-    // Some very basic tests to make sure that we have access to Bondgraph library
+    // Some very basic tests to make sure that we have access to BondgraphUI library
 
-    // Create a context and check a few things
+    OpenCOR::BondGraphUI::BondGraphUIWidget* frame = new OpenCOR::BondGraphUI::BondGraphUIWidget;
+    bool ptrCheck = frame != nullptr;
+    QCOMPARE(ptrCheck, true);
 
-    // static cmzn_context * const Id = cmzn_context_create("test");
-
-    // OpenCMISS::Zinc::Context context(Id);
-
-    // QCOMPARE(context.isValid(), true);
-    // QCOMPARE(context.getId(), Id);
-
-    // std::array<int, 3> version = {};
-
-    // QCOMPARE(context.getVersion(&version[0]), int(OpenCMISS::Zinc::Result::RESULT_OK));
-    // QCOMPARE(version[0], 3);
-    // QCOMPARE(version[1], 1);
-    // QCOMPARE(version[2], 2);
-
-    // QVERIFY(QString(context.getVersionString()).startsWith("3.1.2"));
+    delete frame;
 }
 
 //==============================================================================

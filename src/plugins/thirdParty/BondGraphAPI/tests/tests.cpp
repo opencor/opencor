@@ -37,33 +37,45 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 void Tests::basicTests()
 {
-    // Some very basic tests to make sure that we have access to libSBML
+    // Some very basic tests to make sure that we have access to libBondGraph
+    //Create and test a simple bondgraph
+    BG::newWorkSpace();
+    auto ioBondGraph = BG::createBondGraph();
 
-    // Check the version of libSBML
+    //Create the resistor
+    auto lR = BG::createResistor();
+    lR->setParameter("r", "1", "Ohm");
+    ioBondGraph->addComponent(lR);
 
-    // QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.19.0");
+    auto lC1 = BG::createCapacitor();
+    lC1->setParameter("C", "1", "Farad");
+    lC1->setParameter("q_", "1", "coulomb");
+    ioBondGraph->addComponent(lC1);
 
-    // // Check against which libraries libSBML has been compiled
+    //Create the junctions
+    auto lJ0_1 = BG::createOneJunction();
+    ioBondGraph->addComponent(lJ0_1);
 
-    // QVERIFY(!libsbml::isLibSBMLCompiledWith("bzip2"));
-    // QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
-    // QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
-    // QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
-    // QVERIFY(!libsbml::isLibSBMLCompiledWith("zip"));
+    //Create the bonds
+    ioBondGraph->connect(lR, lJ0_1);
+    ioBondGraph->connect(lC1, lJ0_1);
 
-    // // Create an SBML document with a model inside it, then set the name of the
-    // // model and check that it has been properly set
+    auto res = ioBondGraph->computeStateEquation();
+    // Solvable
+    QCOMPARE(res.bondGraphValidity, true);
+    auto equations = res.dof;
+    std::map<std::string, std::string> result = {
+        {"q_1", "u_3*C_1"},
+        {"dot_Inductor", "u_3"},
+        {"dot_Capacitor", "C_1*dot_u_3"}};
 
-    // auto sbmlDocument = new libsbml::SBMLDocument();
-    // libsbml::Model *sbmlModel = sbmlDocument->createModel();
+    for (auto eq : equations) {
+        std::string svar = symEngineExpressionToString(eq.first);
+        std::string sres = symEngineExpressionToString(eq.second);
+        std::string expected = result[svar];
+        QCOMPARE(sres, expected);
+    }
 
-    // static const std::string ModelName = "myModel";
-
-    // sbmlModel->setName(ModelName);
-
-    // QCOMPARE(sbmlModel->getName(), ModelName);
-
-    // delete sbmlDocument;
 }
 
 //==============================================================================
