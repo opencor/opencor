@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+    </qresource>
+    <qresource prefix="/plugins/widgetbox">
+      <file>collapsed.png</file>
+      <file>expanded.png</file>
+      <file>widgetbox.png</file>
+    </qresource>
+</RCC>

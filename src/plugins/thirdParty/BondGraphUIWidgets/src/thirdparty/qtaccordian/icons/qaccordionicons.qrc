@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/qAccordionIcons">
+        <file>caret-bottom.png</file>
+        <file>caret-right.png</file>
+        <file>accordion_cc_grey.svg</file>
+    </qresource>
+</RCC>

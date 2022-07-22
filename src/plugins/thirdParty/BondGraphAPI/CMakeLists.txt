@@ -46,6 +46,8 @@ if(WIN32)
     )
 endif()
 
+
+
 # Use the pre-built version of our package unless instructed otherwise
 
 # if(USE_PREBUILT_LIBBondGraph_PACKAGE)
@@ -73,23 +75,35 @@ endif()
 # else()
     # Build libBondGraph as an external project
 
+# Set some compilation flags and/or ignore some warnings
+
+    if(WIN32)
+        set(PACKAGE_C_FLAGS "/wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
+        set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577")
+    elseif(NOT APPLE)
+        set(PACKAGE_CXX_FLAGS "-std=c++0x -Wno-deprecated -Wno-misleading-indentation -Wno-reorder -Wno-unused-function")
+    endif()
+
+
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/Jagirhussan/${PACKAGE_REPOSITORY}
+           https://github.com/Jagirhussan/${PACKAGE_REPOSITORY}
         # GIT_TAG
         #     ${GIT_TAG}
         GIT_SHALLOW
+        CMAKE_CACHE_ARGS
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
+            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}        
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-            -DBoost_INCLUDE_DIR=${BOOST_INCLUDE_DIR}
             -DPARSE_AND_CREATE_FACTORY_METHODS=OFF
             -DBUILD_TESTING=OFF
         BUILD_BYPRODUCTS

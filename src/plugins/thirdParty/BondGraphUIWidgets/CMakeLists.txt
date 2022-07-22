@@ -1,125 +1,129 @@
 project(BondGraphUIWidgetsPlugin)
 
-# Our package characteristics
-
-set(PACKAGE_NAME BondGraphUIWidgets)
-set(PACKAGE_VERSION 1.0.0)
-set(PACKAGE_REPOSITORY BondGraphUIWidgets)
-set(GIT_TAG v1.0.0)
-set(RELEASE_TAG v1.0.0)
-
-get_full_local_external_package_dir()
-
-# Version of our package's library
-set(WIDGETLIBNAME BondGraphUI)
-set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
-
-# Name of our package's shared libraries (and of their import libraries, if any)
-
-if(WIN32)
-    set(SHARED_LIBRARY ${WIDGETLIBNAME}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(IMPORT_LIBRARY ${WIDGETLIBNAME}${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX}) 
-else()
-    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${WIDGETLIBNAME}${CMAKE_SHARED_LIBRARY_SUFFIX_PRE})
-    set(IMPORT_LIBRARY ${SHARED_LIBRARY})
-endif()
-
-
-# Retrieve our package's binaries
-
-set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
-
-set(EXTERNAL_BINARIES
-    ${SHARED_LIBRARY}
-)
-
-# Specify the files that can be stripped
-
-set(STRIPPABLE_FILES
-    lib/${SHARED_LIBRARY}
-)
-
-if(WIN32)
-    list(APPEND STRIPPABLE_FILES
-        lib/${IMPORT_LIBRARY}
-    )
-endif()
-
-
-#     # Set platform specific configuration options
-
-if(WIN32)
-    math(EXPR MSVC_VERSION "${CMAKE_CXX_COMPILER_VERSION_MAJOR}-4")
-
-    set(DEFINE_CMAKE_GENERATOR -G "Visual Studio 14 20${MSVC_VERSION} Win64")
-    set(SHARED_lIBRARY_DIR bin)
-else()
-    set(DEFINE_CMAKE_GENERATOR)
-    set(SHARED_lIBRARY_DIR lib)
-endif()
-
-# Build BondGraphUI as an external project
-
-set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-
-#BondGraphUI depends on BondGraph library
-
-ExternalProject_Add(${PACKAGE_BUILD}
-    INSTALL_DIR
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    # GIT_REPOSITORY
-    #     https://github.com/opencor/${PACKAGE_REPOSITORY}
-    # GIT_TAG
-    #     ${GIT_TAG}
-    # GIT_SHALLOW
-    SOURCE_DIR /home/rjag008/bguistandalone        
-    CMAKE_GENERATOR
-        ${CMAKE_GENERATOR}
-    CMAKE_ARGS
-        ${CMAKE_ARGS}
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-        -DBondGraph_DIR=${LIBBONDGRAPH_INSTALL_DIR}
-    BUILD_BYPRODUCTS
-        <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
-    DEPENDS
-        BondGraphAPIPlugin
-)
-
-
-# Do some post-processing that is specific to each platform
-
-# Package our external project
-
-create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                include ${STRIPPABLE_FILES})
-
-set(DEPENDS_ON ${PACKAGE_BUILD})
-
-
-# Allow other external projects to find our BondGraphUI package
-
-set(LIBBONDGRAPHUI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-set(LIBBONDGRAPHUI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-set(LIBBONDGRAPHUI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+# # Load miriam_terms.json to file variable
+# include(../../../../cmake/vtkEncodeString.cmake)
+# set(MIRIAMTERMSJSON miriamtermsjsonstring)
+# vtk_encode_string(
+#   INPUT "res/miriam/miriam_terms.json"
+#   NAME ${MIRIAMTERMSJSON}
+#   SOURCE_OUTPUT MIRIAMTERMSJSONSOURCE
+#   BINARY
+# )
 
 # Add the plugin
+if(WIN32)
+    set(PACKAGE_C_FLAGS "/wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
+    set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577")
+elseif(NOT APPLE)
+    set(PACKAGE_CXX_FLAGS "-std=c++0x -Wno-deprecated -Wno-misleading-indentation -Wno-reorder -Wno-unused-function")
+endif()
 
-add_plugin(${PACKAGE_NAME}
+
+add_plugin(BondGraphUIWidgets
     SOURCES
         ../../plugininfo.cpp
+        src/bgconnection.cpp
+        src/bgdconnection.cpp
+        src/bgdiffundomanager.cpp
+        src/bgeditorsceneactions.cpp
+        src/bgeditorscene.cpp
+        src/bgeditorview.cpp
+        src/bgelement.cpp
+        src/bgelementconnectionpropertiesui.cpp
+        src/bgannotationmiriamtermsui.cpp
+        src/bgannotationviewmetadataeditdetailsui.cpp
+        src/bgelementeditorscene.cpp
+        src/bgelementeditoruicontroller.cpp
+        src/bgelementsceneactions.cpp
+        src/bgitemattribute.cpp
+        src/bgparameterdelegate.cpp
+        src/bgparameterimportdialog.cpp
+        src/bgport.cpp
+        src/bgjsonmodels.cpp
+        src/bgexportutilities.cpp
+        src/bgimageexport.cpp
+        src/bgprojectdetails.cpp
+        src/bgimageexportdialog.cpp
+        src/bgbasicelementannotationtable.cpp
+        src/bguserdefinedimportdialog.cpp
+        src/bgelementproxymapdialog.cpp
+        src/bgcolorschemesuicontroller.cpp
+        src/bgconnectionstable.cpp
+        src/bgporteditordialog.cpp
+        src/controlpoint.cpp
+        src/bgeditorsearchdialog.cpp
+        src/bgtextlabeledit.cpp
+        src/bgtransformrect.cpp
+        src/sceneitem.cpp
+        src/scenemenucontroller.cpp
+        src/sceneoptionsdialog.cpp
+        src/sceneundomanager.cpp
+        src/utils.cpp
+        src/bondgraphuiwidget.cpp
+        #Widgetbox
+        src/thirdparty/widgetbox/widgetbox.cpp
+        src/thirdparty/widgetbox/categorybutton.cpp
+        src/thirdparty/widgetbox/pageeventfilter.cpp
+        src/thirdparty/widgetbox/categorywidgets.cpp
+        src/thirdparty/widgetbox/libraryitem.cpp
+        #Accordian
+        src/thirdparty/qtaccordian/clickableframe.cpp
+        src/thirdparty/qtaccordian/contentpane.cpp
+        src/thirdparty/qtaccordian/qaccordion.cpp
+        #jkqtLatex
+        src/thirdparty/jkqtlatex/jkqtmathtext.cpp
+        src/thirdparty/jkqtlatex/jkqtpcodestructuring.cpp
+        src/thirdparty/jkqtlatex/jkqtpstringtools.cpp
+        #qsint-widgets
+        src/thirdparty/qsintwidgets/colorbutton.cpp
+        src/thirdparty/qsintwidgets/colorcombobox.cpp
+        src/thirdparty/qsintwidgets/colordefs.cpp
+        src/thirdparty/qsintwidgets/colorgrid.cpp
+        src/thirdparty/qsintwidgets/doublespincombobox.cpp
+        src/thirdparty/qsintwidgets/ledwidget.cpp
+        src/thirdparty/qsintwidgets/pathpicker.cpp
+        src/thirdparty/qsintwidgets/qfontbutton.cpp
+        src/thirdparty/qsintwidgets/qmenubutton.cpp
+        src/thirdparty/qsintwidgets/qpenbutton.cpp
+        src/thirdparty/qsintwidgets/qpencombobox.cpp
+        src/thirdparty/qsintwidgets/qsplitbutton.cpp
+        src/thirdparty/qsintwidgets/roundprogressbar.cpp
+        src/thirdparty/qsintwidgets/slider2d.cpp
+        src/thirdparty/qsintwidgets/slider.cpp
+        src/thirdparty/qsintwidgets/spincombobox.cpp
+        src/thirdparty/qsintwidgets/spinslider.cpp
+        src/thirdparty/qsintwidgets/splitbutton.cpp
+        src/thirdparty/qsintwidgets/timepicker.cpp
 
+        #Generated using vtkEncodeString.cmake - hardcoded to integrate with OpenCOR without adding vtkEncodeString.cmake to OpenCOR
+        src/miriamtermsjsonstring.cpp
+
+        src/thirdparty/widgetbox/widgetboxicons.qrc
+        res/resources.qrc
+        src/thirdparty/qtaccordian/icons/qaccordionicons.qrc
         src/bondgraphuiwidgetsplugin.cpp
+    UIS 
+        src/BGAnnotationViewMetadataEditDetailsUI.ui
+        src/BGAttributesEditorUI.ui
+        src/BGBasicElementAnnotationTable.ui
+        src/BGConnectionsTable.ui
+        src/BGEditorSearchDialog.ui
+        src/BGElementAttributesEditorUI.ui
+        src/BGElementConnectionPropertiesUI.ui
+        src/BGImageExportDialog.ui
+        src/BGParameterImport.ui
+        src/BGPortEditorDialog.ui
+        src/BGProjectDetails.ui
+        src/BGUserdefinedImportDialog.ui
+        src/SceneOptionsDialog.ui       
     QT_MODULES
+        Widgets
+        Gui
+        Network
+        OpenGL  
+        Xml
+        PrintSupport
         Core
-    EXTERNAL_BINARIES_DIR
-        ${EXTERNAL_BINARIES_DIR}
-    EXTERNAL_BINARIES
-        ${EXTERNAL_BINARIES}
-    TESTS
-        tests
-    DEPENDS_ON
-        ${DEPENDS_ON}
+    PLUGINS
+        BondGraphAPI
 )
