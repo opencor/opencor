@@ -48,7 +48,7 @@ public:
     void saveSettings(QSettings &pSettings) const override;
 
 private:
-    OpenCOR::BondGraphUI::BondGraphUIWidget *mGui;
+    BondGraphUIWidget *mGui;
 
 };
 

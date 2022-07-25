@@ -79,7 +79,7 @@ endif()
 
     if(WIN32)
         set(PACKAGE_C_FLAGS "/wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
-        set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577")
+        set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577 /EHsc")
     elseif(NOT APPLE)
         set(PACKAGE_CXX_FLAGS "-std=c++0x -Wno-deprecated -Wno-misleading-indentation -Wno-reorder -Wno-unused-function")
     endif()
@@ -123,10 +123,10 @@ endif()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
     else(NOT WIN32)
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
-                                COMMAND ${CMAKE_COMMAND} -E copy bin/${BONDGRAPH_LIBRARY} lib
-                                WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                                DEPENDEES install)
+        # ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
+        #                         COMMAND ${CMAKE_COMMAND} -E copy lib/teuchos.lib lib
+        #                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        #                         DEPENDEES install)
     endif(NOT WIN32)
     # Package our external project
 

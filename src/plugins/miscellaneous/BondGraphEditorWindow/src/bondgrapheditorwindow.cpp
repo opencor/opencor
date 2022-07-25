@@ -36,13 +36,13 @@ namespace BondGraphEditorWindow {
 
 BondGraphEditorWindow::BondGraphEditorWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new OpenCOR::BondGraphUI::BondGraphUIWidget(pParent))
+    mGui(new BondGraphUIWidget(pParent))
 {
     setObjectName("BondGraphEditorWindow");
     setWidget(mGui);
     setWindowTitle(tr("Graphical BondGraph Editor"));
     //Open cellml file in CellML editor when exported by the user
-    connect(mGui,&OpenCOR::BondGraphUI::BondGraphUIWidget::cellMLFileGenerated,
+    connect(mGui,&BondGraphUIWidget::cellMLFileGenerated,
         [this](QString path) {
                QDesktopServices::openUrl("opencor://openFile/"+path);
             }

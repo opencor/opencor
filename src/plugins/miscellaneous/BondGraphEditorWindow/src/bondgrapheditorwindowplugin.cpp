@@ -44,7 +44,7 @@ PLUGININFO_FUNC BondGraphEditorWindowPluginInfo()
                                              };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
-                          { "Core", "BondGraphAPI", "BondGraphUIWidgets" },
+                          { "Core", "BondGraphAPI" },
                           descriptions);
 }
 

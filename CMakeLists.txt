@@ -1017,7 +1017,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
             thirdParty/Qwt
             thirdParty/SUNDIALS
             thirdParty/BondGraphAPI
-            thirdParty/BondGraphUIWidgets
+            #thirdParty/BondGraphUIWidgets
 
             tools/CellMLTools
 
