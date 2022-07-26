@@ -47,7 +47,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-const quint64 version64 = 12; // should match the one in bgeditorscene.cpp
+const quint64 version64 = 12; // should match the definition in bgeditorscene.cpp
 
 std::string serializeToQString(const QVariant &v)
 {
@@ -122,50 +122,6 @@ void to_json(nlohmann::json &j, const BGEditorScene &p)
     }
     j["sceneItems"] = jSceneItems;
 
-    //   // attributes
-
-    //   nlohmann::json attributes;
-    //   attributes["version"] = (quint64)0x12345678;
-    //   attributes["size"] = p.m_classAttributes.size();
-
-    //   for (auto classAttrsIt = p.m_classAttributes.constBegin();
-    //        classAttrsIt != p.m_classAttributes.constEnd(); ++classAttrsIt) {
-    //     nlohmann::json avals = nlohmann::json::array();
-    //     for (const auto &attr : classAttrsIt.value()) {
-    //         nlohmann::json atv;
-    //         atv["id"] = attr.id;
-    //         atv["name"] = attr.name.toStdString();
-    //         //Dirty hack
-    //         atv["defaultValue"] = serializeToQString(attr.defaultValue);
-    //         atv["valueType"] = attr.valueType;
-    //         avals.push_back(atv);
-    //     }
-    //     auto key = classAttrsIt.key();
-    //     attributes[serializeToQString(key)] = avals;
-    //   }
-
-    //   nlohmann::json idmap;
-    //   for(const auto& im : p.m_classToSuperIds.keys())
-    //   {
-    //       auto key = serializeToQString(im);
-    //       idmap[key] = p.m_classToSuperIds[im];
-    //   }
-    //   j["classToSuperIds"]=idmap;
-
-    //   // visible attributes
-    //   nlohmann::json visMap;
-    //   for(const auto& im : p.m_classAttributesVis.keys())
-    //   {
-    //       auto arr = p.m_classAttributesVis[im]; //QSet<QByteArray>
-    //       nlohmann::json vis = nlohmann::json::array();
-    //       for(const auto &v : arr){
-    //           vis.push_back(std::string(v.constData(), v.length()));
-    //       }
-    //       auto key = serializeToQString(im);
-    //       idmap[key] = p.m_classToSuperIds[im];
-    //   }
-    //   j["visibleAttributes"] = visMap;
-    //   j["attributes"] = attributes;
 }
 
 void from_json(const nlohmann::json &j, BGEditorScene &p)
@@ -413,7 +369,6 @@ void from_json(const nlohmann::json &j, BGPort &p)
 
 void to_json(nlohmann::json &j, const SceneItem &p)
 {
-    // j["id"] = p.m_id.toStdString();
     j["label"] = p.m_labelItem->text().toStdString();
     nlohmann::json attrib;
 
@@ -467,7 +422,7 @@ loadBondGraph(nlohmann::json &res)
     std::map<std::string, std::map<std::string, RCPLIB::RCP<BG::BGElement>>>
         bondGraphElements;
     std::map<std::string, std::vector<std::string>> parameterCellMLs;
-    // std::map<std::string, std::vector<std::string>> stateCellMLs;
+
     // Create the bondgraphs
     for (const auto &itm : items.items()) {
         auto k = itm.key();
@@ -486,18 +441,6 @@ loadBondGraph(nlohmann::json &res)
                 for (const auto &pm : sp) {
                     auto nm = pm["name"];
                     if (pm["value"].is_object()) {
-                        // if (edef.contains("states")) {
-                        //   if (edef["states"].contains(
-                        //           nm)) { // For states no mapping, pull the values
-                        //     if (stateCellMLs.find(pm["filename"]) != stateCellMLs.end())
-                        //     {
-                        //       stateCellMLs[pm["filename"]].push_back(nm);
-                        //     } else {
-                        //       stateCellMLs[pm["filename"]] = {nm};
-                        //     }
-                        //     continue;
-                        //   }
-                        // }
                         if (parameterCellMLs.find(pm["filename"]) != parameterCellMLs.end()) {
                             parameterCellMLs[pm["filename"]].push_back(nm);
                         } else {
@@ -590,29 +533,7 @@ loadBondGraph(nlohmann::json &res)
                 for (const auto &pm : sp) {
                     std::string nm = pm["name"];
                     if (pm["value"].is_object()) {
-                        // pm["value"]["value"] Name should be mangled to map to file
-                        // std::vector<std::string> &iVec = stateCellMLs[pm["filename"]];
-                        // if (std::find(iVec.begin(), iVec.end(), nm) != iVec.end()) {
-                        //   auto vars = Utils::getCellMLOutVariables(
-                        //       QString::fromStdString(pm["filename"]));
-                        //   std::string comp = pm["component"];
-                        //   std::string tv = comp + std::string(":") + nm;
-                        //   QList<QString> &v = vars[QString::fromStdString(tv)];
-                        //   bge->setParameter(nm, v[3].toStdString(),
-                        //                     pm["value"]["dimension"]);
-                        // } else {
-                        //   nlohmann::json vmap;
-                        //   vmap["type"] = "file";
-                        //   vmap["compartment"] = pm["component"];
-                        //   std::string fileName = pm["filename"];
-                        //   std::string baseFilename =
-                        //       fileName.substr(fileName.find_last_of("/\\") + 1);
-                        //   vmap["filename"] = baseFilename;
-                        //   vmap["target"] = pm["variable"];
-                        //   // vmap["importname"] = ""; //Provide an import name for this
-                        //   // cellml file, use for resolving multiple/shared instances
-                        //   bge->setParameter(nm, vmap.dump(), pm["value"]["dimension"]);
-                        // }
+
                         nlohmann::json vmap;
                         vmap["type"] = "file";
                         vmap["compartment"] = pm["component"];
@@ -624,8 +545,7 @@ loadBondGraph(nlohmann::json &res)
                         if (pm.contains("stateValue")) {
                             vmap["stateValue"] = pm["stateValue"];
                         }
-                        // vmap["importname"] = ""; //Provide an import name for this
-                        // cellml file, use for resolving multiple/shared instances
+
                         bge->setParameter(nm, vmap.dump(), pm["value"]["dimension"]);
                     } else {
                         ss.str("");
@@ -1242,16 +1162,17 @@ QString to_cellML(QString name, QString dir, const BGEditorScene &p)
         details->setCursor(Qt::WaitCursor);
         std::map<std::string, std::string> importFile;
         try {
-            auto ioBondGraph = getBondGraphFor(items, importFile);
-
+            auto ioBondGraph = getBondGraphFor(items, importFile);          
             auto eqs = ioBondGraph->computeStateEquation();
 
             if (eqs.bondGraphValidity) {
                 nlohmann::json jres = details->getJson();
                 std::string pdir = jres["directory"];
+                //Use the projectname from the popup, the user could have changed it
+                QString projectName = QString::fromStdString(jres["projectname"]).replace(" ","_");
                 QDir projectDirectory(QString::fromStdString(pdir));
                 try {
-                    auto files = getCellML(jres["projectname"], ioBondGraph, eqs);
+                    auto files = getCellML(projectName.toStdString(), ioBondGraph, eqs);
                     for (const auto &i : files) {
                         std::ofstream os;
                         std::string filename =
@@ -1263,7 +1184,7 @@ QString to_cellML(QString name, QString dir, const BGEditorScene &p)
                         os << i.second;
                         os.close();
                     }
-                    serializedFileName = projectDirectory.filePath(name + ".cellml");
+                    serializedFileName = projectDirectory.filePath(projectName + ".cellml");
                 } catch (std::exception &e) {
                     details->setCursor(Qt::ArrowCursor);
                     QMessageBox::critical(

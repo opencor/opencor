@@ -46,7 +46,7 @@ if(WIN32)
     )
 endif()
 
-
+#Uncomment the lines ones the package is in CI/CD of OpenCOR
 
 # Use the pre-built version of our package unless instructed otherwise
 
@@ -122,11 +122,6 @@ endif()
                                                                   ${BONDGRAPH_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
-    else(NOT WIN32)
-        # ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
-        #                         COMMAND ${CMAKE_COMMAND} -E copy lib/teuchos.lib lib
-        #                         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        #                         DEPENDEES install)
     endif(NOT WIN32)
     # Package our external project
 
