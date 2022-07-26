@@ -29,21 +29,22 @@ class BGProjectDetails;
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-class BGProjectDetails : public QDialog {
-  Q_OBJECT
+class BGProjectDetails : public QDialog
+{
+    Q_OBJECT
 
 public:
-  explicit BGProjectDetails(bool allowBrowse = false, QWidget *parent = 0);
-  ~BGProjectDetails();
-  nlohmann::json getJson();
+    explicit BGProjectDetails(bool allowBrowse = false, QWidget *parent = nullptr);
+    ~BGProjectDetails() override;
+    nlohmann::json getJson();
 
 private Q_SLOTS:
-  void on_Apply();
-  void on_Cancel();
-  void on_Browse();
+    void on_Apply();
+    void on_Cancel();
+    void on_Browse();
 
 private:
-  Ui::BGProjectDetails *ui;
+    Ui::BGProjectDetails *ui;
 };
 
 } // namespace BondGraphEditorWindow

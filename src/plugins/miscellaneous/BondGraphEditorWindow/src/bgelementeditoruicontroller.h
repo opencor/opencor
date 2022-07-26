@@ -39,142 +39,145 @@ class BGPort;
 class BGEditorView;
 class BGAnnotationViewMetadataEditDetailsUI;
 
-class BGElementEditorUIController : public QObject {
-  Q_OBJECT
+class BGElementEditorUIController : public QObject
+{
+    Q_OBJECT
 
 public:
-  BGElementEditorUIController(BondGraphUIWidget *parent, bool doBackup = true);
-  virtual ~BGElementEditorUIController();
+    BGElementEditorUIController(BondGraphUIWidget *parent, bool p_doBackup = true);
+    ~BGElementEditorUIController() override;
 
-  QSettings &getApplicationSettings() const;
-  void doReadSettings(QSettings &settings);
-  void doWriteSettings(QSettings &settings);
+    QSettings &getApplicationSettings() const;
+    void doReadSettings(QSettings &settings);
+    void doWriteSettings(QSettings &settings);
 
-  void setAnnotationEditor(BGAnnotationViewMetadataEditDetailsUI *editor);
+    void setAnnotationEditor(BGAnnotationViewMetadataEditDetailsUI *p_editor);
 
-  // callbacks
-  void onNewDocumentCreated();
-  void onDocumentLoaded(const QString &fileName);
-  void removeBackUp();
-  void reloadBackup();
+    // callbacks
+    void onNewDocumentCreated();
+    void onDocumentLoaded(const QString &p_fileName);
+    void removeBackUp();
+    void reloadBackup();
 
 Q_SIGNALS:
-  void serializedToCellML(QString path);
+    void serializedToCellML(QString p_path);
 
 public Q_SLOTS:
-  void undo();
-  void redo();
-  void newBondGraph();
-  void loadFile();
-  void exportFile();
-  void exportSVG();
-  void exportToCellML();
-  void copy();
-  void cut();
-  void paste();
-  void selectAll();
-  void del();
-  // protected API
+    void undo();
+    void redo();
+    void newBondGraph();
+    void loadFile();
+    void exportFile();
+    void exportSVG();
+    void exportToCellML();
+    void copy();
+    void cut();
+    void paste();
+    void selectAll();
+    void del();
+    // protected API
 protected:
-  BGElementEditorScene *scene() { return m_editorScene; }
-  bool serialise(const FileSerializerInterface &exporter);
+    BGElementEditorScene *scene()
+    {
+        return m_editorScene;
+    }
+    bool serialise(const FileSerializerInterface &p_exporter);
 
 private Q_SLOTS:
-  // tbd: move to export controller
+    // tbd: move to export controller
 
-  void doBackup();
+    void doBackup();
 
-  void onNavigatorShown();
+    void onNavigatorShown();
 
-  void onSelectionChanged();
-  void onSceneChanged();
-  void onSceneHint(const QString &text);
-  void onSceneStatusChanged(int status);
-  void onSceneDoubleClicked(QGraphicsSceneMouseEvent *mouseEvent,
-                            QGraphicsItem *clickedItem);
+    void onSelectionChanged();
+    void onSceneChanged();
+    void onSceneHint(const QString &text);
+    void onSceneStatusChanged(int status);
+    void onSceneDoubleClicked(QGraphicsSceneMouseEvent *p_mouseEvent,
+                              QGraphicsItem *p_clickedItem);
 
-  void sceneEditMode(QAction *);
-  void onEditModeChanged(int mode);
+    void sceneEditMode(QAction *);
+    void onEditModeChanged(int p_mode);
 
-  void onZoomChanged(double currentZoom);
-  void zoom();
-  void unzoom();
-  void resetZoom();
+    void onZoomChanged(double p_currentZoom);
+    void zoom();
+    void unzoom();
+    void resetZoom();
 
-  void sceneOptions();
+    void sceneOptions();
 
-  void showElementIds(bool on);
-  void showConnectionIds(bool on);
+    void showElementIds(bool p_on);
+    void showConnectionIds(bool p_on);
 
-  void changeItemId();
-  // void addElementPort();
-  void editNodePort();
-  void find();
-  void onLayoutFinished();
+    void changeItemId();
+    // void addElementPort();
+    void editNodePort();
+    void find();
+    void onLayoutFinished();
 
-  void onElementAnnotationUpdated(BGElement *elem);
-  void elementUpdated(BGElement *elem);
-
-private:
-  void createMenus();
-  void createPanels();
-  void createNavigator();
-
-  void readDefaultSceneSettings();
-  void writeDefaultSceneSettings();
-
-  void updateSceneOptions();
-
-  void updateActions();
-  void updateFromActions();
-
-  void editNodePort(BGPort &port);
+    void onElementAnnotationUpdated(BGElement *p_elem);
+    void elementUpdated(BGElement *p_elem);
 
 private:
-  BondGraphUIWidget *m_parent = nullptr;
-  BGElementEditorScene *m_editorScene = nullptr;
-  BGEditorView *m_editorView = nullptr;
+    void createMenus();
+    void createPanels();
+    void createNavigator();
 
-  QSint::Slider2d *m_sliderView = nullptr;
-  QLabel *m_statusLabel = nullptr;
-  QMenu *m_viewMenu = nullptr;
-  QActionGroup *m_editModesGroup;
-  QAction *findAction = nullptr;
-  QAction *modeDefaultAction;
-  QAction *modeNodesAction;
-  QAction *modeTransformAction;
-  QAction *modeFactorAction;
-  QAction *zoomAction;
-  QAction *unzoomAction;
-  QAction *resetZoomAction;
-  // QAction *resetZoomAction2;
-  QAction *fitZoomAction;
-  QAction *fitZoomSelectedAction;
-  QAction *fitZoomBackAction;
-  QAction *sceneCropAction;
-  QAction *schemesAction;
-  QAction *gridAction;
-  QAction *gridSnapAction;
-  QAction *sceneAction;
-  QAction *actionShowLabels;
-  QAction *m_actionShowNodeIds;
-  QAction *m_actionShowEdgeIds;
-  QAction *undoAction;
-  QAction *redoAction;
-  friend class SceneMenuController; // Allow scenemenucontroller to access
-                                    // actions
-  OptionsData m_optionsData;
+    void readDefaultSceneSettings();
+    void writeDefaultSceneSettings();
 
-  QTimer m_backupTimer;
-  QString m_backupFile;
-  class BGColorSchemesUIController *m_schemesController = nullptr;
-  class BGElementConnectionPropertiesUI *m_propertiesPanel = nullptr;
-  class BGBasicElementAnnotationTable *m_elementPropertiesPanel = nullptr;
-  class BGConnectionsTable *m_connectionsPanel = nullptr;
-  class BGElementAttributesEditorUI *m_defaultsPanel = nullptr;
-  class BGEditorSearchDialog *m_searchDialog = nullptr;
-  class BGImageExportDialog *m_imageDialog = nullptr;
-  BGAnnotationViewMetadataEditDetailsUI *m_annotationEditor = nullptr;
+    void updateSceneOptions();
+
+    void updateActions();
+    void updateFromActions();
+
+    void editNodePort(BGPort &p_port);
+
+private:
+    BondGraphUIWidget *m_parent = nullptr;
+    BGElementEditorScene *m_editorScene = nullptr;
+    BGEditorView *m_editorView = nullptr;
+
+    QSint::Slider2d *m_sliderView = nullptr;
+    QLabel *m_statusLabel = nullptr;
+    QMenu *m_viewMenu = nullptr;
+    QActionGroup *m_editModesGroup;
+    QAction *findAction = nullptr;
+    QAction *modeDefaultAction;
+    QAction *modeNodesAction;
+    QAction *modeTransformAction;
+    QAction *modeFactorAction;
+    QAction *zoomAction;
+    QAction *unzoomAction;
+    QAction *resetZoomAction;
+    QAction *fitZoomAction;
+    QAction *fitZoomSelectedAction;
+    QAction *fitZoomBackAction;
+    QAction *sceneCropAction;
+    QAction *schemesAction;
+    QAction *gridAction;
+    QAction *gridSnapAction;
+    QAction *sceneAction;
+    QAction *actionShowLabels;
+    QAction *m_actionShowNodeIds;
+    QAction *m_actionShowEdgeIds;
+    QAction *undoAction;
+    QAction *redoAction;
+    friend class SceneMenuController; // Allow scenemenucontroller to access
+                                      // actions
+    OptionsData m_optionsData;
+
+    QTimer m_backupTimer;
+    QString m_backupFile;
+    class BGColorSchemesUIController *m_schemesController = nullptr;
+    class BGElementConnectionPropertiesUI *m_propertiesPanel = nullptr;
+    class BGBasicElementAnnotationTable *m_elementPropertiesPanel = nullptr;
+    class BGConnectionsTable *m_connectionsPanel = nullptr;
+    class BGElementAttributesEditorUI *m_defaultsPanel = nullptr;
+    class BGEditorSearchDialog *m_searchDialog = nullptr;
+    class BGImageExportDialog *m_imageDialog = nullptr;
+    BGAnnotationViewMetadataEditDetailsUI *m_annotationEditor = nullptr;
 };
 
 } // namespace BondGraphEditorWindow

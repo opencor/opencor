@@ -24,33 +24,25 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-class BGImageExport : public FileSerializerInterface {
+class BGImageExport : public FileSerializerInterface
+{
 public:
-  BGImageExport(bool cutContent = true, int resolution = 0)
-      : m_cutContent(cutContent), m_resolution(resolution) {}
+    BGImageExport(bool cutContent = true, int resolution = 0);
+    // override
+    QString description() const override;
+    QString filters() const override;
+    QString defaultFileExtension() const override;
+    bool loadSupported() const override;
+    bool load(const QString & /*fileName*/, BGEditorScene & /*scene*/,
+                      QString * /*lastError = nullptr*/) const override;
+    bool saveSupported() const override;
 
-  // override
-  virtual QString description() const { return "Image Format"; }
-
-  virtual QString filters() const;
-
-  virtual QString defaultFileExtension() const { return "bmp"; }
-
-  virtual bool loadSupported() const { return false; }
-
-  virtual bool load(const QString & /*fileName*/, BGEditorScene & /*scene*/,
-                    QString * /*lastError = nullptr*/) const {
-    return false;
-  }
-
-  virtual bool saveSupported() const { return true; }
-
-  virtual bool save(const QString &fileName, BGEditorScene &scene,
-                    QString *lastError = nullptr) const;
+    bool save(const QString &fileName, BGEditorScene &scene,
+                      QString *lastError = nullptr) const override;
 
 private:
-  bool m_cutContent = true;
-  int m_resolution = 96;
+    bool m_cutContent = true;
+    int m_resolution = 96;
 };
 
 } // namespace BondGraphEditorWindow

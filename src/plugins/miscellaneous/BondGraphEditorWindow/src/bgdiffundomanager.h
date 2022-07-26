@@ -28,33 +28,34 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class BGDiffUndoManager : public UndoManagerInterface {
+class BGDiffUndoManager : public UndoManagerInterface
+{
 public:
-  BGDiffUndoManager(BGEditorScene &scene);
+    BGDiffUndoManager(BGEditorScene &scene);
 
-  // override
-  virtual void reset();
-  virtual void addState();
-  virtual void revertState();
-  virtual void undo();
-  virtual void redo();
-  virtual int availableUndoCount() const;
-  virtual int availableRedoCount() const;
-  virtual void serialiseToFile(QString path);
-  virtual void restoreFromFile(QString path);
+    // override
+    virtual void reset();
+    virtual void addState();
+    virtual void revertState();
+    virtual void undo();
+    virtual void redo();
+    virtual int availableUndoCount() const;
+    virtual int availableRedoCount() const;
+    virtual void serialiseToFile(QString path);
+    virtual void restoreFromFile(QString path);
 
 private:
-  struct Command {
-    int index;
-    int sizeToReplace;
-    QByteArray data;
-  };
+    struct Command {
+        int index;
+        int sizeToReplace;
+        QByteArray data;
+    };
 
-  BGEditorScene *m_scene;
-  QList<Command> m_redoStack, m_undoStack;
-  QList<Command> m_redoStackTemp, m_undoStackTemp;
-  QByteArray m_lastState;
-  bool m_updated;
+    BGEditorScene *m_scene;
+    QList<Command> m_redoStack, m_undoStack;
+    QList<Command> m_redoStackTemp, m_undoStackTemp;
+    QByteArray m_lastState;
+    bool m_updated;
 };
 
 } // namespace BondGraphEditorWindow

@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 #include <QBoxLayout>
 #include <QCoreApplication>
-#include <QDebug>
+
 #include <QDir>
 #include <QDrag>
 #include <QEvent>
@@ -200,8 +200,6 @@ void WidgetBox::load(QString ijson) {
         }
         auto dndn1 = new LibraryItem(elementName, eicon, domainElementsPage);
         // Add elementType to mimeData
-        // qDebug()<<Q_FUNC_INFO<<"\nAssigning "<<elementName<<" \ndef\n
-        // "<<definitions[elementName];
         dndn1->setMimeData(definitions[elementName]);
         vl->addWidget(dndn1);
       }
@@ -215,25 +213,22 @@ void WidgetBox::load(QString ijson) {
     for (auto page : pages) {
       addPage(page);
     }
-  } else {
-    qDebug() << "Json parse error " << jsonError.errorString();
-    qDebug() << ijson;
-  }
+  } 
 }
 
 int WidgetBox::count() const { return mTreeWidget->topLevelItemCount(); }
 
-void WidgetBox::createCategory(QTreeWidgetItem *page, QString pageName) {
+void WidgetBox::createCategory(QTreeWidgetItem *page, QString page_name) {
   AbstractCategory *category;
   switch (mCategoryType) {
   case Button:
-    category = new ButtonCategory(pageName, mTreeWidget, page);
+    category = new ButtonCategory(page_name, mTreeWidget, page);
     break;
   case Line:
-    category = new LineCategory(pageName, mTreeWidget, page);
+    category = new LineCategory(page_name, mTreeWidget, page);
     break;
   default:
-    category = new ButtonCategory(pageName, mTreeWidget, page);
+    category = new ButtonCategory(page_name, mTreeWidget, page);
     break;
   }
   // Set new item widget: Qt removes old widget automatically, no need to delete
@@ -259,8 +254,8 @@ void WidgetBox::setCategoryType(const CategoryType type) {
   recreateCategories();
 }
 
-QTreeWidgetItem *WidgetBox::addCategory(QString pageName) {
-  return insertCategory(count(), pageName);
+QTreeWidgetItem *WidgetBox::addCategory(QString page_name) {
+  return insertCategory(count(), page_name);
 }
 
 void WidgetBox::setupWidget(QWidget *widget) {
@@ -288,10 +283,10 @@ void WidgetBox::createContainerWidget(QTreeWidgetItem *page, QWidget *widget) {
 
 void WidgetBox::addPage(QWidget *widget) { insertPage(count(), widget); }
 
-QTreeWidgetItem *WidgetBox::insertCategory(int index, QString pageName) {
+QTreeWidgetItem *WidgetBox::insertCategory(int index, QString page_name) {
   QTreeWidgetItem *page = new QTreeWidgetItem();
   mTreeWidget->insertTopLevelItem(index, page);
-  createCategory(page, pageName);
+  createCategory(page, page_name);
 
   return page;
 }
@@ -356,15 +351,15 @@ QWidget *WidgetBox::page(int index) const {
 
 QWidget *WidgetBox::widget(int index) const { return page(index); }
 
-void WidgetBox::setPageTitle(QString const &newTitle) {
+void WidgetBox::setPageTitle(QString const &new_title) {
   if (checkIndex(currentIndex())) {
-    category(currentIndex())->setTitle(newTitle);
+    category(currentIndex())->setTitle(new_title);
     // Qt doc: use QWidget::windowTitle property to store the page title.
     // Note that currently there is no way of adding a custom property
     // (e.g., a page title) to the pages without using a predefined property as
     // placeholder.
-    page(currentIndex())->setWindowTitle(newTitle);
-    Q_EMIT pageTitleChanged(newTitle);
+    page(currentIndex())->setWindowTitle(new_title);
+    Q_EMIT pageTitleChanged(new_title);
   }
 }
 
@@ -452,12 +447,11 @@ void WidgetBox::mousePressEvent(QMouseEvent *event) {
   drag->setHotSpot(event->pos() - child->pos());
 }
 
-void WidgetBox::changeQtDesignerProperty(QString propertyName, QVariant value,
-                                         bool markChangedOnly) {
-  Q_UNUSED(propertyName);
+void WidgetBox::changeQtDesignerProperty(QString property_name, QVariant value,
+                                         bool mark_changed_only) {
+  Q_UNUSED(property_name);
   Q_UNUSED(value);
-  Q_UNUSED(markChangedOnly);
-  // qDebug() << propertyName << "\t" << value;
+  Q_UNUSED(mark_changed_only);
 }
 
 } // namespace BondGraphEditorWindow

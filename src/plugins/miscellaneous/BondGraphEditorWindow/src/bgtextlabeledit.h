@@ -26,32 +26,33 @@ namespace BondGraphEditorWindow {
 class SceneItem;
 class BGEditorScene;
 
-class BGTextLabelEdit : public QGraphicsTextItem {
-  Q_OBJECT
+class BGTextLabelEdit : public QGraphicsTextItem
+{
+    Q_OBJECT
 
 public:
-  BGTextLabelEdit();
-  ~BGTextLabelEdit();
+    BGTextLabelEdit();
+    ~BGTextLabelEdit() override;
 
-  void startEdit(SceneItem *item);
-  void finishEdit(bool accept = true);
+    void startEdit(SceneItem *item);
+    void finishEdit(bool accept = true);
 
-  virtual bool onKeyPressed(BGEditorScene &scene, QKeyEvent *keyEvent);
-  virtual bool onKeyReleased(BGEditorScene &scene, QKeyEvent *keyEvent);
+    virtual bool onKeyPressed(BGEditorScene &scene, QKeyEvent *keyEvent);
+    virtual bool onKeyReleased(BGEditorScene &scene, QKeyEvent *keyEvent);
 
 Q_SIGNALS:
-  void editingStarted(SceneItem *item);
-  void editingFinished(SceneItem *item, bool cancelled);
+    void editingStarted(SceneItem *item);
+    void editingFinished(SceneItem *item, bool cancelled);
 
 protected:
-  virtual bool sceneEvent(QEvent *event);
+    bool sceneEvent(QEvent *event) override;
 
 private
-  Q_SLOT : void updateGeometry();
+    Q_SLOT : void updateGeometry();
 
 private:
-  SceneItem *m_item = nullptr;
-  QString m_storedText;
+    SceneItem *m_item = nullptr;
+    QString m_storedText;
 };
 
 } // namespace BondGraphEditorWindow

@@ -28,10 +28,11 @@ class BGEditorScene;
 /**
         Common interface to scene item creation filters.
 */
-class SceneItemFactoryInterface {
+class SceneItemFactoryInterface
+{
 public:
-  virtual SceneItem *createItemOfType(const QByteArray &typeId,
-                                      const BGEditorScene &scene) const = 0;
+    virtual SceneItem *createItemOfType(const QByteArray &typeId,
+                                        const BGEditorScene &scene) const = 0;
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

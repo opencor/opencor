@@ -33,38 +33,39 @@ class BGElementEditorScene;
 struct BGItemAttribute;
 class BGConnection;
 
-class BGConnectionsTable : public QWidget {
-  Q_OBJECT
+class BGConnectionsTable : public QWidget
+{
+    Q_OBJECT
 
 public:
-  BGConnectionsTable(QWidget *parent = 0);
-  ~BGConnectionsTable();
+    explicit BGConnectionsTable(QWidget *parent = nullptr);
+    ~BGConnectionsTable() override;
 
-  void setScene(BGElementEditorScene *scene);
-  void updateContents();
-  void doReadSettings(QSettings &settings);
-  void doWriteSettings(QSettings &settings);
+    void setScene(BGElementEditorScene *scene);
+    void updateContents();
+    void doReadSettings(QSettings &settings);
+    void doWriteSettings(QSettings &settings);
 
 protected:
-  void connectSignals(BGEditorScene *scene);
-  void onSceneAttached(BGEditorScene *scene);
-  void onSceneDetached(BGEditorScene *scene);
+    void connectSignals(BGEditorScene *scene);
+    void onSceneAttached(BGEditorScene *scene);
+    void onSceneDetached(BGEditorScene *scene);
 
 protected Q_SLOTS:
-  void onSceneChanged();
-  void onSelectionChanged();
-  void on_Table_itemSelectionChanged();
-  void on_Table_itemDoubleClicked(QTreeWidgetItem *item, int column);
-  void connectionNameChangeRequest(QTreeWidgetItem *item, int column);
+    void onSceneChanged();
+    void onSelectionChanged();
+    void on_Table_itemSelectionChanged();
+    void on_Table_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void connectionNameChangeRequest(QTreeWidgetItem *item, int column);
 
 private:
-  Ui::BGConnectionsTable ui;
+    Ui::BGConnectionsTable ui;
 
-  BGElementEditorScene *m_scene;
+    BGElementEditorScene *m_scene;
 
-  QMap<BGConnection *, QTreeWidgetItem *> m_edgeItemMap;
+    QMap<BGConnection *, QTreeWidgetItem *> m_edgeItemMap;
 
-  QByteArrayList m_extraSectionIds;
+    QByteArrayList m_extraSectionIds;
 };
 
 } // namespace BondGraphEditorWindow

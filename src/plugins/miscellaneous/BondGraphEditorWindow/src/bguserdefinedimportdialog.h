@@ -37,30 +37,31 @@ class BGElement;
 class BGElementEditorScene;
 class QJsonTreeModel;
 
-class BGUserdefinedImportDialog : public QDialog {
-  Q_OBJECT
+class BGUserdefinedImportDialog : public QDialog
+{
+    Q_OBJECT
 
 public:
-  BGUserdefinedImportDialog();
-  ~BGUserdefinedImportDialog();
+    BGUserdefinedImportDialog();
+    ~BGUserdefinedImportDialog() override;
 
-  int exec(BGElementEditorScene &scene);
-  nlohmann::json getDefinition();
+    int exec(BGElementEditorScene &scene);
+    nlohmann::json getDefinition();
 private Q_SLOTS:
-  void uriSelect();
-  void accept();
-  void filterCellMLVariable(QString term);
-  // void filterBGElement(QString term);
+    void uriSelect();
+    void accept() override;
+    void filterCellMLVariable(QString term);
+    // void filterBGElement(QString term);
 private:
-  Ui::BGUserdefinedImportDialog *ui;
-  int m_targetType = -1;
-  bool m_updateInProgress = false;
-  nlohmann::json m_result;
-  QJsonTreeModel *m_cellVariableModel;
-  QSortFilterProxyModel *m_dataProxy;
-  QMap<QString, BGElement *> m_sharedElems;
-  BGElementEditorScene *m_scene;
-  QString m_timeVariable;
+    Ui::BGUserdefinedImportDialog *ui;
+    int m_targetType = -1;
+    bool m_updateInProgress = false;
+    nlohmann::json m_result;
+    QJsonTreeModel *m_cellVariableModel;
+    QSortFilterProxyModel *m_dataProxy;
+    QMap<QString, BGElement *> m_sharedElems;
+    BGElementEditorScene *m_scene;
+    QString m_timeVariable;
 };
 
 } // namespace BondGraphEditorWindow

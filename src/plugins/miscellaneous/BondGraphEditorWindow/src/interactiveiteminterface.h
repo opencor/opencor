@@ -25,37 +25,59 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-enum ItemDragTestResult { Rejected, Accepted, Ignored };
+enum ItemDragTestResult { Rejected,
+                          Accepted,
+                          Ignored };
 
-class InteractiveItemInterface {
+class InteractiveItemInterface
+{
 public:
-  // callbacks
-  virtual void onItemMoved(const QPointF & /*delta*/) {}
-  virtual void
-  onDraggedOver(const QSet<InteractiveItemInterface *> & /*acceptedItems*/,
-                const QSet<InteractiveItemInterface *> & /*rejectedItems*/) {}
-  virtual void
-  onDroppedOn(const QSet<InteractiveItemInterface *> & /*acceptedItems*/,
-              const QSet<InteractiveItemInterface *> & /*rejectedItems*/) {}
-  virtual void onHoverEnter(QGraphicsItem * /*sceneItem*/,
-                            QGraphicsSceneHoverEvent * /*event*/) {}
-  virtual void onHoverLeave(QGraphicsItem * /*sceneItem*/,
-                            QGraphicsSceneHoverEvent * /*event*/) {}
-  virtual void onClick(QGraphicsSceneMouseEvent * /*mouseEvent*/) {}
-  virtual void onDoubleClick(QGraphicsSceneMouseEvent * /*mouseEvent*/) {}
-  virtual bool onClickDrag(QGraphicsSceneMouseEvent * /*mouseEvent*/,
-                           const QPointF & /*clickPos*/) {
-    return true;
-  }
-  virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent * /*mouseEvent*/,
-                                 const QPointF & /*clickPos*/) {
-    return false;
-  }
-  virtual ItemDragTestResult
-  acceptDragFromItem(QGraphicsItem * /*draggedItem*/) {
-    return Ignored;
-  }
-  virtual void leaveDragFromItem(QGraphicsItem * /*draggedItem*/) {}
+    // callbacks
+    virtual void onItemMoved(const QPointF & /*delta*/)
+    {
+    }
+    virtual void
+    onDraggedOver(const QSet<InteractiveItemInterface *> & /*acceptedItems*/,
+                  const QSet<InteractiveItemInterface *> & /*rejectedItems*/)
+    {
+    }
+    virtual void
+    onDroppedOn(const QSet<InteractiveItemInterface *> & /*acceptedItems*/,
+                const QSet<InteractiveItemInterface *> & /*rejectedItems*/)
+    {
+    }
+    virtual void onHoverEnter(QGraphicsItem * /*sceneItem*/,
+                              QGraphicsSceneHoverEvent * /*event*/)
+    {
+    }
+    virtual void onHoverLeave(QGraphicsItem * /*sceneItem*/,
+                              QGraphicsSceneHoverEvent * /*event*/)
+    {
+    }
+    virtual void onClick(QGraphicsSceneMouseEvent * /*mouseEvent*/)
+    {
+    }
+    virtual void onDoubleClick(QGraphicsSceneMouseEvent * /*mouseEvent*/)
+    {
+    }
+    virtual bool onClickDrag(QGraphicsSceneMouseEvent * /*mouseEvent*/,
+                             const QPointF & /*clickPos*/)
+    {
+        return true;
+    }
+    virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent * /*mouseEvent*/,
+                                   const QPointF & /*clickPos*/)
+    {
+        return false;
+    }
+    virtual ItemDragTestResult
+    acceptDragFromItem(QGraphicsItem * /*draggedItem*/)
+    {
+        return Ignored;
+    }
+    virtual void leaveDragFromItem(QGraphicsItem * /*draggedItem*/)
+    {
+    }
 };
 
 } // namespace BondGraphEditorWindow

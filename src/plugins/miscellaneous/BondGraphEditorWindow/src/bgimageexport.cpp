@@ -30,98 +30,133 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-QString BGImageExport::filters() const {
-  static QList<QByteArray> formats = QImageWriter::supportedImageFormats();
-  if (formats.isEmpty())
-    return QString();
+QString BGImageExport::filters() const
+{
+    static QList<QByteArray> formats = QImageWriter::supportedImageFormats();
+    if (formats.isEmpty())
+        return QString();
 
-  static QMap<QByteArray, QString> formatNames = {
-      {"bmp", "Windows Bitmap (*.bmp)"},
-      {"ico", "Windows Icon (*.ico *.cur)"},
-      {"gif", "Graphic Interchange Format (*.gif)"},
-      {"jpg", "Joint Photographic Experts Group (*.jpg *.jpeg)"},
-      {"png", "Portable Network Graphics (*.png)"},
-      {"pbm", "Portable Bitmap (*.pbm)"},
-      {"pgm", "Portable Graymap (*.pgm)"},
-      {"ppm", "Portable Pixmap (*.ppm)"},
-      {"svg", "Scalable Vector Graphics (*.svg)"},
-      {"tif", "Tagged Image File Format (*.tif *.tiff)"},
-      {"xbm", "X11 Bitmap (*.xbm)"},
-      {"xpm", "X11 Pixmap (*.xpm)"},
-      {"wbmp", "Wireless Bitmap (*.wbmp)"},
-      {"webp", "WebP (*.webp)"},
-      {"icns", "Apple Icon Image (*.icns)"}};
+    static QMap<QByteArray, QString> formatNames = {
+        { "bmp", "Windows Bitmap (*.bmp)" },
+        { "ico", "Windows Icon (*.ico *.cur)" },
+        { "gif", "Graphic Interchange Format (*.gif)" },
+        { "jpg", "Joint Photographic Experts Group (*.jpg *.jpeg)" },
+        { "png", "Portable Network Graphics (*.png)" },
+        { "pbm", "Portable Bitmap (*.pbm)" },
+        { "pgm", "Portable Graymap (*.pgm)" },
+        { "ppm", "Portable Pixmap (*.ppm)" },
+        { "svg", "Scalable Vector Graphics (*.svg)" },
+        { "tif", "Tagged Image File Format (*.tif *.tiff)" },
+        { "xbm", "X11 Bitmap (*.xbm)" },
+        { "xpm", "X11 Pixmap (*.xpm)" },
+        { "wbmp", "Wireless Bitmap (*.wbmp)" },
+        { "webp", "WebP (*.webp)" },
+        { "icns", "Apple Icon Image (*.icns)" }
+    };
 
-  static QMap<QByteArray, QByteArray> recodeMap = {
-      {"jpeg", "jpg"}, {"tiff", "tif"}, {"cur", "ico"}};
+    static QMap<QByteArray, QByteArray> recodeMap = {
+        { "jpeg", "jpg" }, { "tiff", "tif" }, { "cur", "ico" }
+    };
 
-  static QString filter;
-  if (filter.isEmpty()) {
-    QSet<QByteArray> usedFormats;
+    static QString filter;
+    if (filter.isEmpty()) {
+        QSet<QByteArray> usedFormats;
 
-    for (auto format : formats) {
-      auto suffix = format.toLower();
-      if (recodeMap.contains(suffix))
-        usedFormats << recodeMap[suffix];
-      else
-        usedFormats << suffix;
+        for (auto format : formats) {
+            auto suffix = format.toLower();
+            if (recodeMap.contains(suffix))
+                usedFormats << recodeMap[suffix];
+            else
+                usedFormats << suffix;
+        }
+
+        // add known formats
+        for (auto it = formatNames.constBegin(); it != formatNames.constEnd();
+             ++it) {
+            if (usedFormats.contains(it.key())) {
+                usedFormats.remove(it.key());
+                filter += it.value() + ";;";
+            }
+        }
+
+        // add evtl. unlisted ones
+        for (auto format : usedFormats) {
+            filter += format + " (*." + format + ");;";
+        }
+
+        filter.chop(2);
     }
 
-    // add known formats
-    for (auto it = formatNames.constBegin(); it != formatNames.constEnd();
-         ++it) {
-      if (usedFormats.contains(it.key())) {
-        usedFormats.remove(it.key());
-        filter += it.value() + ";;";
-      }
-    }
-
-    // add evtl. unlisted ones
-    for (auto format : usedFormats) {
-      filter += format + " (*." + format + ");;";
-    }
-
-    filter.chop(2);
-  }
-
-  return filter;
+    return filter;
 }
 
-bool BGImageExport::save(const QString &fileName, BGEditorScene &scene,
-                         QString * /*lastError*/) const {
-  QScopedPointer<BGEditorScene> tempScene(scene.clone());
+BGImageExport::BGImageExport(bool cut_content, int resolution) :
+    m_cutContent(cut_content), m_resolution(resolution)
+{
+}
 
-  if (m_cutContent)
-    tempScene->crop();
+QString BGImageExport::description() const
+{
+    return "Image Format";
+}
 
-  QImage image(tempScene->sceneRect().size().toSize(), QImage::Format_ARGB32);
-  QRect targetRect; // empty by default
+QString BGImageExport::defaultFileExtension() const
+{
+    return "bmp";
+}
 
-  // resolution
-  int old_dpi = image.physicalDpiX();
-  if (old_dpi <= 0)
-    old_dpi = 96;
+bool BGImageExport::loadSupported() const
+{
+    return false;
+}
 
-  if (m_resolution > 0 && old_dpi != m_resolution) {
-    double coeff = (double)m_resolution / (double)old_dpi;
-    int dpm = m_resolution / 0.0254;
-    image.setDotsPerMeterX(dpm);
-    image.setDotsPerMeterY(dpm);
+bool BGImageExport::load(const QString & /*fileName*/, BGEditorScene & /*scene*/,
+                         QString * /*lastError = nullptr*/) const
+{
+    return false;
+}
 
-    QSize newSize = image.size() * coeff;
-    image = image.scaled(newSize);
+bool BGImageExport::saveSupported() const
+{
+    return true;
+}
 
-    targetRect = QRect(0, 0, newSize.width(), newSize.height());
-  }
+bool BGImageExport::save(const QString &file_name, BGEditorScene &scene,
+                         QString * /*lastError*/) const
+{
+    QScopedPointer<BGEditorScene> tempScene(scene.clone());
 
-  image.fill(Qt::white);
-  QPainter painter(&image);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setRenderHint(QPainter::TextAntialiasing);
-  tempScene->render(&painter, targetRect);
-  painter.end();
+    if (m_cutContent)
+        tempScene->crop();
 
-  return image.save(fileName);
+    QImage image(tempScene->sceneRect().size().toSize(), QImage::Format_ARGB32);
+    QRect targetRect; // empty by default
+
+    // resolution
+    int oldDpi = image.physicalDpiX();
+    if (oldDpi <= 0)
+        oldDpi = 96;
+
+    if (m_resolution > 0 && oldDpi != m_resolution) {
+        double coeff = (double)m_resolution / (double)oldDpi;
+        int dpm = m_resolution / 0.0254;
+        image.setDotsPerMeterX(dpm);
+        image.setDotsPerMeterY(dpm);
+
+        QSize newSize = image.size() * coeff;
+        image = image.scaled(newSize);
+
+        targetRect = QRect(0, 0, newSize.width(), newSize.height());
+    }
+
+    image.fill(Qt::white);
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::TextAntialiasing);
+    tempScene->render(&painter, targetRect);
+    painter.end();
+
+    return image.save(file_name);
 }
 
 } // namespace BondGraphEditorWindow

@@ -28,23 +28,24 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class SceneUndoManager : public UndoManagerInterface {
+class SceneUndoManager : public UndoManagerInterface
+{
 public:
-  SceneUndoManager(BGEditorScene &scene);
+    SceneUndoManager(BGEditorScene &scene);
 
-  // override
-  virtual void reset();
-  virtual void addState();
-  virtual void revertState();
-  virtual void undo();
-  virtual void redo();
-  virtual int availableUndoCount() const;
-  virtual int availableRedoCount() const;
+    // override
+    virtual void reset();
+    virtual void addState();
+    virtual void revertState();
+    virtual void undo();
+    virtual void redo();
+    virtual int availableUndoCount() const;
+    virtual int availableRedoCount() const;
 
 private:
-  BGEditorScene *m_scene;
-  QList<QByteArray> m_stateStack;
-  int m_stackIndex;
+    BGEditorScene *m_scene;
+    QList<QByteArray> m_stateStack;
+    int m_stackIndex;
 };
 
 } // namespace BondGraphEditorWindow

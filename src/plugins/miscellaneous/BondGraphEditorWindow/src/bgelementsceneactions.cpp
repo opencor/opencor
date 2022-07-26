@@ -28,245 +28,195 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-BGElementSceneActions::BGElementSceneActions(BGElementEditorScene *scene)
-    : BGEditorSceneActions(scene), bgElementScene(*scene) {}
+BGElementSceneActions::BGElementSceneActions(BGElementEditorScene *scene) :
+    BGEditorSceneActions(scene), bgElementScene(*scene)
+{
+}
 
-bool BGElementSceneActions::editElementId(BGElement *editElement) {
-  if (editElement == nullptr)
-    return false;
+bool BGElementSceneActions::editElementId(BGElement *editElement)
+{
+    if (editElement == nullptr)
+        return false;
 
-  QString id = editElement->getId();
-  QString editId = id;
+    QString id = editElement->getId();
+    QString editId = id;
 
-  bool redo = false;
-  QString newId;
-  do {
-    newId = QInputDialog::getText(0, tr("Change element Id"),
-                                  tr("Specify new element Id:"),
-                                  QLineEdit::Normal, editId);
+    bool redo = false;
+    QString newId;
+    do {
+        newId = QInputDialog::getText(0, tr("Change element Id"),
+                                      tr("Specify new element Id:"),
+                                      QLineEdit::Normal, editId);
 
-    if (newId.isEmpty() || newId == id)
-      return false;
+        if (newId.isEmpty() || newId == id)
+            return false;
 
-    auto items = bgElementScene.getItemsById(newId);
-    for (auto item : items) {
-      BGElement *elements = dynamic_cast<BGElement *>(item);
-      if (elements == nullptr || elements == editElement)
-        continue;
+        auto items = bgElementScene.getItemsById(newId);
+        for (auto item : items) {
+            BGElement *elements = dynamic_cast<BGElement *>(item);
+            if (elements == nullptr || elements == editElement)
+                continue;
 
-      if (elements->getId() == newId) {
-        int count = 0;
-        QString nextFreeId = newId + QString::number(count++);
-        while (bgElementScene.getItemsById(nextFreeId).count()) {
-          nextFreeId = newId + QString::number(count++);
+            if (elements->getId() == newId) {
+                int count = 0;
+                QString nextFreeId = newId + QString::number(count++);
+                while (bgElementScene.getItemsById(nextFreeId).count()) {
+                    nextFreeId = newId + QString::number(count++);
+                }
+
+                QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
+
+                int r = QMessageBox::warning(
+                    0, tr("Warning: Id is in use"),
+                    tr("Id %1 is already used by another element.").arg(newId), autoId,
+                    tr("Swap element Ids"), tr("Continue editing"), 0, 2);
+
+                if (r == 2) {
+                    editId = newId;
+                    redo = true;
+                    break;
+                }
+
+                if (r == 1) {
+                    editElement->setId(newId);
+                    elements->setId(id);
+                    bgElementScene.addUndoState();
+                    return true;
+                }
+
+                // r = 0
+                editId = nextFreeId;
+                redo = true;
+                break;
+            }
         }
+    } while (redo);
 
-        QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
+    editElement->setId(newId);
+    bgElementScene.addUndoState();
+    return true;
+}
 
-        int r = QMessageBox::warning(
-            0, tr("Warning: Id is in use"),
-            tr("Id %1 is already used by another element.").arg(newId), autoId,
-            tr("Swap element Ids"), tr("Continue editing"), 0, 2);
+void BGElementSceneActions::onActionElementColour()
+{
+    auto elements = bgElementScene.getSelectedElements();
+    if (elements.isEmpty())
+        return;
 
-        if (r == 2) {
-          editId = newId;
-          redo = true;
-          break;
-        }
+    QColor color = QColorDialog::getColor(
+        elements.first()->getAttribute("color").value<QColor>());
+    if (!color.isValid())
+        return;
 
-        if (r == 1) {
-          editElement->setId(newId);
-          elements->setId(id);
-          bgElementScene.addUndoState();
-          return true;
-        }
-
-        // r = 0
-        editId = nextFreeId;
-        redo = true;
-        break;
-      }
+    for (auto elem : elements) {
+        elem->setAttribute("color", color);
     }
-  } while (redo);
 
-  editElement->setId(newId);
-  bgElementScene.addUndoState();
-  return true;
+    bgElementScene.addUndoState();
 }
 
-void BGElementSceneActions::onActionElementColour() {
-  auto elements = bgElementScene.getSelectedElements();
-  if (elements.isEmpty())
-    return;
+void BGElementSceneActions::onActionLink()
+{
+    auto elements = bgElementScene.getSelectedElements();
+    if (elements.count() < 2)
+        return;
 
-  QColor color = QColorDialog::getColor(
-      elements.first()->getAttribute("color").value<QColor>());
-  if (!color.isValid())
-    return;
-
-  for (auto elem : elements) {
-    elem->setAttribute("color", color);
-  }
-
-  bgElementScene.addUndoState();
-}
-
-void BGElementSceneActions::onActionLink() {
-  auto elements = bgElementScene.getSelectedElements();
-  if (elements.count() < 2)
-    return;
-
-  auto baseNode = elements.takeFirst();
-  for (auto elem : elements) {
-    baseNode->merge(elem);
-  }
-
-  bgElementScene.addUndoState();
-}
-
-void BGElementSceneActions::onActionUnlink() {
-  auto elements = bgElementScene.getSelectedElements();
-  if (elements.isEmpty())
-    return;
-
-  for (auto elem : elements) {
-    elem->unlink();
-  }
-
-  bgElementScene.addUndoState();
-}
-
-bool BGElementSceneActions::editConnectionId(BGConnection *editConnection) {
-  if (editConnection == nullptr)
-    return false;
-
-  QString id = editConnection->getId();
-  QString editId = id;
-  bool redo = false;
-  QString newId;
-  do {
-
-    newId = QInputDialog::getText(0, tr("Change connection Id"),
-                                  tr("Specify new connection Id:"),
-                                  QLineEdit::Normal, editId);
-
-    if (newId.isEmpty() || newId == id)
-      return false;
-
-    auto items = bgElementScene.getItemsById(newId);
-    for (auto item : items) {
-      BGConnection *connection = dynamic_cast<BGConnection *>(item);
-      if (connection == nullptr || connection == editConnection)
-        continue;
-
-      if (connection->getId() == newId) {
-        int count = 0;
-        QString nextFreeId = newId + QString::number(count++);
-        while (bgElementScene.getItemsById(nextFreeId).count()) {
-          nextFreeId = newId + QString::number(count++);
-        }
-
-        QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
-
-        int r = QMessageBox::warning(
-            0, tr("Warning: Id is in use"),
-            tr("Id %1 is already used by another connection.").arg(newId),
-            autoId, tr("Swap connection Ids"), tr("Continue editing"), 0, 2);
-
-        if (r == 2) {
-          editId = newId;
-          redo = true;
-          break;
-        }
-
-        if (r == 1) {
-          editConnection->setId(newId);
-          connection->setId(id);
-          bgElementScene.addUndoState();
-          return true;
-        }
-
-        // r = 0
-        editId = nextFreeId;
-        redo = true;
-        break;
-      }
+    auto baseNode = elements.takeFirst();
+    for (auto elem : elements) {
+        baseNode->merge(elem);
     }
-  } while (redo);
 
-  editConnection->setId(newId);
-  bgElementScene.addUndoState();
-  return true;
-}
-/*
-void BGElementSceneActions::onActionConnectionColour() {
-  auto connections = bgElementScene.getSelectedConnections();
-  if (connections.isEmpty())
-    return;
-
-  QColor color = QColorDialog::getColor(
-      connections.first()->getAttribute("color").value<QColor>());
-  if (!color.isValid())
-    return;
-
-  for (auto connection : connections) {
-    connection->setAttribute("color", color);
-  }
-
-  bgElementScene.addUndoState();
-}
-*/
-
-void BGElementSceneActions::onActionConnectionReverse() {
-  auto connections = bgElementScene.getSelectedConnections();
-  if (connections.isEmpty())
-    return;
-
-  for (auto connection : connections) {
-    connection->reverse();
-  }
-
-  bgElementScene.addUndoState();
-}
-/*
-void BGElementSceneActions::onActionConnectionDirected() {
-  auto connections = bgElementScene.getSelectedConnections();
-  if (connections.isEmpty())
-    return;
-
-  for (auto connection : connections) {
-    connection->setAttribute("direction", "directed");
-    connection->update();
-  }
-
-  bgElementScene.addUndoState();
+    bgElementScene.addUndoState();
 }
 
-void BGElementSceneActions::onActionConnectionMutual() {
-  auto connections = bgElementScene.getSelectedConnections();
-  if (connections.isEmpty())
-    return;
+void BGElementSceneActions::onActionUnlink()
+{
+    auto elements = bgElementScene.getSelectedElements();
+    if (elements.isEmpty())
+        return;
 
-  for (auto connection : connections) {
-    connection->setAttribute("direction", "mutual");
-    connection->update();
-  }
+    for (auto elem : elements) {
+        elem->unlink();
+    }
 
-  bgElementScene.addUndoState();
+    bgElementScene.addUndoState();
 }
 
-void BGElementSceneActions::onActionConnectionUndirected() {
-  auto connections = bgElementScene.getSelectedConnections();
-  if (connections.isEmpty())
-    return;
+bool BGElementSceneActions::editConnectionId(BGConnection *editConnection)
+{
+    if (editConnection == nullptr)
+        return false;
 
-  for (auto connection : connections) {
-    connection->setAttribute("direction", "undirected");
-    connection->update();
-  }
+    QString id = editConnection->getId();
+    QString editId = id;
+    bool redo = false;
+    QString newId;
+    do {
+        newId = QInputDialog::getText(0, tr("Change connection Id"),
+                                      tr("Specify new connection Id:"),
+                                      QLineEdit::Normal, editId);
 
-  bgElementScene.addUndoState();
+        if (newId.isEmpty() || newId == id)
+            return false;
+
+        auto items = bgElementScene.getItemsById(newId);
+        for (auto item : items) {
+            BGConnection *connection = dynamic_cast<BGConnection *>(item);
+            if (connection == nullptr || connection == editConnection)
+                continue;
+
+            if (connection->getId() == newId) {
+                int count = 0;
+                QString nextFreeId = newId + QString::number(count++);
+                while (bgElementScene.getItemsById(nextFreeId).count()) {
+                    nextFreeId = newId + QString::number(count++);
+                }
+
+                QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
+
+                int r = QMessageBox::warning(
+                    0, tr("Warning: Id is in use"),
+                    tr("Id %1 is already used by another connection.").arg(newId),
+                    autoId, tr("Swap connection Ids"), tr("Continue editing"), 0, 2);
+
+                if (r == 2) {
+                    editId = newId;
+                    redo = true;
+                    break;
+                }
+
+                if (r == 1) {
+                    editConnection->setId(newId);
+                    connection->setId(id);
+                    bgElementScene.addUndoState();
+                    return true;
+                }
+
+                // r = 0
+                editId = nextFreeId;
+                redo = true;
+                break;
+            }
+        }
+    } while (redo);
+
+    editConnection->setId(newId);
+    bgElementScene.addUndoState();
+    return true;
 }
-*/
+
+void BGElementSceneActions::onActionConnectionReverse()
+{
+    auto connections = bgElementScene.getSelectedConnections();
+    if (connections.isEmpty())
+        return;
+
+    for (auto connection : connections) {
+        connection->reverse();
+    }
+
+    bgElementScene.addUndoState();
+}
+
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

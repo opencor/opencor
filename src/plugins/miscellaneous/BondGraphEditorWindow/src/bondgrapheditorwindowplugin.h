@@ -45,8 +45,7 @@ class BondGraphEditorWindow;
 
 //==============================================================================
 
-class BondGraphEditorWindowPlugin : public QObject, public I18nInterface,
-                           public PluginInterface, public WindowInterface
+class BondGraphEditorWindowPlugin : public QObject, public I18nInterface, public PluginInterface, public WindowInterface
 {
     Q_OBJECT
 

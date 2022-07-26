@@ -29,25 +29,26 @@ namespace BondGraphEditorWindow {
 
 class BGElementEditorScene;
 
-class BGEditorSearchDialog : public QDialog {
-  Q_OBJECT
+class BGEditorSearchDialog : public QDialog
+{
+    Q_OBJECT
 
 public:
-  explicit BGEditorSearchDialog(QWidget *parent = 0);
-  ~BGEditorSearchDialog();
+    explicit BGEditorSearchDialog(QWidget *parent = nullptr);
+    ~BGEditorSearchDialog() override;
 
 public Q_SLOTS:
-  void exec(BGElementEditorScene &scene);
+    void exec(BGElementEditorScene &scene);
 
 private Q_SLOTS:
-  void updateButtons();
-  void on_Find_clicked();
-  void on_Results_itemSelectionChanged();
+    void updateButtons();
+    void on_Find_clicked();
+    void on_Results_itemSelectionChanged();
 
 private:
-  Ui::BGEditorSearchDialog *ui;
+    Ui::BGEditorSearchDialog *ui;
 
-  BGElementEditorScene *m_scene = 0;
+    BGElementEditorScene *m_scene = nullptr;
 };
 
 } // namespace BondGraphEditorWindow

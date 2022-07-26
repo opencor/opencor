@@ -24,78 +24,84 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-SceneOptionsDialog::SceneOptionsDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::SceneOptionsDialog) {
-  ui->setupUi(this);
+SceneOptionsDialog::SceneOptionsDialog(QWidget *parent) :
+    QDialog(parent), ui(new Ui::SceneOptionsDialog)
+{
+    ui->setupUi(this);
 
-  ui->BackgroundColor->setColorScheme(QSint::OpenOfficeColors());
-  ui->GridColor->setColorScheme(QSint::OpenOfficeColors());
+    ui->BackgroundColor->setColorScheme(QSint::OpenOfficeColors());
+    ui->GridColor->setColorScheme(QSint::OpenOfficeColors());
 }
 
-SceneOptionsDialog::~SceneOptionsDialog() { delete ui; }
+SceneOptionsDialog::~SceneOptionsDialog()
+{
+    delete ui;
+}
 
 int SceneOptionsDialog::exec(BGEditorScene &scene, BGEditorView &view,
-                             OptionsData &data_) {
-  ui->BackgroundColor->setColor(scene.backgroundBrush().color());
+                             OptionsData &data)
+{
+    ui->BackgroundColor->setColor(scene.backgroundBrush().color());
 
-  QPen gridPen = scene.getGridPen();
-  ui->GridColor->setColor(gridPen.color());
+    QPen gridPen = scene.getGridPen();
+    ui->GridColor->setColor(gridPen.color());
 
-  ui->GridSize->setValue(scene.getGridSize());
-  ui->GridVisible->setChecked(scene.gridEnabled());
-  ui->GridSnap->setChecked(scene.gridSnapEnabled());
+    ui->GridSize->setValue(scene.getGridSize());
+    ui->GridVisible->setChecked(scene.gridEnabled());
+    ui->GridSnap->setChecked(scene.gridSnapEnabled());
 
-  ui->Antialiasing->setChecked(
-      view.renderHints().testFlag(QPainter::Antialiasing));
+    ui->Antialiasing->setChecked(
+        view.renderHints().testFlag(QPainter::Antialiasing));
 
-  ui->CacheSlider->setValue(QPixmapCache::cacheLimit() / 1024);
+    ui->CacheSlider->setValue(QPixmapCache::cacheLimit() / 1024);
 
-  ui->CacheSlider->setMaximum((int)128);
-  ui->CacheSlider->setUnitText(tr("MB"));
+    ui->CacheSlider->setMaximum((int)128);
+    ui->CacheSlider->setUnitText(tr("MB"));
 
-  ui->EnableBackups->setChecked(data_.backupPeriod > 0);
-  ui->BackupPeriod->setValue(data_.backupPeriod);
+    ui->EnableBackups->setChecked(data.backupPeriod > 0);
+    ui->BackupPeriod->setValue(data.backupPeriod);
 
 #ifdef USE_GVGRAPH
-  ui->ExtraSection->setVisible(true);
-  ui->GraphvizPath->setObjectsToPick(QSint::PathPicker::PF_EXISTING_DIR);
-  ui->GraphvizPath->setCurrentPath(data_.graphvizPath);
-  ui->GraphvizDefaultEngine->setCurrentText(data_.graphvizDefaultEngine);
+    ui->ExtraSection->setVisible(true);
+    ui->GraphvizPath->setObjectsToPick(QSint::PathPicker::PF_EXISTING_DIR);
+    ui->GraphvizPath->setCurrentPath(data_.graphvizPath);
+    ui->GraphvizDefaultEngine->setCurrentText(data_.graphvizDefaultEngine);
 #else
-  ui->ExtraSection->setVisible(false);
+    ui->ExtraSection->setVisible(false);
 #endif
 
-  if (QDialog::exec() == QDialog::Rejected)
-    return QDialog::Rejected;
+    if (QDialog::exec() == QDialog::Rejected)
+        return QDialog::Rejected;
 
-  scene.setBackgroundBrush(ui->BackgroundColor->color());
+    scene.setBackgroundBrush(ui->BackgroundColor->color());
 
-  gridPen.setColor(ui->GridColor->color());
-  scene.setGridPen(gridPen);
+    gridPen.setColor(ui->GridColor->color());
+    scene.setGridPen(gridPen);
 
-  scene.setGridSize(ui->GridSize->value());
-  scene.enableGrid(ui->GridVisible->isChecked());
-  scene.enableGridSnap(ui->GridSnap->isChecked());
+    scene.setGridSize(ui->GridSize->value());
+    scene.enableGrid(ui->GridVisible->isChecked());
+    scene.enableGridSnap(ui->GridSnap->isChecked());
 
-  bool isAA = ui->Antialiasing->isChecked();
-  view.setRenderHint(QPainter::Antialiasing, isAA);
-  scene.setFontAntialiased(isAA);
+    bool isAA = ui->Antialiasing->isChecked();
+    view.setRenderHint(QPainter::Antialiasing, isAA);
+    scene.setFontAntialiased(isAA);
 
-  QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
+    QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
 
-  data_.backupPeriod =
-      ui->EnableBackups->isChecked() ? ui->BackupPeriod->value() : 0;
+    data.backupPeriod =
+        ui->EnableBackups->isChecked() ? ui->BackupPeriod->value() : 0;
 
 #ifdef USE_GVGRAPH
-  data_.graphvizPath = ui->GraphvizPath->currentPath();
-  data_.graphvizDefaultEngine = ui->GraphvizDefaultEngine->currentText();
+    data_.graphvizPath = ui->GraphvizPath->currentPath();
+    data_.graphvizDefaultEngine = ui->GraphvizDefaultEngine->currentText();
 #endif
 
-  return QDialog::Accepted;
+    return QDialog::Accepted;
 }
 
-void SceneOptionsDialog::on_GraphvizTest_clicked() {
-  Q_EMIT testGraphviz(ui->GraphvizPath->currentPath());
+void SceneOptionsDialog::on_GraphvizTest_clicked()
+{
+    Q_EMIT testGraphviz(ui->GraphvizPath->currentPath());
 }
 
 } // namespace BondGraphEditorWindow

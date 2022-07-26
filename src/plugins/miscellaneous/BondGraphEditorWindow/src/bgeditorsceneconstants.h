@@ -25,13 +25,13 @@ namespace BondGraphEditorWindow {
 
 // common scene states
 
-enum SceneInfoState {
-  SIS_Select = 0,
-  SIS_Hover,
-  SIS_Drag,
-  SIS_Hover_Port,
-  SIS_Edit_Label,
-  SIS_Move_Port
+enum SceneStatusInformation {
+    SSI_Select = 0,
+    SSI_Hover,
+    SSI_Drag,
+    SSI_Hover_Port,
+    SSI_Edit_Label,
+    SSI_Move_Port
 };
 
 // common scene attributes

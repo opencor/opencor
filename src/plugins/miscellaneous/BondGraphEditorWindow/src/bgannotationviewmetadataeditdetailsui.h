@@ -32,7 +32,7 @@ class QPushButton;
 
 namespace Ui {
 class BGAnnotationViewMetadataEditDetailsUI;
-}
+};
 
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
@@ -41,97 +41,101 @@ class BGElement;
 class BGAnnotationMiriamtermsUI;
 class QJsonTreeModel;
 
-class BGAnnotationMetadataEditDetailsUiItem {
+class BGAnnotationMetadataEditDetailsUiItem
+{
 public:
-  explicit BGAnnotationMetadataEditDetailsUiItem(const QString &pName = {},
-                                                 const QString &pResource = {},
-                                                 const QString &pId = {});
+    explicit BGAnnotationMetadataEditDetailsUiItem(const QString &pName = {},
+                                                   const QString &pResource = {},
+                                                   const QString &pId = {});
 
-  static bool compare(const BGAnnotationMetadataEditDetailsUiItem &pItem1,
-                      const BGAnnotationMetadataEditDetailsUiItem &pItem2);
+    static bool compare(const BGAnnotationMetadataEditDetailsUiItem &pItem1,
+                        const BGAnnotationMetadataEditDetailsUiItem &pItem2);
 
-  QString name() const;
-  QString resource() const;
-  QString id() const;
+    QString name() const;
+    QString resource() const;
+    QString id() const;
 
 private:
-  QString mName;
-  QString mResource;
-  QString mId;
+    QString mName;
+    QString mResource;
+    QString mId;
 };
 
 using BGAnnotationMetadataEditDetailsUiItems =
     QList<BGAnnotationMetadataEditDetailsUiItem>;
 
-class BGAnnotationViewMetadataEditDetailsUI : public QWidget {
-  Q_OBJECT
+class BGAnnotationViewMetadataEditDetailsUI : public QWidget
+{
+    Q_OBJECT
 
 public:
-  explicit BGAnnotationViewMetadataEditDetailsUI(QWidget *pParent = 0);
-  ~BGAnnotationViewMetadataEditDetailsUI();
-  bool eventFilter(QObject *watched, QEvent *event) override;
+    explicit BGAnnotationViewMetadataEditDetailsUI(QWidget *pParent = nullptr);
+    ~BGAnnotationViewMetadataEditDetailsUI() override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 Q_SIGNALS:
-  void annotationUpdated(BGElement *elem);
+    void annotationUpdated(BGElement *elem);
 
 public Q_SLOTS:
-  void setBGElement(BGElement *elem);
-  void setNoSelection();
-  void reload();
-  void undo();
-  void redo();
+    void setBGElement(BGElement *elem);
+    void setNoSelection();
+    void reload();
+    void undo();
+    void redo();
 
 protected Q_SLOTS:
-  void relationshipsAssigned(nlohmann::json nrel);
-  void onRelationShipViewContextMenu(const QPoint &point);
-  void deleteRelationship();
-  void itemNotesChanged();
+    void relationshipsAssigned(nlohmann::json nrel);
+    void onRelationShipViewContextMenu(const QPoint &point);
+    void deleteRelationship();
+    void itemNotesChanged();
 
 private:
-  Ui::BGAnnotationViewMetadataEditDetailsUI *ui;
+    Ui::BGAnnotationViewMetadataEditDetailsUI *ui;
 
-  enum class InformationType { None, Qualifier, Resource, Id };
+    enum class InformationType { None,
+                                 Qualifier,
+                                 Resource,
+                                 Id };
 
-  QString mTerm;
-  QStringList mTerms;
+    QString mTerm;
+    QStringList mTerms;
 
-  BGAnnotationMetadataEditDetailsUiItems mItems;
+    BGAnnotationMetadataEditDetailsUiItems mItems;
 
-  bool mLookUpTerm = false;
-  QString mErrorMessage;
-  bool mHasInternetConnection = true;
+    bool mLookUpTerm = false;
+    QString mErrorMessage;
+    bool mHasInternetConnection = true;
 
-  QString mOutputOntologicalTermsTemplate;
-  // WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
+    QString mOutputOntologicalTermsTemplate;
 
-  InformationType mInformationType = InformationType::None;
+    InformationType mInformationType = InformationType::None;
 
-  bool mLookUpInformation = false;
-  bool updateLock = false;
-  QMap<QString, BGAnnotationMetadataEditDetailsUiItem> mItemsMapping;
-  QMap<QString, bool> mEnabledItems;
+    bool mLookUpInformation = false;
+    bool updateLock = false;
+    QMap<QString, BGAnnotationMetadataEditDetailsUiItem> mItemsMapping;
+    QMap<QString, bool> mEnabledItems;
 
-  BGElement *mElement = nullptr;
+    BGElement *mElement = nullptr;
 
-  QMap<QString, QString> m_Urls;
-  QStringList m_ItemInformationSha1s;
-  QString m_ItemInformationSha1;
+    QMap<QString, QString> m_Urls;
+    QStringList m_ItemInformationSha1s;
+    QString m_ItemInformationSha1;
 
-  QString m_Link;
-  QString m_TextContent;
+    QString m_Link;
+    QString m_TextContent;
 
-  QMenu *m_ContextMenu;
+    QMenu *m_ContextMenu;
 
-  QAction *m_CopyAction;
-  QAction *m_relationshipDeleteAction;
-  QNetworkReply *m_NetworkReply = nullptr;
-  BGAnnotationMiriamtermsUI *m_tui = nullptr;
-  QJsonTreeModel *m_model = nullptr;
-  BGElement *m_currentElement = nullptr;
-  bool m_elementDataUpdated = false;
+    QAction *m_CopyAction;
+    QAction *m_relationshipDeleteAction;
+    QNetworkReply *m_NetworkReply = nullptr;
+    BGAnnotationMiriamtermsUI *m_tui = nullptr;
+    QJsonTreeModel *m_model = nullptr;
+    BGElement *m_currentElement = nullptr;
+    bool m_elementDataUpdated = false;
 
 public:
-  static const QStringList m_supportedAnnotations_static;
+    static const QStringList m_supportedAnnotations_static;
 };
 
 } // namespace BondGraphEditorWindow

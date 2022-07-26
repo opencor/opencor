@@ -27,32 +27,33 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-BGEditorSceneActions::BGEditorSceneActions(BGEditorScene *scene) {
-  cutAction = new QAction(QIcon(":/Icons/Cut"), tr("Cut"), scene);
-  cutAction->setStatusTip(tr("Cut selected item(s) to clipboard"));
-  cutAction->setToolTip(tr("Cut selection"));
-  cutAction->setShortcut(QKeySequence::Cut);
-  connect(cutAction, &QAction::triggered, scene, &BGEditorScene::cut);
+BGEditorSceneActions::BGEditorSceneActions(BGEditorScene *scene)
+{
+    cutAction = new QAction(QIcon(":/Icons/Cut"), tr("Cut"), scene);
+    cutAction->setStatusTip(tr("Cut selected item(s) to clipboard"));
+    cutAction->setToolTip(tr("Cut selection"));
+    cutAction->setShortcut(QKeySequence::Cut);
+    connect(cutAction, &QAction::triggered, scene, &BGEditorScene::cut);
 
-  copyAction = new QAction(QIcon(":/Icons/Copy"), tr("Copy"), scene);
-  copyAction->setStatusTip(tr("Copy selected item(s) to clipboard"));
-  copyAction->setToolTip(tr("Copy selection"));
-  copyAction->setShortcut(QKeySequence::Copy);
-  connect(copyAction, &QAction::triggered, scene, &BGEditorScene::copy);
+    copyAction = new QAction(QIcon(":/Icons/Copy"), tr("Copy"), scene);
+    copyAction->setStatusTip(tr("Copy selected item(s) to clipboard"));
+    copyAction->setToolTip(tr("Copy selection"));
+    copyAction->setShortcut(QKeySequence::Copy);
+    connect(copyAction, &QAction::triggered, scene, &BGEditorScene::copy);
 
-  pasteAction = new QAction(QIcon(":/Icons/Paste"), tr("Paste"), scene);
-  pasteAction->setStatusTip(tr("Paste item(s) from clipboard"));
-  pasteAction->setToolTip(tr("Paste from clipboard"));
-  pasteAction->setShortcut(QKeySequence::Paste);
-  connect(pasteAction, &QAction::triggered, scene, &BGEditorScene::paste);
+    pasteAction = new QAction(QIcon(":/Icons/Paste"), tr("Paste"), scene);
+    pasteAction->setStatusTip(tr("Paste item(s) from clipboard"));
+    pasteAction->setToolTip(tr("Paste from clipboard"));
+    pasteAction->setShortcut(QKeySequence::Paste);
+    connect(pasteAction, &QAction::triggered, scene, &BGEditorScene::paste);
 
-  deleteAction =
-      new QAction(QIcon(":/Icons/Delete"), QObject::tr("Delete"), scene);
-  deleteAction->setStatusTip(QObject::tr("Delete selected item(s)"));
-  deleteAction->setToolTip(QObject::tr("Delete selection"));
-  deleteAction->setShortcut(QKeySequence::Delete);
-  QObject::connect(deleteAction, &QAction::triggered, scene,
-                   &BGEditorScene::del);
+    deleteAction =
+        new QAction(QIcon(":/Icons/Delete"), QObject::tr("Delete"), scene);
+    deleteAction->setStatusTip(QObject::tr("Delete selected item(s)"));
+    deleteAction->setToolTip(QObject::tr("Delete selection"));
+    deleteAction->setShortcut(QKeySequence::Delete);
+    QObject::connect(deleteAction, &QAction::triggered, scene,
+                     &BGEditorScene::del);
 }
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

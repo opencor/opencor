@@ -32,126 +32,129 @@ class BGElement;
 class BGPort;
 class BGElementSceneActions;
 
-enum EditMode { EM_Default, EM_AddElements, EM_AddConnections, EM_Transform, EM_Factor };
+enum EditMode { EM_Default,
+                EM_AddElements,
+                EM_AddConnections,
+                EM_Transform,
+                EM_Factor };
 
-class BGElementEditorScene : public BGEditorScene {
-  Q_OBJECT
+class BGElementEditorScene : public BGEditorScene
+{
+    Q_OBJECT
 
 public:
-  BGElementEditorScene(QObject *parent = nullptr);
+    BGElementEditorScene(QObject *parent = nullptr);
 
-  // override
-  virtual BGEditorScene *createScene() const {
-    return new BGElementEditorScene();
-  }
+    // override
+    BGEditorScene *createScene() const override;
+    void initialize() override;
 
-  virtual void initialize();
+    // operations
+    bool startNewConnection(const QPointF &pos);
+    void cancel(const QPointF &pos = QPointF());
 
-  // operations
-  bool startNewConnection(const QPointF &pos);
-  void cancel(const QPointF &pos = QPointF());
+    EditMode getEditMode() const;
 
-  EditMode getEditMode() const { return m_editMode; }
+    // factorizations
+    virtual BGElement *createNewElement() const;
+    BGElement *createNewElement(
+        const QPointF
+            &pos); // calls createNewElement(), attaches to scene and sets pos
 
-  // factorizations
-  virtual BGElement *createNewElement() const;
-  BGElement *createNewElement(
-      const QPointF
-          &pos); // calls createNewElement(), attaches to scene and sets pos
+    virtual BGConnection *createNewConnection() const;
+    BGConnection *createNewConnection(
+        BGElement *startElement,
+        BGElement *endElement); // calls createNewConnection(), attaches to scene
+                                // and sets nodes
 
-  virtual BGConnection *createNewConnection() const;
-  BGConnection *createNewConnection(
-      BGElement *startElement,
-      BGElement *endElement); // calls createNewConnection(), attaches to scene
-                              // and sets nodes
+    void setElementFactory(BGElement *element);
+    void setConnectionFactory(BGConnection *element);
 
-  void setElementFactory(BGElement *element);
-  void setConnectionFactory(BGConnection *element);
+    BGElement *getElementFactory();
+    BGConnection *getConnectionFactory();
 
-  BGElement *getElementFactory() { return m_elementsFactory; }
-  BGConnection *getConnectionFactory() { return m_connectionsFactory; }
+    // selections
+    void moveSelectedItemsBy(const QPointF &dPoint, bool snapped = false) override;
+    int getBoundingMargin() const override;
+    int getNumberOfElements();
+    const QList<BGElement *> &getSelectedElements() const;
+    const QList<BGConnection *> &getSelectedConnections() const;
+    const QList<SceneItem *> &getSelectedItems() const;
 
-  // selections
-  virtual void moveSelectedItemsBy(const QPointF &d, bool snapped = false);
-
-  virtual int getBoundingMargin() const { return 5; }
-  int getNumberOfElements();
-  const QList<BGElement *> &getSelectedElements() const;
-  const QList<BGConnection *> &getSelectedConnections() const;
-  const QList<SceneItem *> &getSelectedItems() const;
-
-  void addElementAnnotation(QString &eid, nlohmann::json &anot);
-  QMap<QString, BGElement *> userDefinedElements();
-  void updateConnectionDescritptions();
+    void addElementAnnotation(QString &eid, nlohmann::json &anot);
+    QMap<QString, BGElement *> userDefinedElements();
+    void updateConnectionDescritptions();
 Q_SIGNALS:
-  void editModeChanged(int mode);
+    void editModeChanged(int mode);
 
 public Q_SLOTS:
-  void setEditMode(EditMode mode);
+    void setEditMode(EditMode mode);
 
 protected Q_SLOTS:
-  virtual void onSelectionChanged();
+    void onSelectionChanged() override;
 
 protected:
-  // selection
-  void moveSelectedEdgesBy(const QPointF &d);
-  void prefetchSelection() const;
+    // selection
+    void moveSelectedEdgesBy(const QPointF &d);
+    void prefetchSelection() const;
 
-  // scene events
-  // virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void keyPressEvent(QKeyEvent *keyEvent);
-  virtual void keyReleaseEvent(QKeyEvent *keyEvent);
+    // scene events
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    void keyPressEvent(QKeyEvent *keyEvent) override;
+    void keyReleaseEvent(QKeyEvent *keyEvent) override;
 
-  virtual void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
-  // called on drag after single click; returns true if handled
-  virtual bool onClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
-                           const QPointF &clickPos);
-  // called on drag after double click; returns true if handled
-  virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
-                                 const QPointF &clickPos);
-  virtual void onDropped(QGraphicsSceneMouseEvent *mouseEvent,
-                         QGraphicsItem *dragItem);
-  virtual void onDropped(QGraphicsSceneDragDropEvent *mouseEvent);
-  virtual void onLeftClick(QGraphicsSceneMouseEvent *mouseEvent,
-                           QGraphicsItem *clickedItem);
-  virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent * /*mouseEvent*/,
-                                 QGraphicsItem *clickedItem);
+    void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent) override;
+    // called on drag after single click; returns true if handled
+    bool onClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
+                     const QPointF &clickPos) override;
+    // called on drag after double click; returns true if handled
+    bool onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
+                           const QPointF &clickPos) override;
+    void onDropped(QGraphicsSceneMouseEvent *mouseEvent,
+                   QGraphicsItem *dragItem) override;
+    void onDropped(QGraphicsSceneDragDropEvent *mouseEvent) override;
+    void onLeftClick(QGraphicsSceneMouseEvent *mouseEvent,
+                     QGraphicsItem *clickedItem) override;
+    void onLeftDoubleClick(QGraphicsSceneMouseEvent * /*mouseEvent*/,
+                           QGraphicsItem *clickedItem) override;
 
-  // override
-  virtual QList<QGraphicsItem *> getCopyPasteItems() const;
-  virtual QList<QGraphicsItem *> getTransformableItems() const;
-  virtual bool doUpdateCursorState(Qt::KeyboardModifiers keys,
-                                   Qt::MouseButtons buttons,
-                                   QGraphicsItem *hoverItem);
-  virtual QObject *createActions();
+    // override
+    QList<QGraphicsItem *> getCopyPasteItems() const override;
+    QList<QGraphicsItem *> getTransformableItems() const override;
+    bool doUpdateCursorState(Qt::KeyboardModifiers keys,
+                             Qt::MouseButtons buttons,
+                             QGraphicsItem *hoverItem) override;
+    QObject *createActions() override;
 
-  // draw
-  virtual void drawBackground(QPainter *painter, const QRectF &);
+    // draw
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
 
 protected:
-  // edit mode
-  EditMode m_editMode;
+    // edit mode
+    EditMode m_editMode;
 
-  // creating
-  BGElement *m_startElement = nullptr, *m_endElement = nullptr;
-  BGConnection *m_connection = nullptr;
-  bool m_realStart = false;
-  BGPort *m_startElementPort = nullptr, *m_endElementPort = nullptr;
+    // creating
+    BGElement *m_startElement = nullptr, *m_endElement = nullptr;
+    BGConnection *m_connection = nullptr;
+    bool m_realStart = false;
+    BGPort *m_startElementPort = nullptr, *m_endElementPort = nullptr;
 
-  enum InternState { IS_None, IS_Creating, IS_Finishing, IS_Cancelling };
-  InternState m_state = IS_None;
+    enum InternState { IS_None,
+                       IS_Creating,
+                       IS_Finishing,
+                       IS_Cancelling };
+    InternState m_state = IS_None;
 
-  BGElement *m_elementsFactory = nullptr;
-  BGConnection *m_connectionsFactory = nullptr;
+    BGElement *m_elementsFactory = nullptr;
+    BGConnection *m_connectionsFactory = nullptr;
 
-  // cached selections
-  mutable QList<BGElement *> m_selectedElements;
-  mutable QList<BGConnection *> m_selectedConnections;
-  mutable QList<SceneItem *> m_selectedItems;
+    // cached selections
+    mutable QList<BGElement *> m_selectedElements;
+    mutable QList<BGConnection *> m_selectedConnections;
+    mutable QList<SceneItem *> m_selectedItems;
 
-  // drawing
-  int m_nextIndex = 0;
+    // drawing
+    int m_nextIndex = 0;
 };
 
 } // namespace BondGraphEditorWindow

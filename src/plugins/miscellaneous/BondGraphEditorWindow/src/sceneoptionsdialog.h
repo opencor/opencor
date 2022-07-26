@@ -32,31 +32,32 @@ namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
 struct OptionsData {
-  int backupPeriod = 10;
+    int backupPeriod = 10;
 
-  QString graphvizPath;
-  // QStringList graphvizEngines;
-  QString graphvizDefaultEngine;
+    QString graphvizPath;
+    // QStringList graphvizEngines;
+    QString graphvizDefaultEngine;
 };
 
-class SceneOptionsDialog : public QDialog {
-  Q_OBJECT
+class SceneOptionsDialog : public QDialog
+{
+    Q_OBJECT
 
 public:
-  explicit SceneOptionsDialog(QWidget *parent = 0);
-  ~SceneOptionsDialog();
+    explicit SceneOptionsDialog(QWidget *parent = 0);
+    ~SceneOptionsDialog();
 
 public Q_SLOTS:
-  virtual int exec(BGEditorScene &scene, BGEditorView &view, OptionsData &data);
+    virtual int exec(BGEditorScene &scene, BGEditorView &view, OptionsData &data);
 
 Q_SIGNALS:
-  void testGraphviz(const QString &graphvizPath);
+    void testGraphviz(const QString &graphvizPath);
 
 private Q_SLOTS:
-  void on_GraphvizTest_clicked();
+    void on_GraphvizTest_clicked();
 
 private:
-  Ui::SceneOptionsDialog *ui;
+    Ui::SceneOptionsDialog *ui;
 };
 
 } // namespace BondGraphEditorWindow

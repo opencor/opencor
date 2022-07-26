@@ -26,7 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 namespace Ui {
 class BGBasicElementAnnotationTable;
-}
+};
 
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
@@ -37,48 +37,49 @@ class BGElementEditorScene;
 class QJsonTableModel;
 class ParameterDelegate;
 
-class BGBasicElementAnnotationTable : public QWidget {
-  Q_OBJECT
+class BGBasicElementAnnotationTable : public QWidget
+{
+    Q_OBJECT
 
 public:
-  explicit BGBasicElementAnnotationTable(QWidget *parent = nullptr,
-                                         BGElementEditorScene *scene = nullptr);
-  ~BGBasicElementAnnotationTable();
+    explicit BGBasicElementAnnotationTable(QWidget *parent = nullptr,
+                                           BGElementEditorScene *scene = nullptr);
+    ~BGBasicElementAnnotationTable() override;
 
-  void setScene(BGElementEditorScene *scene);
+    void setScene(BGElementEditorScene *scene);
 
-  void doReadSettings(QSettings &settings);
-  void doWriteSettings(QSettings &settings);
+    void doReadSettings(QSettings &settings);
+    void doWriteSettings(QSettings &settings);
 
 Q_SIGNALS:
-  void elementUpdated(BGElement *elem);
+    void elementUpdated(BGElement *elem);
 
 public Q_SLOTS:
-  void updateFromScene(BGEditorScene *scene);
-  void updateLatex(const QString &text);
-  void itemDeleted(QGraphicsItem *);
-  void onSelectionChanged();
-  void flush();
+    void updateFromScene(BGEditorScene *scene);
+    void updateLatex(const QString &text);
+    void itemDeleted(QGraphicsItem *item);
+    void onSelectionChanged();
+    void flush();
 
 protected:
-  void onSceneAttached(BGEditorScene *scene);
-  void onSceneDetached(BGEditorScene *scene);
+    void onSceneAttached(BGEditorScene *scene);
+    void onSceneDetached(BGEditorScene *scene);
 
 protected Q_SLOTS:
-  void onSceneChanged();
-  void setElementAsProxy();
+    void onSceneChanged();
+    void setElementAsProxy();
 
 private:
-  void setElementAttribute(const QByteArray &attrId, const QVariant &v);
-  void setConnectionAttribute(const QByteArray &attrId, const QVariant &v);
+    void setElementAttribute(const QByteArray &attrId, const QVariant &value);
+    void setConnectionAttribute(const QByteArray &attrId, const QVariant &value);
 
-  BGElementEditorScene *m_scene;
-  bool m_updateLock;
+    BGElementEditorScene *m_scene;
+    bool m_updateLock = false;
 
-  BGElement *m_currentElement;
-  QJsonTableModel *m_parameterModel;
-  ParameterDelegate *m_parameterDelegate;
-  Ui::BGBasicElementAnnotationTable *ui;
+    BGElement *m_currentElement = nullptr;
+    QJsonTableModel *m_parameterModel;
+    ParameterDelegate *m_parameterDelegate;
+    Ui::BGBasicElementAnnotationTable *ui;
 };
 
 } // namespace BondGraphEditorWindow

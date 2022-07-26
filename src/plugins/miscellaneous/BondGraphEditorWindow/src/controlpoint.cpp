@@ -22,49 +22,53 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-ControlPoint::ControlPoint(SceneItem *parent)
-    : Shape(dynamic_cast<QGraphicsItem *>(parent)), m_parentItem(parent) {
-  Q_ASSERT(parent != nullptr);
+ControlPoint::ControlPoint(SceneItem *parent) :
+    Shape(dynamic_cast<QGraphicsItem *>(parent)), m_parentItem(parent)
+{
+    Q_ASSERT(parent != nullptr);
 
-  setRect(-4, -4, 8, 8);
-  setBrush(Qt::black);
-  setPen(QPen(Qt::gray, 1));
+    setRect(-4, -4, 8, 8);
+    setBrush(Qt::black);
+    setPen(QPen(Qt::gray, 1));
 }
 
 // override
 
 QVariant ControlPoint::itemChange(QGraphicsItem::GraphicsItemChange change,
-                                  const QVariant &value) {
-  // if (change == ItemPositionChange)
-  //{
-  //	if (auto editScene = dynamic_cast<BGEditorScene*>(scene()))
-  //	{
-  //		return editScene->getSnapped(value.toPointF());
-  //	}
+                                  const QVariant &value)
+{
+    // if (change == ItemPositionChange)
+    //{
+    //	if (auto editScene = dynamic_cast<BGEditorScene*>(scene()))
+    //	{
+    //		return editScene->getSnapped(value.toPointF());
+    //	}
 
-  //	return value;
-  //}
+    //	return value;
+    //}
 
-  if (change == ItemPositionHasChanged) {
-    m_parentItem->onControlPointMoved(this, value.toPointF());
+    if (change == ItemPositionHasChanged) {
+        m_parentItem->onControlPointMoved(this, value.toPointF());
 
-    return value;
-  }
+        return value;
+    }
 
-  return Shape::itemChange(change, value);
+    return Shape::itemChange(change, value);
 }
 
 // menu
 
 bool ControlPoint::populateMenu(
-    QMenu &menu, const QList<QGraphicsItem *> & /*selectedItems*/) {
-  menu.addAction(tr("Delete point"), this, SLOT(onActionDelete()));
+    QMenu &menu, const QList<QGraphicsItem *> & /*selectedItems*/)
+{
+    menu.addAction(tr("Delete point"), this, SLOT(onActionDelete()));
 
-  return true;
+    return true;
 }
 
-void ControlPoint::onActionDelete() {
-  m_parentItem->onControlPointDelete(this);
+void ControlPoint::onActionDelete()
+{
+    m_parentItem->onControlPointDelete(this);
 }
 
 } // namespace BondGraphEditorWindow

@@ -43,83 +43,84 @@ namespace BondGraphEditorWindow {
  * constructor the browse button opens a <tt>file</tt> or a <tt>directory</tt>
  * dialog.
  */
-class BrowseLineEdit : public QFrame {
-  Q_OBJECT
+class BrowseLineEdit : public QFrame
+{
+    Q_OBJECT
 
 public:
-  BrowseLineEdit(QWidget *parent = nullptr,
-                 BGElementEditorScene *scene = nullptr);
+    BrowseLineEdit(QWidget *parent = nullptr,
+                   BGElementEditorScene *scene = nullptr);
 
-  /**
+    /**
    * Reimplemented from the QWidget class.
    * Returns the size of the editor.
    */
-  QSize sizeHint() const;
+    QSize sizeHint() const override;
 
-  /**
+    /**
    * Reimplemented from the QWidget class.
    */
-  QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
 
-  /**
+    /**
    * Returns the json.
    */
-  nlohmann::json json() const;
+    nlohmann::json json() const;
 
-  /**
+    /**
    * @brief Set the name of the object who's state/parameter is being modified
    *
    * @param parentName
    */
-  void setParentName(QString parentName);
+    void setParentName(QString parentName);
 
-  void setAsState(bool state);
+    void setAsState(bool state);
 
 public Q_SLOTS:
 
-  void setJson(nlohmann::json &str);
+    void setJson(nlohmann::json &str);
 
 Q_SIGNALS:
 
-  void editingFinished();
+    void editingFinished();
 
 private Q_SLOTS:
 
-  void editing_finished();
+    void editing_finished();
 
-  /**
+    /**
    * This function opens a parameter import dialog
    */
-  void browse();
+    void browse();
 
 private:
-  /**
+    /**
    * The line editor.
    */
-  QLineEdit *line_editor;
+    QLineEdit *line_editor;
 
-  /**
+    /**
    * The browse button.
    */
-  QPushButton *browse_button;
+    QPushButton *browse_button;
 
-  // Scene related to the delegate
-  BGElementEditorScene *m_scene;
+    // Scene related to the delegate
+    BGElementEditorScene *m_scene;
 
-  // Parent Element name
-  QString m_parentName;
+    // Parent Element name
+    QString m_parentName;
 
-  // True if the entry is state - no symbolic assignments
-  bool m_isState;
+    // True if the entry is state - no symbolic assignments
+    bool m_isState;
 
-  /*
+    /*
    * JSON struct based on import dialog spec
    */
-  nlohmann::json m_json;
-  /*
+    nlohmann::json m_json;
+    /*
    * Any JSON data used as reference
    */
-  nlohmann::json m_reference;
+    nlohmann::json m_reference;
 };
 
 /**
@@ -137,69 +138,70 @@ private:
  * with the parameter values has to be set in the constructor.
  *
  */
-class ParameterDelegate : public QItemDelegate {
-  Q_OBJECT
+class ParameterDelegate : public QItemDelegate
+{
+    Q_OBJECT
 
 public:
-  ParameterDelegate(QObject *parent = nullptr,
-                    BGElementEditorScene *scene = nullptr);
+    ParameterDelegate(QObject *parent = nullptr,
+                      BGElementEditorScene *scene = nullptr);
 
-  /**
+    /**
    * @brief Set the Element Name of the object that is being modified
    *
    * @param eName
    */
-  void setElementName(QString eName);
+    void setElementName(QString eName);
 
-  /**
+    /**
    * @brief Allow the SI units to be changed when mutate is True
    *
    * @param mutate
    */
-  void setDimensionAsMutable(bool mutate);
+    void setDimensionAsMutable(bool mutate);
 
-  /**
+    /**
    * This function creates the appropriate editor for the parameter
    * based on the <tt>index</tt>.
    */
-  QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const override;
 
-  /**
+    /**
    * Reimplemented from QItemDelegate.
    */
-  QSize sizeHint(const QStyleOptionViewItem &option,
-                 const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const override;
 
-  /**
+    /**
    * Reimplemented from QItemDelegate.
    */
-  void paint(QPainter *painter, const QStyleOptionViewItem &option,
-             const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const override;
 
-  /**
+    /**
    * Reimplemented from QItemDelegate.
    */
-  void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-  /**
+    /**
    * Reimplemented from QItemDelegate.
    */
-  void setModelData(QWidget *editor, QAbstractItemModel *model,
-                    const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const override;
 Q_SIGNALS:
-  void invalidUserInput(QString err) const;
+    void invalidUserInput(QString err) const;
 
 private Q_SLOTS:
-  /**
+    /**
    * Reimplemented from QItemDelegate.
    */
-  void commit_and_close_editor();
+    void commit_and_close_editor();
 
 private:
-  BGElementEditorScene *m_scene;
-  QString m_ElementName;
-  bool m_AllowDimensionChange;
+    BGElementEditorScene *m_scene;
+    QString m_ElementName;
+    bool m_AllowDimensionChange;
 };
 
 } // namespace BondGraphEditorWindow

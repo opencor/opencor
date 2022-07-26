@@ -28,37 +28,40 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class SceneEditControllerInterface {
+class SceneEditControllerInterface
+{
 public:
-  virtual void onActivated(BGEditorScene &scene) = 0;
-  virtual void onDeactivated(BGEditorScene &scene) = 0;
+    virtual void onActivated(BGEditorScene &scene) = 0;
+    virtual void onDeactivated(BGEditorScene &scene) = 0;
 
-  virtual void onSceneChanged(BGEditorScene &scene) = 0;
-  virtual void onSelectionChanged(BGEditorScene &scene) = 0;
-  virtual void onDragItem(BGEditorScene &scene,
-                          QGraphicsSceneMouseEvent *mouseEvent,
-                          QGraphicsItem *dragItem) = 0;
+    virtual void onSceneChanged(BGEditorScene &scene) = 0;
+    virtual void onSelectionChanged(BGEditorScene &scene) = 0;
+    virtual void onDragItem(BGEditorScene &scene,
+                            QGraphicsSceneMouseEvent *mouseEvent,
+                            QGraphicsItem *dragItem) = 0;
 
-  virtual bool onMousePressed(BGEditorScene &scene,
-                              QGraphicsSceneMouseEvent *mouseEvent) = 0;
-  virtual bool onMouseMove(BGEditorScene &scene,
-                           QGraphicsSceneMouseEvent *mouseEvent) = 0;
-  virtual bool onMouseReleased(BGEditorScene &scene,
-                               QGraphicsSceneMouseEvent *mouseEvent) = 0;
+    virtual bool onMousePressed(BGEditorScene &scene,
+                                QGraphicsSceneMouseEvent *mouseEvent) = 0;
+    virtual bool onMouseMove(BGEditorScene &scene,
+                             QGraphicsSceneMouseEvent *mouseEvent) = 0;
+    virtual bool onMouseReleased(BGEditorScene &scene,
+                                 QGraphicsSceneMouseEvent *mouseEvent) = 0;
 
-  virtual bool onKeyPressed(BGEditorScene &scene, QKeyEvent *keyEvent) {
-    Q_UNUSED(scene);
-    Q_UNUSED(keyEvent);
-    return false;
-  }
-  virtual bool onKeyReleased(BGEditorScene &scene, QKeyEvent *keyEvent) {
-    Q_UNUSED(scene);
-    Q_UNUSED(keyEvent);
-    return false;
-  }
+    virtual bool onKeyPressed(BGEditorScene &scene, QKeyEvent *keyEvent)
+    {
+        Q_UNUSED(scene);
+        Q_UNUSED(keyEvent);
+        return false;
+    }
+    virtual bool onKeyReleased(BGEditorScene &scene, QKeyEvent *keyEvent)
+    {
+        Q_UNUSED(scene);
+        Q_UNUSED(keyEvent);
+        return false;
+    }
 
-  virtual void draw(BGEditorScene &scene, QPainter *painter,
-                    const QRectF &r) = 0;
+    virtual void draw(BGEditorScene &scene, QPainter *painter,
+                      const QRectF &r) = 0;
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

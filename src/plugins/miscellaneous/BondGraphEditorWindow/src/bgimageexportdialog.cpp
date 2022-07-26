@@ -16,81 +16,91 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
-#include "bgimageexportdialog.h"
 #include "bgeditorscene.h"
+#include "bgimageexportdialog.h"
 #include "ui_BGImageExportDialog.h"
 
 namespace OpenCOR {
 
 namespace BondGraphEditorWindow {
 
-BGImageExportDialog::BGImageExportDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::BGImageExportDialog) {
-  ui->setupUi(this);
-  setMinimumSize(300, 200);
-  QImage temp(QSize(100, 100), QImage::Format_ARGB32);
-  m_dpi = temp.physicalDpiX();
-  if (m_dpi > 0)
-    ui->Resolution->setCurrentText(QString::number(m_dpi));
-  else
-    m_dpi = 300; // default
-
-  connect(ui->Resolution, &QComboBox::currentTextChanged, this,
-          &BGImageExportDialog::updateTargetSize);
-  connect(ui->CutToContent, &QCheckBox::stateChanged, this,
-          &BGImageExportDialog::updateTargetSize);
+BGImageExportDialog::BGImageExportDialog(QWidget *parent) :
+    QDialog(parent), ui(new Ui::BGImageExportDialog)
+{
+    ui->setupUi(this);
+    setMinimumSize(300, 200);
+    QImage temp(QSize(100, 100), QImage::Format_ARGB32);
+    m_dpi = temp.physicalDpiX();
+    if (m_dpi > 0) {
+        ui->Resolution->setCurrentText(QString::number(m_dpi));
+    } else {
+        m_dpi = 300; // default
+    }
+    connect(ui->Resolution, &QComboBox::currentTextChanged, this,
+            &BGImageExportDialog::updateTargetSize);
+    connect(ui->CutToContent, &QCheckBox::stateChanged, this,
+            &BGImageExportDialog::updateTargetSize);
 }
 
-BGImageExportDialog::~BGImageExportDialog() {}
-
-void BGImageExportDialog::doReadSettings(QSettings &settings) {
-  settings.beginGroup("BondGraphEditorWindow/ImageExport");
-  ui->Resolution->setCurrentText(
-      settings.value("DPI", ui->Resolution->currentText()).toString());
-  ui->CutToContent->setChecked(
-      settings.value("CutContent", ui->CutToContent->isChecked()).toBool());
-  settings.endGroup();
+BGImageExportDialog::~BGImageExportDialog()
+{
 }
 
-void BGImageExportDialog::doWriteSettings(QSettings &settings) {
-  settings.beginGroup("BondGraphEditorWindow/ImageExport");
-  settings.setValue("DPI", ui->Resolution->currentText());
-  settings.setValue("CutContent", ui->CutToContent->isChecked());
-  settings.endGroup();
+void BGImageExportDialog::doReadSettings(QSettings &settings)
+{
+    settings.beginGroup("BondGraphEditorWindow/ImageExport");
+    ui->Resolution->setCurrentText(
+        settings.value("DPI", ui->Resolution->currentText()).toString());
+    ui->CutToContent->setChecked(
+        settings.value("CutContent", ui->CutToContent->isChecked()).toBool());
+    settings.endGroup();
 }
 
-void BGImageExportDialog::setScene(BGEditorScene &scene) {
-  m_scene = &scene;
-
-  updateTargetSize();
+void BGImageExportDialog::doWriteSettings(QSettings &settings)
+{
+    settings.beginGroup("BondGraphEditorWindow/ImageExport");
+    settings.setValue("DPI", ui->Resolution->currentText());
+    settings.setValue("CutContent", ui->CutToContent->isChecked());
+    settings.endGroup();
 }
 
-void BGImageExportDialog::updateTargetSize() {
-  if (!m_scene)
-    return;
+void BGImageExportDialog::setScene(BGEditorScene &scene)
+{
+    m_scene = &scene;
 
-  QSize size = m_scene->sceneRect().size().toSize();
-  if (cutToContent())
-    size =
-        m_scene->itemsBoundingRect().adjusted(-20, -20, 20, 20).size().toSize();
-
-  int res = resolution();
-  if (res <= 0)
-    res = m_dpi;
-
-  double coeff = (double)res / (double)m_dpi;
-  QSize newSize = size * coeff;
-  ui->ImageSize->setText(
-      QString("%1 x %2").arg(newSize.width()).arg(newSize.height()));
+    updateTargetSize();
 }
 
-bool BGImageExportDialog::cutToContent() const {
-  return ui->CutToContent->isChecked();
+void BGImageExportDialog::updateTargetSize()
+{
+    if (m_scene != nullptr) {
+        return;
+    }
+
+    QSize size = m_scene->sceneRect().size().toSize();
+    if (cutToContent()) {
+        size =
+            m_scene->itemsBoundingRect().adjusted(-20, -20, 20, 20).size().toSize();
+    }
+    int res = resolution();
+    if (res <= 0) {
+        res = m_dpi;
+    }
+    double coeff = (double)res / (double)m_dpi;
+    QSize newSize = size * coeff;
+    ui->ImageSize->setText(
+        QString("%1 x %2").arg(newSize.width()).arg(newSize.height()));
 }
 
-int BGImageExportDialog::resolution() const {
-  int res = ui->Resolution->currentText().toUInt();
-  return res;
+bool BGImageExportDialog::cutToContent() const
+{
+    return ui->CutToContent->isChecked();
+}
+
+int BGImageExportDialog::resolution() const
+{
+    int res = ui->Resolution->currentText().toUInt();
+    return res;
 }
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

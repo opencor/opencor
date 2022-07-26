@@ -33,113 +33,77 @@ namespace BondGraphEditorWindow {
 // attribute class
 
 struct BGItemAttribute : public AttrInfo {
-  BGItemAttribute();
-  BGItemAttribute(const QByteArray &attrId,
-                  const QString &attrName = QString());
-  BGItemAttribute(const QByteArray &attrId, const QString &attrName,
-                  const QVariant &defaultValue,
-                  const int attrFlags = ATTR_NONE);
+    BGItemAttribute();
+    BGItemAttribute(const QByteArray &attrId,
+                    const QString &attrName = QString());
+    BGItemAttribute(const QByteArray &attrId, const QString &attrName,
+                    const QVariant &defaultValue,
+                    const int attrFlags = ATTR_NONE);
 
-  /*const*/ int flags = ATTR_NONE;
+    int flags = ATTR_NONE;
 
-  bool isUserDefined() const { return !(flags & ATTR_FIXED); }
+    bool isUserDefined() const;
+    // serialization
+    virtual bool storeTo(QDataStream &out, quint64 version64) const;
+    virtual bool restoreFrom(QDataStream &out, quint64 version64);
 
-  // serialization
-  virtual bool storeTo(QDataStream &out, quint64 version64) const;
-  virtual bool restoreFrom(QDataStream &out, quint64 version64);
-
-  // dummy member
-  QByteArray classId;
+    // dummy member
+    QByteArray classId;
 };
 
-typedef QMap<QByteArray, BGItemAttribute> AttributesMap; // <attr.id, attr>
+using AttributesMap = QMap<QByteArray, BGItemAttribute>; // <attr.id, attr>
 
-typedef QMap<QByteArray, AttributesMap>
-    ClassAttributesMap; // <class.id, attr.map>
+using ClassAttributesMap = QMap<QByteArray, AttributesMap>; // <class.id, attr.map>
 
-// attribute constrains
+// attribute constraints
 
-typedef QPair<QByteArray, QByteArray> ClassAttrIndex;
+using ClassAttrIndex = QPair<QByteArray, QByteArray>;
 
 struct BGItemAttributeConstraints;
-typedef QMap<ClassAttrIndex, BGItemAttributeConstraints *>
-    AttributeConstrainsMap;
+using AttributeConstrainsMap = QMap<ClassAttrIndex, BGItemAttributeConstraints *>;
 
 struct BGItemAttributeConstraints {
-  virtual ~BGItemAttributeConstraints();
+    virtual ~BGItemAttributeConstraints();
 };
 
 // integer values
 
 struct BGItemAttributeIntegerConstraints : public BGItemAttributeConstraints {
-  BGItemAttributeIntegerConstraints(int minV = INT_MIN, int maxV = INT_MAX) {
-    minValue = minV;
-    maxValue = maxV;
-  }
-
-  BGItemAttributeIntegerConstraints(BGItemAttributeConstraints *ptr = nullptr) {
-    BGItemAttributeIntegerConstraints *dptr =
-        dynamic_cast<BGItemAttributeIntegerConstraints *>(ptr);
-    if (dptr) {
-      minValue = dptr->minValue;
-      maxValue = dptr->maxValue;
-    }
-  }
-
-  int minValue = INT_MIN;
-  int maxValue = INT_MAX;
+    BGItemAttributeIntegerConstraints(int minV = INT_MIN, int maxV = INT_MAX);
+    BGItemAttributeIntegerConstraints(BGItemAttributeConstraints *ptr = nullptr);
+    int minValue = INT_MIN;
+    int maxValue = INT_MAX;
 };
 
 // double values
 
 struct BGItemAttributeRationalConstraints : public BGItemAttributeConstraints {
-  BGItemAttributeRationalConstraints(double minV, double maxV, int decs = 4) {
-    minValue = minV;
-    maxValue = maxV;
-    decPoints = decs;
-  }
+    BGItemAttributeRationalConstraints(double minV, double maxV, int decs = 4);
+    BGItemAttributeRationalConstraints(
+        BGItemAttributeConstraints *ptr = nullptr);
 
-  BGItemAttributeRationalConstraints(
-      BGItemAttributeConstraints *ptr = nullptr) {
-    BGItemAttributeRationalConstraints *dptr =
-        dynamic_cast<BGItemAttributeRationalConstraints *>(ptr);
-    if (dptr) {
-      minValue = dptr->minValue;
-      maxValue = dptr->maxValue;
-      decPoints = dptr->decPoints;
-    }
-  }
-
-  double minValue = std::numeric_limits<double>::lowest();
-  double maxValue = std::numeric_limits<double>::max();
-  int decPoints = 4;
+    double minValue = std::numeric_limits<double>::lowest();
+    double maxValue = std::numeric_limits<double>::max();
+    int decPoints = 4;
 };
 
 // list of id items
 
-typedef QList<QIcon> IconsList;
+using IconsList = QList<QIcon>;
 
 struct BGAttributeConstraintsListBase : public BGItemAttributeConstraints {
-  QStringList names;
-  IconsList icons;
-
-  // convenience method to conform property browser API
-  QMap<int, QIcon> iconsAsMap() const {
-    QMap<int, QIcon> result;
-
-    for (auto i = 0; i < icons.size(); ++i)
-      result[i] = icons[i];
-
-    return result;
-  }
+    QStringList names;
+    IconsList icons;
+    // convenience method to conform property browser API
+    QMap<int, QIcon> iconsAsMap() const;
 };
 
 struct BGAttributeConstraintsList : public BGAttributeConstraintsListBase {
-  QStringList ids;
+    QStringList ids;
 };
 
 struct BGAttributeConstraintsEnum : public BGAttributeConstraintsListBase {
-  QList<int> ids;
+    QList<int> ids;
 };
 
 } // namespace BondGraphEditorWindow

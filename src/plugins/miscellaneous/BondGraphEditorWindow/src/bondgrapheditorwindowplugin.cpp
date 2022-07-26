@@ -21,9 +21,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // BondGraphEditor window plugin
 //==============================================================================
 
-#include "coreguiutils.h"
-#include "bondgrapheditorwindowplugin.h"
 #include "bondgrapheditorwindow.h"
+#include "bondgrapheditorwindowplugin.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
@@ -39,9 +39,9 @@ namespace BondGraphEditorWindow {
 PLUGININFO_FUNC BondGraphEditorWindowPluginInfo()
 {
     static const Descriptions descriptions = {
-                                                 { "en", QString::fromUtf8("a plugin that provides a BondGraph window.") },
-                                                 { "fr", QString::fromUtf8("une extension qui fournit une BondGraph.") }
-                                             };
+        { "en", QString::fromUtf8("a plugin that provides a BondGraph window.") },
+        { "fr", QString::fromUtf8("une extension qui fournit une BondGraph.") }
+    };
 
     return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           { "Core", "BondGraphAPI" },
@@ -78,11 +78,11 @@ bool BondGraphEditorWindowPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool BondGraphEditorWindowPlugin::pluginInterfacesOk(const QString &pFileName,
-                                            QObject *pInstance)
+bool BondGraphEditorWindowPlugin::pluginInterfacesOk(const QString &p_file_name,
+                                                     QObject *p_instance)
 {
-    Q_UNUSED(pFileName)
-    Q_UNUSED(pInstance)
+    Q_UNUSED(p_file_name)
+    Q_UNUSED(p_instance)
 
     // We don't handle this interface...
 
@@ -93,7 +93,6 @@ bool BondGraphEditorWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void BondGraphEditorWindowPlugin::initializePlugin()
 {
-
     // Create an action to show/hide our Web Browser window
 
     mBondGraphEditorWindowAction = Core::newAction(true, Core::mainWindow());
@@ -112,36 +111,36 @@ void BondGraphEditorWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void BondGraphEditorWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void BondGraphEditorWindowPlugin::pluginsInitialized(const Plugins &p_loaded_plugins)
 {
-    Q_UNUSED(pLoadedPlugins)
+    Q_UNUSED(p_loaded_plugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void BondGraphEditorWindowPlugin::loadSettings(QSettings &pSettings)
+void BondGraphEditorWindowPlugin::loadSettings(QSettings &p_settings)
 {
-   mBondGraphEditorWindow->loadSettings(pSettings);
+    mBondGraphEditorWindow->loadSettings(p_settings);
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void BondGraphEditorWindowPlugin::saveSettings(QSettings &pSettings) const
+void BondGraphEditorWindowPlugin::saveSettings(QSettings &p_settings) const
 {
-    mBondGraphEditorWindow->saveSettings(pSettings);
+    mBondGraphEditorWindow->saveSettings(p_settings);
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void BondGraphEditorWindowPlugin::handleUrl(const QUrl &pUrl)
+void BondGraphEditorWindowPlugin::handleUrl(const QUrl &p_url)
 {
-    Q_UNUSED(pUrl)
+    Q_UNUSED(p_url)
 
     // We don't handle this interface...
 }
@@ -159,7 +158,7 @@ Qt::DockWidgetArea BondGraphEditorWindowPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QAction * BondGraphEditorWindowPlugin::windowAction() const
+QAction *BondGraphEditorWindowPlugin::windowAction() const
 {
     // Return our window action
 
@@ -168,7 +167,7 @@ QAction * BondGraphEditorWindowPlugin::windowAction() const
 
 //==============================================================================
 
-QDockWidget * BondGraphEditorWindowPlugin::windowWidget() const
+QDockWidget *BondGraphEditorWindowPlugin::windowWidget() const
 {
     // Return our window widget
 

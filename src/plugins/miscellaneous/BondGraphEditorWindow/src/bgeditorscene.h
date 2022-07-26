@@ -43,454 +43,442 @@ class SceneEditControllerInterface;
 class SceneItem;
 class BGEditorSceneActions;
 
-class SceneItemEvaluator {
+class SceneItemEvaluator
+{
 public:
-  virtual bool evaluate(const QGraphicsItem &item) const = 0;
+    virtual bool evaluate(const QGraphicsItem &item) const = 0;
 };
 
-class DeletableSceneItems : public SceneItemEvaluator {
+class DeletableSceneItems : public SceneItemEvaluator
+{
 public:
-  virtual bool evaluate(const QGraphicsItem &item) const;
+    bool evaluate(const QGraphicsItem &item) const override;
 };
 
-class BGEditorScene : public QGraphicsScene {
-  Q_OBJECT
+class BGEditorScene : public QGraphicsScene
+{
+    Q_OBJECT
 
 public:
-  BGEditorScene(QObject *parent = nullptr);
-  virtual ~BGEditorScene();
+    BGEditorScene(QObject *parent = nullptr);
+    ~BGEditorScene() override;
 
-  virtual void reset();
-  virtual void initialize();
+    virtual void reset();
+    virtual void initialize();
 
-  // properties
-  void setGridSize(int newSize);
-  int getGridSize() const { return m_gridSize; }
+    // properties
+    void setGridSize(int newSize);
+    int getGridSize() const;
+    bool gridEnabled() const;
+    bool gridSnapEnabled() const;
+    void setGridPen(const QPen &gridPen);
+    const QPen &getGridPen() const;
+    void setFontAntialiased(bool on);
+    bool isFontAntialiased() const;
+    bool itemLabelsEnabled() const;
+    bool itemLabelsforceUpdate() const;
 
-  bool gridEnabled() const { return m_gridEnabled; }
-  bool gridSnapEnabled() const { return m_gridSnap; }
+    enum LabelsPolicy { Auto,
+                        AlwaysOn,
+                        AlwaysOff };
 
-  void setGridPen(const QPen &gridPen);
-  const QPen &getGridPen() const { return m_gridPen; }
+    LabelsPolicy getLabelsPolicy() const;
+    void setLabelsPolicy(LabelsPolicy value);
 
-  void setFontAntialiased(bool on);
-  bool isFontAntialiased() const { return m_isFontAntialiased; }
+    // undo-redo
+    int availableUndoCount() const;
+    int availableRedoCount() const;
+    // must be called after scene state changed
+    void addUndoState();
+    // must be called to discard recent changes without undo
+    void revertUndoState();
+    // sets initial scene state
+    void setInitialState();
 
-  bool itemLabelsEnabled() const { return m_labelsEnabled; }
-  bool itemLabelsforceUpdate() const { return m_labelsUpdate; }
+    // serialization
+    virtual bool storeTo(QDataStream &out, bool storeOptions) const;
+    virtual bool restoreFrom(QDataStream &out, bool readOptions);
 
-  enum LabelsPolicy { Auto, AlwaysOn, AlwaysOff };
+    friend void to_json(nlohmann::json &json_, const BGEditorScene &bgescene);
+    friend void from_json(const nlohmann::json &json_, BGEditorScene &bgescene);
 
-  LabelsPolicy getLabelsPolicy() const;
-  void setLabelsPolicy(LabelsPolicy v);
+    // item factories
+    template<class T> bool registerItemFactory()
+    {
+        static T factory;
+        return setItemFactory(&factory);
+    }
 
-  // undo-redo
-  int availableUndoCount() const;
-  int availableRedoCount() const;
-  // must be called after scene state changed
-  void addUndoState();
-  // must be called to discard recent changes without undo
-  void revertUndoState();
-  // sets initial scene state
-  void setInitialState();
+    template<class T> static T *factory()
+    {
+        static T s_item;
+        return &s_item;
+    }
 
-  // serialization
-  virtual bool storeTo(QDataStream &out, bool storeOptions) const;
-  virtual bool restoreFrom(QDataStream &out, bool readOptions);
+    bool setItemFactory(SceneItem *factoryItem, const QByteArray &typeId = "");
+    SceneItem *getItemFactory(const QByteArray &typeId) const;
 
-  friend void to_json(nlohmann::json &j, const BGEditorScene &p);
-  friend void from_json(const nlohmann::json &j, BGEditorScene &p);
+    virtual SceneItem *createItemOfType(const QByteArray &typeId) const;
 
-  // item factories
-  template <class T> bool registerItemFactory() {
-    static T f;
-    return setItemFactory(&f);
-  }
+    template<class T> T *createItemOfType(QPointF *itype = nullptr) const;
 
-  template <class T> static T *factory() {
-    static T s_item;
-    return &s_item;
-  }
+    void setItemFactoryFilter(SceneItemFactoryInterface *filter);
+    // scene factory & copy
+    virtual BGEditorScene *createScene() const;
+    virtual BGEditorScene *clone();
 
-  bool setItemFactory(SceneItem *factoryItem, const QByteArray &typeId = "");
-  SceneItem *getItemFactory(const QByteArray &typeId) const;
+    virtual void backupScene(QString file);
+    virtual void removeBackUp(QString file);
+    virtual void restoreFromFile(QString file);
+    virtual void copyProperties(const BGEditorScene &from);
 
-  virtual SceneItem *createItemOfType(const QByteArray &typeId) const;
+    // attributes
+    QByteArray getSuperClassId(const QByteArray &classId) const;
 
-  template <class T> T *createItemOfType(QPointF *at = nullptr) const;
+    const BGItemAttribute getClassAttribute(const QByteArray &classId,
+                                            const QByteArray &attrId,
+                                            bool inherited) const;
+    AttributesMap getClassAttributes(const QByteArray &classId,
+                                     bool inherited) const;
 
-  void setItemFactoryFilter(SceneItemFactoryInterface *filter) {
-    m_itemFactoryFilter = filter;
-  }
+    bool removeClassAttribute(const QByteArray &classId,
+                              const QByteArray &attrId);
 
-  // scene factory & copy
-  virtual BGEditorScene *createScene() const { return new BGEditorScene(); }
+    void setClassAttribute(const QByteArray &classId, const BGItemAttribute &attr,
+                           bool vis = false);
+    void setClassAttribute(const QByteArray &classId, const QByteArray &attrId,
+                           const QVariant &defaultValue);
 
-  virtual BGEditorScene *clone();
+    // convenience method to create a class attribute by single call
+    BGItemAttribute &createClassAttribute(
+        const QByteArray &classId, const QByteArray &attrId,
+        const QString &attrName, const QVariant &defaultValue = QVariant(),
+        int attrFlags = ATTR_FIXED,
+        BGItemAttributeConstraints *constrains = nullptr, bool vis = false);
 
-  virtual void backupScene(QString file);
-  virtual void removeBackUp(QString file);
-  virtual void restoreFromFile(QString file);
-  virtual void copyProperties(const BGEditorScene &from);
+    QSet<QByteArray> getVisibleClassAttributes(const QByteArray &classId,
+                                               bool inherited) const;
+    void setVisibleClassAttributes(const QByteArray &classId,
+                                   const QSet<QByteArray> &vis);
 
-  // attributes
-  QByteArray getSuperClassId(const QByteArray &classId) const {
-    if (m_classToSuperIds.contains(classId))
-      return m_classToSuperIds[classId];
+    void setClassAttributeVisible(const QByteArray &classId,
+                                  const QByteArray &attrId, bool vis = true);
+    bool isClassAttributeVisible(const QByteArray &classId,
+                                 const QByteArray &attrId) const;
 
-    return QByteArray();
-  }
+    BGItemAttributeConstraints *
+    getClassAttributeConstrains(const QByteArray &classId,
+                                const QByteArray &attrId) const;
+    void setClassAttributeConstrains(const QByteArray &classId,
+                                     const QByteArray &attrId,
+                                     BGItemAttributeConstraints *cptr);
 
-  const BGItemAttribute getClassAttribute(const QByteArray &classId,
-                                          const QByteArray &attrId,
-                                          bool inherited) const;
-  AttributesMap getClassAttributes(const QByteArray &classId,
-                                   bool inherited) const;
+    // items
+    template<class T = SceneItem, class L = T> QList<T *> getItems() const;
 
-  bool removeClassAttribute(const QByteArray &classId,
-                            const QByteArray &attrId);
+    template<class T = SceneItem>
+    QList<T *> getItemsById(const QString &id) const;
 
-  void setClassAttribute(const QByteArray &classId, const BGItemAttribute &attr,
-                         bool vis = false);
-  void setClassAttribute(const QByteArray &classId, const QByteArray &attrId,
-                         const QVariant &defaultValue);
+    QGraphicsItem *getItemAt(const QPointF &pos) const;
 
-  // convenience method to create a class attribute by single call
-  BGItemAttribute &createClassAttribute(
-      const QByteArray &classId, const QByteArray &attrId,
-      const QString &attrName, const QVariant &defaultValue = QVariant(),
-      int attrFlags = ATTR_FIXED,
-      BGItemAttributeConstraints *constrains = nullptr, bool vis = false);
+    template<class T> T *isItemAt(const QPointF &pos) const
+    {
+        return dynamic_cast<T *>(getItemAt(pos));
+    }
 
-  QSet<QByteArray> getVisibleClassAttributes(const QByteArray &classId,
-                                             bool inherited) const;
-  void setVisibleClassAttributes(const QByteArray &classId,
-                                 const QSet<QByteArray> &vis);
+    // selections
+    QList<QGraphicsItem *> createSelectedList(const SceneItemEvaluator &) const;
 
-  void setClassAttributeVisible(const QByteArray &classId,
-                                const QByteArray &attrId, bool vis = true);
-  bool isClassAttributeVisible(const QByteArray &classId,
-                               const QByteArray &attrId) const;
+    template<class T = SceneItem, class L = T>
+    QList<T *> getSelectedItems(bool triggeredIfEmpty = false) const;
 
-  BGItemAttributeConstraints *
-  getClassAttributeConstrains(const QByteArray &classId,
-                              const QByteArray &attrId) const;
-  void setClassAttributeConstrains(const QByteArray &classId,
-                                   const QByteArray &attrId,
-                                   BGItemAttributeConstraints *cptr);
+    virtual void beginSelection();
+    virtual void endSelection();
 
-  // items
-  template <class T = SceneItem, class L = T> QList<T *> getItems() const;
+    void ensureSelectionVisible();
 
-  template <class T = SceneItem>
-  QList<T *> getItemsById(const QString &id) const;
+    void moveSelectedItemsBy(double x, double y, bool snapped = false);
 
-  QGraphicsItem *getItemAt(const QPointF &pos) const;
+    virtual void moveSelectedItemsBy(const QPointF &point, bool snapped = false);
 
-  template <class T> T *isItemAt(const QPointF &pos) const {
-    return dynamic_cast<T *>(getItemAt(pos));
-  }
+    virtual void rotateElementPort(int dir);
 
-  // selections
-  QList<QGraphicsItem *> createSelectedList(const SceneItemEvaluator &) const;
+    virtual QList<SceneItem *> cloneSelectedItems();
 
-  template <class T = SceneItem, class L = T>
-  QList<T *> getSelectedItems(bool triggeredIfEmpty = false) const;
+    virtual int getBoundingMargin() const;
 
-  virtual void beginSelection();
-  virtual void endSelection();
+    // to reimplement
+    virtual QList<QGraphicsItem *> getCopyPasteItems() const;
+    virtual QList<QGraphicsItem *> getTransformableItems() const;
 
-  void ensureSelectionVisible();
+    // operations
+    void startDrag(QGraphicsItem *dragItem);
+    void startTransform(bool on, bool moveOnly = false);
 
-  void moveSelectedItemsBy(double x, double y, bool snapped = false) {
-    moveSelectedItemsBy(QPointF(x, y), snapped);
-  }
+    // actions
+    QObject *getActions();
+    BGEditorSceneActions *actions();
 
-  virtual void moveSelectedItemsBy(const QPointF &d, bool snapped = false);
+    // edit extenders
+    void setSceneEditController(SceneEditControllerInterface *controller);
+    SceneEditControllerInterface *getSceneEditController() const;
 
-  virtual void rotateElementPort(int dir);
+    // context menu
+    void setContextMenuController(SceneMenuControllerInterface *controller);
+    SceneMenuControllerInterface *getContextMenuController() const;
+    QGraphicsItem *getContextMenuTrigger() const;
 
-  virtual QList<SceneItem *> cloneSelectedItems();
+    // other
+    bool checkLabelRegion(const QRectF &region);
+    void layoutItemLabels();
+    void forceUpdate();
 
-  virtual int getBoundingMargin() const { return 0; }
+    virtual QPointF getSnapped(const QPointF &pos) const;
 
-  // to reimplement
-  virtual QList<QGraphicsItem *> getCopyPasteItems() const;
-  virtual QList<QGraphicsItem *> getTransformableItems() const;
+    int getInfoStatus() const;
+    QGraphicsView *getCurrentView();
 
-  // operations
-  void startDrag(QGraphicsItem *dragItem);
-  void startTransform(bool on, bool moveOnly = false);
-
-  // actions
-  QObject *getActions();
-  BGEditorSceneActions *actions();
-
-  // edit extenders
-  void setSceneEditController(SceneEditControllerInterface *controller);
-
-  SceneEditControllerInterface *getSceneEditController() const {
-    return m_editController;
-  }
-
-  // context menu
-  void setContextMenuController(SceneMenuControllerInterface *controller) {
-    m_menuController = controller;
-  }
-
-  SceneMenuControllerInterface *getContextMenuController() const {
-    return m_menuController;
-  }
-
-  QGraphicsItem *getContextMenuTrigger() const { return m_menuTriggerItem; }
-
-  // other
-  bool checkLabelRegion(const QRectF &r);
-  void layoutItemLabels();
-
-  void forceUpdate();
-
-  virtual QPointF getSnapped(const QPointF &pos) const;
-
-  int getInfoStatus() const { return m_infoStatus; }
-
-  QGraphicsView *getCurrentView();
-
-  // callbacks
-  virtual void onItemDestroyed(SceneItem *citem);
-  virtual void refresh(SceneItem *citem);
+    // callbacks
+    virtual void onItemDestroyed(SceneItem *citem);
+    virtual void refresh(SceneItem *citem);
 
 public Q_SLOTS:
-  void enableGrid(bool on = true);
-  void enableGridSnap(bool on = true);
-  void enableItemLabels(bool on = true);
+    void enableGrid(bool on = true);
+    void enableGridSnap(bool on = true);
+    void enableItemLabels(bool on = true);
 
-  void undo();
-  void redo();
+    void undo();
+    void redo();
 
-  void selectAll();
-  void deselectAll();
-  void selectItem(SceneItem *item, bool exclusive = true);
-  void selectItems(const QList<SceneItem *> &items, bool exclusive = true);
+    void selectAll();
+    void deselectAll();
+    void selectItem(SceneItem *item, bool exclusive = true);
+    void selectItems(const QList<SceneItem *> &items, bool exclusive = true);
 
-  void del();
-  void cut();
-  void copy();
+    void del();
+    void cut();
+    void copy();
 
-  void setPastePosition(const QPointF &anchor) { m_pastePos = anchor; }
-  void pasteAt(const QPointF &anchor);
-  void paste();
+    void setPastePosition(const QPointF &anchor);
+    void pasteAt(const QPointF &anchor);
+    void paste();
 
-  void crop();
+    void crop();
 
-  void setSceneCursor(const QCursor &c);
+    void setSceneCursor(const QCursor &cursor);
 
 Q_SIGNALS:
-  void undoAvailable(bool);
-  void redoAvailable(bool);
-  void itemDeleted(QGraphicsItem *);
-  void sceneChanged();
-  void sceneDoubleClicked(QGraphicsSceneMouseEvent *mouseEvent,
-                          QGraphicsItem *clickedItem);
+    void undoAvailable(bool flag);
+    void redoAvailable(bool flag);
+    void itemDeleted(QGraphicsItem *item);
+    void sceneChanged();
+    void sceneDoubleClicked(QGraphicsSceneMouseEvent *mouseEvent,
+                            QGraphicsItem *clickedItem);
 
-  void infoStatusChanged(int status);
+    void infoStatusChanged(int status);
 
 protected:
-  void setInfoStatus(int status);
+    void setInfoStatus(int status);
 
-  void updateCursorState();
-  virtual bool doUpdateCursorState(Qt::KeyboardModifiers keys,
-                                   Qt::MouseButtons buttons,
-                                   QGraphicsItem *hoverItem);
+    void updateCursorState();
+    virtual bool doUpdateCursorState(Qt::KeyboardModifiers keys,
+                                     Qt::MouseButtons buttons,
+                                     QGraphicsItem *hoverItem);
 
-  virtual QObject *createActions();
+    virtual QObject *createActions();
 
-  // internal call
-  void selectUnderMouse(QGraphicsSceneMouseEvent *mouseEvent);
+    // internal call
+    void selectUnderMouse(QGraphicsSceneMouseEvent *mouseEvent);
 
-  // override
-  virtual void drawBackground(QPainter *painter, const QRectF &rect);
-  virtual void drawForeground(QPainter *painter, const QRectF &rect);
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void keyPressEvent(QKeyEvent *keyEvent);
-  virtual void keyReleaseEvent(QKeyEvent *keyEvent);
-  virtual void focusInEvent(QFocusEvent *focusEvent);
-  virtual void
-  contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent);
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
+    void drawForeground(QPainter *painter, const QRectF &rect) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    void keyPressEvent(QKeyEvent *keyEvent) override;
+    void keyReleaseEvent(QKeyEvent *keyEvent) override;
+    void focusInEvent(QFocusEvent *focusEvent) override;
+    void
+    contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent) override;
 
-  void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
-  void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
-  void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
+    void dragLeaveEvent(QGraphicsSceneDragDropEvent *event) override;
+    void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
-  // call from reimp
-  void moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem *dragItem,
-                bool performDrag);
-  virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent,
+    // call from reimp
+    void moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem *dragItem,
+                  bool performDrag);
+    virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent,
+                             QGraphicsItem *dragItem);
+    void finishDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem *dragItem,
+                    bool dragCancelled);
+
+    // callbacks
+    virtual void
+    onDragging(QGraphicsItem *dragItem,
+               const QSet<InteractiveItemInterface *> &acceptedItems,
+               const QSet<InteractiveItemInterface *> &rejectedItems);
+    virtual void onMoving(QGraphicsSceneMouseEvent *mouseEvent,
+                          QGraphicsItem *hoverItem);
+    virtual void onDropped(QGraphicsSceneMouseEvent *mouseEvent,
                            QGraphicsItem *dragItem);
-  void finishDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem *dragItem,
-                  bool dragCancelled);
+    virtual void onDropped(QGraphicsSceneDragDropEvent *mouseEvent);
+    virtual void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void onRightButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void onLeftClick(QGraphicsSceneMouseEvent *mouseEvent,
+                             QGraphicsItem *clickedItem);
+    virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent *mouseEvent,
+                                   QGraphicsItem *clickedItem);
+    // called on drag after single click; returns true if handled
+    virtual bool onClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
+                             const QPointF &clickPos);
+    // called on drag after double click; returns true if handled
+    virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
+                                   const QPointF &clickPos);
 
-  // callbacks
-  virtual void
-  onDragging(QGraphicsItem *dragItem,
-             const QSet<InteractiveItemInterface *> &acceptedItems,
-             const QSet<InteractiveItemInterface *> &rejectedItems);
-  virtual void onMoving(QGraphicsSceneMouseEvent *mouseEvent,
-                        QGraphicsItem *hoverItem);
-  virtual void onDropped(QGraphicsSceneMouseEvent *mouseEvent,
-                         QGraphicsItem *dragItem);
-  virtual void onDropped(QGraphicsSceneDragDropEvent *mouseEvent);
-  virtual void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void onRightButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
-  virtual void onLeftClick(QGraphicsSceneMouseEvent *mouseEvent,
-                           QGraphicsItem *clickedItem);
-  virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent *mouseEvent,
-                                 QGraphicsItem *clickedItem);
-  // called on drag after single click; returns true if handled
-  virtual bool onClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
-                           const QPointF &clickPos);
-  // called on drag after double click; returns true if handled
-  virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent,
-                                 const QPointF &clickPos);
-
-  virtual void onSceneChanged();
+    virtual void onSceneChanged();
 
 protected Q_SLOTS:
-  virtual void onSelectionChanged();
-  void onFocusItemChanged(QGraphicsItem *newFocusItem,
-                          QGraphicsItem *oldFocusItem, Qt::FocusReason reason);
-  void onItemEditingFinished(SceneItem *item, bool cancelled);
+    virtual void onSelectionChanged();
+    void onFocusItemChanged(QGraphicsItem *newFocusItem,
+                            QGraphicsItem *oldFocusItem, Qt::FocusReason reason);
+    void onItemEditingFinished(SceneItem *item, bool cancelled);
 
-  void onActionDelete();
-  void onActionSelectAll();
-  void onActionEditLabel(SceneItem *item);
+    void onActionDelete();
+    void onActionSelectAll();
+    void onActionEditLabel(SceneItem *item);
 
 private:
-  void removeItems();
-  void checkUndoState();
+    void removeItems();
+    void checkUndoState();
 
 protected:
-  QPointF m_leftClickPos;
-  QPointF m_mousePos;
-  bool m_doubleClick = false;
-  bool m_cancelled = false;
-  bool m_dragInProgress = false;
-  QGraphicsItem *m_startDragItem = nullptr;
-  QPointF m_lastDragPos;
-  QGraphicsItem *m_draggedItem = nullptr;
-  QSet<InteractiveItemInterface *> m_acceptedHovers, m_rejectedHovers;
-  bool m_skipMenuEvent = false;
+    QPointF m_leftClickPos;
+    QPointF m_mousePos;
+    bool m_doubleClick = false;
+    bool m_cancelled = false;
+    bool m_dragInProgress = false;
+    QGraphicsItem *m_startDragItem = nullptr;
+    QPointF m_lastDragPos;
+    QGraphicsItem *m_draggedItem = nullptr;
+    QSet<InteractiveItemInterface *> m_acceptedHovers, m_rejectedHovers;
+    bool m_skipMenuEvent = false;
 
-  SceneItem *m_editItem = nullptr;
+    SceneItem *m_editItem = nullptr;
 
-  BGTextLabelEdit m_labelEditor;
-  BGTransformRect *m_transformRect;
-  UndoManagerInterface *m_undoManager = nullptr;
+    BGTextLabelEdit m_labelEditor;
+    BGTransformRect *m_transformRect;
+    UndoManagerInterface *m_undoManager = nullptr;
 
 private:
-  int m_infoStatus;
+    int m_infoStatus;
 
-  QMap<QByteArray, SceneItem *> m_itemFactories;
-  SceneItemFactoryInterface *m_itemFactoryFilter = nullptr;
+    QMap<QByteArray, SceneItem *> m_itemFactories;
+    SceneItemFactoryInterface *m_itemFactoryFilter = nullptr;
 
-  bool m_inProgress = false;
+    bool m_inProgress = false;
 
-  QGraphicsItem *m_menuTriggerItem = nullptr;
-  SceneMenuControllerInterface *m_menuController = nullptr;
+    QGraphicsItem *m_menuTriggerItem = nullptr;
+    SceneMenuControllerInterface *m_menuController = nullptr;
 
-  QObject *m_actions = nullptr;
+    QObject *m_actions = nullptr;
 
-  SceneEditControllerInterface *m_editController = nullptr;
+    SceneEditControllerInterface *m_editController = nullptr;
 
-  QMap<QByteArray, QByteArray> m_classToSuperIds;
-  ClassAttributesMap m_classAttributes;
-  QMap<QByteArray, QSet<QByteArray>> m_classAttributesVis;
-  AttributeConstrainsMap m_classAttributesConstrains;
+    QMap<QByteArray, QByteArray> m_classToSuperIds;
+    ClassAttributesMap m_classAttributes;
+    QMap<QByteArray, QSet<QByteArray>> m_classAttributesVis;
+    AttributeConstrainsMap m_classAttributesConstrains;
 
-  int m_gridSize;
-  bool m_gridEnabled;
-  bool m_gridSnap;
-  QPen m_gridPen;
+    int m_gridSize;
+    bool m_gridEnabled;
+    bool m_gridSnap;
+    QPen m_gridPen;
 
-  bool m_forceUpdateItems = true;
-  QPointF m_pastePos;
+    bool m_forceUpdateItems = true;
+    QPointF m_pastePos;
 
-  // labels
-  QPainterPath m_usedLabelsRegion;
-  bool m_labelsEnabled, m_labelsUpdate;
+    // labels
+    QPainterPath m_usedLabelsRegion;
+    bool m_labelsEnabled, m_labelsUpdate;
 
-  bool m_isFontAntialiased = true;
+    bool m_isFontAntialiased = true;
 };
 
 // factorization
 
-template <class T> T *BGEditorScene::createItemOfType(QPointF *at) const {
-  if (SceneItem *item = createItemOfType(T::TYPE())) {
-    if (T *titem = dynamic_cast<T *>(item)) {
-      if (at) {
-        (const_cast<BGEditorScene *>(this))->addItem(titem);
-        titem->setPos(*at);
-      }
+template<class T> T *BGEditorScene::createItemOfType(QPointF *atype) const
+{
+    if (SceneItem *item = createItemOfType(T::TYPE())) {
+        if (T *titem = dynamic_cast<T *>(item)) {
+            if (atype) {
+                (const_cast<BGEditorScene *>(this))->addItem(titem);
+                titem->setPos(*atype);
+            }
 
-      return titem;
+            return titem;
+        }
+
+        delete item;
+        return nullptr;
     }
 
-    delete item;
     return nullptr;
-  }
-
-  return nullptr;
 }
 
 // selections
 
-template <class T, class L>
-QList<T *> BGEditorScene::getSelectedItems(bool triggeredIfEmpty) const {
-  QList<T *> result;
+template<class T, class L>
+QList<T *> BGEditorScene::getSelectedItems(bool triggeredIfEmpty) const
+{
+    QList<T *> result;
 
-  QList<QGraphicsItem *> selItems = selectedItems();
-  if (selItems.isEmpty() && triggeredIfEmpty && m_menuTriggerItem)
-    selItems.append(m_menuTriggerItem);
+    QList<QGraphicsItem *> selItems = selectedItems();
+    if (selItems.isEmpty() && triggeredIfEmpty && m_menuTriggerItem) {
+        selItems.append(m_menuTriggerItem);
+    }
+    for (auto *item : selItems) {
+        T *titem = dynamic_cast<L *>(item);
+        if (titem) {
+            result.append(titem);
+        }
+    }
 
-  for (auto *item : selItems) {
-    T *titem = dynamic_cast<L *>(item);
-    if (titem)
-      result.append(titem);
-  }
-
-  return result;
+    return result;
 }
 
-template <class T, class L> QList<T *> BGEditorScene::getItems() const {
-  QList<T *> result;
+template<class T, class L> QList<T *> BGEditorScene::getItems() const
+{
+    QList<T *> result;
 
-  auto allItems = items();
-  for (auto item : allItems) {
-    T *titem = dynamic_cast<L *>(item);
-    if (titem)
-      result.append(titem);
-  }
+    auto allItems = items();
+    for (auto *item : allItems) {
+        T *titem = dynamic_cast<L *>(item);
+        if (titem) {
+            result.append(titem);
+        }
+    }
 
-  return result;
+    return result;
 }
 
-template <class T>
-QList<T *> BGEditorScene::getItemsById(const QString &id) const {
-  QList<T *> res;
+template<class T>
+QList<T *> BGEditorScene::getItemsById(const QString &id) const
+{
+    QList<T *> res;
 
-  auto allItems = items();
-  for (auto item : allItems) {
-    T *titem = dynamic_cast<T *>(item);
+    auto allItems = items();
+    for (auto *item : allItems) {
+        T *titem = dynamic_cast<T *>(item);
 
-    if (titem && titem->getId() == id)
-      res << titem;
-  }
+        if (titem && titem->getId() == id) {
+            res << titem;
+        }
+    }
 
-  return res;
+    return res;
 }
 
 } // namespace BondGraphEditorWindow

@@ -29,27 +29,30 @@ class SceneItem;
 
 class ControlPoint : public QObject,
                      public QGraphicsRectItem,
-                     public BGContextMenuProviderInterface {
-  Q_OBJECT
+                     public BGContextMenuProviderInterface
+{
+    Q_OBJECT
 public:
-  typedef QGraphicsRectItem Shape;
+    typedef QGraphicsRectItem Shape;
 
-  explicit ControlPoint(SceneItem *parent);
-  virtual ~ControlPoint() {}
+    explicit ControlPoint(SceneItem *parent);
+    virtual ~ControlPoint()
+    {
+    }
 
-  // menu
-  virtual bool populateMenu(QMenu &menu,
-                            const QList<QGraphicsItem *> &selectedItems);
+    // menu
+    virtual bool populateMenu(QMenu &menu,
+                              const QList<QGraphicsItem *> &selectedItems);
 
 protected Q_SLOTS:
-  void onActionDelete();
+    void onActionDelete();
 
 protected:
-  // override
-  virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change,
-                              const QVariant &value);
+    // override
+    virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change,
+                                const QVariant &value);
 
-  SceneItem *m_parentItem;
+    SceneItem *m_parentItem;
 };
 
 } // namespace BondGraphEditorWindow

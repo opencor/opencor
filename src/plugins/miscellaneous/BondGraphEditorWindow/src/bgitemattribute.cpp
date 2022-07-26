@@ -22,57 +22,112 @@ namespace OpenCOR {
 namespace BondGraphEditorWindow {
 // attributes
 
-BGItemAttribute::BGItemAttribute() : flags(ATTR_NONE) {
-  valueType = QVariant::String;
+BGItemAttribute::BGItemAttribute() :
+    flags(ATTR_NONE)
+{
+    valueType = QVariant::String;
 }
 
-BGItemAttribute::BGItemAttribute(const QByteArray &attrId,
-                                 const QString &attrName)
-    : flags(ATTR_NODEFAULT) {
-  id = attrId;
-  name = attrName;
-  if (name.isEmpty())
-    name = id;
-
-  valueType = QVariant::String;
+bool BGItemAttribute::isUserDefined() const
+{
+    return !(flags & ATTR_FIXED);
 }
 
-BGItemAttribute::BGItemAttribute(const QByteArray &attrId,
-                                 const QString &attrName,
-                                 const QVariant &defaultValue_,
-                                 const int attrFlags_)
-    : flags(attrFlags_) {
-  id = attrId;
-  name = attrName.isEmpty() ? id : attrName;
+BGItemAttribute::BGItemAttribute(const QByteArray &attr_id,
+                                 const QString &attr_name) :
+    flags(ATTR_NODEFAULT)
+{
+    id = attr_id;
+    name = attr_name;
+    if (name.isEmpty())
+        name = id;
 
-  valueType = defaultValue_.type();
-  defaultValue = (flags & ATTR_NODEFAULT) ? QVariant() : defaultValue_;
+    valueType = QVariant::String;
 }
 
-bool BGItemAttribute::storeTo(QDataStream &out, quint64 /*version64*/) const {
-  out << id << name << defaultValue << true << true << valueType;
+BGItemAttribute::BGItemAttribute(const QByteArray &attr_id,
+                                 const QString &attr_name,
+                                 const QVariant &default_value,
+                                 const int attr_flags) :
+    flags(attr_flags)
+{
+    id = attr_id;
+    name = attr_name.isEmpty() ? id : attr_name;
 
-  return true;
+    valueType = default_value.type();
+    defaultValue = (flags & ATTR_NODEFAULT) ? QVariant() : default_value;
 }
 
-bool BGItemAttribute::restoreFrom(QDataStream &out, quint64 version64) {
-  Q_UNUSED(version64);
-  out >> id;
+bool BGItemAttribute::storeTo(QDataStream &out, quint64 /*version64*/) const
+{
+    out << id << name << defaultValue << true << true << valueType;
 
-  static bool dummy;
+    return true;
+}
 
-  out >> name >> defaultValue >> dummy >> dummy;
-  // attrFlags = ATTR_USER;
+bool BGItemAttribute::restoreFrom(QDataStream &out, quint64 version64)
+{
+    Q_UNUSED(version64);
+    out >> id;
 
-  out >> valueType;
+    static bool dummy;
 
-  return true;
+    out >> name >> defaultValue >> dummy >> dummy;
+    // attrFlags = ATTR_USER;
+
+    out >> valueType;
+
+    return true;
 }
 
 // attribute constrains
 
-BGItemAttributeConstraints::~BGItemAttributeConstraints() {
-  // dummy
+BGItemAttributeConstraints::~BGItemAttributeConstraints()
+{
+    // dummy
+}
+
+BGItemAttributeIntegerConstraints::BGItemAttributeIntegerConstraints(int min_v, int max_v) :
+    minValue(min_v), maxValue(max_v)
+{
+}
+
+BGItemAttributeIntegerConstraints::BGItemAttributeIntegerConstraints(BGItemAttributeConstraints *ptr)
+{
+    auto *dptr =
+        dynamic_cast<BGItemAttributeIntegerConstraints *>(ptr);
+    if (dptr != nullptr) {
+        minValue = dptr->minValue;
+        maxValue = dptr->maxValue;
+    }
+}
+
+BGItemAttributeRationalConstraints::BGItemAttributeRationalConstraints(double min_v, double max_v, int decs) :
+    minValue(min_v), maxValue(max_v), decPoints(decs)
+{
+}
+
+BGItemAttributeRationalConstraints::BGItemAttributeRationalConstraints(
+    BGItemAttributeConstraints *ptr)
+{
+    auto *dptr =
+        dynamic_cast<BGItemAttributeRationalConstraints *>(ptr);
+    if (dptr != nullptr) {
+        minValue = dptr->minValue;
+        maxValue = dptr->maxValue;
+        decPoints = dptr->decPoints;
+    }
+}
+
+QMap<int, QIcon> BGAttributeConstraintsListBase::iconsAsMap() const
+{
+    QMap<int, QIcon> result;
+
+    for (auto i = 0; i < icons.size(); ++i) {
+        result[i] = icons[i];
+    }
+
+    return result;
 }
 
 } // namespace BondGraphEditorWindow

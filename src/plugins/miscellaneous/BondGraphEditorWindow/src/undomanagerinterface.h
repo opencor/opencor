@@ -22,17 +22,18 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-class UndoManagerInterface {
+class UndoManagerInterface
+{
 public:
-  virtual void reset() = 0;
-  virtual void addState() = 0;
-  virtual void revertState() = 0;
-  virtual void undo() = 0;
-  virtual void redo() = 0;
-  virtual int availableUndoCount() const = 0;
-  virtual int availableRedoCount() const = 0;
-  virtual void serialiseToFile(QString path) = 0;
-  virtual void restoreFromFile(QString path) = 0;
+    virtual void reset() = 0;
+    virtual void addState() = 0;
+    virtual void revertState() = 0;
+    virtual void undo() = 0;
+    virtual void redo() = 0;
+    virtual int availableUndoCount() const = 0;
+    virtual int availableRedoCount() const = 0;
+    virtual void serialiseToFile(QString path) = 0;
+    virtual void restoreFromFile(QString path) = 0;
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

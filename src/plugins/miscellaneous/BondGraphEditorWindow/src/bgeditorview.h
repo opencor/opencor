@@ -28,81 +28,64 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class BGEditorView : public QGraphicsView {
-  Q_OBJECT
+class BGEditorView : public QGraphicsView
+{
+    Q_OBJECT
 
 public:
-  BGEditorView(BGEditorScene *scene, QWidget *parent = nullptr);
-  BGEditorView(QWidget *parent = nullptr);
-  virtual ~BGEditorView();
+    BGEditorView(BGEditorScene *scene, QWidget *parent = nullptr);
+    explicit BGEditorView(QWidget *parent = nullptr);
+    ~BGEditorView() override;
 
-  // zoom
-  double getZoom() const { return m_currentZoom; }
-  // target is % value to zoom to (1.0 = 100% = reset zoom, 0.25 = 25% = 1/4
-  // etc.)
-  void zoomTo(double target);
-  // factor if relative % value to zoom by (2 = 2x from current etc.)
-  void zoomBy(double factor);
+    // zoom
+    double getZoom() const;
+    // target is % value to zoom to (1.0 = 100% = reset zoom, 0.25 = 25% = 1/4
+    // etc.)
+    void zoomTo(double target);
+    // factor if relative % value to zoom by (2 = 2x from current etc.)
+    void zoomBy(double factor);
 
-  double getZoomBeforeFit() const { return m_zoomBeforeFit; }
-  void fitToView();
-  void fitSelectedToView();
-  void zoomBack();
+    double getZoomBeforeFit() const;
+    void fitToView();
+    void fitSelectedToView();
+    void zoomBack();
 
-  // center
-  QPointF getCenter() const;
+    // center
+    QPointF getCenter() const;
+    void centerContent();
 
-  void centerContent();
+    // scene
+    QGraphicsItem *getDragItem();
 
-  // scene
-  QGraphicsItem *getDragItem() {
-    if (scene())
-      return scene()->mouseGrabberItem();
-    else
-      return nullptr;
-  }
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *keyEvent) override;
 
-  // override
-  virtual void mousePressEvent(QMouseEvent *e);
-  virtual void mouseMoveEvent(QMouseEvent *e);
-  virtual void mouseReleaseEvent(QMouseEvent *e);
-  virtual void contextMenuEvent(QContextMenuEvent *e);
-  virtual void wheelEvent(QWheelEvent *e);
-  virtual void keyReleaseEvent(QKeyEvent *keyEvent);
-
-  /*
-          void dragEnterEvent(QDragEnterEvent* event);
-          void dragMoveEvent(QDragMoveEvent* event);
-          void dragLeaveEvent(QDragLeaveEvent* event);
-          void dropEvent(QDropEvent* event);
-  */
-
-  void paintEvent(QPaintEvent *event) {
-    QPaintEvent *newEvent = new QPaintEvent(event->region().boundingRect());
-    QGraphicsView::paintEvent(newEvent);
-    delete newEvent;
-  }
+    void paintEvent(QPaintEvent *event) override;
 
 Q_SIGNALS:
-  void scaleChanged(double);
+    void scaleChanged(double newScale);
 
 private Q_SLOTS:
-  void restoreContextMenu();
-  void onScrollTimeout();
+    void restoreContextMenu();
+    void onScrollTimeout();
 
 private:
-  DragMode m_dragModeTmp;
-  Qt::ContextMenuPolicy m_menuModeTmp;
-  bool m_interactiveTmp = false;
-  bool m_moved = false;
-  QPoint m_pos;
+    DragMode m_dragModeTmp;
+    Qt::ContextMenuPolicy m_menuModeTmp;
+    bool m_interactiveTmp = false;
+    bool m_moved = false;
+    QPoint m_pos;
 
-  double m_currentZoom = 1.0;
-  double m_zoomBeforeFit = 0.0; // 0 means no zoom called yet
-  QPointF m_dxyBeforeFit;
+    double m_currentZoom = 1.0;
+    double m_zoomBeforeFit = 0.0; // 0 means no zoom called yet
+    QPointF m_dxyBeforeFit;
 
-  QTimer m_scrollTimer;
-  float m_scrollThreshold = 30;
+    QTimer m_scrollTimer;
+    float m_scrollThreshold = 30;
 };
 
 } // namespace BondGraphEditorWindow

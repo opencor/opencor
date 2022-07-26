@@ -48,7 +48,7 @@ QStringList byteArraySetToStringList(const QSet<QByteArray> &visIds);
 QString pointsToString(const QList<QPointF> &points);
 QList<QPointF> pointsFromString(const QString &text);
 
-template <class X> void insertUnique(X &dest, const X &from);
+template<class X> void insertUnique(X &dest, const X &from);
 
 QPointF closestIntersection(const QLineF &line, const QPolygonF &with);
 
@@ -61,22 +61,24 @@ QLineF extendLine(const QLineF &line, float fromStart, float fromEnd);
 QMap<QString, QList<QString>> getCellMLOutVariables(QString filename,
                                                     QString *timeVar = nullptr);
 
-class CellMLVariableFilter : public QSortFilterProxyModel {
+class CellMLVariableFilter : public QSortFilterProxyModel
+{
 public:
-  CellMLVariableFilter(QObject *parent = nullptr)
-      : QSortFilterProxyModel(parent){};
-  virtual ~CellMLVariableFilter(){};
+    CellMLVariableFilter(QObject *parent = nullptr) :
+        QSortFilterProxyModel(parent) {};
+    virtual ~CellMLVariableFilter() {};
 
 protected:
-  bool filterAcceptsRow(int sourceRow,
-                        const QModelIndex &sourceParent) const override;
+    bool filterAcceptsRow(int sourceRow,
+                          const QModelIndex &sourceParent) const override;
 };
 
-template <class X> void insertUnique(X &dest, const X &from) {
-  for (auto it = from.constBegin(); it != from.constEnd(); ++it) {
-    if (!dest.contains(it.key()))
-      dest[it.key()] = it.value();
-  }
+template<class X> void insertUnique(X &dest, const X &from)
+{
+    for (auto it = from.constBegin(); it != from.constEnd(); ++it) {
+        if (!dest.contains(it.key()))
+            dest[it.key()] = it.value();
+    }
 }
 } // namespace Utils
 } // namespace BondGraphEditorWindow

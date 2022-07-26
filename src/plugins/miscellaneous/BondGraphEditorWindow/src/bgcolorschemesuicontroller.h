@@ -26,36 +26,36 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class BGColorSchemesUIController : public QObject {
-  Q_OBJECT
+class BGColorSchemesUIController : public QObject
+{
+    Q_OBJECT
 public:
-  explicit BGColorSchemesUIController(QObject *parent = nullptr);
+    explicit BGColorSchemesUIController(QObject *parent = nullptr);
 
-  void setScene(BGEditorScene *scene) { m_scene = scene; }
-
-  QMenu *getSchemesMenu() { return &m_menu; }
+    void setScene(BGEditorScene *scene);
+    QMenu *getSchemesMenu();
 
 Q_SIGNALS:
-  void colorSchemeApplied(BGEditorScene *scene);
+    void colorSchemeApplied(BGEditorScene *scene);
 
 private Q_SLOTS:
-  void onMenuTriggered(QAction *action);
+    void onMenuTriggered(QAction *action);
 
 private:
-  QMenu m_menu;
-  BGEditorScene *m_scene = nullptr;
+    QMenu m_menu;
+    BGEditorScene *m_scene = nullptr;
 
-  struct Scheme {
-    QString name;
-    QColor bgColor, gridColor;
-    QColor nodeColor, nodeStrokeColor, nodeLabelColor;
-    QColor edgeColor, edgeLabelColor;
-  };
+    struct Scheme {
+        QString name;
+        QColor bgColor, gridColor;
+        QColor nodeColor, nodeStrokeColor, nodeLabelColor;
+        QColor edgeColor, edgeLabelColor;
+    };
 
-  QList<Scheme> m_schemes;
+    QList<Scheme> m_schemes;
 
-  void addScheme(const Scheme &scheme);
-  void applyScheme(const Scheme &scheme);
+    void addScheme(const Scheme &scheme);
+    void applyScheme(const Scheme &scheme);
 };
 
 } // namespace BondGraphEditorWindow

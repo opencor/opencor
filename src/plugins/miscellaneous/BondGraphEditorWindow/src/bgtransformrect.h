@@ -34,56 +34,59 @@ class BGEditorScene;
 class SceneItem;
 class BGElement;
 
-class BGTransformRect : public QObject, public SceneEditControllerInterface {
-  Q_OBJECT
+class BGTransformRect : public QObject, public SceneEditControllerInterface
+{
+    Q_OBJECT
 
 public:
-  BGTransformRect();
-  ~BGTransformRect();
+    BGTransformRect();
+    ~BGTransformRect() override;
 
-  // move-only mode
-  void setMoveOnly(bool on);
+    // move-only mode
+    void setMoveOnly(bool on);
 
-  // ISceneEditController
-  virtual void onActivated(BGEditorScene &scene);
-  virtual void onDeactivated(BGEditorScene & /*scene*/) {}
-  virtual void onSelectionChanged(BGEditorScene & /*scene*/);
-  virtual void onSceneChanged(BGEditorScene &scene);
-  virtual void onDragItem(BGEditorScene & /*scene*/,
-                          QGraphicsSceneMouseEvent * /*mouseEvent*/,
-                          QGraphicsItem * /*dragItem*/);
-  virtual void draw(BGEditorScene &scene, QPainter *painter, const QRectF &r);
-  virtual bool onMousePressed(BGEditorScene &scene,
-                              QGraphicsSceneMouseEvent *mouseEvent);
-  virtual bool onMouseMove(BGEditorScene &scene,
-                           QGraphicsSceneMouseEvent *mouseEvent);
-  virtual bool onMouseReleased(BGEditorScene &scene,
-                               QGraphicsSceneMouseEvent *mouseEvent);
+    // ISceneEditController
+    void onActivated(BGEditorScene &scene) override;
+    void onDeactivated(BGEditorScene & /*scene*/) override
+    {
+    }
+    void onSelectionChanged(BGEditorScene & /*scene*/) override;
+    void onSceneChanged(BGEditorScene &scene) override;
+    void onDragItem(BGEditorScene & /*scene*/,
+                    QGraphicsSceneMouseEvent * /*mouseEvent*/,
+                    QGraphicsItem * /*dragItem*/) override;
+    void draw(BGEditorScene &scene, QPainter *painter, const QRectF &rect) override;
+    bool onMousePressed(BGEditorScene &scene,
+                        QGraphicsSceneMouseEvent *mouseEvent) override;
+    bool onMouseMove(BGEditorScene &scene,
+                     QGraphicsSceneMouseEvent *mouseEvent) override;
+    bool onMouseReleased(BGEditorScene &scene,
+                         QGraphicsSceneMouseEvent *mouseEvent) override;
 
 private:
-  void doSetupItems(BGEditorScene &scene);
-  void doReset();
-  void doTransformBy(BGEditorScene &scene, QRectF oldRect, QRectF newRect);
+    void doSetupItems(BGEditorScene &scene);
+    void doReset();
+    void doTransformBy(BGEditorScene &scene, QRectF oldRect, QRectF newRect);
 
-  struct ControlPoint {
-    QPointF pos;
-    QCursor cursor;
-    QRectF sceneRect;
-  };
+    struct ControlPoint {
+        QPointF pos;
+        QCursor cursor;
+        QRectF sceneRect;
+    };
 
-  ControlPoint m_points[8];
+    ControlPoint m_points[8];
 
-  int m_dragPoint = -1;
-  QPointF m_dragPos;
-  QRectF m_dragRect;
-  QPointF m_lastPos;
-  QRectF m_lastRect;
+    int m_dragPoint = -1;
+    QPointF m_dragPos;
+    QRectF m_dragRect;
+    QPointF m_lastPos;
+    QRectF m_lastRect;
 
-  bool m_moveOnlyMode = false;
+    bool m_moveOnlyMode = false;
 
-  // transform lists
-  QList<BGElement *> m_nodesTransform, m_nodesMove;
-  QList<SceneItem *> m_others;
+    // transform lists
+    QList<BGElement *> m_nodesTransform, m_nodesMove;
+    QList<SceneItem *> m_others;
 };
 
 } // namespace BondGraphEditorWindow

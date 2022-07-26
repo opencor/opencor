@@ -26,28 +26,24 @@ class BGElementEditorScene;
 class BGElement;
 class BGConnection;
 
-class BGElementSceneActions : public BGEditorSceneActions {
-  Q_OBJECT
+class BGElementSceneActions : public BGEditorSceneActions
+{
+    Q_OBJECT
 
 public:
-  BGElementSceneActions(BGElementEditorScene *scene);
+    explicit BGElementSceneActions(BGElementEditorScene *scene);
 
 public Q_SLOTS:
-  bool editElementId(BGElement *);
-  bool editConnectionId(BGConnection *);
+    bool editElementId(BGElement *);
+    bool editConnectionId(BGConnection *);
 
-  void onActionElementColour();
-  void onActionLink();
-  void onActionUnlink();
-
-  // void onActionConnectionColour();
-  void onActionConnectionReverse();
-  // void onActionConnectionDirected();
-  // void onActionConnectionMutual();
-  // void onActionConnectionUndirected();
+    void onActionElementColour();
+    void onActionLink();
+    void onActionUnlink();
+    void onActionConnectionReverse();
 
 private:
-  BGElementEditorScene &bgElementScene;
+    BGElementEditorScene &bgElementScene;
 };
 
 } // namespace BondGraphEditorWindow

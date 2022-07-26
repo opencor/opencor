@@ -24,14 +24,15 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class BGEditorSceneActions : public QObject {
+class BGEditorSceneActions : public QObject
+{
 public:
-  BGEditorSceneActions(BGEditorScene *scene);
+    explicit BGEditorSceneActions(BGEditorScene *scene);
 
-  QAction *cutAction;
-  QAction *copyAction;
-  QAction *pasteAction;
-  QAction *deleteAction;
+    QAction *cutAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+    QAction *deleteAction;
 };
 
 } // namespace BondGraphEditorWindow

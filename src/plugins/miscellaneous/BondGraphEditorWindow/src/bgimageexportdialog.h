@@ -29,29 +29,30 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class BGImageExportDialog : public QDialog {
-  Q_OBJECT
+class BGImageExportDialog : public QDialog
+{
+    Q_OBJECT
 
 public:
-  BGImageExportDialog(QWidget *parent = 0);
-  ~BGImageExportDialog();
+    BGImageExportDialog(QWidget *parent = nullptr);
+    ~BGImageExportDialog() override;
 
-  void doReadSettings(QSettings &settings);
-  void doWriteSettings(QSettings &settings);
+    void doReadSettings(QSettings &settings);
+    void doWriteSettings(QSettings &settings);
 
-  void setScene(BGEditorScene &scene);
+    void setScene(BGEditorScene &scene);
 
-  bool cutToContent() const;
-  int resolution() const;
+    bool cutToContent() const;
+    int resolution() const;
 
 private Q_SLOTS:
-  void updateTargetSize();
+    void updateTargetSize();
 
 private:
-  Ui::BGImageExportDialog *ui;
+    Ui::BGImageExportDialog *ui;
 
-  BGEditorScene *m_scene = nullptr;
-  int m_dpi = 300;
+    BGEditorScene *m_scene = nullptr;
+    int m_dpi = 300;
 };
 
 } // namespace BondGraphEditorWindow

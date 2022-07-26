@@ -30,60 +30,60 @@ class BGElement;
 class BGConnection;
 class BGElementEditorScene;
 
-class BGPort : public QGraphicsEllipseItem, public InteractiveItemInterface {
+class BGPort : public QGraphicsEllipseItem, public InteractiveItemInterface
+{
 public:
-  explicit BGPort(BGElement *element, const QByteArray &portId = QByteArray(),
-                  QPointF pos = QPointF(0, 0));
-  virtual ~BGPort();
+    explicit BGPort(BGElement *element, const QByteArray &portId = QByteArray(),
+                    QPointF pos = QPointF(0, 0));
+    virtual ~BGPort();
 
-  BGElement *getElement() const { return m_Element; }
-  QUuid getUid() const { return uid; }
-  const QByteArray &getId() const { return m_id; }
-  bool getDeleteFlag() const { return m_canDelete; }
-  double getX() const { return m_position.x(); }
-  double getY() const { return m_position.y(); }
-  QColor getColor() const;
-  int getAlign() const { return m_align; }
-  int getDirection() const { return m_direction; }
-  void setDirection(int dir) { m_direction = dir; }
-  void setId(const QByteArray &portId);
-  void setDeleteFlag(const bool flag);
-  void setAlignment(int align);
-  void setOffset(QPointF pos);
-  void setColor(const QColor &color);
-  void setConnection(BGConnection *conn) { m_Connection = conn; }
-  BGConnection *getConnection() const { return m_Connection; }
+    BGElement *getElement() const;
+    QUuid getUid() const;
+    const QByteArray &getId() const;
+    bool getDeleteFlag() const;
+    double getX() const;
+    double getY() const;
+    QColor getColor() const;
+    int getAlign() const;
+    int getDirection() const;
+    void setDirection(int dir);
+    void setId(const QByteArray &portId);
+    void setDeleteFlag(const bool flag);
+    void setAlignment(int align);
+    void setOffset(QPointF pos);
+    void setColor(const QColor &color);
+    void setConnection(BGConnection *conn);
+    BGConnection *getConnection() const;
+    void copyDataFrom(const BGPort &port);
+    // serialization
+    virtual bool storeTo(QDataStream &out, quint64 version64) const;
+    friend void to_json(nlohmann::json &j, const BGPort &p);
+    friend void from_json(const nlohmann::json &j, BGPort &p);
 
-  void copyDataFrom(const BGPort &port);
-  // serialization
-  virtual bool storeTo(QDataStream &out, quint64 version64) const;
-  friend void to_json(nlohmann::json &j, const BGPort &p);
-  friend void from_json(const nlohmann::json &j, BGPort &p);
+    // callbacks
+    void onParentDeleted();
+    virtual void onParentGeometryChanged();
 
-  // callbacks
-  void onParentDeleted();
-  virtual void onParentGeometryChanged();
+    virtual void onClick(QGraphicsSceneMouseEvent * /*mouseEvent*/);
 
-  virtual void onClick(QGraphicsSceneMouseEvent * /*mouseEvent*/);
-
-  virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem *draggedItem);
-  virtual void leaveDragFromItem(QGraphicsItem *draggedItem);
-  virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem *draggedItem);
+    virtual void leaveDragFromItem(QGraphicsItem *draggedItem);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 protected:
-  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                     QWidget *widget = Q_NULLPTR);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                       QWidget *widget = Q_NULLPTR);
 
-  BGElement *m_Element = nullptr;
-  BGConnection *m_Connection = nullptr;
-  QPolygonF m_shapeCache;
-  QByteArray m_id;
-  QPointF m_position;
-  int m_align;
-  int m_direction;
-  bool m_canDelete;
-  QRectF m_anchorSize;
-  QUuid uid;
+    BGElement *m_Element = nullptr;
+    BGConnection *m_Connection = nullptr;
+    QPolygonF m_shapeCache;
+    QByteArray m_id;
+    QPointF m_position;
+    int m_align;
+    int m_direction;
+    bool m_canDelete;
+    QRectF m_anchorSize;
+    QUuid uid;
 };
 
 } // namespace BondGraphEditorWindow

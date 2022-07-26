@@ -17,7 +17,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 #include "libraryitem.h"
-#include <QDebug>
+
 #include <QDrag>
 #include <QEvent>
 #include <QHBoxLayout>
@@ -56,14 +56,14 @@ QPixmap getImage(QString text) {
   return pix;
 }
 
-LibraryItem::LibraryItem(QString text, QString iconFile, QWidget *parent)
+LibraryItem::LibraryItem(QString text, QString icon_file, QWidget *parent)
     : QFrame(parent) {
   auto icon = new QLabel(this);
   icon->setScaledContents(true);
-  m_iMap = new QPixmap(iconFile);
+  m_iMap = new QPixmap(icon_file);
   if (m_iMap->isNull()) {
     delete m_iMap;
-    m_iMap = new QPixmap(getImage(iconFile));
+    m_iMap = new QPixmap(getImage(icon_file));
   }
   icon->setPixmap(*m_iMap);
   icon->setFixedHeight(15);

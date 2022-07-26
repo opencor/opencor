@@ -23,8 +23,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "bondgrapheditorwindow.h"
 
-#include <QLayout>
 #include <QDesktopServices>
+#include <QLayout>
 #include <QUrl>
 
 //==============================================================================
@@ -34,19 +34,18 @@ namespace BondGraphEditorWindow {
 
 //==============================================================================
 
-BondGraphEditorWindow::BondGraphEditorWindow(QWidget *pParent) :
-    Core::WindowWidget(pParent),
-    mGui(new BondGraphUIWidget(pParent))
+BondGraphEditorWindow::BondGraphEditorWindow(QWidget *p_parent) :
+    Core::WindowWidget(p_parent),
+    mGui(new BondGraphUIWidget(p_parent))
 {
     setObjectName("BondGraphEditorWindow");
     setWidget(mGui);
     setWindowTitle(tr("Graphical BondGraph Editor"));
     //Open cellml file in CellML editor when exported by the user
-    connect(mGui,&BondGraphUIWidget::cellMLFileGenerated,
-        [this](QString path) {
-               QDesktopServices::openUrl("opencor://openFile/"+path);
-            }
-    );
+    connect(mGui, &BondGraphUIWidget::cellMLFileGenerated,
+            [this](QString path) {
+                QDesktopServices::openUrl("opencor://openFile/" + path);
+            });
 }
 
 //==============================================================================
@@ -60,22 +59,19 @@ BondGraphEditorWindow::~BondGraphEditorWindow()
 
 //==============================================================================
 
-void BondGraphEditorWindow::loadSettings(QSettings &pSettings)
+void BondGraphEditorWindow::loadSettings(QSettings &p_settings)
 {
     // Retrieve the settings of our Web browser window widget
 
-    mGui->readSettings(pSettings);
+    mGui->readSettings(p_settings);
 }
 
 //==============================================================================
 
-void BondGraphEditorWindow::saveSettings(QSettings &pSettings) const
+void BondGraphEditorWindow::saveSettings(QSettings &p_settings) const
 {
-    mGui->saveSettings(pSettings);
+    mGui->saveSettings(p_settings);
 }
-
-
-
 
 //==============================================================================
 

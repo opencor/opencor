@@ -31,31 +31,32 @@ class BGElement;
 class BGPort;
 class BGEditorScene;
 
-class BGPortEditorDialog : public QDialog {
-  Q_OBJECT
+class BGPortEditorDialog : public QDialog
+{
+    Q_OBJECT
 
 public:
-  BGPortEditorDialog(BGEditorScene* scene);
-  ~BGPortEditorDialog();
+    explicit BGPortEditorDialog(BGEditorScene *scene);
+    ~BGPortEditorDialog() override;
 
-  int exec(BGPort &port);
+    int exec(BGPort &port);
 
 private Q_SLOTS:
-  void on_Anchor_currentIndexChanged(int index);
-  void on_OffsetX_valueChanged(int v);
-  void on_OffsetY_valueChanged(int v);
-  void on_Color_activated(const QColor &color);
-  void on_flipVertical_clicked();
-  void on_flipHorizontal_clicked();
+    void on_Anchor_currentIndexChanged(int index);
+    void on_OffsetX_valueChanged(int value);
+    void on_OffsetY_valueChanged(int value);
+    void on_Color_activated(const QColor &color);
+    void on_flipVertical_clicked();
+    void on_flipHorizontal_clicked();
 
 private:
-  void doUpdate();
+    void doUpdate();
 
-  Ui::BGPortEditorDialog *ui;
-  bool m_updateInProgress = false;
-  BGPort *m_port = nullptr;
-  BGElement *m_Element = nullptr;
-  BGEditorScene* m_scene;
+    Ui::BGPortEditorDialog *ui;
+    bool m_updateInProgress = false;
+    BGPort *m_port = nullptr;
+    BGElement *m_Element = nullptr;
+    BGEditorScene *m_scene;
 };
 
 } // namespace BondGraphEditorWindow

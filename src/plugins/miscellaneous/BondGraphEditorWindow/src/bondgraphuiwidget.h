@@ -31,63 +31,64 @@ class WidgetBox;
 class QAccordion;
 class BGElementEditorUIController;
 
-class BondGraphUIWidget : public QWidget {
-  Q_OBJECT
+class BondGraphUIWidget : public QWidget
+{
+    Q_OBJECT
 
 public:
-  BondGraphUIWidget(QWidget *parent = nullptr, bool doBackup = false);
-  ~BondGraphUIWidget();
+    BondGraphUIWidget(QWidget *parent = nullptr, bool doBackup = false);
+    ~BondGraphUIWidget();
 
-  void setupUi();
-  void retranslateUi();
-  QToolBar *getToolBar() const;
+    void setupUi();
+    void retranslateUi();
+    QToolBar *getToolBar() const;
 
-  virtual QSettings &getApplicationSettings() const;
-  virtual void saveSettings(QSettings &pSettings) const;
-  virtual void readSettings(QSettings &settings);
-  virtual void setCentralWidget(QWidget *mainWidget);
-  virtual void showStatusMessage(const QString &msg, int timeout = 0);
-  virtual QString getCurrentFileName() const { return m_currentFileName; };
-  virtual QStatusBar *statusBar() const { return m_statusBar; };
-  virtual void addControlPane(QString name, QWidget *widget);
-  virtual QString iconURI(QString domain, QString element);
-  virtual void closeEvent(QCloseEvent *evt);
+    virtual QSettings &getApplicationSettings() const;
+    virtual void saveSettings(QSettings &pSettings) const;
+    virtual void readSettings(QSettings &settings);
+    virtual void setCentralWidget(QWidget *mainWidget);
+    virtual void showStatusMessage(const QString &msg, int timeout = 0);
+    virtual QString getCurrentFileName() const;
+    virtual QStatusBar *statusBar() const;
+    virtual void addControlPane(QString name, QWidget *widget);
+    virtual QString iconURI(QString domain, QString element);
+    virtual void closeEvent(QCloseEvent *evt);
 
-  virtual void saveFile(const QString &pOldFileName,
-                        const QString &pNewFileName, bool &pNeedFeedback);
-  virtual void cut();
-  virtual void copy();
-  virtual void paste();
-  virtual void del();
-  virtual void undo();
-  virtual void redo();
+    virtual void saveFile(const QString &pOldFileName,
+                          const QString &pNewFileName, bool &pNeedFeedback);
+    virtual void cut();
+    virtual void copy();
+    virtual void paste();
+    virtual void del();
+    virtual void undo();
+    virtual void redo();
 
 Q_SIGNALS:
-  /**
+    /**
    * @brief Signal that the model was serialized to CellML
    * Path to the cellml file is passed. Useful to connect to a CellML editor
    * 
    * @param path 
    */
-  void cellMLFileGenerated(QString path);
+    void cellMLFileGenerated(QString path);
 
 protected:
-  virtual void showEvent(QShowEvent *event);
+    virtual void showEvent(QShowEvent *event);
 
 private:
-  WidgetBox *m_widgetBox;
-  QAccordion *m_controls;
-  QWidget *m_annotation;
-  QWidget *m_canvasParent;
-  QStatusBar *m_statusBar;
-  QToolBar *m_toolBar;
-  BGElementEditorUIController *uiController;
-  QString m_lastPath;
-  QString m_currentFileName;
-  bool m_controlsVisible = true;
-  bool m_widgetBoxVisible = true;
-  bool m_initialShowEvent = true;
-  bool m_doBackup;
+    WidgetBox *m_widgetBox;
+    QAccordion *m_controls;
+    QWidget *m_annotation;
+    QWidget *m_canvasParent;
+    QStatusBar *m_statusBar;
+    QToolBar *m_toolBar;
+    BGElementEditorUIController *uiController;
+    QString m_lastPath;
+    QString m_currentFileName;
+    bool m_controlsVisible = true;
+    bool m_widgetBoxVisible = true;
+    bool m_initialShowEvent = true;
+    bool m_doBackup;
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

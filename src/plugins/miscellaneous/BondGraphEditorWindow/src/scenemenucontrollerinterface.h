@@ -25,10 +25,11 @@ namespace BondGraphEditorWindow {
 
 class BGEditorScene;
 
-class SceneMenuControllerInterface {
+class SceneMenuControllerInterface
+{
 public:
-  virtual bool exec(BGEditorScene *scene, QGraphicsItem *triggerItem,
-                    QGraphicsSceneContextMenuEvent *contextMenuEvent) = 0;
+    virtual bool exec(BGEditorScene *scene, QGraphicsItem *triggerItem,
+                      QGraphicsSceneContextMenuEvent *contextMenuEvent) = 0;
 };
 
 } // namespace BondGraphEditorWindow

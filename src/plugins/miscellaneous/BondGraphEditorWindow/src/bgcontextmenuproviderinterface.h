@@ -25,10 +25,11 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-class BGContextMenuProviderInterface {
+class BGContextMenuProviderInterface
+{
 public:
-  virtual bool populateMenu(QMenu &menu,
-                            const QList<QGraphicsItem *> &selectedItems) = 0;
+    virtual bool populateMenu(QMenu &menu,
+                              const QList<QGraphicsItem *> &selectedItems) = 0;
 };
 
 } // namespace BondGraphEditorWindow

@@ -36,27 +36,28 @@ class BGElement;
 class BGElementEditorScene;
 class QJsonTreeModel;
 
-class BGElementProxyMapDialog : public QDialog {
-  Q_OBJECT
+class BGElementProxyMapDialog : public QDialog
+{
+    Q_OBJECT
 
 public:
-  BGElementProxyMapDialog();
-  ~BGElementProxyMapDialog();
+    BGElementProxyMapDialog();
+    ~BGElementProxyMapDialog() override;
 
-  int exec(QString type, BGElementEditorScene &scene);
-  nlohmann::json getDefinition();
+    int exec(QString type, BGElementEditorScene &scene);
+    nlohmann::json getDefinition();
 private Q_SLOTS:
-  void uriSelect();
-  void accept();
-  void filterBGElement(QString term);
+    void uriSelect();
+    void accept() override;
+    void filterBGElement(QString term);
 
 private:
-  Ui::BGUserdefinedImportDialog *ui;
-  nlohmann::json m_result;
-  QString m_typeFilter;
-  QMap<QString, BGElement *> m_sharedElems;
-  BGElementEditorScene *m_scene;
-  bool m_updateInProgress = false;
+    Ui::BGUserdefinedImportDialog *ui;
+    nlohmann::json m_result;
+    QString m_typeFilter;
+    QMap<QString, BGElement *> m_sharedElems;
+    BGElementEditorScene *m_scene;
+    bool m_updateInProgress = false;
 };
 
 } // namespace BondGraphEditorWindow

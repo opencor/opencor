@@ -36,41 +36,42 @@ namespace BondGraphEditorWindow {
 class QJsonTreeModel;
 class BGElement;
 
-class BGParameterImport : public QDialog {
-  Q_OBJECT
+class BGParameterImport : public QDialog
+{
+    Q_OBJECT
 
 public:
-  explicit BGParameterImport(const nlohmann::json &res,
-                             BGElementEditorScene *scene, QWidget *parent = 0);
-  ~BGParameterImport();
-  void constrainDimension(QString si);
-  void setElementName(QString name);
-  void setAsState(bool state);
-  static nlohmann::json getParameterRecord(const nlohmann::json &res,
-                                           QString eName, bool parmIsState,
-                                           BGElementEditorScene *parent = 0);
-  static nlohmann::json getParameterRecordWithDimensionalConsistency(
-      const nlohmann::json &result, std::string siunit, QString eName,
-      bool parmIsState, BGElementEditorScene *parent = 0);
+    explicit BGParameterImport(const nlohmann::json &res,
+                               BGElementEditorScene *scene, QWidget *parent = nullptr);
+    ~BGParameterImport() override;
+    void constrainDimension(QString siunit);
+    void setElementName(QString name);
+    void setAsState(bool state);
+    static nlohmann::json getParameterRecord(const nlohmann::json &res,
+                                             QString eName, bool parmIsState,
+                                             BGElementEditorScene *parent = nullptr);
+    static nlohmann::json getParameterRecordWithDimensionalConsistency(
+        const nlohmann::json &result, std::string siunit, QString eName,
+        bool parmIsState, BGElementEditorScene *parent = nullptr);
 
 private Q_SLOTS:
-  void loadFile();
-  void variableSelectionChanged(const QModelIndex &index);
-  void searchForCellMLVariable(const QString &str);
-  void on_existingCellMLInstances_currentIndexChanged(int index);
+    void loadFile();
+    void variableSelectionChanged(const QModelIndex &index);
+    void searchForCellMLVariable(const QString &str);
+    void on_existingCellMLInstances_currentIndexChanged(int index);
 
 private:
-  void loadCellML(QString cellmlfile);
-  Ui::BGParameterImport *ui;
-  QJsonTreeModel *m_cellVariableModel;
-  QSortFilterProxyModel *m_dataProxy;
-  BGElementEditorScene *m_scene;
-  nlohmann::json m_record;
-  QMap<QString, BGElement *> m_sharedElems;
-  QString m_dimension;
-  QString m_timeVariable;
-  QString m_elementName;
-  bool m_isState; // Only values can be assigned
+    void loadCellML(QString cellmlfile);
+    Ui::BGParameterImport *ui;
+    QJsonTreeModel *m_cellVariableModel;
+    QSortFilterProxyModel *m_dataProxy;
+    BGElementEditorScene *m_scene;
+    nlohmann::json m_record;
+    QMap<QString, BGElement *> m_sharedElems;
+    QString m_dimension;
+    QString m_timeVariable;
+    QString m_elementName;
+    bool m_isState; // Only values can be assigned
 };
 
 } // namespace BondGraphEditorWindow

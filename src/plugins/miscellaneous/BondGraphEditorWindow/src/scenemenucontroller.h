@@ -30,29 +30,30 @@ namespace BondGraphEditorWindow {
 class BGElementEditorScene;
 
 class SceneMenuController : public QObject,
-                            public SceneMenuControllerInterface {
-  Q_OBJECT
+                            public SceneMenuControllerInterface
+{
+    Q_OBJECT
 
 public:
-  SceneMenuController(BGElementEditorUIController *parent = nullptr);
-  virtual ~SceneMenuController();
+    SceneMenuController(BGElementEditorUIController *parent = nullptr);
+    virtual ~SceneMenuController();
 
-  // called before \a menu is about to show.
-  virtual void fillMenu(QMenu &menu, BGEditorScene *scene,
-                        QGraphicsItem *triggerItem,
-                        QGraphicsSceneContextMenuEvent *contextMenuEvent);
+    // called before \a menu is about to show.
+    virtual void fillMenu(QMenu &menu, BGEditorScene *scene,
+                          QGraphicsItem *triggerItem,
+                          QGraphicsSceneContextMenuEvent *contextMenuEvent);
 
-  // override: SceneMenuControllerInterface
-  virtual bool exec(BGEditorScene *scene, QGraphicsItem *triggerItem,
-                    QGraphicsSceneContextMenuEvent *contextMenuEvent);
+    // override: SceneMenuControllerInterface
+    virtual bool exec(BGEditorScene *scene, QGraphicsItem *triggerItem,
+                      QGraphicsSceneContextMenuEvent *contextMenuEvent);
 
 Q_SIGNALS:
-  // emitted before \a menu is about to show.
-  void onContextMenu(QMenu &menu);
+    // emitted before \a menu is about to show.
+    void onContextMenu(QMenu &menu);
 
 private:
-  BGElementEditorScene *m_scene = nullptr;
-  BGElementEditorUIController *m_controller;
+    BGElementEditorScene *m_scene = nullptr;
+    BGElementEditorUIController *m_controller;
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

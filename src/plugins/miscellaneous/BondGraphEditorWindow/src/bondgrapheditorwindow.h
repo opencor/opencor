@@ -25,9 +25,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "windowwidget.h"
 #include "bondgraphuiwidget.h"
-
+#include "windowwidget.h"
 
 //==============================================================================
 
@@ -49,7 +48,6 @@ public:
 
 private:
     BondGraphUIWidget *mGui;
-
 };
 
 //==============================================================================

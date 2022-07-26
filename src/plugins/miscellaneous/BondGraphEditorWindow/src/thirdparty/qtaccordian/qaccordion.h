@@ -18,7 +18,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 #pragma once
 
-#include <QDebug>
+
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QPainter>

@@ -33,131 +33,137 @@ namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
 static bool look(const QString &where, const QString &what,
-                 Qt::CaseSensitivity sens, bool word) {
-  if (word)
-    return (where.compare(what, sens) == 0);
-  else
-    return where.contains(what, sens);
+                 Qt::CaseSensitivity sens, bool word)
+{
+    if (word)
+        return (where.compare(what, sens) == 0);
+    else
+        return where.contains(what, sens);
 }
 
-BGEditorSearchDialog::BGEditorSearchDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::BGEditorSearchDialog) {
-  ui->setupUi(this);
-  setMinimumSize(750, 550);
-  connect(ui->Text, &QLineEdit::textChanged, this,
-          &BGEditorSearchDialog::updateButtons);
-  connect(ui->NamesScope, &QCheckBox::toggled, this,
-          &BGEditorSearchDialog::updateButtons);
-  connect(ui->AttrNamesScope, &QCheckBox::toggled, this,
-          &BGEditorSearchDialog::updateButtons);
-  connect(ui->AttrValuesScope, &QCheckBox::toggled, this,
-          &BGEditorSearchDialog::updateButtons);
+BGEditorSearchDialog::BGEditorSearchDialog(QWidget *parent) :
+    QDialog(parent), ui(new Ui::BGEditorSearchDialog)
+{
+    ui->setupUi(this);
+    setMinimumSize(750, 550);
+    connect(ui->Text, &QLineEdit::textChanged, this,
+            &BGEditorSearchDialog::updateButtons);
+    connect(ui->NamesScope, &QCheckBox::toggled, this,
+            &BGEditorSearchDialog::updateButtons);
+    connect(ui->AttrNamesScope, &QCheckBox::toggled, this,
+            &BGEditorSearchDialog::updateButtons);
+    connect(ui->AttrValuesScope, &QCheckBox::toggled, this,
+            &BGEditorSearchDialog::updateButtons);
 }
 
-BGEditorSearchDialog::~BGEditorSearchDialog() { delete ui; }
-
-void BGEditorSearchDialog::exec(BGElementEditorScene &scene) {
-  m_scene = &scene;
-
-  ui->Text->setFocus();
-  ui->Text->selectAll();
-
-  updateButtons();
-
-  show();
+BGEditorSearchDialog::~BGEditorSearchDialog()
+{
+    delete ui;
 }
 
-void BGEditorSearchDialog::updateButtons() {
-  bool isOk = false;
-  isOk |= ui->NamesScope->isChecked();
-  isOk |= ui->AttrNamesScope->isChecked();
-  isOk |= ui->AttrValuesScope->isChecked();
+void BGEditorSearchDialog::exec(BGElementEditorScene &scene)
+{
+    m_scene = &scene;
 
-  isOk &= !ui->Text->text().isEmpty();
+    ui->Text->setFocus();
+    ui->Text->selectAll();
 
-  ui->Find->setEnabled(isOk);
+    updateButtons();
+
+    show();
 }
 
-void BGEditorSearchDialog::on_Find_clicked() {
-  ui->Results->setUpdatesEnabled(false);
-  ui->Results->clear();
+void BGEditorSearchDialog::updateButtons()
+{
+    bool isOk = false;
+    isOk |= ui->NamesScope->isChecked();
+    isOk |= ui->AttrNamesScope->isChecked();
+    isOk |= ui->AttrValuesScope->isChecked();
 
-  auto items =
-      ui->EdgesOnly->isChecked() ? m_scene->getItems<SceneItem, BGConnection>()
-      : ui->NodesOnly->isChecked() ? m_scene->getItems<SceneItem, BGElement>()
-                                   : m_scene->getItems<SceneItem>();
+    isOk &= !ui->Text->text().isEmpty();
 
-  bool lookNames = ui->NamesScope->isChecked();
-  bool lookAttrNames = ui->AttrNamesScope->isChecked();
-  bool lookAttrs = ui->AttrValuesScope->isChecked();
-  QString text = ui->Text->text();
-  Qt::CaseSensitivity sens =
-      ui->CaseSense->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
-  bool word = ui->WholeWords->isChecked();
+    ui->Find->setEnabled(isOk);
+}
 
-  for (const SceneItem *item : items) {
-    QString textToShow;
+void BGEditorSearchDialog::on_Find_clicked()
+{
+    ui->Results->setUpdatesEnabled(false);
+    ui->Results->clear();
 
-    if (lookNames) {
-      // QString id = item->getId();
-      QString id = item->getDisplayName();
-      if (look(id, text, sens, word)) {
-        textToShow = "ID:" + id;
-      }
-    }
+    auto items =
+        ui->EdgesOnly->isChecked() ? m_scene->getItems<SceneItem, BGConnection>() : ui->NodesOnly->isChecked() ? m_scene->getItems<SceneItem, BGElement>() : m_scene->getItems<SceneItem>();
 
-    if (lookAttrNames || lookAttrs) {
-      const auto &attrMap = item->getLocalAttributes();
-      for (auto it = attrMap.constBegin(); it != attrMap.constEnd(); it++) {
-        QString key(it.key());
-        QString val(it.value().toString());
+    bool lookNames = ui->NamesScope->isChecked();
+    bool lookAttrNames = ui->AttrNamesScope->isChecked();
+    bool lookAttrs = ui->AttrValuesScope->isChecked();
+    QString text = ui->Text->text();
+    Qt::CaseSensitivity sens =
+        ui->CaseSense->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    bool word = ui->WholeWords->isChecked();
 
-        if ((lookAttrNames && look(key, text, sens, word)) ||
-            (lookAttrs && look(val, text, sens, word))) {
-          if (textToShow.size())
-            textToShow += " | ";
-          textToShow += key + ": " + val;
+    for (const SceneItem *item : items) {
+        QString textToShow;
+
+        if (lookNames) {
+            // QString id = item->getId();
+            QString id = item->getDisplayName();
+            if (look(id, text, sens, word)) {
+                textToShow = "ID:" + id;
+            }
         }
-      }
+
+        if (lookAttrNames || lookAttrs) {
+            const auto &attrMap = item->getLocalAttributes();
+            for (auto it = attrMap.constBegin(); it != attrMap.constEnd(); it++) {
+                QString key(it.key());
+                QString val(it.value().toString());
+
+                if ((lookAttrNames && look(key, text, sens, word)) || (lookAttrs && look(val, text, sens, word))) {
+                    if (textToShow.size())
+                        textToShow += " | ";
+                    textToShow += key + ": " + val;
+                }
+            }
+        }
+
+        if (textToShow.isEmpty())
+            continue;
+
+        QStringList res;
+        res << item->typeId() << item->getId() << textToShow;
+        auto *ritem = new QTreeWidgetItem(res);
+
+        bool isNode = (dynamic_cast<const BGElement *>(item) != nullptr);
+        ritem->setData(0, Qt::UserRole, isNode);
+
+        ui->Results->addTopLevelItem(ritem);
     }
 
-    if (textToShow.isEmpty())
-      continue;
-
-    QStringList res;
-    res << item->typeId() << item->getId() << textToShow;
-    auto *ritem = new QTreeWidgetItem(res);
-
-    bool isNode = (dynamic_cast<const BGElement *>(item) != nullptr);
-    ritem->setData(0, Qt::UserRole, isNode);
-
-    ui->Results->addTopLevelItem(ritem);
-  }
-
-  ui->Results->setUpdatesEnabled(true);
+    ui->Results->setUpdatesEnabled(true);
 }
 
-void BGEditorSearchDialog::on_Results_itemSelectionChanged() {
-  auto ritems = ui->Results->selectedItems();
+void BGEditorSearchDialog::on_Results_itemSelectionChanged()
+{
+    auto ritems = ui->Results->selectedItems();
 
-  QList<SceneItem *> selected;
+    QList<SceneItem *> selected;
 
-  for (const auto *ritem : ritems) {
-    QString id = ritem->text(1);
-    bool isNode = ritem->data(0, Qt::UserRole).toBool();
-    if (isNode) {
-      auto itemList = m_scene->getItemsById<BGElement>(id);
-      if (!itemList.isEmpty())
-        selected << itemList.first();
-    } else {
-      auto itemList = m_scene->getItemsById<BGConnection>(id);
-      if (!itemList.isEmpty())
-        selected << itemList.first();
+    for (const auto *ritem : ritems) {
+        QString id = ritem->text(1);
+        bool isNode = ritem->data(0, Qt::UserRole).toBool();
+        if (isNode) {
+            auto itemList = m_scene->getItemsById<BGElement>(id);
+            if (!itemList.isEmpty())
+                selected << itemList.first();
+        } else {
+            auto itemList = m_scene->getItemsById<BGConnection>(id);
+            if (!itemList.isEmpty())
+                selected << itemList.first();
+        }
     }
-  }
 
-  m_scene->selectItems(selected);
-  m_scene->ensureSelectionVisible();
+    m_scene->selectItems(selected);
+    m_scene->ensureSelectionVisible();
 }
 
 } // namespace BondGraphEditorWindow

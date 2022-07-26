@@ -24,52 +24,45 @@ along with this program. If not, see <https://gnu.org/licenses>.
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
 
-class BGDConnection : public BGConnection {
+class BGDConnection : public BGConnection
+{
 public:
-  BGDConnection(QGraphicsItem *parent = Q_NULLPTR);
+    BGDConnection(QGraphicsItem *parent = Q_NULLPTR);
+    BGConnection *clone();
 
-  void setBendFactor(int bf);
-  static QByteArray TYPE() { return "BGDConnection"; }
-  virtual QByteArray typeId() const { return "BGDConnection"; }
-  virtual QByteArray classId() const { return "connection"; }
-  virtual QByteArray superClassId() const { return BGConnection::classId(); }
+    void setBendFactor(int bendfactor);
+    static QByteArray TYPE();
+    virtual QByteArray typeId() const;
+    virtual QByteArray classId() const;
+    virtual QByteArray superClassId() const;
+    virtual SceneItem *create() const;
+    virtual QPointF getLabelCenter() const;
+    int getBendFactor() const;
 
-  virtual SceneItem *create() const { return new BGDConnection(parentItem()); }
-  BGConnection *clone();
+    // serialization
+    virtual bool storeTo(QDataStream &out, quint64 version64) const;
+    virtual bool restoreFrom(QDataStream &out, quint64 version64);
 
-  virtual QPointF getLabelCenter() const { return m_controlPoint; }
-  int getBendFactor() const { return m_bendFactor; }
-  // serialization
-  virtual bool storeTo(QDataStream &out, quint64 version64) const;
-  virtual bool restoreFrom(QDataStream &out, quint64 version64);
+    friend void to_json(nlohmann::json &json_, const BGDConnection &pconn);
+    friend void from_json(const nlohmann::json &json_, BGDConnection &pconn);
 
-  friend void to_json(nlohmann::json &j, const BGDConnection &p);
-  friend void from_json(const nlohmann::json &j, BGDConnection &p);
-
-  // transformations
-  virtual void transform(const QRectF &oldRect, const QRectF &newRect,
-                         double xc, double yc, bool changeSize,
-                         bool changePos) override {
-    Q_UNUSED(oldRect);
-    Q_UNUSED(newRect);
-    Q_UNUSED(xc);
-    Q_UNUSED(yc);
-    Q_UNUSED(changeSize);
-    Q_UNUSED(changePos);
-  }
+    // transformations
+    void transform(const QRectF &oldRect, const QRectF &newRect,
+                   double xc, double yc, bool changeSize,
+                   bool changePos) override;
 
 protected:
-  // override
-  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                     QWidget *widget = Q_NULLPTR);
-  virtual void updateLabelPosition();
+    // override
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                       QWidget *widget = Q_NULLPTR);
+    virtual void updateLabelPosition();
 
-  // callbacks
-  virtual void onParentGeometryChanged();
+    // callbacks
+    virtual void onParentGeometryChanged();
 
 protected:
-  int m_bendFactor;
-  QPointF m_controlPoint, m_controlPos;
+    int m_bendFactor;
+    QPointF m_controlPoint, m_controlPos;
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR

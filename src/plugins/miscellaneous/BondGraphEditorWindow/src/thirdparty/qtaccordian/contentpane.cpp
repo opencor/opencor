@@ -34,20 +34,20 @@ bool ContentPane::getActive() const { return this->active; }
 
 QFrame *ContentPane::getContentFrame() { return this->content; }
 
-void ContentPane::setContentFrame(QFrame *content_) {
+void ContentPane::setContentFrame(QFrame *content) {
   this->container->layout()->removeWidget(this->content);
   if (this->content != nullptr) {
     delete (this->content);
   }
-  this->content = content_;
+  this->content = content;
   dynamic_cast<QVBoxLayout *>(this->container->layout())
       ->insertWidget(0, this->content);
 }
 
 int ContentPane::getMaximumHeight() { return this->container->maximumHeight(); }
 
-void ContentPane::setMaximumHeight(int maxHeight) {
-  this->containerAnimationMaxHeight = maxHeight;
+void ContentPane::setMaximumHeight(int max_height) {
+  this->containerAnimationMaxHeight = max_height;
 
   if (this->getActive()) {
     this->container->setMaximumHeight(this->containerAnimationMaxHeight);
@@ -64,8 +64,8 @@ ClickableFrame::TRIGGER ContentPane::getTrigger() {
   return this->header->getTrigger();
 }
 
-void ContentPane::setHeader(QString header_) {
-  this->header->setHeader(std::move(header_));
+void ContentPane::setHeader(QString header) {
+  this->header->setHeader(std::move(header));
 }
 
 QString ContentPane::getHeader() { return this->header->getHeader(); }
@@ -168,7 +168,7 @@ void ContentPane::closeContentPane() {
   this->active = false;
 }
 
-void ContentPane::initDefaults(QString header_) {
+void ContentPane::initDefaults(QString header) {
   this->active = false;
 
   this->headerFrameStyle = QFrame::Shape::StyledPanel | QFrame::Shadow::Raised;
@@ -184,13 +184,13 @@ void ContentPane::initDefaults(QString header_) {
   this->layout()->setSpacing(1);
   this->layout()->setContentsMargins(QMargins());
 
-  this->initHeaderFrame(std::move(header_));
+  this->initHeaderFrame(std::move(header));
   this->initContainerContentFrame();
   this->initAnimations();
 }
 
-void ContentPane::initHeaderFrame(QString header_) {
-  this->header = new ClickableFrame(std::move(header_));
+void ContentPane::initHeaderFrame(QString header) {
+  this->header = new ClickableFrame(std::move(header));
   this->header->setFrameStyle(this->headerFrameStyle);
   // init the icons
   this->setHeaderIconActive(this->header->CARRET_ICON_OPENED);

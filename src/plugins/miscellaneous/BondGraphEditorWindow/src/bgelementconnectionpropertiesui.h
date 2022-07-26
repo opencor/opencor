@@ -35,64 +35,65 @@ class BGEditorScene;
 class BGElement;
 class BGConnection;
 
-class BGElementConnectionPropertiesUI : public QWidget {
-  Q_OBJECT
+class BGElementConnectionPropertiesUI : public QWidget
+{
+    Q_OBJECT
 
 public:
-  explicit BGElementConnectionPropertiesUI(QWidget *parent = nullptr);
-  ~BGElementConnectionPropertiesUI();
+    explicit BGElementConnectionPropertiesUI(QWidget *parent = nullptr);
+    ~BGElementConnectionPropertiesUI();
 
-  void setScene(BGElementEditorScene *scene);
+    void setScene(BGElementEditorScene *scene);
 
-  void doReadSettings(QSettings &settings);
-  void doWriteSettings(QSettings &settings);
+    void doReadSettings(QSettings &settings);
+    void doWriteSettings(QSettings &settings);
 
 public Q_SLOTS:
-  void updateFromScene(BGEditorScene *scene);
+    void updateFromScene(BGEditorScene *scene);
 
 protected:
-  void connectSignals(BGEditorScene *scene);
-  void onSceneAttached(BGEditorScene *scene);
-  void onSceneDetached(BGEditorScene *scene);
+    void connectSignals(BGEditorScene *scene);
+    void onSceneAttached(BGEditorScene *scene);
+    void onSceneDetached(BGEditorScene *scene);
 
 protected Q_SLOTS:
-  void onSceneChanged();
-  void onSelectionChanged();
+    void onSceneChanged();
+    void onSelectionChanged();
 
-  void on_ElementColour_activated(const QColor &color);
-  void on_ElementShape_activated(QVariant data);
-  void on_ElementSizeX_valueChanged(int value);
-  void on_ElementSizeY_valueChanged(int value);
-  void on_ElementSizeSwitch_toggled(bool on);
-  void on_StrokeColour_activated(const QColor &color);
-  void on_StrokeStyle_activated(QVariant data);
-  void on_StrokeSize_valueChanged(double value);
-  void on_zValueSpinBox_valueChanged(int value);
+    void on_ElementColour_activated(const QColor &color);
+    void on_ElementShape_activated(QVariant data);
+    void on_ElementSizeX_valueChanged(int value);
+    void on_ElementSizeY_valueChanged(int value);
+    void on_ElementSizeSwitch_toggled(bool on);
+    void on_StrokeColour_activated(const QColor &color);
+    void on_StrokeStyle_activated(QVariant data);
+    void on_StrokeSize_valueChanged(double value);
+    void on_zValueSpinBox_valueChanged(int value);
 
-  void on_ConnectionColour_activated(const QColor &color);
-  void on_ConnectionWeight_valueChanged(double value);
-  void on_ConnectionStyle_activated(QVariant data);
-  void on_ConnectionDirection_activated(QVariant data);
-  void on_ConnectionType_activated(QVariant data);
+    void on_ConnectionColour_activated(const QColor &color);
+    void on_ConnectionWeight_valueChanged(double value);
+    void on_ConnectionStyle_activated(QVariant data);
+    void on_ConnectionDirection_activated(QVariant data);
+    void on_ConnectionType_activated(QVariant data);
 
-  void on_LabelFont_activated(const QFont &font);
-  void on_LabelColour_activated(const QColor &color);
-  void on_LabelFontSize_valueChanged(int value);
-  void on_LabelFontBold_toggled(bool on);
-  void on_LabelFontItalic_toggled(bool on);
-  void on_LabelFontUnderline_toggled(bool on);
+    void on_LabelFont_activated(const QFont &font);
+    void on_LabelColour_activated(const QColor &color);
+    void on_LabelFontSize_valueChanged(int value);
+    void on_LabelFontBold_toggled(bool on);
+    void on_LabelFontItalic_toggled(bool on);
+    void on_LabelFontUnderline_toggled(bool on);
 
 private:
-  void setElementAttribute(const QByteArray &attrId, const QVariant &v);
-  void setConnectionAttribute(const QByteArray &attrId, const QVariant &v);
+    void setElementAttribute(const QByteArray &attrId, const QVariant &v);
+    void setConnectionAttribute(const QByteArray &attrId, const QVariant &v);
 
-  BGElementEditorScene *m_scene;
-  bool m_updateLock;
+    BGElementEditorScene *m_scene;
+    bool m_updateLock;
 
-  BGElement *m_elementFactory;
-  BGConnection *m_connectionFactory;
+    BGElement *m_elementFactory;
+    BGConnection *m_connectionFactory;
 
-  Ui::BGElementConnectionPropertiesUI *ui;
+    Ui::BGElementConnectionPropertiesUI *ui;
 };
 
 } // namespace BondGraphEditorWindow
