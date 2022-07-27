@@ -26,11 +26,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <QtTest/QtTest>
+
 //==============================================================================
 
-#include "bondgraphapibegin.h"
+#include "bondgrapheditorwindowbegin.h"
     #include "bondgraph.hpp"
-#include "bondgraphapiend.h"
+#include "bondgrapheditorwindowend.h"
 
 //==============================================================================
 
@@ -39,8 +40,7 @@ void Tests::basicTests()
     // Some very basic tests to make sure that we have access to libBondGraph
     //Create and test a simple bondgraph
     BG::newWorkSpace();
-    //On windows teuchos library needs to be linked explicitly
-    //BondgraphEditorWidget handles this, this test case is replicated there
+
     auto ioBondGraph = BG::createBondGraph();
 
     //Create the resistor
@@ -69,10 +69,10 @@ void Tests::basicTests()
         {"q_1", "u_3*C_1"},
         {"dot_Inductor", "u_3"},
         {"dot_Capacitor", "-Capacitor/(r_1*C_0)"}};
+
     for (auto eq : equations) {
         std::string svar = BG::symEngineExpressionToString(eq.first);
         std::string sres = BG::symEngineExpressionToString(eq.second);
-        
         std::string expected = result[svar];
         QCOMPARE(sres, expected);
     }

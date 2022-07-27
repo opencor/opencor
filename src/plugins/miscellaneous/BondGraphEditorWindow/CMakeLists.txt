@@ -166,4 +166,6 @@ add_plugin(BondGraphEditorWindow
     PLUGINS
         BondGraphAPI
         Core
+    TESTS
+        tests        
 )

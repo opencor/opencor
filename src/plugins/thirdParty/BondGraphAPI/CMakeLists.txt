@@ -152,8 +152,8 @@ add_plugin(${PACKAGE_NAME}
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
-    TESTS
-        tests
+    # TESTS
+    #     tests
     DEPENDS_ON
         ${DEPENDS_ON}
 )
