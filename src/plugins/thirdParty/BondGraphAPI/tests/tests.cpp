@@ -70,8 +70,8 @@ void Tests::basicTests()
         {"dot_Capacitor", "C_1*dot_u_3"}};
 
     for (auto eq : equations) {
-        std::string svar = symEngineExpressionToString(eq.first);
-        std::string sres = symEngineExpressionToString(eq.second);
+        std::string svar = BG::symEngineExpressionToString(eq.first);
+        std::string sres = BG::symEngineExpressionToString(eq.second);
         std::string expected = result[svar];
         QCOMPARE(sres, expected);
     }
