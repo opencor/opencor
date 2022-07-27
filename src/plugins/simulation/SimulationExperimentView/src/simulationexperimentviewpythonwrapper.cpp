@@ -21,7 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Simulation Experiment view Python wrapper
 //==============================================================================
 
-#include "centralwidget.h"
 #include "corecliutils.h"
 #include "filemanager.h"
 #include "pythonqtsupport.h"
@@ -33,6 +32,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include <array>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "PythonQt/PythonQt.h"
+#include "pythonend.h"
 
 //==============================================================================
 

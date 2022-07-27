@@ -27,7 +27,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cellmlfileruntime.h"
 #include "commonwidget.h"
-#include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "graphpanelwidget.h"
 #include "propertyeditorwidget.h"

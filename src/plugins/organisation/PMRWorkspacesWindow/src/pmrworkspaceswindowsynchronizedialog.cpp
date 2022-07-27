@@ -22,7 +22,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "cellmlfilemanager.h"
+#include "cellmlfile.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "file.h"

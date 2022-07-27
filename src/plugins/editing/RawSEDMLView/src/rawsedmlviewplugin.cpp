@@ -21,6 +21,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Raw SED-ML view plugin
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorwidget.h"
 #include "filemanager.h"

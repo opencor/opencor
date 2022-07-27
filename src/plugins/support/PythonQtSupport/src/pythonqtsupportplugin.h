@@ -32,7 +32,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "pythonbegin.h"
-    #include "PythonQt/PythonQt.h"
+    #include "PythonQt/PythonQtObjectPtr.h"
 #include "pythonend.h"
 
 //==============================================================================

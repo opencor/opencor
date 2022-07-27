@@ -36,7 +36,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "libsbmlbegin.h"
-    #include "sbml/math/ASTNode.h"
+    #include "sbml/xml/XMLNode.h"
 #include "libsbmlend.h"
 
 //==============================================================================

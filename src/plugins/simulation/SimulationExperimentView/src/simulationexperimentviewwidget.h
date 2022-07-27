@@ -25,10 +25,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "combinearchive.h"
 #include "corecliutils.h"
-#include "sedmlfile.h"
+#include "plugin.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "viewwidget.h"

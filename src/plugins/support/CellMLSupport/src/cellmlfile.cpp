@@ -23,8 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
-#include "cellmlfilemanager.h"
-#include "centralwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"

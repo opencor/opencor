@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cliutils.h"
 #include "guiutils.h"
-#include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginsdialog.h"

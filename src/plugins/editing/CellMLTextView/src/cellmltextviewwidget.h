@@ -29,7 +29,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
-#include "corecliutils.h"
 #include "mathmlconverter.h"
 #include "viewwidget.h"
 

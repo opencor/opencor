@@ -30,7 +30,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "compilerengine.h"
-#include "compilermath.h"
 #include "corecliutils.h"
 #include "solverinterface.h"
 
@@ -44,13 +43,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlapibegin.h"
     #include "CCGSBootstrap.hpp"
 #include "cellmlapiend.h"
-
-//==============================================================================
-
-#include "llvmclangbegin.h"
-    #include "llvm/ADT/StringRef.h"
-    #include "llvm/Support/DynamicLibrary.h"
-#include "llvmclangend.h"
 
 //==============================================================================
 

@@ -21,9 +21,17 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Python shell plugin
 //==============================================================================
 
-#include "pythonqtsupport.h"
-#include "pythonqtsupportplugin.h"
 #include "pythonshellplugin.h"
+
+//==============================================================================
+
+#include <iostream>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "PythonQt/PythonQtPythonInclude.h"
+#include "pythonend.h"
 
 //==============================================================================
 

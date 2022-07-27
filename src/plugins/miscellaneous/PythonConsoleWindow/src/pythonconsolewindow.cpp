@@ -26,11 +26,16 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "borderedwidget.h"
 #include "pythonconsolewindow.h"
-#include "pythonqtsupport.h"
 
 //==============================================================================
 
 #include "ui_pythonconsolewindow.h"
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "PythonQt/PythonQt.h"
+#include "pythonend.h"
 
 //==============================================================================
 

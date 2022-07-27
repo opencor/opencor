@@ -24,7 +24,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "filemanager.h"
 #include "standardfilemanager.h"
-#include "standardsupportplugin.h"
 
 //==============================================================================
 

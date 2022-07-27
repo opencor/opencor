@@ -21,7 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Main window
 //==============================================================================
 
-#include "centralwidget.h"
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "coreinterface.h"
@@ -37,7 +36,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
 #include "windowinterface.h"
-#include "windowwidget.h"
 
 //==============================================================================
 
@@ -53,6 +51,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QCloseEvent>
 #include <QDesktopServices>
+#include <QDir>
+#include <QDockWidget>
 #include <QLocale>
 #include <QRect>
 #include <QScreen>
