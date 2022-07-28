@@ -279,9 +279,9 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     // Now that the import is instantiated, add its own imports
                     // to our list
 
-                    ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
+                    ObjRef<iface::cellml_api::Model> importedModel = import->importedModel();
 
-                    if (importModel == nullptr) {
+                    if (importedModel == nullptr) {
                         throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl),
                                                                                                                                                        xlinkHrefString).toStdString());
                     }
@@ -289,7 +289,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     retrieveImports(isLocalFile?
                                         QUrl::fromLocalFile(fileNameOrUrl).toString():
                                         fileNameOrUrl,
-                                    importModel, importList, importXmlBaseList);
+                                    importedModel, importList, importXmlBaseList);
                 }
             }
         } catch (std::runtime_error &runtimeError) {

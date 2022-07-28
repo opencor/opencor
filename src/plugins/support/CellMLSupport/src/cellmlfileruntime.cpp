@@ -310,9 +310,10 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         bool hasImports = model->imports()->length() != 0;
         QHash<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables;
         QList<iface::cellml_api::CellMLVariable *> realMainVariables;
-        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = model->localComponents()->iterateComponents();
 
         if (hasImports) {
+            ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = model->localComponents()->iterateComponents();
+
             for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
                  component != nullptr; component = localComponentsIter->nextComponent()) {
                 ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = component->variables()->iterateVariables();

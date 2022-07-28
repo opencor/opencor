@@ -105,7 +105,7 @@ private:
     QString mOutputOntologicalTermsTemplate;
     WebViewerWidget::WebViewerWidget *mOutputOntologicalTerms;
 
-    ObjRef<iface::cellml_api::CellMLElement> mElement = nullptr;
+    ObjRef<iface::cellml_api::CellMLElement> mElement;
 
     QString mRdfTripleInformation;
     InformationType mInformationType = InformationType::None;
