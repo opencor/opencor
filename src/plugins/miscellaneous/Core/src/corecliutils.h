@@ -28,7 +28,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "coreglobal.h"
 #include "file.h"
 #include "filetypeinterface.h"
-#include "plugin.h"
 #include "plugininfo.h"
 
 //==============================================================================

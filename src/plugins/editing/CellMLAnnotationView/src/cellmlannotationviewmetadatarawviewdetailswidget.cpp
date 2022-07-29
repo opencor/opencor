@@ -21,7 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // CellML Annotation view metadata raw view details widget
 //==============================================================================
 
-#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 
 //==============================================================================

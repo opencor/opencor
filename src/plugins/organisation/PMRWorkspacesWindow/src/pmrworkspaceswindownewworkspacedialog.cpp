@@ -24,7 +24,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrsupport.h"
-#include "pmrworkspace.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 #include "pmrworkspaceswindowplugin.h"
 

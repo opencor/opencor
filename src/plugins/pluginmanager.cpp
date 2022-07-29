@@ -21,12 +21,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Plugin manager
 //==============================================================================
 
-#ifdef OpenCOR_MAIN
-    #include "cliutils.h"
-#else
-    #include "corecliutils.h"
-#endif
 #include "plugin.h"
+#include "plugininfo.h"
 #include "pluginmanager.h"
 
 //==============================================================================

@@ -25,7 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "sedmlfile.h"
 #include "sedmlsupportglobal.h"
 #include "standardfilemanager.h"
 
@@ -33,6 +32,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 namespace OpenCOR {
 namespace SEDMLSupport {
+
+//==============================================================================
+
+class SedmlFile;
 
 //==============================================================================
 

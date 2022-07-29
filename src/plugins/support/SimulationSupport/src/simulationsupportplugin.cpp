@@ -21,7 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Simulation support plugin
 //==============================================================================
 
-#include "simulation.h"
 #include "simulationmanager.h"
 #include "simulationsupportplugin.h"
 #include "simulationsupportpythonwrapper.h"

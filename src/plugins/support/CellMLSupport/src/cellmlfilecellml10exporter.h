@@ -67,7 +67,7 @@ private:
 
     QSet<QString> mComponentNames;
 
-    ObjRef<iface::cellml_api::Group> mRootGroup = nullptr;
+    ObjRef<iface::cellml_api::Group> mRootGroup;
 
     int mCmetaIdCounter = 0xb4da55;
     QStringList mCmetaIds;

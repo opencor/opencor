@@ -22,7 +22,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "collapsiblewidget.h"
-#include "filemanager.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"

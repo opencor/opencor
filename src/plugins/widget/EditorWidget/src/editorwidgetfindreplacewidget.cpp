@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "coreguiutils.h"
 #include "editorwidget.h"
-#include "editorwidgeteditorwidget.h"
 #include "editorwidgetfindreplacewidget.h"
 #include "i18ninterface.h"
 

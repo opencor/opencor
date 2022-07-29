@@ -25,7 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "editorwidget.h"
 #include "editorwidgeteditorwidget.h"
 #include "editorwidgetfindreplacewidget.h"
-#include "editorwidgetscrollbar.h"
 
 //==============================================================================
 

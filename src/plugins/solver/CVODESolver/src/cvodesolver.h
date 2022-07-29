@@ -30,7 +30,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "sundialsbegin.h"
-    #include "nvector/nvector_serial.h"
     #include "sundials/sundials_linearsolver.h"
     #include "sundials/sundials_matrix.h"
     #include "sundials/sundials_nonlinearsolver.h"

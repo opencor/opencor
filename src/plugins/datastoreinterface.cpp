@@ -21,11 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Data store interface
 //==============================================================================
 
-#ifdef OpenCOR_MAIN
-    #include "cliutils.h"
-#else
-    #include "corecliutils.h"
-#endif
 #include "datastoreinterface.h"
 #include "solverinterface.h"
 

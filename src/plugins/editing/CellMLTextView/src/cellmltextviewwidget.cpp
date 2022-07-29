@@ -32,10 +32,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
-#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
-#include "qscintillawidget.h"
 
 //==============================================================================
 

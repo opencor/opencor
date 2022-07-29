@@ -24,14 +24,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrauthentication.h"
-#include "pmrsupportplugin.h"
-#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
 #include "pmrwebviewerdialog.h"
-#include "progressbarwidget.h"
-#include "webviewerwidget.h"
 
 //==============================================================================
 
