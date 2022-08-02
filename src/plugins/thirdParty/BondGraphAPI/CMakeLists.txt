@@ -118,7 +118,7 @@ endif()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyBGLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${BONDGRAPH_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}BondGraph${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.1.0
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}BondGraph${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.1.0${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${BONDGRAPH_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
