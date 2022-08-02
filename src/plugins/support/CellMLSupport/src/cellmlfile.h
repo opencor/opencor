@@ -169,10 +169,10 @@ private:
 
     void reset() override;
 
-    void retrieveImports(const QString &pXmlBase,
+    void retrieveImports(const QString &pCrtUrl,
                          iface::cellml_api::Model *pModel,
-                         QList<iface::cellml_api::CellMLImport *> &pImportList,
-                         QStringList &pImportXmlBaseList);
+                         QList<iface::cellml_api::CellMLImport *> &pImports,
+                         QStringList &pCrtUrls, QStringList &pImportedUrls);
 
     bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                  CellmlFileIssues &pIssues);

@@ -137,21 +137,24 @@ iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 
 //==============================================================================
 
-void CellmlFile::retrieveImports(const QString &pXmlBase,
+void CellmlFile::retrieveImports(const QString &pCrtUrl,
                                  iface::cellml_api::Model *pModel,
-                                 QList<iface::cellml_api::CellMLImport *> &pImportList,
-                                 QStringList &pImportXmlBaseList)
+                                 QList<iface::cellml_api::CellMLImport *> &pImports,
+                                 QStringList &pCrtUrls,
+                                 QStringList &pImportedUrls)
 {
     // Retrieve all the imports of the given model
 
+    QUrl xmlBaseUrl = pCrtUrl.left(pCrtUrl.lastIndexOf('/')+1);
     ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = pModel->imports()->iterateImports();
 
     for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
          import != nullptr; import = importsIter->nextImport()) {
         import->add_ref();
 
-        pImportList << import;
-        pImportXmlBaseList << pXmlBase;
+        pImports << import;
+        pCrtUrls << pCrtUrl;
+        pImportedUrls << xmlBaseUrl.resolved(QString::fromStdWString(import->xlinkHref()->asText())).toString();
     }
 }
 
@@ -184,48 +187,50 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
             // Retrieve the list of imports, together with their XML base values
 
-            QList<iface::cellml_api::CellMLImport *> importList;
-            QStringList importXmlBaseList;
+            Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+            QString crtUrl = fileManagerInstance->isRemote(mFileName)?
+                                 fileManagerInstance->url(mFileName):
+                                 QUrl::fromLocalFile(mFileName).toString();
+            QList<iface::cellml_api::CellMLImport *> imports;
+            QStringList crtUrls;
+            QStringList importedUrls;
 
-            retrieveImports(xmlBase(), pModel, importList, importXmlBaseList);
+            retrieveImports(crtUrl, pModel, imports, crtUrls, importedUrls);
 
             // Instantiate all the imports in our list
 
-            while (!importList.isEmpty()) {
+            while (!imports.isEmpty()) {
                 // Retrieve the first import and instantiate it, if needed
-
-                ObjRef<iface::cellml_api::CellMLImport> import = importList.first();
-                QString importXmlBase = importXmlBaseList.first();
-
-                importList.removeFirst();
-                importXmlBaseList.removeFirst();
-
                 // Note: CDA_CellMLImport::instantiate() would normally be
                 //       called, but it doesn't work with https, so we retrieve
                 //       the contents of the import ourselves and instantiate it
                 //       from text instead...
 
-                QString xlinkHrefString = QString::fromStdWString(import->xlinkHref()->asText());
-                QString url = QUrl(importXmlBase).resolved(xlinkHrefString).toString();
-                bool isLocalFile;
-                QString fileNameOrUrl;
+                ObjRef<iface::cellml_api::CellMLImport> import = imports.first();
                 bool dummy;
-                QString xmlBaseFileNameOrUrl;
+                QString crtFileNameOrUrl;
+                QString importedUrl = importedUrls.first();
+                bool isLocalImportedFile;
+                QString importedFileNameOrUrl;
 
-                Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
-                Core::checkFileNameOrUrl(importXmlBase, dummy, xmlBaseFileNameOrUrl);
+                Core::checkFileNameOrUrl(crtUrls.first(), dummy, crtFileNameOrUrl);
+                Core::checkFileNameOrUrl(importedUrl, isLocalImportedFile, importedFileNameOrUrl);
 
-                if (fileNameOrUrl == mFileName) {
+                imports.removeFirst();
+                crtUrls.removeFirst();
+                importedUrls.removeFirst();
+
+                if (importedFileNameOrUrl == mFileName) {
                     // We want to import ourselves, something we can't do
 
-                    throw std::runtime_error(tr("%1 cannot import itself").arg(fileNameOrUrl).toStdString());
+                    throw std::runtime_error(tr("%1 cannot import itself").arg(QDir::toNativeSeparators(importedFileNameOrUrl)).toStdString());
                 }
 
-                if (mImportContents.contains(fileNameOrUrl)) {
+                if (mImportContents.contains(importedFileNameOrUrl)) {
                     // We have already loaded the import contents, so directly
                     // instantiate the import with it
 
-                    import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
+                    import->instantiateFromText(mImportContents.value(importedFileNameOrUrl).toStdWString());
                 } else {
                     // We haven't already loaded the import contents, so do so
                     // now, with a busy widget if requested and if we are not
@@ -233,13 +238,13 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                     QString fileContents;
 
-                    if (!isLocalFile) {
+                    if (!isLocalImportedFile) {
                         Core::showCentralBusyWidget();
                     }
 
-                    bool res = Core::readFile(fileNameOrUrl, fileContents);
+                    bool res = Core::readFile(importedFileNameOrUrl, fileContents);
 
-                    if (!isLocalFile) {
+                    if (!isLocalImportedFile) {
                         Core::hideCentralBusyWidget();
                     }
 
@@ -253,25 +258,25 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             // Something went wrong with the instantiation of
                             // the import
 
-                            throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved (%3)").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl),
-                                                                                                                                                           xlinkHrefString,
+                            throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved (%3)").arg(QDir::toNativeSeparators(crtFileNameOrUrl),
+                                                                                                                                                           QDir::toNativeSeparators(importedFileNameOrUrl),
                                                                                                                                                            Core::formatMessage(QString::fromStdWString(exception.explanation))).toStdString());
                         }
 
                         // Keep track of the import contents
 
-                        mImportContents.insert(fileNameOrUrl, fileContents);
+                        mImportContents.insert(importedFileNameOrUrl, fileContents);
 
                         // Keep track of the import as being one of our
                         // dependencies, should it be local and should we be
                         // directly dealing with our model
 
-                        if (isLocalFile && (pModel == mModel)) {
-                            dependencies << fileNameOrUrl;
+                        if (isLocalImportedFile && (pModel == mModel)) {
+                            dependencies << importedFileNameOrUrl;
                         }
                     } else {
-                        throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl),
-                                                                                                                                                  xlinkHrefString).toStdString());
+                        throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(QDir::toNativeSeparators(crtFileNameOrUrl),
+                                                                                                                                                  QDir::toNativeSeparators(importedFileNameOrUrl)).toStdString());
                     }
                 }
 
@@ -281,14 +286,11 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                 ObjRef<iface::cellml_api::Model> importedModel = import->importedModel();
 
                 if (importedModel == nullptr) {
-                    throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl),
-                                                                                                                                                   xlinkHrefString).toStdString());
+                    throw std::runtime_error(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(QDir::toNativeSeparators(crtFileNameOrUrl),
+                                                                                                                                                   QDir::toNativeSeparators(importedFileNameOrUrl)).toStdString());
                 }
 
-                retrieveImports(isLocalFile?
-                                    QUrl::fromLocalFile(fileNameOrUrl).toString():
-                                    fileNameOrUrl,
-                                importedModel, importList, importXmlBaseList);
+                retrieveImports(importedUrl, importedModel, imports, crtUrls, importedUrls);
             }
         } catch (std::runtime_error &runtimeError) {
             // Something went wrong with the full instantiation of the imports
@@ -356,9 +358,10 @@ bool CellmlFile::load(const QString &pFileContents,
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    mXmlBase = (fileManagerInstance->isRemote(mFileName))?
+    mXmlBase = fileManagerInstance->isRemote(mFileName)?
                    fileManagerInstance->url(mFileName):
-                   QFileInfo(mFileName).canonicalPath()+"/";
+                   QUrl::fromLocalFile(mFileName).toString();
+    mXmlBase = mXmlBase.left(mXmlBase.lastIndexOf('/')+1);
 
     return true;
 }
@@ -988,7 +991,7 @@ QString CellmlFile::cmetaId()
 
 QString CellmlFile::xmlBase()
 {
-    // Return our base URI
+    // Return our XML base
 
     if (load()) {
         return mXmlBase;
