@@ -21,18 +21,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // PMR authentication
 //==============================================================================
 
-#include "corecliutils.h"
+#include "plugin.h"
 #include "pmrauthentication.h"
 #include "pmrsupportplugin.h"
-#include "pmrsupportpreferenceswidget.h"
-#include "pmrwebservice.h"
 
 //==============================================================================
 
 #include "oauthbegin.h"
-    #include "o2/o0globals.h"
     #include "o2/o0settingsstore.h"
-    #include "o2/o1requestor.h"
 #include "oauthend.h"
 
 //==============================================================================

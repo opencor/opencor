@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"

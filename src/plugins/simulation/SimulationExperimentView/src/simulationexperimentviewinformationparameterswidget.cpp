@@ -24,7 +24,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfileruntime.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
-#include "simulationexperimentviewsimulationwidget.h"
 
 //==============================================================================
 

@@ -28,7 +28,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
-#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
 #include "rawcellmlviewwidget.h"

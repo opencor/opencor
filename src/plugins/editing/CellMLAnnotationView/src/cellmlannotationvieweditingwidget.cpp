@@ -27,7 +27,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"

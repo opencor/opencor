@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "borderedwidget.h"
 #include "coreguiutils.h"
-#include "filemanager.h"
 #include "i18ninterface.h"
 #include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"

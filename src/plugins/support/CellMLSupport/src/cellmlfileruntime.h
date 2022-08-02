@@ -168,7 +168,7 @@ public:
 private:
     bool mAtLeastOneNlaSystem = false;
 
-    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation = nullptr;
+    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
 
     int mConstantsCount = 0;
     int mStatesRatesCount = 0;

@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
-#include "corecliutils.h"
 
 //==============================================================================
 

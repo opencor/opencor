@@ -25,7 +25,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"
-#include "preferencesinterface.h"
 #include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"

@@ -22,7 +22,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlfileruntime.h"
 #include "cellmlinterface.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"

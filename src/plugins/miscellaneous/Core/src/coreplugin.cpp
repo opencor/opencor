@@ -29,7 +29,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "filemanager.h"
 #include "filetypeinterface.h"
 #include "interfaces.h"
-#include "organisationwidget.h"
 #include "plugin.h"
 #include "solverinterface.h"
 

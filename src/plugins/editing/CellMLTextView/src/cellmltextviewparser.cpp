@@ -22,7 +22,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "cellmltextviewparser.h"
-#include "corecliutils.h"
 #include "qscintillawidget.h"
 
 //==============================================================================

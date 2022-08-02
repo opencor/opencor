@@ -23,7 +23,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
-#include "mainwindow.h"
 
 //==============================================================================
 

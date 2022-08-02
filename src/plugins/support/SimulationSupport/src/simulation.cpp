@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "combinefilemanager.h"
 #include "filemanager.h"
 #include "interfaces.h"
+#include "sedmlfile.h"
 #include "sedmlfilemanager.h"
 #include "simulation.h"
 #include "simulationworker.h"

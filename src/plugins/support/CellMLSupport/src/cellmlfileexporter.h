@@ -30,12 +30,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include "cellmlapibegin.h"
-    #include "IfaceCellML_APISPEC.hxx"
-#include "cellmlapiend.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 

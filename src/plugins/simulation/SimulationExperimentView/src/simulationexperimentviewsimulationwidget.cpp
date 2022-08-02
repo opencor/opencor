@@ -21,7 +21,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // Simulation Experiment view simulation widget
 //==============================================================================
 
-#include "centralwidget.h"
+#include "cellmlfile.h"
+#include "combinearchive.h"
 #include "combineinterface.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
@@ -30,6 +31,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "interfaces.h"
 #include "progressbarwidget.h"
 #include "remotefiledialog.h"
+#include "sedmlfile.h"
 #include "sedmlinterface.h"
 #include "sedmlsupport.h"
 #include "sedmlsupportplugin.h"
@@ -77,12 +79,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "qwtbegin.h"
     #include "qwt_wheel.h"
 #include "qwtend.h"
-
-//==============================================================================
-
-#include "libsbmlbegin.h"
-    #include "sbml/math/FormulaParser.h"
-#include "libsbmlend.h"
 
 //==============================================================================
 

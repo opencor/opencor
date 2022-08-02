@@ -27,6 +27,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
 #include "mathmlviewerwidget.h"
+#include "plugin.h"
 
 //==============================================================================
 
