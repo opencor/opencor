@@ -356,9 +356,10 @@ bool CellmlFile::load(const QString &pFileContents,
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    mXmlBase = (fileManagerInstance->isRemote(mFileName))?
+    mXmlBase = fileManagerInstance->isRemote(mFileName)?
                    fileManagerInstance->url(mFileName):
-                   QFileInfo(mFileName).canonicalPath()+"/";
+                   QUrl::fromLocalFile(mFileName).toString();
+    mXmlBase = mXmlBase.left(mXmlBase.lastIndexOf('/')+1);
 
     return true;
 }
@@ -988,7 +989,7 @@ QString CellmlFile::cmetaId()
 
 QString CellmlFile::xmlBase()
 {
-    // Return our base URI
+    // Return our XML base
 
     if (load()) {
         return mXmlBase;
