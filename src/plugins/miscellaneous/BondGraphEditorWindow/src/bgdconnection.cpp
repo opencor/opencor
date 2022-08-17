@@ -197,8 +197,8 @@ void BGDConnection::paint(QPainter *painter,
 void BGDConnection::updateLabelPosition()
 {
     auto r = m_labelItem->boundingRect();
-    int w = r.width();
-    int h = r.height();
+    int w = (int)r.width();
+    int h = (int)r.height();
     m_labelItem->setTransformOriginPoint(w / 2, h / 2);
 
     if (isCircled()) {
@@ -292,8 +292,8 @@ void BGDConnection::onParentGeometryChanged()
     bool isArrow = (len > arrowSize * 2);
 
     if (isArrow && (m_itemFlags & CF_Mutual_Arrows)) {
-        l1 = Utils::extendLine(l1, m_itemFlags & CF_Start_Arrow ? -arrowSize : 0,
-                               m_itemFlags & CF_End_Arrow ? arrowSize : 0);
+        l1 = Utils::extendLine(l1, m_itemFlags & CF_Start_Arrow ? -(float)arrowSize : 0,
+                               m_itemFlags & CF_End_Arrow ? (float)arrowSize : 0);
     }
 
     m_shapeCachePath.moveTo(p11);
@@ -329,3 +329,6 @@ void BGDConnection::onParentGeometryChanged()
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+
