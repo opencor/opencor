@@ -42,8 +42,8 @@ public:
     explicit BGElement(QGraphicsItem *parent = nullptr);
     ~BGElement() override;
     static QByteArray TYPE();
-    virtual QByteArray typeId() const;
-    virtual QString createNewId() const;
+    virtual QByteArray typeId() const override;
+    virtual QString createNewId() const override;
     int bgElementFlags() const;
     void setBGElementFlags(int flag);
     void setBGElementFlag(int flag);
@@ -56,8 +56,8 @@ public:
     void setJson(nlohmann::json &json);
     QPixmap getRenderedLatex(int fontSize = 12);
 
-    QString getDisplayName() const;
-    void setDisplayName(QString name);
+    QString getDisplayName() const override;
+    void setDisplayName(QString name) override;
     QString getConstiutiveRelation();
     bool isProxy();
     bool canBeProxy();
@@ -65,8 +65,8 @@ public:
 
     // override
     SceneItem *create() const override;
-    virtual SceneItem *clone();
-    virtual void copyDataFrom(SceneItem *from);
+    virtual SceneItem *clone() override;
+    virtual void copyDataFrom(SceneItem *from) override;
 
     // transformations
     void transform(const QRectF &oldRect, const QRectF &newRect,
@@ -78,12 +78,12 @@ public:
     virtual int getMinDim() const;
     virtual void setSize(float w, float h);
 
-    virtual bool hasLocalAttribute(const QByteArray &attrId) const;
-    virtual bool setAttribute(const QByteArray &attrId, const QVariant &value);
-    virtual bool removeAttribute(const QByteArray &attrId);
-    virtual QVariant getAttribute(const QByteArray &attrId) const;
-    virtual QByteArray classId() const;
-    virtual QByteArray superClassId() const;
+    virtual bool hasLocalAttribute(const QByteArray &attrId) const override;
+    virtual bool setAttribute(const QByteArray &attrId, const QVariant &value) override;
+    virtual bool removeAttribute(const QByteArray &attrId) override;
+    virtual QVariant getAttribute(const QByteArray &attrId) const override;
+    virtual QByteArray classId() const override;
+    virtual QByteArray superClassId() const override;
 
     // ports
     BGPort *addPort(const QByteArray &portId = "",
@@ -97,8 +97,8 @@ public:
     QByteArrayList getPortIds() const;
 
     // serialization
-    virtual bool storeTo(QDataStream &out, quint64 version64) const;
-    virtual bool restoreFrom(QDataStream &out, quint64 version64);
+    virtual bool storeTo(QDataStream &out, quint64 version64) const override;
+    virtual bool restoreFrom(QDataStream &out, quint64 version64) override;
     friend void to_json(nlohmann::json &json_, const BGElement &pelem);
     friend void from_json(const nlohmann::json &json_, BGElement &pelem);
 
@@ -142,18 +142,18 @@ public:
     virtual void onPortDeleted(BGPort *port);
     virtual void onPortRenamed(BGPort *port, const QByteArray &oldId);
 
-    virtual void onItemMoved(const QPointF &delta);
-    virtual void onItemRestored();
+    virtual void onItemMoved(const QPointF &delta) override;
+    virtual void onItemRestored() override;
     virtual void
     onDroppedOn(const QSet<InteractiveItemInterface *> &acceptedItems,
-                const QSet<InteractiveItemInterface *> &rejectedItems);
-    virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem *draggedItem);
+                const QSet<InteractiveItemInterface *> &rejectedItems) override;
+    virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem *draggedItem) override;
     virtual void updatePortsLayout();
     virtual void pauseCacheUpdates();
     virtual void restartCacheUpdates();
 
     // override
-    virtual QRectF boundingRect() const;
+    virtual QRectF boundingRect() const override;
     friend void from_json(const nlohmann::json &json_, BGEditorScene &pscene);
 
 protected:

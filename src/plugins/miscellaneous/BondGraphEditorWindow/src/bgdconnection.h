@@ -28,20 +28,20 @@ class BGDConnection : public BGConnection
 {
 public:
     BGDConnection(QGraphicsItem *parent = Q_NULLPTR);
-    BGConnection *clone();
+    BGConnection *clone() override;
 
     void setBendFactor(int bendfactor);
     static QByteArray TYPE();
-    virtual QByteArray typeId() const;
-    virtual QByteArray classId() const;
-    virtual QByteArray superClassId() const;
-    virtual SceneItem *create() const;
-    virtual QPointF getLabelCenter() const;
+    virtual QByteArray typeId() const override;
+    virtual QByteArray classId() const override;
+    virtual QByteArray superClassId() const override;
+    virtual SceneItem *create() const override;
+    virtual QPointF getLabelCenter() const override;
     int getBendFactor() const;
 
     // serialization
-    virtual bool storeTo(QDataStream &out, quint64 version64) const;
-    virtual bool restoreFrom(QDataStream &out, quint64 version64);
+    virtual bool storeTo(QDataStream &out, quint64 version64) const override;
+    virtual bool restoreFrom(QDataStream &out, quint64 version64) override;
 
     friend void to_json(nlohmann::json &json_, const BGDConnection &pconn);
     friend void from_json(const nlohmann::json &json_, BGDConnection &pconn);
@@ -54,11 +54,11 @@ public:
 protected:
     // override
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                       QWidget *widget = Q_NULLPTR);
-    virtual void updateLabelPosition();
+                       QWidget *widget = Q_NULLPTR) override;
+    virtual void updateLabelPosition() override;
 
     // callbacks
-    virtual void onParentGeometryChanged();
+    virtual void onParentGeometryChanged() override;
 
 protected:
     int m_bendFactor;

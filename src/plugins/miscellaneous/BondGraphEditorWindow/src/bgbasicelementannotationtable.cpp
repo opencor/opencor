@@ -79,7 +79,7 @@ BGBasicElementAnnotationTable::BGBasicElementAnnotationTable(
 
     connect(
         m_parameterDelegate, &ParameterDelegate::invalidUserInput, this,
-        [this](const QString &st) {
+        [](const QString &st) {
             QMessageBox::critical(nullptr, tr("Inconsistent SI Units"), st);
         },
         Qt::QueuedConnection);
