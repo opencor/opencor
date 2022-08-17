@@ -28,6 +28,11 @@ BGItemAttribute::BGItemAttribute() :
     valueType = QVariant::String;
 }
 
+BGItemAttribute::~BGItemAttribute() 
+{
+    
+}
+
 bool BGItemAttribute::isUserDefined() const
 {
     return !(flags & ATTR_FIXED);

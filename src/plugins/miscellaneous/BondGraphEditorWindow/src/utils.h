@@ -64,9 +64,8 @@ QMap<QString, QList<QString>> getCellMLOutVariables(QString filename,
 class CellMLVariableFilter : public QSortFilterProxyModel
 {
 public:
-    CellMLVariableFilter(QObject *parent = nullptr) :
-        QSortFilterProxyModel(parent) {};
-    virtual ~CellMLVariableFilter() {};
+    CellMLVariableFilter(QObject *parent = nullptr);
+    virtual ~CellMLVariableFilter() override;
 
 protected:
     bool filterAcceptsRow(int sourceRow,

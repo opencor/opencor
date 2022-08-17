@@ -38,7 +38,7 @@ public:
     ~BGEditorSearchDialog() override;
 
 public Q_SLOTS:
-    void exec(BGElementEditorScene &scene);
+    virtual void exec(BGElementEditorScene &scene) override;
 
 private Q_SLOTS:
     void updateButtons();

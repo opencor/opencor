@@ -17,6 +17,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 #pragma once
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wnon-virtual-dtor"
+    #pragma clang diagnostic ignored "-Wunused-parameter"
+#endif
+
 #include <QByteArrayList>
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>

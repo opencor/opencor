@@ -33,6 +33,12 @@ namespace OpenCOR {
 namespace BondGraphEditorWindow {
 namespace Utils {
 
+CellMLVariableFilter::CellMLVariableFilter(QObject *parent) :
+    QSortFilterProxyModel(parent) {}
+
+CellMLVariableFilter::~CellMLVariableFilter() {}
+
+
 bool CellMLVariableFilter::filterAcceptsRow(
     int source_row, const QModelIndex &source_parent) const
 {
