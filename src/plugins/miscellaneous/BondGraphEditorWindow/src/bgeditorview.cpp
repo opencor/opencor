@@ -323,9 +323,9 @@ void BGEditorView::mouseReleaseEvent(QMouseEvent *e)
         setContextMenuPolicy(m_menuModeTmp);
 
         if (!m_moved) {
-            QMouseEvent fake(QEvent::MouseButtonPress, e->pos(), Qt::RightButton,
+            QMouseEvent fake1(QEvent::MouseButtonPress, e->pos(), Qt::RightButton,
                              Qt::RightButton, Qt::NoModifier);
-            QGraphicsView::mousePressEvent(&fake);
+            QGraphicsView::mousePressEvent(&fake1);
 
             QGraphicsView::mouseReleaseEvent(e);
 
@@ -377,8 +377,8 @@ void BGEditorView::wheelEvent(QWheelEvent *e)
         double w = this->viewport()->width();
         double h = this->viewport()->height();
 
-        double wf = this->mapToScene(QPoint(w - 1, 0)).x() - this->mapToScene(QPoint(0, 0)).x();
-        double hf = this->mapToScene(QPoint(0, h - 1)).y() - this->mapToScene(QPoint(0, 0)).y();
+        double wf = this->mapToScene(QPoint(((int)(w - 1), 0)).x() - this->mapToScene(QPoint(0, 0)).x();
+        double hf = this->mapToScene(QPoint(0, (int)(h - 1))).y() - this->mapToScene(QPoint(0, 0)).y();
 
         double lf = posf.x() - pos.x() * wf / w;
         double tf = posf.y() - pos.y() * hf / h;
@@ -404,3 +404,6 @@ void BGEditorView::wheelEvent(QWheelEvent *e)
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+
