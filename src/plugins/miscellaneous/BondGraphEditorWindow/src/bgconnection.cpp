@@ -26,6 +26,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "bgeditorsceneconstants.h"
 #include "bgelement.h"
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wunused-macros"
+#endif
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 namespace OpenCOR {
@@ -79,12 +86,12 @@ BGConnection::~BGConnection()
 
 // attributes
 
-bool BGConnection::hasLocalAttribute(const QByteArray &attr_id) const
+bool BGConnection::hasLocalAttribute(const QByteArray &pattr_id) const
 {
-    if (attr_id == attr_edge_direction)
+    if (pattr_id == attr_edge_direction)
         return true;
     else
-        return SceneItem::hasLocalAttribute(attr_id);
+        return SceneItem::hasLocalAttribute(pattr_id);
 }
 
 BGElement *BGConnection::firstElement() const
@@ -124,24 +131,24 @@ QPainterPath BGConnection::shape() const
     return m_selectionShapePath;
 }
 
-bool BGConnection::setAttribute(const QByteArray &attr_id, const QVariant &v)
+bool BGConnection::setAttribute(const QByteArray &pattr_id, const QVariant &v)
 {
-    if (attr_id == attr_edge_direction) {
+    if (pattr_id == attr_edge_direction) {
         updateArrowFlags(v.toString());
     }
 
-    bool res = SceneItem::setAttribute(attr_id, v);
+    bool res = SceneItem::setAttribute(pattr_id, v);
 
     if (res)
         update();
     return res;
 }
 
-bool BGConnection::removeAttribute(const QByteArray &attr_id)
+bool BGConnection::removeAttribute(const QByteArray &pattr_id)
 {
-    bool res = SceneItem::removeAttribute(attr_id);
+    bool res = SceneItem::removeAttribute(pattr_id);
 
-    if (attr_id == attr_edge_direction) {
+    if (pattr_id == attr_edge_direction) {
         updateArrowFlags(getAttribute(attr_edge_direction).toString());
     }
 
@@ -390,7 +397,8 @@ bool BGConnection::reattach(BGElement *old_node, BGElement *new_node,
     bool done = false;
 
     if (m_firstElement == old_node) {
-        setFirstElement(new_node, port_id, false), done = true;
+        setFirstElement(new_node, port_id, false);
+        done = true;
         auto pt = m_firstElement->scenePos();
         auto target = m_lastElement->scenePos();
         auto vec = target - pt;
@@ -402,7 +410,8 @@ bool BGConnection::reattach(BGElement *old_node, BGElement *new_node,
     }
 
     if (m_lastElement == old_node) {
-        setLastElement(new_node, port_id, false), done = true;
+        setLastElement(new_node, port_id, false);
+        done = true;
         auto pt = m_lastElement->scenePos();
         auto target = m_firstElement->scenePos();
         auto vec = target - pt;
