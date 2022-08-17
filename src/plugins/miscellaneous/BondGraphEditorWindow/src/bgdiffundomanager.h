@@ -17,6 +17,10 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 #pragma once
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wnon-virtual-dtor"
+#endif
 
 #include "undomanagerinterface.h"
 
@@ -60,3 +64,6 @@ private:
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+
