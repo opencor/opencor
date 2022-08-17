@@ -34,6 +34,7 @@ SOFTWARE.
     #pragma clang diagnostic ignored "-Wswitch-enum"
     #pragma clang diagnostic ignored "-Wcovered-switch-default"
     #pragma clang diagnostic ignored "-Wfloat-equal"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_

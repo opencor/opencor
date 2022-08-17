@@ -26,7 +26,7 @@ namespace BondGraphEditorWindow {
 class CategoryButton : public QPushButton {
 public:
   explicit CategoryButton(QWidget *parent = nullptr);
-  virtual ~CategoryButton();
+  virtual ~CategoryButton() override;
 
   void setPixmap(const QPixmap &pixmap);
 
