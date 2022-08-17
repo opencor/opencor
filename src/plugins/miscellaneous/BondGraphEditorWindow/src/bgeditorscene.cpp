@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif
+
 #include <QApplication>
 #include <QClipboard>
 
@@ -649,24 +654,24 @@ SceneItem *BGEditorScene::createItemOfType(const QByteArray &id) const
 // attributes
 
 BGItemAttribute &BGEditorScene::createClassAttribute(
-    const QByteArray &class_id, const QByteArray &attr_id,
+    const QByteArray &class_id, const QByteArray &pattr_id,
     const QString &attr_name, const QVariant &default_value, int attr_flags,
     BGItemAttributeConstraints *constrains, bool vis)
 {
-    if (m_classAttributes[class_id].contains(attr_id)) {
+    if (m_classAttributes[class_id].contains(pattr_id)) {
         // just update the value
-        m_classAttributes[class_id][attr_id].defaultValue = default_value;
+        m_classAttributes[class_id][pattr_id].defaultValue = default_value;
     } else {
-        m_classAttributes[class_id][attr_id] =
-            BGItemAttribute(attr_id, attr_name, default_value, attr_flags);
+        m_classAttributes[class_id][pattr_id] =
+            BGItemAttribute(pattr_id, attr_name, default_value, attr_flags);
 
-        setClassAttributeVisible(class_id, attr_id, vis);
+        setClassAttributeVisible(class_id, pattr_id, vis);
 
         if (constrains)
-            setClassAttributeConstrains(class_id, attr_id, constrains);
+            setClassAttributeConstrains(class_id, pattr_id, constrains);
     }
 
-    return m_classAttributes[class_id][attr_id];
+    return m_classAttributes[class_id][pattr_id];
 }
 
 void BGEditorScene::setClassAttribute(const QByteArray &class_id,
@@ -685,39 +690,39 @@ void BGEditorScene::setClassAttribute(const QByteArray &class_id,
 }
 
 void BGEditorScene::setClassAttribute(const QByteArray &class_id,
-                                      const QByteArray &attr_id,
+                                      const QByteArray &pattr_id,
                                       const QVariant &default_value)
 {
-    if (m_classAttributes[class_id].contains(attr_id)) {
+    if (m_classAttributes[class_id].contains(pattr_id)) {
         // just update the value
-        m_classAttributes[class_id][attr_id].defaultValue = default_value;
+        m_classAttributes[class_id][pattr_id].defaultValue = default_value;
         forceUpdate();
         return;
     }
 
     // clone from super if not found
     auto superId = getSuperClassId(class_id);
-    while (!superId.isEmpty() && !m_classAttributes[superId].contains(attr_id)) {
+    while (!superId.isEmpty() && !m_classAttributes[superId].contains(pattr_id)) {
         superId = getSuperClassId(superId);
     }
 
     if (!superId.isEmpty()) {
-        auto attr = m_classAttributes[superId][attr_id];
+        auto attr = m_classAttributes[superId][pattr_id];
         attr.defaultValue = default_value;
-        m_classAttributes[class_id][attr_id] = attr;
+        m_classAttributes[class_id][pattr_id] = attr;
 
         forceUpdate();
         return;
     }
 
     // else create new attribute with name = id
-    BGItemAttribute attr(attr_id, attr_id, default_value);
-    m_classAttributes[class_id][attr_id] = attr;
+    BGItemAttribute attr(pattr_id, pattr_id, default_value);
+    m_classAttributes[class_id][pattr_id] = attr;
     forceUpdate();
 }
 
 bool BGEditorScene::removeClassAttribute(const QByteArray &class_id,
-                                         const QByteArray &attr_id)
+                                         const QByteArray &pattr_id)
 {
     auto it = m_classAttributes.find(class_id);
     if (it == m_classAttributes.end())
@@ -725,20 +730,20 @@ bool BGEditorScene::removeClassAttribute(const QByteArray &class_id,
 
     forceUpdate();
 
-    return (*it).remove(attr_id);
+    return (*it).remove(pattr_id);
 }
 
 void BGEditorScene::setClassAttributeVisible(const QByteArray &class_id,
-                                             const QByteArray &attr_id,
+                                             const QByteArray &pattr_id,
                                              bool vis)
 {
-    if (vis == m_classAttributesVis[class_id].contains(attr_id))
+    if (vis == m_classAttributesVis[class_id].contains(pattr_id))
         return;
 
     if (vis)
-        m_classAttributesVis[class_id].insert(attr_id);
+        m_classAttributesVis[class_id].insert(pattr_id);
     else
-        m_classAttributesVis[class_id].remove(attr_id);
+        m_classAttributesVis[class_id].remove(pattr_id);
 
     // set label update flag
     m_labelsUpdate = true;
@@ -748,9 +753,9 @@ void BGEditorScene::setClassAttributeVisible(const QByteArray &class_id,
 }
 
 bool BGEditorScene::isClassAttributeVisible(const QByteArray &class_id,
-                                            const QByteArray &attr_id) const
+                                            const QByteArray &pattr_id) const
 {
-    return m_classAttributesVis[class_id].contains(attr_id);
+    return m_classAttributesVis[class_id].contains(pattr_id);
 }
 
 QSet<QByteArray>
@@ -783,9 +788,9 @@ void BGEditorScene::setVisibleClassAttributes(const QByteArray &class_id,
 }
 
 const BGItemAttribute BGEditorScene::getClassAttribute(
-    const QByteArray &class_id, const QByteArray &attr_id, bool inherited) const
+    const QByteArray &class_id, const QByteArray &pattr_id, bool inherited) const
 {
-    BGItemAttribute attr = m_classAttributes[class_id][attr_id];
+    BGItemAttribute attr = m_classAttributes[class_id][pattr_id];
     if (attr.id.size() || !inherited)
         return attr;
 
@@ -795,7 +800,7 @@ const BGItemAttribute BGEditorScene::getClassAttribute(
         // fail
         return BGItemAttribute();
 
-    return getClassAttribute(superId, attr_id, true);
+    return getClassAttribute(superId, pattr_id, true);
 }
 
 AttributesMap BGEditorScene::getClassAttributes(const QByteArray &class_id,
@@ -821,9 +826,9 @@ AttributesMap BGEditorScene::getClassAttributes(const QByteArray &class_id,
 
 BGItemAttributeConstraints *
 BGEditorScene::getClassAttributeConstrains(const QByteArray &class_id,
-                                           const QByteArray &attr_id) const
+                                           const QByteArray &pattr_id) const
 {
-    ClassAttrIndex index(class_id, attr_id);
+    ClassAttrIndex index(class_id, pattr_id);
 
     if (m_classAttributesConstrains.contains(index))
         return m_classAttributesConstrains[index];
@@ -832,10 +837,10 @@ BGEditorScene::getClassAttributeConstrains(const QByteArray &class_id,
 }
 
 void BGEditorScene::setClassAttributeConstrains(
-    const QByteArray &class_id, const QByteArray &attr_id,
+    const QByteArray &class_id, const QByteArray &pattr_id,
     BGItemAttributeConstraints *cptr)
 {
-    ClassAttrIndex index(class_id, attr_id);
+    ClassAttrIndex index(class_id, pattr_id);
 
     // do we need to clean up?
     // if (m_classAttributesConstrains.contains(index))

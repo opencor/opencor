@@ -39,7 +39,7 @@ struct BGItemAttribute : public AttrInfo {
     BGItemAttribute(const QByteArray &attrId, const QString &attrName,
                     const QVariant &defaultValue,
                     const int attrFlags = ATTR_NONE);
-    ~BGItemAttribute();
+
     int flags = ATTR_NONE;
 
     bool isUserDefined() const;
