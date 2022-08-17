@@ -68,8 +68,10 @@ void BGDiffUndoManager::addState()
 
     int rightDiffIndex1 = m_lastState.size() - 1;
     int rightDiffIndex2 = snap.size() - 1;
-    while (rightDiffIndex1 >= 0 && rightDiffIndex2 >= 0 && rightDiffIndex1 > leftDiffIndex && rightDiffIndex2 > leftDiffIndex && snap[rightDiffIndex2] == m_lastState[rightDiffIndex1])
-        --rightDiffIndex1, --rightDiffIndex2;
+    while (rightDiffIndex1 >= 0 && rightDiffIndex2 >= 0 && rightDiffIndex1 > leftDiffIndex && rightDiffIndex2 > leftDiffIndex && snap[rightDiffIndex2] == m_lastState[rightDiffIndex1]){
+        --rightDiffIndex1;
+        --rightDiffIndex2;
+    }
 
     int len1 = rightDiffIndex1 - leftDiffIndex + 1;
     int len2 = rightDiffIndex2 - leftDiffIndex + 1;
@@ -224,3 +226,6 @@ int BGDiffUndoManager::availableRedoCount() const
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+

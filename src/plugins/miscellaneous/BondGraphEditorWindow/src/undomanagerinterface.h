@@ -22,6 +22,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #if defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wnon-virtual-dtor"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 
@@ -43,3 +44,6 @@ public:
 };
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+
