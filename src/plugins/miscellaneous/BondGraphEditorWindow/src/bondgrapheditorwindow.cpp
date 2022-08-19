@@ -43,7 +43,7 @@ BondGraphEditorWindow::BondGraphEditorWindow(QWidget *p_parent) :
     setWindowTitle(tr("Graphical BondGraph Editor"));
     //Open cellml file in CellML editor when exported by the user
     connect(mGui, &BondGraphUIWidget::cellMLFileGenerated,
-            [this](QString path) {
+            [](QString path) {
                 QDesktopServices::openUrl("opencor://openFile/" + path);
             });
 }

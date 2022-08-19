@@ -19,6 +19,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #if defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wdelete-non-abstract-non-virtual-dtor"
+    #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
+    #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #endif
 
 #include <QApplication>

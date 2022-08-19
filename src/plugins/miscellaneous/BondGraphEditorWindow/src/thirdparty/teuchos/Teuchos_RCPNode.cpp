@@ -38,6 +38,13 @@
 //
 // ***********************************************************************
 // @HEADER
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wshorten-64-to-32"
+    #pragma clang diagnostic ignored "-Wunused-member-function"
+    #pragma clang diagnostic ignored "-Wunreachable-code-return"
+    #pragma clang diagnostic ignored "-Wexceptions"
+#endif
 
 #include "Teuchos_RCPNode.hpp"
 #include "Teuchos_Assert.hpp"

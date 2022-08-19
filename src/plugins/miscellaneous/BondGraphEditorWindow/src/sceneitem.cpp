@@ -16,6 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wcast-qual"
+    #pragma clang diagnostic ignored "-Wdelete-non-abstract-non-virtual-dtor"
+#endif
+
 #include "bgeditorsceneconstants.h"
 #include "sceneitem.h"
 
@@ -136,25 +144,25 @@ bool SceneItem::restoreFrom(QDataStream &out, quint64 version64)
 
 // attributes
 
-bool SceneItem::hasLocalAttribute(const QByteArray &attr_id) const
+bool SceneItem::hasLocalAttribute(const QByteArray &pattr_id) const
 {
-    if (attr_id == "id")
+    if (pattr_id == "id")
         return true;
     else
-        return m_attributes.contains(attr_id);
+        return m_attributes.contains(pattr_id);
 }
 
-bool SceneItem::setAttribute(const QByteArray &attr_id, const QVariant &v)
+bool SceneItem::setAttribute(const QByteArray &pattr_id, const QVariant &v)
 {
     setItemStateFlag(IS_Attribute_Changed);
 
-    if (attr_id == "id") {
+    if (pattr_id == "id") {
         m_id = v.toString();
         return true;
     }
 
     // real attributes
-    m_attributes[attr_id] = v;
+    m_attributes[pattr_id] = v;
 
     return true;
 }
@@ -226,25 +234,25 @@ bool SceneItem::junctionType() const
     return false;
 }
 
-bool SceneItem::removeAttribute(const QByteArray &attr_id)
+bool SceneItem::removeAttribute(const QByteArray &pattr_id)
 {
-    if (m_attributes.remove(attr_id)) {
+    if (m_attributes.remove(pattr_id)) {
         setItemStateFlag(IS_Attribute_Changed);
         return true;
     } else
         return false;
 }
 
-QVariant SceneItem::getAttribute(const QByteArray &attr_id) const
+QVariant SceneItem::getAttribute(const QByteArray &pattr_id) const
 {
-    if (attr_id == "id")
+    if (pattr_id == "id")
         return m_id;
 
-    if (m_attributes.contains(attr_id))
-        return m_attributes[attr_id];
+    if (m_attributes.contains(pattr_id))
+        return m_attributes[pattr_id];
 
     if (auto scene = getScene())
-        return scene->getClassAttribute(classId(), attr_id, true).defaultValue;
+        return scene->getClassAttribute(classId(), pattr_id, true).defaultValue;
 
     return QVariant();
 }

@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+    #pragma clang diagnostic ignored "-Wshadow"
+#endif
+
 #include "contentpane.h"
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
@@ -258,3 +264,6 @@ void ContentPane::paintEvent(QPaintEvent *event) {
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+

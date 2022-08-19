@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif
+
 #include "qaccordion.h"
 #include "contentpane.h"
 #include <stdexcept>
@@ -317,8 +322,8 @@ int QAccordion::findContentPaneIndex(QString name, QFrame *cframe,
   if (cframe != nullptr) {
     auto result =
         std::find_if(this->contentPanes.begin(), this->contentPanes.end(),
-                     [cframe](ContentPane *cpane) {
-                       return cpane->getContentFrame() == cframe;
+                     [cframe](ContentPane *cpane_) {
+                       return cpane_->getContentFrame() == cframe;
                      });
     if (result != std::end(this->contentPanes)) {
       index = static_cast<int>(result - this->contentPanes.begin());
@@ -412,3 +417,5 @@ void QAccordion::paintEvent(QPaintEvent *event) {
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+

@@ -165,10 +165,10 @@ void BGConnectionsTable::updateContents()
         item->setData(EdgeId, Qt::UserRole, edge->getId());
         item->setFlags(item->flags() | Qt::ItemIsEditable);
 
-        int extraSectionIndex = CustomId;
+        int extraSectionIndex1 = CustomId;
         for (const auto &paramId : m_extraSectionIds) {
             QString val = edge->getAttribute(paramId).toString();
-            item->setText(extraSectionIndex++, val);
+            item->setText(extraSectionIndex1++, val);
         }
     }
 

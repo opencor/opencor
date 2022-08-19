@@ -1,3 +1,9 @@
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif
+
 #include "colordefs.h"
 
 #include <QtCore/QCoreApplication>

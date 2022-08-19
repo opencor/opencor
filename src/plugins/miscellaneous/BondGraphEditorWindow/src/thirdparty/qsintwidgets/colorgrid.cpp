@@ -1,3 +1,9 @@
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wfloat-conversion"
+#endif
+
 #include "colorgrid.h"
 
 #include <qmath.h>

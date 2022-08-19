@@ -38,6 +38,15 @@
 //
 // ***********************************************************************
 // @HEADER
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated"
+    #pragma clang diagnostic ignored "-Wmissing-noreturn"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+#endif
 
 #ifndef TEUCHOS_DYN_CAST_HPP
 #define TEUCHOS_DYN_CAST_HPP

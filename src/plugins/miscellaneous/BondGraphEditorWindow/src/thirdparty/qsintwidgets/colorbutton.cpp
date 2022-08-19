@@ -1,3 +1,8 @@
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wswitch-enum"
+#endif
+
 #include "colorbutton.h"
 #include "colorgrid.h"
 

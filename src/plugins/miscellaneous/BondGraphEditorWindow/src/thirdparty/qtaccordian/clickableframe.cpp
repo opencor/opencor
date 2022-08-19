@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+#endif
+
 #include "clickableframe.h"
 namespace OpenCOR {
 namespace BondGraphEditorWindow {
@@ -122,3 +128,6 @@ void ClickableFrame::leaveEvent(QEvent *event) {
 }
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+

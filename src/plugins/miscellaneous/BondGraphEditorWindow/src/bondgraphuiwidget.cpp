@@ -44,7 +44,19 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "thirdparty/widgetbox/widgetbox.h"
 
 #include "thirdparty/json.hpp"
-#include <bondgraph.hpp>
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wnewline-eof"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+#endif
+#include "bondgraph.hpp"
+
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+#endif
 
 namespace OpenCOR {
 namespace BondGraphEditorWindow {

@@ -18,6 +18,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 *******************************************************************************/
 #pragma once
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wnewline-eof"
+    #pragma clang diagnostic ignored "-Woverloaded-virtual"
+    #pragma clang diagnostic ignored "-Wcovered-switch-default"
+#endif
+
 #include <QCheckBox>
 #include <QLabel>
 #include <QPushButton>
@@ -96,3 +103,6 @@ private:
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+

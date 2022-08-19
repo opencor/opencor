@@ -16,6 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wshorten-64-to-32"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif 
+
 #include "bgexportutilities.h"
 
 #include <QBuffer>
@@ -39,7 +46,21 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "bgelement.h"
 #include "bgport.h"
 #include "bgprojectdetails.h"
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wnewline-eof"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+#endif
 #include "bondgraph.hpp"
+
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+#endif
+
+
 #include "sceneitem.h"
 #include "thirdparty/widgetbox/widgetbox.h"
 #include "utils.h"

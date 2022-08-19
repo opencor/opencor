@@ -23,7 +23,19 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <limits>
 
 #include "bgparameterimportdialog.h"
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wnewline-eof"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+#endif
 #include "bondgraph.hpp"
+
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+#endif
 /**
  * Following diagnostic pragmas have been added to integrate with opencor.
  * OpenCOR fails to build on these warnings (by design)

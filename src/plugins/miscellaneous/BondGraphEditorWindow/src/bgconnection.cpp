@@ -437,7 +437,7 @@ bool BGConnection::reattach(BGElement *element, const QByteArray &old_port_id,
     bool done = false;
 
     if (m_firstElement == element && m_firstPortId == old_port_id) {
-        setFirstElement(element, new_port_id, false), done = true;
+        setFirstElement(element, new_port_id, false); done = true;
         auto pt = element->scenePos();
         auto target = m_lastElement->scenePos();
         auto vec = target - pt;
@@ -449,7 +449,7 @@ bool BGConnection::reattach(BGElement *element, const QByteArray &old_port_id,
     }
 
     if (m_lastElement == element && m_lastPortId == old_port_id) {
-        setLastElement(element, new_port_id, false), done = true;
+        setLastElement(element, new_port_id, false); done = true;
         auto pt = element->scenePos();
         auto target = m_firstElement->scenePos();
         auto vec = target - pt;
@@ -575,3 +575,8 @@ void BGConnection::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+
+
+

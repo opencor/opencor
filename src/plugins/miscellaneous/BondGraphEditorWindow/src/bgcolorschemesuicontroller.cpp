@@ -33,6 +33,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #    pragma GCC diagnostic ignored "-Wunused-parameter"
 #else
 #    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wmissing-field-initializers"
 #    pragma clang diagnostic ignored "-Wunused-parameter"
 #endif
 

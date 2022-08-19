@@ -1,3 +1,8 @@
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#endif
+
 #ifndef SPINSLIDER_H
 #define SPINSLIDER_H
 

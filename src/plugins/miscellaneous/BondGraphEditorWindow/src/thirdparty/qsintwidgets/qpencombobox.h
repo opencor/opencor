@@ -1,3 +1,8 @@
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wweak-vtables"
+#endif
+
 #ifndef QPENCOMBOBOX_H
 #define QPENCOMBOBOX_H
 

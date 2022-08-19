@@ -38,6 +38,10 @@
 //
 // ***********************************************************************
 // @HEADER
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+#endif
 
 #ifndef _TEUCHOS_TYPE_NAME_TRAITS_HPP_
 #define _TEUCHOS_TYPE_NAME_TRAITS_HPP_

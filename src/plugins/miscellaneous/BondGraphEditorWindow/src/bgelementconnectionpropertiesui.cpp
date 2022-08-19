@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wfloat-conversion"
+    #pragma clang diagnostic ignored "-Wunreachable-code-loop-increment"
+    #pragma clang diagnostic ignored "-Wdelete-non-abstract-non-virtual-dtor"
+#endif
 
 #include <QInputDialog>
 #include <QMessageBox>
@@ -325,10 +331,10 @@ void BGElementConnectionPropertiesUI::onSelectionChanged()
 }
 
 void BGElementConnectionPropertiesUI::setElementAttribute(
-    const QByteArray &attr_id, const QVariant &v)
+    const QByteArray &pattr_id, const QVariant &v)
 {
     // if (m_elementFactory)
-    //	m_elementFactory->setAttribute(attrId, v);
+    //	m_elementFactory->setAttribute(pattrId, v);
 
     if (m_updateLock || m_scene == nullptr)
         return;
@@ -339,20 +345,20 @@ void BGElementConnectionPropertiesUI::setElementAttribute(
         return;
 
     for (auto element : elements) {
-        if (attr_id == "shape")
+        if (pattr_id == "shape")
             if (element->getClassType() != "annotation")
                 continue;
-        element->setAttribute(attr_id, v);
+        element->setAttribute(pattr_id, v);
     }
 
     m_scene->addUndoState();
 }
 
 void BGElementConnectionPropertiesUI::setConnectionAttribute(
-    const QByteArray &attr_id, const QVariant &v)
+    const QByteArray &pattr_id, const QVariant &v)
 {
     // if (m_connectionFactory)
-    //	m_connectionFactory->setAttribute(attrId, v);
+    //	m_connectionFactory->setAttribute(pattrId, v);
 
     if (m_updateLock || m_scene == nullptr)
         return;
@@ -362,7 +368,7 @@ void BGElementConnectionPropertiesUI::setConnectionAttribute(
         return;
 
     for (auto connection : connections)
-        connection->setAttribute(attr_id, v);
+        connection->setAttribute(pattr_id, v);
 
     m_scene->addUndoState();
 }

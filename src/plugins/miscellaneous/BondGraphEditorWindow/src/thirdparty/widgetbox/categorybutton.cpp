@@ -47,3 +47,6 @@ void CategoryButton::paintEvent(QPaintEvent *e) {
 }
 } // namespace BondGraphEditorWindow
 } // namespace OpenCOR
+
+
+

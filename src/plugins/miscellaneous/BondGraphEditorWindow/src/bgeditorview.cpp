@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif
+
 #include "bgeditorscene.h"
 #include "bgeditorview.h"
 
@@ -377,8 +383,8 @@ void BGEditorView::wheelEvent(QWheelEvent *e)
         double w = this->viewport()->width();
         double h = this->viewport()->height();
 
-        double wf = this->mapToScene(QPoint(((int)(w - 1), 0)).x() - this->mapToScene(QPoint(0, 0)).x();
-        double hf = this->mapToScene(QPoint(0, (int)(h - 1))).y() - this->mapToScene(QPoint(0, 0)).y();
+        double wf = this->mapToScene(QPoint((int)(w - 1), 0)).x() - this->mapToScene(QPoint(0, 0)).x();
+        double hf = this->mapToScene(QPoint(0,(int)(h - 1))).y() - this->mapToScene(QPoint(0, 0)).y();
 
         double lf = posf.x() - pos.x() * wf / w;
         double tf = posf.y() - pos.y() * hf / h;

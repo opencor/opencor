@@ -1,3 +1,11 @@
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wfloat-equal"
+    #pragma clang diagnostic ignored "-Wfloat-conversion"
+    #pragma clang diagnostic ignored "-Wcovered-switch-default"
+#endif
+
 #include "roundprogressbar.h"
 
 #include <QtGui/QPainter>

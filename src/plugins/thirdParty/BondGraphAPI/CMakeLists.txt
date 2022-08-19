@@ -112,7 +112,7 @@ endif()
 
     # Do some post-processing that is specific to each platform
 
-    if(NOT WIN32)
+    if(NOT WIN32 AND NOT APPLE)
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
@@ -122,7 +122,7 @@ endif()
                                                                   ${BONDGRAPH_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
-    endif(NOT WIN32)
+    endif(NOT WIN32 AND NOT APPLE)
     # Package our external project
 
     create_package(${PACKAGE_NAME} ${PACKAGE_VERSION}

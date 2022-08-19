@@ -383,12 +383,12 @@ void BGBasicElementAnnotationTable::onSelectionChanged()
 }
 
 void BGBasicElementAnnotationTable::setElementAttribute(
-    const QByteArray &attr_id, const QVariant &v)
+    const QByteArray &pattr_id, const QVariant &v)
 {
-    Q_UNUSED(attr_id);
+    Q_UNUSED(pattr_id);
     Q_UNUSED(v);
     // if (m_currentElement)
-    //	m_currentElement->setAttribute(attrId, v);
+    //	m_currentElement->setAttribute(pattrId, v);
 
     if (m_updateLock || m_scene == nullptr) {
         return;

@@ -17,6 +17,14 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 *******************************************************************************/
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdouble-promotion"
+    #pragma clang diagnostic ignored "-Wfloat-conversion"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wimplicit-float-conversion"
+#endif 
+
 #include "bgelement.h"
 #include "bgport.h"
 

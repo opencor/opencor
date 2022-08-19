@@ -1,3 +1,7 @@
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#endif
 #ifndef PATHPICKER_H
 #define PATHPICKER_H
 

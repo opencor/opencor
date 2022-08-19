@@ -1,6 +1,11 @@
 #ifndef COLORBUTTON_H
 #define COLORBUTTON_H
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#endif
+
 #include "colordefs.h"
 
 #include <QToolButton>

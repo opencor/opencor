@@ -24,8 +24,10 @@
   Copyright: (c) 2010-2019
   Author: Jan krieger <jan@jkrieger.de>, http://www.jkrieger.de/
 */
-
-
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#endif
 
 #ifndef JKQTMATHTEXT_H
 #define JKQTMATHTEXT_H
