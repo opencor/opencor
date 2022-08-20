@@ -76,12 +76,13 @@ endif()
     # Build libBondGraph as an external project
 
 # Set some compilation flags and/or ignore some warnings
-
+# Adding build directory to be included via the flags as Teuchos_config.h is created in the
+# current build directory and required by the build
     if(WIN32)
-        set(PACKAGE_C_FLAGS "/wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
-        set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577 /EHsc")
+        set(PACKAGE_C_FLAGS "/wd4005 /wd4244 /wd4267 /wd4311 /wd4312 -I.")
+        set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577 /EHsc -I.")
     elseif(NOT APPLE)
-        set(PACKAGE_CXX_FLAGS "-std=c++0x -Wno-deprecated -Wno-misleading-indentation -Wno-reorder -Wno-unused-function")
+        set(PACKAGE_CXX_FLAGS "-std=c++0x -Wno-deprecated -Wno-misleading-indentation -Wno-reorder -Wno-unused-function -I.")
     endif()
 
 
@@ -90,11 +91,12 @@ endif()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-           https://github.com/Jagirhussan/${PACKAGE_REPOSITORY}
+        #GIT_REPOSITORY
+        #   https://github.com/Jagirhussan/${PACKAGE_REPOSITORY}
         # GIT_TAG
         #     ${GIT_TAG}
-        GIT_SHALLOW
+        #GIT_SHALLOW
+        SOURCE_DIR   D:/Temp/OpenCORBuildTest/libbondgraph
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
             -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}        

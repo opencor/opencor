@@ -3,7 +3,7 @@ project(BondGraphEditorWindowPlugin)
 # Add the plugin
 
 # Configure Teuchos using our CMake options:
-configure_file(src/thirdparty/teuchos/Teuchos_config.h.in Teuchos_config.h)
+# configure_file(src/thirdparty/teuchos/Teuchos_config.h.in Teuchos_config.h)
 
 add_plugin(BondGraphEditorWindow
     SOURCES
@@ -125,12 +125,12 @@ add_plugin(BondGraphEditorWindow
         src/thirdparty/qsintwidgets/splitbutton.cpp
         src/thirdparty/qsintwidgets/timepicker.cpp
         #Teuchos
-        src/thirdparty/teuchos/Teuchos_dyn_cast.cpp
-        src/thirdparty/teuchos/Teuchos_Ptr.cpp
-        src/thirdparty/teuchos/Teuchos_RCPNode.cpp
-        src/thirdparty/teuchos/Teuchos_TestForException.cpp
-        src/thirdparty/teuchos/Teuchos_TypeNameTraits.cpp
-        src/thirdparty/teuchos/Teuchos_stacktrace.cpp
+        # src/thirdparty/teuchos/Teuchos_dyn_cast.cpp
+        # src/thirdparty/teuchos/Teuchos_Ptr.cpp
+        # src/thirdparty/teuchos/Teuchos_RCPNode.cpp
+        # src/thirdparty/teuchos/Teuchos_TestForException.cpp
+        # src/thirdparty/teuchos/Teuchos_TypeNameTraits.cpp
+        # src/thirdparty/teuchos/Teuchos_stacktrace.cpp
 
         #Generated using vtkEncodeString.cmake - hardcoded to integrate with OpenCOR without adding vtkEncodeString.cmake to OpenCOR
         src/miriamtermsjsonstring.cpp
