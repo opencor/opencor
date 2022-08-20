@@ -91,12 +91,11 @@ endif()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        #GIT_REPOSITORY
-        #   https://github.com/Jagirhussan/${PACKAGE_REPOSITORY}
+        GIT_REPOSITORY
+           https://github.com/Jagirhussan/${PACKAGE_REPOSITORY}
         # GIT_TAG
         #     ${GIT_TAG}
-        #GIT_SHALLOW
-        SOURCE_DIR   D:/Temp/OpenCORBuildTest/libbondgraph
+        GIT_SHALLOW
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
             -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}        
