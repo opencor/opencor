@@ -76,8 +76,9 @@ endif()
     # Build libBondGraph as an external project
 
 # Set some compilation flags and/or ignore some warnings
+
 # Adding build directory to be included via the flags as Teuchos_config.h is created in the
-# current build directory and required by the build
+# current build directory and is required by the build
     if(WIN32)
         set(PACKAGE_C_FLAGS "/wd4005 /wd4244 /wd4267 /wd4311 /wd4312 -I.")
         set(PACKAGE_CXX_FLAGS "/wd4244 /wd4267 /wd4309 /wd4477 /wd4530 /wd4577 /EHsc -I.")
@@ -107,6 +108,10 @@ endif()
             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
             -DPARSE_AND_CREATE_FACTORY_METHODS=OFF
             -DBUILD_TESTING=OFF
+            #Many of the OpenCOR test cases that monitor screen output are unable to discern logging messages
+            #They count the number of lines output and not match content. This causes CI to fail. Disabling logging
+            #ensures that these test cases pass.
+            -DENABLE_LOGGING=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${BONDGRAPH_IMPORT_LIBRARY}       
     )
