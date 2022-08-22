@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="${PLUGIN_NAME}_fr">${PROJECT_BUILD_DIR}/${PLUGIN_NAME}_fr.qm</file>
+    </qresource>
+</RCC>
