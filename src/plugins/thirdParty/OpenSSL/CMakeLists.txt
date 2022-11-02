@@ -3,10 +3,10 @@ project(OpenSSLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 1.1.1o)
+set(PACKAGE_VERSION 1.1.1s)
 set(PACKAGE_REPOSITORY openssl)
-set(GIT_TAG OpenSSL_1_1_1o)
-set(RELEASE_TAG OpenSSL_1_1_1o)
+set(GIT_TAG OpenSSL_1_1_1s)
+set(RELEASE_TAG OpenSSL_1_1_1s)
 
 get_full_local_external_package_dir()
 
@@ -69,11 +69,11 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             7c3387853da767c4ba8ccbfee34108d2aea79a2e)
+                             30e47e90a33c34b5c7ea150780a52eee14627823)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             f843ca66a79b6704d65edfd2e0588db80dcbf7ea)
+                             cfd5cb584e4a470de11828bb580585291cfdb1bc)
         endif()
 
         # Make a copy of our import libraries
@@ -90,11 +90,11 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         4dec22a24c6fab2f18c30ad89b05bd50a6e43b8d)
+                         0b79ff625ee627a26bbaebf6150197b21f7d552d)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         c9d6e540dd6b681db4dd583094ddeb6644263900)
+                         6a6931c6ed57cfb70c69e062dcc1739efda74888)
     endif()
 else()
     # We require Perl to build OpenSSL
