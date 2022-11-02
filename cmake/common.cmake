@@ -915,64 +915,34 @@ foreach(PACKAGED_FILENAME ${PACKAGED_FILES})
 endforeach()")
     endif()
 
-if(NOT WIN32)
     set(CMAKE_CODE "${CMAKE_CODE}\n
-    # Compress our package
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${PACKAGE_FILE} ${PACKAGED_FILES}
-                    WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                    RESULT_VARIABLE RESULT
-                    OUTPUT_QUIET
-                    )
-    # Make sure that the package file exists
+# Compress our package
 
-    if(RESULT EQUAL 0 AND EXISTS ${PACKAGE_FILE})
-        # The package file, so calculate its SHA-1 value and let people know how we
-        # should call the retrieve_package() macro
+execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${PACKAGE_FILE} ${PACKAGED_FILES}
+                WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                RESULT_VARIABLE RESULT
+                OUTPUT_QUIET)
 
-        file(SHA1 ${PACKAGE_FILE} SHA1_VALUE)
+# Make sure that the package file exists
 
-        message(\"To retrieve the '${PACKAGE_NAME}' package, use:
-    retrieve_package(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
-                    \\$\\{PACKAGE_REPOSITORY\\} \\$\\{RELEASE_TAG\\}
-                    \$\{SHA1_VALUE\})\")
-    else()
-        if(EXISTS ${PACKAGE_FILE})
-            file(REMOVE ${PACKAGE_FILE})
-        endif()
+if(RESULT EQUAL 0 AND EXISTS ${PACKAGE_FILE})
+    # The package file, so calculate its SHA-1 value and let people know how we
+    # should call the retrieve_package() macro
 
-        message(FATAL_ERROR \"The '${PACKAGE_NAME}' package could not be created...\")
-    endif()
-    ")
+    file(SHA1 ${PACKAGE_FILE} SHA1_VALUE)
+
+    message(\"To retrieve the '${PACKAGE_NAME}' package, use:
+retrieve_package(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
+                 \\$\\{PACKAGE_REPOSITORY\\} \\$\\{RELEASE_TAG\\}
+                 \$\{SHA1_VALUE\})\")
 else()
-    set(CMAKE_CODE "${CMAKE_CODE}\n
-    # Compress our package
-    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E tar -czf ${PACKAGE_FILE} ${PACKAGED_FILES}
-                    WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                    RESULT_VARIABLE RESULT
-                    OUTPUT_QUIET
-                    )
-
-    # Make sure that the package file exists
-
-    if(RESULT EQUAL 0 AND EXISTS ${PACKAGE_FILE})
-        # The package file, so calculate its SHA-1 value and let people know how we
-        # should call the retrieve_package() macro
-
-        file(SHA1 ${PACKAGE_FILE} SHA1_VALUE)
-
-        message(\"To retrieve the '${PACKAGE_NAME}' package, use:
-        retrieve_package(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
-                        \\$\\{PACKAGE_REPOSITORY\\} \\$\\{RELEASE_TAG\\}
-                        \$\{SHA1_VALUE\})\")
-    else()
-        if(EXISTS ${PACKAGE_FILE})
-            file(REMOVE ${PACKAGE_FILE})
-        endif()
-
-        message(FATAL_ERROR \"The '${PACKAGE_NAME}' package could not be created...\")
+    if(EXISTS ${PACKAGE_FILE})
+        file(REMOVE ${PACKAGE_FILE})
     endif()
-    ")
+
+    message(FATAL_ERROR \"The '${PACKAGE_NAME}' package could not be created...\")
 endif()
+")
 
     file(WRITE ${PACKAGING_SCRIPT} ${CMAKE_CODE})
 
