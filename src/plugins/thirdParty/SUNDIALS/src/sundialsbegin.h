@@ -26,7 +26,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma warning(disable: 4141)
 #elif defined(__clang__)
     #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
     #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 //==============================================================================
