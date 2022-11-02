@@ -3,10 +3,10 @@ project(OpenSSLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 1.1.1o)
+set(PACKAGE_VERSION 1.1.1s)
 set(PACKAGE_REPOSITORY openssl)
-set(GIT_TAG OpenSSL_1_1_1o)
-set(RELEASE_TAG OpenSSL_1_1_1o)
+set(GIT_TAG OpenSSL_1_1_1s)
+set(RELEASE_TAG OpenSSL_1_1_1s)
 
 get_full_local_external_package_dir()
 
