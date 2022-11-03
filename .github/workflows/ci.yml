@@ -100,4 +100,5 @@ jobs:
         run: |
           echo $PATH
           pip3 show Sphinx
+          ls -al /Library/Frameworks/Python.framework/Versions
           ./cd
