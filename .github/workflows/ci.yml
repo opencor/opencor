@@ -96,4 +96,5 @@ jobs:
         if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
         run: |
           echo $PATH
+          pip3 show Sphinx
           ./cd
