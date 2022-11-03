@@ -90,6 +90,7 @@ jobs:
         run: |
           pip3 freeze
           which python3
+          which pip3
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
@@ -99,5 +100,4 @@ jobs:
         run: |
           echo $PATH
           pip3 show Sphinx
-          find / -name sphinx-build
           ./cd
