@@ -94,4 +94,6 @@ jobs:
         run: .\cd
       - name: Generate the documentation (Linux and macOS only)
         if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
-        run: ./cd
+        run: |
+          echo $PATH
+          ./cd
