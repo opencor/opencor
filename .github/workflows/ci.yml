@@ -13,22 +13,22 @@ jobs:
   #     fail-fast: false
   #     matrix:
   #       include:
-  #         - name: 'Build and test (Windows release)'
+  #         - name: Build and test (Windows release)
   #           os: windows-2019
   #           mode: Release
-  #         - name: 'Build and test (Windows debug)'
+  #         - name: Build and test (Windows debug)
   #           os: windows-2019
   #           mode: Debug
-  #         - name: 'Build and test (Linux release)'
+  #         - name: Build and test (Linux release)
   #           os: ubuntu-20.04
   #           mode: Release
-  #         - name: 'Build and test (Linux debug)'
+  #         - name: Build and test (Linux debug)
   #           os: ubuntu-20.04
   #           mode: Debug
-  #         - name: 'Build and test (macOS release)'
+  #         - name: Build and test (macOS release)
   #           os: macos-11
   #           mode: Release
-  #         - name: 'Build and test (macOS debug)'
+  #         - name: Build and test (macOS debug)
   #           os: macos-11
   #           mode: Debug
   #   env:
@@ -73,9 +73,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - name: 'Documentation (Windows)'
+          # - name: Documentation (Windows)
           #   os: windows-2019
-          # - name: 'Documentation (Linux)'
+          # - name: Documentation (Linux)
           #   os: ubuntu-20.04
           - name: Documentation (macOS)
             os: macos-11
@@ -86,8 +86,8 @@ jobs:
         uses: lukka/get-cmake@latest
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
-      - name: Check Sphinx' version
-        run: sphinx-build2 --version
+      - name: Check things
+        run: pip3 freeze
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
