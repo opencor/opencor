@@ -77,7 +77,7 @@ jobs:
           #   os: windows-2019
           # - name: 'Documentation (Linux)'
           #   os: ubuntu-20.04
-          - name: 'Documentation (macOS)'
+          - name: Documentation (macOS)
             os: macos-11
     steps:
       - name: Check out OpenCOR
@@ -87,7 +87,7 @@ jobs:
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Check Sphinx' version
-        run: sphinx-build --version
+        run: sphinx-build2 --version
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
