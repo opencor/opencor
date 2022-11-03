@@ -87,7 +87,9 @@ jobs:
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Check things
-        run: pip3 freeze
+        run: |
+          pip3 freeze
+          which python3
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
