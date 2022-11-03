@@ -97,4 +97,5 @@ jobs:
         run: |
           echo $PATH
           pip3 show Sphinx
+          find / -name sphinx-build
           ./cd
