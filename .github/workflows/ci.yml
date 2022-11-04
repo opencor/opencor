@@ -6,66 +6,66 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ci:
-  #   name: ${{ matrix.name }}
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - name: 'Build and test (Windows release)'
-  #           os: windows-2019
-  #           mode: Release
-  #         - name: 'Build and test (Windows debug)'
-  #           os: windows-2019
-  #           mode: Debug
-  #         - name: 'Build and test (Linux release)'
-  #           os: ubuntu-20.04
-  #           mode: Release
-  #         - name: 'Build and test (Linux debug)'
-  #           os: ubuntu-20.04
-  #           mode: Debug
-  #         - name: 'Build and test (macOS release)'
-  #           os: macos-11
-  #           mode: Release
-  #         - name: 'Build and test (macOS debug)'
-  #           os: macos-11
-  #           mode: Debug
-  #   env:
-  #     BUILDCACHE_COMPRESS_FORMAT: ZSTD
-  #     BUILDCACHE_DEBUG: -1
-  #     BUILDCACHE_DIRECT_MODE: true
-  #     BUILDCACHE_LOG_FILE: ""
-  #   steps:
-  #     - name: Check out OpenCOR
-  #       uses: actions/checkout@v2
-  #     - name: Install CMake and Ninja
-  #       uses: lukka/get-cmake@latest
-  #     - name: Install Qt
-  #       uses: jurplel/install-qt-action@v3
-  #       with:
-  #         version: '5.12.12'
-  #         setup-python: 'false'
-  #     - name: Install packages (Linux only)
-  #       if: ${{ runner.os == 'Linux' }}
-  #       run: sudo apt install libglu1-mesa
-  #     - name: Install buildcache
-  #       uses: mikehardy/buildcache-action@v1
-  #       with:
-  #         cache_key: ${{ matrix.os }}-${{ matrix.mode }}
-  #     - name: Cache external dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ${{ github.workspace }}/ext
-  #         key: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies-${{ github.sha }}
-  #         restore-keys: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies
-  #     - name: Build and test OpenCOR (Windows only)
-  #       if: ${{ runner.os == 'Windows' }}
-  #       shell: cmd
-  #       run: scripts\genericci ${{ matrix.mode }}
-  #     - name: Build and test OpenCOR (Linux and macOS only)
-  #       if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
-  #       run: scripts/genericci ${{ matrix.mode }}
+  ci:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'Build and test (Windows release)'
+            os: windows-2019
+            mode: Release
+          - name: 'Build and test (Windows debug)'
+            os: windows-2019
+            mode: Debug
+          - name: 'Build and test (Linux release)'
+            os: ubuntu-20.04
+            mode: Release
+          - name: 'Build and test (Linux debug)'
+            os: ubuntu-20.04
+            mode: Debug
+          - name: 'Build and test (macOS release)'
+            os: macos-11
+            mode: Release
+          - name: 'Build and test (macOS debug)'
+            os: macos-11
+            mode: Debug
+    env:
+      BUILDCACHE_COMPRESS_FORMAT: ZSTD
+      BUILDCACHE_DEBUG: -1
+      BUILDCACHE_DIRECT_MODE: true
+      BUILDCACHE_LOG_FILE: ""
+    steps:
+      - name: Check out OpenCOR
+        uses: actions/checkout@v2
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.12.12'
+          setup-python: 'false'
+      - name: Install packages (Linux only)
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt install libglu1-mesa
+      - name: Install buildcache
+        uses: mikehardy/buildcache-action@v1
+        with:
+          cache_key: ${{ matrix.os }}-${{ matrix.mode }}
+      - name: Cache external dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/ext
+          key: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies-${{ github.sha }}
+          restore-keys: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies
+      - name: Build and test OpenCOR (Windows only)
+        if: ${{ runner.os == 'Windows' }}
+        shell: cmd
+        run: scripts\genericci ${{ matrix.mode }}
+      - name: Build and test OpenCOR (Linux and macOS only)
+        if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+        run: scripts/genericci ${{ matrix.mode }}
   doc:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -73,10 +73,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - name: 'Documentation (Windows)'
-          #   os: windows-2019
-          # - name: 'Documentation (Linux)'
-          #   os: ubuntu-20.04
+          - name: 'Documentation (Windows)'
+            os: windows-2019
+          - name: 'Documentation (Linux)'
+            os: ubuntu-20.04
           - name: 'Documentation (macOS)'
             os: macos-11
     steps:
@@ -86,8 +86,6 @@ jobs:
         uses: lukka/get-cmake@latest
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
-      - name: Check Sphinx' version
-        run: sphinx-build --version
       - name: Generate the documentation (Windows only)
         if: ${{ runner.os == 'Windows' }}
         shell: cmd
