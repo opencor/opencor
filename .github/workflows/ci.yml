@@ -73,12 +73,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - name: Documentation (Windows)
-          #   os: windows-2019
-          #   path_separator: \
-          # - name: Documentation (Linux)
-          #   os: ubuntu-20.04
-          #   path_separator: /
+          - name: Documentation (Windows)
+            os: windows-2019
+            path_separator: \
+          - name: Documentation (Linux)
+            os: ubuntu-20.04
+            path_separator: /
           - name: Documentation (macOS)
             os: macos-11
             context: PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
@@ -90,16 +90,6 @@ jobs:
         uses: lukka/get-cmake@latest
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
-      - name: Check things
-        run: |
-          pip3 freeze
-          which python3
-          which pip3
-      - name: Generate the documentation (Windows only)
-        if: ${{ runner.os == 'Windows' }}
-        shell: cmd
-        run: .\cd
-      - name: Generate the documentation (Linux and macOS only)
-        if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+      - name: Generate the documentation
         run: |
           ${{ matrix.context }} .${{ matrix.path_separator }}cd
