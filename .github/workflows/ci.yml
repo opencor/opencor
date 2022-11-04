@@ -13,24 +13,30 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: 'Build and test (Windows release)'
+          - name: Build and test (Windows release)
             os: windows-2019
             mode: Release
-          - name: 'Build and test (Windows debug)'
+            path_separator: \
+          - name: Build and test (Windows debug)
             os: windows-2019
             mode: Debug
-          - name: 'Build and test (Linux release)'
+            path_separator: \
+          - name: Build and test (Linux release)
             os: ubuntu-20.04
             mode: Release
-          - name: 'Build and test (Linux debug)'
+            path_separator: /
+          - name: Build and test (Linux debug)
             os: ubuntu-20.04
             mode: Debug
-          - name: 'Build and test (macOS release)'
+            path_separator: /
+          - name: Build and test (macOS release)
             os: macos-11
             mode: Release
-          - name: 'Build and test (macOS debug)'
+            path_separator: /
+          - name: Build and test (macOS debug)
             os: macos-11
             mode: Debug
+            path_separator: /
     env:
       BUILDCACHE_COMPRESS_FORMAT: ZSTD
       BUILDCACHE_DEBUG: -1
@@ -59,13 +65,8 @@ jobs:
           path: ${{ github.workspace }}/ext
           key: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies-${{ github.sha }}
           restore-keys: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies
-      - name: Build and test OpenCOR (Windows only)
-        if: ${{ runner.os == 'Windows' }}
-        shell: cmd
-        run: scripts\genericci ${{ matrix.mode }}
-      - name: Build and test OpenCOR (Linux and macOS only)
-        if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
-        run: scripts/genericci ${{ matrix.mode }}
+      - name: Build and test OpenCOR
+        run: scripts${{ matrix.path_separator }}genericci ${{ matrix.mode }}
   doc:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -73,12 +74,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: 'Documentation (Windows)'
+          - name: Documentation (Windows)
             os: windows-2019
-          - name: 'Documentation (Linux)'
+            path_separator: \
+          - name: Documentation (Linux)
             os: ubuntu-20.04
-          - name: 'Documentation (macOS)'
+            path_separator: /
+          - name: Documentation (macOS)
             os: macos-11
+            context: PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
+            path_separator: /
     steps:
       - name: Check out OpenCOR
         uses: actions/checkout@v2
@@ -86,10 +91,6 @@ jobs:
         uses: lukka/get-cmake@latest
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
-      - name: Generate the documentation (Windows only)
-        if: ${{ runner.os == 'Windows' }}
-        shell: cmd
-        run: .\cd
-      - name: Generate the documentation (Linux and macOS only)
-        if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
-        run: ./cd
+      - name: Generate the documentation
+        run: |
+          ${{ matrix.context }} .${{ matrix.path_separator }}cd
