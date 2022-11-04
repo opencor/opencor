@@ -80,6 +80,8 @@ jobs:
           - name: Documentation (macOS)
             os: macos-11
     steps:
+      - name: Configure macOS
+        run: export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
       - name: Check out OpenCOR
         uses: actions/checkout@v2
       - name: Install CMake and Ninja
@@ -100,5 +102,5 @@ jobs:
         run: |
           echo $PATH
           pip3 show Sphinx
-          ls -al /Library/Frameworks/Python.framework/Versions
+          ls -al /Library/Frameworks/Python.framework/Versions/Current/bin
           ./cd
