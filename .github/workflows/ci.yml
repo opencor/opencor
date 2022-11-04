@@ -75,11 +75,14 @@ jobs:
         include:
           # - name: Documentation (Windows)
           #   os: windows-2019
+          #   path_separator: \
           # - name: Documentation (Linux)
           #   os: ubuntu-20.04
+          #   path_separator: /
           - name: Documentation (macOS)
             os: macos-11
             context: PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
+            path_separator: /
     steps:
       - name: Check out OpenCOR
         uses: actions/checkout@v2
@@ -99,4 +102,4 @@ jobs:
       - name: Generate the documentation (Linux and macOS only)
         if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
         run: |
-          ${{ matrix.context }} ./cd
+          ${{ matrix.context }} .${{ matrix.path_separator }}cd
