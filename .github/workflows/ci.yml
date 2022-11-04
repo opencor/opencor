@@ -79,9 +79,8 @@ jobs:
           #   os: ubuntu-20.04
           - name: Documentation (macOS)
             os: macos-11
+            context: PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
     steps:
-      - name: Configure macOS
-        run: export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
       - name: Check out OpenCOR
         uses: actions/checkout@v2
       - name: Install CMake and Ninja
@@ -100,7 +99,4 @@ jobs:
       - name: Generate the documentation (Linux and macOS only)
         if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
         run: |
-          echo $PATH
-          pip3 show Sphinx
-          ls -al /Library/Frameworks/Python.framework/Versions/Current/bin
-          ./cd
+          ${{ matrix.context }} ./cd
