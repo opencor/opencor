@@ -27,7 +27,7 @@ if(USE_PREBUILT_MESA_PACKAGE)
 
     retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                      ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                     b3264307939fd0c244fa41a536b0ba7be5b5ba99)
+                     5d35a37ffbf1f5abe91b2eba3906772ad9172959)
 else()
     # Build Mesa as an external project
 
