@@ -3,18 +3,18 @@ project(libgit2Plugin)
 # Our package characteristics
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 1.4.3)
+set(PACKAGE_VERSION 1.5.0)
 set(PACKAGE_REPOSITORY libgit2)
-set(GIT_TAG v1.4.3-opencor)
-set(RELEASE_TAG v1.4.3-opencor)
+set(GIT_TAG v1.5.0-opencor)
+set(RELEASE_TAG v1.5.0-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(MINOR_LIBRARY_VERSION 4)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
+set(MINOR_LIBRARY_VERSION 5)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -105,6 +105,7 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
+            -DBUILD_CLI=OFF
             -DBUILD_TESTS=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
