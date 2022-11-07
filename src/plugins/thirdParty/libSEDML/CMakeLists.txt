@@ -3,17 +3,17 @@ project(libSEDMLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME libSEDML)
-set(PACKAGE_VERSION 2.0.31)
+set(PACKAGE_VERSION 2.0.32)
 set(PACKAGE_REPOSITORY libSEDML)
-set(GIT_TAG v2.0.31-opencor)
-set(RELEASE_TAG v2.0.31-opencor)
+set(GIT_TAG v2.0.32-opencor)
+set(RELEASE_TAG v2.0.32-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 2)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.31)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.32)
 
 # Name of our package's shared library (and of its import library, if any)
 
