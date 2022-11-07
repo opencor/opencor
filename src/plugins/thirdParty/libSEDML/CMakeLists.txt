@@ -3,17 +3,17 @@ project(libSEDMLPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME libSEDML)
-set(PACKAGE_VERSION 2.0.31)
+set(PACKAGE_VERSION 2.0.32)
 set(PACKAGE_REPOSITORY libSEDML)
-set(GIT_TAG v2.0.31-opencor)
-set(RELEASE_TAG v2.0.31-opencor)
+set(GIT_TAG v2.0.32-opencor)
+set(RELEASE_TAG v2.0.32-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 2)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.31)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.32)
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -54,20 +54,20 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             13257d84b35e18d26ae0ebe32d9b67e8065383e2)
+                             c9df823e77791690171a59f8c6a7ceb13c63b048)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             945fe15146600815e7c288e1c1465f1b55d89dd8)
+                             ef945eb6707ce81bd99e120a5995b5f1cfc4d982)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         e0d7e55a35fe00057673f61be4d0966c75d51901)
+                         624f468417bbfa6ed4bb1de8d9e5af36232642a1)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cd70b85913725648aec063d38d9c6465ab675b9e)
+                         415ef92de8a2ad5e95406090d294f4b0a6a8227c)
     endif()
 else()
     # Build libSEDML as an external project
