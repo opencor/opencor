@@ -3,18 +3,18 @@ project(libgit2Plugin)
 # Our package characteristics
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 1.4.3)
+set(PACKAGE_VERSION 1.5.0)
 set(PACKAGE_REPOSITORY libgit2)
-set(GIT_TAG v1.4.3-opencor)
-set(RELEASE_TAG v1.4.3-opencor)
+set(GIT_TAG v1.5.0-opencor)
+set(RELEASE_TAG v1.5.0-opencor)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(MINOR_LIBRARY_VERSION 4)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
+set(MINOR_LIBRARY_VERSION 5)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -58,20 +58,20 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             1e4172fef28b91317908cd352084f40866eb45bd)
+                             95c81506076e06784639e202015430213b8e503f)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             dbdb1fabd18b4a855b7d07a97f426e338807d549)
+                             43315f39abcc401b304004bec5613f1920b4ecfa)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         1c8e2587ffd4178a0f866020b3b1a827092f3725)
+                         8fbf1896f7d5ced8f8022a21f8949f5a401fdbf9)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         ed405d099d92b49c1afbb751d49a540cae75d8c2)
+                         8106cca3b83124c83b818dfafcfc1417bfb95ed3)
     endif()
 else()
     # Ignore some warnings
@@ -105,6 +105,7 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
+            -DBUILD_CLI=OFF
             -DBUILD_TESTS=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
