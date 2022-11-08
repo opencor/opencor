@@ -56,7 +56,7 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: sudo apt install libglu1-mesa
       - name: Install buildcache
-        uses: mikehardy/buildcache-action@v1
+        uses: mikehardy/buildcache-action@v2
         with:
           cache_key: ${{ matrix.os }}-${{ matrix.mode }}
       - name: Cache external dependencies
