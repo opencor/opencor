@@ -3,17 +3,17 @@ project(zlibPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME zlib)
-set(PACKAGE_VERSION 1.2.12)
+set(PACKAGE_VERSION 1.2.13)
 set(PACKAGE_REPOSITORY zlib)
-set(GIT_TAG v1.2.12)
-set(RELEASE_TAG v1.2.12)
+set(GIT_TAG v1.2.13)
+set(RELEASE_TAG v1.2.13)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.12)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.13)
 
 # Name of our package's shared library (and of its import library, if any)
 
@@ -54,20 +54,20 @@ if(USE_PREBUILT_ZLIB_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             8ad62be90dc4c9f7391f06ce87e06bef84f80d65)
+                             068a5d26079112c70e93d2e480b6f95c5e191091)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             bab5056a685c83258794b4ed42eb6f92a3f274a7)
+                             7338c2a4464d0cacc38f7f96416c393c86db3a83)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         b0cdfe79d9f0386264be3c882ff684258995e7ad)
+                         93a7fddd5b6fd9928fd2b34cd4b12567680c5b9a)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         cd4f97fa9a9035f02be3f02d0c76ad6c9b565823)
+                         d8c5e1baf04b6e7d677f26181bccbb946bc43177)
     endif()
 else()
     # Ignore some warnings
