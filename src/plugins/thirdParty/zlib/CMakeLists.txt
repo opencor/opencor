@@ -3,17 +3,17 @@ project(zlibPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME zlib)
-set(PACKAGE_VERSION 1.2.12)
+set(PACKAGE_VERSION 1.2.13)
 set(PACKAGE_REPOSITORY zlib)
-set(GIT_TAG v1.2.12)
-set(RELEASE_TAG v1.2.12)
+set(GIT_TAG v1.2.13)
+set(RELEASE_TAG v1.2.13)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.12)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.13)
 
 # Name of our package's shared library (and of its import library, if any)
 
