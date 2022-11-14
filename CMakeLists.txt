@@ -268,11 +268,10 @@ set(REQUIRED_QT_LTS_VERSION_MINOR 12)
 
 if(   NOT ${QT_VERSION_MAJOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MAJOR}
    OR NOT ${QT_VERSION_MINOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MINOR})
-    message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt ${REQUIRED_QT_LTS_VERSION_MAJOR}.${REQUIRED_QT_LTS_VERSION_MINOR}.x LTS... You are using ${QT_VERSION_MAJOR}. ${QT_VERSION_MINOR} ")
+    message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt ${REQUIRED_QT_LTS_VERSION_MAJOR}.${REQUIRED_QT_LTS_VERSION_MINOR}.x LTS (you are using Qt ${QT_VERSION})...")
 endif()
 
 set(QT_DIR ${_qt5Core_install_prefix})
-
 set(QT_BINARIES_DIR ${QT_DIR}/bin)
 set(QT_LIBRARIES_DIR ${QT_DIR}/lib)
 set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
@@ -1538,7 +1537,6 @@ elseif(APPLE)
                       ${PYTHON_SHELL_FILENAME}
                 DESTINATION .
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
     endif()
 else()
     # Select TGZ as the packager on Linux

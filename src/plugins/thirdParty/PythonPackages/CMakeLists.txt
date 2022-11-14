@@ -413,20 +413,21 @@ if(NOT "${DEPENDS_ON}" STREQUAL "")
 endif()
 
 # Update the Python path in our newly copied scripts
-if (WIN32) 
+
+if (WIN32)
     add_custom_command(TARGET ${PROJECT_NAME}
-                    POST_BUILD
-                    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPTS_DIR}/set_python_path.py --scripts-dir ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR}
-                                                                                                        ${PYTHON_ROOT_DIR} -s
-                                                    )
+                       POST_BUILD
+                       COMMAND ${PYTHON_EXECUTABLE}
+                               ${PYTHON_SCRIPTS_DIR}/set_python_path.py --scripts-dir ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR}
+                                                                        ${PYTHON_ROOT_DIR}
+                               -s)
 else()
     add_custom_command(TARGET ${PROJECT_NAME}
-                POST_BUILD
-                COMMAND ${PYTHON_EXECUTABLE}
-                ${CMAKE_SOURCE_DIR}/scripts/change_python_shebangs_mac.py
-                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR})
-
+                       POST_BUILD
+                       COMMAND ${PYTHON_EXECUTABLE}
+                               ${CMAKE_SOURCE_DIR}/scripts/change_python_shebangs_mac.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR})
 endif()
+
 # Update our list of Python specific dependencies
 
 set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${PROJECT_NAME} PARENT_SCOPE)

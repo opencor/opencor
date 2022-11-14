@@ -147,7 +147,7 @@ if(NOT APPLE)
     # Note: it is statically linked on macOS...
 
     set(SQLITE3_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sqlite3${CMAKE_SHARED_LIBRARY_SUFFIX})
-    
+
     list(APPEND EXTERNAL_BINARIES
         ${SQLITE3_SHARED_LIBRARY}
     )
@@ -224,8 +224,6 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          0982331f1719017596c28e010cc5b46825346d99)
     endif()
-
-
 else()
     # Set platform-specific configuration options
 
@@ -643,20 +641,20 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 
 # And run it
 
-if (WIN32)
+if(WIN32)
     add_custom_command(TARGET ${PROJECT_NAME}
-                    POST_BUILD
-                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
-                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/set_python_path.py
-                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
+                       POST_BUILD
+                       COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/set_python_path.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                               -s)
 
 else()
     add_custom_command(TARGET ${PROJECT_NAME}
-                    POST_BUILD
-                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
-                    ${CMAKE_SOURCE_DIR}/scripts/change_python_shebangs_mac.py
-                    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+                       POST_BUILD
+                       COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                               ${CMAKE_SOURCE_DIR}/scripts/change_python_shebangs_mac.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
 endif()
+
 # Keep a list of Python specific dependencies
 
 set(PYTHON_DEPENDENCIES ${PROJECT_NAME} PARENT_SCOPE)
