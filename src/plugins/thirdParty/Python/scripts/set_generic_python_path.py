@@ -29,7 +29,7 @@ if __name__ == '__main__':
         # Check if it is calling python
         if re.match('#!.*python', lines[0]):
             # Perl expression from @bdrx https://stackoverflow.com/questions/20095351/shebang-use-interpreter-relative-to-the-script-path/33225909#33225909
-            ##!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV) . 
+            ##!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV) .
             lines[0] = f'#!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV)\n'
             logging.info(f'Change the shebangs of file {lines[0]}')
 

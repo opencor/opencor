@@ -635,25 +635,24 @@ endif()
 
 # Copy a script to update the Python path in copied scripts
 
-file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
+if(WIN32)
+    set(PYTHON_SCRIPT set_python_path.py)
+    set(PYTHON_OPTION -s)
+else()
+    set(PYTHON_SCRIPT set_generic_python_path.py)
+endif()
+
+file(COPY ${PROJECT_SOURCE_DIR}/scripts/${PYTHON_SCRIPT}
      DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}
      FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # And run it
 
-if(WIN32)
-    add_custom_command(TARGET ${PROJECT_NAME}
-                       POST_BUILD
-                       COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
-                               ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/set_python_path.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                               -s)
-
-else()
-    add_custom_command(TARGET ${PROJECT_NAME}
-                       POST_BUILD
-                       COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
-                               ${CMAKE_SOURCE_DIR}/scripts/change_python_shebangs_mac.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
-endif()
+add_custom_command(TARGET ${PROJECT_NAME}
+                   POST_BUILD
+                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/${PYTHON_SCRIPT} ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                           ${PYTHON_OPTION})
 
 # Keep a list of Python specific dependencies
 

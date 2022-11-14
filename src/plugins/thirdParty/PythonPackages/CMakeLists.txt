@@ -425,7 +425,7 @@ else()
     add_custom_command(TARGET ${PROJECT_NAME}
                        POST_BUILD
                        COMMAND ${PYTHON_EXECUTABLE}
-                               ${CMAKE_SOURCE_DIR}/scripts/change_python_shebangs_mac.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR})
+                               ${PYTHON_SCRIPTS_DIR}/set_generic_python_path.py ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPTS_DIR})
 endif()
 
 # Update our list of Python specific dependencies
