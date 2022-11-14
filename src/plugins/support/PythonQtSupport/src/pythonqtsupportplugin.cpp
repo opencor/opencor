@@ -118,15 +118,14 @@ void PythonQtSupportPlugin::initializePlugin()
 
     QString pythonHome = qEnvironmentVariable("PYTHONHOME");
 
+    // Update the shebang of our Python scripts
+    // Note: this only needs to be done on Windows since we have a relative
+    //       shebang on both Linux and macOS...
+
+#ifdef Q_OS_WIN
     // The script to update Python scripts
 
-    QString setPythonPathScript = pythonHome
-#if defined(Q_OS_WIN)
-        + "/Scripts"
-#else
-        + "/bin"
-#endif
-        + "/set_python_path.py";
+    QString setPythonPathScript = pythonHome+"/Scripts/set_python_path.py";
 
     // Create a buffer in which to pass arguments to Python
 
@@ -134,7 +133,7 @@ void PythonQtSupportPlugin::initializePlugin()
 
     // Set arguments for `set_python_path`
     // Note: we need to use an intermediate variable as otherwise the cast
-    //       results in an empty string
+    //       results in an empty string...
 
     std::wstring wSetPythonPathScript = setPythonPathScript.toStdWString();
     std::wstring wPythonHome = pythonHome.toStdWString();
@@ -156,15 +155,18 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgV[1] = nullptr;
 
     PySys_SetArgvEx(1, mArgV, 0);
+#endif
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
+#ifdef Q_OS_WIN
     // Delete some internal objects
 
     PyMem_RawFree(mArgV);
+#endif
 
     // Clean up PythonQt
 
