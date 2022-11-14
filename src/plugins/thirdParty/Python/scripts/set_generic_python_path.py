@@ -1,37 +1,40 @@
-"""
-Author: @gbernardino
-Change the shebangs of the python to refer to the local. Note that the -s option, that removes $HOME from pythonpath is not included to the shebangs.
-"""
+# Copyright (C) The University of Auckland
 
-import argparse, sys, platform, os, logging, re
+# OpenCOR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
-#logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+# OpenCOR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://gnu.org/licenses>.
+
+import os
+import re
+import sys
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Update the path of scripts to a perl snipped linking to python in the same folder.')
-    parser.add_argument('path', metavar='PATH', help='Path to new Python installation.')
+    for filename in os.listdir(sys.argv[1]):
+        # Read the contents of the given file
 
-    args = parser.parse_args()
+        full_filename = os.path.join(sys.argv[1], filename)
 
-    # If it is not osx, do nothing
-    if platform.system() != 'Darwin':
-        sys.exit(0)
-    logging.debug(f'Changing shebangs @{args.path}')
-
-    for file in os.listdir(args.path):
-        script_filename = os.path.join(args.path, file)
         try:
-            with open(script_filename, 'r') as f:
+            with open(full_filename, 'r') as f:
                 lines = list(f)
         except (IsADirectoryError, UnicodeDecodeError, PermissionError, OSError):
             continue
-        logging.info(f'Change the shebangs of file {file}')
-        # Check if it is calling python
-        if re.match('#!.*python', lines[0]):
-            # Perl expression from @bdrx https://stackoverflow.com/questions/20095351/shebang-use-interpreter-relative-to-the-script-path/33225909#33225909
-            ##!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV) .
-            lines[0] = f'#!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV)\n'
-            logging.info(f'Change the shebangs of file {lines[0]}')
 
-            with open(script_filename, 'w') as f:
+        # Check whether it's a Python script and, if so, change its shebang to
+        # use our copy of Python, relative to this script
+        # Note: see https://stackoverflow.com/a/62268465...
+
+        if re.match('#!.*python', lines[0]):
+            lines[0] = f'#!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV)\n'
+
+            with open(full_filename, 'w') as f:
                 f.writelines(lines)
