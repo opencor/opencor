@@ -4,6 +4,4 @@ appDir="$(cd "$(dirname "$0")"; pwd)/../.."
 
 export PATH="${appDir}/bin":$PATH
 
-"${appDir}/python/bin/python" "${appDir}/python/bin/set_python_path.py" "${appDir}/python" -s
-
 "${appDir}/python/bin/jupyter" "$@"

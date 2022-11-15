@@ -58,9 +58,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-#ifdef Q_OS_WIN
     wchar_t **mArgV = nullptr;
-#endif
     PythonQtObjectPtr mModule = nullptr;
 
 private slots:

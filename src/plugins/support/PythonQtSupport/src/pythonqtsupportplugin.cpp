@@ -122,14 +122,14 @@ void PythonQtSupportPlugin::initializePlugin()
     // Note: this only needs to be done on Windows since we have a relative
     //       shebang on both Linux and macOS...
 
+    // Create a buffer in which to pass arguments to Python
+
+    mArgV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(4*sizeof(wchar_t*)));
+
 #ifdef Q_OS_WIN
     // The script to update Python scripts
 
     QString setPythonPathScript = pythonHome+"/Scripts/set_python_path.py";
-
-    // Create a buffer in which to pass arguments to Python
-
-    mArgV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc(4*sizeof(wchar_t*)));
 
     // Set arguments for `set_python_path`
     // Note: we need to use an intermediate variable as otherwise the cast
@@ -148,6 +148,7 @@ void PythonQtSupportPlugin::initializePlugin()
     // Actually update the path to Python in scripts
 
     PythonQtSupport::evaluateFile(setPythonPathScript);
+#endif
 
     // Clear the argument buffer so that `sys.argv` is empty in the GUI console
 
@@ -155,18 +156,15 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgV[1] = nullptr;
 
     PySys_SetArgvEx(1, mArgV, 0);
-#endif
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
-#ifdef Q_OS_WIN
     // Delete some internal objects
 
     PyMem_RawFree(mArgV);
-#endif
 
     // Clean up PythonQt
 
