@@ -601,8 +601,12 @@ set(PYTHON_SCRIPTS_DIR ${ROOT_DIR}/${SCRIPTS_DIR} PARENT_SCOPE)
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
 
 set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
-set(PYTHON_ABI_VERSION ${PYTHON_ABI_VERSION} PARENT_SCOPE)
-set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
+
+if(WIN32)
+    set(PYTHON_SET_PYTHON_PATH_SCRIPT ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py PARENT_SCOPE)
+else()
+    set(PYTHON_SET_PYTHON_PATH_SCRIPT ${PROJECT_SOURCE_DIR}/scripts/set_generic_python_path.py PARENT_SCOPE)
+endif()
 
 # Add the plugin
 
@@ -633,19 +637,15 @@ if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
 
-# Copy a script to update the Python path in copied scripts
+# Copy the Python script that updates the Python path in our Python scripts
+# Note: it's only needed on Windows since on Linux and macOS, we can use a
+#       relative Python path thanks to set_generic_python_path.py...
 
-file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}
-     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-# And run it
-
-add_custom_command(TARGET ${PROJECT_NAME}
-                   POST_BUILD
-                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${BINARY_DIR}/${PYTHON_EXECUTABLE}
-                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPTS_DIR}/set_python_path.py
-                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
+if(WIN32)
+    file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
+         DESTINATION ${ROOT_DIR}/${SCRIPTS_DIR}
+         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+endif()
 
 # Keep a list of Python specific dependencies
 

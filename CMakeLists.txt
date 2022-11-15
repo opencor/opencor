@@ -158,7 +158,7 @@ elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
     set(RELEASE_MODE FALSE)
 else()
-    message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
+    message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in Release or Debug mode...")
 endif()
 
 # Try to build our silent program
@@ -268,7 +268,7 @@ set(REQUIRED_QT_LTS_VERSION_MINOR 12)
 
 if(   NOT ${QT_VERSION_MAJOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MAJOR}
    OR NOT ${QT_VERSION_MINOR} EQUAL ${REQUIRED_QT_LTS_VERSION_MINOR})
-    message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt ${REQUIRED_QT_LTS_VERSION_MAJOR}.${REQUIRED_QT_LTS_VERSION_MINOR}.x LTS...")
+    message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt ${REQUIRED_QT_LTS_VERSION_MAJOR}.${REQUIRED_QT_LTS_VERSION_MINOR}.x LTS (you are using Qt ${QT_VERSION})...")
 endif()
 
 set(QT_DIR ${_qt5Core_install_prefix})
