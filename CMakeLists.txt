@@ -1554,9 +1554,11 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # Library needed by Qt, but not present on Ubuntu 20.04 LTS and later
+    # libtinfo.so.5 is needed by Qt, but is not present on Ubuntu 20.04/22.04
+    # LTS while libffi.so.7 is needed by Python and is prevent on Ubuntu 20.04
+    # LTS, but not on Ubuntu 22.04 LTS
 
-    foreach(LIBRARY tinfo.so.5)
+    foreach(LIBRARY ffi.so.7 tinfo.so.5)
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
         get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
