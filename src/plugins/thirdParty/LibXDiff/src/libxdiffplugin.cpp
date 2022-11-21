@@ -37,8 +37,8 @@ namespace LibXDiff {
 PLUGININFO_FUNC LibXDiffPluginInfo()
 {
     static const Descriptions descriptions = {
-                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="http://xmailserver.org/xdiff-lib.html">LibXDiff</a>.)") },
-                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://xmailserver.org/xdiff-lib.html">LibXDiff</a>.)") }
+                                                 { "en", QString::fromUtf8(R"(a plugin to access <a href="http://www.xmailserver.org/xdiff-lib.html">LibXDiff</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://www.xmailserver.org/xdiff-lib.html">LibXDiff</a>.)") }
                                              };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,

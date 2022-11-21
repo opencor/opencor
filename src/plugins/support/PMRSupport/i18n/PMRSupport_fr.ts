@@ -4,16 +4,16 @@
 <context>
     <name>OpenCOR::PMRSupport::PmrSupportPreferencesWidget</name>
     <message>
-        <source>the primary instance is selected. Everything on this instance is permanent and persistent. It is always up and always stable.</source>
-        <translation>l&apos;instance principale est sélectionnée. Tout sur cette instance est permanent et persistant. Elle est toujours disponible et toujours stable.</translation>
+        <source>the models instance is selected. Everything on this instance is permanent and persistent. It is always up and always stable.</source>
+        <translation>l&apos;instance de modèles est sélectionnée. Tout sur cette instance est permanent et persistant. Elle est toujours disponible et toujours stable.</translation>
     </message>
     <message>
         <source>the staging instance is selected. It is used for public testing/preview of PMR developments. Data on this instance is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise.</source>
         <translation>l&apos;instance de transit est sélectionnée. Elle est utilisée pour publiquement tester/prévisualiser les développements de PMR. Les données sur cette instance sont effacées périodiquement chaque fois qu&apos;un nouveau test/aperçu public de la suite logicielle PMR est publié pour l&apos;exercice de test requis.</translation>
     </message>
     <message>
-        <source>the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;cellml-discussion mailing list&lt;/a&gt;.</source>
-        <translation>l&apos;instance d&apos;enseignement est sélectionnée. Les fonctionnalités de cette instance devraient correspondre à celles de l&apos;instance principale, mais sans les garanties de persistance des données. Bien que les données sur cette instance ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;liste de discussion cellml-discussion&lt;/a&gt;.</translation>
+        <source>the teaching instance is selected. The functionality of this instance should match the models instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;cellml-discussion mailing list&lt;/a&gt;.</source>
+        <translation>l&apos;instance d&apos;enseignement est sélectionnée. Les fonctionnalités de cette instance devraient correspondre à celles de l&apos;instance de modèles, mais sans les garanties de persistance des données. Bien que les données sur cette instance ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;liste de discussion cellml-discussion&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>

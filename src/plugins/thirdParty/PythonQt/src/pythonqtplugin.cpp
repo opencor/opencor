@@ -37,8 +37,8 @@ namespace PythonQt {
 PLUGININFO_FUNC PythonQtPluginInfo()
 {
     static const Descriptions descriptions = {
-                                                 { "en", QString::fromUtf8("a plugin to use <a href=\"https://qt.io/\">Qt</a> with <a href=\"https://python.org/\">Python</a>.") },
-                                                 { "fr", QString::fromUtf8("un plugin pour utiliser <a href=\"https://qt.io/\">Qt</a> avec <a href=\"https://python.org/\">Python</a>") }
+                                                 { "en", QString::fromUtf8("a plugin to access <a href=\"https://mevislab.github.io/pythonqt/\">PythonQt</a>.") },
+                                                 { "fr", QString::fromUtf8("un plugin pour accéder <a href=\"https://mevislab.github.io/pythonqt/\">PythonQt</a>.") }
                                              };
 
     return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,

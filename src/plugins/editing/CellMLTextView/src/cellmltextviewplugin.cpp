@@ -43,8 +43,8 @@ namespace CellMLTextView {
 PLUGININFO_FUNC CellMLTextViewPluginInfo()
 {
     static const Descriptions descriptions = {
-                                                 { "en", QString::fromUtf8(R"(a plugin to edit <a href="https://cellml.org/">CellML</a> files using the CellML Text format.)") },
-                                                 { "fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://cellml.org/">CellML</a> à l'aide du format CellML Text.)") }
+                                                 { "en", QString::fromUtf8(R"(a plugin to edit <a href="https://cellml.org/">CellML</a> files using the <a href="https://opencor.ws/user/plugins/editing/cellmlTextView.html#plugins-editing-cellmltextview-cellmltextformat">CellML Text format</a>.)") },
+                                                 { "fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="https://cellml.org/">CellML</a> à l'aide du <a href="https://opencor.ws/user/plugins/editing/cellmlTextView.html#plugins-editing-cellmltextview-cellmltextformat">format CellML Text</a>.)") }
                                              };
 
     return new PluginInfo(PluginInfo::Category::Editing, true, true,
