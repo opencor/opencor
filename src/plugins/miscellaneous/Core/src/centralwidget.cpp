@@ -1544,11 +1544,14 @@ void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
 
 //==============================================================================
 
-void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
+void CentralWidget::showEnableActions(const QList<QAction *> &pActions,
+                                      bool pMainMenuActions)
 {
     // Show/enable or hide/disable the given actions, depending on whether they
     // correspond to a menu with visible/enabled or hidden/disabled actions,
     // respectively
+    // Note: main menu actions get hidden/disabled if all their children are
+    //       disabled...
 
     for (auto action : pActions) {
         QMenu *actionMenu = action->menu();
@@ -1562,7 +1565,9 @@ void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
 
             for (auto actionMenuAction : actionMenuActions) {
                 if (   !actionMenuAction->isSeparator()
-                    &&  actionMenuAction->isVisible()) {
+                    &&  actionMenuAction->isVisible()
+                    &&  (    (pMainMenuActions && actionMenuAction->isEnabled())
+                         || !pMainMenuActions)) {
                     showEnable = true;
 
                     break;
@@ -1810,9 +1815,9 @@ void CentralWidget::updateGui()
     }
 
     // Go through our different menus and show/hide them, depending on whether
-    // they have visible items
+    // they have visible and enabled items
 
-    showEnableActions(mainWindow()->menuBar()->actions());
+    showEnableActions(mainWindow()->menuBar()->actions(), true);
 
     // Give the focus to the new view after first checking that it has a focused
     // widget

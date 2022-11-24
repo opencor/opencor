@@ -178,7 +178,8 @@ private:
     bool closeFile(int pIndex, bool pForceClosing);
     void closeAllFiles(bool pForceClosing);
 
-    void showEnableActions(const QList<QAction *> &pActions);
+    void showEnableActions(const QList<QAction *> &pActions,
+                           bool pMainMenuActions = false);
 
 signals:
     void atLeastOneView(bool pAtLeastOneView);
