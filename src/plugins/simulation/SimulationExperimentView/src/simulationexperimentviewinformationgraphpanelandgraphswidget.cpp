@@ -74,6 +74,8 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mAddGraphAction = Core::newAction(this);
     mRemoveCurrentGraphAction = Core::newAction(this);
     mRemoveAllGraphsAction = Core::newAction(this);
+    mSelectCurrentGraphAction = Core::newAction(this);
+    mUnselectCurrentGraphAction = Core::newAction(this);
     mSelectAllGraphsAction = Core::newAction(this);
     mUnselectAllGraphsAction = Core::newAction(this);
     mSelectGraphColorAction = Core::newAction(this);
@@ -84,6 +86,10 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeCurrentGraph);
     connect(mRemoveAllGraphsAction, &QAction::triggered,
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeAllGraphs);
+    connect(mSelectCurrentGraphAction, &QAction::triggered,
+            this, QOverload<>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectCurrentGraph));
+    connect(mUnselectCurrentGraphAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::unselectCurrentGraph);
     connect(mSelectAllGraphsAction, &QAction::triggered,
             this, QOverload<>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGraphs));
     connect(mUnselectAllGraphsAction, &QAction::triggered,
@@ -95,6 +101,9 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphContextMenu->addSeparator();
     mGraphContextMenu->addAction(mRemoveCurrentGraphAction);
     mGraphContextMenu->addAction(mRemoveAllGraphsAction);
+    mGraphContextMenu->addSeparator();
+    mGraphContextMenu->addAction(mSelectCurrentGraphAction);
+    mGraphContextMenu->addAction(mUnselectCurrentGraphAction);
     mGraphContextMenu->addSeparator();
     mGraphContextMenu->addAction(mSelectAllGraphsAction);
     mGraphContextMenu->addAction(mUnselectAllGraphsAction);
@@ -213,6 +222,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
                                      tr("Remove the current graph"));
     I18nInterface::retranslateAction(mRemoveAllGraphsAction, tr("Remove All Graphs"),
                                      tr("Remove all the graphs"));
+    I18nInterface::retranslateAction(mSelectCurrentGraphAction, tr("Select Current Graph"),
+                                     tr("Select the current graph"));
+    I18nInterface::retranslateAction(mUnselectCurrentGraphAction, tr("Unselect Current Graph"),
+                                     tr("Unselect the current graph"));
     I18nInterface::retranslateAction(mSelectAllGraphsAction, tr("Select All Graphs"),
                                      tr("Select all the graphs"));
     I18nInterface::retranslateAction(mUnselectAllGraphsAction, tr("Unselect All Graphs"),
@@ -717,6 +730,33 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeAllGrap
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectCurrentGraph(bool pSelect)
+{
+    // (Un)select the current graph
+    // Note: see the note in selectAllGraphs() for the reason behind the way we
+    //       are doing things here...
+
+    disconnect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+               this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+
+    Core::Property *crtProperty = mGraphsPropertyEditor->currentProperty();
+
+    if (crtProperty != nullptr) {
+        crtProperty->setChecked(pSelect);
+
+        GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(crtProperty);
+
+        graph->setSelected(pSelect);
+
+        emit graphUpdated(graph);
+    }
+
+    connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGraphs(bool pSelect)
 {
     // (Un)select all the graphs
@@ -752,6 +792,24 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
 
     connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectCurrentGraph()
+{
+    // Select the current graph
+
+    selectCurrentGraph(true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::unselectCurrentGraph()
+{
+    // Unselect the current graph
+
+    selectCurrentGraph(false);
 }
 
 //==============================================================================
@@ -1045,6 +1103,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
         canSelectAllGraphs = canSelectAllGraphs || !graphSelected;
         canUnselectAllGraphs = canUnselectAllGraphs || graphSelected;
     }
+
+    mSelectCurrentGraphAction->setEnabled((crtProperty != nullptr) && !crtProperty->isChecked());
+    mUnselectCurrentGraphAction->setEnabled((crtProperty != nullptr) && crtProperty->isChecked());
 
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);
     mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);

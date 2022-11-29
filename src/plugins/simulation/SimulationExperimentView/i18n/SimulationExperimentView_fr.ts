@@ -108,6 +108,22 @@
         <translation>Supprimer toutes les courbes</translation>
     </message>
     <message>
+        <source>Select Current Graph</source>
+        <translation>Sélectionner Courbe Actuelle</translation>
+    </message>
+    <message>
+        <source>Select the current graph</source>
+        <translation>Sélectionner la courbe actuelle</translation>
+    </message>
+    <message>
+        <source>Unselect Current Graph</source>
+        <translation>Déselectionner Courbe Actuelle</translation>
+    </message>
+    <message>
+        <source>Unselect the current graph</source>
+        <translation>Désélectionner la courbe actuelle</translation>
+    </message>
+    <message>
         <source>Select All Graphs</source>
         <translation>Sélectionner Toutes Courbes</translation>
     </message>
