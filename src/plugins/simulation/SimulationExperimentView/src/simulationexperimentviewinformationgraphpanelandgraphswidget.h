@@ -139,6 +139,8 @@ private:
     QAction *mAddGraphAction;
     QAction *mRemoveCurrentGraphAction;
     QAction *mRemoveAllGraphsAction;
+    QAction *mSelectCurrentGraphAction;
+    QAction *mUnselectCurrentGraphAction;
     QAction *mSelectAllGraphsAction;
     QAction *mUnselectAllGraphsAction;
     QAction *mSelectGraphColorAction;
@@ -166,6 +168,7 @@ private:
     void updateGraphsInfo(Core::Property *pSectionProperty = nullptr);
     void updateAllGraphsInfo();
 
+    void selectCurrentGraph(bool pSelect);
     void selectAllGraphs(bool pSelect);
 
     bool rootProperty(Core::Property *pProperty) const;
@@ -212,6 +215,8 @@ private slots:
 
     void removeCurrentGraph();
     void removeAllGraphs();
+    void selectCurrentGraph();
+    void unselectCurrentGraph();
     void selectAllGraphs();
     void unselectAllGraphs();
     void selectGraphColor();

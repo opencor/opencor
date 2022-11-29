@@ -261,7 +261,7 @@ else()
         add_dependencies(installSphinx installNumpy)
         add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
     else()
-        # Install NumPy, SciPy and Matplotlib
+        # Install Matplotlib, NumPy, and SciPy
 
         add_custom_target(sciencePackages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all

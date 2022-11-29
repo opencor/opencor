@@ -71,7 +71,7 @@ void SampleViewWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     // Update ourself too since some widgets will have been reset following the
-    // retranslation (e.g. mGui->fileNameValue)
+    // retranslation (e.g., mGui->fileNameValue)
 
     update(mFileName);
 }

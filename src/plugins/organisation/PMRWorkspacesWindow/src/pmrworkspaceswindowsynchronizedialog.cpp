@@ -538,6 +538,7 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                     fileItem->setEditable(false);
                     fileItem->setEnabled(unstagedFile);
                     fileItem->setSelectable(unstagedFile);
+                    fileItem->setText(QDir::toNativeSeparators(fileName));
                     fileItem->setToolTip(QDir::toNativeSeparators(fileName));
 
                     mModel->appendRow(fileItem);
