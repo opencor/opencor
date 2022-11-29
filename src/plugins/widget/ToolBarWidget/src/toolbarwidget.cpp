@@ -32,6 +32,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QApplication>
 #include <QStyle>
+#include <QTimer>
 
 //==============================================================================
 
@@ -133,7 +134,7 @@ void ToolBarWidget::changeEvent(QEvent *pEvent)
 
     if (   (pEvent->type() == QEvent::PaletteChange)
         || (pEvent->type() == QEvent::StyleChange)) {
-        updateStyleSheet();
+        QTimer::singleShot(0, this, &ToolBarWidget::updateStyleSheet);
     }
 }
 
