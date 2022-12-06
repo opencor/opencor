@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <model name="Lorenz" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <component name="main">
-        <variable initial_value="0" name="t" units="dimensionless"/>
+        <variable name="t" units="dimensionless"/>
         <variable initial_value="1" name="x" units="dimensionless"/>
         <variable initial_value="1" name="y" units="dimensionless"/>
         <variable initial_value="1" name="z" units="dimensionless"/>
