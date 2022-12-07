@@ -4,6 +4,6 @@
         <units name="ms" units_ref="ms"/>
     </import>
     <component name="time">
-        <variable initial_value="0" name="time" public_interface="out" units="ms"/>
+        <variable name="time" public_interface="out" units="ms"/>
     </component>
 </model>

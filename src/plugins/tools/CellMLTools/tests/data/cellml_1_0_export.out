@@ -149,7 +149,7 @@
         </math>
     </component>
     <component name="time">
-        <variable initial_value="0" name="time" public_interface="out" units="ms"/>
+        <variable name="time" public_interface="out" units="ms"/>
     </component>
     <component name="default_parameters">
         <variable initial_value="12" name="VK" private_interface="out" public_interface="out" units="mV"/>
