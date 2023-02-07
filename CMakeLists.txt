@@ -20,7 +20,7 @@ set(ENV{CXX} ${CXX_COMPILER})
 
 # Project definition
 
-project(OpenCOR VERSION 0.7)
+project(OpenCOR VERSION 0.7.1)
 
 # Our options
 
