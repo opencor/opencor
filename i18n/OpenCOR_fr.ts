@@ -25,13 +25,6 @@
     </message>
 </context>
 <context>
-    <name>GeneralPreferencesWidget</name>
-    <message>
-        <source>Style</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>File</source>
@@ -218,6 +211,14 @@
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you want to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>No preferences could be found.</source>
+        <translation>Aucunes préférences n&apos;ont pu être trouvées.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PluginsDialog</name>
@@ -316,10 +317,6 @@
     <message>
         <source>Reset All</source>
         <translation>Tout Réinitialiser</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Général</translation>
     </message>
     <message>
         <source>%1.</source>

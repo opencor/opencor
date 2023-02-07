@@ -673,7 +673,6 @@ configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in ${I18N_QRC_FILENAME})
 
 set(SOURCES
     src/checkforupdatesdialog.cpp
-    src/generalpreferenceswidget.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
@@ -705,7 +704,6 @@ set(SOURCES
 
 set(UIS
     src/checkforupdatesdialog.ui
-    src/generalpreferenceswidget.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
     src/preferencesdialog.ui
