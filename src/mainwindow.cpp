@@ -1247,26 +1247,44 @@ void MainWindow::actionPluginsTriggered()
 
 void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
+    // Check whether we have some preferences
+
+    const Plugins loadedPlugins = mPluginManager->loadedPlugins();
+    bool canShowPreferences = false;
+
+    for (auto plugin : loadedPlugins) {
+        PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+
+        if (preferencesInterface != nullptr) {
+            canShowPreferences = true;
+
+            break;
+        }
+    }
+
     // Show the preferences dialog
 
-    PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
+    if (canShowPreferences) {
+        PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
 
-    preferencesDialog.exec();
+        preferencesDialog.exec();
 
-    // Let people know about the plugins that had their preferences changed, if
-    // any and if requested
+        // Let people know about the plugins that had their preferences changed,
+        // if any and if requested
 
-    if (    (preferencesDialog.result() == QMessageBox::Ok)
-        && !preferencesDialog.pluginNames().isEmpty()) {
-        const Plugins loadedPllugins = mPluginManager->loadedPlugins();
+        if (    (preferencesDialog.result() == QMessageBox::Ok)
+            && !preferencesDialog.pluginNames().isEmpty()) {
+            for (auto loadedPlugin : loadedPlugins) {
+                PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(loadedPlugin->instance());
 
-        for (auto plugin : loadedPllugins) {
-            PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
-
-            if (preferencesInterface != nullptr) {
-                preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
+                if (preferencesInterface != nullptr) {
+                    preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
+                }
             }
         }
+    } else {
+        warningMessageBox(tr("Preferences"),
+                          tr("No preferences could be found."));
     }
 }
 

@@ -21,7 +21,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 // GUI application
 //==============================================================================
 
-#include "generalpreferenceswidget.h"
 #include "guiapplication.h"
 #include "preferencesinterface.h"
 
@@ -40,12 +39,6 @@ namespace OpenCOR {
 GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
     QtSingleApplication(QFileInfo(pArgV[0]).baseName(), pArgC, pArgV)
 {
-    // Set our style
-
-    QApplication::setStyle(PreferencesInterface::preference(Preferences::GeneralPreferences,
-                                                            SettingsPreferencesStyle,
-                                                            SettingsPreferencesStyleDefault).toString());
-
     // Filter out OpenSSL warning messages
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
