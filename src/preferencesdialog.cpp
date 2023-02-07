@@ -22,7 +22,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "cliutils.h"
-#include "generalpreferenceswidget.h"
 #include "guiutils.h"
 #include "pluginmanager.h"
 #include "preferencesdialog.h"
@@ -184,37 +183,25 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new PreferencesItemDelegate(this));
 
-    // Populate the data model with our General section
-
-    auto generalPluginItem = new QStandardItem(tr("General"));
-    auto selectedPluginItem = generalPluginItem;
-
-    mModel->invisibleRootItem()->appendRow(generalPluginItem);
-
-    auto generalPreferencesWidget = new GeneralPreferencesWidget(mainWindow());
-
-    mGui->stackedWidget->addWidget(generalPreferencesWidget);
-
-    mItemPreferencesWidgets.insert(generalPluginItem, generalPreferencesWidget);
-
     // Populate the data model with our plugins that support the Preferences
     // interface
 
-    const Plugins plugins = mPluginManager->sortedPlugins();
+    const Plugins loadedPlugins = mPluginManager->sortedLoadedPlugins();
+    QStandardItem *selectedPluginItem = nullptr;
 
-    for (auto plugin : plugins) {
-        PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+    for (auto loadedPlugin : loadedPlugins) {
+        PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(loadedPlugin->instance());
 
         if (   (preferencesInterface != nullptr)
             && (preferencesInterface->preferencesWidget() != nullptr)) {
             // Create the item corresponding to the current plugin and add it to
             // its corresponding category
 
-            auto pluginItem = new QStandardItem(plugin->name());
+            auto pluginItem = new QStandardItem(loadedPlugin->name());
 
-            pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
+            pluginCategoryItem(loadedPlugin->info()->category())->appendRow(pluginItem);
 
-            if (plugin->name() == pPluginName) {
+            if (loadedPlugin->name() == pPluginName) {
                 selectedPluginItem = pluginItem;
             }
 
@@ -226,7 +213,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
             mGui->stackedWidget->addWidget(preferencesWidget);
 
             mItemPreferencesWidgets.insert(pluginItem, preferencesWidget);
-            mPreferencesWidgetPluginNames.insert(preferencesWidget, plugin->name());
+            mPreferencesWidgetPluginNames.insert(preferencesWidget, loadedPlugin->name());
         }
     }
 
@@ -260,9 +247,15 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Select our selected item (!!)
 
-    mGui->treeView->setCurrentIndex(selectedPluginItem->index());
+    if (selectedPluginItem != nullptr) {
+        mGui->treeView->setCurrentIndex(selectedPluginItem->index());
+    } else {
+        QStandardItem *firstItem = mModel->invisibleRootItem()->child(0);
 
-    mGui->stackedWidget->currentWidget()->setFocus();
+        if (firstItem != nullptr) {
+            mGui->treeView->setCurrentIndex(firstItem->index());
+        }
+    }
 }
 
 //==============================================================================
