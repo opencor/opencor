@@ -39,10 +39,6 @@ static const auto SettingsPreferences = QStringLiteral("Preferences");
 
 //==============================================================================
 
-static const auto GeneralPreferences = QStringLiteral("General");
-
-//==============================================================================
-
 class PreferencesWidget : public QWidget
 {
     Q_OBJECT

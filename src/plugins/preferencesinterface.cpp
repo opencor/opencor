@@ -52,11 +52,8 @@ PreferencesWidget::PreferencesWidget(const QString &pName, QWidget *pParent) :
 {
     // Customise our settings
 
-    if (pName != GeneralPreferences) {
-        mSettings.beginGroup(SettingsPlugins);
-        mSettings.beginGroup(pName);
-    }
-
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(pName);
     mSettings.beginGroup(SettingsPreferences);
 }
 
@@ -80,11 +77,8 @@ QVariant PreferencesInterface::preference(const QString &pName,
 
     QSettings settings;
 
-    if (pName != Preferences::GeneralPreferences) {
-        settings.beginGroup(SettingsPlugins);
-        settings.beginGroup(pName);
-    }
-
+    settings.beginGroup(SettingsPlugins);
+    settings.beginGroup(pName);
     settings.beginGroup(Preferences::SettingsPreferences);
 
     return settings.value(pKey, pDefaultValue);

@@ -130,76 +130,77 @@ void ToolBarWidget::changeEvent(QEvent *pEvent)
 
     QToolBar::changeEvent(pEvent);
 
-    // Update our local style sheet if the global style or palette has changed
+    // Update our local style sheet if the palette has changed on macOS
 
-    if (   (pEvent->type() == QEvent::PaletteChange)
-        || (pEvent->type() == QEvent::StyleChange)) {
-        QTimer::singleShot(0, this, &ToolBarWidget::updateStyleSheet);
+#ifdef Q_OS_MAC
+    if (pEvent->type() == QEvent::PaletteChange) {
+        updateStyleSheet();
     }
+#endif
 }
 
 //==============================================================================
 
 void ToolBarWidget::updateStyleSheet()
 {
-    // Some styling to fix tool buttons in the "macintosh" style (see
+    // Some styling to fix tool buttons on macOS (see
     // https://github.com/opencor/opencor/issues/2551)
 
     QString additionalStyles;
 
-    if (QApplication::style()->objectName() == "macintosh") {
-        QColor primaryColor = Core::windowColor();
-        QColor secondaryColor = Core::highlightColor();
+#ifdef Q_OS_MAC
+    QColor primaryColor = Core::windowColor();
+    QColor secondaryColor = Core::highlightColor();
 
-        additionalStyles = QString(""
-                                   "QToolButton {"
-                                   "    background-color: rgb(%1, %2, %3);"
-                                   "    border-radius: 4px;"
-                                   "    margin: 1px;"
-                                   "    padding: 3px;"
-                                   "}"
-                                   ""
-                                   "QToolButton:checked,"
-                                   "QToolButton:checked:disabled,"
-                                   "QToolButton:checked:pressed,"
-                                   "QToolButton:pressed {"
-                                   "    background-color: rgba(%4, %5, %6, 0.7);"
-                                   "}"
-                                   ""
-                                   "QToolButton:checked:hover,"
-                                   "QToolButton:hover {"
-                                   "    background-color: rgba(%4, %5, %6, 0.5);"
-                                   "}"
-                                   ""
-                                   "QToolButton::menu-arrow {"
-                                   "    width: 8px;"
-                                   "    height: 8px;"
-                                   "}"
-                                   ""
-                                   "QToolButton::menu-button {"
-                                   "    padding: 2px;"
-                                   "    width: 12px;"
-                                   "}"
-                                   ""
-                                   "QToolButton[popupMode=\"1\"] {"
-                                   "    padding-right: 20px;"
-                                   "}"
-                                   ""
-                                   "QToolButton[popupMode=\"1\"]::menu-button {"
-                                   "    border: none;"
-                                   "}"
-                                   ""
-                                   "QToolButton[popupMode=\"1\"]::menu-button:hover {"
-                                   "    border: none;"
-                                   "    border-left: 1px solid rgb(%1, %2, %3);"
-                                   "    border-radius: 0;"
-                                   "}").arg(primaryColor.red())
-                                       .arg(primaryColor.green())
-                                       .arg(primaryColor.blue())
-                                       .arg(secondaryColor.red())
-                                       .arg(secondaryColor.green())
-                                       .arg(secondaryColor.blue());
-    }
+    additionalStyles = QString(""
+                               "QToolButton {"
+                               "    background-color: rgb(%1, %2, %3);"
+                               "    border-radius: 4px;"
+                               "    margin: 1px;"
+                               "    padding: 3px;"
+                               "}"
+                               ""
+                               "QToolButton:checked,"
+                               "QToolButton:checked:disabled,"
+                               "QToolButton:checked:pressed,"
+                               "QToolButton:pressed {"
+                               "    background-color: rgba(%4, %5, %6, 0.7);"
+                               "}"
+                               ""
+                               "QToolButton:checked:hover,"
+                               "QToolButton:hover {"
+                               "    background-color: rgba(%4, %5, %6, 0.5);"
+                               "}"
+                               ""
+                               "QToolButton::menu-arrow {"
+                               "    width: 8px;"
+                               "    height: 8px;"
+                               "}"
+                               ""
+                               "QToolButton::menu-button {"
+                               "    padding: 2px;"
+                               "    width: 12px;"
+                               "}"
+                               ""
+                               "QToolButton[popupMode=\"1\"] {"
+                               "    padding-right: 20px;"
+                               "}"
+                               ""
+                               "QToolButton[popupMode=\"1\"]::menu-button {"
+                               "    border: none;"
+                               "}"
+                               ""
+                               "QToolButton[popupMode=\"1\"]::menu-button:hover {"
+                               "    border: none;"
+                               "    border-left: 1px solid rgb(%1, %2, %3);"
+                               "    border-radius: 0;"
+                               "}").arg(primaryColor.red())
+                                   .arg(primaryColor.green())
+                                   .arg(primaryColor.blue())
+                                   .arg(secondaryColor.red())
+                                   .arg(secondaryColor.green())
+                                   .arg(secondaryColor.blue());
+#endif
 
     // Remove the border which is normally drawn for a tool bar widget (indeed,
     // it doesn't look great when on a docked window) and make sure that we have
