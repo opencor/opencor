@@ -29,6 +29,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma GCC diagnostic ignored "-Wignored-qualifiers"
 #else
     #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
     #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
     #pragma clang diagnostic ignored "-Wextra-semi"

@@ -20,7 +20,7 @@ set(ENV{CXX} ${CXX_COMPILER})
 
 # Project definition
 
-project(OpenCOR VERSION 0.7)
+project(OpenCOR)
 
 # Our options
 
@@ -345,7 +345,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 include(ExternalProject)
 
 # On macOS, make sure that we support version 10.14 and later, unless a specific
-# deployment target has been specified
+# deployment target has been specified, and also make sure that we target x86_64
 
 if(APPLE)
     if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
@@ -353,6 +353,7 @@ if(APPLE)
     endif()
 
     set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
+    set(CMAKE_OSX_ARCHITECTURES x86_64)
 endif()
 
 # A few constants to help us with building an external project
