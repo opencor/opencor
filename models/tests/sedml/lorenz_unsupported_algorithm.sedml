@@ -2,7 +2,7 @@
 <sedML level="1" version="3" xmlns="http://sed-ml.org/sed-ml/level1/version3" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <listOfSimulations>
         <uniformTimeCourse id="simulation1" initialTime="0" numberOfPoints="50000" outputEndTime="50" outputStartTime="0">
-            <algorithm kisaoID="KISAO:0000029">                
+            <algorithm kisaoID="KISAO:0000029">
             </algorithm>
         </uniformTimeCourse>
     </listOfSimulations>
