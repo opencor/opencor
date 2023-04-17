@@ -377,6 +377,7 @@ endif()
 if(APPLE)
     list(APPEND CMAKE_ARGS
         -DCMAKE_MACOSX_RPATH=ON
+        -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
         -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
     )
 endif()
@@ -1553,7 +1554,7 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # libtinfo.so.5 is needed by Qt, but is not present on vanilla Ubuntu 
+    # libtinfo.so.5 is needed by Qt, but is not present on vanilla Ubuntu
     # 20.04/22.04 LTS while libffi.so.7 is needed by Python and is present on
     # vanilla Ubuntu 20.04 LTS, but not on Ubuntu 22.04 LTS
 
