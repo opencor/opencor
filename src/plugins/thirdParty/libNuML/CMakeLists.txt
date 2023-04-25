@@ -5,7 +5,6 @@ project(libNuMLPlugin)
 set(PACKAGE_NAME libNuML)
 set(PACKAGE_VERSION 1.1.6)
 set(PACKAGE_REPOSITORY NuML)
-set(GIT_TAG v1.1.6-opencor)
 set(RELEASE_TAG v1.1.6-opencor)
 
 get_full_local_external_package_dir()
@@ -82,11 +81,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CONFIGURE_COMMAND
             ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
                              ${CMAKE_ARGS}

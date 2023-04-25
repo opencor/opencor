@@ -406,11 +406,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}-cmake-buildsystem
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}-cmake-buildsystem/archive/refs/tags/${GIT_TAG}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR

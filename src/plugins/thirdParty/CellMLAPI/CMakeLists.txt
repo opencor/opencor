@@ -5,7 +5,6 @@ project(CellMLAPIPlugin)
 set(PACKAGE_NAME CellMLAPI)
 set(PACKAGE_VERSION 1.12)
 set(PACKAGE_REPOSITORY cellml-api)
-set(GIT_TAG 1.12)
 set(RELEASE_TAG 1.12)
 
 get_full_local_external_package_dir()
@@ -182,11 +181,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
             -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}

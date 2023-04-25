@@ -5,15 +5,9 @@ project(PythonPackagesPlugin)
 set(PACKAGE_NAME PythonPackages)
 set(PACKAGE_VERSION 3.7.5)
 set(PACKAGE_REPOSITORY python)
-set(GIT_TAG opencor-3.7.5)
 set(RELEASE_TAG v3.7.5)
 
 get_full_local_external_package_dir()
-
-# Git tags of Python package installers
-
-set(PIP_GIT_TAG 19.2.3)
-set(SETUPTOOLS_GIT_TAG v41.2.0)
 
 # Version of our different Python packages
 
@@ -136,11 +130,8 @@ else()
         ExternalProject_Add(installSetuptools
             INSTALL_DIR
                 ${SETUPTOOLS_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/pypa/setuptools
-            GIT_TAG
-                ${SETUPTOOLS_GIT_TAG}
-            GIT_SHALLOW
+            URL
+                https://github.com/pypa/setuptools/archive/refs/tags/v41.2.0.tar.gz
             CONFIGURE_COMMAND
                 ${PYTHON_EXECUTABLE} bootstrap.py
             BUILD_COMMAND
@@ -155,11 +146,8 @@ else()
         ExternalProject_Add(installPip
             INSTALL_DIR
                 ${PIP_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/pip
-            GIT_TAG
-                ${PIP_GIT_TAG}
-            GIT_SHALLOW
+            URL
+                https://github.com/opencor/pip/archive/refs/tags/19.2.3.tar.gz
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND

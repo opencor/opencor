@@ -5,7 +5,6 @@ project(ZincPlugin)
 set(PACKAGE_NAME Zinc)
 set(PACKAGE_VERSION 3.1.2)
 set(PACKAGE_REPOSITORY zinc)
-set(GIT_TAG v3.1.2)
 set(RELEASE_TAG v3.1.2)
 
 get_full_local_external_package_dir()
@@ -89,11 +88,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CONFIGURE_COMMAND
             ${CMAKE_COMMAND} ${DEFINE_CMAKE_GENERATOR} ${CMAKE_ARGS} -DOPENCMISS_ROOT=<BINARY_DIR>/.. -DOPENCMISS_LIBRARIES=zinc <SOURCE_DIR>
         BUILD_COMMAND

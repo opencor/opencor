@@ -5,7 +5,6 @@ project(QScintillaPlugin)
 set(PACKAGE_NAME QScintilla)
 set(PACKAGE_VERSION 2.13.3)
 set(PACKAGE_REPOSITORY qscintilla)
-set(GIT_TAG v2.13.3)
 set(RELEASE_TAG v2.13.3)
 
 get_full_local_external_package_dir()
@@ -95,11 +94,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CONFIGURE_COMMAND
             ${QMAKE_COMMAND} <SOURCE_DIR>/src INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND

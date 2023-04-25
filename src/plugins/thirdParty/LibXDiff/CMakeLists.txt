@@ -5,7 +5,6 @@ project(LibXDiffPlugin)
 set(PACKAGE_NAME LibXDiff)
 set(PACKAGE_VERSION 0.23)
 set(PACKAGE_REPOSITORY libxdiff)
-set(GIT_TAG v0.23)
 set(RELEASE_TAG v0.23)
 
 get_full_local_external_package_dir()
@@ -83,11 +82,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_GENERATOR
