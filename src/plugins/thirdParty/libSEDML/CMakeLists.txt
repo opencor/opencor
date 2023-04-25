@@ -5,7 +5,6 @@ project(libSEDMLPlugin)
 set(PACKAGE_NAME libSEDML)
 set(PACKAGE_VERSION 2.0.32)
 set(PACKAGE_REPOSITORY libSEDML)
-set(GIT_TAG v2.0.32-opencor)
 set(RELEASE_TAG v2.0.32-opencor)
 
 get_full_local_external_package_dir()
@@ -79,11 +78,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS

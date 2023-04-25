@@ -5,7 +5,6 @@ project(SUNDIALSPlugin)
 set(PACKAGE_NAME SUNDIALS)
 set(PACKAGE_VERSION 6.4.1)
 set(PACKAGE_REPOSITORY sundials)
-set(GIT_TAG v6.4.1-opencor)
 set(RELEASE_TAG v6.4.1-opencor)
 
 get_full_local_external_package_dir()
@@ -250,11 +249,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_GENERATOR

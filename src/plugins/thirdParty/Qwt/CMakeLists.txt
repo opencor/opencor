@@ -5,7 +5,6 @@ project(QwtPlugin)
 set(PACKAGE_NAME Qwt)
 set(PACKAGE_VERSION 6.2.0)
 set(PACKAGE_REPOSITORY qwt)
-set(GIT_TAG v6.2.0)
 set(RELEASE_TAG v6.2.0)
 
 get_full_local_external_package_dir()
@@ -109,11 +108,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CONFIGURE_COMMAND
             ${QMAKE_COMMAND} <SOURCE_DIR> CONFIG+=qt_no_framework INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND

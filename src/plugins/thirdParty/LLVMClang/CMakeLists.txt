@@ -5,7 +5,6 @@ project(LLVMClangPlugin)
 set(PACKAGE_NAME LLVMClang)
 set(PACKAGE_VERSION 14.0.6)
 set(PACKAGE_REPOSITORY llvmclang)
-set(GIT_TAG v14.0.6-opencor)
 set(RELEASE_TAG v14.0.6-opencor)
 
 get_full_local_external_package_dir()
@@ -83,11 +82,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_CACHE_ARGS
             -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
         CMAKE_GENERATOR

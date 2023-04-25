@@ -5,7 +5,6 @@ project(libgit2Plugin)
 set(PACKAGE_NAME libgit2)
 set(PACKAGE_VERSION 1.5.0)
 set(PACKAGE_REPOSITORY libgit2)
-set(GIT_TAG v1.5.0-opencor)
 set(RELEASE_TAG v1.5.0-opencor)
 
 get_full_local_external_package_dir()
@@ -95,11 +94,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_GENERATOR

@@ -22,6 +22,14 @@ set(ENV{CXX} ${CXX_COMPILER})
 
 project(OpenCOR)
 
+# Set the new policies that affect our build.
+
+foreach(NEW_POLICY CMP0135)
+    if(POLICY ${NEW_POLICY})
+        cmake_policy(SET ${NEW_POLICY} NEW)
+    endif()
+endforeach()
+
 # Our options
 
 option(ENABLE_CLANG_TIDY "Enable the use of Clang-Tidy" OFF)

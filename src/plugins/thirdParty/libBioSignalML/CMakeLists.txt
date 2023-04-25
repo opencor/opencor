@@ -5,7 +5,6 @@ project(libBioSignalMLPlugin)
 set(PACKAGE_NAME BioSignalML)
 set(PACKAGE_VERSION 1.0)
 set(PACKAGE_REPOSITORY libbiosignalml)
-set(GIT_TAG v0.8.4)
 set(RELEASE_TAG v0.8.4)
 
 get_full_local_external_package_dir()
@@ -92,11 +91,8 @@ else()
     ExternalProject_Add(typedObjectBuild
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/typedobject
-        GIT_TAG
-            ${GIT_TAG_TYPEDOBJECT}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/typedobject/archive/refs/tags/${GIT_TAG_TYPEDOBJECT}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
@@ -114,11 +110,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG_BIOSIGNALML}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${GIT_TAG_BIOSIGNALML}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
