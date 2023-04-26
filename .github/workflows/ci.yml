@@ -44,7 +44,7 @@ jobs:
       BUILDCACHE_LOG_FILE: ""
     steps:
       - name: Check out OpenCOR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install Qt
