@@ -30,11 +30,11 @@ jobs:
             mode: Debug
             path_separator: /
           - name: Build and test (macOS release)
-            os: macos-11
+            os: macos-12
             mode: Release
             path_separator: /
           - name: Build and test (macOS debug)
-            os: macos-11
+            os: macos-12
             mode: Debug
             path_separator: /
     env:
@@ -81,7 +81,7 @@ jobs:
             os: ubuntu-20.04
             path_separator: /
           - name: Documentation (macOS)
-            os: macos-11
+            os: macos-12
             context: PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
             path_separator: /
     steps:
