@@ -355,6 +355,17 @@ DataStorePythonWrapper::DataStorePythonWrapper(void *pModule,
 
 //==============================================================================
 
+DataStorePythonWrapper::~DataStorePythonWrapper()
+{
+    // Delete all the values that were requested as NumPy arrays.
+
+    for (const auto *numPyArray : mNumPyArrays) {
+        delete numPyArray;
+    }
+}
+
+//==============================================================================
+
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                        SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
@@ -432,7 +443,7 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
 //==============================================================================
 
 PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
-                                          int pRun) const
+                                          int pRun)
 {
     // Create and return a NumPy array for the given data store variable and run
 
@@ -440,6 +451,8 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 
     if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
         auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
+
+        mNumPyArrays << numPyArray;
 
         return numPyArray->numPyArray();
     }
