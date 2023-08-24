@@ -46,16 +46,24 @@ namespace DataStore {
 
 //==============================================================================
 
+class NumPyPythonWrapper;
+
+//==============================================================================
+
 class DataStorePythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
     explicit DataStorePythonWrapper(void *pModule, QObject *pParent);
+    ~DataStorePythonWrapper() override;
 
     static DATASTORE_EXPORT PyObject * dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                            SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction);
     static DATASTORE_EXPORT PyObject * dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
+
+private:
+    QList<NumPyPythonWrapper *> mNumPyArrays;
 
 public slots:
     PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
@@ -64,7 +72,7 @@ public slots:
     double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                  quint64 pPosition, int pRun = -1) const;
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
-                      int pRun = -1) const;
+                      int pRun = -1);
 };
 
 //==============================================================================
