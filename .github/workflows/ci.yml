@@ -92,5 +92,4 @@ jobs:
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Generate the documentation
-        run: |
-          ${{ matrix.context }} .${{ matrix.path_separator }}cd
+        run: ${{ matrix.context }} .${{ matrix.path_separator }}cd

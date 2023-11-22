@@ -18,4 +18,8 @@ include(ExternalProject)
 
 # Generate our documentation
 
+find_package(Python COMPONENTS Interpreter)
+
+find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
+
 generate_documentation(FALSE)
