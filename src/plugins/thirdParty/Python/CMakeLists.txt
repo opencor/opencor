@@ -3,18 +3,18 @@ project(PythonPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.7.5)
+set(PACKAGE_VERSION 3.10.13)
 set(PACKAGE_REPOSITORY python)
-set(GIT_TAG opencor-3.7.5)
-set(RELEASE_TAG v3.7.5)
+set(GIT_TAG opencor-3.10.13)
+set(RELEASE_TAG v3.10.13)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
-set(MAJOR_MINOR_LIBRARY_VERSION 3.7)
-set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.5)
-set(NUMERIC_LIBRARY_VERSION 37)
+set(MAJOR_MINOR_LIBRARY_VERSION 3.10)
+set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.13)
+set(NUMERIC_LIBRARY_VERSION 310)
 
 # Set the ABI flag and version identifier
 
@@ -407,7 +407,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         URL
-            https://github.com/opencor/${PACKAGE_REPOSITORY}-cmake-buildsystem/archive/refs/tags/${GIT_TAG}.tar.gz
+            https://github.com/dbrnz/python-cmake-buildsystem/archive/python3.10.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR
