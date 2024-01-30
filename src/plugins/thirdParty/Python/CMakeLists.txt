@@ -485,7 +485,7 @@ else()
 
             -DENABLE_SQLITE3=ON
             -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
-            -DSQLITE3_LIBRARY=${SQLite3_LIBRARIES}
+            -DSQLite3_LIBRARY=${SQLite3_LIBRARIES}
 
             # Use our copy of zlib
 
