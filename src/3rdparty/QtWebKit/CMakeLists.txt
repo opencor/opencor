@@ -5,7 +5,6 @@ project(QtWebKit)
 set(PACKAGE_NAME QtWebKit)
 set(PACKAGE_VERSION 5.212.0)
 set(PACKAGE_REPOSITORY qtwebkit)
-set(GIT_TAG v5.12.0)
 set(RELEASE_TAG v5.12.0)
 
 get_full_local_external_package_dir()
@@ -116,11 +115,8 @@ else()
         ExternalProject_Add(libjpegBuild
             INSTALL_DIR
                 ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/libjpeg-turbo
-            GIT_TAG
-                ${GIT_TAG_LIBJPEG}
-            GIT_SHALLOW
+            URL
+                https://github.com/opencor/libjpeg-turbo/archive/refs/tags/${GIT_TAG_LIBJPEG}.tar.gz
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
@@ -139,11 +135,8 @@ else()
         ExternalProject_Add(libpngBuild
             INSTALL_DIR
                 ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/libpng
-            GIT_TAG
-                ${GIT_TAG_LIBPNG}
-            GIT_SHALLOW
+            URL
+                https://github.com/opencor/libpng/archive/refs/tags/${GIT_TAG_LIBPNG}.tar.gz
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
@@ -163,11 +156,8 @@ else()
         ExternalProject_Add(zlibBuild
             INSTALL_DIR
                 ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/zlib
-            GIT_TAG
-                ${GIT_TAG_ZLIB}
-            GIT_SHALLOW
+            URL
+                https://github.com/opencor/zlib/archive/refs/tags/${GIT_TAG_ZLIB}.tar.gz
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
@@ -186,7 +176,7 @@ else()
     if(WIN32)
         set(CMAKE_EXTRA_ARGS
             -DFULL_LOCAL_EXTERNAL_PACKAGE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-            -DGIT_TAG=${GIT_TAG}
+            -DGIT_TAG=${RELEASE_TAG}
             -DICUDT_SHARED_LIBRARY=${ICUDT_SHARED_LIBRARY}
             -DICUIN_SHARED_LIBRARY=${ICUIN_SHARED_LIBRARY}
             -DICUUC_SHARED_LIBRARY=${ICUUC_SHARED_LIBRARY}
@@ -216,11 +206,8 @@ else()
     ExternalProject_Add(${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor//${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
