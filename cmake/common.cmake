@@ -1,3 +1,18 @@
+# Copyright (C) The University of Auckland
+
+# OpenCOR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# OpenCOR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://gnu.org/licenses>.
+
 set(LANGUAGES fr)
 
 #===============================================================================
@@ -154,17 +169,11 @@ endmacro()
 macro(generate_documentation BUILD_OPENCOR)
     # General documentation
 
-    ExternalProject_Add(GeneralDocumentationBuild
-        GIT_REPOSITORY
-            https://github.com/opencor/general-documentation
-        GIT_SHALLOW
-        CMAKE_ARGS
-            -DMODE=${CMAKE_PROJECT_NAME}
-            -DENABLE_DOWNLOADS=${BUILD_OPENCOR}
-        INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/GeneralDocumentationBuild-prefix/src/GeneralDocumentationBuild-build/html
-                                               ${CMAKE_BINARY_DIR}/doc/html
-    )
+    build_documentation(general_documentation
+                        general-documentation
+                        .
+                        ${BUILD_OPENCOR}
+                        -DMODE=${CMAKE_PROJECT_NAME})
 
     if(${BUILD_OPENCOR})
         configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
@@ -175,41 +184,44 @@ macro(generate_documentation BUILD_OPENCOR)
 
     # User and developer documentations
 
-    build_documentation(user ${BUILD_OPENCOR})
-    build_documentation(developer ${BUILD_OPENCOR})
+    foreach(DOCUMENTATION_NAME user developer)
+        build_documentation(${DOCUMENTATION_NAME}_documentation
+                            opencor-${DOCUMENTATION_NAME}-documentation
+                            ${DOCUMENTATION_NAME}
+                            ${BUILD_OPENCOR}
+                            -DPYTHON_EXECUTABLE=${Python_EXECUTABLE}
+                            -DSPHINX_EXECUTABLE=${SPHINX_EXECUTABLE})
+    endforeach()
 endmacro()
 
 #===============================================================================
 
-macro(build_documentation DOCUMENTATION_NAME BUILD_OPENCOR)
+macro(build_documentation DOCUMENTATION_NAME REPOSITORY_NAME DESTINATION_DIR BUILD_OPENCOR)
+    # Make sure that configure_file() can replace all the variables
+    # Note: we need to do this since we are using macros...
+
+    set(DOCUMENTATION_NAME ${DOCUMENTATION_NAME})
+    set(REPOSITORY_NAME ${REPOSITORY_NAME})
+    set(DESTINATION_DIR ${DESTINATION_DIR})
+    set(ARGN ${ARGN})
+
     # Build the given documentation as an external project and have it copied to
     # our final documentation directory
 
-    set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
+    set(DOCUMENTATION_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/${DOCUMENTATION_NAME})
 
-    set(DOCUMENTATION_CMAKE_ARGS
-        -DPYTHON_EXECUTABLE=${Python_EXECUTABLE}
-        -DSPHINX_EXECUTABLE=${SPHINX_EXECUTABLE}
-    )
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/builddocumentation.cmake.in ${DOCUMENTATION_BUILD_DIR}/CMakeLists.txt)
 
-    ExternalProject_Add(${DOCUMENTATION_BUILD}
-        GIT_REPOSITORY
-            https://github.com/opencor/opencor-${DOCUMENTATION_NAME}-documentation
-        GIT_SHALLOW
-        CMAKE_ARGS
-            ${DOCUMENTATION_CMAKE_ARGS}
-        LIST_SEPARATOR
-            |
-        INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/${DOCUMENTATION_BUILD}-prefix/src/${DOCUMENTATION_BUILD}-build/html
-                                               ${CMAKE_BINARY_DIR}/doc/html/${DOCUMENTATION_NAME}
-    )
+    add_custom_target(${DOCUMENTATION_NAME}
+                      COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -S . -B build
+                      COMMAND ${CMAKE_COMMAND} --build build
+                      WORKING_DIRECTORY ${DOCUMENTATION_BUILD_DIR})
 
     # Make our documentation build target depend on our local target, if we are
     # building OpencOR
 
     if(${BUILD_OPENCOR})
-        add_dependencies(${DOCUMENTATION_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+        add_dependencies(${DOCUMENTATION_BUILD_TARGET} ${DOCUMENTATION_NAME})
     endif()
 endmacro()
 
