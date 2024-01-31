@@ -212,16 +212,21 @@ macro(build_documentation DOCUMENTATION_NAME REPOSITORY_NAME DESTINATION_DIR BUI
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/builddocumentation.cmake.in ${DOCUMENTATION_BUILD_DIR}/CMakeLists.txt)
 
-    add_custom_target(${DOCUMENTATION_NAME}
-                      COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -S . -B build
-                      COMMAND ${CMAKE_COMMAND} --build build
-                      WORKING_DIRECTORY ${DOCUMENTATION_BUILD_DIR})
+    if (${BUILD_OPENCOR})
+        add_custom_target(${DOCUMENTATION_NAME}
+                          COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -S . -B build
+                          COMMAND ${CMAKE_COMMAND} --build build
+                          WORKING_DIRECTORY ${DOCUMENTATION_BUILD_DIR})
 
-    # Make our documentation build target depend on our local target, if we are
-    # building OpencOR
+        # Make our documentation build target depend on our local target, if we
+        # are building OpencOR
 
-    if(${BUILD_OPENCOR})
         add_dependencies(${DOCUMENTATION_BUILD_TARGET} ${DOCUMENTATION_NAME})
+    else()
+        execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -S . -B build
+                        WORKING_DIRECTORY ${DOCUMENTATION_BUILD_DIR})
+        execute_process(COMMAND ${CMAKE_COMMAND} --build build
+                        WORKING_DIRECTORY ${DOCUMENTATION_BUILD_DIR})
     endif()
 endmacro()
 
