@@ -22,6 +22,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
@@ -100,31 +101,15 @@ void SedmlFile::reset()
         return;
     }
 
-    // Ask our file manager to unmanage our corresponding CellML file, if we
-    // have previously retrieved it, and if it is a remote one (indeed, it will
-    // have been managed by cellmlFile() below, so that CellML 1.1 files can be
-    // properly instantiated)
-
-    if (mCellmlFile != nullptr) {
-        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QString cellmlFileName = mCellmlFile->fileName();
-
-        if (fileManagerInstance->isRemote(cellmlFileName)) {
-            fileManagerInstance->unmanage(cellmlFileName);
-        }
-    }
-
     // Reset all of our properties
+    // Note: we don't delete mCellmlFile in case it's open in OpenCOR...
 
     delete mSedmlDocument;
 
     mSedmlDocument = nullptr;
+    mCellmlFile = nullptr;
 
     mLoadingNeeded = true;
-
-    delete mCellmlFile;
-
-    mCellmlFile = nullptr;
 
     mIssues.clear();
 }
@@ -1560,36 +1545,46 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 modelSource = url.remove(FileNameRegEx)+"/"+modelSource;
             }
 
-            // Retrieve the contents of our model source
+            // Make sure that the file is not already managed (e.g., the SED-ML
+            // file had been previously opened but then got closed and then
+            // reopened)
 
-            QByteArray fileContents;
-            QString errorMessage;
+            QString cellmlFileName = fileManagerInstance->fileName(modelSource);
 
-            Core::showCentralBusyWidget();
+            if (cellmlFileName.isEmpty()) {
+                // Retrieve the contents of our model source
 
-            if (Core::readFile(modelSource, fileContents, &errorMessage)) {
-                // Save the contents of our model source to a local file and use
-                // that to create a CellML file object after having asked our
-                // file manager to manage it (so that CellML 1.1 files can be
-                // properly instantiated)
+                QByteArray fileContents;
+                QString errorMessage;
 
-                QString cellmlFileName = Core::temporaryFileName();
+                Core::showCentralBusyWidget();
 
-                if (Core::writeFile(cellmlFileName, fileContents)) {
-                    fileManagerInstance->manage(cellmlFileName, Core::File::Type::Remote, modelSource);
+                if (Core::readFile(modelSource, fileContents, &errorMessage)) {
+                    // Save the contents of our model source to a local file and use
+                    // that to create a CellML file object after having asked our
+                    // file manager to manage it (so that CellML 1.1 files can be
+                    // properly instantiated)
 
-                    mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+                    cellmlFileName = Core::temporaryFileName();
+
+                    if (Core::writeFile(cellmlFileName, fileContents)) {
+                        fileManagerInstance->manage(cellmlFileName, Core::File::Type::Remote, modelSource);
+
+                        mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+                    } else {
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                  tr("%1 could not be saved").arg(modelSource));
+                    }
                 } else {
                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                              tr("%1 could not be saved").arg(modelSource));
+                                              tr("%1 could not be retrieved (%2)").arg(modelSource,
+                                                                                       Core::formatMessage(errorMessage)));
                 }
-            } else {
-                mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                          tr("%1 could not be retrieved (%2)").arg(modelSource,
-                                                                                   Core::formatMessage(errorMessage)));
-            }
 
-            Core::hideCentralBusyWidget();
+                Core::hideCentralBusyWidget();
+            } else {
+                mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(cellmlFileName);
+            }
         }
 
         // Set our CellML file and its dependencies, if any, as dependencies for
