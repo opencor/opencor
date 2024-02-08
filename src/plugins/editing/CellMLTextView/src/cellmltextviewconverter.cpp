@@ -333,14 +333,16 @@ void CellMLTextViewConverter::unindent()
 
 //==============================================================================
 
-void CellMLTextViewConverter::outputString(Output pOutputType,
-                                           const QString &pString)
+QString CellMLTextViewConverter::outputString(Output pOutputType,
+                                              const QString &pString)
 {
     // Output the given string
 
+    QString res;
+
     if (pString.isEmpty()) {
         if (mLastOutput != Output::EmptyLine) {
-            mOutput += '\n';
+            res = '\n';
         }
     } else {
         if (pOutputType == Output::Comment) {
@@ -348,15 +350,18 @@ void CellMLTextViewConverter::outputString(Output pOutputType,
             // mIndent will be wrong (since it will have been 'incremented'), so
             // we need to rely on the indent that we previously used
 
-            mOutput += mPrevIndent+pString+"\n";
+            res = mPrevIndent+pString+"\n";
         } else {
-            mOutput += mIndent+pString+"\n";
+            res = mIndent+pString+"\n";
 
             mPrevIndent = mIndent;
         }
     }
 
+    mOutput += res;
     mLastOutput = pOutputType;
+
+    return res;
 }
 
 //==============================================================================
@@ -1062,12 +1067,43 @@ bool CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
 
 //==============================================================================
 
+void CellMLTextViewConverter::alignEquations(const QStringList &pEquations)
+{
+    if (pEquations.count() > 1) {
+        static const QChar Equal = '=';
+
+        int maxEqualPos = -1;
+
+        for (const auto & equation : pEquations) {
+            maxEqualPos = qMax(maxEqualPos, equation.indexOf(Equal));
+        }
+
+        QString to;
+        int equalPos;
+
+        for (const auto & equation : pEquations) {
+            equalPos = equation.indexOf(Equal);
+
+            if (equalPos < maxEqualPos) {
+                to += equation.left(equalPos)+QString(maxEqualPos-equalPos, ' ')+equation.mid(equalPos);
+            } else {
+                to += equation;
+            }
+        }
+
+        mOutput.replace(pEquations.join(""), to);
+    }
+}
+
+//==============================================================================
+
 bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
 {
     // Process the given math node's children
 
     QString equation;
     bool hasError;
+    QStringList equations;
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
@@ -1098,12 +1134,22 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
                         && (   mTopPiecewiseStatementUsed
                             || (mTopPiecewiseStatementUsed != mOldTopPiecewiseStatementUsed)))) {
                     outputString();
+
+                    alignEquations(equations);
+
+                    equations.clear();
                 }
 
-                outputString(Output::Equation, equation+";");
+                equation = outputString(Output::Equation, equation+";");
+
+                if (!mTopPiecewiseStatementUsed) {
+                    equations << equation;
+                }
             }
         }
     }
+
+    alignEquations(equations);
 
     return true;
 }

@@ -217,8 +217,8 @@ private:
     void indent(bool pForceTracking = true);
     void unindent();
 
-    void outputString(Output pOutputType = Output::EmptyLine,
-                      const QString &pString = {});
+    QString outputString(Output pOutputType = Output::EmptyLine,
+                         const QString &pString = {});
 
     bool rdfNode(const QDomNode &pDomNode) const;
     bool cellmlNode(const QDomNode &pDomNode, const QString &pName) const;
@@ -259,6 +259,7 @@ private:
     bool processComponentNode(const QDomNode &pDomNode,
                               bool pInImportNode = false);
     bool processVariableNode(const QDomNode &pDomNode);
+    void alignEquations(const QStringList &pEquations);
     bool processMathNode(const QDomNode &pDomNode);
     int childNodesCount(const QDomNode &pDomNode) const;
     QDomNode childNode(const QDomNode &pDomNode, int pChildNodeIndex) const;
