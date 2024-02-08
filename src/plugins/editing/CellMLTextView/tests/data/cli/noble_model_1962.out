@@ -71,8 +71,8 @@ def model noble_model_1962 as
         var V: millivolt {pub: in};
         var time: millisecond {pub: in};
 
-        alpha_m = 0.1{per_millivolt_millisecond}*(-V-48{millivolt})/(exp((-V-48{millivolt})/15{millivolt})-1{dimensionless});
-        beta_m = 0.12{per_millivolt_millisecond}*(V+8{millivolt})/(exp((V+8{millivolt})/5{millivolt})-1{dimensionless});
+        alpha_m      = 0.1{per_millivolt_millisecond}*(-V-48{millivolt})/(exp((-V-48{millivolt})/15{millivolt})-1{dimensionless});
+        beta_m       = 0.12{per_millivolt_millisecond}*(V+8{millivolt})/(exp((V+8{millivolt})/5{millivolt})-1{dimensionless});
         ode(m, time) = alpha_m*(1{dimensionless}-m)-beta_m*m;
     enddef;
 
@@ -83,8 +83,8 @@ def model noble_model_1962 as
         var V: millivolt {pub: in};
         var time: millisecond {pub: in};
 
-        alpha_h = 0.17{per_millisecond}*exp((-V-90{millivolt})/20{millivolt});
-        beta_h = 1{per_millisecond}/(1{dimensionless}+exp((-V-42{millivolt})/10{millivolt}));
+        alpha_h      = 0.17{per_millisecond}*exp((-V-90{millivolt})/20{millivolt});
+        beta_h       = 1{per_millisecond}/(1{dimensionless}+exp((-V-42{millivolt})/10{millivolt}));
         ode(h, time) = alpha_h*(1{dimensionless}-h)-beta_h*h;
     enddef;
 
@@ -96,7 +96,7 @@ def model noble_model_1962 as
         var V: millivolt {pub: in, priv: out};
         var n: dimensionless {priv: in};
 
-        i_K = (g_K1+g_K2)*(V+100{millivolt});
+        i_K  = (g_K1+g_K2)*(V+100{millivolt});
         g_K1 = 1.2{milliS_per_cm2}*exp((-V-90{millivolt})/50{millivolt})+0.015{milliS_per_cm2}*exp((V+90{millivolt})/60{millivolt});
         g_K2 = 1.2{milliS_per_cm2}*pow(n, 4{dimensionless});
     enddef;
@@ -108,8 +108,8 @@ def model noble_model_1962 as
         var V: millivolt {pub: in};
         var time: millisecond {pub: in};
 
-        alpha_n = 0.0001{per_millivolt_millisecond}*(-V-50{millivolt})/(exp((-V-50{millivolt})/10{millivolt})-1{dimensionless});
-        beta_n = 0.002{per_millisecond}*exp((-V-90{millivolt})/80{millivolt});
+        alpha_n      = 0.0001{per_millivolt_millisecond}*(-V-50{millivolt})/(exp((-V-50{millivolt})/10{millivolt})-1{dimensionless});
+        beta_n       = 0.002{per_millisecond}*exp((-V-90{millivolt})/80{millivolt});
         ode(n, time) = alpha_n*(1{dimensionless}-n)-beta_n*n;
     enddef;
 
