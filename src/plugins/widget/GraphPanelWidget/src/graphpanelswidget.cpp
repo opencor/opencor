@@ -49,6 +49,9 @@ GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     mSynchronizeXAxisAction = Core::newAction(true, this);
     mSynchronizeYAxisAction = Core::newAction(true, this);
 
+    mSynchronizeXAxisAction->setChecked(true);
+    mSynchronizeYAxisAction->setChecked(true);
+
     connect(mSynchronizeXAxisAction, &QAction::triggered,
             this, &GraphPanelsWidget::synchronizeXAxis);
     connect(mSynchronizeYAxisAction, &QAction::triggered,
