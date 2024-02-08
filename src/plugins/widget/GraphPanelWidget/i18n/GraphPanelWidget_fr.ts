@@ -181,20 +181,20 @@
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelsWidget</name>
     <message>
-        <source>Synchonise X Axis</source>
+        <source>Synchronise X Axis</source>
         <translation>Synchroniser Axe des X</translation>
     </message>
     <message>
-        <source>Synchronise the X axis of all graph panels</source>
-        <translation>Synchroniser l&apos;axe des X de tous les panneaux graphiques</translation>
+        <source>Synchronise the X axis of the graph panels with the same X axis</source>
+        <translation>Synchroniser l&apos;axe des X des panneaux graphiques avec le même axe des X</translation>
     </message>
     <message>
-        <source>Synchonise Y Axis</source>
+        <source>Synchronise Y Axis</source>
         <translation>Synchroniser Axe des Y</translation>
     </message>
     <message>
-        <source>Synchronise the Y axis of all graph panels</source>
-        <translation>Synchroniser l&apos;axe des Y de tous les panneaux graphiques</translation>
+        <source>Synchronise the Y axis of the graph panels with the same Y axis</source>
+        <translation>Synchroniser l&apos;axe des Y des panneaux graphiques avec le même axe des Y</translation>
     </message>
 </context>
 </TS>

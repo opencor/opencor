@@ -67,10 +67,10 @@ void GraphPanelsWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mSynchronizeXAxisAction, tr("Synchonise X Axis"),
-                                     tr("Synchronise the X axis of all graph panels"));
-    I18nInterface::retranslateAction(mSynchronizeYAxisAction, tr("Synchonise Y Axis"),
-                                     tr("Synchronise the Y axis of all graph panels"));
+    I18nInterface::retranslateAction(mSynchronizeXAxisAction, tr("Synchronise X Axis"),
+                                     tr("Synchronise the X axis of the graph panels with the same X axis"));
+    I18nInterface::retranslateAction(mSynchronizeYAxisAction, tr("Synchronise Y Axis"),
+                                     tr("Synchronise the Y axis of the graph panels with the same Y axis"));
 
     // Retranslate all our graph panels
 
