@@ -647,7 +647,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend(
     // Toggle our legend property
 
     Core::Properties graphPanelProperties = mGraphPanelPropertyEditor->properties();
-    Core::Property *legendProperty = graphPanelProperties[4];
+    Core::Property *legendProperty = graphPanelProperties[4]->properties()[1];
 
     legendProperty->setBooleanValue(!legendProperty->booleanValue());
 }
@@ -659,7 +659,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarit
     // Toggle our logarithmic X axis property
 
     Core::Properties graphPanelProperties = mGraphPanelPropertyEditor->properties();
-    Core::Property *logarithmicXAxisProperty = graphPanelProperties[8]->properties()[0];
+    Core::Property *logarithmicXAxisProperty = graphPanelProperties[8]->properties()[1];
 
     logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
 }
@@ -671,7 +671,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarit
     // Toggle our logarithmic Y axis property
 
     Core::Properties graphPanelProperties = mGraphPanelPropertyEditor->properties();
-    Core::Property *logarithmicYAxisProperty = graphPanelProperties[9]->properties()[0];
+    Core::Property *logarithmicYAxisProperty = graphPanelProperties[9]->properties()[1];
 
     logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
 }
