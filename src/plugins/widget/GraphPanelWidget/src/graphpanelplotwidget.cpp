@@ -1701,13 +1701,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addAction(mExportToAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
-
-    if ((pSynchronizeXAxisAction != nullptr) && (pSynchronizeYAxisAction != nullptr)) {
-        mContextMenu->addSeparator();
-        mContextMenu->addAction(pSynchronizeXAxisAction);
-        mContextMenu->addAction(pSynchronizeYAxisAction);
-    }
-
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(pSynchronizeXAxisAction);
+    mContextMenu->addAction(pSynchronizeYAxisAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGraphPanelSettingsAction);
     mContextMenu->addAction(mGraphsSettingsAction);
