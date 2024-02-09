@@ -3187,9 +3187,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         mCanDirectPaint = false;
         mDirtyAxes = mDirtyAxes || pForceAxesSetting;
 
-        if (xAxisValuesChanged || yAxisValuesChanged) {
-            updateActions();
-        }
+        updateActions();
 
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
