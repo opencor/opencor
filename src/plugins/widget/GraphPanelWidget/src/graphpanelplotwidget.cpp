@@ -1701,13 +1701,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addAction(mExportToAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
-
-    if ((pSynchronizeXAxisAction != nullptr) && (pSynchronizeYAxisAction != nullptr)) {
-        mContextMenu->addSeparator();
-        mContextMenu->addAction(pSynchronizeXAxisAction);
-        mContextMenu->addAction(pSynchronizeYAxisAction);
-    }
-
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(pSynchronizeXAxisAction);
+    mContextMenu->addAction(pSynchronizeYAxisAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGraphPanelSettingsAction);
     mContextMenu->addAction(mGraphsSettingsAction);
@@ -3136,6 +3132,42 @@ void GraphPanelPlotWidget::setDefaultAxesValues(double pDefaultMinX,
 
 //==============================================================================
 
+void * GraphPanelPlotWidget::plotParameter(GraphPanelPlotWidget *pPlot,
+                                          bool pAxisX)
+{
+    // Determine the plot's axis parameter
+    // Note: if there are more than one graphs then all the parameters must be
+    //       the same...
+
+    void *res = nullptr;
+
+    for (auto graph : qAsConst(pPlot->mGraphs)) {
+        if (res == nullptr) {
+            res = pAxisX?graph->parameterX():graph->parameterY();
+        } else if (   ( pAxisX && (graph->parameterX() != res))
+                   || (!pAxisX && (graph->parameterY() != res))) {
+            res = nullptr;
+
+            break;
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::matchingAxis(void *pPlotParameter,
+                                        void *pNeighbourParameter)
+{
+    // Check whether the plot has the same (non-null) axis parameter
+
+    return    (pPlotParameter != nullptr)
+           && (pPlotParameter == pNeighbourParameter);
+}
+
+//==============================================================================
+
 bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    double pMaxY, bool pSynchronizeAxes,
                                    bool pCanReplot, bool pEmitSignal,
@@ -3191,28 +3223,35 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         mCanDirectPaint = false;
         mDirtyAxes = mDirtyAxes || pForceAxesSetting;
 
-        if (xAxisValuesChanged || yAxisValuesChanged) {
-            updateActions();
-        }
+        updateActions();
 
         if (pSynchronizeAxes) {
-            if (   mSynchronizeXAxisAction->isChecked()
-                && mSynchronizeYAxisAction->isChecked()) {
-                for (auto plot : qAsConst(mNeighbors)) {
-                    plot->setAxes(pMinX, pMaxX, pMinY, pMaxY,
-                                  false, false, false, true, false, false);
-                }
-            } else if (   xAxisValuesChanged
-                       && mSynchronizeXAxisAction->isChecked()) {
-                for (auto plot : qAsConst(mNeighbors)) {
-                    plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(),
-                                  false, false, false, true, false, false);
-                }
-            } else if (   yAxisValuesChanged
-                       && mSynchronizeYAxisAction->isChecked()) {
-                for (auto plot : qAsConst(mNeighbors)) {
-                    plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY,
-                                  false, false, false, true, false, false);
+            // Check whether our neighbours have the same X/Y parameter as us
+            // and if so then synchronise them accordingly
+            // Note: we must check the X/Y parameters every single time since a
+            //       user may add/remove a graph to/from a graph panel at any
+            //       time...
+
+            void *plotParameterX = plotParameter(this, true);
+            void *plotParameterY = plotParameter(this, false);
+
+            for (auto neighbour : qAsConst(mNeighbors)) {
+                void *neighbourParameterX = plotParameter(neighbour, true);
+                void *neighbourParameterY = plotParameter(neighbour, false);
+                bool canSynchroniseX =    mSynchronizeXAxisAction->isChecked()
+                                       && matchingAxis(plotParameterX, neighbourParameterX);
+                bool canSynchroniseY =    mSynchronizeYAxisAction->isChecked()
+                                       && matchingAxis(plotParameterY, neighbourParameterY);
+
+                if (canSynchroniseX && canSynchroniseY) {
+                    neighbour->setAxes(pMinX, pMaxX, pMinY, pMaxY,
+                                       false, false, false, true, false, false);
+                } else if (canSynchroniseX) {
+                    neighbour->setAxes(pMinX, pMaxX, neighbour->minY(), neighbour->maxY(),
+                                       false, false, false, true, false, false);
+                } else if (canSynchroniseY) {
+                    neighbour->setAxes(neighbour->minX(), neighbour->maxX(), pMinY, pMaxY,
+                                       false, false, false, true, false, false);
                 }
             }
 
