@@ -104,7 +104,8 @@ class QtConsole(object):
         # still going to PythonQt (and the terminal shell), so we redirect
         # logging output to the console
 
-        logging.getLogger().handlers[0].stream = sys.stderr
+        if logging.getLogger().hasHandlers():
+            logging.getLogger().handlers[0].stream = sys.stderr
 
     def widget(self):
         return self._widget
