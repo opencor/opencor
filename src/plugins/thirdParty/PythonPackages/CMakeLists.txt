@@ -11,8 +11,8 @@ get_full_local_external_package_dir()
 
 # Version of our different Python packages
 
-set(IPYKERNEL_VERSION 6.29.0)
-set(IPYTHON_VERSION 8.2.0)
+set(IPYKERNEL_VERSION 6.29.2)
+set(IPYTHON_VERSION 8.21.0)
 set(IPYWIDGETS_VERSION 8.1.1)
 set(JUPYTER_CLIENT_VERSION 8.6.0)
 set(JUPYTER_CONSOLE_VERSION 6.6.3)
