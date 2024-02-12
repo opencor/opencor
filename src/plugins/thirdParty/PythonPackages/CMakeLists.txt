@@ -28,12 +28,14 @@ set(SCIPY_VERSION 1.12.0)
 set(SPHINX_VERSION 7.2.6)
 set(TRAITLETS_VERSION 5.14.1)
 
-# Patched version of some packages to support PythonQt
+# Patched versions of some Python only packages neede to
+# support PythonQt. These are tags in our copy of the source
+# repositories
 
-set(IPYKERNEL_PYTHONQT ${IPYKERNEL_VERSION}.0)
-set(IPYTHON_PYTHONQT ${IPYTHON_VERSION}.0)
-set(QTCONSOLE_PYTHONQT ${QTCONSOLE_VERSION}.0)
-set(TRAITLETS_PYTHONQT ${TRAITLETS_VERSION}.1)
+set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
+set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
+set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
+set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 
 # Matplotlib is patched using a `diff` file as installing to
 # avoid having to create a full installable package for it,
@@ -338,15 +340,13 @@ else()
         # Note: we only upgrade to our version of packages and patch Matplotlib
         #       *after* all standard packages have been installed...
 
-        set(ARCHIVE_PYTHONQT archive/PythonQt-v)
-
         add_custom_target(pythonQtUpdate
             COMMAND ${PIP_INSTALL_COMMAND} --no-deps
                                            --force-reinstall
-                                           ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
-                                           ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
-                                           ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
-                                           ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/ipykernel/archive/${IPYKERNEL_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/ipython/archive/${IPYTHON_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/qtconsole/archive/${QTCONSOLE_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/traitlets/archive/${TRAITLETS_PYTHONQT}.zip
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM
