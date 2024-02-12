@@ -12,7 +12,7 @@ get_full_local_external_package_dir()
 # Version of our package's library
 
 set(MAJOR_LIBRARY_VERSION 3)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.0)
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
