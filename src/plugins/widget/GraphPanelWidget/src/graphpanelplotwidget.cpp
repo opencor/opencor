@@ -3158,12 +3158,12 @@ void * GraphPanelPlotWidget::plotParameter(GraphPanelPlotWidget *pPlot,
 //==============================================================================
 
 bool GraphPanelPlotWidget::matchingAxis(void *pPlotParameter,
-                                        void *pNeighbourParameter)
+                                        void *pNeighborParameter)
 {
     // Check whether the plot has the same (non-null) axis parameter
 
     return    (pPlotParameter != nullptr)
-           && (pPlotParameter == pNeighbourParameter);
+           && (pPlotParameter == pNeighborParameter);
 }
 
 //==============================================================================
@@ -3235,23 +3235,23 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
             void *plotParameterX = plotParameter(this, true);
             void *plotParameterY = plotParameter(this, false);
 
-            for (auto neighbour : qAsConst(mNeighbors)) {
-                void *neighbourParameterX = plotParameter(neighbour, true);
-                void *neighbourParameterY = plotParameter(neighbour, false);
+            for (auto neighbor : qAsConst(mNeighbors)) {
+                void *neighborParameterX = plotParameter(neighbor, true);
+                void *neighborParameterY = plotParameter(neighbor, false);
                 bool canSynchroniseX =    mSynchronizeXAxisAction->isChecked()
-                                       && matchingAxis(plotParameterX, neighbourParameterX);
+                                       && matchingAxis(plotParameterX, neighborParameterX);
                 bool canSynchroniseY =    mSynchronizeYAxisAction->isChecked()
-                                       && matchingAxis(plotParameterY, neighbourParameterY);
+                                       && matchingAxis(plotParameterY, neighborParameterY);
 
                 if (canSynchroniseX && canSynchroniseY) {
-                    neighbour->setAxes(pMinX, pMaxX, pMinY, pMaxY,
-                                       false, false, false, true, false, false);
+                    neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY,
+                                      false, false, false, true, false, false);
                 } else if (canSynchroniseX) {
-                    neighbour->setAxes(pMinX, pMaxX, neighbour->minY(), neighbour->maxY(),
-                                       false, false, false, true, false, false);
+                    neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(),
+                                      false, false, false, true, false, false);
                 } else if (canSynchroniseY) {
-                    neighbour->setAxes(neighbour->minX(), neighbour->maxX(), pMinY, pMaxY,
-                                       false, false, false, true, false, false);
+                    neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY,
+                                      false, false, false, true, false, false);
                 }
             }
 
