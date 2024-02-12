@@ -286,7 +286,13 @@ set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
 get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 
-set(QMAKE_COMMAND ${QMAKE} -Wnone)
+if(APPLE)
+    # See https://bugreports.qt.io/browse/QTBUG-117225
+
+    set(QMAKE_COMMAND ${QMAKE} -Wnone -early "QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib")
+else()
+    set(QMAKE_COMMAND ${QMAKE} -Wnone)
+endif()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
