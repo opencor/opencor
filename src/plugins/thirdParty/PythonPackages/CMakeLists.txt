@@ -188,6 +188,10 @@ else()
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                                     ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
                                                                                          --no-wheel
+            STEP_TARGETS install
+            LOG_DIR
+                "${CMAKE_SOURCE_DIR}/log"
+            LOG_INSTALL TRUE
         )
 
         # Make sure that pip is up to date
