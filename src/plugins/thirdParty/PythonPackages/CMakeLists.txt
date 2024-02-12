@@ -24,6 +24,7 @@ set(NOTEBOOK_VERSION 7.0.7)
 set(NUMPY_VERSION 1.26.3)
 set(QIMAGE2NDARRAY_VERSION 1.10.0)
 set(QTCONSOLE_VERSION 5.5.1)
+set(QTPY_VERSION 2.4.1)
 set(SCIPY_VERSION 1.12.0)
 set(SPHINX_VERSION 7.2.6)
 set(TRAITLETS_VERSION 5.14.1)
@@ -35,6 +36,7 @@ set(TRAITLETS_VERSION 5.14.1)
 set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
 set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
 set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
+set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.0")
 set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 
 # Matplotlib is patched using a `diff` file as installing to
@@ -298,6 +300,7 @@ else()
                                            nbconvert==${NBCONVERT_VERSION}
                                            notebook==${NOTEBOOK_VERSION}
                                            qtconsole==${QTCONSOLE_VERSION}
+                                           qtpy==${QTPY_VERSION}
                                            traitlets==${TRAITLETS_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
@@ -346,6 +349,7 @@ else()
                                            ${GITHUB_OPENCOR}/ipykernel/archive/${IPYKERNEL_PYTHONQT}.zip
                                            ${GITHUB_OPENCOR}/ipython/archive/${IPYTHON_PYTHONQT}.zip
                                            ${GITHUB_OPENCOR}/qtconsole/archive/${QTCONSOLE_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/qtpy/archive/${QTPY_PYTHONQT}.zip
                                            ${GITHUB_OPENCOR}/traitlets/archive/${TRAITLETS_PYTHONQT}.zip
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
