@@ -3890,6 +3890,15 @@ bool GraphPanelPlotWidget::hasDirtyAxes() const
 
 //==============================================================================
 
+void GraphPanelPlotWidget::setDirtyAxes(bool pDirtyAxes)
+{
+    // Set whether we have dirty axes
+
+    mDirtyAxes = pDirtyAxes;
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
                                               const QwtScaleMap &pScaleMap,
                                               const QFont &pFont, int &pStart,

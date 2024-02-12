@@ -537,6 +537,7 @@ public:
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
     bool hasDirtyAxes() const;
+    void setDirtyAxes(bool pDirtyAxes);
 
     Action action() const;
 
