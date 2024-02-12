@@ -5,7 +5,7 @@ project(PythonQtPlugin)
 set(PACKAGE_NAME PythonQt)
 set(PACKAGE_VERSION 3.4.2)
 set(PACKAGE_REPOSITORY pythonqt)
-set(RELEASE_TAG v3.4.2)
+set(RELEASE_TAG v3.4.2-opencor.0)
 
 get_full_local_external_package_dir()
 
