@@ -458,7 +458,7 @@ private:
     void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, bool pCommitData = true);
 
-    void goToNeighbouringProperty(int pShift);
+    void goToNeighboringProperty(int pShift);
 
     int childrenRowHeight(const QStandardItem *pItem) const;
 

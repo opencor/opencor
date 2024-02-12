@@ -2296,22 +2296,22 @@ void PropertyEditorWidget::removeAllProperties()
 
 //==============================================================================
 
-void PropertyEditorWidget::goToNeighbouringProperty(int pShift)
+void PropertyEditorWidget::goToNeighboringProperty(int pShift)
 {
     // Determine the index of the current index's neighbour
 
-    QModelIndex neighbouringIndex;
+    QModelIndex neighboringIndex;
 
     if (pShift == 1) {
-        neighbouringIndex = indexBelow(currentIndex());
+        neighboringIndex = indexBelow(currentIndex());
     } else if (pShift == -1) {
-        neighbouringIndex = indexAbove(currentIndex());
+        neighboringIndex = indexAbove(currentIndex());
     }
 
     // Edit the neighbouring property, if any
 
-    if (neighbouringIndex.isValid()) {
-        editProperty(property(neighbouringIndex));
+    if (neighboringIndex.isValid()) {
+        editProperty(property(neighboringIndex));
     }
 }
 
@@ -2321,7 +2321,7 @@ void PropertyEditorWidget::goToPreviousProperty()
 {
     // Go to the previous property
 
-    goToNeighbouringProperty(-1);
+    goToNeighboringProperty(-1);
 }
 
 //==============================================================================
@@ -2330,7 +2330,7 @@ void PropertyEditorWidget::goToNextProperty()
 {
     // Go to the next property
 
-    goToNeighbouringProperty(1);
+    goToNeighboringProperty(1);
 }
 
 //==============================================================================
