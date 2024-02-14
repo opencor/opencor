@@ -267,19 +267,56 @@ error:
 // Note: a DataStoreValuesDict is a dictionary sub-class for mapping between the
 //       values of a DataStoreValues list and Python...
 
-// See https://docs.python.org/3.10/extending/newtypes_tutorial.html
-
 static PyTypeObject DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    .tp_name = "OpenCOR.DataStoreValuesDict",
-    .tp_doc = PyDoc_STR("DataStoreValues object"),
-    .tp_basicsize = sizeof(DataStoreValuesDictObject),
-    .tp_repr = reinterpret_cast<reprfunc>(DataStoreValuesDict_repr),
-    .tp_as_mapping = &DataStoreValuesDict_as_mapping,
-    .tp_itemsize = 0,
-    .tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-    .tp_base = &PyDict_Type,
-    .tp_new = 0,
+    "OpenCOR.DataStoreValuesDict",                        // tp_name
+    sizeof(DataStoreValuesDictObject),                    // tp_basicsize
+    0,                                                    // tp_itemsize
+    nullptr,                                              // tp_dealloc
+    0,                                                    // tp_vectorcall_offset
+    nullptr,                                              // tp_getattr
+    nullptr,                                              // tp_setattr
+    nullptr,                                              // tp_as_async
+    reinterpret_cast<reprfunc>(DataStoreValuesDict_repr), // tp_repr
+    nullptr,                                              // tp_as_number
+    nullptr,                                              // tp_as_sequence
+    &DataStoreValuesDict_as_mapping,                      // tp_as_mapping
+    nullptr,                                              // tp_hash
+    nullptr,                                              // tp_call
+    nullptr,                                              // tp_str
+    nullptr,                                              // tp_getattro
+    nullptr,                                              // tp_setattro
+    nullptr,                                              // tp_as_buffer
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,               // tp_flags
+    nullptr,                                              // tp_doc
+    nullptr,                                              // tp_traverse
+    nullptr,                                              // tp_clear
+    nullptr,                                              // tp_richcompare
+    0,                                                    // tp_weaklistoffset
+    nullptr,                                              // tp_iter
+    nullptr,                                              // tp_iternext
+    nullptr,                                              // tp_methods
+    nullptr,                                              // tp_members
+    nullptr,                                              // tp_getset
+    &PyDict_Type,                                         // tp_base
+    nullptr,                                              // tp_dict
+    nullptr,                                              // tp_descr_get
+    nullptr,                                              // tp_descr_set
+    0,                                                    // tp_dictoffset
+    nullptr,                                              // tp_init
+    nullptr,                                              // tp_alloc
+    nullptr,                                              // tp_new
+    nullptr,                                              // tp_free
+    nullptr,                                              // tp_is_gc
+    nullptr,                                              // tp_bases
+    nullptr,                                              // tp_mro
+    nullptr,                                              // tp_cache
+    nullptr,                                              // tp_subclasses
+    nullptr,                                              // tp_weaklist
+    nullptr,                                              // tp_del
+    0,                                                    // tp_version_tag
+    nullptr,                                              // tp_finalize
+    nullptr,                                              // tp_vectorcall
 };
 
 //==============================================================================
