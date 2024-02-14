@@ -104,6 +104,10 @@ else()
 
     add_custom_target(${PACKAGE_BUILD})
 
+    # Where to find libraries needed by Python at build time
+
+    set(BUILT_LIBRARIES_DIR ${PYTHON_ROOT_DIR}/lib:${PROJECT_BUILD_DIR}/lib)
+
     # Python packages installation requires Python
 
     set(BUILD_DEPENDENCIES PythonPlugin)
@@ -118,6 +122,7 @@ else()
     file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
 
     set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
                                                 ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
@@ -186,6 +191,7 @@ else()
                 ""
             INSTALL_COMMAND
                 ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                    env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
                                     ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
                                                                                          --no-wheel
             STEP_TARGETS install
