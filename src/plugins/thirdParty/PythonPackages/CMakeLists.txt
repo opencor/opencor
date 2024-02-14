@@ -36,7 +36,7 @@ set(TRAITLETS_VERSION 5.14.1)
 set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
 set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
 set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
-set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.0")
+set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
 set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 
 # Matplotlib is patched using a `diff` file as installing to
