@@ -439,6 +439,10 @@ else()
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
 
+            # We don't want the Window's distutils installer
+
+            -DBUILD_WININST=OFF
+
             # Optionally patch sources (on Windows)
 
             -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
