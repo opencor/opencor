@@ -5,7 +5,7 @@ project(PythonQtPlugin)
 set(PACKAGE_NAME PythonQt)
 set(PACKAGE_VERSION 3.4.2)
 set(PACKAGE_REPOSITORY pythonqt)
-set(RELEASE_TAG v3.4.2-opencor.0)
+set(RELEASE_TAG v3.4.2-opencor.1)
 
 get_full_local_external_package_dir()
 
@@ -79,7 +79,7 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         8d60483fb922986edf0af7fd8cd6b9d5d9166798)
+                         26471686278f412c2b9eb4db3fb84fd1b368790d)
     endif()
 else()
     # Set platform specific configuration options and tool names

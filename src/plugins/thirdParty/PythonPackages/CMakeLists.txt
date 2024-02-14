@@ -95,7 +95,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         c1635192f1e69e60eb99e39763962a8410c5ed8a)
+                         1d06d1b781f977e84334d52daa5cbf846590e20a)
     endif()
 else()
     # Install Python packages using pip
