@@ -91,11 +91,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         81d0d91ccfd1ebc516bbe532f6ec1f373ecb79b2)
+                         2e0bd9e17a4850425ef44e36995d09fdf250d049)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         1d06d1b781f977e84334d52daa5cbf846590e20a)
+                         ba09a8b219ab37c4d80fc518ce316c1cd8902707)
     endif()
 else()
     # Install Python packages using pip
