@@ -1,0 +1,66 @@
+name: cd
+
+on:
+  push:
+    branches: [ master ]
+  release:
+    types:
+      - created
+      - edited
+
+jobs:
+  cd:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-2019
+          - name: Linux
+            os: ubuntu-20.04
+          - name: macOS
+            os: macos-12
+    env:
+      BUILDCACHE_COMPRESS_FORMAT: ZSTD
+      BUILDCACHE_DEBUG: -1
+      BUILDCACHE_DIRECT_MODE: true
+      BUILDCACHE_LOG_FILE: ""
+    steps:
+      - name: Check out OpenCOR
+        uses: actions/checkout@v3
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+      - name: Install Sphinx
+        run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.12.12'
+          setup-python: 'false'
+      - name: Install packages (Linux only)
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt install libglu1-mesa
+      - name: Install buildcache
+        uses: mikehardy/buildcache-action@v2
+        with:
+          cache_key: ${{ matrix.os }}
+      - name: Cache external dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/ext
+          key: ${{ matrix.os }}-ExternalDependencies-${{ github.sha }}
+          restore-keys: ${{ matrix.os }}-ExternalDependencies
+      - name: Package OpenCOR
+        run: ./package
+      - name: Upload OpenCOR artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: ./build/OpenCOR-*
+      - name: Release OpenCOR (if needed)
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./build/OpenCOR-*
