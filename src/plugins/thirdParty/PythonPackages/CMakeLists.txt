@@ -123,11 +123,9 @@ else()
 
     # Use our installed pip when upgrading pip
 
-    file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
-
     set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                                                 env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
-                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
                                                                                        --no-warn-script-location)
