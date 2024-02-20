@@ -4,9 +4,7 @@ on:
   push:
     branches: [ master ]
   release:
-    types:
-      - created
-      - edited
+    types: [ created ]
 
 jobs:
   cd:
