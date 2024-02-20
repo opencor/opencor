@@ -493,6 +493,7 @@ else()
             -DINSTALL_TEST=OFF
 
             # We don't want the Window's distutils installer
+            # (which in fact doesn't build for Python 3.10)
 
             -DBUILD_WININST=OFF
 
