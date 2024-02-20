@@ -35,7 +35,7 @@ set(TRAITLETS_VERSION 5.14.1)
 
 set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
 set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
-set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.3")
+set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
 set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
 set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 
@@ -44,6 +44,10 @@ set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 # including binary libraries.
 
 set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.1)
+
+# We have our own version of pip for Windows
+
+set(OPENCOR_PIP_VERSION v24.0-opencor.0)
 
 # Our GitHub organisation
 
@@ -91,11 +95,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         81d0d91ccfd1ebc516bbe532f6ec1f373ecb79b2)
+                         2e0bd9e17a4850425ef44e36995d09fdf250d049)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         1d06d1b781f977e84334d52daa5cbf846590e20a)
+                         ba09a8b219ab37c4d80fc518ce316c1cd8902707)
     endif()
 else()
     # Install Python packages using pip
@@ -119,11 +123,9 @@ else()
 
     # Use our installed pip when upgrading pip
 
-    file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
-
     set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                                                 env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
-                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
                                                                                        --no-warn-script-location)
@@ -136,70 +138,45 @@ else()
 
     set(PIP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/pip)
 
+    # Install the Python package installer
+
+    ExternalProject_Add(installPip
+        DOWNLOAD_DIR
+            ${PIP_SOURCE_DIR}
+        INSTALL_DIR
+            ${PIP_SOURCE_DIR}
+        URL
+            https://bootstrap.pypa.io/get-pip.py
+        DOWNLOAD_NO_EXTRACT
+            TRUE
+        CONFIGURE_COMMAND
+            ""
+        BUILD_COMMAND
+            ""
+        INSTALL_COMMAND
+            ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
+                                ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                                                                     --no-wheel
+        STEP_TARGETS install
+        LOG_DIR
+            "${CMAKE_SOURCE_DIR}/log"
+        LOG_INSTALL TRUE
+    )
+
     if(WIN32)
-        # Install the Python setuptools package
+        # Now use pip to install our copy of itself
 
-        set(SETUPTOOLS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/setuptools)
+        set(OPENCOR_PIP_ARCHIVE
+            https://github.com/opencor/pip/archive/refs/tags/${OPENCOR_PIP_VERSION}.tar.gz)
 
-        ExternalProject_Add(installSetuptools
-            INSTALL_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            URL
-                https://github.com/pypa/setuptools/archive/refs/tags/v41.2.0.tar.gz
-            CONFIGURE_COMMAND
-                ${PYTHON_EXECUTABLE} bootstrap.py
-            BUILD_COMMAND
-                ${PYTHON_EXECUTABLE} setup.py build
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-        )
-
-        # Install our Python package installer
-
-        ExternalProject_Add(installPip
-            INSTALL_DIR
-                ${PIP_SOURCE_DIR}
-            URL
-                https://github.com/opencor/pip/archive/refs/tags/19.2.3.tar.gz
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py build
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-            DEPENDS
-                installSetuptools
-        )
+        ExternalProject_Add_Step(installPip replacePip
+                                 COMMAND ${PIP_INSTALL_COMMAND}
+                                           --no-deps --force-reinstall
+                                           ${OPENCOR_PIP_ARCHIVE}
+                                 WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
+                                 DEPENDEES install)
     else()
-        # Install the Python package installer
-
-        ExternalProject_Add(installPip
-            DOWNLOAD_DIR
-                ${PIP_SOURCE_DIR}
-            INSTALL_DIR
-                ${PIP_SOURCE_DIR}
-            URL
-                https://bootstrap.pypa.io/get-pip.py
-            DOWNLOAD_NO_EXTRACT
-                TRUE
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ""
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
-                                    ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                                                                                         --no-wheel
-            STEP_TARGETS install
-            LOG_DIR
-                "${CMAKE_SOURCE_DIR}/log"
-            LOG_INSTALL TRUE
-        )
-
         # Make sure that pip is up to date
 
         ExternalProject_Add_Step(installPip updatePip

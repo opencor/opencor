@@ -154,7 +154,24 @@ if(NOT APPLE)
     )
 
     if(WIN32)
+        # On Windows, we use a prebuilt libffi
+
+        set(WINDOWS_LIBFFI_VERSION 3.4.4)
+        set(WINDOWS_LIBFFI_LIBRARY libffi-8)
+
+        set(LIBFFI_SHARED_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
         # On Windows, we also need import libraries
+
+        set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LIBFFI_IMPORT_LIBRARY}
+        )
+
+        list(APPEND STRIPPABLE_FILES
+            ${LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+        )
 
         set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
@@ -230,6 +247,33 @@ else()
     else()
         set(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
+    endif()
+
+    # Use a prebuilt libffi for Windows
+
+    if(WIN32)
+        set(CPYTHON_BIN_DEPS cpython-bin-deps)
+        set(WINDOWS_LIBFFI_ARCHIVE libffi-${WINDOWS_LIBFFI_VERSION})
+
+        set(LIBFFI_LIBRARY_DIR ${PROJECT_BINARY_DIR}/${CPYTHON_BIN_DEPS}-${WINDOWS_LIBFFI_ARCHIVE})
+
+        if(NOT EXISTS ${LIBFFI_LIBRARY_DIR})
+
+            message("Downloading '${WINDOWS_LIBFFI_ARCHIVE}'...")
+
+            file(DOWNLOAD
+                https://github.com/python/${CPYTHON_BIN_DEPS}/archive/${WINDOWS_LIBFFI_ARCHIVE}.zip
+                ${PROJECT_BINARY_DIR}/zips/${WINDOWS_LIBFFI_ARCHIVE}
+                SHOW_PROGRESS)
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${WINDOWS_LIBFFI_ARCHIVE}.zip --format=zip
+                            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                            OUTPUT_QUIET)
+        endif()
+
+        set(WINDOWS_LIBFFI_OPTIONS -DUSE_SYSTEM_LibFFI=OFF)
+        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/amd64/include)
+        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/amd64/${LIBFFI_IMPORT_LIBRARY})
     endif()
 
     # Build bzip2 on Windows and find it on Linux and macOS
@@ -364,10 +408,19 @@ else()
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
-        # On Windows, we also need the LZMA and SQLite3 import libraries while
-        # the bzip2 library on Linux
+        # On Windows, we need the libFFI shared library
 
         if(WIN32)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+        endif()
+
+        # On Windows, we also need the libFFI, LZMA and SQLite3 import libraries while
+        # for Linux we need the bzip2 library
+
+        if(WIN32)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
@@ -440,6 +493,7 @@ else()
             -DINSTALL_TEST=OFF
 
             # We don't want the Window's distutils installer
+            # (which in fact doesn't build for Python 3.10)
 
             -DBUILD_WININST=OFF
 
@@ -460,6 +514,10 @@ else()
             -DENABLE_TESTCAPI=OFF
             -DENABLE_TKINTER=OFF
 
+            # Link to the downloaded libffi for Windows
+
+            ${WINDOWS_LIBFFI_OPTIONS}
+
             # Build with an appropriate readline
 
             ${PYTHON_READLINE_OPTION}
@@ -473,8 +531,8 @@ else()
             # Link to the LZMA library
 
             -DUSE_SYSTEM_LZMA=OFF
-            -DLIBLZMA_INCLUDE_DIRS=${LIBLZMA_INCLUDE_DIRS}
-            -DLIBLZMA_LIBRARIES=${LIBLZMA_LIBRARIES}
+            -DLZMA_INCLUDE_PATH=${LIBLZMA_INCLUDE_DIRS}
+            -DLZMA_LIBRARY=${LIBLZMA_LIBRARIES}
 
             # Use our copy of OpenSSL
 
@@ -548,6 +606,7 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${ROOT_DIR}/Scripts Scripts
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     elseif(APPLE)
