@@ -139,17 +139,8 @@ else()
 endif()
 
 # Make sure that we are building OpenCOR on a supported architecture
-# Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in some
-#       cases it may not be set (e.g. when generating an Xcode project file), so
-#       we determine and retrieve that value ourselves...
 
-try_run(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-        ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
-        RUN_OUTPUT_VARIABLE ARCHITECTURE)
-
-if(NOT ARCHITECTURE_COMPILE)
-    message(FATAL_ERROR "We could not determine your architecture. Please clean your ${CMAKE_PROJECT_NAME} environment and try again...")
-elseif(NOT ${ARCHITECTURE} EQUAL 64)
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in 64-bit mode...")
 endif()
 

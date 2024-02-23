@@ -52,13 +52,13 @@ jobs:
           restore-keys: ${{ matrix.os }}-ExternalDependencies
       - name: Package OpenCOR
         run: ./package
-      - name: Upload OpenCOR artifacts (if needed)
+      - name: Upload OpenCOR artifacts
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: ./build/OpenCOR-*
-      - name: Release OpenCOR (if needed)
+      - name: Release OpenCOR
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v1
         with:
