@@ -95,7 +95,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         2e0bd9e17a4850425ef44e36995d09fdf250d049)
+                         011520dc16765000df191da9daaaff09a164d3b3)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
@@ -123,8 +123,8 @@ else()
 
     # Use our installed pip when upgrading pip
 
-    set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
+    set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
+                                                env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                                                 ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
@@ -154,8 +154,8 @@ else()
         BUILD_COMMAND
             ""
         INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
+            ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
+                                env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                                 ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                      --no-wheel
         STEP_TARGETS install
@@ -207,7 +207,8 @@ else()
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
+                                    env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
                                     ${PYTHON_EXECUTABLE} setup.py build --debug
             INSTALL_COMMAND
                 ${PIP_INSTALL_COMMAND} --global-option=build
