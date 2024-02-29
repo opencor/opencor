@@ -125,6 +125,7 @@ else()
 
     set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
                                                 env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
                                                 ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
@@ -156,6 +157,7 @@ else()
         INSTALL_COMMAND
             ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
                                 env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
                                 ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                      --no-wheel
         STEP_TARGETS install
