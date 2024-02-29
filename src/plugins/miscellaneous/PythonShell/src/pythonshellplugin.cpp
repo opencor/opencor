@@ -110,8 +110,7 @@ void PythonShellPlugin::runHelpCommand()
 
 bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
-    // The following has been adapted from `Programs/python.c` in the Python
-    // source code
+    // Get command line arguments to pass to Python
 
     const int argC = pArguments.size()+1;
     auto argV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc((argC+1)*sizeof(wchar_t*)));
@@ -165,7 +164,55 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     PyMem_RawFree(locale);
 
-    pRes = Py_Main(argC, argV);
+    // PythonQt has already initialised Python so we need to update
+    // the existing configuration
+
+    PyConfig config;
+    PyStatus status;
+
+    // Get an empty configuration
+
+    PyConfig_InitPythonConfig(&config);
+
+    // Set our arguments into it
+
+    status = PyConfig_SetArgv(&config, argC, argV);
+    if (PyStatus_Exception(status)) {
+        pRes = 1;
+        goto done;
+    }
+
+    // Update it with the interpreter's current state
+
+    status = PyConfig_Read(&config);
+    if (PyStatus_Exception(status)) {
+        pRes = 1;
+        goto done;
+    }
+
+    // Don't search the user's site directory
+
+    config.user_site_directory = 0;
+
+    // Reinitialise the interpreter with the new configuration
+
+    Py_Finalize();
+
+    status = Py_InitializeFromConfig(&config);
+    if (PyStatus_Exception(status)) {
+        pRes = 1;
+        goto done;
+    }
+
+    // Run Python with the passed arguments
+
+    pRes = Py_RunMain();
+
+done:
+
+    // Cleanup
+
+    PyConfig_Clear(&config);
 
     for (int i = 0; i < argC; ++i) {
         PyMem_RawFree(argVCopy[i]);
@@ -174,7 +221,7 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
     PyMem_RawFree(argV);
     PyMem_RawFree(argVCopy);
 
-    return true;
+    return pRes == 0;
 }
 
 //==============================================================================
