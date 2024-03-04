@@ -124,10 +124,6 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
         return false;
     }
 
-#ifdef __FreeBSD__
-    fedisableexcept(FE_OVERFLOW);
-#endif
-
     char *locale = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
 
     if (locale == nullptr) {
