@@ -226,7 +226,7 @@ void PythonQtSupportPlugin::printStdOut(const QString &pString)
 {
     // Print the given text to the standard output
 
-    std::cout << qPrintable(pString);
+    std::cout << qPrintable(pString) << std::flush;
 }
 
 //==============================================================================
@@ -235,7 +235,7 @@ void PythonQtSupportPlugin::printStdErr(const QString &pString)
 {
     // Print the given text to the standard error
 
-    std::cerr << qPrintable(pString);
+    std::cerr << qPrintable(pString) << std::flush;
 }
 
 //==============================================================================
