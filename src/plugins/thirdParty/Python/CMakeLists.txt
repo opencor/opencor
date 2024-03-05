@@ -236,7 +236,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         fe2cf734673b94ba336592c04e974270d84563b4)
+                         f912b3d26dfdc3a9bb1015115e46626c8d1f6e6a)
     endif()
 else()
     # Set platform-specific configuration options
