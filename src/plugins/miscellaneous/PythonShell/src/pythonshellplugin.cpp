@@ -22,10 +22,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "pythonshellplugin.h"
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 //==============================================================================
 
@@ -108,6 +111,110 @@ void PythonShellPlugin::runHelpCommand()
 
 //==============================================================================
 
+static const char *pyStringAsCString(const wchar_t *s)
+{
+    PyObject *unicode, *bytes;
+
+    unicode = PyUnicode_FromWideChar(s, -1);
+    if (unicode == NULL) {
+        return "";
+    }
+    bytes = PyUnicode_AsUTF8String(unicode);
+
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+#endif
+
+    Py_DECREF(unicode);
+
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic pop
+#endif
+
+    if (bytes == NULL) {
+        return "";
+    }
+    return PyBytes_AsString(bytes);
+}
+
+//==============================================================================
+
+static std::string pyStringListAsString(const PyWideStringList list)
+{
+    std::ostringstream stringList;
+
+    stringList << "[";
+    for (Py_ssize_t i = 0; i < list.length; i++) {
+        if (i > 0) {
+            stringList << ", ";
+        }
+        stringList << std::quoted(pyStringAsCString(list.items[i]));
+    }
+    stringList << "]";
+
+    return stringList.str();
+}
+
+//==============================================================================
+
+static void runCommand(const wchar_t *command)
+{
+    PythonQtSupport::evaluateScript(pyStringAsCString(command));
+}
+
+//==============================================================================
+
+static void runModule(const wchar_t *module, const PyWideStringList argV)
+{
+    static const QString runModule = R"PYTHON(
+import runpy
+import sys
+
+sys.argv = %1
+runpy.run_module('%2', init_globals=globals(), run_name='__main__')
+)PYTHON";
+
+    PythonQtSupport::evaluateScript(runModule
+                                        .arg(pyStringListAsString(argV).c_str())
+                                        .arg(pyStringAsCString(module)));
+}
+
+//==============================================================================
+
+static void runFilename(const wchar_t *filename, const PyWideStringList argV)
+{
+    static const QString runFile = R"PYTHON(
+import runpy
+import sys
+
+sys.argv = %1
+runpy.run_path('%2', init_globals=globals(), run_name='__main__')
+)PYTHON";
+
+    PythonQtSupport::evaluateScript(runFile
+                                        .arg(pyStringListAsString(argV).c_str())
+                                        .arg(pyStringAsCString(filename)));
+}
+
+//==============================================================================
+
+static void runInteractive()
+{
+    static const QString RunInteractive = R"PYTHON(
+import code
+import sys
+
+cprt = 'Type "help", "copyright", "credits" or "license" for more information.'
+
+code.interact(banner=f'Python {sys.version} on {sys.platform}\n{cprt}', exitmsg='')
+)PYTHON";
+
+    PythonQtSupport::evaluateScript(RunInteractive);
+}
+
+//==============================================================================
+
 bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
     // Get command line arguments to pass to Python
@@ -170,44 +277,30 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     PyConfig_InitPythonConfig(&config);
 
-    // Set our arguments into it
+    // Set our arguments into the new configuration and parse them
 
     status = PyConfig_SetArgv(&config, argC, argV);
     if (PyStatus_Exception(status)) {
         pRes = 1;
         goto done;
     }
-
-    // Update it with the interpreter's current state
-
     status = PyConfig_Read(&config);
     if (PyStatus_Exception(status)) {
         pRes = 1;
         goto done;
     }
 
-    // Don't search the user's site directory
-
-    config.user_site_directory = 0;
-
-    // Reinitialise the interpreter with the new configuration
-
-    Py_Finalize();
-
-    status = Py_InitializeFromConfig(&config);
-    if (PyStatus_Exception(status)) {
-        pRes = 1;
-        goto done;
+    if (config.run_command) {           // -c command
+        runCommand(config.run_command);
+    } else if (config.run_module) {     // -m module
+        runModule(config.run_module, config.argv);
+    } else if (config.run_filename != NULL) {
+        runFilename(config.run_filename, config.argv);
+    } else {
+        runInteractive();
     }
 
-    // Run Python with the passed arguments
-
-    pRes = Py_RunMain();
-
-done:
-
-    // Cleanup
-
+done:                                   // Cleanup
     PyConfig_Clear(&config);
 
     for (int i = 0; i < argC; ++i) {
