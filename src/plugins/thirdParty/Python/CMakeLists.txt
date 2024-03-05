@@ -255,7 +255,7 @@ else()
         set(CPYTHON_BIN_DEPS cpython-bin-deps)
         set(WINDOWS_LIBFFI_ARCHIVE libffi-${WINDOWS_LIBFFI_VERSION})
 
-        set(LIBFFI_LIBRARY_DIR ${PROJECT_BINARY_DIR}/${CPYTHON_BIN_DEPS}-${WINDOWS_LIBFFI_ARCHIVE})
+        set(LIBFFI_LIBRARY_DIR ${PROJECT_BINARY_DIR}/${CPYTHON_BIN_DEPS}-${WINDOWS_LIBFFI_ARCHIVE}/amd64)
 
         if(NOT EXISTS ${LIBFFI_LIBRARY_DIR})
 
@@ -263,7 +263,7 @@ else()
 
             file(DOWNLOAD
                 https://github.com/python/${CPYTHON_BIN_DEPS}/archive/${WINDOWS_LIBFFI_ARCHIVE}.zip
-                ${PROJECT_BINARY_DIR}/zips/${WINDOWS_LIBFFI_ARCHIVE}
+                ${PROJECT_BINARY_DIR}/zips/${WINDOWS_LIBFFI_ARCHIVE}.zip
                 SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${WINDOWS_LIBFFI_ARCHIVE}.zip --format=zip
@@ -272,8 +272,8 @@ else()
         endif()
 
         set(WINDOWS_LIBFFI_OPTIONS -DUSE_SYSTEM_LibFFI=OFF)
-        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/amd64/include)
-        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/amd64/${LIBFFI_IMPORT_LIBRARY})
+        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/include)
+        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY})
     endif()
 
     # Build bzip2 on Windows and find it on Linux and macOS
