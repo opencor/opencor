@@ -530,7 +530,6 @@ else()
 
             # Link to the LZMA library
 
-            -DUSE_SYSTEM_LZMA=OFF
             -DLZMA_INCLUDE_PATH=${LIBLZMA_INCLUDE_DIRS}
             -DLZMA_LIBRARY=${LIBLZMA_LIBRARIES}
 
