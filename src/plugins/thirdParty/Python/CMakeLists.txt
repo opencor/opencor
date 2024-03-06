@@ -166,11 +166,11 @@ if(NOT APPLE)
         set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_STATIC_LIBRARY_SUFFIX})
 
         list(APPEND EXTERNAL_BINARIES
-            ${LIBFFI_IMPORT_LIBRARY}
+            ${LIBFFI_SHARED_LIBRARY}
         )
 
         list(APPEND STRIPPABLE_FILES
-            ${LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+            ${LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
         )
 
         set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
@@ -617,6 +617,7 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy_directory ${ROOT_DIR}/Scripts Scripts
