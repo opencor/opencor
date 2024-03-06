@@ -66,7 +66,7 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             54c3aff5546a1f8c998157872e9ae14949b937d1)
+                             79ccba0894e1d397a5e3556c94f9bc535620eacc)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
