@@ -161,10 +161,6 @@ if(NOT APPLE)
 
         set(LIBFFI_SHARED_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        # On Windows, we also need import libraries
-
-        set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_STATIC_LIBRARY_SUFFIX})
-
         list(APPEND EXTERNAL_BINARIES
             ${LIBFFI_SHARED_LIBRARY}
         )
@@ -173,25 +169,11 @@ if(NOT APPLE)
             ${LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
         )
 
+        # On Windows, we also need import libraries
+
+        set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_STATIC_LIBRARY_SUFFIX})
         set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-        list(APPEND EXTERNAL_BINARIES
-            ${LZMA_IMPORT_LIBRARY}
-        )
-
-        list(APPEND STRIPPABLE_FILES
-            ${LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
-        )
-
         set(SQLITE3_IMPORT_LIBRARY ${CMAKE_IMPORT_LIBRARY_PREFIX}sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-        list(APPEND EXTERNAL_BINARIES
-            ${SQLITE3_IMPORT_LIBRARY}
-        )
-
-        list(APPEND STRIPPABLE_FILES
-            ${LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
-        )
     endif()
 endif()
 
@@ -422,24 +404,14 @@ else()
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
-        # On Windows, we need the libFFI shared library
-
         if(WIN32)
+            # On Windows, we need the libFFI shared library
+
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
-        endif()
-
-        # On Windows, we also need the libFFI, LZMA and SQLite3 import libraries while
-        # for Linux we need the bzip2 library
-
-        if(WIN32)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
-                                                             ${EXTERNAL_BINARIES_DIR})
-            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
-                                                             ${EXTERNAL_BINARIES_DIR})
-            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
-                                                             ${EXTERNAL_BINARIES_DIR})
         else()
+            # For Linux we need the bzip2 library
+
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         endif()
