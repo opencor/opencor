@@ -39,11 +39,10 @@ set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
 set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
 set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 
-# Matplotlib is patched using a `diff` file as installing to
-# avoid having to create a full installable package for it,
-# including binary libraries.
+# Matplotlib is patched using a `diff` file to avoid having
+# to create a full installable package with binary libraries.
 
-set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.1)
+set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.2)
 
 # We have our own version of pip for Windows
 
