@@ -88,7 +88,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             a0d7d5b1014e790fa5e4726c9c63547aa38237f8)
+                             fcd362b54bdbf96bb9f97c38299116c078f0502e)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
