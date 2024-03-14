@@ -196,13 +196,13 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
            || (graphPanelProperties[1]->colorValue() != mGraphPanelForegroundColor)
            || (graphPanelProperties[2]->booleanValue() != mGraphPanelLegend)
               // Graph line preferences
-           ||  (graphLineProperties[0]->listValueIndex() != indexLineStyleFromQtPenStyle(mGraphLineStyle))
-           ||  (graphLineProperties[1]->integerValue() != mGraphLineWidth)
+           || (graphLineProperties[0]->listValueIndex() != indexLineStyleFromQtPenStyle(mGraphLineStyle))
+           || (graphLineProperties[1]->integerValue() != mGraphLineWidth)
               // Graph line preferences
-           ||  (graphSymbolProperties[0]->listValueIndex() != indexSymbolStyleFromQwtSymbolStyle(mGraphSymbolStyle))
-           ||  (graphSymbolProperties[1]->integerValue() != mGraphSymbolSize)
-           ||  (graphSymbolProperties[2]->booleanValue() != mGraphSymbolFilled)
-           ||  (graphSymbolProperties[3]->colorValue() != mGraphSymbolFillColor);
+           || (graphSymbolProperties[0]->listValueIndex() != indexSymbolStyleFromQwtSymbolStyle(mGraphSymbolStyle))
+           || (graphSymbolProperties[1]->integerValue() != mGraphSymbolSize)
+           || (graphSymbolProperties[2]->booleanValue() != mGraphSymbolFilled)
+           || (graphSymbolProperties[3]->colorValue() != mGraphSymbolFillColor);
 }
 
 //==============================================================================

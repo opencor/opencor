@@ -40,11 +40,8 @@ else()
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-        GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
-        GIT_TAG
-            ${GIT_TAG}
-        GIT_SHALLOW
+        URL
+            https://github.com/opencor/${PACKAGE_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz
         CONFIGURE_COMMAND
             meson build -Dbuildtype=release -Ddri3=disabled -Dgallium-drivers=swrast -Dgles1=disabled -Dgles2=disabled -Dglx=xlib -Dllvm=disabled -Dplatforms=x11 -Dshared-glapi=false -Dvulkan-drivers=
         BUILD_COMMAND

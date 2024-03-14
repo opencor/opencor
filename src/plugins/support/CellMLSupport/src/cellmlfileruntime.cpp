@@ -536,7 +536,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                              mCodeInformation->ratesString());
 
     // Check whether the model code contains a definite integral, otherwise
-    // compute it and check that everything went fine
+    // compile it and check that everything went fine
 
     if (modelCode.contains("defint(func")) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,

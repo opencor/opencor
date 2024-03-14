@@ -3780,6 +3780,14 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         simulationDataModified(simulation->data()->isModified());
     }
 
+    // Keep track of whether the plots' axes were dirty
+
+    QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> dirtyAxes;
+
+    for (auto plot : qAsConst(mPlots)) {
+        dirtyAxes.insert(plot, plot->hasDirtyAxes());
+    }
+
     // Update all the graphs of all our plots, but only if we are visible
     // Note: needProcessingEvents is used to ensure that our plots are all
     //       updated at once...
@@ -3908,6 +3916,14 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // will need to update our plots the next time we become visible
 
             mNeedUpdatePlots = true;
+        }
+
+        // Reset the dirtiness of all the plots' axes
+        // Note: indeed, it may have been modified as a result of synchronising
+        //       some plots...
+
+        for (auto crtPlot : qAsConst(mPlots)) {
+            crtPlot->setDirtyAxes(dirtyAxes[crtPlot]);
         }
     }
 

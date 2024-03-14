@@ -521,6 +521,9 @@ public:
                               double pDefaultMinY, double pDefaultMaxY,
                               double pDefaultMinLogY, double pDefaultMaxLogY);
 
+    void * plotParameter(GraphPanelPlotWidget *pPlot, bool pAxisX);
+    bool matchingAxis(void *pPlotParameter, void *pNeighborParameter);
+
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  bool pSynchronizeAxes, bool pCanReplot, bool pEmitSignal,
                  bool pForceAxesSetting, bool pSynchronizeXAxis,
@@ -534,6 +537,7 @@ public:
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
     bool hasDirtyAxes() const;
+    void setDirtyAxes(bool pDirtyAxes);
 
     Action action() const;
 
