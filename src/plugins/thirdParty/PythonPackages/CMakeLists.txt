@@ -12,6 +12,7 @@ get_full_local_external_package_dir()
 # Version of our different Python packages
 
 set(IPYKERNEL_VERSION 6.29.2)
+set(IPYMPL_VERSION 0.9.3)
 set(IPYTHON_VERSION 8.21.0)
 set(IPYWIDGETS_VERSION 8.1.1)
 set(JUPYTER_CLIENT_VERSION 8.6.0)
@@ -22,6 +23,8 @@ set(MATPLOTLIB_VERSION 3.8.2)
 set(NBCONVERT_VERSION 7.14.2)
 set(NOTEBOOK_VERSION 7.0.7)
 set(NUMPY_VERSION 1.26.3)
+# Windows requires psutil==5.9.3 -- see https://github.com/giampaolo/psutil/issues/2257
+set(PSUTIL_VERSION 5.9.3)
 set(QIMAGE2NDARRAY_VERSION 1.10.0)
 set(QTCONSOLE_VERSION 5.5.1)
 set(QTPY_VERSION 2.4.1)
@@ -281,6 +284,7 @@ else()
         add_custom_target(ipythonPackages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                                            ipykernel==${IPYKERNEL_VERSION}
+                                           ipympl==${IPYMPL_VERSION}
                                            ipython==${IPYTHON_VERSION}
                                            ipywidgets==${IPYWIDGETS_VERSION}
                                            jupyter_client==${JUPYTER_CLIENT_VERSION}
@@ -288,6 +292,7 @@ else()
                                            jupyterlab==${JUPYTERLAB_VERSION}
                                            nbconvert==${NBCONVERT_VERSION}
                                            notebook==${NOTEBOOK_VERSION}
+                                           psutil==${PSUTIL_VERSION}
                                            qtconsole==${QTCONSOLE_VERSION}
                                            qtpy==${QTPY_VERSION}
                                            traitlets==${TRAITLETS_VERSION}
