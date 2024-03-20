@@ -24,6 +24,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
     #pragma warning(disable: 4005)
+#elif defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #elif defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
