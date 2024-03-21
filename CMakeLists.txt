@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.22)
 
 # Make sure that we are using the compilers we support
 # Note #1: indeed, if other compilers are installed on a developer's machine
@@ -289,6 +289,18 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# Find the OS distribution
+
+cmake_host_system_information(RESULT DISTRIB_INFO QUERY DISTRIB_INFO)
+
+# Set a flag for RedHat based linux distributions
+
+set(RHEL_DISTRIBUTIONS centos fedora rhel rocky)
+
+if(DISTRIB_INFO_ID IN_LIST RHEL_DISTRIBUTIONS)
+    set(LINUX_RHEL ON)
+endif()
 
 # Determine our platform directory
 
@@ -1564,14 +1576,23 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # libtinfo.so.5 is needed by Qt, but is not present on vanilla Ubuntu
-    # 20.04/22.04 LTS while libffi.so.7 is needed by Python and is present on
-    # vanilla Ubuntu 20.04 LTS, but not on Ubuntu 22.04 LTS
+    # libtinfo is needed by Qt but is not present on vanilla Ubuntu
+    # and RHEL releasesi, while libffi.so is needed by Python and while
+    # present on vanilla Ubuntu 20.04 LTS, it isn't present on our other
+    # linux platforms
 
-    foreach(LIBRARY ffi.so.7 tinfo.so.5)
+    if(LINUX_RHEL)
+        set(BUNDLED_LIBRARIES ffi.so.8 tinfo.so.5)
+        set(SYSTEM_LIBRARY_DIRECTORY /lib64)
+    else()
+        set(BUNDLED_LIBRARIES ffi.so.7 tinfo.so.5)
+        set(SYSTEM_LIBRARY_DIRECTORY /lib/x86_64-linux-gnu)
+    endif()
+
+    foreach(LIBRARY BUNDLED_LIBRARIES)
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
-        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+        get_filename_component(REAL_FULL_LIBRARY ${SYSTEM_LIBRARY_DIRECTORY}/${FULL_LIBRARY} REALPATH)
 
         install(FILES ${REAL_FULL_LIBRARY}
                 DESTINATION lib

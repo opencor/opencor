@@ -78,6 +78,12 @@ if(NOT USE_PREBUILT_PYTHON_PACKAGE)
     file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
 endif()
 
+# RedHat distributions have their own pre-built Python
+
+if(LINUX_RHEL)
+    set(TARGET_PLATFORM ${TARGET_PLATFORM}.rhel)
+endif()
+
 # Specify the package's files
 
 set(EXTERNAL_BINARIES
@@ -215,6 +221,10 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          9a8f9c6da94b1d21a3d6e27592d76d38e97def0b)
+    elseif(LINUX_RHEL)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         730ddaa3163176d8068374974c95cf2b3c359f00)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
