@@ -431,6 +431,8 @@ else()
 
     if(APPLE)
         set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-function-declaration")
+    elseif(LINUX)
+        set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -D_DEFAULT_SOURCE")
     endif()
 
     # Build Python as an external project
