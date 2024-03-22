@@ -103,12 +103,12 @@ PythonQtInstanceWrapper * getInstanceWrapper(PyObject *pSelf)
 {
     // Retrieve and return a Python wrapper object for the given Python object
 
-    if (   (pSelf != nullptr)
 #include "pythonbegin.h"
+    if (   (pSelf != nullptr)
         && PyObject_TypeCheck(pSelf, &PythonQtInstanceWrapper_Type)) {
-#include "pythonend.h"
         return reinterpret_cast<PythonQtInstanceWrapper *>(pSelf);
     }
+#include "pythonend.h"
 
     return nullptr;
 }

@@ -86,11 +86,11 @@ int main(int pArgC, char *pArgV[])
     //       using dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
 #if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
-    #include "pythonbegin.H"
+    #include "pythonbegin.h"
 
     Py_NoUserSiteDirectory = 1;
 
-    #include "pythonend.H"
+    #include "pythonend.h"
 #endif
 
     // Initialise Qt's message pattern
