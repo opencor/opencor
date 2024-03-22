@@ -1589,7 +1589,7 @@ else()
         set(SYSTEM_LIBRARY_DIRECTORY /lib/x86_64-linux-gnu)
     endif()
 
-    foreach(LIBRARY BUNDLED_LIBRARIES)
+    foreach(LIBRARY ${BUNDLED_LIBRARIES})
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
         get_filename_component(REAL_FULL_LIBRARY ${SYSTEM_LIBRARY_DIRECTORY}/${FULL_LIBRARY} REALPATH)
