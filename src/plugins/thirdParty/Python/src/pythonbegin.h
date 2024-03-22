@@ -27,6 +27,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #elif defined(__clang__)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wcast-qual"
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    #pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
     #pragma clang diagnostic ignored "-Wduplicate-enum"
     #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
     #pragma clang diagnostic ignored "-Wold-style-cast"

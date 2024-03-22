@@ -143,7 +143,9 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgV[2] = const_cast<wchar_t *>(L"-s");
     mArgV[3] = nullptr;
 
+#include "pythonbegin.h"
     PySys_SetArgvEx(3, mArgV, 0);
+#include "pythonend.h"
 
     // Actually update the path to Python in scripts
 
@@ -155,7 +157,9 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgV[0] = const_cast<wchar_t *>(L"");
     mArgV[1] = nullptr;
 
+#include "pythonbegin.h"
     PySys_SetArgvEx(1, mArgV, 0);
+#include "pythonend.h"
 }
 
 //==============================================================================

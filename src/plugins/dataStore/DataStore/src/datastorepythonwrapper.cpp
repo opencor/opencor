@@ -204,7 +204,9 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
 
         res = _PyUnicodeWriter_WriteStr(&writer, s);
 
+#include "pythonbegin.h"
         Py_DECREF(s);
+#include "pythonend.h"
 
         if (res < 0) {
             goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
@@ -232,7 +234,9 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
 
         res = _PyUnicodeWriter_WriteStr(&writer, s);
 
+#include "pythonbegin.h"
         Py_DECREF(s);
+#include "pythonend.h"
 
         if (res < 0) {
             goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
@@ -256,8 +260,10 @@ error:
     Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting)
     _PyUnicodeWriter_Dealloc(&writer);
 
+#include "pythonbegin.h"
     Py_XDECREF(key);
     Py_XDECREF(value);
+#include "pythonend.h"
 
     return nullptr;
 }

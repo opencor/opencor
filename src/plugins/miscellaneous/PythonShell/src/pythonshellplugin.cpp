@@ -121,16 +121,9 @@ static const char *pyStringAsCString(const wchar_t *s)
     }
     bytes = PyUnicode_AsUTF8String(unicode);
 
-#ifdef Q_OS_MAC
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wold-style-cast"
-#endif
-
+#include "pythonbegin.h"
     Py_DECREF(unicode);
-
-#ifdef Q_OS_MAC
-    #pragma clang diagnostic pop
-#endif
+#include "pythonend.h"
 
     if (bytes == NULL) {
         return "";
