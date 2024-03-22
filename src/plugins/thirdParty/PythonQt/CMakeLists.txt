@@ -79,7 +79,7 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         f239cbc0847991eeb0e42501c98dd8b9470f20a1)
+                         c8a0f428c7f4f797255f2908818f9679061ef9f1)
     endif()
 else()
     # Set platform specific configuration options and tool names
