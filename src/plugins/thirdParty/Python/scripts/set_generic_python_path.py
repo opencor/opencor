@@ -34,7 +34,7 @@ if __name__ == '__main__':
         # Note: see https://stackoverflow.com/a/62268465...
 
         if re.match('#!.*python', lines[0]):
-            lines[0] = f'#!/usr/bin/perl -e$_=$ARGV[0];s/[^\/]+$/python/;exec($_,@ARGV)\n'
+            lines[0] = f'#!/usr/bin/perl -e$_=$ARGV[0];s/[^/]+$/python/;exec($_,@ARGV)\n'
 
             with open(full_filename, 'w') as f:
                 f.writelines(lines)
