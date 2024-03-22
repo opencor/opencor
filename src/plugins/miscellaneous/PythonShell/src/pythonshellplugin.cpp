@@ -270,6 +270,8 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     PyConfig_InitPythonConfig(&config);
 
+    config.user_site_directory = 0;
+
     // Set our arguments into the new configuration and parse them
 
     status = PyConfig_SetArgv(&config, argC, argV);
