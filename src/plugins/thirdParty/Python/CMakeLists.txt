@@ -446,7 +446,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         URL
-            https://github.com/bjia56/portable-python-cmake-buildsystem/archive/portable-python.tar.gz
+            https://github.com/opencor/portable-python-cmake-buildsystem/archive/opencor-python.3.12.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR
