@@ -34,6 +34,9 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma clang diagnostic ignored "-Wold-style-cast"
     #pragma clang diagnostic ignored "-Wreserved-id-macro"
     #pragma clang diagnostic ignored "-Wshift-sign-overflow"
+#elif defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 //==============================================================================
