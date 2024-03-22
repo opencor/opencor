@@ -3,9 +3,9 @@ project(PythonPackagesPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME PythonPackages)
-set(PACKAGE_VERSION 3.10.13)
+set(PACKAGE_VERSION 3.12.2)
 set(PACKAGE_REPOSITORY python)
-set(RELEASE_TAG v3.10.13)
+set(RELEASE_TAG v3.12.2)
 
 get_full_local_external_package_dir()
 

@@ -3,18 +3,18 @@ project(PythonPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.10.13)
+set(PACKAGE_VERSION 3.12.2)
 set(PACKAGE_REPOSITORY python)
-set(GIT_TAG opencor-3.10.13)
-set(RELEASE_TAG v3.10.13)
+set(GIT_TAG opencor-3.12.2)
+set(RELEASE_TAG v3.12.2)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
-set(MAJOR_MINOR_LIBRARY_VERSION 3.10)
-set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.13)
-set(NUMERIC_LIBRARY_VERSION 310)
+set(MAJOR_MINOR_LIBRARY_VERSION 3.12)
+set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.2)
+set(NUMERIC_LIBRARY_VERSION 312)
 
 # Set the version identifiers
 
@@ -427,15 +427,6 @@ else()
         endif()
     endif()
 
-    # The type of build
-    # Note: on Windows, we always build a release version...
-
-    if(WIN32)
-        set(APPLY_PATCHES ON)
-    else()
-        set(APPLY_PATCHES OFF)
-    endif()
-
     # Ignore some warnings
 
     if(APPLE)
@@ -453,7 +444,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         URL
-            https://github.com/dbrnz/python-cmake-buildsystem/archive/python3.10.tar.gz
+            https://github.com/bjia56/portable-python-cmake-buildsystem/archive/portable-python.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR
@@ -493,9 +484,9 @@ else()
 
             -DBUILD_WININST=OFF
 
-            # Optionally patch sources (on Windows)
+            # Patch sources for portable Python CMake build
 
-            -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
+            -DPYTHON_APPLY_PATCHES=ON
 
             # Disable extension modules that we don't use or that the platform
             # doesn't provide
