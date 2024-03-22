@@ -323,6 +323,7 @@ static PyTypeObject DataStoreValuesDict_Type = {
     0,                                                    // tp_version_tag
     nullptr,                                              // tp_finalize
     nullptr,                                              // tp_vectorcall
+    0,                                                    // tp_watched
 };
 
 //==============================================================================
