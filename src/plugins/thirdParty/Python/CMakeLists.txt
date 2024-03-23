@@ -220,7 +220,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         9a8f9c6da94b1d21a3d6e27592d76d38e97def0b)
+                         1853ff1d55e49d57b239b64338a23ffb1101d454)
     elseif(LINUX_RHEL)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
