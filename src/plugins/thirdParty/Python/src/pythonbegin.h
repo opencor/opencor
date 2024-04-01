@@ -23,6 +23,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
+    #pragma warning(disable: 4996)
     #pragma warning(disable: 5208)
 #elif defined(__clang__)
     #pragma clang diagnostic push
