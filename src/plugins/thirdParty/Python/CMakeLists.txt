@@ -289,7 +289,8 @@ else()
                             OUTPUT_QUIET)
         endif()
 
-        set(WINDOWS_LIBFFI_OPTIONS -DUSE_SYSTEM_LibFFI=OFF)
+        # Set LibFFI options for external CMake project build
+
         list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/include)
         list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY})
     endif()
