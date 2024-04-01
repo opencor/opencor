@@ -566,7 +566,7 @@ else()
             # Jupyter needs SQLite3
 
             -DENABLE_SQLITE3=ON
-            -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
+            -DSQLite3_INCLUDE_DIR=${SQLite3_INCLUDE_DIRS}
             -DSQLite3_LIBRARY=${SQLite3_LIBRARIES}
 
             # Use our copy of zlib
