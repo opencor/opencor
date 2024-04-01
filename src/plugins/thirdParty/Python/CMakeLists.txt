@@ -474,6 +474,9 @@ else()
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
+    # We use `|` as the list separator to allow actual lists to be passed
+    # through to the Python CMake build without being split 
+
     string(REPLACE ";" "|"
            PYTHON_OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES}")
 
