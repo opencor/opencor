@@ -177,9 +177,35 @@ if(NOT APPLE)
 
         # On Windows, we also need import libraries
 
-        set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_STATIC_LIBRARY_SUFFIX})
+        set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LIBFFI_IMPORT_LIBRARY}
+        )
+
+        list(APPEND STRIPPABLE_FILES
+            ${LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+        )
+
         set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LZMA_IMPORT_LIBRARY}
+        )
+
+        list(APPEND STRIPPABLE_FILES
+            ${LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
+        )
+
         set(SQLITE3_IMPORT_LIBRARY ${CMAKE_IMPORT_LIBRARY_PREFIX}sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${SQLITE3_IMPORT_LIBRARY}
+        )
+
+        list(APPEND STRIPPABLE_FILES
+            ${LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
+        )
     endif()
 endif()
 
@@ -211,7 +237,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             ac9514d781387bb06d16986545e3c14ce06d4b41)
+                             dd013afbf2f2ec7ac4206358df9ae5f73ab5494b)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
@@ -263,7 +289,8 @@ else()
                             OUTPUT_QUIET)
         endif()
 
-        set(WINDOWS_LIBFFI_OPTIONS -DUSE_SYSTEM_LibFFI=OFF)
+        # Set LibFFI options for external CMake project build
+
         list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/include)
         list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY})
     endif()
@@ -415,12 +442,21 @@ else()
                                                          ${EXTERNAL_BINARIES_DIR})
 
         if(WIN32)
-            # On Windows, we need the libFFI shared library
+            # On Windows we need the libFFI shared library
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
+
+            # On Windows, we also need the libFFI, LZMA and SQLite3 import libraries
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
         else()
-            # For Linux we need the bzip2 library
+            # On Linux we also need the bzip2 library
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
@@ -431,13 +467,14 @@ else()
 
     if(APPLE)
         set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-function-declaration")
-    elseif(LINUX)
-        set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -D_DEFAULT_SOURCE")
     endif()
 
     # Build Python as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+
+    # We use `|` as the list separator to allow actual lists to be passed
+    # through to the Python CMake build without being split 
 
     string(REPLACE ";" "|"
            PYTHON_OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES}")
@@ -531,7 +568,7 @@ else()
             # Jupyter needs SQLite3
 
             -DENABLE_SQLITE3=ON
-            -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
+            -DSQLite3_INCLUDE_DIR=${SQLite3_INCLUDE_DIRS}
             -DSQLite3_LIBRARY=${SQLite3_LIBRARIES}
 
             # Use our copy of zlib
