@@ -170,6 +170,8 @@ import sys
 
 sys.argv = %1
 
+sys.path.insert(0, '.')
+
 runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
@@ -186,6 +188,8 @@ import runpy
 import sys
 
 sys.argv = %1
+
+sys.path.insert(0, '.')
 
 runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
