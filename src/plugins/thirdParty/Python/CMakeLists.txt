@@ -510,8 +510,8 @@ else()
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
 
-            # Distutils has been removed from Python 3.12 although
-            # the build system defaults to ON for Windows
+            # Distutils has been removed from Python 3.12 although the build
+            # system defaults to ON for Windows
 
             -DBUILD_WININST=OFF
 
