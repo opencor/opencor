@@ -23,6 +23,7 @@ if(WIN32)
 else()
     set(PYTHON_BUILT_VERSION ${MAJOR_MINOR_LIBRARY_VERSION})
 endif()
+
 set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION})
 
 # Name of our Python executable and shared library (and import library, if any)
@@ -78,9 +79,9 @@ if(NOT USE_PREBUILT_PYTHON_PACKAGE)
     file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
 endif()
 
-# RedHat distributions have their own pre-built Python
+# RHEL-based Linux distributions have their own pre-built Python
 
-if(LINUX_RHEL)
+if(RHEL_LINUX_DISTRIB)
     set(TARGET_PLATFORM ${TARGET_PLATFORM}.rhel)
 endif()
 
@@ -159,12 +160,11 @@ if(NOT APPLE)
         ${LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
     )
 
-    if(WIN32)
-        # On Windows, we use a prebuilt libffi
+    # On Windows, we also need a few more libraries
 
+    if(WIN32)
         set(WINDOWS_LIBFFI_VERSION 3.4.4)
         set(WINDOWS_LIBFFI_LIBRARY libffi-8)
-
         set(LIBFFI_SHARED_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         list(APPEND EXTERNAL_BINARIES
@@ -174,8 +174,6 @@ if(NOT APPLE)
         list(APPEND STRIPPABLE_FILES
             ${LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
         )
-
-        # On Windows, we also need import libraries
 
         set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
@@ -247,7 +245,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          1853ff1d55e49d57b239b64338a23ffb1101d454)
-    elseif(LINUX_RHEL)
+    elseif(RHEL_LINUX_DISTRIB)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          809ca065a37db5f6cc36690136773505a32b753a)
@@ -267,32 +265,28 @@ else()
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     endif()
 
-    # Use a prebuilt libffi for Windows
+    # Use a prebuilt version of libffi on Windows
 
     if(WIN32)
         set(CPYTHON_BIN_DEPS cpython-bin-deps)
         set(WINDOWS_LIBFFI_ARCHIVE libffi-${WINDOWS_LIBFFI_VERSION})
-
         set(LIBFFI_LIBRARY_DIR ${PROJECT_BINARY_DIR}/${CPYTHON_BIN_DEPS}-${WINDOWS_LIBFFI_ARCHIVE}/amd64)
 
         if(NOT EXISTS ${LIBFFI_LIBRARY_DIR})
-
             message("Downloading '${WINDOWS_LIBFFI_ARCHIVE}'...")
 
-            file(DOWNLOAD
-                https://github.com/python/${CPYTHON_BIN_DEPS}/archive/${WINDOWS_LIBFFI_ARCHIVE}.zip
-                ${PROJECT_BINARY_DIR}/zips/${WINDOWS_LIBFFI_ARCHIVE}.zip
-                SHOW_PROGRESS)
+            file(DOWNLOAD https://github.com/python/${CPYTHON_BIN_DEPS}/archive/${WINDOWS_LIBFFI_ARCHIVE}.zip ${PROJECT_BINARY_DIR}/zips/${WINDOWS_LIBFFI_ARCHIVE}.zip
+                 SHOW_PROGRESS)
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${WINDOWS_LIBFFI_ARCHIVE}.zip --format=zip
                             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
                             OUTPUT_QUIET)
         endif()
 
-        # Set LibFFI options for external CMake project build
+        # Set libffi options for external CMake project build
 
-        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/include)
-        list(APPEND WINDOWS_LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY})
+        list(APPEND LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/include)
+        list(APPEND LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY})
     endif()
 
     # Build bzip2 on Windows and find it on Linux and macOS
@@ -362,7 +356,7 @@ else()
         set(LIBLZMA_INCLUDE_DIRS ${XZ_PACKAGE_DIR}/include)
         set(LIBLZMA_LIBRARIES ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY})
     elseif(APPLE)
-        # Location of Homebrew's installed packages depends on architecture
+        # The location of LZMA depends on the architecture
 
         if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
             set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
@@ -417,7 +411,7 @@ else()
         set(SQLite3_INCLUDE_DIRS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
         set(SQLite3_LIBRARIES ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
     elseif(APPLE)
-        # Location of Homebrew's installed packages depends on architecture
+        # The location of SQLite3 depends on the architecture
 
         if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
             set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
@@ -441,23 +435,21 @@ else()
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
+        # On Windows, we need the libffi, LZMA, and SQLite3 import libraries, as
+        # well as the libffi shared library while, on Linux, we need the bzip2
+        # shared library
+
         if(WIN32)
-            # On Windows we need the libFFI shared library
-
-            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
-                                                             ${EXTERNAL_BINARIES_DIR})
-
-            # On Windows, we also need the libFFI, LZMA and SQLite3 import libraries
-
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
-        else()
-            # On Linux we also need the bzip2 library
 
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+        else()
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         endif()
@@ -474,7 +466,7 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     # We use `|` as the list separator to allow actual lists to be passed
-    # through to the Python CMake build without being split 
+    # through to the Python CMake build without being split
 
     string(REPLACE ";" "|"
            PYTHON_OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES}")
@@ -518,12 +510,12 @@ else()
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
 
-            # We don't want the Window's distutils installer
+            # We don't want Windows' distutils installer
             # (which in fact doesn't build for Python 3.10)
 
             -DBUILD_WININST=OFF
 
-            # Patch sources for portable Python CMake build
+            # Patch sources for the portable Python CMake build
 
             -DPYTHON_APPLY_PATCHES=ON
 
@@ -540,9 +532,9 @@ else()
             -DENABLE_TESTCAPI=OFF
             -DENABLE_TKINTER=OFF
 
-            # Link to the downloaded libffi for Windows
+            # Link to the downloaded libffi library
 
-            ${WINDOWS_LIBFFI_OPTIONS}
+            ${LIBFFI_OPTIONS}
 
             # Build with an appropriate readline
 

@@ -145,7 +145,6 @@ static PyMappingMethods DataStoreValuesDict_as_mapping = {
 
 //==============================================================================
 
-#include "pythonbegin.h"
 static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDict)
 {
     // A string representation of a values dictionary
@@ -185,8 +184,10 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         PyObject *s;
         int res;
 
+#include "pythonbegin.h"
         Py_INCREF(key);
         Py_INCREF(value);
+#include "pythonend.h"
 
         if (!first) {
             if (_PyUnicodeWriter_WriteASCIIString(&writer, ", ", 2) < 0) {
@@ -221,7 +222,9 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         if (wrappedValue != nullptr) {
             auto dataStoreValue = static_cast<DataStoreValue *>(wrappedValue->_objPointerCopy);
 
+#include "pythonbegin.h"
             Py_CLEAR(value);
+#include "pythonend.h"
 
             value = PyFloat_FromDouble(dataStoreValue->value());
         }
@@ -242,8 +245,10 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
             goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
         }
 
+#include "pythonbegin.h"
         Py_CLEAR(key);
         Py_CLEAR(value);
+#include "pythonend.h"
     }
 
     writer.overallocate = 0;
@@ -252,12 +257,13 @@ static PyObject * DataStoreValuesDict_repr(DataStoreValuesDictObject *pValuesDic
         goto error; // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
     }
 
-    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting)
+    Py_ReprLeave(reinterpret_cast<PyObject *>(mp));
 
     return _PyUnicodeWriter_Finish(&writer);
 
 error:
-    Py_ReprLeave((PyObject *)mp); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting)
+    Py_ReprLeave(reinterpret_cast<PyObject *>(mp));
+
     _PyUnicodeWriter_Dealloc(&writer);
 
 #include "pythonbegin.h"
@@ -267,7 +273,6 @@ error:
 
     return nullptr;
 }
-#include "pythonend.h"
 
 //==============================================================================
 // Note: a DataStoreValuesDict is a dictionary sub-class for mapping between the

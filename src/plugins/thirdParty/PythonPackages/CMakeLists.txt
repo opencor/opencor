@@ -23,8 +23,7 @@ set(MATPLOTLIB_VERSION 3.8.2)
 set(NBCONVERT_VERSION 7.14.2)
 set(NOTEBOOK_VERSION 7.0.7)
 set(NUMPY_VERSION 1.26.3)
-# Windows requires psutil==5.9.3 -- see https://github.com/giampaolo/psutil/issues/2257
-set(PSUTIL_VERSION 5.9.3)
+set(PSUTIL_VERSION 5.9.3) # Needed on Windows (see https://github.com/giampaolo/psutil/issues/2257)
 set(QIMAGE2NDARRAY_VERSION 1.10.0)
 set(QTCONSOLE_VERSION 5.5.1)
 set(QTPY_VERSION 2.4.1)
@@ -32,9 +31,8 @@ set(SCIPY_VERSION 1.12.0)
 set(SPHINX_VERSION 7.2.6)
 set(TRAITLETS_VERSION 5.14.1)
 
-# Patched versions of some Python only packages neede to
-# support PythonQt. These are tags in our copy of the source
-# repositories
+# Patched versions of some Python only packages needed to support PythonQt.
+# These are tags in our copy of the source repositories
 
 set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
 set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
@@ -42,14 +40,14 @@ set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
 set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
 set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
 
-# Matplotlib is patched using a `diff` file to avoid having
-# to create a full installable package with binary libraries.
+# Matplotlib is patched using a `diff` file to avoid having to create a full
+# installable package with binary libraries
 
 set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.2)
 
 # We have our own version of pip for Windows
 
-set(OPENCOR_PIP_VERSION v24.0-opencor.0)
+set(PIP_VERSION v24.0-opencor.0)
 
 # Our GitHub organisation
 
@@ -101,7 +99,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         a287f79f108b811257c85b6db261a3ef6d4c4a76) 
+                         a287f79f108b811257c85b6db261a3ef6d4c4a76)
     endif()
 else()
     # Install Python packages using pip
@@ -110,9 +108,9 @@ else()
 
     add_custom_target(${PACKAGE_BUILD})
 
-    # Where to find libraries needed by Python at build time
+    # Where to find the libraries needed by Python at build time
 
-    set(BUILT_LIBRARIES_DIR ${PYTHON_ROOT_DIR}/lib:${PROJECT_BUILD_DIR}/lib)
+    set(LD_LIBRARY_PATH ${PYTHON_ROOT_DIR}/lib:${PROJECT_BUILD_DIR}/lib)
 
     # Python packages installation requires Python
 
@@ -127,7 +125,7 @@ else()
 
     set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
                                                 env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
+                                                env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
                                                 ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
@@ -159,25 +157,20 @@ else()
         INSTALL_COMMAND
             ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
                                 env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                env "LD_LIBRARY_PATH=${BUILT_LIBRARIES_DIR}"
+                                env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
                                 ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                      --no-wheel
-        STEP_TARGETS install
-        LOG_DIR
-            "${CMAKE_SOURCE_DIR}/log"
-        LOG_INSTALL TRUE
+        STEP_TARGETS
+            install
     )
 
     if(WIN32)
-        # Now use pip to install our copy of itself
+        # Use pip to install our copy of itself
 
-        set(OPENCOR_PIP_ARCHIVE
-            https://github.com/opencor/pip/archive/refs/tags/${OPENCOR_PIP_VERSION}.tar.gz)
+        set(PIP_ARCHIVE https://github.com/opencor/pip/archive/refs/tags/${PIP_VERSION}.tar.gz)
 
         ExternalProject_Add_Step(installPip replacePip
-                                 COMMAND ${PIP_INSTALL_COMMAND}
-                                           --no-deps --force-reinstall
-                                           ${OPENCOR_PIP_ARCHIVE}
+                                 COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall ${PIP_ARCHIVE}
                                  WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
                                  DEPENDEES install)
     else()

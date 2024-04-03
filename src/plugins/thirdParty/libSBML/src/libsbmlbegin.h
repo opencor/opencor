@@ -27,7 +27,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #elif defined(__GNUC__) && !defined(__clang__)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#elif defined(__clang__)
+#else
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"

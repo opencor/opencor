@@ -111,106 +111,110 @@ void PythonShellPlugin::runHelpCommand()
 
 //==============================================================================
 
-static const char *pyStringAsCString(const wchar_t *s)
+static const char * pyStringAsCString(const wchar_t *pString)
 {
-    PyObject *unicode, *bytes;
+    auto *unicode = PyUnicode_FromWideChar(pString, -1);
 
-    unicode = PyUnicode_FromWideChar(s, -1);
-    if (unicode == NULL) {
+    if (unicode == nullptr) {
         return "";
     }
-    bytes = PyUnicode_AsUTF8String(unicode);
+
+    auto *bytes = PyUnicode_AsUTF8String(unicode);
 
 #include "pythonbegin.h"
     Py_DECREF(unicode);
 #include "pythonend.h"
 
-    if (bytes == NULL) {
+    if (bytes == nullptr) {
         return "";
     }
+
     return PyBytes_AsString(bytes);
 }
 
 //==============================================================================
 
-static std::string pyStringListAsString(const PyWideStringList list)
+static std::string pyStringListAsString(const PyWideStringList pList)
 {
-    std::ostringstream stringList;
+    std::ostringstream res;
 
-    stringList << "[";
-    for (Py_ssize_t i = 0; i < list.length; i++) {
+    res << "[";
+
+    for (Py_ssize_t i = 0; i < pList.length; ++i) {
         if (i > 0) {
-            stringList << ", ";
+            res << ", ";
         }
-        stringList << std::quoted(pyStringAsCString(list.items[i]));
+
+        res << std::quoted(pyStringAsCString(pList.items[i]));
     }
-    stringList << "]";
 
-    return stringList.str();
+    res << "]";
+
+    return res.str();
 }
 
 //==============================================================================
 
-static void runCommand(const wchar_t *command)
+static void runCommand(const wchar_t *pCommand)
 {
-    PythonQtSupport::evaluateScript(pyStringAsCString(command));
+    PythonQtSupport::evaluateScript(pyStringAsCString(pCommand));
 }
 
 //==============================================================================
 
-static void runModule(const wchar_t *module, const PyWideStringList argV)
+static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
 {
-    static const QString runModule = R"PYTHON(
+    static const QString module = R"PYTHON(
 import runpy
 import sys
 
 sys.argv = %1
+
 runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(runModule
-                                        .arg(pyStringListAsString(argV).c_str())
-                                        .arg(pyStringAsCString(module)));
+    PythonQtSupport::evaluateScript(module.arg(pyStringListAsString(pArgV).c_str())
+                                          .arg(pyStringAsCString(pModule)));
 }
 
 //==============================================================================
 
-static void runFilename(const wchar_t *filename, const PyWideStringList argV)
+static void runFilename(const wchar_t *pFileName, const PyWideStringList pArgV)
 {
-    static const QString runFile = R"PYTHON(
+    static const QString file = R"PYTHON(
 import runpy
 import sys
 
 sys.argv = %1
+
 runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(runFile
-                                        .arg(pyStringListAsString(argV).c_str())
-                                        .arg(pyStringAsCString(filename)));
+    PythonQtSupport::evaluateScript(file.arg(pyStringListAsString(pArgV).c_str())
+                                        .arg(pyStringAsCString(pFileName)));
 }
 
 //==============================================================================
 
 static void runInteractive()
 {
-    static const QString RunInteractive = R"PYTHON(
+    static const QString interactive = R"PYTHON(
 import code
 import sys
 
-cprt = 'Type "help", "copyright", "credits" or "license" for more information.'
+copyright = 'Type "help", "copyright", "credits" or "license" for more information.'
 
-code.interact(banner=f'Python {sys.version} on {sys.platform}\n{cprt}', exitmsg='')
+code.interact(banner=f'Python {sys.version} on {sys.platform}\n{copyright}', exitmsg='')
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(RunInteractive);
+    PythonQtSupport::evaluateScript(interactive);
 }
 
 //==============================================================================
 
 bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
-    // Get command line arguments to pass to Python
+    // Get the command line arguments to pass to Python
 
     const int argC = pArguments.size()+1;
     auto argV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc((argC+1)*sizeof(wchar_t*)));
@@ -260,13 +264,10 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     PyMem_RawFree(locale);
 
-    // PythonQt has already initialised Python so we need to update
-    // the existing configuration
+    // PythonQt has already initialised Python, so we need to update the
+    // existing configuration
 
     PyConfig config;
-    PyStatus status;
-
-    // Get an empty configuration
 
     PyConfig_InitPythonConfig(&config);
 
@@ -274,28 +275,35 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     // Set our arguments into the new configuration and parse them
 
-    status = PyConfig_SetArgv(&config, argC, argV);
+    PyStatus status = PyConfig_SetArgv(&config, argC, argV);
+
     if (PyStatus_Exception(status)) {
         pRes = 1;
-        goto done;
-    }
-    status = PyConfig_Read(&config);
-    if (PyStatus_Exception(status)) {
-        pRes = 1;
+
         goto done;
     }
 
-    if (config.run_command) {           // -c command
+    status = PyConfig_Read(&config);
+
+    if (PyStatus_Exception(status)) {
+        pRes = 1;
+
+        goto done;
+    }
+
+    if (config.run_command != nullptr) {
         runCommand(config.run_command);
-    } else if (config.run_module) {     // -m module
+    } else if (config.run_module != nullptr) {
         runModule(config.run_module, config.argv);
-    } else if (config.run_filename != NULL) {
+    } else if (config.run_filename != nullptr) {
         runFilename(config.run_filename, config.argv);
     } else {
         runInteractive();
     }
 
-done:                                   // Cleanup
+done:
+    // Cleanup
+
     PyConfig_Clear(&config);
 
     for (int i = 0; i < argC; ++i) {
