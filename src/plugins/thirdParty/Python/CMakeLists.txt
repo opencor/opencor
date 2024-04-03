@@ -475,7 +475,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         URL
-            https://github.com/opencor/portable-python-cmake-buildsystem/archive/opencor-python.3.12.tar.gz
+            https://github.com/opencor/portable-python-cmake-buildsystem/archive/{GIT_TAG}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR
@@ -510,8 +510,8 @@ else()
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
 
-            # We don't want Windows' distutils installer
-            # (which in fact doesn't build for Python 3.10)
+            # Distutils has been removed from Python 3.12 although
+            # the build system defaults to ON for Windows
 
             -DBUILD_WININST=OFF
 
