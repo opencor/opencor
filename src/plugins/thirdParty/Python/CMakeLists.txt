@@ -510,8 +510,8 @@ else()
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
 
-            # We don't want Windows' distutils installer
-            # (which in fact doesn't build for Python 3.10)
+            # Distutils has been removed from Python 3.12 although
+            # the build system defaults to ON for Windows
 
             -DBUILD_WININST=OFF
 
