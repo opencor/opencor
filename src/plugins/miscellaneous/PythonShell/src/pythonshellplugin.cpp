@@ -26,10 +26,6 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 //==============================================================================
 
-#include <QFileInfo>
-
-//==============================================================================
-
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -165,47 +161,21 @@ static void runCommand(const wchar_t *pCommand)
 }
 
 //==============================================================================
-// Note: taken from https://wiki.qt.io/ToStdWStringAndBuiltInWchar...
-
-static QString toQString(const std::wstring &pString)
-{
-#ifdef _MSC_VER
-    return QString::fromUtf16((const ushort *) pString.c_str());
-#else
-    return QString::fromStdWString(pString);
-#endif
-}
-
-//==============================================================================
-// Note: taken from https://wiki.qt.io/ToStdWStringAndBuiltInWchar...
-
-static const std::wstring toStdWString(const QString &pString)
-{
-#ifdef _MSC_VER
-    return std::wstring((const wchar_t *) pString.utf16());
-#else
-    return pString.toStdWString();
-#endif
-}
-
-//==============================================================================
 
 static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
 {
-    static const QString moduleDirName = QFileInfo(toQString(pModule)).canonicalPath();
     static const QString module = R"PYTHON(
 import runpy
 import sys
 
 sys.argv = %1
 
-sys.path.insert(0, '%2')
+sys.path.insert(0, '.')
 
-runpy.run_module('%3', init_globals=globals(), run_name='__main__')
+runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
     PythonQtSupport::evaluateScript(module.arg(pyStringListAsString(pArgV).c_str())
-                                          .arg(pyStringAsCString(toStdWString(moduleDirName).c_str()))
                                           .arg(pyStringAsCString(pModule)));
 }
 
@@ -213,20 +183,18 @@ runpy.run_module('%3', init_globals=globals(), run_name='__main__')
 
 static void runFileName(const wchar_t *pFileName, const PyWideStringList pArgV)
 {
-    static const QString fileDirName = QFileInfo(toQString(pFileName)).canonicalPath();
     static const QString file = R"PYTHON(
 import runpy
 import sys
 
 sys.argv = %1
 
-sys.path.insert(0, '%2')
+sys.path.insert(0, '.')
 
-runpy.run_path('%3', init_globals=globals(), run_name='__main__')
+runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
     PythonQtSupport::evaluateScript(file.arg(pyStringListAsString(pArgV).c_str())
-                                        .arg(pyStringAsCString(toStdWString(fileDirName).c_str()))
                                         .arg(pyStringAsCString(pFileName)));
 }
 
