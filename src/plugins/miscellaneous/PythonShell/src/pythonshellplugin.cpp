@@ -165,6 +165,7 @@ static void runCommand(const wchar_t *pCommand)
 static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
 {
     static const QString module = R"PYTHON(
+import pathlib
 import runpy
 import sys
 
@@ -184,6 +185,7 @@ runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 static void runFileName(const wchar_t *pFileName, const PyWideStringList pArgV)
 {
     static const QString file = R"PYTHON(
+import pathlib
 import runpy
 import sys
 
