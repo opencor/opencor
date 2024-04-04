@@ -181,7 +181,7 @@ runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 
 //==============================================================================
 
-static void runFilename(const wchar_t *pFileName, const PyWideStringList pArgV)
+static void runFileName(const wchar_t *pFileName, const PyWideStringList pArgV)
 {
     static const QString file = R"PYTHON(
 import runpy
@@ -300,7 +300,7 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
     } else if (config.run_module != nullptr) {
         runModule(config.run_module, config.argv);
     } else if (config.run_filename != nullptr) {
-        runFilename(config.run_filename, config.argv);
+        runFileName(config.run_filename, config.argv);
     } else {
         runInteractive();
     }
