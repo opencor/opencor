@@ -164,7 +164,7 @@ static void runCommand(const wchar_t *pCommand)
 
 static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
 {
-    static const QString module = R"PYTHON(
+    static const QString script = R"PYTHON(
 import pathlib
 import runpy
 import sys
@@ -176,7 +176,7 @@ sys.path.insert(0, str(pathlib.Path('%2').parent))
 runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(module.arg(pyStringListAsString(pArgV).c_str())
+    PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
                                           .arg(pyStringAsCString(pModule)));
 }
 
@@ -184,7 +184,7 @@ runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 
 static void runFileName(const wchar_t *pFileName, const PyWideStringList pArgV)
 {
-    static const QString file = R"PYTHON(
+    static const QString script = R"PYTHON(
 import pathlib
 import runpy
 import sys
@@ -196,15 +196,15 @@ sys.path.insert(0, str(pathlib.Path('%2').parent))
 runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(file.arg(pyStringListAsString(pArgV).c_str())
-                                        .arg(pyStringAsCString(pFileName)));
+    PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
+                                          .arg(pyStringAsCString(pFileName)));
 }
 
 //==============================================================================
 
 static void runInteractive()
 {
-    static const QString interactive = R"PYTHON(
+    static const QString script = R"PYTHON(
 import code
 import sys
 
@@ -215,7 +215,7 @@ copyright = 'Type "help", "copyright", "credits" or "license" for more informati
 code.interact(banner=f'Python {sys.version} on {sys.platform}\n{copyright}', exitmsg='')
 )PYTHON";
 
-    PythonQtSupport::evaluateScript(interactive);
+    PythonQtSupport::evaluateScript(script);
 }
 
 //==============================================================================
