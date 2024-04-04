@@ -162,8 +162,29 @@ static void runCommand(const wchar_t *pCommand)
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+static std::wstring escapedPath(const wchar_t *pPath)
+{
+    // Note: conversions are based on information available at
+    //       https://wiki.qt.io/ToStdWStringAndBuiltInWchar...
+
+    auto qPath = QString::fromUtf16((const ushort *) pPath);
+    auto ePath = qPath.replace("\\", "\\\\");
+
+    return (const wchar_t *) ePath.utf16();
+}
+#endif
+
+//==============================================================================
+
 static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
 {
+    static const auto *module =
+#ifdef Q_OS_WIN
+    escapedPath(pModule).c_str();
+#else
+    pModule;
+#endif
     static const QString script = R"PYTHON(
 import pathlib
 import runpy
@@ -177,13 +198,19 @@ runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
-                                          .arg(pyStringAsCString(pModule)));
+                                          .arg(pyStringAsCString(module)));
 }
 
 //==============================================================================
 
 static void runFileName(const wchar_t *pFileName, const PyWideStringList pArgV)
 {
+    static const auto *fileName =
+#ifdef Q_OS_WIN
+    escapedPath(pFileName).c_str();
+#else
+    pFileName;
+#endif
     static const QString script = R"PYTHON(
 import pathlib
 import runpy
@@ -197,7 +224,7 @@ runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
-                                          .arg(pyStringAsCString(pFileName)));
+                                          .arg(pyStringAsCString(fileName)));
 }
 
 //==============================================================================
