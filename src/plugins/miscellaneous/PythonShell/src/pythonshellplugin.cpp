@@ -171,7 +171,7 @@ import sys
 
 sys.argv = %1
 
-sys.path.insert(0, pathlib.Path(sys.argv).parent)
+sys.path.insert(0, str(pathlib.Path('%2').parent))
 
 runpy.run_module('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
@@ -191,7 +191,7 @@ import sys
 
 sys.argv = %1
 
-sys.path.insert(0, pathlib.Path(sys.argv).parent)
+sys.path.insert(0, str(pathlib.Path('%2').parent))
 
 runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 )PYTHON";
@@ -207,6 +207,8 @@ static void runInteractive()
     static const QString interactive = R"PYTHON(
 import code
 import sys
+
+sys.path.insert(0, '')
 
 copyright = 'Type "help", "copyright", "credits" or "license" for more information.'
 
