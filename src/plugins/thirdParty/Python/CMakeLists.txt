@@ -235,7 +235,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             dd013afbf2f2ec7ac4206358df9ae5f73ab5494b)
+                             41f69188c2356ad32d16bc83f655284a0633de56)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
@@ -244,15 +244,15 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         1853ff1d55e49d57b239b64338a23ffb1101d454)
+                         c9bea37ee122a87ec7b9a743edf88e945d71500f)
     elseif(RHEL_LINUX_DISTRIB)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         809ca065a37db5f6cc36690136773505a32b753a)
+                         91e4e7210b0d7fa73f6d522f9da5e053193f458b)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         4770b2a6ae1263ab9c075543b80d4300840ec304)
+                         cf887108e82745b51d64dfe195576686faa3db10)
     endif()
 else()
     # Set platform-specific configuration options
