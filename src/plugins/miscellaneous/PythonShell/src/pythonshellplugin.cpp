@@ -232,14 +232,37 @@ runpy.run_path('%2', init_globals=globals(), run_name='__main__')
 static void runInteractive()
 {
     static const QString script = R"PYTHON(
+import atexit
 import code
+import os
+import readline
 import sys
+
+HISTORY_FILE = os.path.expanduser('~/.pythonshell_history')
+
+def __init_history():
+    readline_doc = getattr(readline, '__doc__', '')
+    if readline_doc is not None and 'libedit' in readline_doc:
+        readline.parse_and_bind('bind ^I rl_complete')
+    else:
+        readline.parse_and_bind('tab: complete')
+    if hasattr(readline, 'read_history_file'):
+        try:
+            readline.read_history_file(HISTORY_FILE)
+        except FileNotFoundError:
+            pass
+
+def __save_history():
+    readline.set_history_length(1000)
+    readline.write_history_file(HISTORY_FILE)
 
 sys.path.insert(0, '')
 
 copyright = 'Type "help", "copyright", "credits" or "license" for more information.'
 
+__init_history()
 code.interact(banner=f'Python {sys.version} on {sys.platform}\n{copyright}', exitmsg='')
+__save_history()
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script);
