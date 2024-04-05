@@ -194,7 +194,11 @@ sys.argv = %1
 
 sys.path.insert(0, str(pathlib.Path('%2').parent))
 
+sys.stdout.reconfigure(line_buffering=True)
+
 runpy.run_module('%2', init_globals=globals(), run_name='__main__')
+
+sys.stdout.flush()
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
@@ -220,7 +224,11 @@ sys.argv = %1
 
 sys.path.insert(0, str(pathlib.Path('%2').parent))
 
+sys.stdout.reconfigure(line_buffering=True)
+
 runpy.run_path('%2', init_globals=globals(), run_name='__main__')
+
+sys.stdout.flush()
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
