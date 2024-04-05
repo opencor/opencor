@@ -34,7 +34,7 @@ set(TRAITLETS_VERSION 5.14.1)
 # Patched versions of some Python only packages needed to support PythonQt.
 # These are tags in our copy of the source repositories
 
-set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.1")
+set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
 set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
 set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
 set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
