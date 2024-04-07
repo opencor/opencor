@@ -70,7 +70,7 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             1b460f3ece10121a4a0b023985a87618e703301f)
+                             5bdab9ff57ddecc668b5e5fb955e6f708cae8bd3)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}

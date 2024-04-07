@@ -239,7 +239,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             3291133813343f958c0f527688e7bfb368c5f9ef)
+                             6c27e9d6b462d2ab6c926cf762613dfb73972020)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}

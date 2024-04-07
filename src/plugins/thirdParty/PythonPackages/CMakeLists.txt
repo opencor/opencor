@@ -91,7 +91,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             4b30113cdbfa654daeacb925fe334cb6ef22e39d)
+                             57a85372bc82aeaa30615b16b342832bf25f9e8a)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
