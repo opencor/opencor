@@ -36,6 +36,7 @@ set(TRAITLETS_VERSION 5.14.1)
 
 set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
 set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
+set(NUMPY_WINDEBUG "v${NUMPY_VERSION}-windebug.0")
 set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
 set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
 set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
@@ -200,17 +201,15 @@ else()
             INSTALL_DIR
                 ${NUMPY_SOURCE_DIR}
             URL
-                https://github.com/numpy/numpy/releases/download/v${NUMPY_VERSION}/numpy-${NUMPY_VERSION}.zip
+                https://github.com/opencor/numpy/releases/download/${NUMPY_WINDEBUG}/numpy-${NUMPY_VERSION}.tar.gz
             CONFIGURE_COMMAND
                 ""
+            BUILD_IN_SOURCE
+                ON
             BUILD_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
-                                    env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py build --debug
+                ""
             INSTALL_COMMAND
-                ${PIP_INSTALL_COMMAND} --global-option=build
-                                       --global-option=--debug
-                                       .
+                ${PIP_INSTALL_COMMAND} .
         )
 
         add_dependencies(${PACKAGE_BUILD} installNumpy)
