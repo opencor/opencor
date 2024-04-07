@@ -82,7 +82,7 @@ void PythonQtSupportPlugin::initializePlugin()
 {
     // Create and initialise a new PythonQt instance
 
-    PythonQt::init(0); //PythonQt::IgnoreSiteModule);
+    PythonQt::init(0);
 
     // Remap SIGINT
     // Note: indeed, Python maps SIGINT (Ctrl+C) to its own handler, so we need
