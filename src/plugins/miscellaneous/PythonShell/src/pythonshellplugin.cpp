@@ -243,12 +243,17 @@ static void runInteractive()
 import atexit
 import code
 import os
-import readline
 import sys
+try:
+    import readline
+except ModuleNotFoundError:
+    readline = None
 
 HISTORY_FILE = os.path.expanduser('~/.pythonshell_history')
 
 def __init_history():
+    if readline is None:
+        return
     readline_doc = getattr(readline, '__doc__', '')
     if readline_doc is not None and 'libedit' in readline_doc:
         readline.parse_and_bind('bind ^I rl_complete')
@@ -261,6 +266,8 @@ def __init_history():
             pass
 
 def __save_history():
+    if readline is None:
+        return
     readline.set_history_length(1000)
     readline.write_history_file(HISTORY_FILE)
 
