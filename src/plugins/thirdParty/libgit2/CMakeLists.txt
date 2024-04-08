@@ -15,6 +15,12 @@ set(MAJOR_LIBRARY_VERSION 1)
 set(MINOR_LIBRARY_VERSION 5)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
+# RHEL-based Linux distributions have their own pre-built plugin
+
+if(RHEL_LINUX_DISTRIB)
+    set(TARGET_PLATFORM ${TARGET_PLATFORM}.rhel)
+endif()
+
 # Name of our package's shared library (and of its import library, if any)
 
 if(WIN32)
@@ -75,6 +81,10 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          8fbf1896f7d5ced8f8022a21f8949f5a401fdbf9)
+    elseif(RHEL_LINUX_DISTRIB)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         91e4e7210b0d7fa73f6d522f9da5e053193f458b)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
