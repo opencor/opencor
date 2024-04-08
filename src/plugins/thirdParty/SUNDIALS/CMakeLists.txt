@@ -35,6 +35,12 @@ set(SUNNONLINSOL_LIBRARY_VERSION ${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}.4.1)
 set(MAJOR_SUNMATRIX_LIBRARY_VERSION 4)
 set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.4.1)
 
+# RHEL-based Linux distributions have their own pre-built plugin
+
+if(RHEL_LINUX_DISTRIB)
+    set(TARGET_PLATFORM ${TARGET_PLATFORM}.rhel)
+endif()
+
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 if(WIN32)
@@ -243,6 +249,10 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          9151a175ac8f54c7ef682424e96f95418b32031b)
+    elseif(RHEL_LINUX_DISTRIB)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         91e4e7210b0d7fa73f6d522f9da5e053193f458b)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
