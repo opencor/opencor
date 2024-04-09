@@ -328,7 +328,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
     elseif(RHEL_LINUX_DISTRIB)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         11edcd65f82c43ce1b95ab6d7df4d1c4a8cb6b08)
+                         8d21dace2a7f6e17f1a9736cbd4f909166dffbc5)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
