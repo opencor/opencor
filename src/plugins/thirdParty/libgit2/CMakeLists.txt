@@ -84,7 +84,7 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     elseif(RHEL_LINUX_DISTRIB)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         91e4e7210b0d7fa73f6d522f9da5e053193f458b)
+                         291bf00576ceefb9d35181a2a64a088a9c6aff8c)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
