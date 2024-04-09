@@ -221,6 +221,7 @@ import atexit
 import code
 import os
 import sys
+
 try:
     import readline
 except ModuleNotFoundError:

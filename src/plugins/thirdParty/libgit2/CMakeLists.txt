@@ -34,17 +34,17 @@ else()
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
 
-# RHEL-based Linux builds put built libraries into lib64
+# RHEL-based Linux distributions put built libraries into lib64
 
 if(RHEL_LINUX_DISTRIB)
-    set(LIBRARY_DIRECTORY lib64)
+    set(LIB_DIR lib64)
 else()
-    set(LIBRARY_DIRECTORY lib)
+    set(LIB_DIR lib)
 endif()
 
 # Retrieve our package's binaries
 
-set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIRECTORY})
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIB_DIR})
 
 set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
@@ -53,12 +53,12 @@ set(EXTERNAL_BINARIES
 # Specify the files that can be stripped
 
 set(STRIPPABLE_FILES
-    ${LIBRARY_DIRECTORY}/${SHARED_LIBRARY}
+    ${LIB_DIR}/${SHARED_LIBRARY}
 )
 
 if(WIN32)
     list(APPEND STRIPPABLE_FILES
-        ${LIBRARY_DIRECTORY}/${IMPORT_LIBRARY}
+        ${LIB_DIR}/${IMPORT_LIBRARY}
     )
 endif()
 
@@ -134,7 +134,7 @@ else()
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/${LIBRARY_DIRECTORY}/${IMPORT_LIBRARY}
+            <INSTALL_DIR>/${LIB_DIR}/${IMPORT_LIBRARY}
         DEPENDS
             OpenSSLPlugin
             zlibPlugin
@@ -146,7 +146,7 @@ else()
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDll
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} ${LIBRARY_DIRECTORY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} ${LIB_DIR}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     else()

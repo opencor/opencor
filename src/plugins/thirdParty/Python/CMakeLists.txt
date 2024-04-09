@@ -5,7 +5,7 @@ project(PythonPlugin)
 set(PACKAGE_NAME Python)
 set(PACKAGE_VERSION 3.12.2)
 set(PACKAGE_REPOSITORY python)
-set(PYTHON_BUILD_SYSTEM_TAG opencor-3.12.3)
+set(BUILD_TAG opencor-3.12.3)
 set(RELEASE_TAG v3.12.2)
 
 get_full_local_external_package_dir()
@@ -475,7 +475,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         URL
-            https://github.com/opencor/portable-python-cmake-buildsystem/archive/${PYTHON_BUILD_SYSTEM_TAG}.tar.gz
+            https://github.com/opencor/portable-python-cmake-buildsystem/archive/${BUILD_TAG}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR
