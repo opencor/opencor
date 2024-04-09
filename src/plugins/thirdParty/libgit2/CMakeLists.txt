@@ -15,6 +15,12 @@ set(MAJOR_LIBRARY_VERSION 1)
 set(MINOR_LIBRARY_VERSION 5)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
+# RHEL-based Linux distributions have their own pre-built plugin
+
+if(RHEL_LINUX_DISTRIB)
+    set(TARGET_PLATFORM ${TARGET_PLATFORM}.rhel)
+endif()
+
 # Name of our package's shared library (and of its import library, if any)
 
 if(WIN32)
@@ -28,9 +34,17 @@ else()
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
 
+# RHEL-based Linux builds put built libraries into lib64
+
+if(RHEL_LINUX_DISTRIB)
+    set(LIBRARY_DIRECTORY lib64)
+else()
+    set(LIBRARY_DIRECTORY lib)
+endif()
+
 # Retrieve our package's binaries
 
-set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIRECTORY})
 
 set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
@@ -39,12 +53,12 @@ set(EXTERNAL_BINARIES
 # Specify the files that can be stripped
 
 set(STRIPPABLE_FILES
-    lib/${SHARED_LIBRARY}
+    ${LIBRARY_DIRECTORY}/${SHARED_LIBRARY}
 )
 
 if(WIN32)
     list(APPEND STRIPPABLE_FILES
-        lib/${IMPORT_LIBRARY}
+        ${LIBRARY_DIRECTORY}/${IMPORT_LIBRARY}
     )
 endif()
 
@@ -67,6 +81,10 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                          8fbf1896f7d5ced8f8022a21f8949f5a401fdbf9)
+    elseif(RHEL_LINUX_DISTRIB)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         291bf00576ceefb9d35181a2a64a088a9c6aff8c)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
@@ -116,7 +134,7 @@ else()
             -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
+            <INSTALL_DIR>/${LIBRARY_DIRECTORY}/${IMPORT_LIBRARY}
         DEPENDS
             OpenSSLPlugin
             zlibPlugin
@@ -128,7 +146,7 @@ else()
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDll
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} ${LIBRARY_DIRECTORY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     else()
