@@ -148,13 +148,13 @@ class OpenCORKernel(IPythonKernel):
 if __name__ == '__main__':
     from ipykernel.kernelapp import IPKernelApp
 
-    IPKernelApp.connection_file = '%3'
+    IPKernelApp.connection_file = r'%3'
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
 )PYTHON";
 
     PythonQtSupport::evaluateScript(JupyterKernel.arg(qApp->applicationName(),
                                                       qApp->applicationVersion(),
-                                                      QString(pArguments[0]).replace("\\", "\\\\")));
+                                                      pArguments[0]));
 
     return true;
 }
