@@ -26,9 +26,19 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
+    #ifdef _POSIX_SOURCE
+        #undef _POSIX_SOURCE
+    #endif
+
+    #ifdef _POSIX_C_SOURCE
+        #undef _POSIX_C_SOURCE
+    #endif
+
+    #ifdef _XOPEN_SOURCE
+        #undef _XOPEN_SOURCE
+    #endif
+
     #include "Python.h"
-    // Note: this needs to be included before <QObject> to prevent name
-    //       clashes...
 #endif
 
 //==============================================================================
@@ -73,7 +83,9 @@ int main(int pArgC, char *pArgV[])
     //       using dlopen() (see https://akkadia.org/drepper/dsohowto.pdf)...
 
 #if defined(PYTHON_SUPPORT) && defined(Q_OS_LINUX)
+    #include "pythonbegin.h"
     Py_NoUserSiteDirectory = 1;
+    #include "pythonend.h"
 #endif
 
     // Initialise Qt's message pattern

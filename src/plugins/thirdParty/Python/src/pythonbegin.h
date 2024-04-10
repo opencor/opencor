@@ -23,10 +23,16 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #if defined(_MSC_VER) && !defined(__clang__)
     #pragma warning(push)
+    #pragma warning(disable: 4996)
     #pragma warning(disable: 5208)
-#elif defined(__clang__)
+#elif defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#else
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wcast-qual"
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    #pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
     #pragma clang diagnostic ignored "-Wduplicate-enum"
     #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
     #pragma clang diagnostic ignored "-Wold-style-cast"

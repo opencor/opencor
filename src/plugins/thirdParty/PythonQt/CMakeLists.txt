@@ -3,9 +3,9 @@ project(PythonQtPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME PythonQt)
-set(PACKAGE_VERSION 3.2.2)
+set(PACKAGE_VERSION 3.4.2)
 set(PACKAGE_REPOSITORY pythonqt)
-set(RELEASE_TAG v3.2.2)
+set(RELEASE_TAG v3.4.2-python.3.12)
 
 get_full_local_external_package_dir()
 
@@ -66,20 +66,20 @@ if(USE_PREBUILT_PYTHONQT_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             54c3aff5546a1f8c998157872e9ae14949b937d1)
+                             dbc8112467622ea190a334bcc81241e2a0fd39ae)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             1b460f3ece10121a4a0b023985a87618e703301f)
+                             5bdab9ff57ddecc668b5e5fb955e6f708cae8bd3)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         6f736a8a2c680410d441a0ab756bd62e4fd95800)
+                         3b285ccc28d3f0d84d0120c4c8ebe039ecc8b606)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         8d60483fb922986edf0af7fd8cd6b9d5d9166798)
+                         c8a0f428c7f4f797255f2908818f9679061ef9f1)
     endif()
 else()
     # Set platform specific configuration options and tool names

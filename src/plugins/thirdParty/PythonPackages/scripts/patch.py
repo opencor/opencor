@@ -337,7 +337,7 @@ class PatchSet(object):
     hunkparsed = False # state after successfully parsed hunk
 
     # regexp to match start of hunk, used groups - 1,3,4,6
-    re_hunk_start = re.compile(b"^@@ -(\d+)(,(\d+))? \+(\d+)(,(\d+))? @@")
+    re_hunk_start = re.compile(br"^@@ -(\d+)(,(\d+))? \+(\d+)(,(\d+))? @@")
 
     self.errors = 0
     # temp buffers for header and filenames info
@@ -516,7 +516,7 @@ class PatchSet(object):
             filenames = False
             headscan = True
           else:
-            re_filename = b"^\+\+\+ ([^\t]+)"
+            re_filename = br"^\+\+\+ ([^\t]+)"
             match = re.match(re_filename, line)
             if not match:
               warning("skipping invalid patch - no target filename at line %d" % (lineno+1))
@@ -542,7 +542,7 @@ class PatchSet(object):
               continue
 
       if hunkhead:
-        match = re.match(b"^@@ -(\d+)(,(\d+))? \+(\d+)(,(\d+))? @@(.*)", line)
+        match = re.match(br"^@@ -(\d+)(,(\d+))? \+(\d+)(,(\d+))? @@(.*)", line)
         if not match:
           if not p.hunks:
             warning("skipping invalid patch with no hunks for file %s" % p.source)
@@ -696,9 +696,9 @@ class PatchSet(object):
       debug("normalize filenames")
     for i,p in enumerate(self.items):
       if debugmode:
-        debug("    patch type = %s", p.type)
-        debug("    source = %s", p.source)
-        debug("    target = %s", p.target)
+        debug("    patch type = " + p.type)
+        debug("    source = " + p.source)
+        debug("    target = " + p.target)
       if p.type in (HG, GIT):
         # TODO: figure out how to deal with /dev/null entries
         debug("stripping a/ and b/ prefixes")

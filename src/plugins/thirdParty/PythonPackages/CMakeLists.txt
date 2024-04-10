@@ -3,38 +3,52 @@ project(PythonPackagesPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME PythonPackages)
-set(PACKAGE_VERSION 3.7.5)
+set(PACKAGE_VERSION 3.12.2)
 set(PACKAGE_REPOSITORY python)
-set(RELEASE_TAG v3.7.5)
+set(RELEASE_TAG v3.12.2)
 
 get_full_local_external_package_dir()
 
 # Version of our different Python packages
 
-set(IPYKERNEL_VERSION 5.1.2)
-set(IPYTHON_VERSION 7.8.0)
-set(IPYWIDGETS_VERSION 7.5.1)
-set(JUPYTER_CLIENT_VERSION 5.3.4)
-set(JUPYTER_CONSOLE_VERSION 6.0.0)
-set(JUPYTERLAB_VERSION 1.1.3)
-set(LXML_VERSION 4.4.1)
-set(MATPLOTLIB_VERSION 3.1.1)
-set(NBCONVERT_VERSION 5.6.0)
-set(NOTEBOOK_VERSION 6.0.2)
-set(NUMPY_VERSION 1.17.2)
-set(QIMAGE2NDARRAY_VERSION 1.8)
-set(QTCONSOLE_VERSION 4.5.5)
-set(SCIPY_VERSION 1.3.1)
-set(SPHINX_VERSION 2.2.0)
-set(TRAITLETS_VERSION 4.3.2)
+set(IPYKERNEL_VERSION 6.29.2)
+set(IPYMPL_VERSION 0.9.3)
+set(IPYTHON_VERSION 8.21.0)
+set(IPYWIDGETS_VERSION 8.1.1)
+set(JUPYTER_CLIENT_VERSION 8.6.0)
+set(JUPYTER_CONSOLE_VERSION 6.6.3)
+set(JUPYTERLAB_VERSION 4.0.12)
+set(LXML_VERSION 5.1.0)
+set(MATPLOTLIB_VERSION 3.8.2)
+set(NBCONVERT_VERSION 7.14.2)
+set(NOTEBOOK_VERSION 7.0.7)
+set(NUMPY_VERSION 1.26.4)
+set(PSUTIL_VERSION 5.9.3) # Needed on Windows (see https://github.com/giampaolo/psutil/issues/2257)
+set(QIMAGE2NDARRAY_VERSION 1.10.0)
+set(QTCONSOLE_VERSION 5.5.1)
+set(QTPY_VERSION 2.4.1)
+set(SCIPY_VERSION 1.12.0)
+set(SPHINX_VERSION 7.2.6)
+set(TRAITLETS_VERSION 5.14.1)
 
-# Patched version of some packages to support PythonQt
+# Patched versions of some Python only packages needed to support PythonQt.
+# These are tags in our copy of the source repositories
 
-set(IPYKERNEL_PYTHONQT ${IPYKERNEL_VERSION}.0)
-set(IPYTHON_PYTHONQT ${IPYTHON_VERSION}.0)
-set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.1)
-set(QTCONSOLE_PYTHONQT ${QTCONSOLE_VERSION}.0)
-set(TRAITLETS_PYTHONQT ${TRAITLETS_VERSION}.1)
+set(IPYKERNEL_PYTHONQT "v${IPYKERNEL_VERSION}-pythonqt.0")
+set(IPYTHON_PYTHONQT "v${IPYTHON_VERSION}-pythonqt.0")
+set(NUMPY_WINDEBUG "v${NUMPY_VERSION}-windebug.0")
+set(QTCONSOLE_PYTHONQT "v${QTCONSOLE_VERSION}-pythonqt.2")
+set(QTPY_PYTHONQT "v${QTPY_VERSION}-pythonqt.1")
+set(TRAITLETS_PYTHONQT "v${TRAITLETS_VERSION}-pythonqt.0")
+
+# Matplotlib is patched using a `diff` file to avoid having to create a full
+# installable package with binary libraries
+
+set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.2)
+
+# We have our own version of pip for Windows
+
+set(PIP_VERSION v24.0-opencor.0)
 
 # Our GitHub organisation
 
@@ -73,20 +87,20 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             e1fd63b7ffb61de6bef75471d838bffeb4c7773c)
+                             ef648ccfba3a510a65061666cdda811fe04d4aac)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             4b30113cdbfa654daeacb925fe334cb6ef22e39d)
+                             57a85372bc82aeaa30615b16b342832bf25f9e8a)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         c946300c0203995243752dbd71db739a733e3556)
+                         02bfd9595392467f3f1023aeb081cc656db50282)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         c1635192f1e69e60eb99e39763962a8410c5ed8a)
+                         4293a266a284428be11e5c6244d17e18f5dbf72e)
     endif()
 else()
     # Install Python packages using pip
@@ -94,6 +108,10 @@ else()
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     add_custom_target(${PACKAGE_BUILD})
+
+    # Where to find the libraries needed by Python at build time
+
+    set(LD_LIBRARY_PATH ${PYTHON_ROOT_DIR}/lib:${PROJECT_BUILD_DIR}/lib)
 
     # Python packages installation requires Python
 
@@ -106,10 +124,10 @@ else()
 
     # Use our installed pip when upgrading pip
 
-    file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
-
-    set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+    set(PIP_INSTALL_COMMAND ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
+                                                env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                                env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+                                                ${PYTHON_EXECUTABLE} -s -m pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                                                                        --upgrade
                                                                                        --upgrade-strategy only-if-needed
                                                                                        --no-warn-script-location)
@@ -122,65 +140,41 @@ else()
 
     set(PIP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/pip)
 
+    # Install the Python package installer
+
+    ExternalProject_Add(installPip
+        DOWNLOAD_DIR
+            ${PIP_SOURCE_DIR}
+        INSTALL_DIR
+            ${PIP_SOURCE_DIR}
+        URL
+            https://bootstrap.pypa.io/get-pip.py
+        DOWNLOAD_NO_EXTRACT
+            TRUE
+        CONFIGURE_COMMAND
+            ""
+        BUILD_COMMAND
+            ""
+        INSTALL_COMMAND
+            ${CMAKE_COMMAND} -E env "PYTHONHOME=${PYTHON_ROOT_DIR}"
+                                env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+                                env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+                                ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                                                                     --no-wheel
+        STEP_TARGETS
+            install
+    )
+
     if(WIN32)
-        # Install the Python setuptools package
+        # Use pip to install our copy of itself
 
-        set(SETUPTOOLS_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/setuptools)
+        set(PIP_ARCHIVE https://github.com/opencor/pip/archive/refs/tags/${PIP_VERSION}.tar.gz)
 
-        ExternalProject_Add(installSetuptools
-            INSTALL_DIR
-                ${SETUPTOOLS_SOURCE_DIR}
-            URL
-                https://github.com/pypa/setuptools/archive/refs/tags/v41.2.0.tar.gz
-            CONFIGURE_COMMAND
-                ${PYTHON_EXECUTABLE} bootstrap.py
-            BUILD_COMMAND
-                ${PYTHON_EXECUTABLE} setup.py build
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-        )
-
-        # Install our Python package installer
-
-        ExternalProject_Add(installPip
-            INSTALL_DIR
-                ${PIP_SOURCE_DIR}
-            URL
-                https://github.com/opencor/pip/archive/refs/tags/19.2.3.tar.gz
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py build
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-            DEPENDS
-                installSetuptools
-        )
+        ExternalProject_Add_Step(installPip replacePip
+                                 COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall ${PIP_ARCHIVE}
+                                 WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
+                                 DEPENDEES install)
     else()
-        # Install the Python package installer
-
-        ExternalProject_Add(installPip
-            DOWNLOAD_DIR
-                ${PIP_SOURCE_DIR}
-            INSTALL_DIR
-                ${PIP_SOURCE_DIR}
-            URL
-                https://bootstrap.pypa.io/get-pip.py
-            DOWNLOAD_NO_EXTRACT
-                TRUE
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ""
-            INSTALL_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} -s ${PIP_SOURCE_DIR}/get-pip.py --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                                                                                         --no-wheel
-        )
-
         # Make sure that pip is up to date
 
         ExternalProject_Add_Step(installPip updatePip
@@ -207,16 +201,15 @@ else()
             INSTALL_DIR
                 ${NUMPY_SOURCE_DIR}
             URL
-                https://github.com/numpy/numpy/releases/download/v${NUMPY_VERSION}/numpy-${NUMPY_VERSION}.zip
+                https://github.com/opencor/numpy/releases/download/${NUMPY_WINDEBUG}/numpy-${NUMPY_VERSION}.tar.gz
             CONFIGURE_COMMAND
                 ""
+            BUILD_IN_SOURCE
+                ON
             BUILD_COMMAND
-                ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-                                    ${PYTHON_EXECUTABLE} setup.py build --debug
+                ""
             INSTALL_COMMAND
-                ${PIP_INSTALL_COMMAND} --global-option=build
-                                       --global-option=--debug
-                                       .
+                ${PIP_INSTALL_COMMAND} .
         )
 
         add_dependencies(${PACKAGE_BUILD} installNumpy)
@@ -283,6 +276,7 @@ else()
         add_custom_target(ipythonPackages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                                            ipykernel==${IPYKERNEL_VERSION}
+                                           ipympl==${IPYMPL_VERSION}
                                            ipython==${IPYTHON_VERSION}
                                            ipywidgets==${IPYWIDGETS_VERSION}
                                            jupyter_client==${JUPYTER_CLIENT_VERSION}
@@ -290,7 +284,9 @@ else()
                                            jupyterlab==${JUPYTERLAB_VERSION}
                                            nbconvert==${NBCONVERT_VERSION}
                                            notebook==${NOTEBOOK_VERSION}
+                                           psutil==${PSUTIL_VERSION}
                                            qtconsole==${QTCONSOLE_VERSION}
+                                           qtpy==${QTPY_VERSION}
                                            traitlets==${TRAITLETS_VERSION}
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
@@ -333,15 +329,14 @@ else()
         # Note: we only upgrade to our version of packages and patch Matplotlib
         #       *after* all standard packages have been installed...
 
-        set(ARCHIVE_PYTHONQT archive/PythonQt-v)
-
         add_custom_target(pythonQtUpdate
             COMMAND ${PIP_INSTALL_COMMAND} --no-deps
                                            --force-reinstall
-                                           ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
-                                           ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
-                                           ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
-                                           ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/ipykernel/archive/${IPYKERNEL_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/ipython/archive/${IPYTHON_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/qtconsole/archive/${QTCONSOLE_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/qtpy/archive/${QTPY_PYTHONQT}.zip
+                                           ${GITHUB_OPENCOR}/traitlets/archive/${TRAITLETS_PYTHONQT}.zip
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}
             VERBATIM

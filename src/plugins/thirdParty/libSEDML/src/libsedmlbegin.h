@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
     #pragma warning(disable: 4005)
 #elif defined(__GNUC__) && !defined(__clang__)
     #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #pragma GCC diagnostic ignored "-Wignored-qualifiers"
 #else
     #pragma clang diagnostic push

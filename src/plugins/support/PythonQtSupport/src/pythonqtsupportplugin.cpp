@@ -82,15 +82,7 @@ void PythonQtSupportPlugin::initializePlugin()
 {
     // Create and initialise a new PythonQt instance
 
-    PythonQt::init(PythonQt::RedirectStdOut);
-
-    // Capture and redirect PythonQt's standard output and error
-
-    connect(PythonQt::self(), &PythonQt::pythonStdOut,
-            this, &PythonQtSupportPlugin::printStdOut);
-
-    connect(PythonQt::self(), &PythonQt::pythonStdErr,
-            this, &PythonQtSupportPlugin::printStdErr);
+    PythonQt::init(0);
 
     // Remap SIGINT
     // Note: indeed, Python maps SIGINT (Ctrl+C) to its own handler, so we need
@@ -143,7 +135,9 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgV[2] = const_cast<wchar_t *>(L"-s");
     mArgV[3] = nullptr;
 
+#include "pythonbegin.h"
     PySys_SetArgvEx(3, mArgV, 0);
+#include "pythonend.h"
 
     // Actually update the path to Python in scripts
 
@@ -155,7 +149,9 @@ void PythonQtSupportPlugin::initializePlugin()
     mArgV[0] = const_cast<wchar_t *>(L"");
     mArgV[1] = nullptr;
 
+#include "pythonbegin.h"
     PySys_SetArgvEx(1, mArgV, 0);
+#include "pythonend.h"
 }
 
 //==============================================================================
@@ -216,26 +212,6 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl)
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-void PythonQtSupportPlugin::printStdOut(const QString &pString)
-{
-    // Print the given text to the standard output
-
-    std::cout << qPrintable(pString);
-}
-
-//==============================================================================
-
-void PythonQtSupportPlugin::printStdErr(const QString &pString)
-{
-    // Print the given text to the standard error
-
-    std::cerr << qPrintable(pString);
 }
 
 //==============================================================================

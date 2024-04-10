@@ -60,10 +60,6 @@ public:
 private:
     wchar_t **mArgV = nullptr;
     PythonQtObjectPtr mModule = nullptr;
-
-private slots:
-    void printStdOut(const QString &pString);
-    void printStdErr(const QString &pString);
 };
 
 //==============================================================================

@@ -3,30 +3,28 @@ project(PythonPlugin)
 # Our package characteristics
 
 set(PACKAGE_NAME Python)
-set(PACKAGE_VERSION 3.7.5)
+set(PACKAGE_VERSION 3.12.2)
 set(PACKAGE_REPOSITORY python)
-set(GIT_TAG opencor-3.7.5)
-set(RELEASE_TAG v3.7.5)
+set(BUILD_TAG opencor-3.12.3)
+set(RELEASE_TAG v3.12.2)
 
 get_full_local_external_package_dir()
 
 # Version of our package's library
 
-set(MAJOR_MINOR_LIBRARY_VERSION 3.7)
-set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.5)
-set(NUMERIC_LIBRARY_VERSION 37)
+set(MAJOR_MINOR_LIBRARY_VERSION 3.12)
+set(LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}.2)
+set(NUMERIC_LIBRARY_VERSION 312)
 
-# Set the ABI flag and version identifier
-
-set(PYTHON_ABIFLAGS "m")
+# Set the version identifiers
 
 if(WIN32)
     set(PYTHON_BUILT_VERSION ${NUMERIC_LIBRARY_VERSION})
-    set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION})
 else()
-    set(PYTHON_BUILT_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
-    set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
+    set(PYTHON_BUILT_VERSION ${MAJOR_MINOR_LIBRARY_VERSION})
 endif()
+
+set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION})
 
 # Name of our Python executable and shared library (and import library, if any)
 
@@ -79,6 +77,12 @@ set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
 if(NOT USE_PREBUILT_PYTHON_PACKAGE)
     file(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
+endif()
+
+# RHEL-based Linux distributions have their own pre-built Python
+
+if(RHEL_LINUX_DISTRIB)
+    set(TARGET_PLATFORM ${TARGET_PLATFORM}.rhel)
 endif()
 
 # Specify the package's files
@@ -156,8 +160,30 @@ if(NOT APPLE)
         ${LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
     )
 
+    # On Windows, we also need a few more libraries
+
     if(WIN32)
-        # On Windows, we also need import libraries
+        set(WINDOWS_LIBFFI_VERSION 3.4.4)
+        set(WINDOWS_LIBFFI_LIBRARY libffi-8)
+        set(LIBFFI_SHARED_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LIBFFI_SHARED_LIBRARY}
+        )
+
+        list(APPEND STRIPPABLE_FILES
+            ${LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
+        )
+
+        set(LIBFFI_IMPORT_LIBRARY ${WINDOWS_LIBFFI_LIBRARY}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        list(APPEND EXTERNAL_BINARIES
+            ${LIBFFI_IMPORT_LIBRARY}
+        )
+
+        list(APPEND STRIPPABLE_FILES
+            ${LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+        )
 
         set(LZMA_IMPORT_LIBRARY liblzma${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
@@ -209,30 +235,58 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             66e870b2892d5854ca65e1bb794321b087f1b3e0)
+                             41f69188c2356ad32d16bc83f655284a0633de56)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             3291133813343f958c0f527688e7bfb368c5f9ef)
+                             6c27e9d6b462d2ab6c926cf762613dfb73972020)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         a04fc155b424621f5776eb98db76f8d19d380290)
+                         c9bea37ee122a87ec7b9a743edf88e945d71500f)
+    elseif(RHEL_LINUX_DISTRIB)
+        retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                         ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
+                         91e4e7210b0d7fa73f6d522f9da5e053193f458b)
     else()
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                         0982331f1719017596c28e010cc5b46825346d99)
+                         cf887108e82745b51d64dfe195576686faa3db10)
     endif()
 else()
     # Set platform-specific configuration options
 
     if(WIN32 OR APPLE)
         set(CMAKE_INSTALL_RPATH_OPTION)
-        set(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
+        set(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON -DUSE_LIBEDIT=ON)
     else()
         set(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
         set(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
+    endif()
+
+    # Use a prebuilt version of libffi on Windows
+
+    if(WIN32)
+        set(CPYTHON_BIN_DEPS cpython-bin-deps)
+        set(WINDOWS_LIBFFI_ARCHIVE libffi-${WINDOWS_LIBFFI_VERSION})
+        set(LIBFFI_LIBRARY_DIR ${PROJECT_BINARY_DIR}/${CPYTHON_BIN_DEPS}-${WINDOWS_LIBFFI_ARCHIVE}/amd64)
+
+        if(NOT EXISTS ${LIBFFI_LIBRARY_DIR})
+            message("Downloading '${WINDOWS_LIBFFI_ARCHIVE}'...")
+
+            file(DOWNLOAD https://github.com/python/${CPYTHON_BIN_DEPS}/archive/${WINDOWS_LIBFFI_ARCHIVE}.zip ${PROJECT_BINARY_DIR}/zips/${WINDOWS_LIBFFI_ARCHIVE}.zip
+                 SHOW_PROGRESS)
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${WINDOWS_LIBFFI_ARCHIVE}.zip --format=zip
+                            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                            OUTPUT_QUIET)
+        endif()
+
+        # Set libffi options for external CMake project build
+
+        list(APPEND LIBFFI_OPTIONS -DLibFFI_INCLUDE_DIR=${LIBFFI_LIBRARY_DIR}/include)
+        list(APPEND LIBFFI_OPTIONS -DLibFFI_LIBRARY=${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY})
     endif()
 
     # Build bzip2 on Windows and find it on Linux and macOS
@@ -302,8 +356,15 @@ else()
         set(LIBLZMA_INCLUDE_DIRS ${XZ_PACKAGE_DIR}/include)
         set(LIBLZMA_LIBRARIES ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY})
     elseif(APPLE)
-        set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
-        set(LIBLZMA_LIBRARIES /usr/local/lib/liblzma.a)
+        # The location of LZMA depends on the architecture
+
+        if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+            set(LIBLZMA_INCLUDE_DIRS /usr/local/include)
+            set(LIBLZMA_LIBRARIES /usr/local/lib/liblzma.a)
+        else()
+            set(LIBLZMA_INCLUDE_DIRS /opt/homebrew/opt/xz/include)
+            set(LIBLZMA_LIBRARIES /opt/homebrew/opt/xz/lib/liblzma.a)
+        endif()
     else()
         find_package(LibLZMA REQUIRED)
 
@@ -350,8 +411,15 @@ else()
         set(SQLite3_INCLUDE_DIRS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
         set(SQLite3_LIBRARIES ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY})
     elseif(APPLE)
-        set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
-        set(SQLite3_LIBRARIES /usr/local/opt/sqlite3/lib/libsqlite3.a)
+        # The location of SQLite3 depends on the architecture
+
+        if("${CMAKE_HOST_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+            set(SQLite3_INCLUDE_DIRS /usr/local/opt/sqlite3/include)
+            set(SQLite3_LIBRARIES /usr/local/opt/sqlite3/lib/libsqlite3.a)
+        else()
+            set(SQLite3_INCLUDE_DIRS /opt/homebrew/opt/sqlite/include)
+            set(SQLite3_LIBRARIES /opt/homebrew/opt/sqlite/lib/libsqlite3.a)
+        endif()
     else()
         find_package(SQLite3 REQUIRED)
 
@@ -367,27 +435,24 @@ else()
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
 
-        # On Windows, we also need the LZMA and SQLite3 import libraries while
-        # the bzip2 library on Linux
+        # On Windows, we need the libffi, LZMA, and SQLite3 import libraries, as
+        # well as the libffi shared library while, on Linux, we need the bzip2
+        # shared library
 
         if(WIN32)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_IMPORT_LIBRARY_DIR}/${LZMA_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+
+            execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         else()
             execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${BZIP2_LIBRARY_DIR}/${BZIP2_SHARED_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         endif()
-    endif()
-
-    # The type of build
-    # Note: on Windows, we always build a release version...
-
-    if(WIN32)
-        set(APPLY_PATCHES ON)
-    else()
-        set(APPLY_PATCHES OFF)
     endif()
 
     # Ignore some warnings
@@ -400,6 +465,9 @@ else()
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
+    # We use `|` as the list separator to allow actual lists to be passed
+    # through to the Python CMake build without being split
+
     string(REPLACE ";" "|"
            PYTHON_OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES}")
 
@@ -407,7 +475,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         URL
-            https://github.com/opencor/${PACKAGE_REPOSITORY}-cmake-buildsystem/archive/refs/tags/${GIT_TAG}.tar.gz
+            https://github.com/opencor/portable-python-cmake-buildsystem/archive/${BUILD_TAG}.tar.gz
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         LIST_SEPARATOR
@@ -442,9 +510,14 @@ else()
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
 
-            # Optionally patch sources (on Windows)
+            # Distutils has been removed from Python 3.12 although the build
+            # system defaults to ON for Windows
 
-            -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
+            -DBUILD_WININST=OFF
+
+            # Patch sources for the portable Python CMake build
+
+            -DPYTHON_APPLY_PATCHES=ON
 
             # Disable extension modules that we don't use or that the platform
             # doesn't provide
@@ -459,6 +532,10 @@ else()
             -DENABLE_TESTCAPI=OFF
             -DENABLE_TKINTER=OFF
 
+            # Link to the downloaded libffi library
+
+            ${LIBFFI_OPTIONS}
+
             # Build with an appropriate readline
 
             ${PYTHON_READLINE_OPTION}
@@ -471,9 +548,8 @@ else()
 
             # Link to the LZMA library
 
-            -DUSE_SYSTEM_LZMA=OFF
-            -DLIBLZMA_INCLUDE_DIRS=${LIBLZMA_INCLUDE_DIRS}
-            -DLIBLZMA_LIBRARIES=${LIBLZMA_LIBRARIES}
+            -DLZMA_INCLUDE_PATH=${LIBLZMA_INCLUDE_DIRS}
+            -DLZMA_LIBRARY=${LIBLZMA_LIBRARIES}
 
             # Use our copy of OpenSSL
 
@@ -484,8 +560,8 @@ else()
             # Jupyter needs SQLite3
 
             -DENABLE_SQLITE3=ON
-            -DSQLITE3_INCLUDE_PATH=${SQLite3_INCLUDE_DIRS}
-            -DSQLITE3_LIBRARY=${SQLite3_LIBRARIES}
+            -DSQLite3_INCLUDE_DIR=${SQLite3_INCLUDE_DIRS}
+            -DSQLite3_LIBRARY=${SQLite3_LIBRARIES}
 
             # Use our copy of zlib
 
@@ -545,8 +621,10 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${LIBFFI_LIBRARY_DIR}/${LIBFFI_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${LZMA_LIBRARY_DIR}/${LZMA_SHARED_LIBRARY} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${ROOT_DIR}/Scripts Scripts
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     elseif(APPLE)

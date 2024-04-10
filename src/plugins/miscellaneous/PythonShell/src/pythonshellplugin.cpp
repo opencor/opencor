@@ -22,10 +22,13 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 #include "pythonshellplugin.h"
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 //==============================================================================
 
@@ -108,10 +111,166 @@ void PythonShellPlugin::runHelpCommand()
 
 //==============================================================================
 
+static const char * pyStringAsCString(const wchar_t *pString)
+{
+    auto *unicode = PyUnicode_FromWideChar(pString, -1);
+
+    if (unicode == nullptr) {
+        return "";
+    }
+
+    auto *bytes = PyUnicode_AsUTF8String(unicode);
+
+#include "pythonbegin.h"
+    Py_DECREF(unicode);
+#include "pythonend.h"
+
+    if (bytes == nullptr) {
+        return "";
+    }
+
+    return PyBytes_AsString(bytes);
+}
+
+//==============================================================================
+
+static std::string pyStringListAsString(const PyWideStringList pList)
+{
+    std::ostringstream res;
+
+    res << "[";
+
+    for (Py_ssize_t i = 0; i < pList.length; ++i) {
+        if (i > 0) {
+            res << ", ";
+        }
+
+        res << std::quoted(pyStringAsCString(pList.items[i]));
+    }
+
+    res << "]";
+
+    return res.str();
+}
+
+//==============================================================================
+
+static void runCommand(const wchar_t *pCommand)
+{
+    PythonQtSupport::evaluateScript(pyStringAsCString(pCommand));
+}
+
+//==============================================================================
+
+static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
+{
+    static const QString script = R"PYTHON(
+import pathlib
+import runpy
+import sys
+
+sys.argv = %1
+
+module = r'%2'
+
+sys.path.insert(0, str(pathlib.Path(module).parent))
+
+sys.stdout.reconfigure(line_buffering=True)
+
+runpy.run_module(module, init_globals=globals(), run_name='__main__')
+
+sys.stdout.flush()
+)PYTHON";
+
+    PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
+                                          .arg(pyStringAsCString(pModule)));
+}
+
+//==============================================================================
+
+static void runFileName(const wchar_t *pFileName, const PyWideStringList pArgV)
+{
+    static const QString script = R"PYTHON(
+import pathlib
+import runpy
+import sys
+
+sys.argv = %1
+
+filename = r'%2'
+
+sys.path.insert(0, str(pathlib.Path(filename).parent))
+
+sys.stdout.reconfigure(line_buffering=True)
+
+runpy.run_path(filename, init_globals=globals(), run_name='__main__')
+
+sys.stdout.flush()
+)PYTHON";
+
+    PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
+                                          .arg(pyStringAsCString(pFileName)));
+}
+
+//==============================================================================
+
+static void runInteractive()
+{
+    static const QString script = R"PYTHON(
+import atexit
+import code
+import os
+import sys
+
+try:
+    import readline
+except ModuleNotFoundError:
+    readline = None
+
+HISTORY_FILE = os.path.expanduser('~/.pythonshell_history')
+
+def __init_history():
+    if readline is None:
+        return
+
+    readline_doc = getattr(readline, '__doc__', '')
+
+    if readline_doc is not None and 'libedit' in readline_doc:
+        readline.parse_and_bind('bind ^I rl_complete')
+    else:
+        readline.parse_and_bind('tab: complete')
+
+    if hasattr(readline, 'read_history_file'):
+        try:
+            readline.read_history_file(HISTORY_FILE)
+        except FileNotFoundError:
+            pass
+
+def __save_history():
+    if readline is None:
+        return
+
+    readline.set_history_length(1000)
+
+    readline.write_history_file(HISTORY_FILE)
+
+sys.path.insert(0, '')
+
+copyright = 'Type "help", "copyright", "credits" or "license" for more information.'
+
+__init_history()
+code.interact(banner=f'Python {sys.version} on {sys.platform}\n{copyright}', exitmsg='')
+__save_history()
+)PYTHON";
+
+    PythonQtSupport::evaluateScript(script);
+}
+
+//==============================================================================
+
 bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 {
-    // The following has been adapted from `Programs/python.c` in the Python
-    // source code
+    // Get the command line arguments to pass to Python
 
     const int argC = pArguments.size()+1;
     auto argV = reinterpret_cast<wchar_t **>(PyMem_RawMalloc((argC+1)*sizeof(wchar_t*)));
@@ -124,10 +283,6 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
         return false;
     }
-
-#ifdef __FreeBSD__
-    fedisableexcept(FE_OVERFLOW);
-#endif
 
     char *locale = _PyMem_RawStrdup(setlocale(LC_ALL, nullptr));
 
@@ -165,7 +320,47 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
 
     PyMem_RawFree(locale);
 
-    pRes = Py_Main(argC, argV);
+    // PythonQt has already initialised Python, so we need to update the
+    // existing configuration
+
+    PyConfig config;
+
+    PyConfig_InitPythonConfig(&config);
+
+    config.user_site_directory = 0;
+
+    // Set our arguments into the new configuration and parse them
+
+    PyStatus status = PyConfig_SetArgv(&config, argC, argV);
+
+    if (PyStatus_Exception(status)) {
+        pRes = 1;
+
+        goto done;
+    }
+
+    status = PyConfig_Read(&config);
+
+    if (PyStatus_Exception(status)) {
+        pRes = 1;
+
+        goto done;
+    }
+
+    if (config.run_command != nullptr) {
+        runCommand(config.run_command);
+    } else if (config.run_module != nullptr) {
+        runModule(config.run_module, config.argv);
+    } else if (config.run_filename != nullptr) {
+        runFileName(config.run_filename, config.argv);
+    } else {
+        runInteractive();
+    }
+
+done:
+    // Cleanup
+
+    PyConfig_Clear(&config);
 
     for (int i = 0; i < argC; ++i) {
         PyMem_RawFree(argVCopy[i]);
@@ -174,7 +369,7 @@ bool PythonShellPlugin::runPython(const QStringList &pArguments, int &pRes)
     PyMem_RawFree(argV);
     PyMem_RawFree(argVCopy);
 
-    return true;
+    return pRes == 0;
 }
 
 //==============================================================================

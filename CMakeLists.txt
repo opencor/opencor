@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.22)
 
 # Make sure that we are using the compilers we support
 # Note #1: indeed, if other compilers are installed on a developer's machine
@@ -277,12 +277,32 @@ set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
 get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 
-set(QMAKE_COMMAND ${QMAKE} -Wnone)
+if(APPLE)
+    # Account for the fact that QMake (from Qt 5.12) doesn't work with Xcode 15
+    # Note: see https://bugreports.qt.io/browse/QTBUG-117225...
+
+    set(QMAKE_COMMAND ${QMAKE} -Wnone -early "QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib")
+else()
+    set(QMAKE_COMMAND ${QMAKE} -Wnone)
+endif()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# Find out, on Linux, whether we are using a RHEL-based distribution
+# Note: this is needed for our Python bindings...
+
+if(NOT WIN32 AND NOT APPLE)
+    cmake_host_system_information(RESULT DISTRIB_INFO QUERY DISTRIB_INFO)
+
+    set(RHEL_LINUX_DISTRIBS centos fedora rhel rocky)
+
+    if(DISTRIB_INFO_ID IN_LIST RHEL_LINUX_DISTRIBS)
+        set(RHEL_LINUX_DISTRIB ON)
+    endif()
+endif()
 
 # Determine our platform directory
 
@@ -1558,14 +1578,23 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # libtinfo.so.5 is needed by Qt, but is not present on vanilla Ubuntu
-    # 20.04/22.04 LTS while libffi.so.7 is needed by Python and is present on
-    # vanilla Ubuntu 20.04 LTS, but not on Ubuntu 22.04 LTS
+    # libtinfo is needed by Qt but is not present on either vanilla Ubuntu or
+    # RHEL-based distributions, while libffi.so is needed by Python and
+    # although it is present on vanilla Ubuntu, it isn't present on our other
+    # Linux distributions
 
-    foreach(LIBRARY ffi.so.7 tinfo.so.5)
+    if(RHEL_LINUX_DISTRIB)
+        set(LIBRARIES ffi.so.8 tinfo.so.5)
+        set(SYSTEM_LIBRARY_DIRECTORY /lib64)
+    else()
+        set(LIBRARIES ffi.so.7 tinfo.so.5)
+        set(SYSTEM_LIBRARY_DIRECTORY /lib/x86_64-linux-gnu)
+    endif()
+
+    foreach(LIBRARY ${LIBRARIES})
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
-        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+        get_filename_component(REAL_FULL_LIBRARY ${SYSTEM_LIBRARY_DIRECTORY}/${FULL_LIBRARY} REALPATH)
 
         install(FILES ${REAL_FULL_LIBRARY}
                 DESTINATION lib

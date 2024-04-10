@@ -138,7 +138,9 @@ void PythonSupportPlugin::initializePlugin()
     // Ensure that the user's Python site directory (in ~/.local, etc.) isn't
     // used
 
+#include "pythonbegin.h"
     Py_NoUserSiteDirectory = 1;
+#include "pythonend.h"
 }
 
 //==============================================================================

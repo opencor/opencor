@@ -3,5 +3,6 @@
 appDir="$(cd "$(dirname "$0")"; pwd)/../.."
 
 export PATH="${appDir}/bin":$PATH
+export PYDEVD_DISABLE_FILE_VALIDATION=1
 
 "${appDir}/python/bin/ipython" "$@"
