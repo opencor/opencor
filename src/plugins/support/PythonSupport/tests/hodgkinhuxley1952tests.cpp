@@ -45,7 +45,7 @@ void HodgkinHuxley1952Tests::tests()
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(HodgkinHuxley1952Tests)
+QTEST_GUILESS_MAIN(HodgkinHuxley1952Tests)
 
 //==============================================================================
 // End of file
