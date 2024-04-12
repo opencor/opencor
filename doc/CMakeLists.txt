@@ -22,4 +22,11 @@ find_package(Python COMPONENTS Interpreter)
 
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
 
-generate_documentation(FALSE)
+check_python_package(sphinx-copybutton PYTHON_SPHINX_COPY_BUTTON_AVAILABLE)
+check_python_package(sphinx-inline-tabs PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
+
+if(SPHINX_EXECUTABLE AND PYTHON_SPHINX_COPY_BUTTON_AVAILABLE AND PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
+    generate_documentation(FALSE)
+else()
+    message(FATAL_ERROR "No documentation could be generated...")
+endif()
