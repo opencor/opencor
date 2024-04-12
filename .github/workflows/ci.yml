@@ -79,7 +79,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Install Sphinx
-        run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
+        run: pip install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Generate the documentation
         run: ./cd
