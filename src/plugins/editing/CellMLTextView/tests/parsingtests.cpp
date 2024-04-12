@@ -2914,7 +2914,7 @@ void ParsingTests::mapTests()
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(ParsingTests)
+QTEST_GUILESS_MAIN(ParsingTests)
 
 //==============================================================================
 // End of file

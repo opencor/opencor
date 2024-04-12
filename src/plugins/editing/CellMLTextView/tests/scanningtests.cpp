@@ -818,7 +818,7 @@ void ScanningTests::scanningNumberTests()
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(ScanningTests)
+QTEST_GUILESS_MAIN(ScanningTests)
 
 //==============================================================================
 // End of file
