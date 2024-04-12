@@ -16,27 +16,21 @@ jobs:
           - name: Build and test (Windows release)
             os: windows-2019
             mode: Release
-            path_separator: \
           - name: Build and test (Windows debug)
             os: windows-2019
             mode: Debug
-            path_separator: \
           - name: Build and test (Linux release)
             os: ubuntu-20.04
             mode: Release
-            path_separator: /
           - name: Build and test (Linux debug)
             os: ubuntu-20.04
             mode: Debug
-            path_separator: /
           - name: Build and test (macOS release)
             os: macos-12
             mode: Release
-            path_separator: /
           - name: Build and test (macOS debug)
             os: macos-12
             mode: Debug
-            path_separator: /
     env:
       BUILDCACHE_COMPRESS_FORMAT: ZSTD
       BUILDCACHE_DEBUG: -1
@@ -66,7 +60,7 @@ jobs:
           key: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies-${{ github.sha }}
           restore-keys: ${{ matrix.os }}-${{ matrix.mode }}-ExternalDependencies
       - name: Build and test OpenCOR
-        run: scripts${{ matrix.path_separator }}genericci ${{ matrix.mode }}
+        run: scripts/genericci ${{ matrix.mode }}
   doc:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
@@ -76,14 +70,10 @@ jobs:
         include:
           - name: Documentation (Windows)
             os: windows-2019
-            path_separator: \
           - name: Documentation (Linux)
             os: ubuntu-20.04
-            path_separator: /
           - name: Documentation (macOS)
             os: macos-12
-            context: PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
-            path_separator: /
     steps:
       - name: Check out OpenCOR
         uses: actions/checkout@v2
@@ -92,4 +82,4 @@ jobs:
       - name: Install Sphinx
         run: pip3 install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Generate the documentation
-        run: ${{ matrix.context }} .${{ matrix.path_separator }}cd
+        run: ./cd
