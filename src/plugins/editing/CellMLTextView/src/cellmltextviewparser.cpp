@@ -993,8 +993,18 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
                     // the previous line comment, so add the previous line
                     // comment(s) to the current node and keep track of the new
                     // line comment
+                    // Note #1: we add a space to the comment in case it is
+                    //          empty so that we can still have an "empty"
+                    //          comment in the resulting XML document...
+                    // Note #2: we check whether pDomNode is null in case we
+                    //          have a comment before the first element of the
+                    //          document (i.e. the model element)...
 
-                    pDomNode.appendChild(mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments));
+                    auto comment = mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments);
+
+                    if (!pDomNode.isNull()) {
+                        pDomNode.appendChild(comment);
+                    }
 
                     singleLineComments = processCommentString(mScanner.string());
                 }
@@ -1010,7 +1020,13 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             // the current node, if any, and leave
 
             if (prevLineCommentLine != 0) {
-                pDomNode.appendChild(mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments));
+                // Note: see the two notes above...
+
+                auto comment = mDomDocument.createComment(singleLineComments.isEmpty()?" ":singleLineComments);
+
+                if (!pDomNode.isNull()) {
+                    pDomNode.appendChild(comment);
+                }
             }
 
             return;
