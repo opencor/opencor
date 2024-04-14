@@ -163,8 +163,8 @@ static void runCommand(const wchar_t *pCommand)
 
 //==============================================================================
 
-#ifdef Q_OS_WIN
 static const char *reconfigureStdout =
+#ifdef Q_OS_WIN
     ""
 #else
     "sys.stdout.reconfigure(line_buffering=True)"
