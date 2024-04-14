@@ -148,7 +148,7 @@ void CliTests::cliStatusTests()
 
 //==============================================================================
 
-QTEST_APPLESS_MAIN(CliTests)
+QTEST_GUILESS_MAIN(CliTests)
 
 //==============================================================================
 // End of file

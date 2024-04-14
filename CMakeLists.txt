@@ -906,18 +906,13 @@ set(DOCUMENTATION_BUILD_TARGET DocumentationBuild)
 add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
 
 # Check whether we have everything to build our documentation
-# Note: we check the LANG environment variable since it's needed by Sphinx and
-#       it needs to be set, except that it's not when building OpenCOR using Qt
-#       Creator...
 
-if (NOT "$ENV{LANG}" STREQUAL "")
-    find_package(Python COMPONENTS Interpreter)
+find_package(Python COMPONENTS Interpreter)
 
-    find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
+find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
 
-    check_python_package(sphinx-copybutton PYTHON_SPHINX_COPY_BUTTON_AVAILABLE)
-    check_python_package(sphinx-inline-tabs PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
-endif()
+check_python_package(sphinx-copybutton PYTHON_SPHINX_COPY_BUTTON_AVAILABLE)
+check_python_package(sphinx-inline-tabs PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
 
 if(SPHINX_EXECUTABLE AND PYTHON_SPHINX_COPY_BUTTON_AVAILABLE AND PYTHON_SPHINX_INLINE_TABS_AVAILABLE)
     set(CAN_GENERATE_DOCUMENTATION TRUE)
