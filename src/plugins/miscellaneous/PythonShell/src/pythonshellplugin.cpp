@@ -163,7 +163,7 @@ static void runCommand(const wchar_t *pCommand)
 
 //==============================================================================
 
-static const char *reconfigureStdout =
+static const char *ReconfigureStdout =
 #ifdef Q_OS_WIN
     ""
 #else
@@ -195,7 +195,7 @@ sys.stdout.flush()
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
                                           .arg(pyStringAsCString(pModule))
-                                          .arg(reconfigureStdout));
+                                          .arg(ReconfigureStdout));
 }
 
 //==============================================================================
@@ -222,7 +222,7 @@ sys.stdout.flush()
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
                                           .arg(pyStringAsCString(pFileName))
-                                          .arg(reconfigureStdout));                                          
+                                          .arg(ReconfigureStdout));
 }
 
 //==============================================================================

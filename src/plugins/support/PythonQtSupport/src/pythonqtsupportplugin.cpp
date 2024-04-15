@@ -82,14 +82,13 @@ void PythonQtSupportPlugin::initializePlugin()
 {
     // Create and initialise a new PythonQt instance
 
-#ifdef Q_OS_WIN    
+#ifdef Q_OS_WIN
     // Capture and redirect PythonQt's standard output and error
 
     PythonQt::init(PythonQt::RedirectStdOut);
 
     connect(PythonQt::self(), &PythonQt::pythonStdOut,
             this, &PythonQtSupportPlugin::printStdOut);
-
     connect(PythonQt::self(), &PythonQt::pythonStdErr,
             this, &PythonQtSupportPlugin::printStdErr);
 #else
@@ -226,20 +225,22 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
     // We don't handle this interface...
 }
 
-#ifdef Q_OS_WIN
 //==============================================================================
 // Plugin specific
 //==============================================================================
 
+#ifdef Q_OS_WIN
 void PythonQtSupportPlugin::printStdOut(const QString &pString)
 {
     // Print the given text to the standard output
 
     std::cout << qPrintable(pString) << std::flush;
 }
+#endif
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
 void PythonQtSupportPlugin::printStdErr(const QString &pString)
 {
     // Print the given text to the standard error
