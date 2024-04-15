@@ -160,6 +160,17 @@ static void runCommand(const wchar_t *pCommand)
     PythonQtSupport::evaluateScript(pyStringAsCString(pCommand));
 }
 
+
+//==============================================================================
+
+static const char *ReconfigureStdout =
+#ifdef Q_OS_WIN
+    ""
+#else
+    "sys.stdout.reconfigure(line_buffering=True)"
+#endif
+;
+
 //==============================================================================
 
 static void runModule(const wchar_t *pModule, const PyWideStringList pArgV)
@@ -175,7 +186,7 @@ module = r'%2'
 
 sys.path.insert(0, str(pathlib.Path(module).parent))
 
-sys.stdout.reconfigure(line_buffering=True)
+%3
 
 runpy.run_module(module, init_globals=globals(), run_name='__main__')
 
@@ -183,7 +194,8 @@ sys.stdout.flush()
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
-                                          .arg(pyStringAsCString(pModule)));
+                                          .arg(pyStringAsCString(pModule))
+                                          .arg(ReconfigureStdout));
 }
 
 //==============================================================================
@@ -201,7 +213,7 @@ filename = r'%2'
 
 sys.path.insert(0, str(pathlib.Path(filename).parent))
 
-sys.stdout.reconfigure(line_buffering=True)
+%3
 
 runpy.run_path(filename, init_globals=globals(), run_name='__main__')
 
@@ -209,7 +221,8 @@ sys.stdout.flush()
 )PYTHON";
 
     PythonQtSupport::evaluateScript(script.arg(pyStringListAsString(pArgV).c_str())
-                                          .arg(pyStringAsCString(pFileName)));
+                                          .arg(pyStringAsCString(pFileName))
+                                          .arg(ReconfigureStdout));
 }
 
 //==============================================================================
