@@ -393,6 +393,16 @@ void CvodeSolver::reinitialize(double pVoi)
 
 void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
 {
+    // Note: rate values are computed and handled internally by CVODE, so we
+    //       can't access them and therefore need to compute them ourselves. To
+    //       do so, we keep track of the old state values (in mRates, to save
+    //       memory) and then update mRates once we have the new state values...
+
+    auto oldStates = mRates;
+    auto oneOverdVoi = 1.0 / (pVoiEnd - pVoi);
+
+    std::copy(mStates, mStates + mRatesStatesCount, oldStates);
+
     // Solve the model
 
     if (!mInterpolateSolution) {
@@ -401,15 +411,11 @@ void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 
-    // Compute the rates one more time to get up to date values for the rates
-    // Note: another way of doing this would be to copy the contents of the
-    //       calculated rates in rhsFunction, but that's bound to be more time
-    //       consuming since a call to CVode() is likely to generate at least a
-    //       few calls to rhsFunction(), so that would be quite a few memory
-    //       transfers while here we 'only' compute the rates one more time...
+    // Compute the rate values
 
-    mComputeRates(pVoiEnd, mConstants, mRates,
-                  N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
+    for (int i = 0; i < mRatesStatesCount; ++i) {
+        mRates[i] = oneOverdVoi * (mStates[i] - oldStates[i]);
+    }
 }
 
 //==============================================================================
