@@ -1326,7 +1326,7 @@ bool FileOrganiserWindowWidget::canCreateNewFolder() const
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
     int selectedIndexesCount = selectedIndexes.count();
 
-    // Determnine whether we can create a new folder
+    // Determine whether we can create a new folder
 
     if (selectedIndexesCount == 1) {
         // One item is currently selected, so the only way we could create a new

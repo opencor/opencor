@@ -396,7 +396,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
         setTabBarCurrentIndex(mFileTabs, 0);
     }
 
-    // Retrieve the seleted modes and views, in case there are no files
+    // Retrieve the selected modes and views, in case there are no files
 
     if (mFileNames.isEmpty()) {
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(QString(SettingsFileMode).arg(QString())).toString());
@@ -1389,7 +1389,7 @@ void CentralWidget::addView(Plugin *pPlugin)
 
         mModes.value(viewMode)->setEnabled(true);
 
-        // Keep track of the correspondance mode type/index
+        // Keep track of the correspondence mode type/index
 
         mModeTabIndexModes.insert(tabIndex, viewMode);
         mModeModeTabIndexes.insert(viewMode, tabIndex);
@@ -1908,9 +1908,9 @@ void CentralWidget::fileChanged(const QString &pFileName, bool pFileChanged,
         // The given file and/or one or several of its dependencies has changed,
         // so ask the user whether to reload the given file
         // Note: we temporarily disable the fact that our file manager can check
-        //       its fiels. Indeed, we are going to show a message box and this
+        //       its fields. Indeed, we are going to show a message box and this
         //       would normally result in our file manager stopping its timer
-        //       and then restarting it straightaway once our message box
+        //       and then restarting it straight away once our message box
         //       disappears (see FileManager::focusWindowChanged()). So, if we
         //       were not to do this, the fileChanged() signal would be handled
         //       a second time before we get a chance to reload the changed

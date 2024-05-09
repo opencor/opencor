@@ -399,7 +399,7 @@ void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
     // given string using the given end of line
 
     if ((pLine < 1) || (pColumn < 1)) {
-        // Invalid line and/or colunn values
+        // Invalid line and/or column values
 
         pPosition = -1;
     } else {

@@ -726,8 +726,8 @@ void CellmlFileCellml10Exporter::propagateInitialValues()
 bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
                                            const QString &pFileName)
 {
-    // Save the given model or ouput it to the console, if no file name has been
-    // provided, and this after having reformatted the given model
+    // Save the given model or output it to the console, if no file name has
+    // been provided, and this after having reformatted the given model
     // Note: for some reasons, the MathML type of e-notation based numbers gets
     //       moved to the CellML namespace, so we revert that behaviour...
 

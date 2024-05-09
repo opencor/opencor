@@ -177,7 +177,7 @@
         <translation>Le sujet dont la ressource est référencée (&quot;Biological Entity B&quot;) est une version ou une instance de l&apos;entité biologique représentée par l&apos;élément du modèle. Cette relation peut être utilisée pour représenter une isoforme ou forme modifiée d&apos;une entité biologique.</translation>
     </message>
     <message>
-        <source>Indentity</source>
+        <source>Identity</source>
         <translation>Identité</translation>
     </message>
     <message>

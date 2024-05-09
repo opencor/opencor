@@ -18,7 +18,7 @@
                 <ci>e_2</ci>
                 <ci>e_1</ci>
             </apply>
-            <!-- Compute flow taking acount of head (1) or tail (-1)-->
+            <!-- Compute flow taking account of head (1) or tail (-1)-->
             <apply>
                 <eq/>
                 <ci>f_1</ci>
@@ -60,7 +60,7 @@
                 <ci>e_3</ci>
                 <ci>e_1</ci>
             </apply>
-            <!-- Compute flow taking acount of head (1) or tail (-1)-->
+            <!-- Compute flow taking account of head (1) or tail (-1)-->
             <apply>
                 <eq/>
                 <ci>f_1</ci>

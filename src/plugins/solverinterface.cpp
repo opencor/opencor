@@ -72,7 +72,7 @@ void Solver::setProperties(const Properties &pProperties)
 
 void Solver::emitError(const QString &pErrorMessage)
 {
-    // Let people know that an error occured, but first reformat the error a
+    // Let people know that an error occurred, but first reformat the error a
     // bit, if needed
 
     QString errorMessage;

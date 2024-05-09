@@ -168,9 +168,9 @@ void CollapsibleHeaderWidget::setLastHeader(bool pLastHeader)
 
 //==============================================================================
 
-bool CollapsibleHeaderWidget::isCollapsable() const
+bool CollapsibleHeaderWidget::isCollapsible() const
 {
-    // Return wheter we are collapsable
+    // Return whether we are collapsible
 
     return !mButton->icon().isNull();
 }
@@ -179,7 +179,7 @@ bool CollapsibleHeaderWidget::isCollapsable() const
 
 bool CollapsibleHeaderWidget::isCollapsed() const
 {
-    // Return wheter we are collapsed
+    // Return whether we are collapsed
 
     return mCollapsed;
 }
@@ -317,7 +317,7 @@ int CollapsibleWidget::count() const
 
 bool CollapsibleWidget::isCollapsed(int pIndex) const
 {
-    // Return wheter our requested header is collapsed
+    // Return whether our requested header is collapsed
 
     return (mHeaders.value(pIndex) != nullptr)?mHeaders[pIndex]->isCollapsed():false;
 }

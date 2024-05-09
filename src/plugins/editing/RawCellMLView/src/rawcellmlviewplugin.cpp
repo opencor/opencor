@@ -88,7 +88,7 @@ EditorWidget::EditorWidget * RawCellMLViewPlugin::editorWidget(const QString &pF
 
 //==============================================================================
 
-bool RawCellMLViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
+bool RawCellMLViewPlugin::isEditorWidgetUsable(const QString &pFileName) const
 {
     Q_UNUSED(pFileName)
 

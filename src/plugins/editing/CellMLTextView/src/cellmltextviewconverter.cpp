@@ -258,7 +258,7 @@ CellMLTextViewConverterWarnings CellMLTextViewConverter::warnings() const
 
 QDomNode CellMLTextViewConverter::documentationNode() const
 {
-    // Return our documentation ndoe
+    // Return our documentation node
 
     return mDocumentationNode;
 }

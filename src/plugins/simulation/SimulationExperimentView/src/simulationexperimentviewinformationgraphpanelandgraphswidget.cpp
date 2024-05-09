@@ -483,7 +483,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(Grap
 
     pGraphPanel->removeAllGraphs();
 
-    // Remove track of the link betwen our graph panel and our graph panel and
+    // Remove track of the link between our graph panel and our graph panel and
     // graphs property editors
 
     Core::PropertyEditorWidget *graphPanelPropertyEditor = mGraphPanelPropertyEditors.value(pGraphPanel);
@@ -537,7 +537,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     // Create some graph properties
     // Note #1: to add properties will result in the propertyChanged() signal
     //          being emitted, but we don't want to handle that signal (at
-    //          least, not when creating a graph since not everyting may be set
+    //          least, not when creating a graph since not everything may be set
     //          yet, so this might cause more problems than anything), so we
     //          must disconnect ourselves from it before adding the properties
     //          (and then reconnect ourselves to it once we are done)...
@@ -764,7 +764,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     //       properties, which would in turn update the selected state of our
     //       graphs and let people know that they have been updated. Now, the
     //       problem with this is that every single graph is going to be shown/
-    //       hidden indivdually. So, if we have loads of graphs with many data
+    //       hidden individually. So, if we have loads of graphs with many data
     //       points, then it's going to be slow. So, instead, we disconnect the
     //       propertyChanged() signal, update the checked state of our graph
     //       properties as well as the selected state of our graphs, and then

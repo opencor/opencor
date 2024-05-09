@@ -306,7 +306,7 @@ void FileBrowserWindowWidget::updateItems(const QString &pItemPath,
 
     pItems.removeAll(pItemPath);
 
-    // Because of the above, we may have two or more consective identital items
+    // Because of the above, we may have two or more consecutive identital items
     // in the list, so we must reduce that to one
 
     if (pItems.count() > 1) {

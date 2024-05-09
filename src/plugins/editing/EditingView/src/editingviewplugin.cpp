@@ -465,7 +465,7 @@ void EditingViewPlugin::updateGui(const QString &pFileName)
 
         if (mEditor != nullptr) {
             mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                 || !mEditingViewInterface->isEditorWidgetUseable(pFileName));
+                                 || !mEditingViewInterface->isEditorWidgetUsable(pFileName));
         }
     }
 }

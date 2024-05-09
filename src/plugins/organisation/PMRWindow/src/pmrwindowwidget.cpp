@@ -114,7 +114,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     setLayout(layout);
 
-    // Create and customise our user menssage
+    // Create and customise our user message
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
@@ -137,10 +137,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                        this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
-    mMakeLocalCopyAction = Core::newAction(Core::overlayedIcon(folderIcon, ArrowDownIcon,
-                                                               folderIconSize, folderIconSize,
-                                                               folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
-                                                               overlayIconSize, overlayIconSize),
+    mMakeLocalCopyAction = Core::newAction(Core::overlaidIcon(folderIcon, ArrowDownIcon,
+                                                              folderIconSize, folderIconSize,
+                                                              folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                              overlayIconSize, overlayIconSize),
                                            this);
 
     connect(mViewInPmrAction, &QAction::triggered,

@@ -184,7 +184,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     setFindReplaceVisible(pEditorWidget->isFindReplaceVisible(), false);
 
     // Update the find/replace widget itself
-    // Note: we must inactivate (and then reactivate) our find/replace widget
+    // Note: we must deactivate (and then reactivate) our find/replace widget
     //       otherwise opening a new file or switching to another will result in
     //       the find text being automatically searched (see the
     //       findTextChanged() slot)...
@@ -497,7 +497,7 @@ void EditorWidget::selectAll()
 
 void EditorWidget::highlightAll()
 {
-    // Highlight all the occurences of the text, if any, in our editor
+    // Highlight all the occurrences of the text, if any, in our editor
 
     mEditor->highlightAll();
 }
@@ -594,7 +594,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible, bool pSelectWord)
     // Note: if we are over a word, then we want it to become our find text
     //       (unless some text is already selected), but if we make it so then a
     //       call to findText() will be triggered if the find text is different.
-    //       Clearly, we don't want this to happen, hence we inactivate and then
+    //       Clearly, we don't want this to happen, hence we deactivate and then
     //       reactivate our find/replace widget...
 
     if (pVisible) {
@@ -700,7 +700,7 @@ void EditorWidget::replaceSelectedText(const QString &pText)
 
 void EditorWidget::replaceAndFind()
 {
-    // Replace the current text and then find its next occurence
+    // Replace the current text and then find its next occurrence
 
     mEditor->replaceAndFind();
 }

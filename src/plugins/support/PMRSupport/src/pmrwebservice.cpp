@@ -193,7 +193,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         static const QString Id          = "id";
         static const QString Git         = "git";
 
-        const QList<QVariant> datas = itemsList.first().toMap()["data"].toList();
+        const QList<QVariant> dataList = itemsList.first().toMap()["data"].toList();
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
         QString storage;
         QString workspaceDescription;
@@ -201,7 +201,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         QString workspaceName;
         QString workspaceId;
 
-        for (const auto &data : datas) {
+        for (const auto &data : dataList) {
             QVariantMap dataMap = data.toMap();
             QString name = dataMap["name"].toString();
 
@@ -363,14 +363,14 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
         static const QString Title       = "title";
         static const QString Git         = "git";
 
-        const QList<QVariant> datas = itemsList.first().toMap()["data"].toList();
+        const QList<QVariant> dataList = itemsList.first().toMap()["data"].toList();
         QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
         QString storage;
         QString workspaceDescription;
         QString workspaceOwner;
         QString workspaceName;
 
-        for (const auto &data : datas) {
+        for (const auto &data : dataList) {
             QVariantMap dataMap = data.toMap();
 
             if (dataMap["name"].toString() == Storage) {

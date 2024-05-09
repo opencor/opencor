@@ -79,7 +79,7 @@ QAction * Menu::action() const
 
 QMenu * Menu::menu() const
 {
-    // Return the menu itsef
+    // Return the menu itself
 
     return mMenu;
 }

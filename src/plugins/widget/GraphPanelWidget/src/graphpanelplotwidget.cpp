@@ -1466,7 +1466,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
         //       itself to be updated, if it was originally allowed. Now, the
         //       problem is that if one of our ancestors decides to temporarily
         //       disable updates (e.g. our simulation experiment view) then
-        //       QwtLegendLabel won't reenable itself, which means that the
+        //       QwtLegendLabel won't re-enable itself, which means that the
         //       legend may not actually be visible in some cases (e.g. when
         //       opening a SED-ML file)...
 
@@ -1946,7 +1946,7 @@ bool GraphPanelPlotWidget::eventFilter(QObject *pObject, QEvent *pEvent)
 
 void GraphPanelPlotWidget::updateActions()
 {
-    // Leave straightaway if we cannot update our actions anymore
+    // Leave straight away if we cannot update our actions anymore
 
     if (!mCanUpdateActions) {
         return;
@@ -3437,7 +3437,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
         }
     }
 
-    // Reenable updates for our legend
+    // Re-enable updates for our legend
     // Note: see addGraph() for the reasoning behind it...
 
     if (legend() != nullptr) {
@@ -3754,7 +3754,7 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     // Note: we temporarily disable updates for our legend, this to avoid some
     //       black areas from quickly appearing on macOS (when adding a graph
     //       that results in the vertical scroll bar being shown). It gets
-    //       reenabled in updateGUI()...
+    //       re-enabled in updateGUI()...
 
     legend()->setUpdatesEnabled(false);
 

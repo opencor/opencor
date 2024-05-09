@@ -130,8 +130,8 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
                 this, &PmrWebServiceManager::authenticationCancelled);
     } else {
         mWebViewerDialog->load({});
-        // Note: this is in case we used our Web brower before, in which case it
-        //       will contain something, which we don't want to see when
+        // Note: this is in case we used our Web browser before, in which case
+        //       it will contain something, which we don't want to see when
         //       reopening it...
 
         mWebViewerDialog->retranslateUi();
@@ -147,7 +147,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 void PmrWebServiceManager::startCloseBrowser()
 {
     // Close our temporary Web browser after a slight delay
-    // Note: the whole idea is that granting/denying access resuts in a new
+    // Note: the whole idea is that granting/denying access results in a new
     //       (empty) page being loaded, so we want to wait until that page is
     //       loaded before actually closing our temporary Web browser. So, here,
     //       we have a short delay to give time to our temporary Web browser to

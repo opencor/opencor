@@ -285,7 +285,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     setLayout(layout);
 
-    // Create and customise our user menssage
+    // Create and customise our user message
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
@@ -307,26 +307,26 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     int folderIconSize = folderIconSizes.first().width();
     int overlayIconSize = int(0.57*folderIconSize);
 
-    mStagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, StagedIcon,
-                                                        folderIconSize, folderIconSize,
-                                                        0, 0, overlayIconSize, overlayIconSize);
-    mStagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, StagedIcon,
+    mStagedCollapsedWorkspaceIcon = Core::overlaidIcon(mCollapsedWorkspaceIcon, StagedIcon,
                                                        folderIconSize, folderIconSize,
                                                        0, 0, overlayIconSize, overlayIconSize);
+    mStagedExpandedWorkspaceIcon = Core::overlaidIcon(mExpandedWorkspaceIcon, StagedIcon,
+                                                      folderIconSize, folderIconSize,
+                                                      0, 0, overlayIconSize, overlayIconSize);
 
-    mUnstagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, UnstagedIcon,
-                                                          folderIconSize, folderIconSize,
-                                                          0, 0, overlayIconSize, overlayIconSize);
-    mUnstagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, UnstagedIcon,
+    mUnstagedCollapsedWorkspaceIcon = Core::overlaidIcon(mCollapsedWorkspaceIcon, UnstagedIcon,
                                                          folderIconSize, folderIconSize,
                                                          0, 0, overlayIconSize, overlayIconSize);
+    mUnstagedExpandedWorkspaceIcon = Core::overlaidIcon(mExpandedWorkspaceIcon, UnstagedIcon,
+                                                        folderIconSize, folderIconSize,
+                                                        0, 0, overlayIconSize, overlayIconSize);
 
-    mConflictCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, ConflictIcon,
-                                                          folderIconSize, folderIconSize,
-                                                          0, 0, overlayIconSize, overlayIconSize);
-    mConflictExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, ConflictIcon,
+    mConflictCollapsedWorkspaceIcon = Core::overlaidIcon(mCollapsedWorkspaceIcon, ConflictIcon,
                                                          folderIconSize, folderIconSize,
                                                          0, 0, overlayIconSize, overlayIconSize);
+    mConflictExpandedWorkspaceIcon = Core::overlaidIcon(mExpandedWorkspaceIcon, ConflictIcon,
+                                                        folderIconSize, folderIconSize,
+                                                        0, 0, overlayIconSize, overlayIconSize);
 
     // Create our various owned workspace icons
 
@@ -334,35 +334,35 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     int overlayIconPos = folderIconSize-overlayIconSize;
 
-    mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, FavoriteIcon,
-                                                       folderIconSize, folderIconSize,
-                                                       overlayIconPos, overlayIconPos,
-                                                       overlayIconSize, overlayIconSize);
-    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, FavoriteIcon,
+    mCollapsedOwnedWorkspaceIcon = Core::overlaidIcon(mCollapsedWorkspaceIcon, FavoriteIcon,
                                                       folderIconSize, folderIconSize,
                                                       overlayIconPos, overlayIconPos,
                                                       overlayIconSize, overlayIconSize);
+    mExpandedOwnedWorkspaceIcon = Core::overlaidIcon(mExpandedWorkspaceIcon, FavoriteIcon,
+                                                     folderIconSize, folderIconSize,
+                                                     overlayIconPos, overlayIconPos,
+                                                     overlayIconSize, overlayIconSize);
 
-    mStagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, StagedIcon,
-                                                             folderIconSize, folderIconSize,
-                                                             0, 0, overlayIconSize, overlayIconSize);
-    mStagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, StagedIcon,
+    mStagedCollapsedOwnedWorkspaceIcon = Core::overlaidIcon(mCollapsedOwnedWorkspaceIcon, StagedIcon,
                                                             folderIconSize, folderIconSize,
                                                             0, 0, overlayIconSize, overlayIconSize);
+    mStagedExpandedOwnedWorkspaceIcon = Core::overlaidIcon(mExpandedOwnedWorkspaceIcon, StagedIcon,
+                                                           folderIconSize, folderIconSize,
+                                                           0, 0, overlayIconSize, overlayIconSize);
 
-    mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, UnstagedIcon,
-                                                               folderIconSize, folderIconSize,
-                                                               0, 0, overlayIconSize, overlayIconSize);
-    mUnstagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, UnstagedIcon,
+    mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlaidIcon(mCollapsedOwnedWorkspaceIcon, UnstagedIcon,
                                                               folderIconSize, folderIconSize,
                                                               0, 0, overlayIconSize, overlayIconSize);
+    mUnstagedExpandedOwnedWorkspaceIcon = Core::overlaidIcon(mExpandedOwnedWorkspaceIcon, UnstagedIcon,
+                                                             folderIconSize, folderIconSize,
+                                                             0, 0, overlayIconSize, overlayIconSize);
 
-    mConflictCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, ConflictIcon,
-                                                               folderIconSize, folderIconSize,
-                                                               0, 0, overlayIconSize, overlayIconSize);
-    mConflictExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, ConflictIcon,
+    mConflictCollapsedOwnedWorkspaceIcon = Core::overlaidIcon(mCollapsedOwnedWorkspaceIcon, ConflictIcon,
                                                               folderIconSize, folderIconSize,
                                                               0, 0, overlayIconSize, overlayIconSize);
+    mConflictExpandedOwnedWorkspaceIcon = Core::overlaidIcon(mExpandedOwnedWorkspaceIcon, ConflictIcon,
+                                                             folderIconSize, folderIconSize,
+                                                             0, 0, overlayIconSize, overlayIconSize);
 
     // Create our various file icons
 
@@ -373,47 +373,47 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     overlayIconSize = int(0.57*fileIconSize);
 
-    mGcFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/gC.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mGiFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/gI.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
+    mGcFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/gC.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mGiFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/gI.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
 
-    mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mIdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iD.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mImFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iM.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mIrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iR.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mItFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iT.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
+    mIaFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mIdFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iD.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mImFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iM.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mIrFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iR.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mItFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iT.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
 
-    mWaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wA.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mWdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wD.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mWmFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wM.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mWrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wR.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mWtFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wT.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mWuFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wU.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
+    mWaFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wA.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mWdFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wD.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mWmFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wM.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mWrFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wR.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mWtFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wT.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
+    mWuFileIcon = Core::overlaidIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wU.png"),
+                                     fileIconSize, fileIconSize,
+                                     0, 0, overlayIconSize, overlayIconSize);
 
     // Connection to handle a response from our workspace manager
 
@@ -452,11 +452,11 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                               this);
     mCopyWorkspacePathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                                this);
-    mMakeLocalWorkspaceCopyAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon,
-                                                                        QIcon(":/PMRWorkspacesWindow/pull.png"),
-                                                                        folderIconSize, folderIconSize,
-                                                                        overlayIconPos, overlayIconPos,
-                                                                        overlayIconSize, overlayIconSize),
+    mMakeLocalWorkspaceCopyAction = Core::newAction(Core::overlaidIcon(mCollapsedWorkspaceIcon,
+                                                                       QIcon(":/PMRWorkspacesWindow/pull.png"),
+                                                                       folderIconSize, folderIconSize,
+                                                                       overlayIconPos, overlayIconPos,
+                                                                       overlayIconSize, overlayIconSize),
                                                     this);
     mSynchronizeWorkspaceAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/synchronize.png"),
                                                   this);
@@ -518,7 +518,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
     I18nInterface::retranslateAction(mMakeLocalWorkspaceCopyAction, tr("Make Local Workspace Copy..."),
                                      tr("Make a local copy of the current workspace"));
     I18nInterface::retranslateAction(mSynchronizeWorkspaceAction, tr("Synchronise Workspace With PMR..."),
-                                     tr("Synchronise the curent workspace with PMR"));
+                                     tr("Synchronise the current workspace with PMR"));
     I18nInterface::retranslateAction(mReloadWorkspacesAction, tr("Reload Workspaces"),
                                      mParentReloadAction->statusTip());
     I18nInterface::retranslateAction(mAboutWorkspaceAction, tr("About Workspace"),

@@ -308,7 +308,7 @@ void WebBrowserWindowWindow::actionForwardTriggered()
 
 void WebBrowserWindowWindow::actionCopyTriggered()
 {
-    // Copy the current slection to the clipboard
+    // Copy the current selection to the clipboard
 
     QApplication::clipboard()->setText(mWebBrowserWindowWidget->webView()->selectedText());
 }

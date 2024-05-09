@@ -129,11 +129,11 @@ EditorWidget::EditorWidget * CellMLTextViewPlugin::editorWidget(const QString &p
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorWidgetUsable(const QString &pFileName) const
 {
-    // Return whether the requested editor widget is useable
+    // Return whether the requested editor widget is usable
 
-    return mViewWidget->isEditorWidgetUseable(pFileName);
+    return mViewWidget->isEditorWidgetUsable(pFileName);
 }
 
 //==============================================================================

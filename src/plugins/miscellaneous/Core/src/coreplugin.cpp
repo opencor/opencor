@@ -564,7 +564,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
 
-        // Keep track of file types, but disinguish between those that are also
+        // Keep track of file types, but distinguish between those that are also
         // a data store and those that are not
 
         if (fileTypeInterface != nullptr) {

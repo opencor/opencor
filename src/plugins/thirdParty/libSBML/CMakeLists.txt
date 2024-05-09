@@ -109,7 +109,7 @@ else()
                 # Note: this is in case we had an HTTP error of sorts, in which case we
                 #       would end up with an empty file...
 
-                message(FATAL_ERROR "The libSBML depencies could not be retrieved...")
+                message(FATAL_ERROR "The libSBML dependencies could not be retrieved...")
             endif()
         endif()
     endif()

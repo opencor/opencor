@@ -149,7 +149,7 @@ public:
 
     QWidget * widget(const QString &pFileName) override;
 
-    bool isEditorWidgetUseable(const QString &pFileName) const;
+    bool isEditorWidgetUsable(const QString &pFileName) const;
     bool isEditorWidgetContentsModified(const QString &pFileName) const;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName,

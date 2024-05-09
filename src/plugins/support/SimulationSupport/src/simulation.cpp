@@ -298,7 +298,7 @@ void SimulationData::setStartingPoint(double pStartingPoint, bool pRecompute)
     mStartingPoint = pStartingPoint;
 
     // Recompute our 'computed constants' and 'variables', i.e. reset ourselves
-    // witout initialisation (hence passing false to reset())
+    // without initialisation (hence passing false to reset())
 
     if (pRecompute) {
         reset(false);
@@ -1049,7 +1049,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
     }
 
-    // Compute the values of our imported data, so we can plot it straightaway
+    // Compute the values of our imported data, so we can plot it straight away
     // along our other simulation results, if any
 
     int runsCount = pImportData->runSizes().count();

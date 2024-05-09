@@ -93,10 +93,10 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     //       case the icon would be smaller than what we need for our tool bar
     //       widget...
 
-    mGui->actionNew->setIcon(Core::scaledIcon(Core::overlayedIcon(folderIcon, PlusIcon,
-                                                                  folderIconSize, folderIconSize,
-                                                                  folderIconSize-plusIconSize, 0,
-                                                                  plusIconSize, plusIconSize),
+    mGui->actionNew->setIcon(Core::scaledIcon(Core::overlaidIcon(folderIcon, PlusIcon,
+                                                                 folderIconSize, folderIconSize,
+                                                                 folderIconSize-plusIconSize, 0,
+                                                                 plusIconSize, plusIconSize),
                                               scaledIconSize, scaledIconSize,
                                               Qt::KeepAspectRatio,
                                               Qt::SmoothTransformation));

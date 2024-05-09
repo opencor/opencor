@@ -3368,7 +3368,7 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 {
     // Ask the current graph panel to add a new graph for the given parameters
     // Note: due to the way legend labels are handled by Qwt, we temporarily
-    //       disable their update (and reenable it once the graph has been
+    //       disable their update (and re-enable it once the graph has been
     //       added; see graphAdded()) since otherwise we may see the label flash
     //       due to its properties (e.g. font size) not being the same as those
     //       of QwtLegendLabel...
@@ -3903,7 +3903,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       plot, we don't want a full update of our plot since
                 //       this is going to reset its axes' values and therefore
                 //       result in some (expected) flickering, if some data is
-                //       to be drawn straightaway (e.g. when we start a
+                //       to be drawn straight away (e.g. when we start a
                 //       simulation)...
 
                 updatePlot(plot, needFullUpdatePlot, true);
