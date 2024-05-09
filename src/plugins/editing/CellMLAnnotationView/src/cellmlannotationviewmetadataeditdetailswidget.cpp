@@ -1055,7 +1055,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
                                               termInformation[0], termInformation[1]);
     }
 
-    // Disable the add term buton, now that we have added the term
+    // Disable the add term button, now that we have added the term
 
     mAddTermButton->setEnabled(false);
 

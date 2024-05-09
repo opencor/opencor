@@ -471,7 +471,7 @@ void EditorWidgetFindReplaceWidget::replaceButtonClicked()
 void EditorWidgetFindReplaceWidget::replaceAndFindButtonClicked()
 {
     // Let people know that we want to replace the current text and the find the
-    // next occurence of the text
+    // next occurrence of the text
 
     emit replaceAndFindRequested();
 }
@@ -480,7 +480,7 @@ void EditorWidgetFindReplaceWidget::replaceAndFindButtonClicked()
 
 void EditorWidgetFindReplaceWidget::replaceAllButtonClicked()
 {
-    // Let people know that we want to replace all the occurences of the text
+    // Let people know that we want to replace all the occurrences of the text
 
     emit replaceAllRequested();
 }

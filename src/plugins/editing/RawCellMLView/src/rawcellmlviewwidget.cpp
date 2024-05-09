@@ -599,7 +599,7 @@ void RawCellmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
     // Note: before setting the contents of our viewer, we need to make sure
     //       that pInput is still our current Content MathML equation. Indeed,
     //       say that updateViewer() gets called many times in a short period of
-    //       time (e.g. as a result of replacing all the occurences of a
+    //       time (e.g. as a result of replacing all the occurrences of a
     //       particular string with another one) and that some of those calls
     //       don't require an XSL transformation, then we may end up in a case
     //       where pInput is not our current Content MathML equation anymore, in

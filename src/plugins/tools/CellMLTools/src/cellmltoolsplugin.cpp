@@ -468,7 +468,7 @@ bool CellMLToolsPlugin::runCommand(Command pCommand,
     }
 
     // Delete the temporary file, if any, i.e. we are dealing with a remote file
-    // and it has a temporay file associated with it
+    // and it has a temporary file associated with it
 
     if (!isLocalFile && fileExists) {
         QFile::remove(fileName);

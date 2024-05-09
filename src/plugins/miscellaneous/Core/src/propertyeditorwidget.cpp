@@ -265,7 +265,7 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
                                                  this);
 
         // Check whether the sub control exists (i.e. its region is valid) and,
-        // if so, whether we ore over it
+        // if so, whether we are over it
 
         if (subControlRect.isValid() && subControlRect.contains(pEvent->pos())) {
             break;
@@ -1131,7 +1131,7 @@ void Property::setColorValue(const QPoint &pPoint)
         }
 
         // Make sure that the widget that owns this property gets the focus back
-        // straightaway
+        // straight away
         // Note: indeed, if we come here as a result of a double click (see
         //       PropertyEditorWidget::mouseDoubleClickEvent()), then the first
         //       time round, we will have to click anywhere in OpenCOR for

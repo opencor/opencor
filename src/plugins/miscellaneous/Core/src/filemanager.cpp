@@ -740,7 +740,7 @@ void FileManager::checkFiles()
     // Note: indeed, although we try our best to enable/disable our timer as
     //       needed, there are cases (e.g. a QFileDialog is opened) that don't
     //       result in the focusWindowChanged() signal being emitted, which
-    //       means that we can't enable/disable our timer in those acses, hence
+    //       means that we can't enable/disable our timer in those cases, hence
     //       our checking that OpenCOR is really active indeed...
 
     if (!opencorActive() || !mCheckFilesEnabled) {

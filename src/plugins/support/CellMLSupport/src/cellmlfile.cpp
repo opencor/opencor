@@ -165,8 +165,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 {
     // Fully instantiate all the imports, but only if we are not directly
     // dealing with our model or if we are dealing with a non CellML 1.0 model,
-    // and then keep track of that fact (so we don't fully instantiate everytime
-    // we come here)
+    // and then keep track of that fact (so we don't fully instantiate every
+    // time we come here)
 
     Version cellmlVersion = modelVersion(pModel);
 

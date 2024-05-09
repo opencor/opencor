@@ -1,0 +1,5 @@
+                                                 { "fr", QString::fromUtf8(R"(une extension pour accéder les espaces de travail <a href="https://models.physiomeproject.org/">PMR</a> d'un utilisateur.)") }
+                                                 { "fr", QString::fromUtf8("une extension qui fournit une fonction d'addition.") }
+                                                                  { "fr", QString::fromUtf8("Tolérance absolue") }
+    if (modelCode.contains("defint(func")) {
+        auto requestor = new O1Requestor(this, mPmrAuthentication, this);

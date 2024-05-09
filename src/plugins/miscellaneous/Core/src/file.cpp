@@ -61,7 +61,7 @@ File::File(const QString &pFileName, Type pType, const QString &pUrl) :
 File::~File()
 {
     // Delete our corresponding physical file, in case we refer to a new or a
-    // remote file (in which case our corresponding phsyical file was always
+    // remote file (in which case our corresponding physical file was always
     // supposed to be only a temporary file)
 
     if (isNew() || isRemote()) {

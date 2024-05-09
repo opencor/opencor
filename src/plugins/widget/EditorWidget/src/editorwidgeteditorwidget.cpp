@@ -160,7 +160,7 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
     // Check whether something has been selected and, if so, highlight all of
     // its occurrences
-    // Note: we must inactivate (and then reactivate) our find/replace widget
+    // Note: we must deactivate (and then reactivate) our find/replace widget
     //       before setting its find text otherwise we will be highlighting
     //       things twice...
 
@@ -273,7 +273,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
                         |(mFindReplace->isCaseSensitive()?SCFIND_MATCHCASE:0)
                         |(mFindReplace->searchWholeWordsOnly()?SCFIND_WHOLEWORD:0)));
 
-    // Hihghlight/replace all the occurences of the text
+    // Hihghlight/replace all the occurrences of the text
 
     const char *rawFindText = findText.constData();
     int findTextLen = findText.length();
@@ -362,7 +362,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
 void EditorWidgetEditorWidget::highlightAll()
 {
-    // Highlight all the occurences of the text
+    // Highlight all the occurrences of the text
 
     processAll(Action::HighlightAll);
 }
@@ -371,7 +371,7 @@ void EditorWidgetEditorWidget::highlightAll()
 
 void EditorWidgetEditorWidget::replaceAll()
 {
-    // Replace all the occurences of the text
+    // Replace all the occurrences of the text
 
     processAll(Action::ReplaceAll);
 }
@@ -511,7 +511,7 @@ void EditorWidgetEditorWidget::replace()
 
 void EditorWidgetEditorWidget::replaceAndFind()
 {
-    // Replace the current text and then find its next occurence
+    // Replace the current text and then find its next occurrence
 
     replace();
     findNext();

@@ -232,7 +232,7 @@ void HelpWindowWindow::actionForwardTriggered()
 
 void HelpWindowWindow::actionCopyTriggered()
 {
-    // Copy the current slection to the clipboard
+    // Copy the current selection to the clipboard
 
     QApplication::clipboard()->setText(mHelpWindowWidget->webView()->selectedText());
 }

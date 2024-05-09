@@ -67,7 +67,7 @@ EditorWidget::EditorWidget * RawSEDMLViewPlugin::editorWidget(const QString &pFi
 
 //==============================================================================
 
-bool RawSEDMLViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
+bool RawSEDMLViewPlugin::isEditorWidgetUsable(const QString &pFileName) const
 {
     Q_UNUSED(pFileName)
 

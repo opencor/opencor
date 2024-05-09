@@ -192,26 +192,26 @@ QIcon CORE_EXPORT standardIcon(QStyle::StandardPixmap pStandardIcon,
 QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, const QColor &pColor);
 QIcon CORE_EXPORT tintedIcon(const QString &pIcon, const QColor &pColor);
 
-QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
-                                const QIcon &pOverlayIcon,
-                                int pBaseWidth, int pBaseHeight,
-                                int pOverlayLeft, int pOverlayTop,
-                                int pOverlayWidth, int pOverlayHeight);
-QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
-                                const QIcon &pOverlayIcon,
-                                int pBaseWidth, int pBaseHeight,
-                                int pOverlayLeft, int pOverlayTop,
-                                int pOverlayWidth, int pOverlayHeight);
-QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
-                                const QString &pOverlayIcon,
-                                int pBaseWidth, int pBaseHeight,
-                                int pOverlayLeft, int pOverlayTop,
-                                int pOverlayWidth, int pOverlayHeight);
-QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
-                                const QString &pOverlayIcon,
-                                int pBaseWidth, int pBaseHeight,
-                                int pOverlayLeft, int pOverlayTop,
-                                int pOverlayWidth, int pOverlayHeight);
+QIcon CORE_EXPORT overlaidIcon(const QIcon &pBaseIcon,
+                               const QIcon &pOverlayIcon,
+                               int pBaseWidth, int pBaseHeight,
+                               int pOverlayLeft, int pOverlayTop,
+                               int pOverlayWidth, int pOverlayHeight);
+QIcon CORE_EXPORT overlaidIcon(const QString &pBaseIcon,
+                               const QIcon &pOverlayIcon,
+                               int pBaseWidth, int pBaseHeight,
+                               int pOverlayLeft, int pOverlayTop,
+                               int pOverlayWidth, int pOverlayHeight);
+QIcon CORE_EXPORT overlaidIcon(const QIcon &pBaseIcon,
+                               const QString &pOverlayIcon,
+                               int pBaseWidth, int pBaseHeight,
+                               int pOverlayLeft, int pOverlayTop,
+                               int pOverlayWidth, int pOverlayHeight);
+QIcon CORE_EXPORT overlaidIcon(const QString &pBaseIcon,
+                               const QString &pOverlayIcon,
+                               int pBaseWidth, int pBaseHeight,
+                               int pOverlayLeft, int pOverlayTop,
+                               int pOverlayWidth, int pOverlayHeight);
 
 QIcon CORE_EXPORT scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
                              Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,

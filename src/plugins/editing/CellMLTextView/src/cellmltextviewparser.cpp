@@ -2910,7 +2910,7 @@ QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
 
     argumentElements << argumentElement;
 
-    // Check wheter we expect or might expect a second argument
+    // Check whether we expect or might expect a second argument
 
     if (   (   pOneArgument && pTwoArguments
             && isTokenType(pDomNode, CellmlTextViewScanner::Token::Comma))
@@ -2934,7 +2934,7 @@ QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
         argumentElements << argumentElement;
     }
 
-    // Check wheter we might expect more arguments
+    // Check whether we might expect more arguments
 
     while (   pTwoArguments && pMoreArguments
            && isTokenType(pDomNode, CellmlTextViewScanner::Token::Comma)) {

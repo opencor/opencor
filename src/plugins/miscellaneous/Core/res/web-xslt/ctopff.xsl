@@ -2077,7 +2077,7 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
   </mrow>
 </x:template>
 
- <!-- make 1-(9-2) google code isse 3-->
+ <!-- make 1-(9-2) google code issue 3-->
 <x:template name="binary" >
   <x:param name="mo"/>
   <x:param name="p" select="0"/>
@@ -2126,7 +2126,7 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
 </x:template>
 
 
-<!-- mathml 3 addtitions -->
+<!-- mathml 3 additions -->
 
 <x:template match="m:cs">
   <ms>

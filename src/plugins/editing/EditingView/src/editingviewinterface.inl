@@ -27,7 +27,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
     VIRTUAL EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const PURE_OR_OVERRIDE;
 
-    VIRTUAL bool isEditorWidgetUseable(const QString &pFileName) const PURE_OR_OVERRIDE;
+    VIRTUAL bool isEditorWidgetUsable(const QString &pFileName) const PURE_OR_OVERRIDE;
     VIRTUAL bool isEditorWidgetContentsModified(const QString &pFileName) const PURE_OR_OVERRIDE;
 #include "interfaceend.h"
 

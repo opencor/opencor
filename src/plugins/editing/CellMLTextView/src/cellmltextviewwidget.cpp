@@ -525,8 +525,8 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             editingWidget->editorWidget()->setReadOnly(true);
             // Note: EditingViewPlugin::filePermissionsChanged() will do the
-            //       same as above, but this will take a wee bit of time while
-            //       we want it done straightaway...
+            //       same as above, but this will take a bit of time while we
+            //       want it done straight away...
 
             editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Error,
                                                        mConverter.errorLine(),
@@ -724,9 +724,9 @@ QWidget * CellmlTextViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-bool CellmlTextViewWidget::isEditorWidgetUseable(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorWidgetUsable(const QString &pFileName) const
 {
-    // Return whether the requested editor widget is useable
+    // Return whether the requested editor widget is usable
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
@@ -1300,7 +1300,7 @@ void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
     // Note: before setting the contents of our viewer, we need to make sure
     //       that pInput is still our current Content MathML equation. Indeed,
     //       say that updateViewer() gets called many times in a short period of
-    //       time (e.g. as a result of replacing all the occurences of a
+    //       time (e.g. as a result of replacing all the occurrences of a
     //       particular string with another one) and that some of those calls
     //       don't require an XSL transformation, then we may end up in a case
     //       where pInput is not our current Content MathML equation anymore, in

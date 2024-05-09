@@ -808,12 +808,11 @@ QIcon tintedIcon(const QString &pIcon, const QColor &pColor)
 
 //==============================================================================
 
-QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
-                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
-                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
+QIcon overlaidIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
+                   int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                   int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Create and return an overlaid icon using the given base and overlay icons
     // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens
     //       (see https://bugreports.qt.io/browse/QTBUG-71333), hence we need to
     //       scale things...
@@ -838,38 +837,38 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 
 //==============================================================================
 
-QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
-                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
-                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
+QIcon overlaidIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
+                   int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                   int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Return an overlayed icon using the given base and overlay icons
+    // Return an overlaid icon using the given base and overlay icons
 
-    return overlayedIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
-                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+    return overlaidIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
+                        pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
 }
 
 //==============================================================================
 
-QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
-                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
-                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
+QIcon overlaidIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
+                   int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                   int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Return an overlayed icon using the given base and overlay icons
+    // Return an overlaid icon using the given base and overlay icons
 
-    return overlayedIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
-                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+    return overlaidIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
+                        pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
 }
 
 //==============================================================================
 
-QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
-                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
-                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
+QIcon overlaidIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
+                   int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                   int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Return an overlayed icon using the given base and overlay icons
+    // Return an overlaid icon using the given base and overlay icons
 
-    return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
-                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+    return overlaidIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
+                        pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
 }
 
 //==============================================================================

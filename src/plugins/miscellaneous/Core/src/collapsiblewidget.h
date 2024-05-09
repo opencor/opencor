@@ -72,7 +72,7 @@ public:
     void setFirstHeader(bool pFirstHeader);
     void setLastHeader(bool pLastHeader);
 
-    bool isCollapsable() const;
+    bool isCollapsible() const;
 
     bool isCollapsed() const;
     void setCollapsed(bool pCollapsed);

@@ -110,7 +110,7 @@
         <translation>Synchroniser Espace De Travail Avec PMR...</translation>
     </message>
     <message>
-        <source>Synchronise the curent workspace with PMR</source>
+        <source>Synchronise the current workspace with PMR</source>
         <translation>Synchroniser l&apos;espace de travail actuel avec PMR</translation>
     </message>
     <message>

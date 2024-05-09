@@ -111,7 +111,7 @@ PmrWorkspacesWindowSynchronizeDialogDifferenceData::PmrWorkspacesWindowSynchroni
 
 QString PmrWorkspacesWindowSynchronizeDialogDifferenceData::operation() const
 {
-    // Return our opereation
+    // Return our operation
 
     return mOperation;
 }
@@ -1030,7 +1030,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
                 mCellmlDiffHtmls.insert(pFileName, res);
             } else {
                 // The conversion failed, so keep track of that fact (so as not
-                // to try to convert everytime this file gets selected)
+                // to try to convert every time this file gets selected)
 
                 if (!oldFileEmpty) {
                     mInvalidCellmlCode << oldFileContents;
@@ -1105,8 +1105,8 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         mPreviouslySelectedIndexes = indexes;
 
         // Go through each selected index and retrieve its differences, if it
-        // hasn't already been done, and show them (respecting the order in whic
-        // they are listed)
+        // hasn't already been done, and show them (respecting the order in
+        // which they are listed)
 
         static const QString Space = R"(    <tr class="space"/>)""\n";
         static const QString FileName = R"(    <tr class="filename">)""\n"

@@ -232,7 +232,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
         shortDescription = tr("Version");
         longDescription = tr(R"(The subject of the referenced resource ("Biological Entity B") is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform or modified form of a biological entity.)");
     } else if (pQualifier == BioIs) {
-        shortDescription = tr("Indentity");
+        shortDescription = tr("Identity");
         longDescription = tr(R"(The biological entity represented by the model element has identity with the subject of the referenced resource ("Biological Entity B"). This relation might be used to link a reaction to its exact counterpart in a database, for instance.)");
     } else if (pQualifier == BioIsDescribedBy) {
         shortDescription = tr("Description");

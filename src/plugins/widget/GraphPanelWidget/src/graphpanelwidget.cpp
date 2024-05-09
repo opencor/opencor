@@ -129,7 +129,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 
-    // Make sure that our marker's colour is properly intiialised
+    // Make sure that our marker's colour is properly initialised
 
     updateMarkerColor();
 
@@ -198,7 +198,7 @@ void GraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 
     QWidget::mousePressEvent(pEvent);
 
-    // Activate/inactivate the graph panel
+    // Activate/deactivate the graph panel
     // Note: we do it through setActive() because we want the graph panel to let
     //       people know that our active state has changed...
 

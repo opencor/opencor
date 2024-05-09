@@ -65,7 +65,7 @@ EditorWidget::EditorWidget * RawTextViewPlugin::editorWidget(const QString &pFil
 
 //==============================================================================
 
-bool RawTextViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
+bool RawTextViewPlugin::isEditorWidgetUsable(const QString &pFileName) const
 {
     Q_UNUSED(pFileName)
 

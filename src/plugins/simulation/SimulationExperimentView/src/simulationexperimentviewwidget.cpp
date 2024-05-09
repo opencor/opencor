@@ -367,7 +367,7 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that our simulation's contents' information GUI is up to
         // date
-        // Note: this is, at least, necessary for our paramaters widget since we
+        // Note: this is, at least, necessary for our parameters widget since we
         //       repopulate it, meaning that its columns' width will be reset...
 
         updateContentsInformationGui(simulationWidget);
@@ -725,7 +725,7 @@ void SimulationExperimentViewWidget::graphPanelSectionExpanded(int pSection,
 
 void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget)
 {
-    // Update our simualtion widget's GUI and that of its children
+    // Update our simulation widget's GUI and that of its children
     // Note: for column widths, we set the last column width to zero to avoid
     //       potential issues, should the vertical scroll bar be visible...
 
