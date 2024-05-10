@@ -91,3 +91,16 @@ jobs:
         run: pip install Sphinx sphinx_copybutton sphinx_inline_tabs
       - name: Generate the documentation
         run: ./cd
+  spell_check:
+    name: Spell check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out OpenCOR
+        uses: actions/checkout@v4
+      - name: Spell check
+        uses: codespell-project/actions-codespell@v2
+        with:
+          check_filenames: true
+          skip: ./i18n,./res/flags,./res/ui.qrc,./src/3rdparty,./src/plugins/thirdParty/Python/scripts,./src/plugins/thirdParty/PythonPackages/scripts,*_fr.ts,*.out,*.xml
+          exclude_file: .codespellexclude
+          ignore_words_list: filetests,pevent,pres,dependees
