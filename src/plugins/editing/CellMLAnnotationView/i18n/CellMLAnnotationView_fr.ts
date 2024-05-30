@@ -177,10 +177,6 @@
         <translation>Le sujet dont la ressource est référencée (&quot;Biological Entity B&quot;) est une version ou une instance de l&apos;entité biologique représentée par l&apos;élément du modèle. Cette relation peut être utilisée pour représenter une isoforme ou forme modifiée d&apos;une entité biologique.</translation>
     </message>
     <message>
-        <source>Identity</source>
-        <translation>Identité</translation>
-    </message>
-    <message>
         <source>The biological entity represented by the model element has identity with the subject of the referenced resource (&quot;Biological Entity B&quot;). This relation might be used to link a reaction to its exact counterpart in a database, for instance.</source>
         <translation>L&apos;entité biologique représentée par l&apos;élément du modèle a identité avec le sujet dont la ressource est référencée (&quot;Biological Entity B&quot;). Cette relation pourrait être utilisée pour associer une réaction à son homologue exact dans une base de données, par exemple.</translation>
     </message>
