@@ -159,7 +159,7 @@ void CsvDataStoreExporterWorker::run()
                 double voiValue = voiValues[i];
 
                 if (voi != nullptr) {
-                    rowData += QString::number(voiValue);
+                    rowData += QString::number(voiValue, 'g', 15);
                 }
 
                 bool firstRowData = true;
@@ -181,7 +181,7 @@ void CsvDataStoreExporterWorker::run()
 
                         if (   (runsIndex[j] < dataStore->size(j))
                             && qFuzzyCompare(dataStore->voi()->value(runsIndex[j], j), voiValue)) {
-                            rowData += QString::number(variableRun->value(runsIndex[j], j));
+                            rowData += QString::number(variableRun->value(runsIndex[j], j), 'g', 15);
 
                             updateRunsIndex[j] = true;
                         }
