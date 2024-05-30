@@ -162,7 +162,7 @@ endif()
 
 # Try to build our silent program
 
-set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
+set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun${CMAKE_EXECUTABLE_SUFFIX})
 
 try_compile(SILENTRUN_EXE ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/silentrun.c
             COPY_FILE ${SILENTRUN})
