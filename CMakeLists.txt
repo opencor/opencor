@@ -164,19 +164,10 @@ endif()
 
 set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
 
-if(WIN32)
-    execute_process(COMMAND ${C_COMPILER} /O2 /Fe${SILENTRUN} ${CMAKE_SOURCE_DIR}/cmake/silentrun.c
-                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
-else()
-    if(APPLE)
-        set(INCLUDE_ARGUMENT -I ${CMAKE_OSX_SYSROOT}/usr/include)
-    endif()
+try_compile(SILENTRUN_EXE ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/silentrun.c
+            COPY_FILE ${SILENTRUN})
 
-    execute_process(COMMAND ${C_COMPILER} -std=c99 -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${CMAKE_SOURCE_DIR}/cmake/silentrun.c
-                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
-endif()
-
-if(NOT RESULT EQUAL 0)
+if(NOT SILENTRUN_EXE)
     message(FATAL_ERROR "silentrun could not be built...")
 endif()
 
@@ -185,10 +176,10 @@ endif()
 if(NOT WIN32 AND NOT APPLE)
     set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
-    execute_process(COMMAND ${C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${CMAKE_SOURCE_DIR}/cmake/runpath2rpath.c
-                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+    try_compile(RUNPATH2RPATH_EXE ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/runpath2rpath.c
+                COPY_FILE ${RUNPATH2RPATH})
 
-    if(NOT RESULT EQUAL 0)
+    if(NOT RUNPATH2RPATH_EXE)
         message(FATAL_ERROR "runpath2rpath could not be built...")
     endif()
 endif()
@@ -231,12 +222,12 @@ else()
         find_program(CLCACHE clcache)
 
         if(CLCACHE)
-            set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
+            set(CLCACHEWRAPPER ${CMAKE_BINARY_DIR}/clcachewrapper)
 
-            execute_process(COMMAND ${C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${CMAKE_SOURCE_DIR}/cmake/clcachewrapper.c
-                            RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+            try_compile(CLCACHEWRAPPER_EXE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/clcachewrapper.c
+                        COPY_FILE ${CLCACHEWRAPPER})
 
-            if(RESULT EQUAL 0)
+            if(CLCACHEWRAPPER_EXE)
                 set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
                 set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
                 set(COMPILER_LAUNCHER_NAME clcache)
