@@ -1725,7 +1725,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       replot ourselves...
 
     setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis,
-            false, false, false, true, false, false);
+            false, false, false, true, false, false, false);
 
     mDirtyAxes = false;
 
@@ -3173,7 +3173,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    bool pCanReplot, bool pEmitSignal,
                                    bool pForceAxesSetting,
                                    bool pSynchronizeXAxis,
-                                   bool pSynchronizeYAxis)
+                                   bool pSynchronizeYAxis,
+                                   bool pSynchronizeNeighbor)
 {
     // Axes can only be set if they are not dirty or if we want to force the
     // setting of our X/Y axes
@@ -3221,7 +3222,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
     if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
-        mDirtyAxes = mDirtyAxes || pForceAxesSetting;
+        mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizeNeighbor);
 
         updateActions();
 
@@ -3245,13 +3246,13 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
                 if (canSynchroniseX && canSynchroniseY) {
                     neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY,
-                                      false, false, false, true, false, false);
+                                      false, false, false, true, false, false, true);
                 } else if (canSynchroniseX) {
                     neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(),
-                                      false, false, false, true, false, false);
+                                      false, false, false, true, false, false, true);
                 } else if (canSynchroniseY) {
                     neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY,
-                                      false, false, false, true, false, false);
+                                      false, false, false, true, false, false, true);
                 }
             }
 
@@ -3279,7 +3280,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
-                       true, true, true, true, false, false);
+                       true, true, true, true, false, false, false);
 
     mDirtyAxes = false;
 
@@ -3380,7 +3381,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     if (scaledAxisX || scaledAxisY) {
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                true, true, true, true, false, false);
+                true, true, true, true, false, false, false);
     }
 }
 
@@ -3506,7 +3507,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
                 canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY),
-                true, true, true, true, false, false);
+                true, true, true, true, false, false, false);
 
         break;
     }
@@ -3655,7 +3656,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
             && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
-                    true, true, true, true, false, false);
+                    true, true, true, true, false, false, false);
         }
     } else {
         // An action that doesn't require anything specific to be done, except
@@ -4183,7 +4184,7 @@ void GraphPanelPlotWidget::customAxes()
             || !qFuzzyCompare(newMinY, oldMinY)
             || !qFuzzyCompare(newMaxY, oldMaxY)) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, true, true, false, false);
+                    true, true, true, true, false, false, false);
         }
     }
 }
