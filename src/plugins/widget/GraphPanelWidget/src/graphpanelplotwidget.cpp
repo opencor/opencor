@@ -3578,7 +3578,7 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         return;
     }
 
-    // Check which action to can carry out
+    // Check which action to carry out
 
     if (   (pEvent->modifiers() == Qt::NoModifier)
         && (pEvent->button() == Qt::LeftButton)) {
