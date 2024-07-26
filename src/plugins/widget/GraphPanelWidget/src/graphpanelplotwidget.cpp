@@ -1720,15 +1720,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addSeparator();
     mContextMenu->addAction(mResetZoomAction);
 
-    // Set our axes' values
-    // Note: we are not all initialised yet, so we don't want setAxes() to
-    //       replot ourselves...
-
-    setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis,
-            false, false, false, true, false, false, false);
-
-    mDirtyAxes = false;
-
     // We want our legend to be active by default
 
     setLegendVisible(true);
@@ -2534,8 +2525,6 @@ void GraphPanelPlotWidget::setLogAxisX(bool pLogAxisX)
                                static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
         resetAxes();
-
-        replot();
     }
 }
 
@@ -2612,8 +2601,6 @@ void GraphPanelPlotWidget::setLogAxisY(bool pLogAxisY)
                                static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
         resetAxes();
-
-        replot();
     }
 }
 
@@ -3169,12 +3156,12 @@ bool GraphPanelPlotWidget::matchingAxis(void *pPlotParameter,
 //==============================================================================
 
 bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
-                                   double pMaxY, bool pSynchronizeAxes,
-                                   bool pCanReplot, bool pEmitSignal,
+                                   double pMaxY, bool pCanReplot,
                                    bool pForceAxesSetting,
                                    bool pSynchronizeXAxis,
                                    bool pSynchronizeYAxis,
-                                   bool pSynchronizeNeighbor)
+                                   bool pForceAlignment,
+                                   bool pSynchronizingNeighbor)
 {
     // Axes can only be set if they are not dirty or if we want to force the
     // setting of our X/Y axes
@@ -3222,11 +3209,11 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
     if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
-        mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizeNeighbor);
+        mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizingNeighbor);
 
         updateActions();
 
-        if (pSynchronizeAxes) {
+        if (pSynchronizeXAxis || pSynchronizeYAxis) {
             // Check whether our neighbours have the same X/Y parameter as us
             // and if so then synchronise them accordingly
             // Note: we must check the X/Y parameters every single time since a
@@ -3239,28 +3226,19 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
             for (auto neighbor : qAsConst(mNeighbors)) {
                 void *neighborParameterX = plotParameter(neighbor, true);
                 void *neighborParameterY = plotParameter(neighbor, false);
-                bool canSynchroniseX =    mSynchronizeXAxisAction->isChecked()
-                                       && matchingAxis(plotParameterX, neighborParameterX);
-                bool canSynchroniseY =    mSynchronizeYAxisAction->isChecked()
-                                       && matchingAxis(plotParameterY, neighborParameterY);
+                bool synchroniseX =    mSynchronizeXAxisAction->isChecked()
+                                    && matchingAxis(plotParameterX, neighborParameterX);
+                bool synchroniseY =    mSynchronizeYAxisAction->isChecked()
+                                    && matchingAxis(plotParameterY, neighborParameterY);
 
-                if (canSynchroniseX && canSynchroniseY) {
-                    neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY,
-                                      false, false, false, true, false, false, true);
-                } else if (canSynchroniseX) {
-                    neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(),
-                                      false, false, false, true, false, false, true);
-                } else if (canSynchroniseY) {
-                    neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY,
-                                      false, false, false, true, false, false, true);
-                }
+                neighbor->setAxes(synchroniseX?pMinX:neighbor->minX(),
+                                  synchroniseX?pMaxX:neighbor->maxX(),
+                                  synchroniseY?pMinY:neighbor->minY(),
+                                  synchroniseY?pMaxY:neighbor->maxY(),
+                                  false, false, false, false, false, true);
             }
 
-            alignWithNeighbors(pCanReplot);
-        }
-
-        if (pEmitSignal) {
-            emit axesChanged(pMinX, pMaxX, pMinY, pMaxY);
+            alignWithNeighbors(pCanReplot, pForceAlignment, pForceAlignment);
         }
 
         return pCanReplot;
@@ -3280,7 +3258,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
-                       true, true, true, true, false, false, false);
+                       true, true, true, true, true, false);
 
     mDirtyAxes = false;
 
@@ -3381,7 +3359,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     if (scaledAxisX || scaledAxisY) {
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                true, true, true, true, false, false, false);
+                true, true, scaledAxisX, scaledAxisY, true, false);
     }
 }
 
@@ -3447,7 +3425,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
 
     // Make sure that we are still properly aligned with our neighbours
 
-    alignWithNeighbors(true, pForceAlignment);
+    alignWithNeighbors(true, pForceAlignment, false);
 }
 
 //==============================================================================
@@ -3507,7 +3485,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
                 canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY),
-                true, true, true, true, false, false, false);
+                true, true, shiftX != 0, shiftY != 0, true, false);
 
         break;
     }
@@ -3656,7 +3634,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
             && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
-                    true, true, true, true, false, false, false);
+                    true, true, true, true, true, false);
         }
     } else {
         // An action that doesn't require anything specific to be done, except
@@ -3976,7 +3954,8 @@ void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
 //==============================================================================
 
 void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
-                                              bool pForceAlignment)
+                                              bool pForceAlignment,
+                                              bool pReplotAll)
 {
     // Align ourselves with our neighbours by taking into account the size it
     // takes to draw the Y axis and, if any, its corresponding title (including
@@ -4040,7 +4019,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                              || (newMinBorderDistEndX != oldMinBorderDistEndX);
     bool yAlignmentChanged =     forceAlignment
                              || !qFuzzyCompare(newMinExtentY, oldMinExtentY);
-    bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
     for (auto plot : selfPlusNeighbors) {
         auto xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
@@ -4055,19 +4033,23 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                                                           yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
         if (pCanReplot) {
-            if (alignmentChanged) {
-                if (xAlignmentChanged) {
-                    xScaleWidget->updateLayout();
-                }
-
-                if (yAlignmentChanged) {
-                    yScaleWidget->updateLayout();
-                }
-
-                plot->replot();
-            } else if (plot == this) {
-                replot();
+            if (xAlignmentChanged) {
+                xScaleWidget->updateLayout();
             }
+
+            if (yAlignmentChanged) {
+                yScaleWidget->updateLayout();
+            }
+        }
+    }
+
+    if (pCanReplot) {
+        if (pReplotAll) {
+            for (auto plot : selfPlusNeighbors) {
+                plot->replot();
+            }
+        } else {
+            replot();
         }
     }
 }
@@ -4178,13 +4160,14 @@ void GraphPanelPlotWidget::customAxes()
         double newMaxX = customAxesDialog.maxX();
         double newMinY = customAxesDialog.minY();
         double newMaxY = customAxesDialog.maxY();
+        auto customXAxis =    !qFuzzyCompare(newMinX, oldMinX)
+                           || !qFuzzyCompare(newMaxX, oldMaxX);
+        auto customYAxis =    !qFuzzyCompare(newMinY, oldMinY)
+                           || !qFuzzyCompare(newMaxY, oldMaxY);
 
-        if (   !qFuzzyCompare(newMinX, oldMinX)
-            || !qFuzzyCompare(newMaxX, oldMaxX)
-            || !qFuzzyCompare(newMinY, oldMinY)
-            || !qFuzzyCompare(newMaxY, oldMaxY)) {
+        if (customXAxis || customYAxis) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, true, true, false, false, false);
+                    true, true, customXAxis, customYAxis, true, false);
         }
     }
 }

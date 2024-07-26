@@ -3655,7 +3655,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                           pPlot->logAxisX()?maxLogX:maxX,
                           pPlot->logAxisY()?minLogY:minY,
                           pPlot->logAxisY()?maxLogY:maxY,
-                          true, true, false, false, false, false, false)) {
+                          true, false, true, true, false, false)) {
         return true;
     }
 
