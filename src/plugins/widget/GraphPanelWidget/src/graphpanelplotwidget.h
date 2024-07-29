@@ -525,9 +525,9 @@ public:
     bool matchingAxis(void *pPlotParameter, void *pNeighborParameter);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 bool pSynchronizeAxes, bool pCanReplot, bool pEmitSignal,
-                 bool pForceAxesSetting, bool pSynchronizeXAxis,
-                 bool pSynchronizeYAxis, bool pSynchronizeNeighbor);
+                 bool pCanReplot, bool pForceAxesSetting,
+                 bool pSynchronizeXAxis, bool pSynchronizeYAxis,
+                 bool pForceAlignment, bool pSynchronizingNeighbor);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 
@@ -697,11 +697,10 @@ private:
                             const QwtScaleMap &pScaleMap, const QFont &pFont,
                             int &pStart, int &pEnd);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment,
+                            bool pReplotAll);
 
 signals:
-    void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
-
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 

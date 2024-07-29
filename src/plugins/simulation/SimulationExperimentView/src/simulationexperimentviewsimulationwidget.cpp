@@ -3655,7 +3655,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                           pPlot->logAxisX()?maxLogX:maxX,
                           pPlot->logAxisY()?minLogY:minY,
                           pPlot->logAxisY()?maxLogY:maxY,
-                          true, true, false, false, false, false, false)) {
+                          true, false, true, true, false, false)) {
         return true;
     }
 
@@ -3858,11 +3858,13 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         double maxX = plotMaxX;
                         double minY = plotMinY;
                         double maxY = plotMaxY;
+                        auto graphData = graph->data(pSimulationRun);
 
                         for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data(pSimulationRun)->sample(i).x();
-                            double valY = graph->data(pSimulationRun)->sample(i).y();
+                            auto val = graphData->sample(i);
+                            auto valX = val.x();
+                            auto valY = val.y();
 
                             if (   !qIsInf(valX) && !qIsNaN(valX)
                                 && !qIsInf(valY) && !qIsNaN(valY)) {
