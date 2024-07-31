@@ -73,6 +73,8 @@ public slots:
                  quint64 pPosition, int pRun = -1) const;
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                       int pRun = -1);
+    bool release_values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
+                        PyObject *pValues);
 };
 
 //==============================================================================
