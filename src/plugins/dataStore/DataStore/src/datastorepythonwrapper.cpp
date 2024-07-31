@@ -467,7 +467,7 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 
         mNumPyArrays << numPyArray;
 
-        return numPyArray->numPyArray();
+        return numPyArray->mNumPyArray;
     }
 
 #include "pythonbegin.h"
@@ -504,15 +504,6 @@ NumPyPythonWrapper::~NumPyPythonWrapper()
     // Tell our array that we are releasing it
 
     mArray->release();
-}
-
-//==============================================================================
-
-PyObject * NumPyPythonWrapper::numPyArray() const
-{
-    // Return our NumPy array
-
-    return mNumPyArray;
 }
 
 //==============================================================================

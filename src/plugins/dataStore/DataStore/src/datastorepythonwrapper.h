@@ -81,12 +81,12 @@ class NumPyPythonWrapper : public QObject
 {
     Q_OBJECT
 
+    friend class DataStorePythonWrapper;
+
 public:
     explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
                                 quint64 pSize = 0);
     ~NumPyPythonWrapper() override;
-
-    PyObject * numPyArray() const;
 
 private:
     DataStoreArray *mArray;
@@ -101,4 +101,3 @@ private:
 //==============================================================================
 // End of file
 //==============================================================================
-
