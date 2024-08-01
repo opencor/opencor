@@ -170,9 +170,7 @@ double * SimulationData::constants() const
 {
     // Return our constants array
 
-    return (mConstantsArray != nullptr)?
-                mConstantsArray->data():
-                nullptr;
+    return mConstantsArray->data();
 }
 
 //==============================================================================
@@ -181,9 +179,7 @@ double * SimulationData::rates() const
 {
     // Return our rates array
 
-    return (mRatesArray != nullptr)?
-                mRatesArray->data():
-                nullptr;
+    return mRatesArray->data();
 }
 
 //==============================================================================
@@ -192,9 +188,7 @@ double * SimulationData::states() const
 {
     // Return our states array
 
-    return (mStatesArray != nullptr)?
-                mStatesArray->data():
-                nullptr;
+    return mStatesArray->data();
 }
 
 //==============================================================================
@@ -203,9 +197,7 @@ double * SimulationData::algebraic() const
 {
     // Return our algebraic array
 
-    return (mAlgebraicArray != nullptr)?
-                mAlgebraicArray->data():
-                nullptr;
+    return mAlgebraicArray->data();
 }
 
 //==============================================================================
