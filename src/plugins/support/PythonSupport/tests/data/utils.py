@@ -58,7 +58,11 @@ def values(data, data_type, indent=''):
             print('%s       - %s = ' % (indent, item.uri()), end='')
 
             try:
-                print_values(item.values())
+                values = item.values()
+
+                print_values(values)
+
+                item.release_values(values)
             except Exception:
                 print(str_value(item.value()))
     else:
@@ -93,7 +97,7 @@ def run_simulation(simulation, step):
     states = results.states()
 
     print('    - Result values:')
-    print('       - Number of points: %d' % len(states['main/x'].values()))
+    print('       - Number of points: %d' % states['main/x'].values_count())
 
     values(results.constants(), 'Constants', '   ')
     values(states, 'States', '   ')

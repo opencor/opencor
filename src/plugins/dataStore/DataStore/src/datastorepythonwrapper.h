@@ -73,6 +73,8 @@ public slots:
                  quint64 pPosition, int pRun = -1) const;
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                       int pRun = -1);
+    bool release_values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
+                        PyObject *pValues);
 };
 
 //==============================================================================
@@ -81,12 +83,12 @@ class NumPyPythonWrapper : public QObject
 {
     Q_OBJECT
 
+    friend class DataStorePythonWrapper;
+
 public:
     explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
                                 quint64 pSize = 0);
     ~NumPyPythonWrapper() override;
-
-    PyObject * numPyArray() const;
 
 private:
     DataStoreArray *mArray;
@@ -101,4 +103,3 @@ private:
 //==============================================================================
 // End of file
 //==============================================================================
-

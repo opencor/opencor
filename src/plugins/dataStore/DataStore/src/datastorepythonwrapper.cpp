@@ -467,12 +467,34 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 
         mNumPyArrays << numPyArray;
 
-        return numPyArray->numPyArray();
+        return numPyArray->mNumPyArray;
     }
 
 #include "pythonbegin.h"
     Py_RETURN_NONE;
 #include "pythonend.h"
+}
+
+//==============================================================================
+
+bool DataStorePythonWrapper::release_values(DataStoreVariable *pDataStoreVariable,
+                                            PyObject *pValues)
+{
+    Q_UNUSED(pDataStoreVariable);
+
+    // Release the given NumPy array
+
+    for (auto it = mNumPyArrays.begin(); it != mNumPyArrays.end(); ++it) {
+        if ((*it)->mNumPyArray == pValues) {
+            delete *it;
+
+            mNumPyArrays.erase(it);
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -504,15 +526,6 @@ NumPyPythonWrapper::~NumPyPythonWrapper()
     // Tell our array that we are releasing it
 
     mArray->release();
-}
-
-//==============================================================================
-
-PyObject * NumPyPythonWrapper::numPyArray() const
-{
-    // Return our NumPy array
-
-    return mNumPyArray;
 }
 
 //==============================================================================

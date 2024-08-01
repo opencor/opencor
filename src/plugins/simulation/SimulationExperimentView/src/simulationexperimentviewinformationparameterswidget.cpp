@@ -255,6 +255,11 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
     // Update our data
 
     const Core::Properties properties = allProperties();
+    auto data = mSimulation->data();
+    auto constants = data->constants();
+    auto rates = data->rates();
+    auto states = data->states();
+    auto algebraic = data->algebraic();
 
     for (auto property : properties) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
@@ -266,13 +271,13 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
                 property->setDoubleValue(pCurrentPoint, false);
             } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                        || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
-                property->setDoubleValue(mSimulation->data()->constants()[parameter->index()], false);
+                property->setDoubleValue(constants[parameter->index()], false);
             } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
-                property->setDoubleValue(mSimulation->data()->rates()[parameter->index()], false);
+                property->setDoubleValue(rates[parameter->index()], false);
             } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
-                property->setDoubleValue(mSimulation->data()->states()[parameter->index()], false);
+                property->setDoubleValue(states[parameter->index()], false);
             } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
-                property->setDoubleValue(mSimulation->data()->algebraic()[parameter->index()], false);
+                property->setDoubleValue(algebraic[parameter->index()], false);
             } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Data) {
                 property->setDoubleValue(parameter->data()[parameter->index()], false);
             }
@@ -281,7 +286,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
 
     // Check whether any of our properties has actually been modified
 
-    mSimulation->data()->checkForModifications();
+    data->checkForModifications();
 }
 
 //==============================================================================
@@ -335,6 +340,11 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
     const CellMLSupport::CellmlFileRuntimeParameters parameters = pRuntime->parameters();
     QString componentHierarchy;
     Core::Property *sectionProperty = nullptr;
+    auto data = mSimulation->data();
+    auto constants = data->constants();
+    auto rates = data->rates();
+    auto states = data->states();
+    auto algebraic = data->algebraic();
 
     for (auto parameter : parameters) {
         // Check whether the current parameter is in the same component
@@ -411,16 +421,16 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
 
         if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
-            propertyValue = mSimulation->data()->startingPoint();
+            propertyValue = data->startingPoint();
         } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
-            propertyValue = mSimulation->data()->constants()[parameter->index()];
+            propertyValue = constants[parameter->index()];
         } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
-            propertyValue = mSimulation->data()->rates()[parameter->index()];
+            propertyValue = rates[parameter->index()];
         } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
-            propertyValue = mSimulation->data()->states()[parameter->index()];
+            propertyValue = states[parameter->index()];
         } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
-            propertyValue = mSimulation->data()->algebraic()[parameter->index()];
+            propertyValue = algebraic[parameter->index()];
         }
 
         Core::Property *property = addDoubleProperty(propertyValue, sectionProperty);
