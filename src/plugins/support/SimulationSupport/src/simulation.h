@@ -59,6 +59,13 @@ namespace COMBINESupport {
 
 //==============================================================================
 
+namespace DataStore {
+    class DataStorePythonWrapper;
+    class NumPyPythonWrapper;
+} // namespace DataStore
+
+//==============================================================================
+
 namespace SEDMLSupport {
     class SedmlFile;
 } // namespace SEDMLSupport
@@ -350,6 +357,8 @@ class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
 {
     Q_OBJECT
 
+    friend class DataStore::DataStorePythonWrapper;
+
 public:
     enum class FileType {
         Unknown,
@@ -407,6 +416,8 @@ private:
     SimulationData *mData = nullptr;
     SimulationResults *mResults = nullptr;
     SimulationImportData *mImportData = nullptr;
+
+    QList<DataStore::NumPyPythonWrapper *> mNumPyArrays;
 
     void checkIssues();
 

@@ -135,6 +135,8 @@ class DataStoreVariable : public QObject
 {
     Q_OBJECT
 
+    friend class DataStorePythonWrapper;
+
 public:
     explicit DataStoreVariable(SimulationSupport::Simulation *pSimulation, double *pValue = nullptr);
     ~DataStoreVariable() override;

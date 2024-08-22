@@ -462,6 +462,7 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
     if (dataStoreArray != nullptr) {
         auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
 
+        pDataStoreVariable->mSimulation->mNumPyArrays << numPyArray;
         mNumPyArrays << numPyArray;
 
         return numPyArray->mNumPyArray;
