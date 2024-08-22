@@ -1444,6 +1444,7 @@ if(WIN32)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . pip.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . python.bat)
 
             install(FILES ${PLATFORM_DISTRIB_DIR}/ipython.bat
@@ -1453,6 +1454,7 @@ if(WIN32)
                           ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
                           ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
                           ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
+                          ${PLATFORM_DISTRIB_DIR}/pip.bat
                           ${PLATFORM_DISTRIB_DIR}/python.bat
                     DESTINATION .)
         endif()
@@ -1532,6 +1534,7 @@ elseif(APPLE)
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
         set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
         set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
+        set(PIP_FILENAME ${PROJECT_BUILD_DIR}/pip)
         set(PYTHON_FILENAME ${PROJECT_BUILD_DIR}/python)
         set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
@@ -1540,6 +1543,7 @@ elseif(APPLE)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/pip.in ${PIP_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/python.in ${PYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
@@ -1642,6 +1646,7 @@ else()
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . pip)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . python)
         configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
