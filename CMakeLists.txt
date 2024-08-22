@@ -1444,6 +1444,7 @@ if(WIN32)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab.vbs)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.bat)
             copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook.vbs)
+            copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . python.bat)
 
             install(FILES ${PLATFORM_DISTRIB_DIR}/ipython.bat
                           ${PLATFORM_DISTRIB_DIR}/jupyter.bat
@@ -1452,6 +1453,7 @@ if(WIN32)
                           ${PLATFORM_DISTRIB_DIR}/jupyterlab.vbs
                           ${PLATFORM_DISTRIB_DIR}/jupyternotebook.bat
                           ${PLATFORM_DISTRIB_DIR}/jupyternotebook.vbs
+                          ${PLATFORM_DISTRIB_DIR}/python.bat
                     DESTINATION .)
         endif()
 
@@ -1530,6 +1532,7 @@ elseif(APPLE)
         set(JUPYTER_CONSOLE_FILENAME ${PROJECT_BUILD_DIR}/jupyterconsole)
         set(JUPYTER_LAB_FILENAME ${PROJECT_BUILD_DIR}/jupyterlab)
         set(JUPYTER_NOTEBOOK_FILENAME ${PROJECT_BUILD_DIR}/jupyternotebook)
+        set(PYTHON_FILENAME ${PROJECT_BUILD_DIR}/python)
         set(PYTHON_SHELL_FILENAME ${PROJECT_BUILD_DIR}/pythonshell)
 
         configure_file(${PLATFORM_DISTRIB_DIR}/ipython.in ${IPYTHON_FILENAME} @ONLY)
@@ -1537,6 +1540,7 @@ elseif(APPLE)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterlab.in ${JUPYTER_LAB_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyternotebook.in ${JUPYTER_NOTEBOOK_FILENAME} @ONLY)
+        configure_file(${PLATFORM_DISTRIB_DIR}/python.in ${PYTHON_FILENAME} @ONLY)
         configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
         install(FILES ${IPYTHON_FILENAME}
@@ -1544,6 +1548,7 @@ elseif(APPLE)
                       ${JUPYTER_CONSOLE_FILENAME}
                       ${JUPYTER_LAB_FILENAME}
                       ${JUPYTER_NOTEBOOK_FILENAME}
+                      ${PYTHON_FILENAME}
                       ${PYTHON_SHELL_FILENAME}
                 DESTINATION .
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -1637,6 +1642,7 @@ else()
         configure_file(${PLATFORM_DISTRIB_DIR}/jupyterconsole.in ${JUPYTER_CONSOLE_FILENAME} @ONLY)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyterlab)
         copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . jupyternotebook)
+        copy_file_to_build_dir(DIRECT ${PLATFORM_DISTRIB_DIR} . python)
         configure_file(${PLATFORM_DISTRIB_DIR}/pythonshell.in ${PYTHON_SHELL_FILENAME} @ONLY)
 
         install(FILES ${PLATFORM_DISTRIB_DIR}/ipython
@@ -1644,6 +1650,7 @@ else()
                       ${JUPYTER_CONSOLE_FILENAME}
                       ${PLATFORM_DISTRIB_DIR}/jupyterlab
                       ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                      ${PLATFORM_DISTRIB_DIR}/python
                       ${PYTHON_SHELL_FILENAME}
                 DESTINATION .
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
