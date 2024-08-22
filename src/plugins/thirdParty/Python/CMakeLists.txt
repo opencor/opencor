@@ -58,7 +58,7 @@ else()
     if (APPLE)
         set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/Python)
     else()
-        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../python)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
     endif()
 
     set(BINARY_DIR bin)
