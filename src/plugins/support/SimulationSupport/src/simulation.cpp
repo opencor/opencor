@@ -876,7 +876,7 @@ void SimulationResults::createDataStore()
 
     SimulationData *simulationData = mSimulation->data();
 
-    mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
+    mDataStore = new DataStore::DataStore(mSimulation, mSimulation->cellmlFile()->xmlBase());
 
     mPointsVariable = mDataStore->voi();
 
@@ -1374,7 +1374,7 @@ DataStore::DataStore * SimulationImportData::addDataStore()
 {
     // Add a data store to our list and return it
 
-    auto dataStore = new DataStore::DataStore();
+    auto dataStore = new DataStore::DataStore(mSimulation);
 
     if (dataStore != nullptr) {
         mDataStores << dataStore;
