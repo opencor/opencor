@@ -368,17 +368,6 @@ DataStorePythonWrapper::DataStorePythonWrapper(void *pModule,
 
 //==============================================================================
 
-DataStorePythonWrapper::~DataStorePythonWrapper()
-{
-    // Delete all the values that were requested as NumPy arrays.
-
-    for (const auto *numPyArray : mNumPyArrays) {
-        delete numPyArray;
-    }
-}
-
-//==============================================================================
-
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                        SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
@@ -463,7 +452,6 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
         auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
 
         pDataStoreVariable->mSimulation->mNumPyArrays << numPyArray;
-        mNumPyArrays << numPyArray;
 
         return numPyArray->mNumPyArray;
     }
@@ -471,28 +459,6 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 #include "pythonbegin.h"
     Py_RETURN_NONE;
 #include "pythonend.h"
-}
-
-//==============================================================================
-
-bool DataStorePythonWrapper::release_values(DataStoreVariable *pDataStoreVariable,
-                                            PyObject *pValues)
-{
-    Q_UNUSED(pDataStoreVariable);
-
-    // Release the given NumPy array
-
-    for (auto it = mNumPyArrays.begin(); it != mNumPyArrays.end(); ++it) {
-        if ((*it)->mNumPyArray == pValues) {
-            delete *it;
-
-            mNumPyArrays.erase(it);
-
-            return true;
-        }
-    }
-
-    return false;
 }
 
 //==============================================================================

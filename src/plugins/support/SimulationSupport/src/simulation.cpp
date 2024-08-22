@@ -24,6 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
+#include "datastorepythonwrapper.h"
 #include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfile.h"
@@ -1424,6 +1425,13 @@ Simulation::~Simulation()
     delete mImportData;
     delete mResults;
     delete mData;
+
+    // Delete all the values, associated with this simulation, that were
+    // requested as NumPy arrays.
+
+    for (const auto *numPyArray : mNumPyArrays) {
+        delete numPyArray;
+    }
 }
 
 //==============================================================================

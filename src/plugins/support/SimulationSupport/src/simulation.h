@@ -358,6 +358,7 @@ class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
     Q_OBJECT
 
     friend class DataStore::DataStorePythonWrapper;
+    friend class SimulationSupportPythonWrapper;
 
 public:
     enum class FileType {

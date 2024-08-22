@@ -352,6 +352,43 @@ void SimulationSupportPythonWrapper::clear_results(Simulation *pSimulation)
 
 //==============================================================================
 
+bool SimulationSupportPythonWrapper::release_values(Simulation *pSimulation,
+                                                    PyObject *pValues)
+{
+    // Release the given NumPy array
+
+    auto &numPyArrays = pSimulation->mNumPyArrays;
+
+    for (auto it = numPyArrays.begin(); it != numPyArrays.end(); ++it) {
+        if ((*it)->mNumPyArray == pValues) {
+            delete *it;
+
+            numPyArrays.erase(it);
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::release_all_values(Simulation *pSimulation)
+{
+    // Release all the NumPy arrays
+
+    auto &numPyArrays = pSimulation->mNumPyArrays;
+
+    for (auto it = numPyArrays.begin(); it != numPyArrays.end(); ++it) {
+        delete *it;
+
+        numPyArrays.erase(it);
+    }
+}
+
+//==============================================================================
+
 PyObject * SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 {
     // Return a list of issues the given simulation has, if any
