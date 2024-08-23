@@ -281,7 +281,8 @@ double * DataStoreVariableRun::values() const
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(double *pValue) :
+DataStoreVariable::DataStoreVariable(SimulationSupport::Simulation *pSimulation, double *pValue) :
+    mSimulation(pSimulation),
     mValue(pValue)
 {
 }
@@ -795,9 +796,11 @@ DataStoreVariables DataStoreExportData::variables() const
 
 //==============================================================================
 
-DataStore::DataStore(const QString &pUri) :
+DataStore::DataStore(SimulationSupport::Simulation *pSimulation,
+                     const QString &pUri) :
+    mSimulation(pSimulation),
     mUri(pUri),
-    mVoi(new DataStoreVariable())
+    mVoi(new DataStoreVariable(mSimulation))
 {
 }
 
@@ -921,7 +924,7 @@ DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
     DataStoreVariables variables;
 
     for (int i = 0; i < pCount; ++i, ++pValues) {
-        variables << new DataStoreVariable(pValues);
+        variables << new DataStoreVariable(mSimulation, pValues);
     }
 
     mVariables << variables;
@@ -935,7 +938,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 {
     // Add a variable to our data store
 
-    auto variable = new DataStoreVariable(pValue);
+    auto variable = new DataStoreVariable(mSimulation, pValue);
 
     mVariables << variable;
 

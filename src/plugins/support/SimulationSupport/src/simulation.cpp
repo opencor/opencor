@@ -24,6 +24,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
+#include "datastorepythonwrapper.h"
 #include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfile.h"
@@ -876,7 +877,7 @@ void SimulationResults::createDataStore()
 
     SimulationData *simulationData = mSimulation->data();
 
-    mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
+    mDataStore = new DataStore::DataStore(mSimulation, mSimulation->cellmlFile()->xmlBase());
 
     mPointsVariable = mDataStore->voi();
 
@@ -1374,7 +1375,7 @@ DataStore::DataStore * SimulationImportData::addDataStore()
 {
     // Add a data store to our list and return it
 
-    auto dataStore = new DataStore::DataStore();
+    auto dataStore = new DataStore::DataStore(mSimulation);
 
     if (dataStore != nullptr) {
         mDataStores << dataStore;
@@ -1424,6 +1425,13 @@ Simulation::~Simulation()
     delete mImportData;
     delete mResults;
     delete mData;
+
+    // Delete all the values, associated with this simulation, that were
+    // requested as NumPy arrays.
+
+    for (const auto *numPyArray : mNumPyArrays) {
+        delete numPyArray;
+    }
 }
 
 //==============================================================================

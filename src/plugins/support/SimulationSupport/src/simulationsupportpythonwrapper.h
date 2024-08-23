@@ -81,6 +81,9 @@ public slots:
     void reset(OpenCOR::SimulationSupport::Simulation *pSimulation,
                bool pAll = true);
     void clear_results(OpenCOR::SimulationSupport::Simulation *pSimulation);
+    bool release_values(OpenCOR::SimulationSupport::Simulation *pSimulation,
+                        PyObject *pValues);
+    void release_all_values(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
     PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
 

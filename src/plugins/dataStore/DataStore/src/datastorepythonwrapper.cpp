@@ -368,17 +368,6 @@ DataStorePythonWrapper::DataStorePythonWrapper(void *pModule,
 
 //==============================================================================
 
-DataStorePythonWrapper::~DataStorePythonWrapper()
-{
-    // Delete all the values that were requested as NumPy arrays.
-
-    for (const auto *numPyArray : mNumPyArrays) {
-        delete numPyArray;
-    }
-}
-
-//==============================================================================
-
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                        SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
@@ -392,12 +381,10 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(const DataStoreValues *pD
 
     reinterpret_cast<DataStoreValuesDictObject *>(res)->simulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
-    if (pDataStoreValues != nullptr) {
-        for (int i = 0, iMax = pDataStoreValues->size(); i < iMax; ++i) {
-            DataStoreValue *value = pDataStoreValues->at(i);
+    for (int i = 0, iMax = pDataStoreValues->size(); i < iMax; ++i) {
+        DataStoreValue *value = pDataStoreValues->at(i);
 
-            PythonQtSupport::addObject(res, value->uri(), value);
-        }
+        PythonQtSupport::addObject(res, value->uri(), value);
     }
 
     return res;
@@ -445,8 +432,7 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
     // Return the value of the given data store variable at the given position
     // and for the given run
 
-    if (   (pDataStoreVariable != nullptr)
-        && (pDataStoreVariable->array() != nullptr)) {
+    if (pDataStoreVariable->array() != nullptr) {
         return pDataStoreVariable->value(pPosition, pRun);
     }
 
@@ -462,10 +448,10 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 
     DataStoreArray *dataStoreArray = pDataStoreVariable->array(pRun);
 
-    if ((pDataStoreVariable != nullptr) && (dataStoreArray != nullptr)) {
+    if (dataStoreArray != nullptr) {
         auto numPyArray = new NumPyPythonWrapper(dataStoreArray, pDataStoreVariable->size());
 
-        mNumPyArrays << numPyArray;
+        pDataStoreVariable->mSimulation->mNumPyArrays << numPyArray;
 
         return numPyArray->mNumPyArray;
     }
@@ -473,28 +459,6 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 #include "pythonbegin.h"
     Py_RETURN_NONE;
 #include "pythonend.h"
-}
-
-//==============================================================================
-
-bool DataStorePythonWrapper::release_values(DataStoreVariable *pDataStoreVariable,
-                                            PyObject *pValues)
-{
-    Q_UNUSED(pDataStoreVariable);
-
-    // Release the given NumPy array
-
-    for (auto it = mNumPyArrays.begin(); it != mNumPyArrays.end(); ++it) {
-        if ((*it)->mNumPyArray == pValues) {
-            delete *it;
-
-            mNumPyArrays.erase(it);
-
-            return true;
-        }
-    }
-
-    return false;
 }
 
 //==============================================================================

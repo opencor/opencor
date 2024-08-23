@@ -1,7 +1,14 @@
+from enum import Enum
 import math
 import os
 
 import opencor as oc
+
+
+class Mode(Enum):
+    RELEASE_NOTHING = 0
+    RELEASE_VALUES = 1
+    RELEASE_ALL_VALUES = 2
 
 
 def header(title, first=True):
@@ -50,7 +57,7 @@ def print_values(data):
                  str_value(data[data_len - 3]), str_value(data[data_len - 2]), str_value(data[data_len - 1])))
 
 
-def values(data, data_type, indent=''):
+def values(simulation, mode, data, data_type, indent=''):
     if data:
         print('%s    - %s:' % (indent, data_type))
 
@@ -62,14 +69,15 @@ def values(data, data_type, indent=''):
 
                 print_values(values)
 
-                item.release_values(values)
+                if mode == Mode.RELEASE_VALUES:
+                    simulation.release_values(values)
             except Exception:
                 print(str_value(item.value()))
     else:
         print('%s    - %s: empty' % (indent, data_type))
 
 
-def run_simulation(simulation, step):
+def run_simulation(simulation, mode, step):
     # Run the simulation
 
     print(' - Run simulation [%d]:' % step)
@@ -83,10 +91,10 @@ def run_simulation(simulation, step):
     print('       - ODE solver: %s' % data.ode_solver_name())
     print('       - Initial values:')
 
-    values(data.constants(), 'Constants', '      ')
-    values(data.states(), 'States', '      ')
-    values(data.rates(), 'Rates', '      ')
-    values(data.algebraic(), 'Algebraic', '      ')
+    values(simulation, mode, data.constants(), 'Constants', '      ')
+    values(simulation, mode, data.states(), 'States', '      ')
+    values(simulation, mode, data.rates(), 'Rates', '      ')
+    values(simulation, mode, data.algebraic(), 'Algebraic', '      ')
 
     simulation.run()
 
@@ -99,10 +107,13 @@ def run_simulation(simulation, step):
     print('    - Result values:')
     print('       - Number of points: %d' % states['main/x'].values_count())
 
-    values(results.constants(), 'Constants', '   ')
-    values(states, 'States', '   ')
-    values(results.rates(), 'Rates', '   ')
-    values(results.algebraic(), 'Algebraic', '   ')
+    values(simulation, mode, results.constants(), 'Constants', '   ')
+    values(simulation, mode, states, 'States', '   ')
+    values(simulation, mode, results.rates(), 'Rates', '   ')
+    values(simulation, mode, results.algebraic(), 'Algebraic', '   ')
+
+    if mode == Mode.RELEASE_ALL_VALUES:
+        simulation.release_all_values()
 
 
 def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
@@ -146,7 +157,7 @@ def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
         print('    - Ending point: %f' % data.ending_point())
         print('    - Point interval: %f' % data.point_interval())
 
-    run_simulation(simulation, 1)
+    run_simulation(simulation, Mode.RELEASE_ALL_VALUES , 1)
 
     # Run #2: change a few settings and rerun the simulation
 
@@ -167,18 +178,18 @@ def test_simulation(title, file_name_or_url, first=True, expected_fail=False):
     print('    - Point interval: %f' % data.point_interval())
     print('    - ODE solver: %s' % data.ode_solver_name())
 
-    run_simulation(simulation, 2)
+    run_simulation(simulation, Mode.RELEASE_VALUES, 2)
 
     # Run #3: carry on from the previous run
 
-    run_simulation(simulation, 3)
+    run_simulation(simulation, Mode.RELEASE_NOTHING, 3)
 
     # Close the simulation
 
     oc.close_simulation(simulation)
 
 
-def run_solver_simulation(simulation, solver_name):
+def run_solver_simulation(simulation, mode, solver_name):
     data = simulation.data()
 
     data.set_ode_solver(solver_name)
@@ -192,10 +203,13 @@ def run_solver_simulation(simulation, solver_name):
 
     print(' - %s:' % solver_name)
 
-    values(results.constants(), 'Constants')
-    values(results.states(), 'States')
-    values(results.rates(), 'Rates')
-    values(results.algebraic(), 'Algebraic')
+    values(simulation, mode, results.constants(), 'Constants')
+    values(simulation, mode, results.states(), 'States')
+    values(simulation, mode, results.rates(), 'Rates')
+    values(simulation, mode, results.algebraic(), 'Algebraic')
+
+    if mode == Mode.RELEASE_ALL_VALUES:
+        simulation.release_all_values()
 
 
 def run_simulations(model, title):
@@ -203,10 +217,10 @@ def run_simulations(model, title):
 
     simulation = open_simulation(model)
 
-    run_solver_simulation(simulation, 'CVODE')
-    run_solver_simulation(simulation, 'Euler (forward)')
-    run_solver_simulation(simulation, 'Heun')
-    run_solver_simulation(simulation, 'Runge-Kutta (2nd order)')
-    run_solver_simulation(simulation, 'Runge-Kutta (4th order)')
+    run_solver_simulation(simulation, Mode.RELEASE_NOTHING, 'CVODE')
+    run_solver_simulation(simulation, Mode.RELEASE_VALUES, 'Euler (forward)')
+    run_solver_simulation(simulation, Mode.RELEASE_ALL_VALUES, 'Heun')
+    run_solver_simulation(simulation, Mode.RELEASE_VALUES, 'Runge-Kutta (2nd order)')
+    run_solver_simulation(simulation, Mode.RELEASE_NOTHING, 'Runge-Kutta (4th order)')
 
     oc.close_simulation(simulation)

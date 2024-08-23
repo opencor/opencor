@@ -30,6 +30,15 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace DataStore {
 
 //==============================================================================
@@ -126,8 +135,10 @@ class DataStoreVariable : public QObject
 {
     Q_OBJECT
 
+    friend class DataStorePythonWrapper;
+
 public:
-    explicit DataStoreVariable(double *pValue = nullptr);
+    explicit DataStoreVariable(SimulationSupport::Simulation *pSimulation, double *pValue = nullptr);
     ~DataStoreVariable() override;
 
     static bool compare(DataStoreVariable *pVariable1,
@@ -168,6 +179,8 @@ public slots:
     void setValue(double pValue);
 
 private:
+    SimulationSupport::Simulation *mSimulation;
+
     int mType = -1;
     QString mUri;
     QString mName;
@@ -287,7 +300,8 @@ class DataStore : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStore(const QString &pUri = {});
+    explicit DataStore(SimulationSupport::Simulation *pSimulation,
+                       const QString &pUri = {});
     ~DataStore() override;
 
     bool addRun(quint64 pCapacity);
@@ -313,6 +327,8 @@ public slots:
     OpenCOR::DataStore::DataStoreVariable * voi() const;
 
 private:
+    SimulationSupport::Simulation *mSimulation;
+
     QString mUri;
 
     DataStoreVariable *mVoi = nullptr;

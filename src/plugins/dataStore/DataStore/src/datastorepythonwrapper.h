@@ -42,6 +42,15 @@ along with this program. If not, see <https://gnu.org/licenses>.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace SimulationSupport {
+    class SimulationSupportPythonWrapper;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace DataStore {
 
 //==============================================================================
@@ -56,14 +65,10 @@ class DataStorePythonWrapper : public QObject
 
 public:
     explicit DataStorePythonWrapper(void *pModule, QObject *pParent);
-    ~DataStorePythonWrapper() override;
 
     static DATASTORE_EXPORT PyObject * dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                            SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction);
     static DATASTORE_EXPORT PyObject * dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
-
-private:
-    QList<NumPyPythonWrapper *> mNumPyArrays;
 
 public slots:
     PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
@@ -73,8 +78,6 @@ public slots:
                  quint64 pPosition, int pRun = -1) const;
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
                       int pRun = -1);
-    bool release_values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable,
-                        PyObject *pValues);
 };
 
 //==============================================================================
@@ -84,6 +87,7 @@ class NumPyPythonWrapper : public QObject
     Q_OBJECT
 
     friend class DataStorePythonWrapper;
+    friend class SimulationSupport::SimulationSupportPythonWrapper;
 
 public:
     explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray,
