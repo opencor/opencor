@@ -1552,6 +1552,7 @@ elseif(APPLE)
                       ${JUPYTER_CONSOLE_FILENAME}
                       ${JUPYTER_LAB_FILENAME}
                       ${JUPYTER_NOTEBOOK_FILENAME}
+                      ${PIP_FILENAME}
                       ${PYTHON_FILENAME}
                       ${PYTHON_SHELL_FILENAME}
                 DESTINATION .
@@ -1655,6 +1656,7 @@ else()
                       ${JUPYTER_CONSOLE_FILENAME}
                       ${PLATFORM_DISTRIB_DIR}/jupyterlab
                       ${PLATFORM_DISTRIB_DIR}/jupyternotebook
+                      ${PLATFORM_DISTRIB_DIR}/pip
                       ${PLATFORM_DISTRIB_DIR}/python
                       ${PYTHON_SHELL_FILENAME}
                 DESTINATION .
