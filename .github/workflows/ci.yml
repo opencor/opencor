@@ -16,19 +16,19 @@ jobs:
           - name: Build and test (Windows release)
             os: windows-2019
             mode: Release
-          - name: Build and test (Windows debug)
+          - name: Build (Windows debug)
             os: windows-2019
             mode: Debug
           - name: Build and test (Linux release)
             os: ubuntu-20.04
             mode: Release
-          - name: Build and test (Linux debug)
+          - name: Build (Linux debug)
             os: ubuntu-20.04
             mode: Debug
           - name: Build and test (macOS release)
             os: macos-12
             mode: Release
-          - name: Build and test (macOS debug)
+          - name: Build (macOS debug)
             os: macos-12
             mode: Debug
     env:

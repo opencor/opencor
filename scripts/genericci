@@ -59,13 +59,15 @@ if [ -d $appDir/build ]; then
         exit $exitCode
     fi
 
-    if [ "`uname -s`" = "Linux" ]; then
-        $appDir/build/bin/runtests
-    else
-        $appDir/build/OpenCOR.app/Contents/MacOS/runtests
-    fi
+    if [ "$version" = "release" ]; then
+        if [ "`uname -s`" = "Linux" ]; then
+            $appDir/build/bin/runtests
+        else
+            $appDir/build/OpenCOR.app/Contents/MacOS/runtests
+        fi
 
-    exitCode=$?
+        exitCode=$?
+    fi
 
     if [ $exitCode -eq 0 ]; then
         echo -e "\033[42;37;1mAll done!\033[0m"
