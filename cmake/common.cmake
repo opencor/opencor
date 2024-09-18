@@ -34,6 +34,7 @@ macro(configure_clang_and_clang_tidy TARGET_NAME)
             -Wno-anon-enum-enum-conversion
             -Wno-c++98-compat
             -Wno-c++98-compat-pedantic
+            -Wno-cast-function-type-strict
             -Wno-documentation
             -Wno-exit-time-destructors
             -Wno-extra-semi-stmt

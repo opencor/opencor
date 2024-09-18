@@ -1119,11 +1119,11 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
         if (mScanner.token() == CellmlTextViewScanner::Token::Def) {
             // Expect a model definition
 
-            static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Import,
-                                                                  CellmlTextViewScanner::Token::Unit,
-                                                                  CellmlTextViewScanner::Token::Comp,
-                                                                  CellmlTextViewScanner::Token::Group,
-                                                                  CellmlTextViewScanner::Token::Map };
+            static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::Import,
+                                                                     CellmlTextViewScanner::Token::Unit,
+                                                                     CellmlTextViewScanner::Token::Comp,
+                                                                     CellmlTextViewScanner::Token::Group,
+                                                                     CellmlTextViewScanner::Token::Map };
 
             mScanner.getNextToken();
 
@@ -1132,7 +1132,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
                                                                              "comp",
                                                                              "group",
                                                                              "map"),
-                          Tokens)) {
+                          SubTokens)) {
                 if (mScanner.token() == CellmlTextViewScanner::Token::Import) {
                     if (!parseImportDefinition(pDomNode)) {
                         return false;
@@ -1444,12 +1444,12 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
         // We are dealing with a 'normal' unit definition, so loop while we have
         // "unit" or leave if we get "enddef"
 
-        static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Unit,
-                                                              CellmlTextViewScanner::Token::EndDef };
+        static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::Unit,
+                                                                 CellmlTextViewScanner::Token::EndDef };
 
         while (tokenType(unitsElement, tr("'%1' or '%2'").arg("unit",
                                                               "enddef"),
-                         Tokens)) {
+                         SubTokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::Unit) {
                 if (!parseUnitDefinition(unitsElement)) {
                     return false;
@@ -1520,10 +1520,10 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
         forever {
             // Expect "pref", "expo", "mult" or "off"
 
-            static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Pref,
-                                                                  CellmlTextViewScanner::Token::Expo,
-                                                                  CellmlTextViewScanner::Token::Mult,
-                                                                  CellmlTextViewScanner::Token::Off };
+            static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::Pref,
+                                                                     CellmlTextViewScanner::Token::Expo,
+                                                                     CellmlTextViewScanner::Token::Mult,
+                                                                     CellmlTextViewScanner::Token::Off };
 
             mScanner.getNextToken();
 
@@ -1531,7 +1531,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                                                                            "expo",
                                                                            "mult",
                                                                            "off"),
-                           Tokens)) {
+                           SubTokens)) {
                 return false;
             }
 
@@ -1843,16 +1843,16 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
         forever {
             // Expect "init", "pub" or "priv"
 
-            static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Init,
-                                                                  CellmlTextViewScanner::Token::Pub,
-                                                                  CellmlTextViewScanner::Token::Priv };
+            static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::Init,
+                                                                     CellmlTextViewScanner::Token::Pub,
+                                                                     CellmlTextViewScanner::Token::Priv };
 
             mScanner.getNextToken();
 
             if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("init",
                                                                          "pub",
                                                                          "priv"),
-                           Tokens)) {
+                           SubTokens)) {
                 return false;
             }
 
@@ -1906,11 +1906,11 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
                     // Expect a number or an identifier
 
-                    static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Number,
-                                                                          CellmlTextViewScanner::Token::IdentifierOrCmetaId };
+                    static const CellmlTextViewScanner::Tokens SubSubTokens = { CellmlTextViewScanner::Token::Number,
+                                                                                CellmlTextViewScanner::Token::IdentifierOrCmetaId };
 
                     if (!tokenType(variableElement, tr("A number or an identifier"),
-                                   Tokens)) {
+                                   SubSubTokens)) {
                         return false;
                     }
 
@@ -1924,14 +1924,14 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
             } else {
                 // Expect "in", "out" or "none"
 
-                static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::In,
-                                                                      CellmlTextViewScanner::Token::Out,
-                                                                      CellmlTextViewScanner::Token::None };
+                static const CellmlTextViewScanner::Tokens SubSubTokens = { CellmlTextViewScanner::Token::In,
+                                                                            CellmlTextViewScanner::Token::Out,
+                                                                            CellmlTextViewScanner::Token::None };
 
                 if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("in",
                                                                              "out",
                                                                              "none"),
-                               Tokens)) {
+                               SubSubTokens)) {
                     return false;
                 }
             }
@@ -2140,13 +2140,13 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
             // Expect an identifier, "and" or "for"
 
-            static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::IdentifierOrCmetaId,
-                                                                  CellmlTextViewScanner::Token::And,
-                                                                  CellmlTextViewScanner::Token::For };
+            static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::IdentifierOrCmetaId,
+                                                                     CellmlTextViewScanner::Token::And,
+                                                                     CellmlTextViewScanner::Token::For };
 
             if (!tokenType(groupElement, tr("An identifier, '%1' or '%2'").arg("and",
                                                                                "for"),
-                           Tokens)) {
+                           SubTokens)) {
                 return false;
             }
 
@@ -2181,12 +2181,12 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
         // Expect "and" or "for"
 
-        static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::And,
-                                                              CellmlTextViewScanner::Token::For };
+        static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::And,
+                                                                 CellmlTextViewScanner::Token::For };
 
         if (tokenType(groupElement, tr("'%1' or '%2'").arg("and",
                                                            "for"),
-                      Tokens)) {
+                      SubTokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::For) {
                 break;
             }
@@ -2270,8 +2270,8 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
         // Expect at least one "comp", then loop while we have "comp" or leave
         // if we get "enddcomp"
 
-        static const CellmlTextViewScanner::Tokens Tokens = { CellmlTextViewScanner::Token::Comp,
-                                                              CellmlTextViewScanner::Token::EndComp };
+        static const CellmlTextViewScanner::Tokens SubTokens = { CellmlTextViewScanner::Token::Comp,
+                                                                 CellmlTextViewScanner::Token::EndComp };
 
         bool firstTime = true;
 
@@ -2297,7 +2297,7 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
             }
         } while (tokenType(componentRefElement, tr("'%1' or '%2'").arg("comp",
                                                                        "endcomp"),
-                           Tokens));
+                           SubTokens));
 
         // Expect ";"
 
