@@ -71,7 +71,9 @@ IF EXIST !AppDir!build (
         EXIT /B !ExitCode!
     )
 
-    !AppDir!build\bin\runtests.exe
+    IF "%Version" == "release" (
+        !AppDir!build\bin\runtests.exe
+    )
 
     EXIT /B !ERRORLEVEL!
 ) ELSE (
