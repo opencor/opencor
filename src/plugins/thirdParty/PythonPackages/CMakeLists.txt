@@ -48,7 +48,7 @@ set(MATPLOTLIB_PYTHONQT ${MATPLOTLIB_VERSION}.2)
 
 # We have our own version of pip for Windows
 
-set(PIP_VERSION v24.0-opencor.0)
+set(PIP_VERSION v24.2-opencor.0)
 
 # Our GitHub organisation
 
@@ -87,11 +87,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             ef648ccfba3a510a65061666cdda811fe04d4aac)
+                             47ead3443edb9e28f9a0bd2d46cd19d962e0ac9f)
         else()
             retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
-                             57a85372bc82aeaa30615b16b342832bf25f9e8a)
+                             b79481218bc9ea574fd6203170ead0a98d8bb114)
         endif()
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
