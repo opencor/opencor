@@ -461,7 +461,7 @@ macro(add_plugin PLUGIN_NAME)
        AND NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL "")
         # Copy the entire source directory to the destination
 
-        add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET}
+        add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} PRE_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
                                                                       ${ARG_EXTERNAL_DESTINATION_DIR}
                            BYPRODUCTS ${ARG_BYPRODUCTS})
