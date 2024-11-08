@@ -537,8 +537,11 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
-    bool hasDirtyAxes() const;
-    void setDirtyAxes(bool pDirtyAxes);
+    bool hasDirtyAxisX() const;
+    void setDirtyAxisX(bool pDirtyAxisX);
+
+    bool hasDirtyAxisY() const;
+    void setDirtyAxisY(bool pDirtyAxisY);
 
     Action action() const;
 
@@ -669,7 +672,8 @@ private:
 
     GraphPanelPlotWidgets mNeighbors;
 
-    bool mDirtyAxes = false;
+    bool mDirtyAxisX = false;
+    bool mDirtyAxisY = false;
 
     void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 

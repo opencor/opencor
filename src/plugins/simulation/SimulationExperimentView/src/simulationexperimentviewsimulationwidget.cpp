@@ -3782,10 +3782,10 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
     // Keep track of whether the plots' axes were dirty
 
-    QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> dirtyAxes;
+    QMap<GraphPanelWidget::GraphPanelPlotWidget *, QPair<bool, bool>> dirtyAxes;
 
     for (auto plot : qAsConst(mPlots)) {
-        dirtyAxes.insert(plot, plot->hasDirtyAxes());
+        dirtyAxes.insert(plot, QPair<bool, bool>(plot->hasDirtyAxisX(), plot->hasDirtyAxisY()));
     }
 
     // Update all the graphs of all our plots, but only if we are visible
@@ -3853,7 +3853,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                     // plot's viewport since we last came here (e.g. by panning
                     // the plot's contents)
 
-                    if (!plot->hasDirtyAxes()) {
+                    if (!plot->hasDirtyAxisX() || !plot->hasDirtyAxisY()) {
                         double minX = plotMinX;
                         double maxX = plotMaxX;
                         double minY = plotMinY;
@@ -3878,8 +3878,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         // Update our plot, if our graph segment cannot fit
                         // within our plot's current viewport
 
-                        needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                             || (minY < plotMinY) || (maxY > plotMaxY);
+                        needFullUpdatePlot =    plot->hasDirtyAxisX() || (!plot->hasDirtyAxisX() && ((minX < plotMinX) || (maxX > plotMaxX)))
+                                             || plot->hasDirtyAxisY() || (!plot->hasDirtyAxisY() && ((minY < plotMinY) || (maxY > plotMaxY)));
                     }
 
                     if (!needFullUpdatePlot) {
@@ -3925,7 +3925,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         //       some plots...
 
         for (auto crtPlot : qAsConst(mPlots)) {
-            crtPlot->setDirtyAxes(dirtyAxes[crtPlot]);
+            crtPlot->setDirtyAxisX(dirtyAxes[crtPlot].first);
+            crtPlot->setDirtyAxisY(dirtyAxes[crtPlot].second);
         }
     }
 

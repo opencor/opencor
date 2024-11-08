@@ -3167,7 +3167,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // Axes can only be set if they are not dirty or if we want to force the
     // setting of our X/Y axes
 
-    if (mDirtyAxes && !pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
+    if (mDirtyAxisX && mDirtyAxisY && !pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
         return false;
     }
 
@@ -3209,14 +3209,16 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // allowed), in case the axes' values have changed
 
     if (pResettingAxes) {
-        mDirtyAxes = false;
+        mDirtyAxisX = false;
+        mDirtyAxisY = false;
     }
 
     if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
 
         if (!pResettingAxes) {
-            mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizingNeighbor);
+            mDirtyAxisX = mDirtyAxisY || (pForceAxesSetting && !pSynchronizingNeighbor);
+            mDirtyAxisX = mDirtyAxisY || (pForceAxesSetting && !pSynchronizingNeighbor);
         }
 
         updateActions();
@@ -3864,20 +3866,38 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::hasDirtyAxes() const
+bool GraphPanelPlotWidget::hasDirtyAxisX() const
 {
-    // Return whether we have dirty axes
+    // Return whether we have a dirty X axis
 
-    return mDirtyAxes;
+    return mDirtyAxisX;
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setDirtyAxes(bool pDirtyAxes)
+void GraphPanelPlotWidget::setDirtyAxisX(bool pDirtyAxisX)
 {
-    // Set whether we have dirty axes
+    // Set whether we have a dirty X axis
 
-    mDirtyAxes = pDirtyAxes;
+    mDirtyAxisX = pDirtyAxisX;
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::hasDirtyAxisY() const
+{
+    // Return whether we have a dirty Y axis
+
+    return mDirtyAxisY;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setDirtyAxisY(bool pDirtyAxisY)
+{
+    // Set whether we have a dirty Y axis
+
+    mDirtyAxisY = pDirtyAxisY;
 }
 
 //==============================================================================
