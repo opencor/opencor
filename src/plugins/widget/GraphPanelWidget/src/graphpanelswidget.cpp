@@ -189,7 +189,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
                                   activeGraphPanelPlot->maxX(),
                                   activeGraphPanelPlot->minY(),
                                   activeGraphPanelPlot->maxY(),
-                                  true, false, true, true, false, false);
+                                  true, false, true, true, false, false, false);
 
     // Return our newly created graph panel
 
@@ -392,7 +392,7 @@ void GraphPanelsWidget::synchronizeXAxis()
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
                                       activeGraphPanelPlot->maxY(),
-                                      true, false, true, false, true, false);
+                                      true, false, true, false, true, false, false);
     }
 }
 
@@ -410,7 +410,7 @@ void GraphPanelsWidget::synchronizeYAxis()
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
                                       activeGraphPanelPlot->maxY(),
-                                      true, false, false, true, true, false);
+                                      true, false, false, true, true, false, false);
     }
 }
 

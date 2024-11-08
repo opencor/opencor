@@ -3161,7 +3161,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    bool pSynchronizeXAxis,
                                    bool pSynchronizeYAxis,
                                    bool pForceAlignment,
-                                   bool pSynchronizingNeighbor)
+                                   bool pSynchronizingNeighbor,
+                                   bool pResettingAxes)
 {
     // Axes can only be set if they are not dirty or if we want to force the
     // setting of our X/Y axes
@@ -3207,9 +3208,16 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // result in ourselves, and maybe our neighbours, being replotted, if
     // allowed), in case the axes' values have changed
 
+    if (pResettingAxes) {
+        mDirtyAxes = false;
+    }
+
     if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
-        mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizingNeighbor);
+
+        if (!pResettingAxes) {
+            mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizingNeighbor);
+        }
 
         updateActions();
 
@@ -3235,7 +3243,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                   synchroniseX?pMaxX:neighbor->maxX(),
                                   synchroniseY?pMinY:neighbor->minY(),
                                   synchroniseY?pMaxY:neighbor->maxY(),
-                                  false, false, false, false, false, true);
+                                  false, false, false, false, false, true, false);
             }
 
             alignWithNeighbors(pCanReplot, pForceAlignment, pForceAlignment);
@@ -3253,14 +3261,10 @@ bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
     // that allow us to see all the graphs
-    // Note: mDirtyAxes gets set to true as a result of our call to setAxes(),
-    //       yet it should be false once our axes have been reset...
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
-                       true, true, true, true, true, false);
-
-    mDirtyAxes = false;
+                       true, true, true, true, true, false, true);
 
     return res;
 }
@@ -3359,7 +3363,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     if (scaledAxisX || scaledAxisY) {
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                true, true, scaledAxisX, scaledAxisY, true, false);
+                true, true, scaledAxisX, scaledAxisY, true, false, false);
     }
 }
 
@@ -3485,7 +3489,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
                 canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY),
-                true, true, shiftX != 0, shiftY != 0, true, false);
+                true, true, shiftX != 0, shiftY != 0, true, false, false);
 
         break;
     }
@@ -3634,7 +3638,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
             && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
-                    true, true, true, true, true, false);
+                    true, true, true, true, true, false, false);
         }
     } else {
         // An action that doesn't require anything specific to be done, except
@@ -4167,7 +4171,7 @@ void GraphPanelPlotWidget::customAxes()
 
         if (customXAxis || customYAxis) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, customXAxis, customYAxis, true, false);
+                    true, true, customXAxis, customYAxis, true, false, false);
         }
     }
 }
