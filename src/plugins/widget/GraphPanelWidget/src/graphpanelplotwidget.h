@@ -527,8 +527,7 @@ public:
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  bool pCanReplot, bool pForceAxesSetting,
                  bool pSynchronizeXAxis, bool pSynchronizeYAxis,
-                 bool pForceAlignment, bool pSynchronizingNeighbor,
-                 bool pResettingAxes);
+                 bool pForceAlignment);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 
@@ -536,12 +535,6 @@ public:
 
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
-
-    bool hasDirtyAxisX() const;
-    void setDirtyAxisX(bool pDirtyAxisX);
-
-    bool hasDirtyAxisY() const;
-    void setDirtyAxisY(bool pDirtyAxisY);
 
     Action action() const;
 
@@ -671,9 +664,6 @@ private:
     double mDefaultMaxLogY = DefaultMaxAxis;
 
     GraphPanelPlotWidgets mNeighbors;
-
-    bool mDirtyAxisX = false;
-    bool mDirtyAxisY = false;
 
     void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 

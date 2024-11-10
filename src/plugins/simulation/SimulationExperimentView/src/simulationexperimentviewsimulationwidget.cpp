@@ -3655,7 +3655,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                           pPlot->logAxisX()?maxLogX:maxX,
                           pPlot->logAxisY()?minLogY:minY,
                           pPlot->logAxisY()?maxLogY:maxY,
-                          true, false, true, true, false, false, false)) {
+                          true, false, true, true, false)) {
         return true;
     }
 
@@ -3780,14 +3780,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         simulationDataModified(simulation->data()->isModified());
     }
 
-    // Keep track of whether the plots' axes were dirty
-
-    QMap<GraphPanelWidget::GraphPanelPlotWidget *, QPair<bool, bool>> dirtyAxes;
-
-    for (auto plot : qAsConst(mPlots)) {
-        dirtyAxes.insert(plot, QPair<bool, bool>(plot->hasDirtyAxisX(), plot->hasDirtyAxisY()));
-    }
-
     // Update all the graphs of all our plots, but only if we are visible
     // Note: needProcessingEvents is used to ensure that our plots are all
     //       updated at once...
@@ -3849,38 +3841,34 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 if (    visible && graph->isVisible()
                     && !needFullUpdatePlot && (pSimulationResultsSize != 0)) {
                     // Check that our graph segment can fit within our plot's
-                    // current viewport, but only if the user hasn't changed the
-                    // plot's viewport since we last came here (e.g. by panning
-                    // the plot's contents)
+                    // current viewport
 
-                    if (!plot->hasDirtyAxisX() || !plot->hasDirtyAxisY()) {
-                        double minX = plotMinX;
-                        double maxX = plotMaxX;
-                        double minY = plotMinY;
-                        double maxY = plotMaxY;
-                        auto graphData = graph->data(pSimulationRun);
+                    double minX = plotMinX;
+                    double maxX = plotMaxX;
+                    double minY = plotMinY;
+                    double maxY = plotMaxY;
+                    auto graphData = graph->data(pSimulationRun);
 
-                        for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
-                             i < pSimulationResultsSize; ++i) {
-                            auto val = graphData->sample(i);
-                            auto valX = val.x();
-                            auto valY = val.y();
+                    for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
+                            i < pSimulationResultsSize; ++i) {
+                        auto val = graphData->sample(i);
+                        auto valX = val.x();
+                        auto valY = val.y();
 
-                            if (   !qIsInf(valX) && !qIsNaN(valX)
-                                && !qIsInf(valY) && !qIsNaN(valY)) {
-                                minX = qMin(minX, valX);
-                                maxX = qMax(maxX, valX);
-                                minY = qMin(minY, valY);
-                                maxY = qMax(maxY, valY);
-                            }
+                        if (   !qIsInf(valX) && !qIsNaN(valX)
+                            && !qIsInf(valY) && !qIsNaN(valY)) {
+                            minX = qMin(minX, valX);
+                            maxX = qMax(maxX, valX);
+                            minY = qMin(minY, valY);
+                            maxY = qMax(maxY, valY);
                         }
-
-                        // Update our plot, if our graph segment cannot fit
-                        // within our plot's current viewport
-
-                        needFullUpdatePlot =    plot->hasDirtyAxisX() || (!plot->hasDirtyAxisX() && ((minX < plotMinX) || (maxX > plotMaxX)))
-                                             || plot->hasDirtyAxisY() || (!plot->hasDirtyAxisY() && ((minY < plotMinY) || (maxY > plotMaxY)));
                     }
+
+                    // Update our plot, if our graph segment cannot fit within
+                    // our plot's current viewport
+
+                    needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                         || (minY < plotMinY) || (maxY > plotMaxY);
 
                     if (!needFullUpdatePlot) {
                         if (plot->drawGraphFrom(graph, realOldDataSize-1)) {
@@ -3918,15 +3906,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // will need to update our plots the next time we become visible
 
             mNeedUpdatePlots = true;
-        }
-
-        // Reset the dirtiness of all the plots' axes
-        // Note: indeed, it may have been modified as a result of synchronising
-        //       some plots...
-
-        for (auto crtPlot : qAsConst(mPlots)) {
-            crtPlot->setDirtyAxisX(dirtyAxes[crtPlot].first);
-            crtPlot->setDirtyAxisY(dirtyAxes[crtPlot].second);
         }
     }
 

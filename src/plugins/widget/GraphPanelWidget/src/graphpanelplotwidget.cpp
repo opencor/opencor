@@ -3160,14 +3160,11 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    bool pForceAxesSetting,
                                    bool pSynchronizeXAxis,
                                    bool pSynchronizeYAxis,
-                                   bool pForceAlignment,
-                                   bool pSynchronizingNeighbor,
-                                   bool pResettingAxes)
+                                   bool pForceAlignment)
 {
-    // Axes can only be set if they are not dirty or if we want to force the
-    // setting of our X/Y axes
+    // Axes can only be set if we want to force the setting of our X/Y axes
 
-    if (mDirtyAxisX && mDirtyAxisY && !pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
+    if (!pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
         return false;
     }
 
@@ -3208,18 +3205,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // result in ourselves, and maybe our neighbours, being replotted, if
     // allowed), in case the axes' values have changed
 
-    if (pResettingAxes) {
-        mDirtyAxisX = false;
-        mDirtyAxisY = false;
-    }
-
     if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
-
-        if (!pResettingAxes) {
-            mDirtyAxisX = mDirtyAxisY || (pForceAxesSetting && !pSynchronizingNeighbor);
-            mDirtyAxisX = mDirtyAxisY || (pForceAxesSetting && !pSynchronizingNeighbor);
-        }
 
         updateActions();
 
@@ -3245,7 +3232,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                   synchroniseX?pMaxX:neighbor->maxX(),
                                   synchroniseY?pMinY:neighbor->minY(),
                                   synchroniseY?pMaxY:neighbor->maxY(),
-                                  false, false, false, false, false, true, false);
+                                  false, false, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot, pForceAlignment, pForceAlignment);
@@ -3266,7 +3253,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
-                       true, true, true, true, true, false, true);
+                       true, true, true, true, true);
 
     return res;
 }
@@ -3365,7 +3352,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     if (scaledAxisX || scaledAxisY) {
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                true, true, scaledAxisX, scaledAxisY, true, false, false);
+                true, true, scaledAxisX, scaledAxisY, true);
     }
 }
 
@@ -3491,7 +3478,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
                 canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY),
-                true, true, shiftX != 0, shiftY != 0, true, false, false);
+                true, true, shiftX != 0, shiftY != 0, true);
 
         break;
     }
@@ -3640,7 +3627,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
             && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
-                    true, true, true, true, true, false, false);
+                    true, true, true, true, true);
         }
     } else {
         // An action that doesn't require anything specific to be done, except
@@ -3862,42 +3849,6 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
     mNeighbors.removeOne(pPlot);
 
     updateActions();
-}
-
-//==============================================================================
-
-bool GraphPanelPlotWidget::hasDirtyAxisX() const
-{
-    // Return whether we have a dirty X axis
-
-    return mDirtyAxisX;
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::setDirtyAxisX(bool pDirtyAxisX)
-{
-    // Set whether we have a dirty X axis
-
-    mDirtyAxisX = pDirtyAxisX;
-}
-
-//==============================================================================
-
-bool GraphPanelPlotWidget::hasDirtyAxisY() const
-{
-    // Return whether we have a dirty Y axis
-
-    return mDirtyAxisY;
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::setDirtyAxisY(bool pDirtyAxisY)
-{
-    // Set whether we have a dirty Y axis
-
-    mDirtyAxisY = pDirtyAxisY;
 }
 
 //==============================================================================
@@ -4191,7 +4142,7 @@ void GraphPanelPlotWidget::customAxes()
 
         if (customXAxis || customYAxis) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, customXAxis, customYAxis, true, false, false);
+                    true, true, customXAxis, customYAxis, true);
         }
     }
 }
