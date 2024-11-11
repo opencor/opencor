@@ -3859,7 +3859,7 @@ void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
                                               int &pEnd)
 {
     // Note: this is based on QwtScaleDraw::getBorderDistHint(), except that we
-    //       don't on pScaleDraw's scale map, but use the one provided by
+    //       don't rely on pScaleDraw's scale map, but use the one provided by
     //       pScaleMap...
 
     pStart = 0;
