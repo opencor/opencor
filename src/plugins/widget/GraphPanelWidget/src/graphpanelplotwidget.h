@@ -536,6 +536,8 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
+    bool hasDirtyAxes();
+
     Action action() const;
 
     bool canZoomInX() const;

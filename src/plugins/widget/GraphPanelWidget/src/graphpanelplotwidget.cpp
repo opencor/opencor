@@ -1945,13 +1945,8 @@ void GraphPanelPlotWidget::updateActions()
 
     // Update our actions
 
-    double crtMinX = minX();
-    double crtMaxX = maxX();
-    double crtMinY = minY();
-    double crtMaxY = maxY();
-
-    double crtRangeX = crtMaxX-crtMinX;
-    double crtRangeY = crtMaxY-crtMinY;
+    double crtRangeX = maxX()-minX();
+    double crtRangeY = maxY()-minY();
 
     mCanZoomInX = crtRangeX > MinAxisRange;
     mCanZoomOutX = crtRangeX < (mLogAxisX?MaxLogAxisRange:MaxAxisRange);
@@ -1967,12 +1962,7 @@ void GraphPanelPlotWidget::updateActions()
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = realDataRect();
-
-    mResetZoomAction->setEnabled(   !qFuzzyCompare(crtMinX, dRect.left())
-                                 || !qFuzzyCompare(crtMaxX, dRect.left()+dRect.width())
-                                 || !qFuzzyCompare(crtMinY, dRect.top())
-                                 || !qFuzzyCompare(crtMaxY, dRect.top()+dRect.height()));
+    mResetZoomAction->setEnabled(hasDirtyAxes());
 }
 
 //==============================================================================
@@ -3849,6 +3839,21 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
     mNeighbors.removeOne(pPlot);
 
     updateActions();
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::hasDirtyAxes()
+{
+    // Return whether we have dirty axes, i.e. the min/max values of our axes
+    // allow us to see all the graphs
+
+    QRectF dRect = realDataRect();
+
+    return    !qFuzzyCompare(minX(), dRect.left())
+           || !qFuzzyCompare(maxX(), dRect.right())
+           || !qFuzzyCompare(minY(), dRect.top())
+           || !qFuzzyCompare(maxY(), dRect.bottom());
 }
 
 //==============================================================================
