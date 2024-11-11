@@ -3789,6 +3789,9 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
     for (auto plot : qAsConst(mPlots)) {
         // Now we are ready to actually update all the graphs of all our plots
+        // Note: we determine whether our plot's axes are dirty before adding
+        //       any new data to it, so that we can determine whether we need
+        //       to update our plot's axes...
 
         const GraphPanelWidget::GraphPanelPlotGraphs graphs = plot->graphs();
         bool needFullUpdatePlot = !plot->isOptimizedAxes();
@@ -3796,6 +3799,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         double plotMaxX = plot->maxX();
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
+        bool hasDirtyAxes = plot->hasDirtyAxes();
 
         for (auto graph : graphs) {
             if (graph->fileName() == pSimulationWidget->simulation()->fileName()) {
@@ -3841,34 +3845,38 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 if (    visible && graph->isVisible()
                     && !needFullUpdatePlot && (pSimulationResultsSize != 0)) {
                     // Check that our graph segment can fit within our plot's
-                    // current viewport
+                    // current viewport, but only if the user hasn't changed the
+                    // plot's viewport since we last came here (e.g. by panning
+                    // the plot's contents)
 
-                    double minX = plotMinX;
-                    double maxX = plotMaxX;
-                    double minY = plotMinY;
-                    double maxY = plotMaxY;
-                    auto graphData = graph->data(pSimulationRun);
+                    if (!hasDirtyAxes) {
+                        double minX = plotMinX;
+                        double maxX = plotMaxX;
+                        double minY = plotMinY;
+                        double maxY = plotMaxY;
+                        auto graphData = graph->data(pSimulationRun);
 
-                    for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
-                            i < pSimulationResultsSize; ++i) {
-                        auto val = graphData->sample(i);
-                        auto valX = val.x();
-                        auto valY = val.y();
+                        for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
+                                i < pSimulationResultsSize; ++i) {
+                            auto val = graphData->sample(i);
+                            auto valX = val.x();
+                            auto valY = val.y();
 
-                        if (   !qIsInf(valX) && !qIsNaN(valX)
-                            && !qIsInf(valY) && !qIsNaN(valY)) {
-                            minX = qMin(minX, valX);
-                            maxX = qMax(maxX, valX);
-                            minY = qMin(minY, valY);
-                            maxY = qMax(maxY, valY);
+                            if (   !qIsInf(valX) && !qIsNaN(valX)
+                                && !qIsInf(valY) && !qIsNaN(valY)) {
+                                minX = qMin(minX, valX);
+                                maxX = qMax(maxX, valX);
+                                minY = qMin(minY, valY);
+                                maxY = qMax(maxY, valY);
+                            }
                         }
+
+                        // Update our plot, if our graph segment cannot fit within
+                        // our plot's current viewport
+
+                        needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                            || (minY < plotMinY) || (maxY > plotMaxY);
                     }
-
-                    // Update our plot, if our graph segment cannot fit within
-                    // our plot's current viewport
-
-                    needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                         || (minY < plotMinY) || (maxY > plotMaxY);
 
                     if (!needFullUpdatePlot) {
                         if (plot->drawGraphFrom(graph, realOldDataSize-1)) {
@@ -3896,7 +3904,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       to be drawn straight away (e.g. when we start a
                 //       simulation)...
 
-                updatePlot(plot, needFullUpdatePlot, true);
+                updatePlot(plot, needFullUpdatePlot && !hasDirtyAxes, true);
 
                 needProcessingEvents = true;
             }
