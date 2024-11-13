@@ -219,6 +219,8 @@ int main(int pArgC, char *pArgV[])
     auto splashScreen = new OpenCOR::SplashScreenWindow();
 
     splashScreen->show();
+    splashScreen->activateWindow();
+    splashScreen->raise();
 
     guiApp->processEvents();
 #endif
