@@ -199,6 +199,7 @@ int main(int pArgC, char *pArgV[])
 
     appArguments.removeFirst();
 
+/*
     if (guiApp->isRunning()) {
         guiApp->sendMessage(appArguments.join('|'));
 
@@ -206,6 +207,7 @@ int main(int pArgC, char *pArgV[])
 
         return 0;
     }
+*/
 
     // Initialise the GUI version of OpenCOR
 

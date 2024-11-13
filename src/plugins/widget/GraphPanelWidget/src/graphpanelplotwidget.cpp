@@ -3218,6 +3218,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                 bool synchroniseY =    mSynchronizeYAxisAction->isChecked()
                                     && matchingAxis(plotParameterY, neighborParameterY);
 
+printf(">>> [02] setAxes(%g, %g, %g, %g)...\n", synchroniseX?pMinX:neighbor->minX(), synchroniseX?pMaxX:neighbor->maxX(), synchroniseY?pMinY:neighbor->minY(), synchroniseY?pMaxY:neighbor->maxY());
                 neighbor->setAxes(synchroniseX?pMinX:neighbor->minX(),
                                   synchroniseX?pMaxX:neighbor->maxX(),
                                   synchroniseY?pMinY:neighbor->minY(),
@@ -3242,6 +3243,7 @@ bool GraphPanelPlotWidget::resetAxes()
     // that allow us to see all the graphs
 
     QRectF dRect = realDataRect();
+printf(">>> [03] setAxes(%g, %g, %g, %g)...\n", dRect.left(), dRect.right(), dRect.top(), dRect.bottom());
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
                        true, true, true, true, true);
 
@@ -3341,6 +3343,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
     //       of the if() statement below...
 
     if (scaledAxisX || scaledAxisY) {
+printf(">>> [04] setAxes(%g, %g, %g, %g)...\n", newMinX, newMaxX, newMinY, newMaxY);
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
                 true, true, scaledAxisX, scaledAxisY, true);
     }
@@ -3464,6 +3467,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
         QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
 
+printf(">>> [05] setAxes(%g, %g, %g, %g)...\n", canvasMapX.invTransform(canvasMapX.transform(minX())-shiftX), canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX), canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY), canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY));
         setAxes(canvasMapX.invTransform(canvasMapX.transform(minX())-shiftX),
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
@@ -3615,6 +3619,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         if (   !qFuzzyIsNull(zoomRegion.width())
             && !qFuzzyIsNull(zoomRegion.height())) {
+printf(">>> [06] setAxes(%g, %g, %g, %g)...\n", zoomRegion.left(), zoomRegion.right(), zoomRegion.bottom(), zoomRegion.top());
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
                     true, true, true, true, true);
@@ -4146,6 +4151,7 @@ void GraphPanelPlotWidget::customAxes()
                            || !qFuzzyCompare(newMaxY, oldMaxY);
 
         if (customXAxis || customYAxis) {
+printf(">>> [07] setAxes(%g, %g, %g, %g)...\n", newMinX, newMaxX, newMinY, newMaxY);
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
                     true, true, customXAxis, customYAxis, true);
         }
