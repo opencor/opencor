@@ -52,7 +52,7 @@ namespace OpenCOR {
 //==============================================================================
 
 SplashScreenWindow::SplashScreenWindow() :
-    QWidget(nullptr, Qt::SplashScreen|Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint),
+    QWidget(nullptr, Qt::SplashScreen|Qt::FramelessWindowHint),
     mGui(new Ui::SplashScreenWindow)
 {
     // Set up the GUI
