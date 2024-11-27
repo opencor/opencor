@@ -3286,7 +3286,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
     //       updated at once...
 
     for (auto plot : qAsConst(mPlots)) {
-printf(">>> [01] updatePlot(true)...\n"); fflush(stdout);
+printf(">>> [01] updatePlot(true, false)...\n"); fflush(stdout);
         if (updatePlot(plot, true, false)) {
             needProcessingEvents = true;
         }
@@ -3410,7 +3410,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
         updateGraphData(pGraph, mSimulation->results()->size(i), i);
     }
 
-printf(">>> [02] updatePlot(true)...\n"); fflush(stdout);
+printf(">>> [02] updatePlot(true, false)...\n"); fflush(stdout);
     if (   updatePlot(plot, true, false)
         || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3443,7 +3443,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-printf(">>> [03] updatePlot(true)...\n"); fflush(stdout);
+printf(">>> [03] updatePlot(true, true)...\n"); fflush(stdout);
     updatePlot(plot, true, true);
 
     processEvents();
@@ -3499,8 +3499,8 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         for (auto plot : qAsConst(plots)) {
-printf(">>> [04] updatePlot(true)...\n"); fflush(stdout);
-            updatePlot(plot, true, true);
+printf(">>> [04] updatePlot(false, true)...\n"); fflush(stdout);
+            updatePlot(plot, false, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
@@ -3760,7 +3760,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
         mNeedUpdatePlots = false;
 
         for (auto plot : qAsConst(mPlots)) {
-printf(">>> [05] updatePlot(true)...\n"); fflush(stdout);
+printf(">>> [05] updatePlot(true, true)...\n"); fflush(stdout);
             updatePlot(plot, true, true);
         }
 
@@ -3912,7 +3912,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       to be drawn straight away (e.g. when we start a
                 //       simulation)...
 
-printf(">>> [06] updatePlot(%s)...\n", (needFullUpdatePlot && !hasDirtyAxes)?"true":"false"); fflush(stdout);
+printf(">>> [06] updatePlot(%s, true)...\n", (needFullUpdatePlot && !hasDirtyAxes)?"true":"false"); fflush(stdout);
                 updatePlot(plot, needFullUpdatePlot && !hasDirtyAxes, true);
 
                 needProcessingEvents = true;

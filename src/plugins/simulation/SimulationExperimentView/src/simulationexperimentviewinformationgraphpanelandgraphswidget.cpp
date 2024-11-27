@@ -1651,6 +1651,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(Core::Property *pProperty)
 {
+printf(">>> SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged()...\n");
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed
 
