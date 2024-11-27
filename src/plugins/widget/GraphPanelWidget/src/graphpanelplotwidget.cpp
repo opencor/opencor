@@ -3987,7 +3987,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
         newMinExtentY = qMax(newMinExtentY, minExtentY);
     }
 
-    bool xAlignmentChanged =     forceAlignment
+    bool xAlignmentChanged =    forceAlignment
                              || (newMinBorderDistStartX != oldMinBorderDistStartX)
                              || (newMinBorderDistEndX != oldMinBorderDistEndX);
     bool yAlignmentChanged =     forceAlignment

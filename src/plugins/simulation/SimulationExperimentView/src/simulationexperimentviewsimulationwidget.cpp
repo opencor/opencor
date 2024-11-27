@@ -3866,8 +3866,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         double maxY = plotMaxY;
                         auto graphData = graph->data(pSimulationRun);
 
-                        for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
-                                i < pSimulationResultsSize; ++i) {
+                        for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0; i < pSimulationResultsSize; ++i) {
                             auto val = graphData->sample(i);
                             auto valX = val.x();
                             auto valY = val.y();
@@ -3881,11 +3880,11 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                             }
                         }
 
-                        // Update our plot, if our graph segment cannot fit within
-                        // our plot's current viewport
+                        // Update our plot, if our graph segment cannot fit
+                        // within our plot's current viewport
 
                         needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                            || (minY < plotMinY) || (maxY > plotMaxY);
+                                             || (minY < plotMinY) || (maxY > plotMaxY);
                     }
 
                     if (!needFullUpdatePlot) {
