@@ -3460,7 +3460,8 @@ printf(">>> [03] updatePlot(true, true)...\n"); fflush(stdout);
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs,
+                                                             bool pCanSetAxes)
 {
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
@@ -3500,7 +3501,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
     if (mCanUpdatePlotsForUpdatedGraphs) {
         for (auto plot : qAsConst(plots)) {
 printf(">>> [04] updatePlot(false, true)...\n"); fflush(stdout);
-            updatePlot(plot, false, true);
+            updatePlot(plot, pCanSetAxes, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
@@ -3513,12 +3514,13 @@ printf(">>> [04] updatePlot(false, true)...\n"); fflush(stdout);
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                            bool pCanSetAxes)
 {
     // The given graph has been updated, so make sure that its corresponding
     // plots are up to date
 
-    graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
+    graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph, pCanSetAxes);
 }
 
 //==============================================================================
