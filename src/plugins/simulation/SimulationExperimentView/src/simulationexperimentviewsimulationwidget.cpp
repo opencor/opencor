@@ -3500,7 +3500,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         for (auto plot : qAsConst(plots)) {
-printf(">>> [04] updatePlot(false, true)...\n"); fflush(stdout);
+printf(">>> [04] updatePlot(%s, true)...\n", pCanSetAxes?"true":"false"); fflush(stdout);
             updatePlot(plot, pCanSetAxes, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
