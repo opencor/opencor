@@ -3211,7 +3211,7 @@ printf(">>> [02] setAxes(%g, %g, %g, %g)...\n", synchroniseX?pMinX:neighbor->min
                                   synchroniseX?pMaxX:neighbor->maxX(),
                                   synchroniseY?pMinY:neighbor->minY(),
                                   synchroniseY?pMaxY:neighbor->maxY(),
-                                  false, false, false, false, false);
+                                  false, true, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot, pForceAlignment, pForceAlignment);
