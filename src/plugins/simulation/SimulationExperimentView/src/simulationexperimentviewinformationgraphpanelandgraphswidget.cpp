@@ -745,10 +745,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectCurrent
         crtProperty->setChecked(pSelect);
 
         GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(crtProperty);
+        auto canSetAxes = !graph->plot()->hasDirtyAxes();
 
         graph->setSelected(pSelect);
 
-        emit graphUpdated(graph);
+        emit graphUpdated(graph, canSetAxes);
     }
 
     connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
@@ -775,11 +776,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
 
     const Core::Properties properties = mGraphsPropertyEditor->properties();
     GraphPanelWidget::GraphPanelPlotGraphs graphs = GraphPanelWidget::GraphPanelPlotGraphs();
+    auto canSetAxes = true;
 
     for (auto property : properties) {
         property->setChecked(pSelect);
 
         GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(property);
+
+        if (graphs.empty()) {
+            canSetAxes = !graph->plot()->hasDirtyAxes();
+        }
 
         graphs << graph;
 
@@ -787,7 +793,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     }
 
     if (!graphs.isEmpty()) {
-        emit graphsUpdated(graphs);
+        emit graphsUpdated(graphs, canSetAxes);
     }
 
     connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
@@ -1514,7 +1520,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
-        emit graphUpdated(graph);
+        emit graphUpdated(graph, !graph->plot()->hasDirtyAxes());
     }
 
     if ((oldLinePen != newLinePen) || graphSymbolUpdated) {
@@ -1662,9 +1668,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropert
         GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
 
         if (graph != nullptr) {
+            auto canSetAxes = !graph->plot()->hasDirtyAxes();
+
             graph->setSelected(pProperty->isChecked());
 
-            emit graphUpdated(graph);
+            emit graphUpdated(graph, canSetAxes);
         }
     } else {
         // One of our graph properties has changed, so update its information

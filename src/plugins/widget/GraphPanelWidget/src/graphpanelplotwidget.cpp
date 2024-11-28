@@ -1945,13 +1945,8 @@ void GraphPanelPlotWidget::updateActions()
 
     // Update our actions
 
-    double crtMinX = minX();
-    double crtMaxX = maxX();
-    double crtMinY = minY();
-    double crtMaxY = maxY();
-
-    double crtRangeX = crtMaxX-crtMinX;
-    double crtRangeY = crtMaxY-crtMinY;
+    double crtRangeX = maxX()-minX();
+    double crtRangeY = maxY()-minY();
 
     mCanZoomInX = crtRangeX > MinAxisRange;
     mCanZoomOutX = crtRangeX < (mLogAxisX?MaxLogAxisRange:MaxAxisRange);
@@ -1967,12 +1962,7 @@ void GraphPanelPlotWidget::updateActions()
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = realDataRect();
-
-    mResetZoomAction->setEnabled(   !qFuzzyCompare(crtMinX, dRect.left())
-                                 || !qFuzzyCompare(crtMaxX, dRect.left()+dRect.width())
-                                 || !qFuzzyCompare(crtMinY, dRect.top())
-                                 || !qFuzzyCompare(crtMaxY, dRect.top()+dRect.height()));
+    mResetZoomAction->setEnabled(hasDirtyAxes());
 }
 
 //==============================================================================
@@ -2903,39 +2893,42 @@ void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
     }
 
     // Optimise the axis' values, using either a linear or logarithmic approach
+    // Note: we loop to make sure that the optimised values are stable. Indeed,
+    //       if pMax was to be equal to 4.76 then to optimise it (using a linear
+    //       approach) would give us 4.8, but to optimise it again would give us
+    //       5.0. So, we loop until we get the same optimised value twice...
+
+    double oldMin;
+    double oldMax;
 
     if (   (   (pOptimization == Optimization::Default)
             && (   ((pAxisId == QwtPlot::xBottom) && !mLogAxisX)
                 || ((pAxisId == QwtPlot::yLeft) && !mLogAxisY)))
         || (pOptimization == Optimization::Linear)) {
         uint base = axisScaleEngine(pAxisId)->base();
-        double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
-                                                              axisMaxMajor(pAxisId),
-                                                              base);
-        double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
-                                                              axisMaxMinor(pAxisId),
-                                                              base);
-        double minOverMinorStep = pMin/minorStep;
-        double maxOverMinorStep = pMax/minorStep;
+        double majorStep;
+        double minorStep;
 
-        pMin = qFuzzyCompare(minOverMinorStep, int(minOverMinorStep))?
-                    minOverMinorStep*minorStep:
-                    qFloor(minOverMinorStep)*minorStep;
-        pMax = qFuzzyCompare(maxOverMinorStep, int(maxOverMinorStep))?
-                    maxOverMinorStep*minorStep:
-                    qCeil(maxOverMinorStep)*minorStep;
+        do {
+            oldMin = pMin;
+            oldMax = pMax;
+            majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin, axisMaxMajor(pAxisId), base);
+            minorStep = QwtScaleArithmetic::divideInterval(majorStep, axisMaxMinor(pAxisId), base);
+            pMin = qFloor(pMin/minorStep)*minorStep;
+            pMax = qCeil(pMax/minorStep)*minorStep;
+        } while (!qFuzzyCompare(oldMin, pMin) || !qFuzzyCompare(oldMax, pMax));
     } else {
-        double minStep = pow(10.0, qFloor(log10(pMin))-1);
-        double maxStep = pow(10.0, qCeil(log10(pMax))-1);
-        double minOverMinStep = pMin/minStep;
-        double maxOverMaxStep = pMax/maxStep;
+        double minStep;
+        double maxStep;
 
-        pMin = qFuzzyCompare(minOverMinStep, int(minOverMinStep))?
-                    minOverMinStep*minStep:
-                    qFloor(minOverMinStep)*minStep;
-        pMax = qFuzzyCompare(maxOverMaxStep, int(maxOverMaxStep))?
-                    maxOverMaxStep*maxStep:
-                    qCeil(maxOverMaxStep)*maxStep;
+        do {
+            oldMin = pMin;
+            oldMax = pMax;
+            minStep = pow(10.0, qFloor(log10(pMin))-1);
+            maxStep = pow(10.0, qCeil(log10(pMax))-1);
+            pMin = qFloor(pMin/minStep)*minStep;
+            pMax = qCeil(pMax/maxStep)*maxStep;
+        } while (!qFuzzyCompare(oldMin, pMin) || !qFuzzyCompare(oldMax, pMax));
     }
 }
 
@@ -3163,10 +3156,9 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    bool pForceAlignment,
                                    bool pSynchronizingNeighbor)
 {
-    // Axes can only be set if they are not dirty or if we want to force the
-    // setting of our X/Y axes
+    // Axes can only be set if we want to force the setting of our X/Y axes
 
-    if (mDirtyAxes && !pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
+    if (!pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
         return false;
     }
 
@@ -3209,7 +3201,6 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
     if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
-        mDirtyAxes = mDirtyAxes || (pForceAxesSetting && !pSynchronizingNeighbor);
 
         updateActions();
 
@@ -3235,7 +3226,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                   synchroniseX?pMaxX:neighbor->maxX(),
                                   synchroniseY?pMinY:neighbor->minY(),
                                   synchroniseY?pMaxY:neighbor->maxY(),
-                                  false, false, false, false, false, true);
+                                  false, pSynchronizingNeighbor, false, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot, pForceAlignment, pForceAlignment);
@@ -3253,14 +3244,10 @@ bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
     // that allow us to see all the graphs
-    // Note: mDirtyAxes gets set to true as a result of our call to setAxes(),
-    //       yet it should be false once our axes have been reset...
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
-                       true, true, true, true, true, false);
-
-    mDirtyAxes = false;
+                       true, true, true, true, true, true);
 
     return res;
 }
@@ -3359,7 +3346,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     if (scaledAxisX || scaledAxisY) {
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                true, true, scaledAxisX, scaledAxisY, true, false);
+                true, true, scaledAxisX, scaledAxisY, true, true);
     }
 }
 
@@ -3485,7 +3472,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
                 canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY),
-                true, true, shiftX != 0, shiftY != 0, true, false);
+                true, true, shiftX != 0, shiftY != 0, true, true);
 
         break;
     }
@@ -3634,7 +3621,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
             && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
-                    true, true, true, true, true, false);
+                    true, true, true, true, true, true);
         }
     } else {
         // An action that doesn't require anything specific to be done, except
@@ -3860,20 +3847,17 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::hasDirtyAxes() const
+bool GraphPanelPlotWidget::hasDirtyAxes()
 {
-    // Return whether we have dirty axes
+    // Return whether we have dirty axes, i.e. the min/max values of our axes
+    // allow us to see all the graphs
 
-    return mDirtyAxes;
-}
+    QRectF dRect = realDataRect();
 
-//==============================================================================
-
-void GraphPanelPlotWidget::setDirtyAxes(bool pDirtyAxes)
-{
-    // Set whether we have dirty axes
-
-    mDirtyAxes = pDirtyAxes;
+    return    !qFuzzyCompare(minX(), dRect.left())
+           || !qFuzzyCompare(maxX(), dRect.right())
+           || !qFuzzyCompare(minY(), dRect.top())
+           || !qFuzzyCompare(maxY(), dRect.bottom());
 }
 
 //==============================================================================
@@ -3884,7 +3868,7 @@ void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
                                               int &pEnd)
 {
     // Note: this is based on QwtScaleDraw::getBorderDistHint(), except that we
-    //       don't on pScaleDraw's scale map, but use the one provided by
+    //       don't rely on pScaleDraw's scale map, but use the one provided by
     //       pScaleMap...
 
     pStart = 0;
@@ -4014,7 +3998,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
         newMinExtentY = qMax(newMinExtentY, minExtentY);
     }
 
-    bool xAlignmentChanged =     forceAlignment
+    bool xAlignmentChanged =    forceAlignment
                              || (newMinBorderDistStartX != oldMinBorderDistStartX)
                              || (newMinBorderDistEndX != oldMinBorderDistEndX);
     bool yAlignmentChanged =     forceAlignment
@@ -4167,7 +4151,7 @@ void GraphPanelPlotWidget::customAxes()
 
         if (customXAxis || customYAxis) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, customXAxis, customYAxis, true, false);
+                    true, true, customXAxis, customYAxis, true, true);
         }
     }
 }

@@ -185,8 +185,8 @@ signals:
 
     void graphPanelSectionExpanded(int pSection, bool pExpanded);
 
-    void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-    void graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph, bool pCanSetAxes);
+    void graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs, bool pCanSetAxes);
 
 public slots:
     void initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
