@@ -3153,7 +3153,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    bool pForceAxesSetting,
                                    bool pSynchronizeXAxis,
                                    bool pSynchronizeYAxis,
-                                   bool pForceAlignment)
+                                   bool pForceAlignment,
+                                   bool pSynchronizingNeighbor)
 {
     // Axes can only be set if we want to force the setting of our X/Y axes
 
@@ -3225,7 +3226,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                   synchroniseX?pMaxX:neighbor->maxX(),
                                   synchroniseY?pMinY:neighbor->minY(),
                                   synchroniseY?pMaxY:neighbor->maxY(),
-                                  false, true, false, false, false);
+                                  false, pSynchronizingNeighbor, false, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot, pForceAlignment, pForceAlignment);
@@ -3246,7 +3247,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
-                       true, true, true, true, true);
+                       true, true, true, true, true, true);
 
     return res;
 }
@@ -3345,7 +3346,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     if (scaledAxisX || scaledAxisY) {
         setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                true, true, scaledAxisX, scaledAxisY, true);
+                true, true, scaledAxisX, scaledAxisY, true, true);
     }
 }
 
@@ -3471,7 +3472,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                 canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
                 canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
                 canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY),
-                true, true, shiftX != 0, shiftY != 0, true);
+                true, true, shiftX != 0, shiftY != 0, true, true);
 
         break;
     }
@@ -3620,7 +3621,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
             && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
-                    true, true, true, true, true);
+                    true, true, true, true, true, true);
         }
     } else {
         // An action that doesn't require anything specific to be done, except
@@ -4150,7 +4151,7 @@ void GraphPanelPlotWidget::customAxes()
 
         if (customXAxis || customYAxis) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, customXAxis, customYAxis, true);
+                    true, true, customXAxis, customYAxis, true, true);
         }
     }
 }
