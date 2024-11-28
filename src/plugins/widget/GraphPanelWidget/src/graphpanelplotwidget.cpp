@@ -2893,27 +2893,42 @@ void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
     }
 
     // Optimise the axis' values, using either a linear or logarithmic approach
+    // Note: we loop to make sure that the optimised values are stable. Indeed,
+    //       if pMax was to be equal to 4.76 then to optimise it (using a linear
+    //       approach) would give us 4.8, but to optimise it again would give us
+    //       5.0. So, we loop until we get the same optimised value twice...
+
+    double oldMin;
+    double oldMax;
 
     if (   (   (pOptimization == Optimization::Default)
             && (   ((pAxisId == QwtPlot::xBottom) && !mLogAxisX)
                 || ((pAxisId == QwtPlot::yLeft) && !mLogAxisY)))
         || (pOptimization == Optimization::Linear)) {
         uint base = axisScaleEngine(pAxisId)->base();
-        double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
-                                                              axisMaxMajor(pAxisId),
-                                                              base);
-        double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
-                                                              axisMaxMinor(pAxisId),
-                                                              base);
+        double majorStep;
+        double minorStep;
 
-        pMin = qFloor(pMin/minorStep)*minorStep;
-        pMax = qCeil(pMax/minorStep)*minorStep;
+        do {
+            oldMin = pMin;
+            oldMax = pMax;
+            majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin, axisMaxMajor(pAxisId), base);
+            minorStep = QwtScaleArithmetic::divideInterval(majorStep, axisMaxMinor(pAxisId), base);
+            pMin = qFloor(pMin/minorStep)*minorStep;
+            pMax = qCeil(pMax/minorStep)*minorStep;
+        } while (!qFuzzyCompare(oldMin, pMin) || !qFuzzyCompare(oldMax, pMax));
     } else {
-        double minStep = pow(10.0, qFloor(log10(pMin))-1);
-        double maxStep = pow(10.0, qCeil(log10(pMax))-1);
+        double minStep;
+        double maxStep;
 
-        pMin = qFloor(pMin/minStep)*minStep;
-        pMax = qCeil(pMax/maxStep)*maxStep;
+        do {
+            oldMin = pMin;
+            oldMax = pMax;
+            minStep = pow(10.0, qFloor(log10(pMin))-1);
+            maxStep = pow(10.0, qCeil(log10(pMax))-1);
+            pMin = qFloor(pMin/minStep)*minStep;
+            pMax = qCeil(pMax/maxStep)*maxStep;
+        } while (!qFuzzyCompare(oldMin, pMin) || !qFuzzyCompare(oldMax, pMax));
     }
 }
 
