@@ -185,7 +185,6 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
 
     GraphPanelPlotWidget *activeGraphPanelPlot = res->plot();
 
-printf(">>> [08] setAxes(%g, %g, %g, %g)...\n", activeGraphPanelPlot->minX(), activeGraphPanelPlot->maxX(), activeGraphPanelPlot->minY(), activeGraphPanelPlot->maxY());
     activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
                                   activeGraphPanelPlot->maxX(),
                                   activeGraphPanelPlot->minY(),
@@ -389,7 +388,6 @@ void GraphPanelsWidget::synchronizeXAxis()
     if (mSynchronizeXAxisAction->isChecked()) {
         GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel->plot();
 
-printf(">>> [09] setAxes(%g, %g, %g, %g)...\n", activeGraphPanelPlot->minX(), activeGraphPanelPlot->maxX(), activeGraphPanelPlot->minY(), activeGraphPanelPlot->maxY());
         activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
@@ -408,7 +406,6 @@ void GraphPanelsWidget::synchronizeYAxis()
     if (mSynchronizeYAxisAction->isChecked()) {
         GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel->plot();
 
-printf(">>> [10] setAxes(%g, %g, %g, %g)...\n", activeGraphPanelPlot->minX(), activeGraphPanelPlot->maxX(), activeGraphPanelPlot->minY(), activeGraphPanelPlot->maxY());
         activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),

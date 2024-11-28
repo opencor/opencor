@@ -3286,7 +3286,6 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
     //       updated at once...
 
     for (auto plot : qAsConst(mPlots)) {
-printf(">>> [01] updatePlot(true, false)...\n"); fflush(stdout);
         if (updatePlot(plot, true, false)) {
             needProcessingEvents = true;
         }
@@ -3410,7 +3409,6 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
         updateGraphData(pGraph, mSimulation->results()->size(i), i);
     }
 
-printf(">>> [02] updatePlot(true, false)...\n"); fflush(stdout);
     if (   updatePlot(plot, true, false)
         || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3443,7 +3441,6 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-printf(">>> [03] updatePlot(true, true)...\n"); fflush(stdout);
     updatePlot(plot, true, true);
 
     processEvents();
@@ -3500,7 +3497,6 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         for (auto plot : qAsConst(plots)) {
-printf(">>> [04] updatePlot(%s, true)...\n", pCanSetAxes?"true":"false"); fflush(stdout);
             updatePlot(plot, pCanSetAxes, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
@@ -3655,9 +3651,6 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
     pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
                                 minY, maxY, minLogY, maxLogY);
-if (pCanSetAxes) {
-printf(">>> [01] setAxes(%g, %g, %g, %g)...\n", pPlot->logAxisX()?minLogX:minX, pPlot->logAxisX()?maxLogX:maxX, pPlot->logAxisY()?minLogY:minY, pPlot->logAxisY()?maxLogY:maxY);
-}
 
     if (   pCanSetAxes
         && pPlot->setAxes(pPlot->logAxisX()?minLogX:minX,
@@ -3762,7 +3755,6 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
         mNeedUpdatePlots = false;
 
         for (auto plot : qAsConst(mPlots)) {
-printf(">>> [05] updatePlot(true, true)...\n"); fflush(stdout);
             updatePlot(plot, true, true);
         }
 
@@ -3913,7 +3905,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       to be drawn straight away (e.g. when we start a
                 //       simulation)...
 
-printf(">>> [06] updatePlot(%s, true)...\n", (needFullUpdatePlot && !hasDirtyAxes)?"true":"false"); fflush(stdout);
                 updatePlot(plot, needFullUpdatePlot && !hasDirtyAxes, true);
 
                 needProcessingEvents = true;
