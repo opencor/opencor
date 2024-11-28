@@ -2896,7 +2896,8 @@ void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
     // Note: we loop to make sure that the optimised values are stable. Indeed,
     //       if pMax was to be equal to 4.76 then to optimise it (using a linear
     //       approach) would give us 4.8, but to optimise it again would give us
-    //       5.0. So, we loop until we get the same optimised value twice...
+    //       5.0. So, we loop until we get the same optimised value, which is
+    //       bound to happen at some point...
 
     double oldMin;
     double oldMax;

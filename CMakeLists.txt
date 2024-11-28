@@ -24,7 +24,7 @@ project(OpenCOR)
 
 # Set the new policies that affect our build.
 
-foreach(NEW_POLICY CMP0135 CMP0175)
+foreach(NEW_POLICY CMP0135 CMP0175 CMP0177)
     if(POLICY ${NEW_POLICY})
         cmake_policy(SET ${NEW_POLICY} NEW)
     endif()

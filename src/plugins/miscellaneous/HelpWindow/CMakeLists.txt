@@ -6,7 +6,7 @@ add_custom_target(GenerateQtHelpFiles)
 
 add_dependencies(GenerateQtHelpFiles ${DOCUMENTATION_BUILD_TARGET})
 
-add_custom_command(TARGET GenerateQtHelpFiles
+add_custom_command(TARGET GenerateQtHelpFiles PRE_BUILD
                    COMMAND ${SILENTRUN}
                            ${QT_BINARIES_DIR}/qhelpgenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
                                                           -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
