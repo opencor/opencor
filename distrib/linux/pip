@@ -4,4 +4,4 @@ appDir="$(cd "$(dirname "$0")"; pwd)"
 
 export LD_LIBRARY_PATH="${appDir}/lib":$LD_LIBRARY_PATH
 
-"${appDir}/Python/bin/python" -m pip "$@"
+"${appDir}/.Python/bin/python" -m pip "$@"

@@ -2,4 +2,4 @@
 
 TITLE Running IPython...
 
-CALL "%~dp0Python\Scripts\runipython.bat" %*
+CALL "%~dp0.Python\Scripts\runipython.bat" %*

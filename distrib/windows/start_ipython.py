@@ -11,8 +11,8 @@ home_dir = '\\'.join(sys.executable.split('\\')[:-3])
 path = os.environ['PATH'].split(';')
 
 path.insert(0, '%s\\bin' % home_dir)
-path.insert(0, '%s\\Python\\bin' % home_dir)
-path.insert(0, '%s\\Python\\Scripts' % home_dir)
+path.insert(0, '%s\\.Python\\bin' % home_dir)
+path.insert(0, '%s\\.Python\\Scripts' % home_dir)
 
 os.environ['PATH'] = ';'.join(path)
 
