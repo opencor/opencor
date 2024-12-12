@@ -11,6 +11,24 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
+if [ "`uname -s`" != "Linux" \
+     -a ! -z "$DEVELOPER_ID_APPLICATION_CERTIFICATE_DESCRIPTION" \
+     -a ! -z "$APPLE_ID" \
+     -a ! -z "$APPLE_APP_SPECIFIC_PASSWORD" \
+     -a ! -z "$APPLE_TEAM_ID" ]; then
+    echo -e "\033[44;37;1mCode signing and notarising OpenCOR...\033[0m"
+
+    $appDir/distrib/macos/codesignandnotarise
+
+    exitCode=$?
+
+    if [ $exitCode -eq 0 ]; then
+        echo -e "\033[42;37;1mAll done!\033[0m"
+    else
+        exit $exitCode
+    fi
+fi
+
 echo -e "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 origDir=`pwd`
