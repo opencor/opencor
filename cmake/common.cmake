@@ -870,10 +870,8 @@ endmacro()
 macro(macos_deploy_qt_library LIBRARY_NAME)
     # Deploy the Qt library
 
-    set(APP_FRAMEWORKS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
     set(QT_LIBRARY_NAME Qt${LIBRARY_NAME})
-    set(QT_FRAMEWORK_VERSIONS_DIR ${QT_LIBRARY_NAME}.framework/Versions)
-    set(QT_FRAMEWORK_DIR ${QT_FRAMEWORK_VERSIONS_DIR}/${QT_VERSION_MAJOR})
+    set(QT_FRAMEWORK_DIR ${QT_LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
     if(   "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
        OR "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
@@ -883,22 +881,8 @@ macro(macos_deploy_qt_library LIBRARY_NAME)
     endif()
 
     macos_deploy_qt_file(${REAL_QT_LIBRARIES_DIR}/${QT_FRAMEWORK_DIR}
-                         ${APP_FRAMEWORKS_DIR}/${QT_FRAMEWORK_DIR}
+                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                          ${QT_LIBRARY_NAME})
-
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${QT_VERSION_MAJOR} Current
-                    WORKING_DIRECTORY ${APP_FRAMEWORKS_DIR}/${QT_FRAMEWORK_VERSIONS_DIR})
-
-    if(   "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKIT}"
-       OR "${QT_LIBRARY_NAME}" STREQUAL "Qt${WEBKITWIDGETS}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_FRAMEWORKS_DIR}/${QT_FRAMEWORK_DIR}/Resources)
-
-        configure_file(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/Info.plist.in
-                       ${APP_FRAMEWORKS_DIR}/${QT_FRAMEWORK_DIR}/Resources/Info.plist)
-    else()
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${REAL_QT_LIBRARIES_DIR}/${QT_FRAMEWORK_DIR}/Resources
-                                                                   ${APP_FRAMEWORKS_DIR}/${QT_FRAMEWORK_DIR}/Resources)
-    endif()
 endmacro()
 
 #===============================================================================

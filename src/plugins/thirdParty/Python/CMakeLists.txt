@@ -48,7 +48,7 @@ endif()
 # The base Python directory, library and script directories
 
 if(WIN32)
-    set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../.Python)
+    set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
 
     set(BINARY_DIR bin)
     set(LIBRARY_DIR Libs)
@@ -56,9 +56,9 @@ if(WIN32)
     set(SCRIPTS_DIR Scripts)
 else()
     if (APPLE)
-        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../../../.Python)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/Python)
     else()
-        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../.Python)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_LIBRARIES_DIR}/../Python)
     endif()
 
     set(BINARY_DIR bin)

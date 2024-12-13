@@ -1411,7 +1411,7 @@ if(WIN32)
 
     # Python runtime libraries and utilities
 
-    install(DIRECTORY ${PROJECT_BUILD_DIR}/.Python
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
     # Batch files to setup and run Python, IPython and Jupyter
@@ -1485,7 +1485,7 @@ if(WIN32)
         # Update Python scripts to refer to our installed Python
 
         set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
-            Exec '\\\"\\\$INSTDIR\\\\.Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\.Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\.Python\\\" -s'
+            Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
         ")
     endif()
 elseif(APPLE)
@@ -1517,12 +1517,6 @@ elseif(APPLE)
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-    # Python runtime libraries and utilities
-
-    install(DIRECTORY ${PROJECT_BUILD_DIR}/.Python
-            DESTINATION .
-            USE_SOURCE_PERMISSIONS)
 
     # Shell scripts to setup and run Python, IPython and Jupyter
 
@@ -1628,7 +1622,7 @@ else()
 
     # Python runtime libraries and utilities
 
-    install(DIRECTORY ${PROJECT_BUILD_DIR}/.Python
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
 

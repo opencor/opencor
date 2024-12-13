@@ -2,4 +2,4 @@
 
 TITLE Running Jupyter...
 
-CALL "%~dp0.Python\Scripts\runjupyter.bat" %*
+CALL "%~dp0Python\Scripts\runjupyter.bat" %*

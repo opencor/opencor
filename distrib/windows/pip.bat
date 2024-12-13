@@ -2,4 +2,4 @@
 
 TITLE Running Python...
 
-CALL "%~dp0.Python\bin\python.exe" -m pip %*
+CALL "%~dp0Python\bin\python.exe" -m pip %*

@@ -5,4 +5,4 @@ appDir="$(cd "$(dirname "$0")"; pwd)/../../../../.."
 export PATH="${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS":$PATH
 export PYDEVD_DISABLE_FILE_VALIDATION=1
 
-"${appDir}/.Python/bin/ipython" "$@"
+"${appDir}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/ipython" "$@"

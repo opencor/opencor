@@ -25,10 +25,6 @@ jobs:
       BUILDCACHE_DIRECT_MODE: true
       BUILDCACHE_LOG_FILE: ""
       EV_CERTIFICATE_BASE64: ${{ secrets.EV_CERTIFICATE_BASE64 }}
-      DEVELOPER_ID_APPLICATION_CERTIFICATE_DESCRIPTION: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_DESCRIPTION }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
     steps:
       - name: Set the timezone to New Zealand
         uses: szenius/set-timezone@v2.0
@@ -42,19 +38,6 @@ jobs:
         if: matrix.name == 'Windows'
         shell: bash
         run: echo -n $EV_CERTIFICATE_BASE64 | base64 -d > EVCertificate.pfx
-      - name: Retrieve some environment variales for code signing and notarisation (macOS only)
-        if: runner.os == 'macOS'
-        run: |
-          echo "DEVELOPER_ID_APPLICATION_CERTIFICATE_DESCRIPTION=$(echo $DEVELOPER_ID_APPLICATION_CERTIFICATE_DESCRIPTION)" >> $GITHUB_ENV
-          echo "APPLE_ID=$(echo $APPLE_ID)" >> $GITHUB_ENV
-          echo "APPLE_APP_SPECIFIC_PASSWORD=$(echo $APPLE_APP_SPECIFIC_PASSWORD)" >> $GITHUB_ENV
-          echo "APPLE_TEAM_ID=$(echo $APPLE_TEAM_ID)" >> $GITHUB_ENV
-      - name: Import the Developer ID Application certificate (macOS only)
-        if: runner.os == 'macOS'
-        uses: apple-actions/import-codesign-certs@v3
-        with:
-          p12-file-base64: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64 }}
-          p12-password: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install Python
