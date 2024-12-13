@@ -896,7 +896,7 @@ add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
 
 # Check whether we have everything to build our documentation
 
-find_package(Python COMPONENTS Interpreter)
+find_package(Python 3.12 EXACT COMPONENTS Interpreter)
 
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
 
