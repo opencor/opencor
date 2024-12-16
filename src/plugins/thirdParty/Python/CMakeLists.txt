@@ -241,6 +241,12 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                              ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
                              6c27e9d6b462d2ab6c926cf762613dfb73972020)
         endif()
+
+        # Copy vcruntime400.dll to the Python bin directory
+        # Note: our prebuilt copy of Python should have it (see below), but
+        #       somehow it doesn't!?...
+
+        copy_file_to_build_dir(DIRECT ${MSVC_DIR} Python/bin vcruntime140${DEBUG_TAG}.dll)
     elseif(APPLE)
         retrieve_package(${PACKAGE_NAME} ${PACKAGE_VERSION}
                          ${PACKAGE_REPOSITORY} ${RELEASE_TAG}
