@@ -27,7 +27,10 @@ IF !ExitCode! EQU 0 (
             CALL "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd\core\winsdk.bat"
         )
 
+        "!WindowsSdkVerBinPath!\x64\signtool.exe" sign /tr http://timestamp.globalsign.com/tsa/r6advanced1 /fd SHA256 /td SHA256 /f !EvCertificate! !AppDir!build\OpenCOR.com
         "!WindowsSdkVerBinPath!\x64\signtool.exe" sign /tr http://timestamp.globalsign.com/tsa/r6advanced1 /fd SHA256 /td SHA256 /f !EvCertificate! !AppDir!build\OpenCOR.exe
+
+        "!WindowsSdkVerBinPath!\x64\signtool.exe" sign /tr http://timestamp.globalsign.com/tsa/r6advanced1 /fd SHA256 /td SHA256 /f !EvCertificate! !AppDir!build\Python\bin\python.exe
 
         SET ExitCode=!ERRORLEVEL!
     ) ELSE (
