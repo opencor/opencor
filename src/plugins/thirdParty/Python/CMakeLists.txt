@@ -5,7 +5,7 @@ project(PythonPlugin)
 set(PACKAGE_NAME Python)
 set(PACKAGE_VERSION 3.12.2)
 set(PACKAGE_REPOSITORY python)
-set(BUILD_TAG opencor-3.12.3)
+set(BUILD_TAG opencor-3.12.2)
 set(RELEASE_TAG v3.12.2)
 
 get_full_local_external_package_dir()
