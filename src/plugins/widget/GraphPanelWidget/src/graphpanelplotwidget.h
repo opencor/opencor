@@ -420,6 +420,8 @@ public:
 
     bool isOptimizedAxes() const;
 
+    bool areEqual(double pValue1, double pValue2) const;
+
     void optimizeAxisX(double &pMin, double &pMax,
                        Optimization pOptimization = Optimization::Default);
     void optimizeAxisY(double &pMin, double &pMax,
