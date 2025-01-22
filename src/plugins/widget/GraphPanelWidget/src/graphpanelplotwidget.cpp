@@ -2862,6 +2862,17 @@ bool GraphPanelPlotWidget::isOptimizedAxes() const
 
 //==============================================================================
 
+bool GraphPanelPlotWidget::areEqual(double pValue1, double pValue2) const
+{
+    // Return whether the two given values are equal
+
+    return    (   qFuzzyIsNull(pValue1)
+               && qFuzzyIsNull(pValue2))
+           || qFuzzyCompare(pValue1, pValue2);
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
                                         Optimization pOptimization)
 {
@@ -2917,7 +2928,7 @@ void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
             minorStep = QwtScaleArithmetic::divideInterval(majorStep, axisMaxMinor(pAxisId), base);
             pMin = qFloor(pMin/minorStep)*minorStep;
             pMax = qCeil(pMax/minorStep)*minorStep;
-        } while (!qFuzzyCompare(oldMin, pMin) || !qFuzzyCompare(oldMax, pMax));
+        } while (!areEqual(oldMin, pMin) || !areEqual(oldMax, pMax));
     } else {
         double minStep;
         double maxStep;
@@ -2925,11 +2936,21 @@ void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
         do {
             oldMin = pMin;
             oldMax = pMax;
-            minStep = pow(10.0, qFloor(log10(pMin))-1);
-            maxStep = pow(10.0, qCeil(log10(pMax))-1);
-            pMin = qFloor(pMin/minStep)*minStep;
-            pMax = qCeil(pMax/maxStep)*maxStep;
-        } while (!qFuzzyCompare(oldMin, pMin) || !qFuzzyCompare(oldMax, pMax));
+
+            if (qFuzzyIsNull(pMin) || (pMin < 0.0)) {
+                pMin = 0.0;
+            } else {
+                minStep = pow(10.0, qFloor(log10(pMin))-1.0);
+                pMin = qFloor(pMin/minStep)*minStep;
+            }
+
+            if (qFuzzyIsNull(pMax) || (pMax < 0.0)) {
+                pMax = 0.0;
+            } else {
+                maxStep = pow(10.0, qCeil(log10(pMax))-1.0);
+                pMax = qCeil(pMax/maxStep)*maxStep;
+            }
+        } while (!areEqual(oldMin, pMin) || !areEqual(oldMax, pMax));
     }
 }
 
