@@ -537,7 +537,7 @@ else()
     set(CMAKE_CXX_FLAGS "-Wall -W -Werror")
 
     if(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nan-infinity-disabled -Wno-switch-default -Wno-undefined-reinterpret-cast")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-poison-system-directories -Wno-nan-infinity-disabled -Wno-switch-default -Wno-undefined-reinterpret-cast")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
         set(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
     else()
