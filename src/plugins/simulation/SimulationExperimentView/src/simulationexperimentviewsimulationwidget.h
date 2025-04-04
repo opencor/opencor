@@ -443,8 +443,8 @@ private slots:
     void graphsRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-    void graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
-    void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs, bool pCanSetAxes);
+    void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph, bool pCanSetAxes);
 
     void openCellmlFile();
 

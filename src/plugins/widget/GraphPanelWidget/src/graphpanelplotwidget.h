@@ -420,6 +420,8 @@ public:
 
     bool isOptimizedAxes() const;
 
+    bool areEqual(double pValue1, double pValue2) const;
+
     void optimizeAxisX(double &pMin, double &pMax,
                        Optimization pOptimization = Optimization::Default);
     void optimizeAxisY(double &pMin, double &pMax,
@@ -536,8 +538,7 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
-    bool hasDirtyAxes() const;
-    void setDirtyAxes(bool pDirtyAxes);
+    bool hasDirtyAxes();
 
     Action action() const;
 
@@ -667,8 +668,6 @@ private:
     double mDefaultMaxLogY = DefaultMaxAxis;
 
     GraphPanelPlotWidgets mNeighbors;
-
-    bool mDirtyAxes = false;
 
     void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 

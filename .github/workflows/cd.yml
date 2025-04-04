@@ -1,8 +1,6 @@
 name: CD
 
 on:
-  push:
-    branches: [ master ]
   release:
     types: [ created ]
   workflow_dispatch:
@@ -20,12 +18,13 @@ jobs:
           - name: Linux
             os: ubuntu-20.04
           - name: macOS
-            os: macos-12
+            os: macos-13
     env:
       BUILDCACHE_COMPRESS_FORMAT: ZSTD
       BUILDCACHE_DEBUG: -1
       BUILDCACHE_DIRECT_MODE: true
       BUILDCACHE_LOG_FILE: ""
+      EV_CERTIFICATE_BASE64: ${{ secrets.EV_CERTIFICATE_BASE64 }}
     steps:
       - name: Set the timezone to New Zealand
         uses: szenius/set-timezone@v2.0
@@ -35,6 +34,10 @@ jobs:
           timezoneMacos: "Pacific/Auckland"
       - name: Check out OpenCOR
         uses: actions/checkout@v4
+      - name: Retrieve the EV certificate (Windows only)
+        if: matrix.name == 'Windows'
+        shell: bash
+        run: echo -n $EV_CERTIFICATE_BASE64 | base64 -d > EVCertificate.pfx
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
       - name: Install Python
@@ -52,7 +55,7 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: sudo apt install libglu1-mesa
       - name: Install buildcache
-        uses: mikehardy/buildcache-action@v2
+        uses: cscouto/buildcache-action@v1
         with:
           cache_key: ${{ matrix.os }}
       - name: Cache external dependencies

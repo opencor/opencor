@@ -20,11 +20,11 @@ set(ENV{CXX} ${CXX_COMPILER})
 
 # Project definition
 
-project(OpenCOR)
+project(OpenCOR VERSION 0.8.1)
 
 # Set the new policies that affect our build.
 
-foreach(NEW_POLICY CMP0135)
+foreach(NEW_POLICY CMP0135 CMP0175 CMP0177)
     if(POLICY ${NEW_POLICY})
         cmake_policy(SET ${NEW_POLICY} NEW)
     endif()
@@ -81,12 +81,10 @@ if(WIN32)
     list(GET CMAKE_CXX_COMPILER_VERSION_LIST 1 CMAKE_CXX_COMPILER_VERSION_MINOR)
 
     if(   NOT(    "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC"
-              AND "${CMAKE_C_COMPILER_VERSION_MAJOR}" STREQUAL "19"
-              AND "${CMAKE_C_COMPILER_VERSION_MINOR}" STREQUAL "29")
+              AND "${CMAKE_C_COMPILER_VERSION_MAJOR}" STREQUAL "19")
        OR NOT(    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-              AND "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"
-              AND "${CMAKE_CXX_COMPILER_VERSION_MINOR}" STREQUAL "29"))
-        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2019 on Windows...")
+              AND "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"))
+        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2017, 2019 or 2022 on Windows...")
     endif()
 elseif(APPLE)
     if(    NOT(   "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang"
@@ -354,16 +352,14 @@ include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 include(ExternalProject)
 
-# On macOS, make sure that we support version 10.14 and later, unless a specific
-# deployment target has been specified, and also make sure that we target x86_64
+# On macOS, make sure that we support version 11 and later and that we target
+# x86_64
 
 if(APPLE)
-    if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
-    endif()
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 11 CACHE STRING "Minimum OS X deployment version" FORCE)
+    set(CMAKE_OSX_ARCHITECTURES x86_64)
 
     set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
-    set(CMAKE_OSX_ARCHITECTURES x86_64)
 endif()
 
 # A few constants to help us with building an external project
@@ -899,7 +895,7 @@ add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
 
 # Check whether we have everything to build our documentation
 
-find_package(Python COMPONENTS Interpreter)
+find_package(Python 3.12 EXACT COMPONENTS Interpreter)
 
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build sphinx-build2)
 
