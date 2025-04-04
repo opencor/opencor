@@ -398,15 +398,13 @@ endif()
 # Update the Python path in our Python scripts
 
 if (WIN32)
-    add_custom_command(TARGET ${PROJECT_NAME}
-                       POST_BUILD
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${PYTHON_EXECUTABLE}
                                ${PYTHON_SET_PYTHON_PATH_SCRIPT} --scripts-dir ${PYTHON_SCRIPTS_DIR}
                                                                 ${PYTHON_ROOT_DIR}
                                -s)
 else()
-    add_custom_command(TARGET ${PROJECT_NAME}
-                       POST_BUILD
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${PYTHON_EXECUTABLE}
                                ${PYTHON_SET_PYTHON_PATH_SCRIPT} ${PYTHON_SCRIPTS_DIR})
 endif()

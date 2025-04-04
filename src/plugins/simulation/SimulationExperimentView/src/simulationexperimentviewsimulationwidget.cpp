@@ -3457,7 +3457,8 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs,
+                                                             bool pCanSetAxes)
 {
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
@@ -3496,7 +3497,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         for (auto plot : qAsConst(plots)) {
-            updatePlot(plot, true, true);
+            updatePlot(plot, pCanSetAxes, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
@@ -3509,12 +3510,13 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                            bool pCanSetAxes)
 {
     // The given graph has been updated, so make sure that its corresponding
     // plots are up to date
 
-    graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
+    graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph, pCanSetAxes);
 }
 
 //==============================================================================
@@ -3780,14 +3782,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         simulationDataModified(simulation->data()->isModified());
     }
 
-    // Keep track of whether the plots' axes were dirty
-
-    QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> dirtyAxes;
-
-    for (auto plot : qAsConst(mPlots)) {
-        dirtyAxes.insert(plot, plot->hasDirtyAxes());
-    }
-
     // Update all the graphs of all our plots, but only if we are visible
     // Note: needProcessingEvents is used to ensure that our plots are all
     //       updated at once...
@@ -3797,6 +3791,9 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
     for (auto plot : qAsConst(mPlots)) {
         // Now we are ready to actually update all the graphs of all our plots
+        // Note: we determine whether our plot's axes are dirty before adding
+        //       any new data to it, so that we can determine whether we need
+        //       to update our plot's axes...
 
         const GraphPanelWidget::GraphPanelPlotGraphs graphs = plot->graphs();
         bool needFullUpdatePlot = !plot->isOptimizedAxes();
@@ -3804,6 +3801,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         double plotMaxX = plot->maxX();
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
+        bool hasDirtyAxes = plot->hasDirtyAxes();
 
         for (auto graph : graphs) {
             if (graph->fileName() == pSimulationWidget->simulation()->fileName()) {
@@ -3853,15 +3851,14 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                     // plot's viewport since we last came here (e.g. by panning
                     // the plot's contents)
 
-                    if (!plot->hasDirtyAxes()) {
+                    if (!hasDirtyAxes) {
                         double minX = plotMinX;
                         double maxX = plotMaxX;
                         double minY = plotMinY;
                         double maxY = plotMaxY;
                         auto graphData = graph->data(pSimulationRun);
 
-                        for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0;
-                             i < pSimulationResultsSize; ++i) {
+                        for (quint64 i = (oldDataSize != 0)?oldDataSize-1:0; i < pSimulationResultsSize; ++i) {
                             auto val = graphData->sample(i);
                             auto valX = val.x();
                             auto valY = val.y();
@@ -3908,7 +3905,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       to be drawn straight away (e.g. when we start a
                 //       simulation)...
 
-                updatePlot(plot, needFullUpdatePlot, true);
+                updatePlot(plot, needFullUpdatePlot && !hasDirtyAxes, true);
 
                 needProcessingEvents = true;
             }
@@ -3918,14 +3915,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // will need to update our plots the next time we become visible
 
             mNeedUpdatePlots = true;
-        }
-
-        // Reset the dirtiness of all the plots' axes
-        // Note: indeed, it may have been modified as a result of synchronising
-        //       some plots...
-
-        for (auto crtPlot : qAsConst(mPlots)) {
-            crtPlot->setDirtyAxes(dirtyAxes[crtPlot]);
         }
     }
 
