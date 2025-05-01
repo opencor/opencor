@@ -20,10 +20,10 @@ jobs:
             os: windows-2019
             mode: Debug
           - name: Build and test (Linux release)
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             mode: Release
           - name: Build (Linux debug)
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             mode: Debug
           - name: Build and test (macOS release)
             os: macos-13
@@ -52,7 +52,7 @@ jobs:
           setup-python: 'false'
       - name: Install packages (Linux only)
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt install libglu1-mesa
+        run: sudo apt install libffi7 libgl1-mesa-dev libglu1-mesa libtinfo5
       - name: Install buildcache
         uses: cscouto/buildcache-action@v1
         with:
@@ -75,7 +75,7 @@ jobs:
           - name: Documentation (Windows)
             os: windows-2019
           - name: Documentation (Linux)
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - name: Documentation (macOS)
             os: macos-13
     steps:

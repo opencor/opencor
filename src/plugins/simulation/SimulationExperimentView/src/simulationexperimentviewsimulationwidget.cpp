@@ -3801,7 +3801,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         double plotMaxX = plot->maxX();
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
-        bool hasDirtyAxes = plot->hasDirtyAxes();
+        bool hasDirtyAxes = (pTask == Task::ResetRuns)?false:plot->hasDirtyAxes();
 
         for (auto graph : graphs) {
             if (graph->fileName() == pSimulationWidget->simulation()->fileName()) {

@@ -1,7 +1,6 @@
 To build Python:
 
 - The host system needs to have Python 3.10+.
-  For Ubuntu 20.04 LTS, this means upgrading from the bundled Python 3.9.
 
 - **Linux:** `bzip2 <https://sourceware.org/bzip2>`__, `libffi <https://sourceware.org/libffi/>`__, `LZMA <https://tukaani.org/xz/>`__, `readline <https://savannah.gnu.org/projects/readline>`__, and `SQLite3 <https://sqlite.org/>`__ are needed. On Ubuntu and Debian, they can be installed using:
 

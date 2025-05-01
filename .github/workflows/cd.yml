@@ -16,7 +16,7 @@ jobs:
           - name: Windows
             os: windows-2019
           - name: Linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - name: macOS
             os: macos-13
     env:
@@ -53,7 +53,7 @@ jobs:
           setup-python: 'false'
       - name: Install packages (Linux only)
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt install libglu1-mesa
+        run: sudo apt install libffi7 libgl1-mesa-dev libglu1-mesa libtinfo5
       - name: Install buildcache
         uses: cscouto/buildcache-action@v1
         with:
