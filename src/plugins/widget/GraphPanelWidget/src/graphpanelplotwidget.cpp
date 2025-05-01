@@ -2926,8 +2926,11 @@ void GraphPanelPlotWidget::optimizeAxis(int pAxisId, double &pMin, double &pMax,
             oldMax = pMax;
             majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin, axisMaxMajor(pAxisId), base);
             minorStep = QwtScaleArithmetic::divideInterval(majorStep, axisMaxMinor(pAxisId), base);
-            pMin = qFloor(pMin/minorStep)*minorStep;
-            pMax = qCeil(pMax/minorStep)*minorStep;
+
+            if (!qFuzzyIsNull(majorStep) && !qFuzzyIsNull(minorStep)) {
+                pMin = qFloor(pMin/minorStep)*minorStep;
+                pMax = qCeil(pMax/minorStep)*minorStep;
+            }
         } while (!areEqual(oldMin, pMin) || !areEqual(oldMax, pMax));
     } else {
         double minStep;
