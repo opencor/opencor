@@ -52,7 +52,7 @@ jobs:
           setup-python: 'false'
       - name: Install packages (Linux only)
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt install libglu1-mesa
+        run: sudo apt install libffi7 libgl1-mesa-dev libglu1-mesa libtinfo5
       - name: Install buildcache
         uses: cscouto/buildcache-action@v1
         with:
