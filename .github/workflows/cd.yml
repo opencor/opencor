@@ -16,7 +16,7 @@ jobs:
           - name: Windows
             os: windows-2019
           - name: Linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - name: macOS
             os: macos-13
     env:
