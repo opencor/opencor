@@ -20,7 +20,7 @@ set(ENV{CXX} ${CXX_COMPILER})
 
 # Project definition
 
-project(OpenCOR VERSION 0.8.1)
+project(OpenCOR VERSION 0.8.2)
 
 # Set the new policies that affect our build.
 
