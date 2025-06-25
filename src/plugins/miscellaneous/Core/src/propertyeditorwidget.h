@@ -444,6 +444,7 @@ private:
     Properties mProperties;
     Properties mAllProperties;
 
+    QString mOldPropertyValue;
     Property *mProperty = nullptr;
     QWidget *mPropertyEditor = nullptr;
 

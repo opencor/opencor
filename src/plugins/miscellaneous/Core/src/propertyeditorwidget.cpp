@@ -2038,6 +2038,7 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
     mProperty = currentProperty();
     mPropertyEditor = pEditor;
+    mOldPropertyValue = mProperty->value();
 
     // We are starting the editing of a property, so make sure that if we are to
     // edit a list item, then its original value gets properly set
@@ -2088,7 +2089,7 @@ void PropertyEditorWidget::editorClosed()
 
     if (   (mProperty->type() != Property::Type::List)
         && (mProperty->type() != Property::Type::Boolean)) {
-        mProperty->setValue(mProperty->value(), true);
+        mProperty->setValue(mProperty->value(), true, mOldPropertyValue != mProperty->value());
     }
 
     // Reset some information about the property
