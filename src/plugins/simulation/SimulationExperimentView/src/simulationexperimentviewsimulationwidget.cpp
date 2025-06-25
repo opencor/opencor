@@ -3257,11 +3257,13 @@ void SimulationExperimentViewSimulationWidget::simulationResultsReset()
     // Note: see clearSimulationResults() for the reason behind temporarily
     //       disabling updates...
 
-    setUpdatesEnabled(false);
-        updateSimulationMode();
+    QTimer::singleShot(0, this, [this]() {
+        setUpdatesEnabled(false);
+            updateSimulationMode();
 
-        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
-    setUpdatesEnabled(true);
+            mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
+        setUpdatesEnabled(true);
+    });
 }
 
 //==============================================================================
