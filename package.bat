@@ -21,10 +21,10 @@ IF !ExitCode! EQU 0 (
         set VSCMD_ARG_HOST_ARCH=x64
         set VSCMD_ARG_TGT_ARCH=x64
 
-        IF EXIST "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\vsdevcmd\core\winsdk.bat" (
-            CALL "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\vsdevcmd\core\winsdk.bat"
+        IF EXIST "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\vsdevcmd\core\winsdk.bat" (
+            CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\vsdevcmd\core\winsdk.bat"
         ) ELSE (
-            CALL "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd\core\winsdk.bat"
+            CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\vsdevcmd\core\winsdk.bat"
         )
 
         "!WindowsSdkVerBinPath!\x64\signtool.exe" sign /tr http://timestamp.globalsign.com/tsa/r6advanced1 /fd SHA256 /td SHA256 /f !EvCertificate! !AppDir!build\OpenCOR.com

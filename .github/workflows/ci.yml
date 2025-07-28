@@ -14,10 +14,10 @@ jobs:
       matrix:
         include:
           - name: Build and test (Windows release)
-            os: windows-2019
+            os: windows-2022
             mode: Release
           - name: Build (Windows debug)
-            os: windows-2019
+            os: windows-2022
             mode: Debug
           - name: Build and test (Linux release)
             os: ubuntu-22.04
@@ -41,6 +41,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
+      - name: Configure MSVC
+        if: ${{ runner.os == 'Windows' }}
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -73,7 +76,7 @@ jobs:
       matrix:
         include:
           - name: Documentation (Windows)
-            os: windows-2019
+            os: windows-2022
           - name: Documentation (Linux)
             os: ubuntu-22.04
           - name: Documentation (macOS)
