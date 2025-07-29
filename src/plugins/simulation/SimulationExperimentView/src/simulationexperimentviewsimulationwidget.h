@@ -204,6 +204,7 @@ private:
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
+    bool mReloading = false;
     int mProgress = -1;
     bool mLockedDevelopmentMode = false;
 

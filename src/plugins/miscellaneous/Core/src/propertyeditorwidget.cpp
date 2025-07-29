@@ -2032,21 +2032,13 @@ void PropertyEditorWidget::checkCheckState(QStandardItem *pItem)
 
 //==============================================================================
 
-void PropertyEditorWidget::updateFocusProxy()
-{
-    // Set our property's editor as our focus proxy
-
-    setFocusProxy(mPropertyEditor);
-}
-
-//==============================================================================
-
 void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
     // Keep track of some information about the property
 
     mProperty = currentProperty();
     mPropertyEditor = pEditor;
+    mOldPropertyValue = mProperty->value();
 
     // We are starting the editing of a property, so make sure that if we are to
     // edit a list item, then its original value gets properly set
@@ -2066,19 +2058,13 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
         }
     }
 
-    // Next, we need to use the property's editor as our focus proxy and make
-    // sure that it immediately gets the focus
-    // Note #1: if we were not to immediately give the focus to our editor, then
-    //          the central widget would give the focus to the previously
-    //          focused widget (see CentralWidget::updateGui()), which is
-    //          clearly not what we want...
-    // Note #2: starting with Qt 5.12.5, we can't immediately set the property's
-    //          editor as our focus proxy (!?). This will indeed crash OpenCOR!
-    //          So, instead, we set it through a single shot...
+    // Next, we need to make sure that it immediately gets the focus
+    // Note: if we were not to immediately give the focus to our editor, then
+    //       the central widget would give the focus to the previously focused
+    //       widget (see CentralWidget::updateGui()), which is clearly not what
+    //       we want...
 
     pEditor->setFocus();
-
-    QTimer::singleShot(0, this, &PropertyEditorWidget::updateFocusProxy);
 }
 
 //==============================================================================
@@ -2103,14 +2089,8 @@ void PropertyEditorWidget::editorClosed()
 
     if (   (mProperty->type() != Property::Type::List)
         && (mProperty->type() != Property::Type::Boolean)) {
-        mProperty->setValue(mProperty->value(), true);
+        mProperty->setValue(mProperty->value(), true, mOldPropertyValue != mProperty->value());
     }
-
-    // Reset our focus proxy and make sure that we get the focus (see
-    // editorOpened() above for the reason)
-
-    setFocusProxy(nullptr);
-    setFocus();
 
     // Reset some information about the property
 

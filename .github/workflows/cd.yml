@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
           - name: Windows
-            os: windows-2019
+            os: windows-2022
           - name: Linux
             os: ubuntu-22.04
           - name: macOS
@@ -40,6 +40,9 @@ jobs:
         run: echo -n $EV_CERTIFICATE_BASE64 | base64 -d > EVCertificate.pfx
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
+      - name: Configure MSVC
+        if: ${{ runner.os == 'Windows' }}
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Install Python
         uses: actions/setup-python@v5
         with:

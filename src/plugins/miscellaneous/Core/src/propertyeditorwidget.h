@@ -444,6 +444,7 @@ private:
     Properties mProperties;
     Properties mAllProperties;
 
+    QString mOldPropertyValue;
     Property *mProperty = nullptr;
     QWidget *mPropertyEditor = nullptr;
 
@@ -471,8 +472,6 @@ private slots:
     void updateHeight();
 
     void checkCheckState(QStandardItem *pItem);
-
-    void updateFocusProxy();
 
     void editorOpened(QWidget *pEditor);
     void editorClosed();

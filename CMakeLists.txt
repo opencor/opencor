@@ -81,10 +81,12 @@ if(WIN32)
     list(GET CMAKE_CXX_COMPILER_VERSION_LIST 1 CMAKE_CXX_COMPILER_VERSION_MINOR)
 
     if(   NOT(    "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC"
-              AND "${CMAKE_C_COMPILER_VERSION_MAJOR}" STREQUAL "19")
+              AND "${CMAKE_C_COMPILER_VERSION_MAJOR}" STREQUAL "19"
+              AND "${CMAKE_C_COMPILER_VERSION_MINOR}" STREQUAL "44")
        OR NOT(    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-              AND "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"))
-        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2017, 2019 or 2022 on Windows...")
+              AND "${CMAKE_CXX_COMPILER_VERSION_MAJOR}" STREQUAL "19"
+              AND "${CMAKE_CXX_COMPILER_VERSION_MINOR}" STREQUAL "44"))
+        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2022 on Windows...")
     endif()
 elseif(APPLE)
     if(    NOT(   "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang"
@@ -527,7 +529,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
 
 if(WIN32)
-    set(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc")
+    set(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc /wd4996")
     # Note: MSVC has a /Wall flag, but it results in MSVC being very pedantic,
     #       so instead we use what MSVC recommends for production code, which is
     #       /W3 and which is also what CMake uses by default...
@@ -920,16 +922,16 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     # Determine the location of the MSVC runtime libraries
 
     if(WIN32)
-        if(EXISTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community")
+        if(EXISTS "C:/Program Files/Microsoft Visual Studio/2022/Community")
             set(MSVC_EDITION Community)
         else()
             set(MSVC_EDITION Enterprise)
         endif()
 
         if(RELEASE_MODE)
-            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/x64/Microsoft.VC142.CRT")
+            set(MSVC_DIR "C:/Program Files/Microsoft Visual Studio/2022/${MSVC_EDITION}/VC/Redist/MSVC/14.44.35112/x64/Microsoft.VC143.CRT")
         else()
-            set(MSVC_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/VC/Redist/MSVC/14.29.30133/debug_nonredist/x64/Microsoft.VC142.DebugCRT")
+            set(MSVC_DIR "C:/Program Files/Microsoft Visual Studio/2022/${MSVC_EDITION}/VC/Redist/MSVC/14.44.35112/debug_nonredist/x64/Microsoft.VC143.DebugCRT")
         endif()
     endif()
 
@@ -1263,10 +1265,10 @@ else()
         add_dependencies(${WINDOWS_CLI_COPY} ${WINDOWS_CLI_PROJECT_NAME})
 
         # Additional files required by OpenCOR
-        # Note #1: these files may or not be needed in order to test OpenCOR
-        #          locally. It all depends on the way the user's computer is set
-        #          up. So, by copying them over, we are sure that the
-        #          release/debug version of OpenCOR will work fine...
+        # Note: these files may or not be needed in order to test OpenCOR
+        #       locally. It all depends on the way the user's computer is set
+        #       up. So, by copying them over, we are sure that the release/debug
+        #       version of OpenCOR will work fine...
         # Note #2: the second set of additional files is needed in case OpenCOR
         #          is to be run on a non-up-to-date copy of Windows 7...
 
@@ -1276,7 +1278,7 @@ else()
             ${MSVC_DIR}/vcruntime140_1${DEBUG_TAG}.dll
         )
 
-        set(REMOTE_DEBUGGER_DIR "C:/Program Files (x86)/Microsoft Visual Studio/2019/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
+        set(REMOTE_DEBUGGER_DIR "C:/Program Files/Microsoft Visual Studio/2022/${MSVC_EDITION}/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
             ${REMOTE_DEBUGGER_DIR}/api-ms-win-core-file-l1-2-0.dll

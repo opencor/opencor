@@ -900,6 +900,10 @@ static const char *OutputBrLn = "<br/>\n";
 
 void SimulationExperimentViewSimulationWidget::initialize(bool pReloading)
 {
+    // Keep track of the fact that we are reloading ourselves
+
+    mReloading = pReloading;
+
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
     // furtherInitialize()), so we ask our central widget to show its busy
@@ -2735,6 +2739,10 @@ void SimulationExperimentViewSimulationWidget::finalFurtherInitialize()
     mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
 
     checkGraphPanelsAndGraphs();
+
+    // If we were reloading ourselves, then we can now reset mReloading to false
+
+    mReloading = false;
 }
 
 //==============================================================================
@@ -3257,11 +3265,13 @@ void SimulationExperimentViewSimulationWidget::simulationResultsReset()
     // Note: see clearSimulationResults() for the reason behind temporarily
     //       disabling updates...
 
-    setUpdatesEnabled(false);
-        updateSimulationMode();
+    QTimer::singleShot(0, this, [this]() {
+        setUpdatesEnabled(false);
+            updateSimulationMode();
 
-        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
-    setUpdatesEnabled(true);
+            mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
+        setUpdatesEnabled(true);
+    });
 }
 
 //==============================================================================
@@ -3774,6 +3784,12 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                                                                        int pSimulationRun,
                                                                        Task pTask)
 {
+    // Don't update our simulation results if we are reloading ourselves
+
+    if (mReloading) {
+        return;
+    }
+
     // Update our simulation results
 
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
