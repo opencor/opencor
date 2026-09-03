@@ -83,6 +83,17 @@ EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
 
 //==============================================================================
 
+void EditorWidgetEditorWidget::changeEvent(QEvent *pEvent)
+{
+    QScintillaWidget::QScintillaWidget::changeEvent(pEvent);
+
+    if (pEvent->type() == QEvent::PaletteChange) {
+        setReadOnly(isReadOnly());
+    }
+}
+
+//==============================================================================
+
 void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Hide our corresponding find/replace widget, if needed

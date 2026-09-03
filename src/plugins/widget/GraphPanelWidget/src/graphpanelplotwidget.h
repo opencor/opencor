@@ -579,6 +579,11 @@ private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
 
+    bool mBackgroundUsesTheme = true;
+    bool mForegroundUsesTheme = true;
+    bool mSurroundingAreaBackgroundUsesTheme = true;
+    bool mSurroundingAreaForegroundUsesTheme = true;
+
     Qt::PenStyle mPointCoordinatesStyle = Qt::DashLine;
     int mPointCoordinatesWidth = 1;
     QColor mPointCoordinatesColor;

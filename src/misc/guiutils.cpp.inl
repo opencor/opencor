@@ -332,6 +332,37 @@ QColor windowTextColor(QPalette::ColorGroup pColorGroup)
 
 //==============================================================================
 
+QPixmap themedPixmap(const QPixmap &pPixmap)
+{
+    if (baseColor().lightness() >= windowTextColor().lightness()) {
+        return pPixmap;
+    }
+
+    QImage image = pPixmap.toImage().convertToFormat(QImage::Format_ARGB32);
+
+    // Preserve coloured artwork, while making monochrome black details
+    // visible on a dark background.
+
+    for (int y = 0; y < image.height(); ++y) {
+        auto line = reinterpret_cast<QRgb *>(image.scanLine(y));
+
+        for (int x = 0; x < image.width(); ++x) {
+            QColor color = QColor::fromRgba(line[x]);
+
+            if (   (color.alpha() != 0) && (color.saturation() < 40)
+                && (color.lightness() < 128)) {
+                color.setRgb(255-color.red(), 255-color.green(),
+                             255-color.blue(), color.alpha());
+                line[x] = color.rgba();
+            }
+        }
+    }
+
+    return QPixmap::fromImage(image);
+}
+
+//==============================================================================
+
 QMessageBox::StandardButton showMessageBox(QWidget *pParent,
                                            const QMessageBox::Icon &pIcon,
                                            const Qt::TextInteractionFlags &pFlags,

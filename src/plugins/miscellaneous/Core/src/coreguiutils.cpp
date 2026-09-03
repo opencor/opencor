@@ -39,10 +39,12 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+#include <QImage>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QPainter>
+#include <QPixmap>
 #include <QPushButton>
 #include <QScreen>
 #include <QSettings>
@@ -686,17 +688,42 @@ QAction * newSeparator(QWidget *pParent)
 
 //==============================================================================
 
+class PaletteLineWidget : public QFrame
+{
+public:
+    explicit PaletteLineWidget(QWidget *pParent) :
+        QFrame(pParent)
+    {
+        updateStyleSheet();
+    }
+
+protected:
+    void changeEvent(QEvent *pEvent) override
+    {
+        QFrame::changeEvent(pEvent);
+
+        if (pEvent->type() == QEvent::PaletteChange) {
+            updateStyleSheet();
+        }
+    }
+
+private:
+    void updateStyleSheet()
+    {
+        setStyleSheet(QString("QFrame {"
+                              "    border: 1px solid %1;"
+                              "}").arg(borderColor().name()));
+    }
+};
+
+//==============================================================================
+
 QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
     // Create and return a line widget, i.e. one which is 1 pixel wide, using a
     // QFrame widget
 
-    auto res = new QFrame(pParent);
-    QString color = borderColor().name();
-
-    res->setStyleSheet(QString("QFrame {"
-                               "    border: 1px solid %1;"
-                               "}").arg(color));
+    auto res = new PaletteLineWidget(pParent);
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

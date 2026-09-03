@@ -40,6 +40,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QApplication>
 #include <QDialogButtonBox>
 #include <QDragEnterEvent>
+#include <QEvent>
 #include <QFile>
 #include <QFileInfo>
 #include <QGridLayout>
@@ -50,6 +51,8 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include <QMenu>
 #include <QMenuBar>
 #include <QMimeData>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QPushButton>
 #include <QRect>
 #include <QScreen>
@@ -64,6 +67,51 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class LogoWidget : public QWidget
+{
+public:
+    explicit LogoWidget(QWidget *pParent) :
+        QWidget(pParent),
+        mLightPixmap(QStringLiteral(":/Core/logo.png"))
+    {
+        updatePixmap();
+    }
+
+protected:
+    void changeEvent(QEvent *pEvent) override
+    {
+        QWidget::changeEvent(pEvent);
+
+        if (pEvent->type() == QEvent::PaletteChange) {
+            updatePixmap();
+        }
+    }
+
+    void paintEvent(QPaintEvent *pEvent) override
+    {
+        Q_UNUSED(pEvent)
+
+        QPainter painter(this);
+
+        painter.fillRect(rect(), palette().color(QPalette::Base));
+
+        painter.drawPixmap((width()-mPixmap.width())/2,
+                           (height()-mPixmap.height())/2, mPixmap);
+    }
+
+private:
+    QPixmap mLightPixmap;
+    QPixmap mPixmap;
+
+    void updatePixmap()
+    {
+        mPixmap = themedPixmap(mLightPixmap);
+        update();
+    }
+};
 
 //==============================================================================
 
@@ -174,14 +222,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our logo view which simply displays OpenCOR's logo
 
-    mLogoView = new QWidget(this);
-
-    mLogoView->setStyleSheet("QWidget {"
-                             "    background-color: white;"
-                             "    background-image: url(:/Core/logo.png);"
-                             "    background-position: center;"
-                             "    background-repeat: no-repeat;"
-                             "}");
+    mLogoView = new LogoWidget(this);
 
     mContents->addWidget(mLogoView);
 

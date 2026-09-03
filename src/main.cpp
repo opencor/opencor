@@ -47,6 +47,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "cliutils.h"
 #include "guiapplication.h"
 #include "mainwindow.h"
+#include "thememanager.h"
 
 #ifdef Q_OS_MAC
     #include "macos.h"
@@ -212,6 +213,10 @@ int main(int pArgC, char *pArgV[])
     QString appDate;
 
     OpenCOR::initApplication(&appDate);
+
+    // Apply the user's preferred theme before creating any visible widget.
+
+    OpenCOR::ThemeManager::applyTheme(guiApp);
 
     // Create and show our splash screen, if we are not in debug mode
 

@@ -636,7 +636,9 @@ void SimulationExperimentViewSimulationWidget::changeEvent(QEvent *pEvent)
         mCanHandleChangeEvent = true;
     }
 
-    if (mCanHandleChangeEvent && (pEvent->type() == QEvent::EnabledChange)) {
+    if (   mCanHandleChangeEvent
+        && (   (pEvent->type() == QEvent::EnabledChange)
+            || (pEvent->type() == QEvent::PaletteChange))) {
         int horizontalSliderPosition = mOutputWidget->horizontalScrollBar()->sliderPosition();
         int verticalSliderPosition = mOutputWidget->verticalScrollBar()->sliderPosition();
 
@@ -746,11 +748,18 @@ QString SimulationExperimentViewSimulationWidget::styledOutput()
                                                 "</body>";
 
     if (isEnabled()) {
-        static const QString RedColor   = QColor(Qt::darkRed).name();
-        static const QString GreenColor = QColor(Qt::darkGreen).name();
-        static const QString BlueColor  = QColor(Qt::darkBlue).name();
+        QColor redColor = Qt::darkRed;
+        QColor greenColor = Qt::darkGreen;
+        QColor blueColor = Qt::darkBlue;
 
-        return DefaultOutputMessage.arg(GreenColor, BlueColor, RedColor,
+        if (Core::baseColor() == Qt::black) {
+            redColor = QColor(0xff, 0x6b, 0x6b);
+            greenColor = QColor(0x62, 0xd2, 0x6f);
+            blueColor = QColor(0x66, 0xb3, 0xff);
+        }
+
+        return DefaultOutputMessage.arg(greenColor.name(), blueColor.name(),
+                                        redColor.name(),
                                         mOutputMessage);
     }
 

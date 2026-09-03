@@ -38,6 +38,8 @@ QColor CORE_EXPORT shadowColor(QPalette::ColorGroup pColorGroup = QPalette::Curr
 QColor CORE_EXPORT windowColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
 QColor CORE_EXPORT windowTextColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
 
+QPixmap CORE_EXPORT themedPixmap(const QPixmap &pPixmap);
+
 QMessageBox::StandardButton CORE_EXPORT informationMessageBox(const QString &pTitle,
                                                               const QString &pText,
                                                               const QMessageBox::StandardButtons &pButtons = QMessageBox::Ok,

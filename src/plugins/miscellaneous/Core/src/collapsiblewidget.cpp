@@ -82,9 +82,9 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
 
     subWidget->setLayout(subLayout);
 
-    setStyleSheet(QString("QWidget {"
-                          "    background-color: %1;"
-                          "}").arg(windowColor().name()));
+    setStyleSheet("QWidget {"
+                  "    background-color: palette(window);"
+                  "}");
 
     // Create and customise our button and title
 

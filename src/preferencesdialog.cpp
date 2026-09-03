@@ -26,6 +26,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 #include "pluginmanager.h"
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
+#include "thememanager.h"
 
 //==============================================================================
 
@@ -147,6 +148,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    mGui->themeValue->addItems({ tr("Light"), tr("Dark") });
+    mGui->themeValue->setCurrentIndex(ThemeManager::currentTheme() == Theme::Dark? 1:0);
 
     connect(mGui->treeView, &QTreeView::collapsed,
             this, &PreferencesDialog::treeViewCollapsed);
@@ -312,6 +316,13 @@ void PreferencesDialog::buttonBoxAccepted()
         }
     }
 
+    // Save and apply our application preferences. Setting the application
+    // palette updates the open interface as well as widgets created later.
+
+    ThemeManager::setTheme(mGui->themeValue->currentIndex() == 1?
+                               Theme::Dark:
+                               Theme::Light);
+
     // Confirm that we accepted the changes
 
     done(QMessageBox::Ok);
@@ -379,6 +390,8 @@ void PreferencesDialog::resetAll()
     for (auto preferencesWidget : qAsConst(mItemPreferencesWidgets)) {
         preferencesWidget->resetPreferences();
     }
+
+    mGui->themeValue->setCurrentIndex(1);
 }
 
 //==============================================================================

@@ -33,6 +33,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QCloseEvent>
 #include <QElapsedTimer>
+#include <QPixmap>
 #include <QScreen>
 #include <QTimer>
 #include <QWindow>
@@ -59,13 +60,19 @@ SplashScreenWindow::SplashScreenWindow() :
 
     mGui->setupUi(this);
 
+    const QPixmap *splashScreenPixmap = mGui->splashScreenImage->pixmap();
+
+    if (splashScreenPixmap != nullptr) {
+        mGui->splashScreenImage->setPixmap(themedPixmap(*splashScreenPixmap));
+    }
+
     QColor borderRgb = borderColor();
     QString borderStyle = QString("1px solid rgb(%1, %2, %3)").arg(borderRgb.red())
                                                               .arg(borderRgb.green())
                                                               .arg(borderRgb.blue());
 
     setStyleSheet(QString("QLabel#splashScreenImage {"
-                          "     background-color: white;"
+                          "     background-color: palette(base);"
                           "}"
 #ifdef Q_OS_MAC
                           "QWidget#infoWidget {"

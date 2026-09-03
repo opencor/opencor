@@ -244,6 +244,10 @@ void WebViewerWidget::setToolTip(const QString &pToolTip)
 
 bool WebViewerWidget::event(QEvent *pEvent)
 {
+    if (pEvent->type() == QEvent::PaletteChange) {
+        updateLocalContentTheme();
+    }
+
     // Override the change of the cursor and tool tip
 
     if (mOverridingCursor) {
@@ -331,6 +335,91 @@ Core::ProgressBarWidget * WebViewerWidget::progressBarWidget() const
     // Return our progress bar
 
     return mProgressBarWidget;
+}
+
+//==============================================================================
+
+static QString localContentStyleSheet(const QPalette &pPalette)
+{
+    QColor backgroundColor = pPalette.color(QPalette::Base);
+    QColor foregroundColor = pPalette.color(QPalette::Text);
+
+    if (backgroundColor.lightness() >= foregroundColor.lightness()) {
+        return {};
+    }
+
+    return QString("html, body { background: %1 !important; color: %2 !important; }"
+                   "a, a:visited, a:hover { color: %3 !important; }"
+                   "h1, h2, h3, h4, h5, h6 { color: %2 !important; }"
+                   "div.section { color: %3 !important; }"
+                   "pre, code { background: %4 !important; color: %2 !important; }"
+                   "table, th, td { border-color: %5 !important; }"
+                   "table tr { color: %2 !important; }"
+                   "tr.add, span.add { background-color: #123b1a !important; }"
+                   "tr.remove, span.remove { background-color: #461818 !important; }"
+                   "tr.add td.linenumber { background-color: #174d20 !important; }"
+                   "tr.remove td.linenumber { background-color: #5c2020 !important; }"
+                   "tr.header { background-color: #181818 !important; color: #b0b0b0 !important; }"
+                   "tr.binaryfile { background-color: #3b2c12 !important; color: #f0c36a !important; }"
+                   "td.linenumber, td.tag { color: #b0b0b0 !important; }"
+                   "td.rightborder, tr.last { border-color: %5 !important; }"
+                   "div.diagram svg { -webkit-filter: invert(1) hue-rotate(180deg); }")
+            .arg(backgroundColor.name(), foregroundColor.name(),
+                 pPalette.color(QPalette::Link).name(),
+                 pPalette.color(QPalette::AlternateBase).name(),
+                 pPalette.color(QPalette::Mid).name());
+}
+
+//==============================================================================
+
+void WebViewerWidget::setLocalHtml(const QString &pHtml, const QUrl &pBaseUrl)
+{
+    mHasLocalHtml = true;
+    mLocalHtml = pHtml;
+    mLocalHtmlBaseUrl = pBaseUrl;
+
+    updateLocalContentTheme();
+}
+
+//==============================================================================
+
+void WebViewerWidget::setLocalContentThemingEnabled(bool pEnabled)
+{
+    mLocalContentThemingEnabled = pEnabled;
+
+    QString styleSheet = pEnabled? localContentStyleSheet(palette()):QString();
+    QUrl styleSheetUrl;
+
+    if (!styleSheet.isEmpty()) {
+        styleSheetUrl = QUrl("data:text/css;charset=utf-8;base64,"
+                            +QString::fromLatin1(styleSheet.toUtf8().toBase64()));
+    }
+
+    mWebView->settings()->setUserStyleSheetUrl(styleSheetUrl);
+}
+
+//==============================================================================
+
+void WebViewerWidget::updateLocalContentTheme()
+{
+    if (mLocalContentThemingEnabled) {
+        setLocalContentThemingEnabled(true);
+    }
+
+    if (!mHasLocalHtml) {
+        return;
+    }
+
+    QString html = mLocalHtml;
+    QString styleSheet = localContentStyleSheet(palette());
+
+    if (!styleSheet.isEmpty()) {
+        html.prepend(QString("<style type=\"text/css\">%1</style>").arg(styleSheet));
+    }
+
+    mSettingLocalHtml = true;
+    mWebView->setHtml(html, mLocalHtmlBaseUrl);
+    mSettingLocalHtml = false;
 }
 
 //==============================================================================
@@ -514,6 +603,13 @@ void WebViewerWidget::showWebInspector()
 
 void WebViewerWidget::urlChanged(const QUrl &pUrl)
 {
+    if (   !mSettingLocalHtml && !pUrl.isEmpty()
+        && (pUrl != QUrl(QStringLiteral("about:blank")))) {
+        mHasLocalHtml = false;
+        mLocalHtml = QString();
+        mLocalHtmlBaseUrl = QUrl();
+    }
+
     // The URL has changed, so let the user know whether it's our home page
 
     emit homePage(pUrl == mHomePage);

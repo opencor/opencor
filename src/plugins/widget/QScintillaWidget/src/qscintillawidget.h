@@ -31,6 +31,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 #include <QFont>
 #include <QString>
+#include <QVector>
 
 //==============================================================================
 
@@ -135,6 +136,9 @@ private:
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;
+
+    QVector<QColor> mDefaultBackgroundColors;
+    QVector<QColor> mDefaultForegroundColors;
 
     void updateColors();
 

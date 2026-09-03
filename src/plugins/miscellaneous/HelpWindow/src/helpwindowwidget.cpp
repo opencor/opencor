@@ -142,6 +142,8 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
 HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent)
 {
+    setLocalContentThemingEnabled(true);
+
     // Extract the help files
 
     QString applicationBaseFileName =  QDir::tempPath()+"/"

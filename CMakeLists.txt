@@ -693,6 +693,7 @@ set(SOURCES
     src/misc/cliutils.cpp
     src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
+    src/misc/thememanager.cpp
 
     src/plugins/cliinterface.cpp
     src/plugins/coreinterface.cpp

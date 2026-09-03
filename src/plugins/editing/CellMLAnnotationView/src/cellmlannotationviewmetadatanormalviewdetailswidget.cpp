@@ -238,7 +238,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             addRdfTriple(rdfTriple, false);
         }
     } else {
-        mOutputOntologicalTerms->webView()->setHtml({});
+        mOutputOntologicalTerms->setLocalHtml({});
     }
 
     // Do additional GUI updates
@@ -261,7 +261,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     if (mItemsCount == 0) {
         int iconSize = int(16/qApp->devicePixelRatio());
 
-        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize),
+        mOutputOntologicalTerms->setLocalHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize),
                                                                                         Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize, QIcon::Disabled)));
     }
 

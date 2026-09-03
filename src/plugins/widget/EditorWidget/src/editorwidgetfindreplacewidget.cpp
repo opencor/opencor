@@ -387,6 +387,7 @@ void EditorWidgetFindReplaceWidget::changeEvent(QEvent *pEvent)
 
     if (pEvent->type() == QEvent::PaletteChange) {
         updateStyleSheet();
+        searchOptionChanged();
     }
 }
 
@@ -506,9 +507,10 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
                       +int(mRegularExpressionAction->isChecked());
 
     if (nbOfOptions != 0) {
-        static const QIcon CaseSensitiveIcon     = QIcon(":/EditorWidget/casesensitively.png");
-        static const QIcon WholeWordsOnlyIcon    = QIcon(":/EditorWidget/wholewords.png");
-        static const QIcon RegularExpressionIcon = QIcon(":/EditorWidget/regexp.png");
+        QColor iconColor = palette().color(QPalette::Text);
+        QIcon caseSensitiveIcon = Core::tintedIcon(":/EditorWidget/casesensitively.png", iconColor);
+        QIcon wholeWordsOnlyIcon = Core::tintedIcon(":/EditorWidget/wholewords.png", iconColor);
+        QIcon regularExpressionIcon = Core::tintedIcon(":/EditorWidget/regexp.png", iconColor);
 
         enum {
             CaseSensitiveIconWidth  = 5,
@@ -523,34 +525,35 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
                     -int(mRegularExpressionAction->isChecked())*RegularExpressionWidth)/2;
 
         if (mCaseSensitiveAction->isChecked()) {
-            CaseSensitiveIcon.paint(&dropDownPixmapPainter,
+            caseSensitiveIcon.paint(&dropDownPixmapPainter,
                                     left, 0, CaseSensitiveIconWidth, IconSize);
 
             left += CaseSensitiveIconWidth+1;
         }
 
         if (mWholeWordsOnlyAction->isChecked()) {
-            WholeWordsOnlyIcon.paint(&dropDownPixmapPainter,
+            wholeWordsOnlyIcon.paint(&dropDownPixmapPainter,
                                      left, 0, WholeWordsOnlyIconWidth, IconSize);
 
             left += WholeWordsOnlyIconWidth+1;
         }
 
         if (mRegularExpressionAction->isChecked()) {
-            RegularExpressionIcon.paint(&dropDownPixmapPainter,
+            regularExpressionIcon.paint(&dropDownPixmapPainter,
                                         left, 0, RegularExpressionWidth, IconSize);
         }
     } else {
         // We hack of magnifier icon away so that it ends up looking the way we
         // want it (since it's wider than 16 pixels)
 
-        static const QIcon MagnifierIcon = QIcon(":/EditorWidget/magnifier.png");
+        QIcon magnifierIcon = Core::tintedIcon(":/EditorWidget/magnifier.png",
+                                               palette().color(QPalette::Text));
 
         enum {
             MagnifierIconHeight = 10
         };
 
-        MagnifierIcon.paint(&dropDownPixmapPainter,
+        magnifierIcon.paint(&dropDownPixmapPainter,
                             0, (int(IconSize)-int(MagnifierIconHeight))/2,
                             IconSize, MagnifierIconHeight);
     }

@@ -64,6 +64,7 @@ public:
     using QsciScintilla::replace;
 
 protected:
+    void changeEvent(QEvent *pEvent) override;
     void keyPressEvent(QKeyEvent *pEvent) override;
     void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
     void mousePressEvent(QMouseEvent *pEvent) override;

@@ -45,6 +45,7 @@ class QFrame;
 class QLabel;
 class QMainWindow;
 class QMenu;
+class QPixmap;
 class QWidget;
 
 //==============================================================================

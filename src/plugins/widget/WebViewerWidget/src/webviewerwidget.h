@@ -88,6 +88,9 @@ public:
     QWebView * webView() const;
     Core::ProgressBarWidget * progressBarWidget() const;
 
+    void setLocalHtml(const QString &pHtml, const QUrl &pBaseUrl = {});
+    void setLocalContentThemingEnabled(bool pEnabled);
+
     void retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
     void setToolTip(const QString &pToolTip);
@@ -123,6 +126,13 @@ private:
     bool mOverrideCursor = false;
     bool mOverridingCursor = false;
 
+    bool mLocalContentThemingEnabled = false;
+    bool mSettingLocalHtml = false;
+    bool mHasLocalHtml = false;
+
+    QString mLocalHtml;
+    QUrl mLocalHtmlBaseUrl;
+
     QWebView *mWebView;
 
     Core::ProgressBarWidget *mProgressBarWidget;
@@ -131,6 +141,7 @@ private:
     void emitZoomRelatedSignals();
 
     void setZoomLevel(int pZoomLevel);
+    void updateLocalContentTheme();
 
 signals:
     void homePage(bool pHomePage);

@@ -57,7 +57,7 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
     setScale(1.0);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setStyleSheet("QLabel {"
-                  "     background-color: white;"
+                  "    background-color: palette(base);"
                   "}");
     setWordWrap(true);
 }

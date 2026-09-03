@@ -1157,7 +1157,7 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 
         html += "</table>\n";
 
-        mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
+        mWebViewer->setLocalHtml(mDiffTemplate.arg(html));
     }
 }
 

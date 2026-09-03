@@ -211,6 +211,19 @@ void QScintillaWidget::setLexer(QsciLexer *pLexer)
     }
 
     QsciScintilla::setLexer(pLexer);
+
+    // Remember the lexer's Light-theme colours so that switching themes is
+    // reversible and semantic syntax colours are not lost.
+
+    mDefaultBackgroundColors.resize(QsciScintillaBase::STYLE_MAX);
+    mDefaultForegroundColors.resize(QsciScintillaBase::STYLE_MAX);
+
+    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i) {
+        mDefaultBackgroundColors[i] = backgroundColor(i);
+        mDefaultForegroundColors[i] = foregroundColor(i);
+    }
+
+    updateColors();
 }
 
 //==============================================================================
@@ -795,9 +808,48 @@ void QScintillaWidget::checkCanSelectAll()
 
 void QScintillaWidget::updateColors()
 {
-    // Compute and set the background colour of our caret line
+    const QColor baseColor = palette().color(QPalette::Base);
+    const QColor textColor = palette().color(QPalette::Text);
+    const QColor alternateBaseColor = palette().color(QPalette::AlternateBase);
+    const QColor disabledTextColor = palette().color(QPalette::Disabled,
+                                                      QPalette::Text);
+    const bool darkTheme = baseColor.lightness() < textColor.lightness();
 
-    static const qreal Threshold = 0.875;
+    // Apply the editor surface colours and restore or adapt lexer colours.
+
+    for (int i = 0; i < mDefaultBackgroundColors.count(); ++i) {
+        setBackgroundColor(i, darkTheme?
+                                  baseColor:
+                                  mDefaultBackgroundColors[i]);
+
+        QColor foregroundColor = mDefaultForegroundColors[i];
+
+        if (darkTheme) {
+            if ((foregroundColor.saturation() < 20) && (foregroundColor.lightness() < 80)) {
+                foregroundColor = textColor;
+            } else {
+                while (foregroundColor.lightness() < 150) {
+                    foregroundColor.setRgb((4*foregroundColor.red()+255)/5,
+                                           (4*foregroundColor.green()+255)/5,
+                                           (4*foregroundColor.blue()+255)/5);
+                }
+            }
+        }
+
+        setForegroundColor(i, foregroundColor);
+    }
+
+    setCaretForegroundColor(textColor);
+    setMarginsBackgroundColor(alternateBaseColor);
+    setMarginsForegroundColor(disabledTextColor);
+    setSelectionBackgroundColor(palette().color(QPalette::Highlight));
+    setSelectionForegroundColor(palette().color(QPalette::HighlightedText));
+    setMatchedBraceBackgroundColor(darkTheme? alternateBaseColor:Qt::white);
+    setMatchedBraceForegroundColor(darkTheme? QColor(0xff, 0x66, 0x66):Qt::red);
+
+    // Compute and set the background colour of our caret line.
+
+    static const qreal LightThreshold = 0.875;
 
     QColor caretLineBackgroundColor = Core::highlightColor();
 
@@ -805,10 +857,17 @@ void QScintillaWidget::updateColors()
     qreal green = caretLineBackgroundColor.greenF();
     qreal blue = caretLineBackgroundColor.blueF();
 
-    while ((red < Threshold) || (green < Threshold) || (blue < Threshold)) {
-        red = 0.5*(red+1.0);
-        green = 0.5*(green+1.0);
-        blue = 0.5*(blue+1.0);
+    if (darkTheme) {
+        red *= 0.25;
+        green *= 0.25;
+        blue *= 0.25;
+    } else {
+        while (   (red < LightThreshold) || (green < LightThreshold)
+               || (blue < LightThreshold)) {
+            red = 0.5*(red+1.0);
+            green = 0.5*(green+1.0);
+            blue = 0.5*(blue+1.0);
+        }
     }
 
     setCaretLineBackgroundColor(qRgba(int(red*255), int(green*255), int(blue*255),

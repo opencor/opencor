@@ -211,14 +211,6 @@
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you want to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
-    <message>
-        <source>Preferences</source>
-        <translation>Préférences</translation>
-    </message>
-    <message>
-        <source>No preferences could be found.</source>
-        <translation>Aucunes préférences n&apos;ont pu être trouvées.</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::PluginsDialog</name>
@@ -322,6 +314,14 @@
         <source>%1.</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PreferencesPluginCategoryWidget</name>
@@ -354,6 +354,14 @@
     <message>
         <source>Preferences</source>
         <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Apparence</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>Thème :</translation>
     </message>
 </context>
 <context>

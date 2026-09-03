@@ -267,10 +267,10 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
     // Show the information
 
-    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier,
-                                                                     qualifierSvg,
-                                                                     shortDescription,
-                                                                     longDescription));
+    pWebViewer->setLocalHtml(mQualifierInformationTemplate.arg(pQualifier,
+                                                               qualifierSvg,
+                                                               shortDescription,
+                                                               longDescription));
 }
 
 //==============================================================================

@@ -94,13 +94,17 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
 
     // Draw our position
 
-    static const QPen PositionPen = QColor(0, 0, 0, PenAlpha);
+    QPen positionPen = palette().color(QPalette::Text);
+
+    positionPen.setColor(QColor(positionPen.color().red(),
+                                positionPen.color().green(),
+                                positionPen.color().blue(), PenAlpha));
 
     int line = int(mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS)));
 
     cursorPosition = int(arrowButtonHeight+line*positionScaling);
 
-    painter.setPen(PositionPen);
+    painter.setPen(positionPen);
     painter.drawLine(0, cursorPosition, width(), cursorPosition);
 }
 

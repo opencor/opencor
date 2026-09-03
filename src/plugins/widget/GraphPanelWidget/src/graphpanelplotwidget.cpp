@@ -1601,7 +1601,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setPointCoordinatesColor(pointCoordinatesColor);
 
     setSurroundingAreaBackgroundColor(Core::windowColor());
-    setSurroundingAreaForegroundColor(Qt::black);
+    setSurroundingAreaForegroundColor(Core::windowTextColor());
 
     QColor zoomRegionColor = Qt::darkRed;
     QColor zoomRegionFillColor = Qt::yellow;
@@ -1641,7 +1641,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mGrid = new QwtPlotGrid();
 
-    mGrid->setMajorPen(Qt::gray, 1, Qt::DotLine);
+    mGrid->setMajorPen(Core::baseColor() == Qt::black?
+                           QColor(0x50, 0x50, 0x50):
+                           QColor(Qt::gray),
+                       1, Qt::DotLine);
 
     mGrid->attach(this);
 
@@ -1788,8 +1791,38 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
     QwtPlot::changeEvent(pEvent);
 
+    // Update palette-derived plot colours when the application theme changes.
+
+    if (pEvent->type() == QEvent::PaletteChange) {
+        if (mBackgroundUsesTheme) {
+            setBackgroundColor(Qt::white);
+        }
+
+        if (mForegroundUsesTheme) {
+            setForegroundColor(Qt::black);
+        }
+
+        if (mSurroundingAreaBackgroundUsesTheme) {
+            setSurroundingAreaBackgroundColor(Core::windowColor());
+        }
+
+        if (mSurroundingAreaForegroundUsesTheme) {
+            setSurroundingAreaForegroundColor(Core::windowTextColor());
+        }
+
+        QColor oldDefaultGridColor = Core::baseColor() == Qt::black?
+                                         QColor(Qt::gray):
+                                         QColor(0x50, 0x50, 0x50);
+
+        if (gridLinesColor() == oldDefaultGridColor) {
+            setGridLinesColor(Core::baseColor() == Qt::black?
+                                  QColor(0x50, 0x50, 0x50):
+                                  QColor(Qt::gray));
+        }
+    }
+
     // Check whether our enabled state has changed and if so then update our
-    // background colour
+    // background colour.
 
     if (pEvent->type() == QEvent::EnabledChange) {
         setUpdatesEnabled(false);
@@ -2053,18 +2086,28 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
     //       an opaque colour from an opaque white colour and the given
     //       (potentially semi-transparent) colour...
 
-    if (pBackgroundColor != mBackgroundColor) {
-        mBackgroundColor = pBackgroundColor;
+    QColor backgroundColor = pBackgroundColor;
 
-        static const QColor White = Qt::white;
+    if (   (pBackgroundColor == Qt::white)
+        || (pBackgroundColor == Core::baseColor())) {
+        mBackgroundUsesTheme = true;
+        backgroundColor = Core::baseColor();
+    } else {
+        mBackgroundUsesTheme = false;
+    }
+
+    if (backgroundColor != mBackgroundColor) {
+        mBackgroundColor = backgroundColor;
+
+        QColor baseColor = Core::baseColor();
 
         QBrush brush = canvasBackground();
-        double ratio = pBackgroundColor.alpha()/256.0;
+        double ratio = backgroundColor.alpha()/256.0;
         QColor color;
 
-        color.setRedF((1.0-ratio)*White.redF()+ratio*pBackgroundColor.redF());
-        color.setGreenF((1.0-ratio)*White.greenF()+ratio*pBackgroundColor.greenF());
-        color.setBlueF((1.0-ratio)*White.blueF()+ratio*pBackgroundColor.blueF());
+        color.setRedF((1.0-ratio)*baseColor.redF()+ratio*backgroundColor.redF());
+        color.setGreenF((1.0-ratio)*baseColor.greenF()+ratio*backgroundColor.greenF());
+        color.setBlueF((1.0-ratio)*baseColor.blueF()+ratio*backgroundColor.blueF());
 
         brush.setColor(color);
 
@@ -2121,12 +2164,22 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 {
     // Set our foreground colour
 
-    if (pForegroundColor != mForegroundColor) {
-        mForegroundColor = pForegroundColor;
+    QColor foregroundColor = pForegroundColor;
+
+    if (   (pForegroundColor == Qt::black)
+        || (pForegroundColor == Core::windowTextColor())) {
+        mForegroundUsesTheme = true;
+        foregroundColor = Core::windowTextColor();
+    } else {
+        mForegroundUsesTheme = false;
+    }
+
+    if (foregroundColor != mForegroundColor) {
+        mForegroundColor = foregroundColor;
 
         // Legend
 
-        mLegend->setForegroundColor(pForegroundColor);
+        mLegend->setForegroundColor(foregroundColor);
 
         replot();
     }
@@ -2376,6 +2429,9 @@ void GraphPanelPlotWidget::setSurroundingAreaBackgroundColor(const QColor &pSurr
 {
     // Set our surrounding area background colour
 
+    mSurroundingAreaBackgroundUsesTheme =
+        pSurroundingAreaBackgroundColor == Core::windowColor();
+
     if (pSurroundingAreaBackgroundColor != mSurroundingAreaBackgroundColor) {
         mSurroundingAreaBackgroundColor = pSurroundingAreaBackgroundColor;
 
@@ -2405,6 +2461,9 @@ QColor GraphPanelPlotWidget::surroundingAreaForegroundColor() const
 void GraphPanelPlotWidget::setSurroundingAreaForegroundColor(const QColor &pSurroundingAreaForegroundColor)
 {
     // Set our surrounding area foreground colour
+
+    mSurroundingAreaForegroundUsesTheme =
+        pSurroundingAreaForegroundColor == Core::windowTextColor();
 
     if (pSurroundingAreaForegroundColor != mSurroundingAreaForegroundColor) {
         mSurroundingAreaForegroundColor = pSurroundingAreaForegroundColor;

@@ -38,6 +38,7 @@ along with this program. If not, see <https://gnu.org/licenses>.
 
 class QAction;
 class QMainWindow;
+class QPixmap;
 class QSettings;
 
 //==============================================================================
